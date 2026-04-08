@@ -310,8 +310,8 @@ void RegularVIBackendModule::updateMapWithMeasurements(
 
   // update static and ego motion
   map_->updateObservations(input->staticMeasurements());
-  map_->updateSensorPoseMeasurement(frame_id_k, input->timestamp(),
-                                    Pose3Measurement(X_W_k));
+  map_->setInitialSensorPose(frame_id_k, input->timestamp(),
+                             Pose3Measurement(X_W_k));
 
   // update dynamic and motions
   MotionEstimateMap object_motions;
@@ -319,7 +319,7 @@ void RegularVIBackendModule::updateMapWithMeasurements(
     map_->updateObservations(object_track.measurements);
     object_motions.insert2(object_id, object_track.H_W_k_1_k);
   }
-  map_->updateObjectMotionMeasurements(frame_id_k, object_motions);
+  map_->setInitialObjectMotions(frame_id_k, object_motions);
 }
 
 void RegularVIBackendModule::updateAndOptimize(

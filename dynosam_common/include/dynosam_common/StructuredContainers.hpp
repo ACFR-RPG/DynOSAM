@@ -506,8 +506,8 @@ class FastSet
 
   const VALUE& front() const { return *this->cbegin(); }
   const VALUE& back() const { return *this->crbegin(); }
-  VALUE& front() { return *this->begin(); }
-  VALUE& back() { return *this->rbegin(); }
+  // VALUE& front() { return *this->begin(); }
+  // VALUE& back() { return *this->rbegin(); }
 
  private:
 };

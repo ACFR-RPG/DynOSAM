@@ -98,7 +98,7 @@ void WorldMotionAccessor::refreshPoseCache() {
     const auto [frame_id_k_1, frame_k_1_ptr] = *prev_itr;
     CHECK_EQ(frame_id_k_1 + 1, frame_id_k);
 
-    const Timestamp timestamp_k = frame_k_ptr->timestamp;
+    const Timestamp timestamp_k = frame_k_ptr->timestamp();
 
     // collect all object centoids from the latest estimate
     gtsam::FastMap<ObjectId, gtsam::Point3> centroids_k =
@@ -180,9 +180,9 @@ void WorldMotionFormulation::dynamicPointUpdateCallback(
   auto theta_accessor = this->accessorFromTheta();
 
   const gtsam::Key object_point_key_k_1 =
-      lmk_node->makeDynamicKey(frame_node_k_1->frame_id);
+      lmk_node->makeDynamicKey(frame_node_k_1->frameId());
   const gtsam::Key object_point_key_k =
-      lmk_node->makeDynamicKey(frame_node_k->frame_id);
+      lmk_node->makeDynamicKey(frame_node_k->frameId());
 
   bool add_point_from_previous = context.is_starting_motion_frame;
   bool does_previous_point_exist = new_values.exists(object_point_key_k_1) ||
@@ -199,7 +199,7 @@ void WorldMotionFormulation::dynamicPointUpdateCallback(
   if (!add_point_from_previous && !does_previous_point_exist) {
     // we could do many things including re-initing this point OR removing it
     // from the tracked set
-    CHECK(lmk_node->seenAtFrame(frame_node_k_1->frame_id));
+    CHECK(lmk_node->seenAtFrame(frame_node_k_1->frameId()));
     // if we think we shouldn't add the previous point but the previous point
     // does not exist, add it!@!
     add_point_from_previous = true;
@@ -225,7 +225,7 @@ void WorldMotionFormulation::dynamicPointUpdateCallback(
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
           .num_dynamic_factors++;
-    result.updateAffectedObject(frame_node_k_1->frame_id,
+    result.updateAffectedObject(frame_node_k_1->frameId(),
                                 context.getObjectId());
 
     // add landmark at previous frame
@@ -244,9 +244,7 @@ void WorldMotionFormulation::dynamicPointUpdateCallback(
   // previous point must be added by the previous iteration
   CHECK(new_values.exists(object_point_key_k_1) ||
         theta_accessor->exists(object_point_key_k_1))
-      << "Key: " << this->formatter()(object_point_key_k_1)
-      << " and seen at frames "
-      << container_to_string(lmk_node->getSeenFrameIds());
+      << "Key: " << this->formatter()(object_point_key_k_1);
 
   // const Landmark measured_k =
   // lmk_node->getMeasurement(frame_node_k).landmark;
@@ -267,7 +265,7 @@ void WorldMotionFormulation::dynamicPointUpdateCallback(
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_dynamic_factors++;
 
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
+  result.updateAffectedObject(frame_node_k->frameId(), context.getObjectId());
 
   Landmark lmk_world_k;
   getSafeQuery(lmk_world_k, theta_accessor->query<Landmark>(object_point_key_k),
@@ -284,8 +282,8 @@ void WorldMotionFormulation::dynamicPointUpdateCallback(
   new_factors.emplace_shared<LandmarkMotionTernaryFactor>(
       object_point_key_k_1, object_point_key_k, object_motion_key_k,
       landmark_motion_noise);
-  result.updateAffectedObject(frame_node_k_1->frame_id, context.getObjectId());
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
+  result.updateAffectedObject(frame_node_k_1->frameId(), context.getObjectId());
+  result.updateAffectedObject(frame_node_k->frameId(), context.getObjectId());
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_motion_factors++;
@@ -317,7 +315,7 @@ void WorldMotionFormulation::objectUpdateContext(
 
     constexpr static bool init_H_with_identity = false;
     if (!init_H_with_identity) {
-      map()->hasInitialObjectMotion(frame_id, object_id, &initial_motion);
+      initial_motion = frame_node_k->initialObjectMotion(object_id);
       LOG(INFO) << "Using motion from frontend " << initial_motion;
       initial_motion =
           gtsam::Pose3(gtsam::Rot3::Identity(), initial_motion.translation());

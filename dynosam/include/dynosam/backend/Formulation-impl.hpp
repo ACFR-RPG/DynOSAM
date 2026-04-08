@@ -52,9 +52,9 @@ gtsam::Pose3 FormulationT<MAP>::getInitialOrLinearizedSensorPose(
   const auto accessor = this->accessorFromTheta();
   // sensor pose from a previous/current linearisation point
   StateQuery<gtsam::Pose3> X_k_theta = accessor->getSensorPose(frame_id);
+  const auto frame_node = CHECK_NOTNULL(this->map()->getFrame(frame_id));
 
-  gtsam::Pose3 X_k_initial;
-  CHECK(this->map()->hasInitialSensorPose(frame_id, &X_k_initial));
+  gtsam::Pose3 X_k_initial = frame_node->initialSensorPose();
   // take either the query value from the map (if we have a previous
   // initalisation), or the estimate from the camera
   gtsam::Pose3 X_k;
@@ -108,14 +108,14 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
 
   // well not true for keyframes!!
   //  const FrameId frame_id_k_1 = frame_id_k - 1u;
-  VLOG(20) << "Add dynamic observations at " << frame_id_k << " for objects "
-           << container_to_string(frame_node_k->getObservedObjects());
+  // VLOG(20) << "Add dynamic observations at " << frame_id_k << " for objects "
+  //          << container_to_string(frame_node_k->getObservedObjects());
 
   constexpr static int kItrTimerLoggerLevel = 20;
 
   utils::ChronoTimingStats dyn_obj_itr_timer(
       this->loggerPrefix() + ".dynamic_object_itr", kItrTimerLoggerLevel);
-  for (const auto& object_node : frame_node_k->objects_seen) {
+  for (const auto& object_node : frame_node_k->objectsSeen()) {
     DebugInfo::ObjectInfo object_debug_info;
     const ObjectId object_id = object_node->getId();
 
@@ -138,7 +138,7 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
     // }
     // possibly the longest call?
     // landmarks on this object seen at frame k
-    auto seen_lmks_k = object_node->getLandmarksSeenAtFrame(frame_id_k);
+    auto seen_lmks_k = object_node->landmarksSeenAtFrame(frame_id_k);
     VLOG(20) << "Adding N= " << seen_lmks_k.size()
              << " measurements j=" << object_id << " from=" << last_seen
              << " to= " << frame_id_k;
@@ -146,7 +146,7 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
     // if we dont have at least N observations of this object in this frame AND
     // the previous frame
     if (seen_lmks_k.size() < params_.min_dynamic_observations ||
-        object_node->getLandmarksSeenAtFrame(last_seen).size() <
+        object_node->landmarksSeenAtFrame(last_seen).size() <
             params_.min_dynamic_observations) {
       continue;
     }
@@ -157,14 +157,14 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
              << ": " << seen_lmks_k.size();
     // iterate over each lmk we have on this object
     for (const auto& obj_lmk_node : seen_lmks_k) {
-      CHECK_EQ(obj_lmk_node->getObjectId(), object_id);
+      CHECK_EQ(obj_lmk_node->objectId(), object_id);
 
       // see if we have enough observations to add this lmk
       if (obj_lmk_node->numObservations() < params_.min_dynamic_observations) {
         continue;
       }
 
-      TrackletId tracklet_id = obj_lmk_node->getId();
+      TrackletId tracklet_id = obj_lmk_node->trackletId();
 
       // if does not exist, we need to go back and all the previous measurements
       // & factors & motions
@@ -183,16 +183,18 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
         // seen in!
         FrameId starting_motion_frame;
         if (update_params.do_backtrack) {
-          starting_motion_frame =
-              seen_frames.template getFirstIndex<FrameId>() +
-              1u;  // as we index the motion from k
+          // starting_motion_frame =
+          //     seen_frames.template getFirstIndex<FrameId>() +
+          //     1u;  // as we index the motion from k
+          // Starting index + 1 as we index the motion from k-1 to k, starting
+          // at k
+          starting_motion_frame = seen_frames.front()->frameId() + 1u;
         } else {
           // start from the requested index, this will still mean that we will
           // add the previous frame as always add a motion between k-1 and k
           starting_motion_frame = frame_id_k;
 
-          if (starting_motion_frame <
-              seen_frames.template getFirstIndex<FrameId>() + 1u) {
+          if (starting_motion_frame < seen_frames.front()->frameId() + 1u) {
             // if the requested starting frame is not the first frame + 1u of
             // the actul track (ie. the second seen frame) we cannot use it yet
             // as we have to index BACKWARDS from the starting motion frame if
@@ -207,8 +209,7 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
             seen_frames.find(starting_motion_frame);
         CHECK(starting_motion_frame_itr != seen_frames.end())
             << "Starting motion frame is " << starting_motion_frame
-            << " but first frame is "
-            << seen_frames.template getFirstIndex<FrameId>();
+            << " but first frame is " << seen_frames.front()->frameId();
 
         std::stringstream ss;
         ss << "Going back to add point on object " << object_id
@@ -231,29 +232,29 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
           //          query_frame_node_k_1->frame_id + 1u);
 
           // add points UP TO AND INCLUDING the current frame
-          if (query_frame_node_k->frame_id > frame_id_k) {
+          if (query_frame_node_k->frameId() > frame_id_k) {
             break;
           }
 
           // point needs to be be in k and k-1 -> we have validated the object
           // exists in these two frames but not the points
-          CHECK(obj_lmk_node->seenAtFrame(query_frame_node_k->frame_id));
-          if (!obj_lmk_node->seenAtFrame(query_frame_node_k_1->frame_id)) {
+          CHECK(obj_lmk_node->seenAtFrame(query_frame_node_k->frameId()));
+          if (!obj_lmk_node->seenAtFrame(query_frame_node_k_1->frameId())) {
             LOG(WARNING) << "Tracklet " << tracklet_id << " on object "
                          << object_id << " seen at "
-                         << query_frame_node_k->frame_id << " but not "
-                         << query_frame_node_k_1->frame_id;
+                         << query_frame_node_k->frameId() << " but not "
+                         << query_frame_node_k_1->frameId();
             break;
           }  // this miay mean this this point never gets added?
 
-          ss << query_frame_node_k_1->frame_id << " "
-             << query_frame_node_k->frame_id << "\n";
+          ss << query_frame_node_k_1->frameId() << " "
+             << query_frame_node_k->frameId() << "\n";
 
           const gtsam::Pose3 T_world_camera_k_1 =
-              getInitialOrLinearizedSensorPose(query_frame_node_k_1->frame_id);
+              getInitialOrLinearizedSensorPose(query_frame_node_k_1->frameId());
 
           gtsam::Pose3 T_world_camera_k =
-              getInitialOrLinearizedSensorPose(query_frame_node_k->frame_id);
+              getInitialOrLinearizedSensorPose(query_frame_node_k->frameId());
 
           PointUpdateContextType point_context;
           point_context.lmk_node = obj_lmk_node;
@@ -291,9 +292,9 @@ UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
         point_context.frame_node_k_1 = frame_node_k_1;
         point_context.frame_node_k = frame_node_k;
         point_context.X_k_1_measured =
-            getInitialOrLinearizedSensorPose(frame_node_k_1->frame_id);
+            getInitialOrLinearizedSensorPose(frame_node_k_1->frameId());
         point_context.X_k_measured =
-            getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
+            getInitialOrLinearizedSensorPose(frame_node_k->frameId());
         point_context.starting_factor_slot = starting_factor_slot;
         point_context.is_starting_motion_frame = false;
         utils::ChronoTimingStats dyn_point_update_timer(

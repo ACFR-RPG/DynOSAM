@@ -100,8 +100,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
   // first frame is always KF
   map_->updateObservations(static_measurements);
-  map_->updateSensorPoseMeasurement(frame_id_k, timestamp_k,
-                                    Pose3Measurement(X_W_k_initial));
+  map_->setInitialSensorPose(frame_id_k, timestamp_k,
+                             Pose3Measurement(X_W_k_initial));
 
   auto pc_input = std::make_shared<PoseChangeInput>();
   pc_input->frame_id = frame_id_k;
@@ -420,7 +420,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
         // NOTE: this is different from the nav state that is mantained in the
         // frontend so the initial states may be slightly different (only if
         // IMU)
-        map_->updateSensorPoseMeasurement(
+        map_->setInitialSensorPose(
             intermediate_motion_lkf_j.to, intermediate_motion_lkf_j.timestamp,
             Pose3Measurement(predicted_nav_state.pose()));
 
@@ -490,11 +490,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     // NOTE: this is different from the nav state that is mantained in the
     // frontend so the initial states may be slightly different (only if IMU)
     // NOTE: must be after the updateObs -> these create new frames with the
-    // correct attrivutes (ie. timestamp) while updateSensorPoseMeasurement
+    // correct attrivutes (ie. timestamp) while setInitialSensorPose
     // creates a new frame id necessary but does not populdate with timestamp!!
     // this is a known bufg!!
-    map_->updateSensorPoseMeasurement(
-        frame_id_k, timestamp_k, Pose3Measurement(predicted_nav_state.pose()));
+    map_->setInitialSensorPose(frame_id_k, timestamp_k,
+                               Pose3Measurement(predicted_nav_state.pose()));
 
     formulation_->addObjects(frame_id_k, kf_pose_change_infos);
 

@@ -51,13 +51,13 @@ template <typename MAP>
 struct MapTraits {
   using Map = MAP;
   using MeasurementType = typename Map::Measurement;
-  using FrameNode = typename Map::FrameNodeM;
-  using ObjectNode = typename Map::ObjectNodeM;
-  using LandmarkNode = typename Map::LandmarkNodeM;
+  using FrameNode = typename Map::FrameNodeT;
+  using ObjectNode = typename Map::ObjectNodeT;
+  using LandmarkNode = typename Map::LandmarkNodeT;
 
-  using FrameNodePtr = typename FrameNode::Ptr;
-  using ObjectNodePtr = typename ObjectNode::Ptr;
-  using LandmarkNodePtr = typename LandmarkNode::Ptr;
+  using SharedFrameNode = typename Map::SharedFrameNodeT;
+  using SharedObjectNode = typename Map::SharedObjectNodeT;
+  using SharedLandmarkNode = typename Map::SharedLandmarkNodeT;
 };
 
 struct UpdateObservationParams {
@@ -107,9 +107,9 @@ template <typename MAP>
 struct PointUpdateContext {
   using MapTraitsType = MapTraits<MAP>;
 
-  typename MapTraitsType::LandmarkNodePtr lmk_node;
-  typename MapTraitsType::FrameNodePtr frame_node_k_1;
-  typename MapTraitsType::FrameNodePtr frame_node_k;
+  typename MapTraitsType::SharedLandmarkNode lmk_node;
+  typename MapTraitsType::SharedFrameNode frame_node_k_1;
+  typename MapTraitsType::SharedFrameNode frame_node_k;
 
   //! Camera pose from measurement (or initial)
   gtsam::Pose3 X_k_measured;
@@ -126,11 +126,9 @@ struct PointUpdateContext {
   //! object and now, since we are at k, we can create a motion from k-1 to k
   bool is_starting_motion_frame{false};
 
-  inline ObjectId getObjectId() const {
-    return lmk_node->template getObjectId();
-  }
+  inline ObjectId getObjectId() const { return lmk_node->template objectId(); }
   inline TrackletId getTrackletId() const {
-    return lmk_node->template tracklet_id;
+    return lmk_node->template trackletId();
   }
 };
 
@@ -139,10 +137,10 @@ struct ObjectUpdateContext {
   using MapTraitsType = MapTraits<MAP>;
   //! Frame that is part of the update context. Shared pointer to a frame node
   //! as defined by the Map type
-  typename MapTraitsType::FrameNodePtr frame_node_k;
+  typename MapTraitsType::SharedFrameNode frame_node_k;
   //! Object that is part of the update context. Shared pointer to a object node
   //! as defined by the Map type
-  typename MapTraitsType::ObjectNodePtr object_node;
+  typename MapTraitsType::SharedObjectNode object_node;
   //! Indicates that we have a valid motion pair from k-1 to k (this frame)
   //! and therefore k is at least the second frame for which this object has
   //! been consequatively tracked When this is false, it means that the frame
@@ -151,8 +149,10 @@ struct ObjectUpdateContext {
   //! of this object.
   bool has_motion_pair{false};
 
-  inline FrameId getFrameId() const { return frame_node_k->template getId(); }
-  inline ObjectId getObjectId() const { return object_node->template getId(); }
+  inline FrameId getFrameId() const { return frame_node_k->template frameId(); }
+  inline ObjectId getObjectId() const {
+    return object_node->template objectId();
+  }
 };
 
 // forward declare
@@ -582,13 +582,13 @@ class FormulationT : public Formulation {
    * that the specified landmark exists within the graph already. This is used
    * as part of the internal bookeeping.
    *
-   * @param lmk_node typename MapTraitsType::LandmarkNodePtr&. Pointer to a
+   * @param lmk_node typename MapTraitsType::SharedLandmarkNode&. Pointer to a
    * landmark node.
    * @return true
    * @return false
    */
   virtual bool isDynamicTrackletInMap(
-      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const = 0;
+      const typename MapTraitsType::SharedLandmarkNode& lmk_node) const = 0;
 
  public:
   /**

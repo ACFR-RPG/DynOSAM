@@ -157,7 +157,7 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
 
   auto map = module_->map();
   auto frame_node = map->getFrame(output->frame_id);
-  ObjectIds observed_objects = frame_node->getObservedObjects();
+  ObjectIds observed_objects = frame_node->objectSeenIds();
 
   const auto object_trajectories = output->object_trajectories;
 

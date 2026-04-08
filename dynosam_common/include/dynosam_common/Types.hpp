@@ -237,6 +237,11 @@ struct ReferenceFrameValue {
     os << "frame: " << std::to_string(t.frame()) << "\n";
     return os;
   }
+
+  bool operator==(const This& other) const {
+    return gtsam::traits<Estimate>::Equals(estimate_, other.estimate_) &&
+           frame_ == other.frame_;
+  }
 };
 
 /**
@@ -248,6 +253,7 @@ struct ReferenceFrameValue {
  */
 template <typename E>
 struct HeavyReferenceFrameValue : public ReferenceFrameValue<E> {
+  using This = HeavyReferenceFrameValue<E>;
   using Base = ReferenceFrameValue<E>;
   using ConstEstimate = typename Base::ConstEstimate;
   using Estimate = typename Base::Estimate;
@@ -260,6 +266,10 @@ struct HeavyReferenceFrameValue : public ReferenceFrameValue<E> {
   inline FrameId from() const { return from_; }
   inline FrameId to() const { return to_; }
   inline const ReferenceFrame& origin() const { return Base::frame_; }
+
+  bool operator==(const This& other) const {
+    return Base::operator==(other) && from_ == other.from_ && to_ == other.to_;
+  }
 
  private:
   FrameId from_{0};
@@ -307,6 +317,10 @@ struct MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
     os << "to: " << t.to() << "\n";
     os << "style : " << std::to_string(t.style()) << "\n";
     return os;
+  }
+
+  bool operator==(const This& other) const {
+    return Base::operator==(other) && style_ == other.style_;
   }
 };
 

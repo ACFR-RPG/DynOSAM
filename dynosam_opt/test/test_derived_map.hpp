@@ -232,12 +232,12 @@ class ObjectNodeBase {
   }
 
   FrameId getFirstSeenFrame() const {
-    auto first_frame = getSeenFrames().front();
+    const auto first_frame = getSeenFrames().front();
     return first_frame->frameId();
   }
 
   FrameId getLastSeenFrame() const {
-    auto last_frame = getSeenFrames().back();
+    const auto last_frame = getSeenFrames().back();
     return last_frame->frameId();
   }
 

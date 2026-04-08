@@ -263,18 +263,18 @@ template <typename MEASUREMENT>
 struct LandmarkNode;
 
 template <typename MEASUREMENT>
-using FrameNodePtr = std::shared_ptr<FrameNode<MEASUREMENT>>;
+using SharedFrameNode = std::shared_ptr<FrameNode<MEASUREMENT>>;
 template <typename MEASUREMENT>
-using ObjectNodePtr = std::shared_ptr<ObjectNode<MEASUREMENT>>;
+using SharedObjectNode = std::shared_ptr<ObjectNode<MEASUREMENT>>;
 template <typename MEASUREMENT>
-using LandmarkNodePtr = std::shared_ptr<LandmarkNode<MEASUREMENT>>;
+using SharedLandmarkNode = std::shared_ptr<LandmarkNode<MEASUREMENT>>;
 
 template <typename MEASUREMENT>
-using FrameNodePtrSet = FastMapNodeSet<FrameNodePtr<MEASUREMENT>>;
+using SharedFrameNodeSet = FastMapNodeSet<SharedFrameNode<MEASUREMENT>>;
 template <typename MEASUREMENT>
-using LandmarkNodePtrSet = FastMapNodeSet<LandmarkNodePtr<MEASUREMENT>>;
+using SharedLandmarkNodeSet = FastMapNodeSet<SharedLandmarkNode<MEASUREMENT>>;
 template <typename MEASUREMENT>
-using ObjectNodePtrSet = FastMapNodeSet<ObjectNodePtr<MEASUREMENT>>;
+using SharedObjectNodeSet = FastMapNodeSet<SharedObjectNode<MEASUREMENT>>;
 
 /// @brief Status for a StateQuery<> type. This is defined outside the
 /// StateQuery class so that the type of status is independant of the StateQuery
@@ -397,13 +397,13 @@ class FrameNode : public MapNodeBase<MEASUREMENT> {
   /// @brief Timestamp (seconds)
   Timestamp timestamp;
   /// @brief All dynamic landmarks observed at this frame
-  LandmarkNodePtrSet<MEASUREMENT> dynamic_landmarks;
+  SharedLandmarkNodeSet<MEASUREMENT> dynamic_landmarks;
   /// @brief All static landmarks observed at this frame
-  LandmarkNodePtrSet<MEASUREMENT> static_landmarks;
+  SharedLandmarkNodeSet<MEASUREMENT> static_landmarks;
   /// @brief All objects seen at this frame. NOTE that this means that we have
   /// point observations at this frame, but not necessarily a motion (e.g. if we
   /// only observe this object once)
-  ObjectNodePtrSet<MEASUREMENT> objects_seen;
+  SharedObjectNodeSet<MEASUREMENT> objects_seen;
 
   /// @brief Optional initial camera pose in world, provided by the front-end
   std::optional<Pose3Measurement> X_world;
@@ -480,9 +480,9 @@ class FrameNode : public MapNodeBase<MEASUREMENT> {
    */
   gtsam::Key makeObjectPoseKey(ObjectId object_id) const;
 
-  /// @brief Const LandmarkNodePtr with corresponding Measurement value
+  /// @brief Const SharedLandmarkNode with corresponding Measurement value
   using LandmarkMeasurementPair =
-      std::pair<const LandmarkNodePtr<MEASUREMENT>, MEASUREMENT>;
+      std::pair<const SharedLandmarkNode<MEASUREMENT>, MEASUREMENT>;
 
   /**
    * @brief Get all static measurements for this frame.
@@ -561,7 +561,7 @@ class ObjectNode : public MapNodeBase<MEASUREMENT> {
   /// @brief Object label (j)
   ObjectId object_id;
   /// @brief All landmarks associated with the object over time
-  LandmarkNodePtrSet<MEASUREMENT> dynamic_landmarks;
+  SharedLandmarkNodeSet<MEASUREMENT> dynamic_landmarks;
 
   /**
    * @brief Returns the object_id
@@ -620,9 +620,9 @@ class ObjectNode : public MapNodeBase<MEASUREMENT> {
   /**
    * @brief Get all the frame nodes that have observed this object.
    *
-   * @return FrameNodePtrSet<MEASUREMENT>
+   * @return SharedFrameNodeSet<MEASUREMENT>
    */
-  FrameNodePtrSet<MEASUREMENT> getSeenFrames() const;
+  SharedFrameNodeSet<MEASUREMENT> getSeenFrames() const;
 
   /**
    * @brief Get all the frame ids that have observed this object.
@@ -636,9 +636,9 @@ class ObjectNode : public MapNodeBase<MEASUREMENT> {
    * frame id. This should be a subset of the dynamic_landmarks stored.
    *
    * @param frame_id FrameId
-   * @return LandmarkNodePtrSet<MEASUREMENT>
+   * @return SharedLandmarkNodeSet<MEASUREMENT>
    */
-  LandmarkNodePtrSet<MEASUREMENT> getLandmarksSeenAtFrame(
+  SharedLandmarkNodeSet<MEASUREMENT> getLandmarksSeenAtFrame(
       FrameId frame_id) const;
 };
 
@@ -664,7 +664,8 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
   using This = LandmarkNode<MEASUREMENT>;
 
   // Map of measurements, via the frame this measurement was seen in
-  using Measurements = gtsam::FastMap<FrameNodePtr<MEASUREMENT>, MEASUREMENT>;
+  using Measurements =
+      gtsam::FastMap<SharedFrameNode<MEASUREMENT>, MEASUREMENT>;
   DYNO_POINTER_TYPEDEFS(This)
 
   LandmarkNode(const std::shared_ptr<Map<MEASUREMENT>>& map)
@@ -727,9 +728,9 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
   /**
    * @brief Get all the frame nodes this landmark was observed in.
    *
-   * @return const FrameNodePtrSet<MEASUREMENT>&
+   * @return const SharedFrameNodeSet<MEASUREMENT>&
    */
-  inline const FrameNodePtrSet<MEASUREMENT>& getSeenFrames() const {
+  inline const SharedFrameNodeSet<MEASUREMENT>& getSeenFrames() const {
     return frames_seen_;
   }
 
@@ -771,10 +772,11 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
    * Throws DynosamException if no measurement existd at this frame; use with
    * seenAtFrame or hasMeasurement.
    *
-   * @param frame_node FrameNodePtr<MEASUREMENT>
+   * @param frame_node SharedFrameNode<MEASUREMENT>
    * @return const MEASUREMENT&
    */
-  const MEASUREMENT& getMeasurement(FrameNodePtr<MEASUREMENT> frame_node) const;
+  const MEASUREMENT& getMeasurement(
+      SharedFrameNode<MEASUREMENT> frame_node) const;
 
   /**
    * @brief Get the measurement at the requested frame id.
@@ -789,10 +791,10 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
   /**
    * @brief Adds a measurement with the associated frame id.
    *
-   * @param frame_node FrameNodePtr<MEASUREMENT>
+   * @param frame_node SharedFrameNode<MEASUREMENT>
    * @param measurement const MEASUREMENT&
    */
-  void add(FrameNodePtr<MEASUREMENT> frame_node,
+  void add(SharedFrameNode<MEASUREMENT> frame_node,
            const MEASUREMENT& measurement);
 
   /**
@@ -826,11 +828,11 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
   DynamicPointSymbol makeDynamicSymbol(FrameId frame_id) const;
 
  private:
-  bool addAvoidDupliactes(FrameNodePtr<MEASUREMENT> frame_node,
+  bool addAvoidDupliactes(SharedFrameNode<MEASUREMENT> frame_node,
                           const MEASUREMENT& measurement);
 
  protected:
-  FrameNodePtrSet<MEASUREMENT> frames_seen_;
+  SharedFrameNodeSet<MEASUREMENT> frames_seen_;
   Measurements measurements_;
 
   friend class Map<MEASUREMENT>;

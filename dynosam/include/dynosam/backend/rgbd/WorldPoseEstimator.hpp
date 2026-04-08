@@ -78,8 +78,9 @@ class WorldPoseFormulation : public VIOFormulation<MapVision> {
                            gtsam::NonlinearFactorGraph& new_factors) override;
 
   inline bool isDynamicTrackletInMap(
-      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const override {
-    const TrackletId tracklet_id = lmk_node->tracklet_id;
+      const typename MapTraitsType::SharedLandmarkNode& lmk_node)
+      const override {
+    const TrackletId tracklet_id = lmk_node->trackletId();
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }
 

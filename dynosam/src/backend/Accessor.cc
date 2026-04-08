@@ -1,6 +1,7 @@
 #include "dynosam/backend/Accessor.hpp"
 
 #include <glog/logging.h>
+#include <pcl/common/centroid.h>
 
 namespace dyno {
 

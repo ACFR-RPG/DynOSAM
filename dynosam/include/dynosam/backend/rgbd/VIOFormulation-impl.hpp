@@ -73,9 +73,10 @@ UpdateObservationResult VIOFormulation<MAP>::updateStaticObservations(
   using GenericProjectionUpdater = GenericProjectionUpdater<MAP>;
   using StereoProjectionUpdater = StereoProjectionUpdater<MAP>;
 
-  VLOG(20) << "Looping over " << frame_node_k->static_landmarks.size()
+  const auto& static_landmarks = frame_node_k->staticLandmarks();
+  VLOG(20) << "Looping over " << static_landmarks.size()
            << " static lmks for frame " << frame_id_k;
-  for (auto lmk_node : frame_node_k->static_landmarks) {
+  for (auto lmk_node : static_landmarks) {
     gtsam::Key point_key;
     std::optional<Landmark> initial_value;
 

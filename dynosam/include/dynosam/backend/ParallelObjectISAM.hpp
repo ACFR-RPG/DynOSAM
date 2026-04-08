@@ -181,7 +181,7 @@ class ParallelObjectISAM {
                  const Pose3Measurement& X_world_k,
                  const Motion3ReferenceFrame& motion_frame) {
     map_->updateObservations(measurements);
-    map_->updateSensorPoseMeasurement(frame_k, timestamp, X_world_k);
+    map_->setInitialSensorPose(frame_k, timestamp, X_world_k);
     const FrameId to = motion_frame.to();
     if (to != frame_k) {
       throw DynosamException(
@@ -199,7 +199,7 @@ class ParallelObjectISAM {
     // do we want global?
     MotionEstimateMap motion_estimate;
     motion_estimate.insert({object_id_, motion_frame});
-    map_->updateObjectMotionMeasurements(frame_k, motion_estimate);
+    map_->setInitialObjectMotions(frame_k, motion_estimate);
   }
 
   bool updateSmoother(FrameId frame_k, const Pose3Measurement& X_world_k);

@@ -270,8 +270,8 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   const auto& X_k_initial = input->cameraPose();
 
   map->updateObservations(input->staticMeasurements());
-  map->updateSensorPoseMeasurement(frame_k, timestamp_k,
-                                   Pose3Measurement(X_k_initial));
+  map->setInitialSensorPose(frame_k, timestamp_k,
+                            Pose3Measurement(X_k_initial));
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
@@ -325,8 +325,8 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
           input->relativeCameraTransform(), input->pim());
 
   // we dont have an uncertainty from the frontend
-  map->updateSensorPoseMeasurement(
-      frame_k, timestamp_k, Pose3Measurement(predicted_nav_state.pose()));
+  map->setInitialSensorPose(frame_k, timestamp_k,
+                            Pose3Measurement(predicted_nav_state.pose()));
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;

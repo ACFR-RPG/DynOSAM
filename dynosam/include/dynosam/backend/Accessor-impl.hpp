@@ -62,9 +62,12 @@ MotionEstimateMap AccessorT<MAP, DerivedAccessor>::getObjectMotions(
     return motion_estimates;
   }
 
-  const auto object_seen =
-      frame_node->objects_seen.template collectIds<ObjectId>();
-  for (ObjectId object_id : object_seen) {
+  // const auto object_seen =
+  //     frame_node->objects_seen.template collectIds<ObjectId>();
+  const auto& objects_seen = frame_node->objectsSeen();
+  for (const auto& object_node : objects_seen) {
+    const ObjectId object_id = object_node->objectId();
+
     StateQuery<Motion3ReferenceFrame> motion_query =
         this->getObjectMotionReferenceFrame(frame_id, object_id);
     if (motion_query) {
@@ -84,9 +87,11 @@ AccessorT<MAP, DerivedAccessor>::getObjectPoses(FrameId frame_id) const {
     return pose_estimates;
   }
 
-  const auto object_seen =
-      frame_node->objects_seen.template collectIds<ObjectId>();
-  for (ObjectId object_id : object_seen) {
+  // const auto object_seen =
+  //     frame_node->objects_seen.template collectIds<ObjectId>();
+  const auto& objects_seen = frame_node->objectsSeen();
+  for (const auto& object_node : objects_seen) {
+    const ObjectId object_id = object_node->objectId();
     StateQuery<gtsam::Pose3> object_pose =
         this->getObjectPose(frame_id, object_id);
     if (object_pose) {
@@ -98,7 +103,6 @@ AccessorT<MAP, DerivedAccessor>::getObjectPoses(FrameId frame_id) const {
   return pose_estimates;
 }
 
-
 template <class MAP, class DerivedAccessor>
 StatusLandmarkVector
 AccessorT<MAP, DerivedAccessor>::getDynamicLandmarkEstimates(
@@ -107,10 +111,12 @@ AccessorT<MAP, DerivedAccessor>::getDynamicLandmarkEstimates(
   CHECK_NOTNULL(frame_node);
 
   StatusLandmarkVector estimates;
-  const auto object_seen =
-      frame_node->objects_seen.template collectIds<ObjectId>();
-  for (ObjectId object_id : object_seen) {
-    estimates += this->getDynamicLandmarkEstimates(frame_id, object_id);
+  // const auto object_seen =
+  //     frame_node->objects_seen.template collectIds<ObjectId>();
+  const auto& objects_seen = frame_node->objectsSeen();
+  for (const auto& object_node : objects_seen) {
+    estimates +=
+        this->getDynamicLandmarkEstimates(frame_id, object_node->objectId());
   }
   return estimates;
 }
@@ -126,14 +132,14 @@ AccessorT<MAP, DerivedAccessor>::getDynamicLandmarkEstimates(
     return StatusLandmarkVector{};
   }
 
-  const auto timestamp = frame_node->timestamp;
+  const auto timestamp = frame_node->timestamp();
 
   StatusLandmarkVector estimates;
-  const auto& dynamic_landmarks = frame_node->dynamic_landmarks;
-  for (auto lmk_node : dynamic_landmarks) {
-    const auto tracklet_id = lmk_node->tracklet_id;
+  const auto& dynamic_landmarks = frame_node->dynamicLandmarks();
+  for (const auto& lmk_node : dynamic_landmarks) {
+    const auto tracklet_id = lmk_node->trackletId();
 
-    if (object_id != lmk_node->object_id) {
+    if (object_id != lmk_node->objectId()) {
       continue;
     }
 
@@ -160,16 +166,18 @@ FrameIds AccessorT<MAP, DerivedAccessor>::getFrameIds() const {
 }
 
 template <class MAP, class DerivedAccessor>
-Timestamp AccessorT<MAP, DerivedAccessor>::getTimestamp(FrameId frame_id) const {
+Timestamp AccessorT<MAP, DerivedAccessor>::getTimestamp(
+    FrameId frame_id) const {
   auto frame_node = map()->getFrame(frame_id);
 
-  if(!frame_node) {
-    DYNO_THROW_MSG(DynosamException) 
-      << "Cannot query timestamp for k=" << frame_id << ": frame node is null";
+  if (!frame_node) {
+    DYNO_THROW_MSG(DynosamException)
+        << "Cannot query timestamp for k=" << frame_id
+        << ": frame node is null";
     throw;
   }
 
-  return frame_node->timestamp;
+  return frame_node->timestamp();
 }
 
 template <class MAP, class DerivedAccessor>
@@ -177,7 +185,7 @@ PoseTrajectory AccessorT<MAP, DerivedAccessor>::getCameraTrajectory() const {
   PoseTrajectory pose_trajectory;
 
   for (const auto& [frame_id, frame_node] : map()->getFrames()) {
-    const Timestamp timestamp = frame_node->timestamp;
+    const Timestamp timestamp = frame_node->timestamp();
     const gtsam::Pose3 X_W_k =
         DYNO_GET_QUERY_DEBUG(this->getSensorPose(frame_id));
 
@@ -198,8 +206,8 @@ PoseTrajectory AccessorT<MAP, DerivedAccessor>::getObjectPoseTrajectory(
 
   PoseTrajectory pose_trajectory;
   for (const auto& frame_node : object_node->getSeenFrames()) {
-    const FrameId frame_id = frame_node->frame_id;
-    const Timestamp timestamp = frame_node->timestamp;
+    const FrameId frame_id = frame_node->frameId();
+    const Timestamp timestamp = frame_node->timestamp();
 
     StateQuery<gtsam::Pose3> object_pose =
         this->getObjectPose(frame_id, object_id);
@@ -223,8 +231,8 @@ MotionTrajetory AccessorT<MAP, DerivedAccessor>::getObjectMotionTrajectory(
 
   MotionTrajetory motion_trajectory;
   for (const auto& frame_node : object_node->getSeenFrames()) {
-    const FrameId frame_id = frame_node->frame_id;
-    const Timestamp timestamp = frame_node->timestamp;
+    const FrameId frame_id = frame_node->frameId();
+    const Timestamp timestamp = frame_node->timestamp();
 
     StateQuery<Motion3ReferenceFrame> object_motion =
         this->getObjectMotionReferenceFrame(frame_id, object_id);
@@ -249,17 +257,17 @@ AccessorT<MAP, DerivedAccessor>::getStaticLandmarkEstimates(
   const auto frame_node = map()->getFrame(frame_id);
   CHECK_NOTNULL(frame_node);
 
-  const auto timestamp = frame_node->timestamp;
+  const auto timestamp = frame_node->timestamp();
 
-  for (const auto& landmark_node : frame_node->static_landmarks) {
+  for (const auto& landmark_node : frame_node->staticLandmarks()) {
     if (landmark_node->isStatic()) {
       StateQuery<gtsam::Point3> lmk_query =
-          getStaticLandmark(landmark_node->tracklet_id);
+          getStaticLandmark(landmark_node->trackletId());
       if (lmk_query) {
-        estimates.push_back(
-            LandmarkStatus::StaticInGlobal(Point3Measurement(lmk_query.get()),
-                                           LandmarkStatus::MeaninglessFrame,
-                                           timestamp, landmark_node->getId()));
+        estimates.push_back(LandmarkStatus::StaticInGlobal(
+            Point3Measurement(lmk_query.get()),
+            LandmarkStatus::MeaninglessFrame, timestamp,
+            landmark_node->trackletId()));
       }
     }
   }
@@ -276,11 +284,12 @@ StatusLandmarkVector AccessorT<MAP, DerivedAccessor>::getFullStaticMap() const {
   for (const auto& [_, landmark_node] : landmarks) {
     if (landmark_node->isStatic()) {
       StateQuery<gtsam::Point3> lmk_query =
-          getStaticLandmark(landmark_node->tracklet_id);
+          getStaticLandmark(landmark_node->trackletId());
       if (lmk_query) {
         estimates.push_back(LandmarkStatus::StaticInGlobal(
             Point3Measurement(lmk_query.get()),  // estimate
-            LandmarkStatus::MeaninglessFrame, NaN, landmark_node->getId()));
+            LandmarkStatus::MeaninglessFrame, NaN,
+            landmark_node->trackletId()));
       }
     }
   }
@@ -329,9 +338,11 @@ AccessorT<MAP, DerivedAccessor>::computeObjectCentroids(
     return centroids;
   }
 
-  const auto object_seen =
-      frame_node->objects_seen.template collectIds<ObjectId>();
-  for (ObjectId object_id : object_seen) {
+  // const auto object_seen =
+  //     frame_node->objects_seen.template collectIds<ObjectId>();
+  const auto& objects_seen = frame_node->objectsSeen();
+  for (const auto& object_node : objects_seen) {
+    const ObjectId object_id = object_node->objectId();
     const auto [centroid, result] =
         this->computeObjectCentroid(frame_id, object_id);
 

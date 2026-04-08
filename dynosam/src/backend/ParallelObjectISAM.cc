@@ -142,8 +142,9 @@ void ParallelObjectISAM::updateFormulation(
     if (!accessor_->exists(CameraPoseSymbol(frame_km1))) {
       VLOG(5) << "Previous camera pose does not exist!! k=" << frame_km1
               << "j=" << object_id_;
-      Pose3Measurement T_W_cam_km1;
-      CHECK(this->map()->hasInitialSensorPose(frame_km1, &T_W_cam_km1));
+      const auto frame_node_km1 = this->map()->getFrame(frame_km1);
+      CHECK_NOTNULL(frame_node_km1);
+      Pose3Measurement T_W_cam_km1 = frame_node_km1->initialSensorPose();
 
       const gtsam::Pose3& initial_X_W_km1 = T_W_cam_km1.measurement();
       CHECK(T_W_cam_km1.hasModel());

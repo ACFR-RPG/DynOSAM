@@ -98,9 +98,9 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
   auto theta_accessor = this->accessorFromTheta();
 
   const gtsam::Key object_point_key_k_1 =
-      lmk_node->makeDynamicKey(frame_node_k_1->frame_id);
+      lmk_node->makeDynamicKey(frame_node_k_1->frameId());
   const gtsam::Key object_point_key_k =
-      lmk_node->makeDynamicKey(frame_node_k->frame_id);
+      lmk_node->makeDynamicKey(frame_node_k->frameId());
 
   // if first motion (i.e first time we have both k-1 and k), add both at k-1
   // and k
@@ -118,7 +118,7 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
         frame_node_k_1->makePoseKey(),  // pose key at previous frames
         object_point_key_k_1, measured_point_local, measurement_covariance);
     // object_debug_info.num_dynamic_factors++;
-    result.updateAffectedObject(frame_node_k_1->frame_id,
+    result.updateAffectedObject(frame_node_k_1->frameId(),
                                 context.getObjectId());
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
@@ -157,7 +157,7 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_dynamic_factors++;
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
+  result.updateAffectedObject(frame_node_k->frameId(), context.getObjectId());
 
   Landmark lmk_world_k;
   getSafeQuery(lmk_world_k, theta_accessor->query<Landmark>(object_point_key_k),
@@ -176,8 +176,8 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
   new_factors.emplace_shared<LandmarkMotionPoseFactor>(
       object_point_key_k_1, object_point_key_k, object_pose_k_1_key,
       object_pose_k_key, landmark_motion_noise);
-  result.updateAffectedObject(frame_node_k_1->frame_id, context.getObjectId());
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
+  result.updateAffectedObject(frame_node_k_1->frameId(), context.getObjectId());
+  result.updateAffectedObject(frame_node_k->frameId(), context.getObjectId());
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_motion_factors++;
@@ -205,13 +205,13 @@ void WorldPoseFormulation::objectUpdateContext(
     const FrameId first_seen_frame = context.object_node->getFirstSeenFrame();
 
     // takes me from k-1 to k
-    Motion3 motion;
+    Motion3ReferenceFrame motion;
     gtsam::Pose3 object_pose_k;
     // we have a motion from k-1 to k and a pose at k
-    if (map()->hasInitialObjectMotion(context.getFrameId(),
-                                      context.getObjectId(), &motion) &&
+    if (map()->getInitialObjectMotion(context.getFrameId(),
+                                      context.getObjectId(), motion) &&
         pose_k_1_query) {
-      object_pose_k = motion * pose_k_1_query.get();
+      object_pose_k = motion.estimate() * pose_k_1_query.get();
       CHECK_NE(first_seen_frame, context.getFrameId());
 
     } else {

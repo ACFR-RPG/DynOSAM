@@ -365,7 +365,7 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
   gtsam::Pose3 L_e;
   FrameId s0;
   std::tie(s0, L_e) =
-      getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+      getOrConstructL0(context.getObjectId(), frame_node_k_1->frameId());
   auto landmark_motion_noise = noise_models_.landmark_motion_noise;
 
   bool is_smart_factor_new = false;
@@ -373,7 +373,7 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
   if (!isDynamicTrackletInMap(lmk_node)) {
     bool keyframe_updated;
     gtsam::Pose3 e_H_k_world = computeInitialH(
-        context.getObjectId(), frame_node_k_1->getId(), &keyframe_updated);
+        context.getObjectId(), frame_node_k_1->frameId(), &keyframe_updated);
 
     // TODO: we should never actually let this happen during an update
     //  it should only happen before measurements are added
@@ -383,7 +383,7 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
     if (keyframe_updated) {
       // TODO: gross I have to re-get them again!!
       std::tie(s0, L_e) =
-          getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+          getOrConstructL0(context.getObjectId(), frame_node_k_1->frameId());
     }
 
     // mark as now in map and include associated frame!!s
@@ -433,7 +433,7 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
 
     is_smart_factor_new = true;
 
-    result.updateAffectedObject(frame_node_k_1->frame_id,
+    result.updateAffectedObject(frame_node_k_1->frameId(),
                                 context.getObjectId());
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
@@ -476,7 +476,7 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
     result.isam_update_params.newAffectedKeys->insert2(slot, affected_keys);
   }
 
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
+  result.updateAffectedObject(frame_node_k->frameId(), context.getObjectId());
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_dynamic_factors++;

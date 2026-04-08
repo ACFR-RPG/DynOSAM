@@ -49,7 +49,7 @@ bool FrameNode<MEASUREMENT>::objectObserved(ObjectId object_id) const {
 // bool FrameNode<MEASUREMENT>::objectObservedInPrevious(
 //     ObjectId object_id) const {
 //   const auto frame_id_k_1 = frame_id - 1u;
-//   FrameNodePtr<MEASUREMENT> frame_node_k_1 =
+//   SharedFrameNode<MEASUREMENT> frame_node_k_1 =
 //       this->map_ptr_->template getFrame(frame_id_k_1);
 
 //   if (!frame_node_k_1) {
@@ -136,7 +136,7 @@ size_t LandmarkNode<MEASUREMENT>::numObservations() const {
 }
 
 template <typename MEASUREMENT>
-void LandmarkNode<MEASUREMENT>::add(FrameNodePtr<MEASUREMENT> frame_node,
+void LandmarkNode<MEASUREMENT>::add(SharedFrameNode<MEASUREMENT> frame_node,
                                     const MEASUREMENT& measurement) {
   frames_seen_.insert(frame_node);
 
@@ -161,7 +161,7 @@ void LandmarkNode<MEASUREMENT>::add(FrameNodePtr<MEASUREMENT> frame_node,
 
 template <typename MEASUREMENT>
 bool LandmarkNode<MEASUREMENT>::addAvoidDupliactes(
-    FrameNodePtr<MEASUREMENT> frame_node, const MEASUREMENT& measurement) {
+    SharedFrameNode<MEASUREMENT> frame_node, const MEASUREMENT& measurement) {
   if (frames_seen_.exists(frame_node)) {
     // measurement already added
     // sanity check with the measurement data-structure
@@ -185,7 +185,7 @@ bool LandmarkNode<MEASUREMENT>::hasMeasurement(FrameId frame_id) const {
 
 template <typename MEASUREMENT>
 const MEASUREMENT& LandmarkNode<MEASUREMENT>::getMeasurement(
-    FrameNodePtr<MEASUREMENT> frame_node) const {
+    SharedFrameNode<MEASUREMENT> frame_node) const {
   CHECK_NOTNULL(frame_node);
   if (!hasMeasurement(frame_node->frame_id)) {
     throw DynosamException("Missing measurement in landmark node with id " +
@@ -244,8 +244,8 @@ int ObjectNode<MEASUREMENT>::getId() const {
 }
 
 template <typename MEASUREMENT>
-FrameNodePtrSet<MEASUREMENT> ObjectNode<MEASUREMENT>::getSeenFrames() const {
-  FrameNodePtrSet<MEASUREMENT> seen_frames;
+SharedFrameNodeSet<MEASUREMENT> ObjectNode<MEASUREMENT>::getSeenFrames() const {
+  SharedFrameNodeSet<MEASUREMENT> seen_frames;
   for (const auto& lmks : dynamic_landmarks) {
     seen_frames.merge(lmks->getSeenFrames());
   }
@@ -258,13 +258,13 @@ FrameIds ObjectNode<MEASUREMENT>::getSeenFrameIds() const {
 }
 
 template <typename MEASUREMENT>
-LandmarkNodePtrSet<MEASUREMENT>
+SharedLandmarkNodeSet<MEASUREMENT>
 ObjectNode<MEASUREMENT>::getLandmarksSeenAtFrame(FrameId frame_id) const {
-  LandmarkNodePtrSet<MEASUREMENT> seen_lmks;
+  SharedLandmarkNodeSet<MEASUREMENT> seen_lmks;
 
   for (const auto& lmk : dynamic_landmarks) {
     // all frames this lmk was seen in
-    const FrameNodePtrSet<MEASUREMENT>& frames = lmk->getSeenFrames();
+    const SharedFrameNodeSet<MEASUREMENT>& frames = lmk->getSeenFrames();
     // lmk was observed at this frame
     if (frames.find(frame_id) != frames.end()) {
       seen_lmks.insert(lmk);

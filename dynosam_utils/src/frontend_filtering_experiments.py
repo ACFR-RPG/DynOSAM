@@ -299,18 +299,20 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_MO", kitti_dataset, "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO_1", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","test", kitti_dataset, "--use_backend=true", "--hybrid_motion_solver=4")
+
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--use_backend=true", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
 
 
@@ -350,9 +352,9 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
-    # run_hybrid_solver_comparison_kitti()
+    run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
-    run_dynoepts()
+    # run_dynoepts()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()

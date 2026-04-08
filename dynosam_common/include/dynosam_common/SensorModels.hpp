@@ -148,6 +148,12 @@ class MeasurementWithCovariance {
         measurement, gtsam::noiseModel::Diagonal::Sigmas(sigmas));
   }
 
+  static MeasurementWithCovariance Random(size_t seed = 42) {
+    T m = utils::createRandomAroundIdentity<T>(3.1, seed);
+    Sigmas sigmas = utils::createRandomAroundIdentity<Sigmas>(2.0, seed + 1);
+    return FromSigmas(m, sigmas);
+  }
+
   const T& measurement() const { return measurement_; }
   const gtsam::SharedGaussian& model() const { return model_; }
   bool hasModel() const { return model_ != nullptr; }

@@ -96,8 +96,8 @@ StateQuery<gtsam::imuBias::ConstantBias> VIOAccessor::getImuBias(
 // class VIOUpdaterImpl : public VIOUpdater {
 //  public:
 //   using MapTraits = VIOFormulation::MapTraitsType;
-//   using LmkNode = MapTraits::LandmarkNodePtr;
-//   using FrameNode = MapTraits::FrameNodePtr;
+//   using LmkNode = MapTraits::SharedLandmarkNode;
+//   using FrameNode = MapTraits::SharedFrameNode;
 //   using MeasurementType = MapTraits::MeasurementType;
 //   using MeasurementTraits = measurement_traits<MeasurementType>;
 

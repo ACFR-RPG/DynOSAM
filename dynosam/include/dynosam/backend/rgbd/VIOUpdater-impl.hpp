@@ -46,8 +46,8 @@ class VIOUpdaterImpl : public VIOUpdater<MAP> {
  public:
   typedef typename VIOUpdater<MAP>::VIOFormulationM VIOFormulation;
   using MapTraits = typename VIOFormulation::MapTraitsType;
-  using LmkNode = typename MapTraits::LandmarkNodePtr;
-  using FrameNode = typename MapTraits::FrameNodePtr;
+  using LmkNode = typename MapTraits::SharedLandmarkNode;
+  using FrameNode = typename MapTraits::SharedFrameNode;
   using MeasurementType = typename MapTraits::MeasurementType;
   using MeasurementTraits = measurement_traits<MeasurementType>;
 
@@ -108,7 +108,7 @@ class PTPUpdater : public VIOUpdaterImpl<MAP> {
     const auto& params = this->vio_formulation_->params();
 
     if (this->isPointAdded(point_key)) {
-      CHECK(lmk->added_to_opt);
+      // CHECK(lmk->added_to_opt);
       const auto pose_key = frame->makePoseKey();
 
       auto [measured_point_local, measurement_covariance] =
@@ -125,8 +125,6 @@ class PTPUpdater : public VIOUpdaterImpl<MAP> {
       result.updateAffectedObject(frame_k, 0);
       return true;
     } else {
-      CHECK(!lmk->added_to_opt);
-
       if (lmk->numObservations() < params.min_static_observations) {
         return false;
       }
@@ -169,18 +167,15 @@ class PTPUpdater : public VIOUpdaterImpl<MAP> {
       const Landmark& measured =
           MeasurementTraits::point(lmk->getMeasurement(frame_k));
 
-      // TODO: should use getInitialOrLinearizedSensorPose
-      gtsam::Pose3 T_W_X;
-      CHECK(
-          this->vio_formulation_->map()->hasInitialSensorPose(frame_k, &T_W_X));
+      // initalise using a single measurement at k
+      gtsam::Pose3 X_W_k = frame->initialSensorPose();
+      Landmark initial_point = X_W_k * measured;
 
-      Landmark initial_point = T_W_X * measured;
       initial = initial_point;
       result.updateAffectedObject(frame_k, 0);
 
       values.insert(point_key, initial_point);
       this->markPointAsAdded(point_key);
-      lmk->added_to_opt = true;
       return true;
     }
   }
@@ -240,7 +235,7 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
     // to the opt
     //  hoping the robust cost funcion handles this!
     if (this->isPointAdded(point_key)) {
-      CHECK(lmk->added_to_opt);
+      // CHECK(lmk->added_to_opt);
       const auto pose_key = frame->makePoseKey();
 
       auto stereo_measurement =
@@ -258,7 +253,7 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
       result.updateAffectedObject(frame_k, 0);
       return true;
     } else {
-      CHECK(!lmk->added_to_opt);
+      // CHECK(!lmk->added_to_opt);
 
       using GtsamCamera = Camera::CameraImpl;
       CameraSet<GtsamCamera> camera_set;
@@ -273,16 +268,7 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
         // use the initial pose
         // in the IMU case the optimised pose will be not so good until visual
         // odom starts working... or maybe not...
-        gtsam::Pose3 X_W_i;
-        CHECK(this->vio_formulation_->map()->hasInitialSensorPose(frame_id_i,
-                                                                  &X_W_i))
-            << "Missing initial pose at k=" << frame_id_i;
-        // TODO: hack for now - in the KF case, we sometimes need to add
-        // KF in the past so we already have measurements at k+1 but not yet
-        //  an initial pose measurement as the frontend has not send it
-        //  for now just skip!
-        //  if(!this->vio_formulation_->map()->hasInitialSensorPose(
-        //    frame_id_i, &X_W_i)) { continue; }
+        Pose3Measurement X_W_i = frame_node_i->initialSensorPose();
 
         const gtsam::Pose3 leftPose = X_W_i;
         const gtsam::Cal3_S2 monoCal = K_stereo_->calibration();
@@ -327,7 +313,7 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
         // if error is too large, discard point
         if (reprojection_error > 3.0) {
           // mark as outlier for the front-end
-          lmk->inlier = false;
+          // lmk->inlier = false;
           return false;
         }
         // collect factors
@@ -364,12 +350,12 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
 
         values.insert(point_key, initial_point);
         this->markPointAsAdded(point_key);
-        lmk->added_to_opt = true;
+        // lmk->added_to_opt = true;
 
         return true;
       } else {
         // mark as outlier for the front-end
-        lmk->inlier = false;
+        // lmk->inlier = false;
         return false;
       }
     }

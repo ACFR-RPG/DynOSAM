@@ -1415,6 +1415,7 @@ class HybridFormulation : public VIOFormulation<MapVision>,
                           public HybridFormulationProperties {
  public:
   using Base = VIOFormulation<MapVision>;
+  using Map = Base::Map;
   using Base::AccessorTypePointer;
   using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
@@ -1437,8 +1438,9 @@ class HybridFormulation : public VIOFormulation<MapVision>,
       gtsam::NonlinearFactorGraph& new_factors) override;
 
   inline bool isDynamicTrackletInMap(
-      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const override {
-    const TrackletId tracklet_id = lmk_node->tracklet_id;
+      const typename MapTraitsType::SharedLandmarkNode& lmk_node)
+      const override {
+    const TrackletId tracklet_id = lmk_node->trackletId();
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }
 
@@ -1459,8 +1461,8 @@ class HybridFormulation : public VIOFormulation<MapVision>,
 
  protected:
   // bool addHybridMotionFactor3(
-  //   typename MapTraitsType::FrameNodePtr frame_node,
-  //   typename MapTraitsType::LandmarkNodePtr landmark_node,
+  //   typename MapTraitsType::SharedFrameNode frame_node,
+  //   typename MapTraitsType::SharedLandmarkNode landmark_node,
   //   const gtsam::Pose3& L_e,
   //   const gtsam::Key& camera_pose_key,
   //   const gtsam::Key& object_motion_key,
@@ -1468,8 +1470,8 @@ class HybridFormulation : public VIOFormulation<MapVision>,
   //   gtsam::NonlinearFactorGraph& graph) const;
 
   // bool addStereoHybridMotionFactor(
-  //   typename MapTraitsType::FrameNodePtr frame_node,
-  //   typename MapTraitsType::LandmarkNodePtr landmark_node,
+  //   typename MapTraitsType::SharedFrameNode frame_node,
+  //   typename MapTraitsType::SharedLandmarkNode landmark_node,
   //   const gtsam::Pose3& L_e,
   //   const gtsam::Key& camera_pose_key,
   //   const gtsam::Key& object_motion_key,
@@ -1584,9 +1586,9 @@ class HybridFormulationKeyFrame : public HybridFormulation {
  public:
   using Base = HybridFormulation;
   using Base::MapTraitsType;
-  using ObjectNodePtr = typename MapTraitsType::ObjectNodePtr;
-  using LandmarkNodePtr = typename MapTraitsType::LandmarkNodePtr;
-  using FrameNodePtr = typename MapTraitsType::FrameNodePtr;
+  using SharedObjectNode = typename MapTraitsType::SharedObjectNode;
+  using SharedLandmarkNode = typename MapTraitsType::SharedLandmarkNode;
+  using SharedFrameNode = typename MapTraitsType::SharedFrameNode;
 
   DYNO_POINTER_TYPEDEFS(HybridFormulationKeyFrame)
 
@@ -1621,16 +1623,16 @@ class HybridFormulationKeyFrame : public HybridFormulation {
 
  private:
   struct Context {
-    ObjectNodePtr object_node;
-    FrameNodePtr frame_node;
+    SharedObjectNode object_node;
+    SharedFrameNode frame_node;
     gtsam::Pose3 X_k_measured;
     //! When an update starts only a subset of the factors are provided to the
     //! update This value indicates the factor slot offset (ie the total graph
     //! size before any update)
     Slot starting_factor_slot = -1;
 
-    inline ObjectId getObjectId() const { return object_node->object_id; }
-    inline FrameId getFrameId() const { return frame_node->frame_id; }
+    inline ObjectId getObjectId() const { return object_node->objectId(); }
+    inline FrameId getFrameId() const { return frame_node->frameId(); }
   };
 
   struct KeyFrameMetaData {
@@ -1655,7 +1657,8 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   void addHybridMotionFactor(gtsam::NonlinearFactorGraph& new_factors,
                              gtsam::Key pose_key, gtsam::Key object_motion_key,
                              gtsam::Key point_key, const gtsam::Pose3& KF_pose,
-                             LandmarkNodePtr lmk_node, FrameNodePtr frame_node);
+                             SharedLandmarkNode lmk_node,
+                             SharedFrameNode frame_node);
   // helper function
   TrackedPointsPerObject getObjectPoints(const ObjectIds& objects) const;
 

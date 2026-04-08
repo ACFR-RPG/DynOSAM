@@ -66,7 +66,7 @@ TEST(DerivedMap, testNotNullInterfaces) {
 //   EXPECT_TRUE(map->landmarkExists(9));
 //   EXPECT_FALSE(map->landmarkExists(10));
 
-//   EXPECT_EQ(map->getStaticTrackletsByFrame(0), expected_tracklets);
+//   EXPECT_EQ(map->staticTrackletsByFrame(0), expected_tracklets);
 
 //   // expected tracklets in frame 0
 //   TrackletIds expected_tracklets_f0 = expected_tracklets;
@@ -85,8 +85,8 @@ TEST(DerivedMap, testNotNullInterfaces) {
 //   // apply update
 //   map->updateObservations(measurements);
 
-//   EXPECT_EQ(map->getStaticTrackletsByFrame(0), expected_tracklets_f0);
-//   EXPECT_EQ(map->getStaticTrackletsByFrame(1), expected_tracklets_f1);
+//   EXPECT_EQ(map->staticTrackletsByFrame(0), expected_tracklets_f0);
+//   EXPECT_EQ(map->staticTrackletsByFrame(1), expected_tracklets_f1);
 
 //   // check for frames in some landmarks
 //   // should be seen in frames 0 and 1
