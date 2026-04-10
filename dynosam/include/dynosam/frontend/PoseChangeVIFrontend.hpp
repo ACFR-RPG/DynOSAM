@@ -112,8 +112,10 @@ class PoseChangeVIFrontend : public VIFrontend {
   //! Last keyframe id
   FrameId lkf_id_;
 
-  //! Current trajectories. Copied to the DynoState output
+  //! Current trajectories. Copied to the DynoState output.
+  //! Only contains trajectories for objects observed at the latest frame
   DynoStateTrajectories dyno_state_;
+  MultiObjectTrajectories full_object_trajectories_;
 
   PoseChangeBackendSink pose_change_backend_sink_;
 

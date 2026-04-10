@@ -495,16 +495,18 @@ class MotionErrorEvaluator(Evaluator):
             plot_axis_ref=False,
             # axis_marker_scale=1.0,
             downscale=0.1)
-        ax.get_legend().remove()
+        # ax.get_legend().remove()
 
         # add generic legend to indicate that dotted lines are ground truth
         # and solid lines are esimtates
-        from matplotlib.lines import Line2D
-        legend_elements = [
-            Line2D([0], [0], color='black', linestyle='-', label='Estimated'),
-            Line2D([0], [0], color='black', linestyle='--', label='Ground Truth'),
-        ]
-        ax.legend(handles=legend_elements)
+        # this only works if they match the kwargs for plot_object_trajectories
+        # which by defauly use - for Estimated and -- for Reference(ie. GT)
+        # from matplotlib.lines import Line2D
+        # legend_elements = [
+        #     Line2D([0], [0], color='black', linestyle='-', label='Estimated'),
+        #     Line2D([0], [0], color='black', linestyle='--', label='Ground Truth'),
+        # ]
+        # ax.legend(handles=legend_elements)
 
         fig_all_object_traj.suptitle(r"Estimated \& Ground Truth Object Trajectories")
         ax = fig_all_object_traj.gca()

@@ -149,7 +149,7 @@ def run_experiment_sequences(dataset_path, dataset_name, dataset_loader, *args):
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
 
 def run_viodes():
@@ -255,6 +255,9 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_29","dynoepts_uope_29_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_29","dynoepts_uope_29_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
+    # run_experiment_sequences("/root/data/dynopets_mocap/VAL10Seqs/7_others_jerry/","dynopets_val_7_other_jerry", dynoepts, "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false")
+
+    pass
 
 
 
@@ -364,6 +367,7 @@ if __name__ == '__main__':
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
 
+    # run_analysis("tech_lab_1_MO_test1")
     # run_analysis("omd_MO_test_with_update")
     # run_analysis("kitti00_MO")
     # run_analysis("kitti00_PnP")
@@ -379,6 +383,7 @@ if __name__ == '__main__':
 
     # run_analysis("carla_l2_MO")
     # run_analysis("carla_l2_PnP")
+    # run_analysis("dynopets_val_7_other_jerry")
 
     # run_analysis("dynoepts_uope_25_PnP_test")
     # run_analysis("dynoepts_uope_25_MO_test")

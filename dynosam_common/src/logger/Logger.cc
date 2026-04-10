@@ -298,39 +298,31 @@ bool EstimationModuleLogger::logObjectTrajectoryEntry(
         << " represent frame-to-frame motion!";
   }
 
-  const gtsam::Pose3& motion_est = entry.data.motion;
+  const Motion3ReferenceFrame& motion_est_ref = entry.data.motion;
+  const gtsam::Pose3& motion_est = motion_est_ref;
   const gtsam::Pose3& pose_est = entry.data.pose;
   const FrameId frame_id = entry.frame_id;
   const Timestamp timestamp = entry.timestamp;
 
-  // if (gt_packets) {
-  //   if (gt_packets->exists(frame_id)) {
-  //     const GroundTruthInputPacket& gt_packet_k = gt_packets->at(frame_id);
-  //     // check object exists in this frame
-  //     ObjectPoseGT object_gt_k;
-  //     if (!gt_packet_k.getObject(object_id, object_gt_k)) {
-  //       // if no packet for this object found, continue and do not log
-  //       // return false;
-  //     } else {
-  //       CHECK(object_gt_k.prev_H_current_world_) << info_string(frame_id,
-  //       object_id); motion_gt = *object_gt_k.prev_H_current_world_; pose_gt =
-  //       object_gt_k.L_world_;
-  //     }
-  //   } else {
-  //     // gt packet has no entry for this frame id and the object ground truth
-  //     is
-  //     // valid
-  //     // TODO: for now?
-  //     // return false;
-  //   }
-  // }
   auto object_ground_truth =
       getObjectGroundTruthHelper(frame_id, object_id, gt_packets);
 
-  // TODO: return false?
+  // check that we have the necessary object ground truth
+  if (object_ground_truth &&
+      !object_ground_truth->prev_H_current_world_.has_value()) {
+    // in the case where we dont have ground truth motion, this is ONLY
+    // acceptable in the case where the motion provided has from_frame == to
+    // frame (ie. in the hybrid case where we have a motion on a KF pose, at the
+    // motion = I)
+    if (motion_est_ref.from() != motion_est_ref.to()) {
+      DYNO_THROW_MSG(DynosamException)
+          << "GTObjectPacket found but issing H_W_km1_k ground truth motion "
+          << info_string(frame_id, object_id);
+    }
+  }
   if (object_ground_truth) {
-    CHECK(object_ground_truth->prev_H_current_world_)
-        << info_string(frame_id, object_id);
+    // we have already checked that prev_H_current_world_ exists in the previous
+    // if condition!
     motion_gt = *(object_ground_truth->prev_H_current_world_);
     pose_gt = object_ground_truth->L_world_;
   }
@@ -357,7 +349,6 @@ std::optional<ObjectPoseGT> EstimationModuleLogger::getObjectGroundTruthHelper(
       possible_object_gt.emplace(object_gt_k);
     }
   }
-
   return possible_object_gt;
 }
 

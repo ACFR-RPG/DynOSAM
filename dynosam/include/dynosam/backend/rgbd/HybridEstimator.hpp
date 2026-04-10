@@ -1621,6 +1621,9 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   // uses last frame in state
   HybridKeyFrameUpdate generateUpdateInfo() const;
 
+  MultiObjectTrajectories refinePerFrameMotionsPGO(
+      const MultiObjectTrajectories& full_trajectories) const;
+
  private:
   struct Context {
     SharedObjectNode object_node;

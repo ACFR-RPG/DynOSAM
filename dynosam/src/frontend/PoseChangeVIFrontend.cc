@@ -212,6 +212,12 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   solveObjectMotions(dyno_state_.object_trajectories, objects_with_new_motions,
                      kf_pose_change_infos, frame_k, frame_km1);
 
+  // update full_object_trajectories_ with trajectories for objects observed at
+  // this frame
+  for (ObjectId j : objects_with_new_motions) {
+    full_object_trajectories_[j] = dyno_state_.object_trajectories.at(j);
+  }
+
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
@@ -560,9 +566,9 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
   const Frame::Ptr lkf_frame = lkf_data.frame;
 
-  // return frame_k->getFrameId() % 2 == 0;
+  return frame_k->getFrameId() % 10 == 0;
   // FOR NOW!
-  return true;
+  // return true;
 }
 
 size_t PoseChangeVIFrontend::extractKeyFramedMotions(
@@ -602,6 +608,9 @@ void PoseChangeVIFrontend::constructVisualFactors(
 void PoseChangeVIFrontend::logBestEstimates() const {
   VLOG(20) << "Logging test estimates from PoseChange frontend";
 
+  MultiObjectTrajectories full_object_trajectories_refined =
+      formulation_->refinePerFrameMotionsPGO(full_object_trajectories_);
+
   // Use the presence of the backend sink function as a proxy to
   // indicate if the backend was running!
   if (!withBackend()) {
@@ -611,8 +620,14 @@ void PoseChangeVIFrontend::logBestEstimates() const {
   VIOAccessor::Ptr accessor = formulation_->getAsVIOAccessor();
 
   const PoseTrajectory& camera_trajectory = accessor->getCameraTrajectory();
-  const MultiObjectTrajectories& object_trajectories =
-      accessor->getMultiObjectTrajectories();
+  // const MultiObjectTrajectories& object_trajectories =
+  // accessor->getMultiObjectTrajectories();
+  auto logger = std::make_unique<VIFrontendLogger>("pc-pgo-estimations");
+  auto ground_truths = shared_ground_truth_.access();
+
+  logger->logCameraPose(camera_trajectory, ground_truths);
+
+  logger->logObjectTrajectory(full_object_trajectories_refined, ground_truths);
 }
 
 }  // namespace dyno

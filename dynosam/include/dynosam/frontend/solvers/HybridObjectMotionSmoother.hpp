@@ -245,24 +245,6 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   virtual void onNewKeyFrameMotion(const dyno::ISAM2& smoother_before_reset,
                                    const gtsam::Pose3 new_L_KF) = 0;
 
-  // Result updateFromInitialMotionFullState(const gtsam::Pose3&
-  // H_W_KF_k_initial,
-  //                                         Frame::Ptr frame,
-  //                                         const TrackletIds& tracklets);
-
-  // Result updateFromInitialMotionSmart(const gtsam::Pose3& H_W_KF_k_initial,
-  //                                     Frame::Ptr frame,
-  //                                     const TrackletIds& tracklets);
-
-  // Result updateFromInitialMotionOnly(const gtsam::Pose3& H_W_KF_k_initial,
-  //                                    Frame::Ptr frame,
-  //                                    const TrackletIds& tracklets);
-
-  // gtsam::Pose3 keyFrameMotionFullState(FrameId frame_id,
-  //                                      const gtsam::Values& values) const;
-  // gtsam::Pose3 keyFrameMotionSmart(FrameId frame_id,
-  //                                  const gtsam::Values& values) const;
-
   // Trajectory since last KF?
   // Updated when new KF made since past variables will not be updated
   // same when marginalized
@@ -271,7 +253,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   FrameIds frames_since_lKF_;
   std::vector<Timestamp> timestamps_since_lKF_;
 
-  // Trajectory up to the current KF
+  // Trajectory up to and including the current KF
   // Nont only will this trajectory be "frozen" (in the sense that)
   // no motions will be in the current state
   // but also all motions will be related to a different KeyMotion pose
@@ -355,7 +337,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
  private:
   //! Updated every update and includes only values in the smoother
   gtsam::Values smoother_state_;
-  //! Best estimate of all values since the last KF
+  //! Best estimate of all values since and including the last KF
   //! May include more values that what is currently in the smoother window
   gtsam::Values state_since_lKF_;
 

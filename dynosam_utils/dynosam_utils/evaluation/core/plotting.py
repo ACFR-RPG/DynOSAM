@@ -189,6 +189,8 @@ class ObjectTrajectoryPlotter(object):
         downscale = kwargs.pop("downscale", 0.1)
         axis_marker_scale = kwargs.pop("axis_marker_scale", 0.1)
 
+        simple_legend = kwargs.pop("simple_legend", True)
+
         ax = None
         if len(fig.axes) == 0:
             ax = evo_plot.prepare_axis(fig, plot_mode, subplot_arg, length_unit)
@@ -200,12 +202,13 @@ class ObjectTrajectoryPlotter(object):
 
         self._set_colours(obj_trajectories, kwargs.get("colours"))
 
+        est_style = kwargs.pop("est_style", '-')
         self._draw_trajectory(
             ax,
             obj_trajectories,
             plot_mode,
             plot_start_end_markers,
-            style=kwargs.pop("est_style", '-'),
+            style=est_style,
             shift_color=kwargs.pop("shift_est_colour", None),
             name_prefix=kwargs.pop("est_name_prefix", ""),
             **kwargs)
@@ -220,13 +223,14 @@ class ObjectTrajectoryPlotter(object):
 
         self._reset_colours()
 
+        ref_style = kwargs.pop("ref_style", '--')
         if obj_trajectories_ref is not None:
             self._draw_trajectory(
                 ax,
                 obj_trajectories_ref,
                 plot_mode,
                 plot_start_end_markers,
-                style=kwargs.pop("ref_style", '--'),
+                style=ref_style,
                 alpha=0.8,
                 shift_color=kwargs.pop("shift_ref_colour", None),
                 name_prefix=kwargs.pop("ref_name_prefix", ""),
@@ -240,6 +244,17 @@ class ObjectTrajectoryPlotter(object):
                     downscale,
                     axis_marker_scale
                 )
+
+        if simple_legend:
+            ax.get_legend().remove()
+
+            from matplotlib.lines import Line2D
+            legend_elements = [Line2D([0], [0], color='black', linestyle=est_style, label='Estimated')]
+
+            if obj_trajectories_ref is not None:
+                legend_elements.append(Line2D([0], [0], color='black', linestyle=ref_style, label='Ground Truth'))
+
+            ax.legend(handles=legend_elements)
         return ax
 
 

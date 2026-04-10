@@ -147,7 +147,7 @@ def write_pose_csv_gtsam(file_path, timestamps, T_w_x):
             ])
 
 
-def save_uope56_format_dynosam(root_path, sequence_name):
+def save_uope56_format_dynosam(root_path, sequence_name, ground_truth_obj_folder):
     # root path should be like /path/to/data/UOPE56
     ground_truth_folder = os.path.join(root_path, "UOPE56_groundtruth")
     ground_truth_file_path = os.path.join(ground_truth_folder, f"{sequence_name}.h5")
@@ -208,7 +208,7 @@ def save_uope56_format_dynosam(root_path, sequence_name):
 
 
 
-def load_and_visualise_raw_data(ground_truth_file_path, ground_truth_obj_folder, sequence_name):
+def load_and_visualise_raw_data(ground_truth_file_path, ground_truth_obj_folder, sequence_name, intrinsics_file, rgb_path):
     # -----------------------
     # Load ground truth camera poses
     # -----------------------
@@ -285,7 +285,7 @@ def load_and_visualise_raw_data(ground_truth_file_path, ground_truth_obj_folder,
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    # -----------------------
+     # -----------------------
     # Paths
     # -----------------------
     ground_truth_folder = "/root/data/dynoepts/UOPE56/UOPE56_groundtruth"
@@ -302,4 +302,4 @@ if __name__ == '__main__':
     intrinsics_file = os.path.join(sequence_file_path, "intrinsics.txt")
 
     # load_and_visualise_raw_data(ground_truth_file_path, ground_truth_obj_folder, sequence_name)
-    save_uope56_format_dynosam("/root/data/dynoepts/UOPE56", sequence_name)
+    save_uope56_format_dynosam("/root/data/dynoepts/UOPE56", sequence_name, ground_truth_obj_folder)

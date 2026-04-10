@@ -35,6 +35,7 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam_opt/NonlinearOptimizer.hpp"
 
 namespace dyno {
 
@@ -1190,6 +1191,199 @@ HybridKeyFrameUpdate HybridFormulationKeyFrame::generateUpdateInfo() const {
   return info;
 }
 
+MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
+    const MultiObjectTrajectories& full_trajectories) const {
+  MultiObjectTrajectories full_trajectories_refined = full_trajectories;
+
+  auto map = this->map();
+  HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+  for (const auto& [object_id, trajectory_j] : full_trajectories) {
+    gtsam::Values values;
+    gtsam::NonlinearFactorGraph graph;
+
+    std::vector<std::pair<FrameId, FrameId>> pose_frame_pairs;
+
+    LOG(INFO) << "Building PGO for j=" << object_id << " " << trajectory_j;
+
+    // do sanity check on first frame to ensure it matches the Anchor Keyframe
+    // stored in the backend
+    const auto& first_entry = trajectory_j.first().data;
+    const Motion3ReferenceFrame& first_motion = first_entry.motion;
+    const gtsam::Pose3& first_pose = first_entry.pose;
+    const FrameId to_frame = first_motion.to();
+    const FrameId from_frame = first_motion.from();
+    CHECK_EQ(first_motion.style(), MotionRepresentationStyle::F2F);
+
+    // // set of shared frame nodes
+    // const auto frames_with_refined_motion = object_node->getSeenFrames();
+    for (const auto& entry_k : trajectory_j) {
+      const Motion3ReferenceFrame& f2f_motion = entry_k.data.motion;
+      const gtsam::Pose3 pose_k = entry_k.data.pose;
+      const FrameId to_frame = f2f_motion.to();
+      const FrameId from_frame = f2f_motion.from();
+      CHECK_EQ(f2f_motion.style(), MotionRepresentationStyle::F2F);
+
+      LOG(INFO) << "j=" << object_id << "entry: " << f2f_motion;
+
+      pose_frame_pairs.push_back(std::make_pair(from_frame, to_frame));
+
+      // use frontend poses as initial values
+      // these will then be validated against the backend keyframe pose data
+      // and priors added when necessary for anchor keyframes
+      gtsam::Key object_pose_key = ObjectPoseSymbol(object_id, to_frame);
+      gtsam::Key object_pose_key_from = ObjectPoseSymbol(object_id, from_frame);
+      values.insert(object_pose_key, pose_k);
+
+      // convert H_W_km1_k to relative motion constraint
+      gtsam::Pose3 L_W_from = trajectory_j.at(from_frame).pose;
+      gtsam::Pose3 H_L_from_to =
+          L_W_from.inverse() * f2f_motion.estimate() * L_W_from;
+
+      // TODO: for now!!
+      gtsam::SharedNoiseModel relative_noise_model =
+          gtsam::noiseModel::Isotropic::Sigma(6u, 4.0);
+
+      auto relative_object_motion =
+          boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+              object_pose_key_from, object_pose_key, H_L_from_to,
+              relative_noise_model);
+      graph += relative_object_motion;
+
+      LOG(INFO) << "Adding relative motion constraint " << from_frame << " -> "
+                << to_frame;
+
+      if (isObjectKeyFrame(object_id, to_frame)) {
+        LOG(INFO) << to_frame << " is KF";
+        const KeyFrameMetaData& kf_data =
+            key_frames_per_object_.at(object_id, to_frame);
+
+        // sanity check frames are good
+        CHECK_EQ(kf_data.H_W_lRKF_KF.to(), to_frame);
+
+        auto object_node = map->getObject(object_id);
+        CHECK_NOTNULL(object_node);
+
+        const KeyFrameRange::ConstPtr akf_range =
+            key_frame_data_.find(object_id, to_frame);
+
+        if (!akf_range) {
+          DYNO_THROW_MSG(DynosamException) << "Missing anchor frame for motion "
+                                           << info_string(to_frame, object_id);
+        }
+
+        // we will validate the backend pose is the same as the frontend pose
+        auto [akf_id, akf_pose_backend] = akf_range->dataPair();
+        LOG(INFO) << akf_id;
+
+        // we expect to have a refined motion from some previous anchor frame
+        // to the to_frame
+        // importantly this motion will inform us what the anchor frame is
+        // via the "from" frame
+        Motion3ReferenceFrame H_W_akf_k_refined = DYNO_GET_QUERY_DEBUG(
+            accessor->getEstimatedMotion(object_id, to_frame));
+        CHECK_EQ(H_W_akf_k_refined.to(), to_frame);
+
+        // convert H_W_KF_k to relative motion constraint
+        CHECK(trajectory_j.exists(akf_id));
+        gtsam::Pose3 L_W_akf = trajectory_j.at(akf_id).pose;
+        gtsam::Pose3 H_L_akf_to =
+            L_W_akf.inverse() * H_W_akf_k_refined.estimate() * L_W_akf;
+
+        gtsam::Key object_pose_key_akf = ObjectPoseSymbol(object_id, akf_id);
+        // add keyframe motion as constraint to hold the graph together!
+        // TODO: odometry should be different noise!!
+        auto refined_keyframe_motion =
+            boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+                object_pose_key_akf, object_pose_key, H_L_akf_to,
+                this->noiseModels().odometry_noise);
+        graph += refined_keyframe_motion;
+
+        LOG(INFO) << "Adding refined KF relative motion constraint " << akf_id
+                  << " -> " << to_frame;
+
+        // TODO: currently intermediate frame nodes will not exist!!
+
+        if (kf_data.keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
+          CHECK_EQ(H_W_akf_k_refined.from(), akf_id);
+
+          // check that the per-frame motions start from the same pose as the
+          // backemd although the value does not NEED to be the same, it ensures
+          // that there is good synchronisation between the frontend and the
+          // estimator get the pose associated with the anchor frame
+          gtsam::Pose3 akf_pose_frontend = trajectory_j.at(akf_id).pose;
+          CHECK(gtsam::traits<gtsam::Pose3>::Equals(akf_pose_backend,
+                                                    akf_pose_frontend, 1e-4))
+              << "KF pose " << akf_pose_backend << " pose " << akf_pose_frontend
+              << " akf id " << akf_id;
+
+          gtsam::Key anchor_object_pose_key =
+              ObjectPoseSymbol(object_id, akf_id);
+          LOG(INFO) << "Adding pose prior at KF pose " << akf_id;
+          // add a strong prior to anchor pose as this will not change!
+          graph.addPrior<gtsam::Pose3>(anchor_object_pose_key,
+                                       akf_pose_frontend,
+                                       this->noiseModels().initial_pose_prior);
+
+        } else if (kf_data.keyframe_status ==
+                   ObjectKeyFrameStatus::RegularKeyFrame) {
+        } else {
+          throw DynosamException("keyframe status cannot be NonKeyFrame!");
+        }
+
+        // // more sanity checks
+        // right now this is a fail because only KF measurements are added to
+        // the map!! CHECK_EQ(from_frame, object_node->getFirstSeenFrame());
+      }
+    }
+
+    dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(graph,
+                                                                        values);
+
+    NonlinearOptimizerSummary summary;
+    NonlinearOptimizerOptions options;
+
+    LOG(INFO) << "Beginning PGO j=" << object_id;
+    gtsam::Values optimised_values;
+    CHECK(solver.solve(optimised_values, options, &summary));
+
+    LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
+              << summary.final_error << " time[s] "
+              << summary.cumulative_time_in_seconds
+              << " #iterations= " << summary.numIterations();
+
+    // recover pose values and correct motions
+    PoseWithMotionTrajectory& refined_trajectory_j =
+        full_trajectories_refined.at(object_id);
+    for (const auto& [from_frame, to_frame] : pose_frame_pairs) {
+      gtsam::Key object_pose_key_from = ObjectPoseSymbol(object_id, from_frame);
+      gtsam::Key object_pose_key_to = ObjectPoseSymbol(object_id, to_frame);
+
+      CHECK(object_pose_key_from == object_pose_key_to - 1 ||
+            object_pose_key_from == object_pose_key_to);
+
+      gtsam::Pose3 L_W_from =
+          optimised_values.at<gtsam::Pose3>(object_pose_key_from);
+      gtsam::Pose3 L_W_to =
+          optimised_values.at<gtsam::Pose3>(object_pose_key_to);
+      gtsam::Pose3 H_W_from_to = L_W_to * L_W_from.inverse();
+
+      Motion3ReferenceFrame f2f_motion_refined(
+          H_W_from_to, Motion3ReferenceFrame::Style::F2F,
+          ReferenceFrame::GLOBAL, from_frame, to_frame);
+
+      PoseWithMotion refined_entry;
+      refined_entry.pose = L_W_to;
+      refined_entry.motion = f2f_motion_refined;
+
+      // always update the "to" frame
+      // we will have identity motions where from==to in which case we still
+      // update every frame since L_W_from==L_W_to
+      CHECK(refined_trajectory_j.update(to_frame, refined_entry));
+    }
+  }
+  return full_trajectories_refined;
+}
+
 UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
     FrameId frame_id_k, gtsam::Values& new_values,
     gtsam::NonlinearFactorGraph& new_factors,
@@ -1582,6 +1776,8 @@ void HybridFormulationKeyFrame::addObjects(
     KeyFrameMetaData kf_data;
     kf_data.keyframe_status = keyframe_status;
     kf_data.H_W_lRKF_KF = H_W_RKF_k;
+
+    CHECK_EQ(frame_id, H_W_RKF_k.to());
 
     key_frames_per_object_.insert22(object_id, frame_id, kf_data);
 

@@ -38,10 +38,9 @@ HybridObjectMotionSmoother::~HybridObjectMotionSmoother() {
 PoseWithMotionTrajectory HybridObjectMotionSmoother::trajectory() const {
   // only from KF -> k (assume continuous?)
   PoseWithMotionTrajectory trajectory = trajectory_upto_lKF_;
-  // do not include KF in result from local trajectory
-  // as it will already be in trajectory_till_lKF_
-  constexpr static bool kIncludeKFInTrajectory = false;
-  trajectory.insert(localTrajectoryImpl(kIncludeKFInTrajectory));
+
+  const bool include_kf_in_local_traj = !trajectory.exists(keyFrameId());
+  trajectory.insert(localTrajectoryImpl(include_kf_in_local_traj));
 
   return trajectory;
 }
@@ -56,11 +55,6 @@ gtsam::Pose3 HybridObjectMotionSmoother::keyFrameMotion() const {
   // TODO: bring back!
   //  CHECK(isam_.valueExists(sym));
   CHECK(smoother_state_.exists(sym));
-  // const gtsam::Pose3 L_W_KF = keyFramePose();
-  // const gtsam::Pose3 H_W_KF_k = smoother_state_.at<gtsam::Pose3>(sym);
-  // const gtsam::Pose3 G_W_KF_k =
-  // smoother_state_.at<gtsam::Pose3>(sym).inverse(); const gtsam::Pose3
-  // H_W_KF_k = camera_poses_.at(frameId()) * G_W_KF_k * L_W_KF.inverse();
   const gtsam::Pose3 H_W_KF_k = keyFrameMotionImpl(frameId(), smoother_state_);
 
   return H_W_KF_k;
@@ -165,12 +159,18 @@ bool HybridObjectMotionSmoother::createNewKeyedMotion(
     // which will include the keyframe as the first frame of the trajectory.
     trajectory_till_lKF = std::move(localTrajectory());
   } else {
+    // TODO: what if the trajectory is broken!!
+    const bool include_kf_in_local_traj =
+        !trajectory_upto_lKF_.exists(keyFrameId());
+    trajectory_till_lKF =
+        std::move(localTrajectoryImpl(include_kf_in_local_traj));
+    // if(trajectory_upto_lKF_.exists(keyFrameId()))
     // get trajectory without keyframe (ie the first frame of the local traj)
     // since this frame will be the last frame of the current trajectory
     // (trajectory_upto_lKF_)
-    constexpr static bool kIncludeKFInTrajectory = false;
-    trajectory_till_lKF =
-        std::move(localTrajectoryImpl(kIncludeKFInTrajectory));
+    // constexpr static bool kIncludeKFInTrajectory = false;
+    // trajectory_till_lKF =
+    //     std::move(localTrajectoryImpl(kIncludeKFInTrajectory));
   }
   trajectory_upto_lKF_.insert(trajectory_till_lKF);
 
@@ -254,6 +254,7 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
 
       // skip this frame if requested
       if (!include_keyframe) {
+        LOG(INFO) << "Skipping kf " << info_string(frame_id, object_id_);
         continue;
       }
 
@@ -269,13 +270,6 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
       const gtsam::Symbol H_key_km1 =
           ObjectMotionSymbol(object_id_, frame_id - 1u);
       CHECK(state_since_lKF_.exists(H_key_km1));
-
-      // const gtsam::Pose3 H_W_KF_km1 =
-      //     state_since_lKF_.at<gtsam::Pose3>(H_key_km1);
-      // const gtsam::Pose3 G_W_KF_km1 =
-      // state_since_lKF_.at<gtsam::Pose3>(H_key_km1).inverse(); const
-      // gtsam::Pose3 H_W_KF_km1 = camera_poses_.at(frame_id - 1u) * G_W_KF_km1
-      // * L_W_KF.inverse();
       const gtsam::Pose3 H_W_KF_km1 =
           keyFrameMotionImpl(frame_id - 1u, state_since_lKF_);
       const gtsam::Pose3 H_W_km1_k = H_W_KF_k * H_W_KF_km1.inverse();
