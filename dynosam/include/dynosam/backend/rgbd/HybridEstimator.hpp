@@ -1343,6 +1343,7 @@ class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
   virtual ~HybridAccessor() {}
 
   StateQuery<gtsam::Pose3> getSensorPose(FrameId frame_id) const override;
+
   StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id,
                                            ObjectId object_id) const override;
   StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id,
@@ -1356,15 +1357,32 @@ class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
   StatusLandmarkVector getDynamicLandmarkEstimates(
       FrameId frame_id, ObjectId object_id) const override;
 
+  // object body frame motion
   std::optional<Motion3ReferenceFrame> getRelativeLocalMotion(
       FrameId frame_id, ObjectId object_id) const;
 
+  /** Get object structure in body frame L (as is estimated) */
   StatusLandmarkVector getLocalDynamicLandmarkEstimates(
       ObjectId object_id) const override;
 
   TrackletIds collectPointsAtKeyFrame(
       ObjectId object_id, FrameId frame_id,
       FrameId* keyframe_id = nullptr) const override;
+
+  /**
+   * @brief H_W_km1_k as a  Motion3ReferenceFrame.
+   *
+   * Method is overwritten becuase in the Hybrid case we have a motion
+   * at each observing frame (not just the "to" frame) and therefore can extract
+   * the frame id directly! This ensures that the from() and to() variables are
+   * set correctly in the Motion3ReferenceFrame
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @return StateQuery<Motion3ReferenceFrame>
+   */
+  virtual StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
+      FrameId frame_id, ObjectId object_id) const override;
 
   bool getObjectKeyFrameHistory(ObjectId object_id,
                                 const KeyFrameRanges*& ranges) const override;
@@ -1376,6 +1394,18 @@ class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
 
   StateQuery<Motion3ReferenceFrame> getEstimatedMotion(
       ObjectId object_id, FrameId frame_id) const override;
+
+ protected:
+  /** Some boiler plate code to help calculate the H_W_km1_k for deriving
+   * classes as in some cases (ie. KeyFraming it will actaully be from KF to k)
+   * In this case the resulting Motion3ReferenceFrame will not be of type F2F.
+   * Only known in the deriving classes and should be used in the
+   * getObjectMotionReferenceFrame() function to construct Motion3ReferenceFrame
+   *
+   */
+  StateQueryStatus getObjectMotionReferenceFrameHelper(
+      FrameId frame_id, ObjectId object_id, gtsam::Key& motion_key,
+      gtsam::Pose3& motion, FrameId& from, FrameId& to) const;
 
  private:
   struct DynamicLandmarkQuery {
@@ -1581,6 +1611,35 @@ class HybridFormulationV1 : public HybridFormulation {
 //       const std::optional<GroundTruthPacketMap>& gt_packets = {}) override;
 // };
 
+class HybridFormulationKeyFrameAccessor : public HybridAccessor {
+ public:
+  HybridFormulationKeyFrameAccessor(
+      const SharedFormulationData::Ptr& shared_data, MapVision::Ptr map,
+      const SharedHybridFormulationData& shared_hybrid_formulation_data)
+      : HybridAccessor(shared_data, map, shared_hybrid_formulation_data) {}
+
+  /**
+   * @brief H_W_lKF_k as a  Motion3ReferenceFrame.
+   *
+   * Overwritten again from the base HybridAccessor
+   * since this expects a motion to exist per frame and therefore
+   * returns H_W_km1_k with a F2F representation style.
+   *
+   * However, when Keyframing we only have access to the KF states
+   * and therefore the return Motion3ReferenceFrame must be KF style
+   *
+   * @param frame_id FrameId must be a KF!
+   * @param object_id
+   * @return StateQuery<Motion3ReferenceFrame>
+   */
+  StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
+      FrameId frame_id, ObjectId object_id) const override;
+
+  // /** Same logic as above, this is F2F motion! */
+  // std::optional<Motion3ReferenceFrame> getRelativeLocalMotion(
+  //     FrameId frame_id, ObjectId object_id) const; override;
+};
+
 // additional functionality when solved with the Regular Backend!
 class HybridFormulationKeyFrame : public HybridFormulation {
  public:
@@ -1598,6 +1657,16 @@ class HybridFormulationKeyFrame : public HybridFormulation {
                             const Sensors& sensors,
                             const FormulationHooks& hooks)
       : Base(params, map, noise_models, sensors, hooks) {}
+
+  AccessorTypePointer createAccessor(
+      const SharedFormulationData::Ptr& shared_data) const override {
+    SharedHybridFormulationData shared_hybrid_data;
+    shared_hybrid_data.key_frame_data = &key_frame_data_;
+    shared_hybrid_data.tracklet_id_to_keyframe = &all_dynamic_landmarks_;
+
+    return std::make_shared<HybridFormulationKeyFrameAccessor>(
+        shared_data, this->map(), shared_hybrid_data);
+  }
 
   UpdateObservationResult updateDynamicObservations(
       FrameId frame_id_k, gtsam::Values& new_values,

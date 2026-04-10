@@ -16,6 +16,15 @@ enum class ObjectKeyFrameStatus {
   AnchorKeyFrame = 2
 };
 
+/** Data parsed from the backend to the frontend when an update is complete */
+struct PoseChangeUpdateComplete {
+  FrameId frame_id;
+  Timestamp timestamp;
+};
+
+using PoseChangeUpdateCompleteCallback =
+    std::function<void(const PoseChangeUpdateComplete&)>;
+
 // TODO: so inconsistent with names!!! Hybrid/Keyframe/PoseChange!?
 struct HybridKeyFrameUpdate {
   FrameId frame_id;

@@ -5,6 +5,9 @@
 DEFINE_bool(pc_smoother_allow_backend_updates, false,
             "If updates from the backend should be received.");
 
+DEFINE_bool(pc_log_object_kf_structure, false,
+            "If the object point cloud should be logged at keyframes");
+
 namespace dyno {
 
 PoseChangeVIFrontend::PoseChangeVIFrontend(
@@ -33,13 +36,42 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
 
 PoseChangeVIFrontend::~PoseChangeVIFrontend() { logBestEstimates(); }
 
-void PoseChangeVIFrontend::onBackendUpdateComplete(FrameId frame_id,
-                                                   Timestamp timestamp) {
-  LOG(INFO) << "Recieved backend update at frame " << frame_id;
-
+void PoseChangeVIFrontend::onBackendUpdateComplete(
+    const PoseChangeUpdateComplete& event) {
   // TODO: this is definitely not thread safe
+  const FrameId frame_id = event.frame_id;
+
   if (FLAGS_pc_smoother_allow_backend_updates) {
+    LOG(INFO) << "Recieved backend update at frame " << frame_id;
     object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
+  }
+
+  if (FLAGS_pc_log_object_kf_structure) {
+    auto accessor = formulation_->derivedAccessor<HybridAccessor>();
+
+    LOG(INFO) << "Logging estimated object structures...";
+
+    // TODO: later when we use a different map we can check for keyframes etc!!
+    auto frame_node_k = map_->getFrame(frame_id);
+    CHECK_NOTNULL(frame_node_k);
+
+    // only log for object seen at this frame
+    for (ObjectId object_id : frame_node_k->objectSeenIds()) {
+      StatusLandmarkVector points_in_L =
+          accessor->getLocalDynamicLandmarkEstimates(object_id);
+
+      if (points_in_L.empty()) {
+        VLOG(20) << "No points for j=" << object_id << ": skipping logging!";
+        continue;
+      }
+
+      std::string path = dyno::getOutputFilePath(
+          "refined_object_map_k" + std::to_string(frame_id) + "_j" +
+          std::to_string(object_id) + ".pcd");
+      VLOG(10) << "Writing object map of size " << points_in_L.size() << " - "
+               << path;
+      saveAsPointCloud(points_in_L, path);
+    }
   }
 }
 
@@ -253,6 +285,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   objects_with_keyframes.reserve(num_object_keyframes);
   for (const auto& [object_id, _] : kf_pose_change_infos) {
     objects_with_keyframes.push_back(object_id);
+  }
+
+  if (FLAGS_pc_log_object_kf_structure) {
+    logRealTimeObjectClouds(objects_with_keyframes, frame_id_k);
   }
 
   const bool ego_motion_keyframe = shouldFrameBeKeyFrame(frame_k, frame_km1);
@@ -608,16 +644,17 @@ void PoseChangeVIFrontend::constructVisualFactors(
 void PoseChangeVIFrontend::logBestEstimates() const {
   VLOG(20) << "Logging test estimates from PoseChange frontend";
 
-  MultiObjectTrajectories full_object_trajectories_refined =
-      formulation_->refinePerFrameMotionsPGO(full_object_trajectories_);
-
   // Use the presence of the backend sink function as a proxy to
   // indicate if the backend was running!
   if (!withBackend()) {
     return;
   }
 
-  VIOAccessor::Ptr accessor = formulation_->getAsVIOAccessor();
+  MultiObjectTrajectories full_object_trajectories_refined =
+      formulation_->refinePerFrameMotionsPGO(full_object_trajectories_);
+
+  auto accessor = formulation_->derivedAccessor<HybridAccessor>();
+  CHECK_NOTNULL(accessor);
 
   const PoseTrajectory& camera_trajectory = accessor->getCameraTrajectory();
   // const MultiObjectTrajectories& object_trajectories =
@@ -628,6 +665,26 @@ void PoseChangeVIFrontend::logBestEstimates() const {
   logger->logCameraPose(camera_trajectory, ground_truths);
 
   logger->logObjectTrajectory(full_object_trajectories_refined, ground_truths);
+}
+
+void PoseChangeVIFrontend::logRealTimeObjectClouds(const ObjectIds& objects,
+                                                   FrameId frame_id) const {
+  for (ObjectId object_id : objects) {
+    StatusLandmarkVector points_in_L;
+    object_motion_solver_->getObjectStructureinL(object_id, points_in_L);
+
+    if (points_in_L.empty()) {
+      VLOG(20) << "No points for j=" << object_id << ": skipping logging!";
+      continue;
+    }
+
+    std::string path =
+        dyno::getOutputFilePath("doo_object_map_k" + std::to_string(frame_id) +
+                                "_j" + std::to_string(object_id) + ".pcd");
+    VLOG(10) << "Writing object map of size " << points_in_L.size() << " - "
+             << path;
+    saveAsPointCloud(points_in_L, path);
+  }
 }
 
 }  // namespace dyno

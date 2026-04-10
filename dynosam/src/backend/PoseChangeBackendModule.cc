@@ -74,16 +74,19 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   // }
 
   // alert frontend
-  if (frontend_update_callback_) {
-    frontend_update_callback_(input->frame_id, input->timestamp);
+  if (update_callback_) {
+    PoseChangeUpdateComplete event;
+    event.frame_id = input->frame_id;
+    event.timestamp = input->timestamp;
+    update_callback_(event);
   }
 
   return makeOutput();
 }
 
-void PoseChangeVIBackendModule::registerFrontendUpdateCallback(
-    const FrontendUpdateCallback& frontend_update_callback) {
-  frontend_update_callback_ = frontend_update_callback;
+void PoseChangeVIBackendModule::registerUpdateCallback(
+    const PoseChangeUpdateCompleteCallback& callback) {
+  update_callback_ = callback;
 }
 
 }  // namespace dyno

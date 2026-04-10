@@ -70,6 +70,7 @@ Motion3ReferenceFrame HybridObjectMotionSmoother::frameToFrameMotionReference()
   }
   const gtsam::Pose3 L_W_KF = keyFramePose();
 
+  CHECK_GT(frameId(), 0u);
   FrameId frame_id_km1 = frameId() - 1u;
 
   const gtsam::Symbol prev_motion_symbol(
@@ -262,6 +263,7 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
           Motion3ReferenceFrame(H_W_KF_k, Motion3ReferenceFrame::Style::F2F,
                                 ReferenceFrame::GLOBAL, frame_id, frame_id);
     } else {
+      CHECK_GT(frame_id, 0u);
       FrameId frame_id_km1 = frame_id - 1u;
       // sanity check that the previous frame is frame id -1 (ie. we're
       // consecutive!)

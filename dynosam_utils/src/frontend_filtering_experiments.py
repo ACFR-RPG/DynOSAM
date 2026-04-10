@@ -208,18 +208,23 @@ def run_kitti():
     run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test_kitti", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true", "--v=30")
 
 
+##### SHOULD BE WITH --init_object_pose_from_gt=true
 def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
-    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_MO_test", dynoepts,
+    #     "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false", "--pc_log_object_kf_structure=true")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_51","dynoepts_uope_51_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_51","dynoepts_uope_51_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_55","dynoepts_uope_55_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_55","dynoepts_uope_55_MO_test", dynoepts,
+    #     "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false", "--pc_log_object_kf_structure=true")
+
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_55","dynoepts_uope_55_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
 
@@ -237,7 +242,9 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
     # this one is hard due to rubber duck!
-    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_MO_test", dynoepts,
+    #     "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false", "--pc_log_object_kf_structure=true")
+    # # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_MO_w_update", dynoepts, "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
@@ -264,6 +271,7 @@ def run_dynoepts():
 def run_aria():
     run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=2")
 
+##### SHOULD BE WITH --init_object_pose_from_gt=false
 def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=2")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_SS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=1")
@@ -273,7 +281,10 @@ def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=2", "--use_backend=false")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2", "--use_backend=true")
 
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test", omd_dataset,
+        "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true",
+        "--pc_smoother_allow_backend_updates=false",
+        "--pc_log_object_kf_structure=true")
 
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test_with_update", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
 
@@ -312,7 +323,9 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","test", kitti_dataset, "--use_backend=true", "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","test", kitti_dataset,
+                             "--use_backend=true",
+                             "--hybrid_motion_solver=4")
 
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--use_backend=true", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
@@ -355,10 +368,10 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
-    # run_hybrid_solver_comparison_kitti()
+    run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
-    run_dynoepts()
-    # run_tartan_air()
+    # run_dynoepts()
+    # # run_tartan_air()
     # run_kitti()
     # run_viodes()
     # run_cluster()
@@ -367,7 +380,7 @@ if __name__ == '__main__':
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
 
-    # run_analysis("tech_lab_1_MO_test1")
+    # run_analysis("omd_MO_test")
     # run_analysis("omd_MO_test_with_update")
     # run_analysis("kitti00_MO")
     # run_analysis("kitti00_PnP")

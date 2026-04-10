@@ -309,7 +309,7 @@ class Accessor {
    * @param object_id ObjectId
    * @return StateQuery<Motion3ReferenceFrame>
    */
-  StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
+  virtual StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
       FrameId frame_id, ObjectId object_id) const;
 
   /**

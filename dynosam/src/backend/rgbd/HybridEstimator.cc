@@ -35,6 +35,7 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam/factors/MotionBetweenFactor.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
 
 namespace dyno {
@@ -149,72 +150,14 @@ StateQuery<gtsam::Pose3> HybridAccessor::getSensorPose(FrameId frame_id) const {
 
 StateQuery<gtsam::Pose3> HybridAccessor::getObjectMotion(
     FrameId frame_id, ObjectId object_id) const {
-  const auto object_node = map()->getObject(object_id);
-  const auto frame_node_k = map()->getFrame(frame_id);
-  CHECK(object_node);
-  // const auto frame_node_k_1 = map()->getFrame(frame_id - 1u);
+  StateQuery<Motion3ReferenceFrame> query =
+      this->getObjectMotionReferenceFrame(frame_id, object_id);
 
-  if (!frame_node_k) {
-    VLOG(30) << "Could not construct object motion frame id=" << frame_id
-             << " object id=" << object_id << " as the frame does not exist!";
-    return StateQuery<gtsam::Pose3>::InvalidMap();
+  if (!query) {
+    return StateQuery<gtsam::Pose3>(query.key(), query.status());
+  } else {
+    return StateQuery<gtsam::Pose3>(query.key(), query.get());
   }
-
-  auto motion_key = frame_node_k->makeObjectMotionKey(object_id);
-  StateQuery<gtsam::Pose3> e_H_k_world = this->query<gtsam::Pose3>(motion_key);
-  if (!e_H_k_world) {
-    VLOG(30) << "Could not construct object motion frame id=" << frame_id
-             << " object id=" << object_id
-             << ". Frame exists but motion is missing!!!";
-    return StateQuery<gtsam::Pose3>::InvalidMap();
-  }
-
-  // first object motion (ie s0 -> s1)
-  auto key_frame_data =
-      CHECK_NOTNULL(shared_hybrid_formulation_data_.key_frame_data);
-
-  FrameId last_seen;
-  if (!object_node->previouslySeenFrame(&last_seen)) {
-    const auto range = CHECK_NOTNULL(key_frame_data->find(object_id, frame_id));
-    const auto [s0, L0] = range->dataPair();
-    // check that the first frame of the object motion is actually this frame
-    // this motion should actually be identity
-    CHECK_EQ(s0, frame_id);
-    return StateQuery<gtsam::Pose3>(motion_key, *e_H_k_world);
-  }
-  // if (!frame_node_k_1) {
-  //   CHECK_NOTNULL(frame_node_k);
-  //   // const auto range = CHECK_NOTNULL(key_frame_data->find(object_id,
-  //   frame_id));
-  //   // const auto [s0, L0] = range->dataPair();
-  //   // // check that the first frame of the object motion is actually this
-  //   frame
-  //   // // this motion should actually be identity
-  //   // CHECK_EQ(s0, frame_id);
-  //   // return StateQuery<gtsam::Pose3>(motion_key, *e_H_k_world);
-  // }
-  else {
-    CHECK_NOTNULL(frame_node_k);
-    const auto frame_node_k_1 = map()->getFrame(last_seen);
-    CHECK_NOTNULL(frame_node_k_1);
-
-    StateQuery<gtsam::Pose3> e_H_km1_world = this->query<gtsam::Pose3>(
-        frame_node_k_1->makeObjectMotionKey(object_id));
-
-    if (e_H_k_world && e_H_km1_world) {
-      // want a motion from k-1 to k, but we estimate s0 to k
-      //^w_{k-1}H_k = ^w_{s0}H_k \: ^w_{s0}H_{k-1}^{-1}
-      gtsam::Pose3 motion = e_H_k_world.get() * e_H_km1_world->inverse();
-      // LOG(INFO) << "Obj motion " << motion;
-      return StateQuery<gtsam::Pose3>(motion_key, motion);
-    } else {
-      return StateQuery<gtsam::Pose3>::NotInMap(
-          frame_node_k->makeObjectMotionKey(object_id));
-    }
-  }
-  LOG(WARNING) << "Could not construct object motion frame id=" << frame_id
-               << " object id=" << object_id;
-  return StateQuery<gtsam::Pose3>::InvalidMap();
 }
 
 StateQuery<gtsam::Pose3> HybridAccessor::getObjectPose(
@@ -222,6 +165,7 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectPose(
   // we estimate a motion ^w_{s0}H_k, so we can compute a pose ^wL_k =
   // ^w_{s0}H_k * ^wL_{s0}
   const auto frame_node_k = map()->getFrame(frame_id);
+  CHECK_NOTNULL(frame_node_k);
   if (!frame_node_k) {
     return StateQuery<gtsam::Pose3>::InvalidMap();
   }
@@ -451,6 +395,87 @@ std::optional<Motion3ReferenceFrame> HybridAccessor::getRelativeLocalMotion(
                                  ReferenceFrame::OBJECT, from, to);
   } else {
     return {};
+  }
+}
+
+StateQueryStatus HybridAccessor::getObjectMotionReferenceFrameHelper(
+    FrameId frame_id, ObjectId object_id, gtsam::Key& motion_key,
+    gtsam::Pose3& motion, FrameId& from, FrameId& to) const {
+  const auto object_node = map()->getObject(object_id);
+  const auto frame_node_k = map()->getFrame(frame_id);
+  CHECK(object_node);
+
+  if (!frame_node_k) {
+    VLOG(30) << "Could not construct object motion frame id=" << frame_id
+             << " object id=" << object_id << " as the frame does not exist!";
+    return StateQueryStatus::INVALID_MAP;
+  }
+
+  motion_key = frame_node_k->makeObjectMotionKey(object_id);
+  StateQuery<gtsam::Pose3> H_W_KF_k = this->query<gtsam::Pose3>(motion_key);
+  if (!H_W_KF_k) {
+    VLOG(30) << "Could not construct object motion frame id=" << frame_id
+             << " object id=" << object_id
+             << ". Frame exists but motion is missing!!!";
+    return StateQueryStatus::INVALID_MAP;
+  }
+
+  auto key_frame_data =
+      CHECK_NOTNULL(shared_hybrid_formulation_data_.key_frame_data);
+
+  FrameId last_seen;
+  // check if and which frame the object was observed before frame id
+  if (!object_node->previouslySeenFrame(frame_id, &last_seen)) {
+    const auto range = CHECK_NOTNULL(key_frame_data->find(object_id, frame_id));
+    const auto [kf_id, L0] = range->dataPair();
+    // check that the first frame of the object motion is actually this frame
+    // this motion should actually be identity
+    CHECK_EQ(kf_id, frame_id);
+    motion = H_W_KF_k.get();
+    from = kf_id;
+    to = frame_id;
+    return StateQueryStatus::VALID;
+  } else {
+    CHECK_NOTNULL(frame_node_k);
+    const auto frame_node_km1 = map()->getFrame(last_seen);
+    CHECK_NOTNULL(frame_node_km1);
+
+    StateQuery<gtsam::Pose3> H_W_KF_km1 = this->query<gtsam::Pose3>(
+        frame_node_km1->makeObjectMotionKey(object_id));
+
+    if (H_W_KF_k && H_W_KF_km1) {
+      // want a motion from k-1 to k, but we estimate s0 to k
+      //^w_{k-1}H_k = ^w_{s0}H_k \: ^w_{s0}H_{k-1}^{-1}
+      gtsam::Pose3 H_W_km1_k = H_W_KF_k.get() * H_W_KF_km1->inverse();
+      motion = H_W_km1_k;
+      from = frame_node_km1->frameId();
+      to = frame_id;
+      return StateQueryStatus::VALID;
+    } else {
+      return StateQueryStatus::NOT_IN_MAP;
+    }
+  }
+  LOG(WARNING) << "Could not construct object motion frame id=" << frame_id
+               << " object id=" << object_id;
+  return StateQueryStatus::INVALID_MAP;
+}
+
+StateQuery<Motion3ReferenceFrame> HybridAccessor::getObjectMotionReferenceFrame(
+    FrameId frame_id, ObjectId object_id) const {
+  using Query = StateQuery<Motion3ReferenceFrame>;
+
+  gtsam::Key motion_key;
+  gtsam::Pose3 H_W_km1_k;
+  FrameId from, to;
+  const StateQueryStatus status = getObjectMotionReferenceFrameHelper(
+      frame_id, object_id, motion_key, H_W_km1_k, from, to);
+  if (status == StateQueryStatus::VALID) {
+    // in base accessor expect motion to be a genuine F2F motion
+    return Query(motion_key, Motion3ReferenceFrame(
+                                 H_W_km1_k, Motion3ReferenceFrame::Style::F2F,
+                                 ReferenceFrame::GLOBAL, from, to));
+  } else {
+    return Query(motion_key, status);
   }
 }
 
@@ -1150,6 +1175,26 @@ TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
   return points_per_object;
 }
 
+StateQuery<Motion3ReferenceFrame>
+HybridFormulationKeyFrameAccessor::getObjectMotionReferenceFrame(
+    FrameId frame_id, ObjectId object_id) const {
+  using Query = StateQuery<Motion3ReferenceFrame>;
+
+  gtsam::Key motion_key;
+  gtsam::Pose3 H_W_KF_k;
+  FrameId from, to;
+  const StateQueryStatus status = getObjectMotionReferenceFrameHelper(
+      frame_id, object_id, motion_key, H_W_KF_k, from, to);
+  if (status == StateQueryStatus::VALID) {
+    // in base accessor expect motion to be a genuine KF motion
+    return Query(motion_key, Motion3ReferenceFrame(
+                                 H_W_KF_k, Motion3ReferenceFrame::Style::KF,
+                                 ReferenceFrame::GLOBAL, from, to));
+  } else {
+    return Query(motion_key, status);
+  }
+}
+
 TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints() const {
   auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
   return getObjectPoints(hybrid_accessor->getObjectIds());
@@ -1203,27 +1248,12 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
 
     std::vector<std::pair<FrameId, FrameId>> pose_frame_pairs;
 
-    LOG(INFO) << "Building PGO for j=" << object_id << " " << trajectory_j;
-
-    // do sanity check on first frame to ensure it matches the Anchor Keyframe
-    // stored in the backend
-    const auto& first_entry = trajectory_j.first().data;
-    const Motion3ReferenceFrame& first_motion = first_entry.motion;
-    const gtsam::Pose3& first_pose = first_entry.pose;
-    const FrameId to_frame = first_motion.to();
-    const FrameId from_frame = first_motion.from();
-    CHECK_EQ(first_motion.style(), MotionRepresentationStyle::F2F);
-
-    // // set of shared frame nodes
-    // const auto frames_with_refined_motion = object_node->getSeenFrames();
     for (const auto& entry_k : trajectory_j) {
       const Motion3ReferenceFrame& f2f_motion = entry_k.data.motion;
       const gtsam::Pose3 pose_k = entry_k.data.pose;
       const FrameId to_frame = f2f_motion.to();
       const FrameId from_frame = f2f_motion.from();
       CHECK_EQ(f2f_motion.style(), MotionRepresentationStyle::F2F);
-
-      LOG(INFO) << "j=" << object_id << "entry: " << f2f_motion;
 
       pose_frame_pairs.push_back(std::make_pair(from_frame, to_frame));
 
@@ -1234,20 +1264,26 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       gtsam::Key object_pose_key_from = ObjectPoseSymbol(object_id, from_frame);
       values.insert(object_pose_key, pose_k);
 
-      // convert H_W_km1_k to relative motion constraint
-      gtsam::Pose3 L_W_from = trajectory_j.at(from_frame).pose;
-      gtsam::Pose3 H_L_from_to =
-          L_W_from.inverse() * f2f_motion.estimate() * L_W_from;
+      // // convert H_W_km1_k to relative motion constraint
+      // gtsam::Pose3 L_W_from = trajectory_j.at(from_frame).pose;
+      // gtsam::Pose3 H_L_from_to =
+      //     L_W_from.inverse() * f2f_motion.estimate() * L_W_from;
 
-      // TODO: for now!!
+      // // TODO: for now!!
       gtsam::SharedNoiseModel relative_noise_model =
-          gtsam::noiseModel::Isotropic::Sigma(6u, 4.0);
+          gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
 
-      auto relative_object_motion =
-          boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
-              object_pose_key_from, object_pose_key, H_L_from_to,
-              relative_noise_model);
+      using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
+      auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
+          object_pose_key_from, object_pose_key, f2f_motion.estimate(),
+          relative_noise_model);
       graph += relative_object_motion;
+
+      // auto relative_object_motion =
+      //     boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+      //         object_pose_key_from, object_pose_key, H_L_from_to,
+      //         relative_noise_model);
+      // graph += relative_object_motion;
 
       LOG(INFO) << "Adding relative motion constraint " << from_frame << " -> "
                 << to_frame;
@@ -1281,22 +1317,28 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
         // via the "from" frame
         Motion3ReferenceFrame H_W_akf_k_refined = DYNO_GET_QUERY_DEBUG(
             accessor->getEstimatedMotion(object_id, to_frame));
-        CHECK_EQ(H_W_akf_k_refined.to(), to_frame);
+        // absolutely horrible the arguments are swapped!
+        gtsam::Pose3 L_W_k_refined =
+            DYNO_GET_QUERY_DEBUG(accessor->getObjectPose(to_frame, object_id));
 
-        // convert H_W_KF_k to relative motion constraint
-        CHECK(trajectory_j.exists(akf_id));
-        gtsam::Pose3 L_W_akf = trajectory_j.at(akf_id).pose;
-        gtsam::Pose3 H_L_akf_to =
-            L_W_akf.inverse() * H_W_akf_k_refined.estimate() * L_W_akf;
+        // CHECK_EQ(H_W_akf_k_refined.to(), to_frame);
 
-        gtsam::Key object_pose_key_akf = ObjectPoseSymbol(object_id, akf_id);
+        // // convert H_W_KF_k to relative motion constraint
+        // CHECK(trajectory_j.exists(akf_id));
+        // gtsam::Pose3 L_W_akf = trajectory_j.at(akf_id).pose;
+        // gtsam::Pose3 H_L_akf_to =
+        //     L_W_akf.inverse() * H_W_akf_k_refined.estimate() * L_W_akf;
+
         // add keyframe motion as constraint to hold the graph together!
         // TODO: odometry should be different noise!!
-        auto refined_keyframe_motion =
-            boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
-                object_pose_key_akf, object_pose_key, H_L_akf_to,
-                this->noiseModels().odometry_noise);
-        graph += refined_keyframe_motion;
+        // auto refined_keyframe_motion =
+        //     boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+        //         object_pose_key_akf, object_pose_key, H_L_akf_to,
+        //         this->noiseModels().odometry_noise);
+        // graph += refined_keyframe_motion;
+
+        graph.addPrior<gtsam::Pose3>(object_pose_key, L_W_k_refined,
+                                     this->noiseModels().initial_pose_prior);
 
         LOG(INFO) << "Adding refined KF relative motion constraint " << akf_id
                   << " -> " << to_frame;
@@ -1304,7 +1346,7 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
         // TODO: currently intermediate frame nodes will not exist!!
 
         if (kf_data.keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
-          CHECK_EQ(H_W_akf_k_refined.from(), akf_id);
+          // CHECK_EQ(H_W_akf_k_refined.from(), akf_id);
 
           // check that the per-frame motions start from the same pose as the
           // backemd although the value does not NEED to be the same, it ensures
@@ -1336,8 +1378,9 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       }
     }
 
-    dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(graph,
-                                                                        values);
+    using LMOptimizer =
+        dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer>;
+    LMOptimizer solver(graph, values);
 
     NonlinearOptimizerSummary summary;
     NonlinearOptimizerOptions options;

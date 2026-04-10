@@ -368,6 +368,49 @@ class ObjectNodeBase {
     return true;
   }
 
+  /**
+   * @brief If the object has been seen before current frame, and if so,
+   * at which frame (previous frame).
+   *
+   * May not be immediately before if there is a jump in the trajectory.
+   *
+   * Returns true if the object was observed at current frame and
+   * has a previous observation.
+   *
+   * @param current_frame FrameId
+   * @param previous_frame FrameId*
+   * @return true
+   * @return false
+   */
+  bool previouslySeenFrame(FrameId current_frame,
+                           FrameId* previous_frame = nullptr) const {
+    const Frames all_frames_seen = this->getSeenFrames();
+    if (all_frames_seen.size() < 2) {
+      return false;
+    }
+
+    auto current_frame_itr = all_frames_seen.find(current_frame);
+
+    // Object not seen at current frame
+    if (current_frame_itr == all_frames_seen.end()) {
+      return false;
+    }
+
+    // If this is the first (smallest) frame, there is no previous
+    if (current_frame_itr == all_frames_seen.begin()) {
+      return false;
+    }
+
+    // Move iterator one step back
+    auto previous_frame_itr = std::prev(current_frame_itr);
+
+    if (previous_frame) {
+      *previous_frame = (*previous_frame_itr)->frameId();
+    }
+
+    return true;
+  }
+
   const Landmarks& landmarks() const { return dynamic_landmarks_; }
   Landmarks& landmarks() { return dynamic_landmarks_; }
 
@@ -965,10 +1008,12 @@ class StateQuery : public std::optional<ValueType> {
   StateQuery(gtsam::Key key, Status status) : key_(key), status_(status) {}
 
   const ValueType& get() const {
-    if (!Base::has_value())
-      throw DynosamException("StateQuery has no value for query type " +
-                             type_name<ValueType>() + " with key " +
-                             DynosamKeyFormatter(key_));
+    if (!Base::has_value()) {
+      DYNO_THROW_MSG(DynosamException)
+          << "StateQuery has no value for query type "
+          << type_name<ValueType>() + " with key " << DynosamKeyFormatter(key_)
+          << " and status " << std::to_string(status());
+    }
     return Base::value();
   }
 

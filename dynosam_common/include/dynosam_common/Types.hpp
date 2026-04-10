@@ -43,6 +43,7 @@
 #include <vector>
 
 #include "dynosam_common/Cuda.hpp"
+#include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Flags.hpp"  //for common glags DECLARATIONS
 #include "dynosam_common/utils/Macros.hpp"
 
@@ -59,6 +60,9 @@ namespace dyno {
 
 template <typename T>
 struct traits;
+
+template <typename T>
+std::string to_string(const T& t);
 
 static constexpr auto NaN = std::numeric_limits<double>::quiet_NaN();
 
@@ -114,9 +118,6 @@ using FrameIdTimestampMap = gtsam::FastMap<FrameId, Timestamp>;
 /// @brief Alias to a map of object ids to a vector of tracklet/point pairs
 using TrackedPointsPerObject =
     gtsam::FastMap<ObjectId, std::vector<std::pair<TrackletId, gtsam::Point3>>>;
-
-using FrontendUpdateCallback =
-    std::function<void(const FrameId, const Timestamp)>;
 
 // T is expected to have (at least) bitwise | (OR) support
 template <typename T>
@@ -234,7 +235,7 @@ struct ReferenceFrameValue {
 
   friend std::ostream& operator<<(std::ostream& os, const This& t) {
     os << type_name<Estimate>() << ": " << t.estimate() << "\n";
-    os << "frame: " << std::to_string(t.frame()) << "\n";
+    os << "frame: " << dyno::to_string(t.frame()) << "\n";
     return os;
   }
 
@@ -284,18 +285,13 @@ enum MotionRepresentationStyle {
 };
 
 template <typename E>
-struct MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
+class MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
+ public:
   using This = MotionReferenceFrame<E>;
   using Base = HeavyReferenceFrameValue<E>;
   using ConstEstimate = typename Base::ConstEstimate;
   using Estimate = typename Base::Estimate;
 
-  // // explicitly inherit casting operators
-  // using Base::operator Estimate&;
-  // using Base::operator const Estimate&;
-  // using Base::operator const ReferenceFrame&;
-
-  // forward the style ;)
   using Style = MotionRepresentationStyle;
 
   MotionRepresentationStyle style_;
@@ -304,23 +300,50 @@ struct MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
   MotionReferenceFrame() {}
   MotionReferenceFrame(ConstEstimate& estimate, const Style& style,
                        ReferenceFrame frame, FrameId from, FrameId to)
-      : Base(estimate, frame, from, to), style_(style) {}
-
-  // // really for seralization
-  // MotionReferenceFrame(const Base& base, const Style& style, FrameId from,
-  //                      FrameId to)
-  //     : Base(base), style_(style), from_(from), to_(to) {}
+      : Base(estimate, frame, from, to), style_(style) {
+    validate();
+  }
 
   friend std::ostream& operator<<(std::ostream& os, const This& t) {
     os << static_cast<const Base&>(t);
     os << "from: " << t.from() << "\n";
     os << "to: " << t.to() << "\n";
-    os << "style : " << std::to_string(t.style()) << "\n";
+    os << "style : " << dyno::to_string(t.style()) << "\n";
     return os;
   }
 
   bool operator==(const This& other) const {
     return Base::operator==(other) && style_ == other.style_;
+  }
+
+ private:
+  void validate() {
+    if (this->from() > this->to()) {
+      DYNO_THROW_MSG(DynosamException) << "From frame cannot be greater than "
+                                          "To frame in MotionReferenceFrame: "
+                                       << *this;
+    }
+
+    // if frames are the same and we represent a motion, the motion should be
+    // Identity!! this should hold in every case!
+    const bool is_same = this->from() == this->to();
+    if (is_same) {
+      checkAndThrow(
+          gtsam::traits<E>::Equals(this->estimate(),
+                                   gtsam::traits<E>::Identity(), 1e-4),
+          "MotionReferenceFrame from == to, but estimate is not Identity!");
+    }
+
+    if (style() == Style::F2F) {
+      const bool is_consecutive = this->from() == (this->to() - 1);
+      bool acceptable_frames = is_consecutive || is_same;
+      if (!acceptable_frames) {
+        DYNO_THROW_MSG(DynosamException)
+            << "MotionReferenceFrame marked with F2F style but frames are "
+               "incompatible: "
+            << *this;
+      }
+    }
   }
 };
 
@@ -772,9 +795,6 @@ using ObjectMotionMap = TemporalObjectCentricMap<Motion3ReferenceFrame>;
 // This is to overcome the fact that the stdlib does not support
 // std::optional<T&> directly
 using OptionalString = std::optional<std::reference_wrapper<std::string>>;
-
-template <typename T>
-std::string to_string(const T& t);
 
 // template <typename T>
 // std::string to_string(const T& t) {

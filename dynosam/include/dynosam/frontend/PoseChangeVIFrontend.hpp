@@ -21,11 +21,13 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   ~PoseChangeVIFrontend();
 
+  /** Add sink to send PC data to the backend */
   void addPoseChangeOutputSink(const PoseChangeBackendSink& func) {
     pose_change_backend_sink_ = func;
   };
 
-  void onBackendUpdateComplete(FrameId frame_id, Timestamp timestamp);
+  /** Callback triggered when the backend has finished a single update */
+  void onBackendUpdateComplete(const PoseChangeUpdateComplete& event);
 
  private:
   SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
@@ -53,6 +55,8 @@ class PoseChangeVIFrontend : public VIFrontend {
                               PostUpdateData& post_update_data);
 
   void logBestEstimates() const;
+  void logRealTimeObjectClouds(const ObjectIds& objects,
+                               FrameId frame_id) const;
 
   struct IntermediateMotion {
     //! Should be from a Keyframe

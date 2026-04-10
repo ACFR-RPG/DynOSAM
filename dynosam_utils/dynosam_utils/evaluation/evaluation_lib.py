@@ -301,14 +301,14 @@ class MotionErrorEvaluator(Evaluator):
         for object_id, object_traj, object_traj_ref in common_entries(self._object_motions_traj, self._object_motions_traj_ref):
 
             # motion errors in W
-            absolute_motion_errors, _, _ = self._compute_motion_in_W_errors(object_id, object_traj, object_traj_ref)
+            # absolute_motion_errors, _, _ = self._compute_motion_in_W_errors(object_id, object_traj, object_traj_ref)
             # motion errors in L
             relatvive_motion_errors, _, _ = self._compute_motion_in_L_errors(object_id, object_traj, plot_collection)
 
 
             # expect results to already have results["objects"][id] prepared
-            if absolute_motion_errors:
-                results["objects"][object_id]["motions_W"] = absolute_motion_errors
+            # if absolute_motion_errors:
+            #     results["objects"][object_id]["motions_W"] = absolute_motion_errors
 
             if relatvive_motion_errors:
                 results["objects"][object_id]["motions_L"] = relatvive_motion_errors
@@ -462,23 +462,6 @@ class MotionErrorEvaluator(Evaluator):
                 f"Object_Pose_APE_rotation_{object_id}",
                 plotting.plot_metric(rpe_rot, f"Object Pose RPE Rotation: {object_id}", x_axis=object_traj.timestamps[1:])
             )
-
-
-            # do reconstruction with relative pose
-            reconstructed_object_traj = reconstruct_trajectory_from_relative(object_traj, object_traj_ref)
-            reconstructed_data = (reconstructed_object_traj, object_traj_ref)
-
-            object_trajectories_calibrated[f"Object {object_id}"] = reconstructed_object_traj
-
-            rpe_trans_recon = metrics.RPE(metrics.PoseRelation.translation_part,
-                            1.0, metrics.Unit.frames, 0.0, False)
-            rpe_rot_recon = metrics.RPE(metrics.PoseRelation.rotation_angle_deg,
-                          1.0, metrics.Unit.frames, 1.0, False)
-            rpe_trans_recon.process_data(reconstructed_data)
-            rpe_rot_recon.process_data(reconstructed_data)
-
-            results_per_object["rpe_translation_reconstruction"] = rpe_trans_recon.get_all_statistics()
-            results_per_object["rpe_rotation_reconstruction"] = rpe_rot_recon.get_all_statistics()
 
             # expect results to already have results["objects"][id]["poses"] prepared
             results["objects"][object_id]["poses"] = results_per_object

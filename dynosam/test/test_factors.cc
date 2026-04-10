@@ -41,6 +41,7 @@
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"  //TODO: move implementation to factors?
 #include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
+#include "dynosam/factors/MotionBetweenFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
@@ -607,6 +608,113 @@ TEST(SmartMotionFactor, computeTriangulationBasic) {
 
   LOG(INFO) << "Triangulated point = " << factor->point();
   EXPECT_TRUE(gtsam::assert_equal(point, factor->point().value(), 1E-5));
+}
+
+TEST(MotionBetweenFactor, ZeroError) {
+  using namespace gtsam;
+  Pose3 Xi = utils::createRandomAroundIdentity<gtsam::Pose3>(2.0);
+  Pose3 Z = utils::createRandomAroundIdentity<gtsam::Pose3>(3.0);
+
+  // Construct Xj so constraint is EXACTLY satisfied
+  Pose3 Xj = Z.compose(Xi);
+
+  auto model = noiseModel::Isotropic::Sigma(6, 1e-6);
+  MotionBetweenFactor<Pose3> factor(0, 1, Z, model);
+
+  Vector error = factor.evaluateError(Xi, Xj);
+
+  EXPECT_TRUE(gtsam::assert_equal(error, Z_6x1, 1e-6));
+}
+
+TEST(MotionBetweenFactor, NotSameAsStandardBetween) {
+  using namespace gtsam;
+  Pose3 Xi = utils::createRandomAroundIdentity<gtsam::Pose3>(1.0);
+  Pose3 Z = utils::createRandomAroundIdentity<gtsam::Pose3>(2.5);
+
+  // For RIGHT factor: Xj = Z * Xi
+  Pose3 Xj = Z.compose(Xi);
+
+  auto model = noiseModel::Isotropic::Sigma(6, 1.0);
+
+  MotionBetweenFactor<Pose3> rightFactor(0, 1, Z, model);
+  BetweenFactor<Pose3> leftFactor(0, 1, Z, model);
+
+  Vector err_right = rightFactor.evaluateError(Xi, Xj);
+  Vector err_left = leftFactor.evaluateError(Xi, Xj);
+
+  // Right factor should be zero
+  EXPECT_TRUE(gtsam::assert_equal(err_right, Z_6x1, 1e-6));
+
+  // Standard between SHOULD NOT be zero
+  EXPECT_GT(err_left.norm(), 1e-3);
+}
+
+TEST(MotionBetweenFactor, InverseConsistency) {
+  using namespace gtsam;
+  Pose3 Xi = utils::createRandomAroundIdentity<gtsam::Pose3>(4.20);
+  Pose3 Z = utils::createRandomAroundIdentity<gtsam::Pose3>(8.1);
+
+  Pose3 Xj = Z.compose(Xi);
+
+  auto model = noiseModel::Unit::Create(6);
+
+  MotionBetweenFactor<Pose3> factor(0, 1, Z, model);
+
+  Vector err = factor.evaluateError(Xi, Xj);
+  EXPECT_NEAR(err.norm(), 0.0, 1e-9);
+
+  // Flip roles
+  MotionBetweenFactor<Pose3> factor_inv(1, 0, Z.inverse(), model);
+
+  Vector err_inv = factor_inv.evaluateError(Xj, Xi);
+  EXPECT_TRUE(gtsam::assert_equal(err_inv, Z_6x1, 1e-6));
+}
+
+TEST(MotionBetweenFactor, Jacobians) {
+  using namespace gtsam;
+  Pose3 Xi = utils::createRandomAroundIdentity<gtsam::Pose3>(4.20);
+  Pose3 Z = utils::createRandomAroundIdentity<gtsam::Pose3>(8.1);
+  Pose3 Xj = utils::createRandomAroundIdentity<gtsam::Pose3>(2.1);
+
+  auto model = noiseModel::Unit::Create(6);
+  MotionBetweenFactor<Pose3> factor(0, 1, Z, model);
+
+  Matrix H_i, H_j;
+  Vector err = factor.evaluateError(Xi, Xj, H_i, H_j);
+
+  // Numerical derivatives
+  Matrix H_i_num = numericalDerivative21<Vector, Pose3, Pose3>(
+      [&](const Pose3& Xi_, const Pose3& Xj_) {
+        return factor.evaluateError(Xi_, Xj_);
+      },
+      Xi, Xj);
+
+  Matrix H_j_num = numericalDerivative22<Vector, Pose3, Pose3>(
+      [&](const Pose3& Xi_, const Pose3& Xj_) {
+        return factor.evaluateError(Xi_, Xj_);
+      },
+      Xi, Xj);
+
+  EXPECT_TRUE(assert_equal(H_i, H_i_num, 1e-6));
+  EXPECT_TRUE(assert_equal(H_j, H_j_num, 1e-6));
+}
+
+TEST(MotionBetweenFactor, MatchesManualError) {
+  using namespace gtsam;
+  Pose3 Xi = utils::createRandomAroundIdentity<gtsam::Pose3>(1.20);
+  Pose3 Z = utils::createRandomAroundIdentity<gtsam::Pose3>(0.2);
+  Pose3 Xj = utils::createRandomAroundIdentity<gtsam::Pose3>(6);
+
+  auto model = noiseModel::Unit::Create(6);
+  MotionBetweenFactor<Pose3> factor(0, 1, Z, model);
+
+  Vector err = factor.evaluateError(Xi, Xj);
+
+  // Manual computation
+  Pose3 predicted = Xj.compose(Xi.inverse());
+  Vector err_manual = Z.localCoordinates(predicted);
+
+  EXPECT_TRUE(assert_equal(err, err_manual, 1e-9));
 }
 
 // TEST(SmartMotionFactor, computeTriangulationBasic) {

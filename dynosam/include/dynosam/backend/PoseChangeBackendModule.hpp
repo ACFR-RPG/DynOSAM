@@ -44,8 +44,7 @@ class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
   }
   HybridFormulationKeyFrame::Ptr getFormulation() const { return formulation_; }
 
-  void registerFrontendUpdateCallback(
-      const FrontendUpdateCallback& frontend_update_callback);
+  void registerUpdateCallback(const PoseChangeUpdateCompleteCallback& callback);
 
  private:
   using SpinReturn = Base::SpinReturn;
@@ -68,7 +67,7 @@ class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
   std::unique_ptr<gtsam::ISAM2> smoother_;
 
   //! Callback to asynchronously alert the frontend an update is complete
-  FrontendUpdateCallback frontend_update_callback_;
+  PoseChangeUpdateCompleteCallback update_callback_;
 };
 
 }  // namespace dyno

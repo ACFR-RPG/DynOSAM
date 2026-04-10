@@ -370,13 +370,6 @@ bool HybridObjectMotionSolver::solveImpl(
       const std::lock_guard<std::mutex> lock(pose_change_info_mutex_);
       pose_change_info_.insert2(object_id, info);
     }
-
-    // std::string path = dyno::getOutputFilePath(
-    //     "doo_object_map_k" + std::to_string(frame_k->getFrameId()) + "_j" +
-    //     std::to_string(object_id) + ".pcd");
-    // VLOG(10) << "Writing object map of size "
-    //          << info.initial_object_points.size() << " - " << path;
-    // saveAsPointCloud(info.initial_object_points, path);
   }
 
   // logic is sperate to keyframe status which determines if a new keyframe
