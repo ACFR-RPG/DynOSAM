@@ -50,6 +50,33 @@ gtsam::SharedNoiseModel robustifyHuber(double k,
       gtsam::noiseModel::mEstimator::Huber::Create(k), model);
 }
 
+gtsam::SharedNoiseModel inflateNoise(const gtsam::SharedNoiseModel& model,
+                                     double k) {
+  using namespace gtsam;
+  using namespace noiseModel;
+
+  // Handle robust wrapper
+  if (auto robust = boost::dynamic_pointer_cast<Robust>(model)) {
+    // WOW chat-gpt giving me some gross recursion here...
+    auto inflated_base = inflateNoise(robust->noise(), k);
+    return Robust::Create(robust->robust(), inflated_base);
+  }
+
+  // Handle Gaussian (covers Diagonal, Isotropic, full)
+  if (auto gaussian = boost::dynamic_pointer_cast<Gaussian>(model)) {
+    // Information matrix (RᵀR form internally)
+    gtsam::Matrix info = gaussian->information();
+
+    // Inflate covariance ⇒ shrink information
+    info /= (k * k);
+
+    return Gaussian::Information(info);
+  }
+
+  // Fallback (rare cases like Unit, Constrained)
+  throw std::runtime_error("Unsupported noise model type for inflation");
+}
+
 // TODO: deprivate!!!
 void addBetweenFactor(FrameId from_frame, FrameId to_frame,
                       const gtsam::Pose3 from_pose_to,

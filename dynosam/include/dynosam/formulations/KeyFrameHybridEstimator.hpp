@@ -1,13 +1,14 @@
 #pragma once
 
 #include "dynosam/formulations/HybridEstimator.hpp"
+#include "dynosam/formulations/KeyFrameHybridMap.hpp"
 
 namespace dyno {
 
-class HybridFormulationKeyFrameAccessor : public HybridAccessor<MapVision> {
+class HybridFormulationKeyFrameAccessor : public HybridAccessor<KeyFrameMap> {
  public:
   HybridFormulationKeyFrameAccessor(
-      const SharedFormulationData::Ptr& shared_data, MapVision::Ptr map,
+      const SharedFormulationData::Ptr& shared_data, KeyFrameMap::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
       : HybridAccessor(shared_data, map, shared_hybrid_formulation_data) {}
 
@@ -33,7 +34,76 @@ class HybridFormulationKeyFrameAccessor : public HybridAccessor<MapVision> {
   //     FrameId frame_id, ObjectId object_id) const; override;
 };
 
-class HybridFormulationKeyFrame : public HybridFormulation<MapVision> {
+class StereoHybridMotionExtrapolatedFactor
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
+                                      gtsam::Point3>,
+      public StereoHybridMotionFactorBase {
+ public:
+  using Base =
+      gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Point3>;
+
+  StereoHybridMotionExtrapolatedFactor(
+      const gtsam::StereoPoint2& measured, const gtsam::Pose3& L_KF,
+      const gtsam::Pose3& T_i_j,  // <-- fixed relative transform
+      const gtsam::SharedNoiseModel& model, gtsam::Cal3_S2Stereo::shared_ptr K,
+      gtsam::Key X_i_key, gtsam::Key H_W_KF_j_key, gtsam::Key m_L_key,
+      bool throw_cheirality = false)
+      : Base(model, X_i_key, H_W_KF_j_key, m_L_key),
+        StereoHybridMotionFactorBase(measured, L_KF, K, throw_cheirality),
+        T_i_j_(T_i_j) {}
+
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+        gtsam::NonlinearFactor::shared_ptr(
+            new StereoHybridMotionExtrapolatedFactor(*this)));
+  }
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& X_i, const gtsam::Pose3& H_W_KF_j,
+      const gtsam::Point3& m_L,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
+    // --- 1. Compose pose ---
+    gtsam::Matrix66 H_comp_Xi;
+    const gtsam::Pose3 X_j = X_i.compose(T_i_j_, J1 ? &H_comp_Xi : nullptr);
+
+    // --- 2. Evaluate base factor ---
+    gtsam::Matrix J_Xj;  // 3x6
+    gtsam::Matrix J_H;   // 3x6
+    gtsam::Matrix J_m;   // 3x3
+
+    try {
+      const gtsam::Vector error = StereoHybridMotionFactorBase::evaluateError(
+          X_j, H_W_KF_j, m_L, J_Xj, J_H, J_m);
+
+      // --- 3. Chain rule ---
+      if (J1) {
+        *J1 = J_Xj * H_comp_Xi;  // (3x6)*(6x6) = 3x6
+      }
+
+      if (J2) {
+        *J2 = J_H;  // unchanged
+      }
+
+      if (J3) {
+        *J3 = J_m;  // unchanged
+      }
+
+      return error;
+    } catch (const CheiralityException&) {
+      // only derived class knows about the key so throw here not in base
+      // which throws CheiralityException
+      // CheiralityException is only thrown if throw_cheirality true
+      throw gtsam::StereoCheiralityException(this->key3());
+    }
+  }
+
+ private:
+  gtsam::Pose3 T_i_j_;  // fixed transform
+};
+
+class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
  public:
   using Base = HybridFormulation;
   using Base::MapTraitsType;
@@ -44,7 +114,7 @@ class HybridFormulationKeyFrame : public HybridFormulation<MapVision> {
   DYNO_POINTER_TYPEDEFS(HybridFormulationKeyFrame)
 
   HybridFormulationKeyFrame(const FormulationParams& params,
-                            typename Map::Ptr map,
+                            KeyFrameMap::Ptr map,
                             const NoiseModels& noise_models,
                             const Sensors& sensors,
                             const FormulationHooks& hooks)
@@ -89,7 +159,6 @@ class HybridFormulationKeyFrame : public HybridFormulation<MapVision> {
   struct Context {
     SharedObjectNode object_node;
     SharedFrameNode frame_node;
-    gtsam::Pose3 X_k_measured;
     //! When an update starts only a subset of the factors are provided to the
     //! update This value indicates the factor slot offset (ie the total graph
     //! size before any update)

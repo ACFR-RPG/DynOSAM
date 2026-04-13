@@ -121,6 +121,20 @@ class FrameKFNode : public FrameNodeBase<KeyFrameNodeTypes> {
   bool isCameraKeyFrame() const;
   bool isObjectKeyFrame(ObjectId object_id) const;
 
+  void addRelativeEgoMotion(const gtsam::Pose3& T_KF_k, FrameId frame_id_k);
+  bool hasRelativeEgoMotion(FrameId frame_id_k) const {
+    return T_KF_k_.exists(frame_id_k);
+  }
+
+  void setLastCameraKeyFrame(FrameId frame_id) {
+    last_camera_keyframe_ = frame_id;
+  }
+  FrameId getLastCameraKeyFrame() const { return last_camera_keyframe_; }
+
+  const gtsam::Pose3& getRelativeEgoMotion(FrameId frame_id_k) const {
+    return T_KF_k_.at(frame_id_k);
+  }
+
  private:
   // allert all landmarks that this frame is now a keyframe
   // achieved by updating LandmarkKFNode::keyframes_ for each
@@ -131,6 +145,17 @@ class FrameKFNode : public FrameNodeBase<KeyFrameNodeTypes> {
  private:
   bool is_camera_keyframe_{false};
   std::unordered_set<ObjectId> object_keyframes_;
+
+  //! identifies the FrameId of closest (temporally) frame that is also a camera
+  //! keyframe Only ever before or equal to this frame id If
+  //! last_camera_keyframe_ == this->frameId() then implified that this is a
+  //! camera keyframe
+  FrameId last_camera_keyframe_;
+
+  //! Relative ego0motions from this keyframe to intermediate frames k
+  //! We should have this data for all intermediate frames (except for k==KF)
+  // TODO: eventually IMU data as well!
+  gtsam::FastMap<FrameId, gtsam::Pose3> T_KF_k_;
 };
 
 class KeyFrameMap : public Map<KeyFrameNodeTypes> {
@@ -138,6 +163,8 @@ class KeyFrameMap : public Map<KeyFrameNodeTypes> {
 
  public:
   using Base = Map<KeyFrameNodeTypes>;
+  typedef typename Base::SharedFrameSet SharedFrameSet;
+
   DYNO_POINTER_TYPEDEFS(KeyFrameMap)
 
   // Constructor is only usable by this class

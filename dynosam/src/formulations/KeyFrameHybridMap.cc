@@ -53,6 +53,13 @@ bool FrameKFNode::isObjectKeyFrame(ObjectId object_id) const {
   return object_keyframes_.find(object_id) != object_keyframes_.end();
 }
 
+void FrameKFNode::addRelativeEgoMotion(const gtsam::Pose3& T_KF_k,
+                                       FrameId frame_id_k) {
+  CHECK(!T_KF_k_.exists(frame_id_k));
+
+  T_KF_k_.insert2(frame_id_k, T_KF_k);
+}
+
 void FrameKFNode::updateLandmarksWithKF(const Base::Landmarks& lmks) {
   FrameId frame_id = this->frameId();
   for (auto& lmk : lmks) {

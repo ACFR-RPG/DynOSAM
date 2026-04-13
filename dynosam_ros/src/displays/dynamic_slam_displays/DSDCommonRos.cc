@@ -63,8 +63,14 @@ void DynoStatePublisher::publish(const DynoState& state) {
 void DynoStatePublisher::publishObjects(
     FrameId frame_id, const MultiObjectTrajectories& object_trajectories) {
   // get subset of trajectories that has an object observed at k
-  auto object_trajectories_k =
-      object_trajectories.trajectoriesAtFrame(frame_id);
+  // TODO: for now!
+  // auto object_trajectories_k =
+  //     object_trajectories.trajectoriesAtFrame(frame_id);
+
+  // if (object_trajectories_k.empty()) {
+  //   return;
+  // }
+  MultiObjectTrajectories object_trajectories_k = object_trajectories;
 
   if (object_trajectories_k.empty()) {
     return;
@@ -74,7 +80,7 @@ void DynoStatePublisher::publishObjects(
 
   MultiObjectOdometryPath multi_object_odom_paths;
   multi_object_odom_paths.header.stamp =
-      utils::toRosTime(object_trajectories.lastTimestamp());
+      utils::toRosTime(object_trajectories_k.lastTimestamp());
   multi_object_odom_paths.header.frame_id = params_.world_frame_id;
 
   for (const auto& [object_id, object_trajectory] : object_trajectories_k) {

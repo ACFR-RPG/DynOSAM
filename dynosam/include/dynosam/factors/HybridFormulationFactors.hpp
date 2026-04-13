@@ -250,37 +250,6 @@ class StereoHybridMotionFactor
       boost::optional<gtsam::Matrix&> J3 = boost::none) const override;
 };
 
-// class StereoHybridMotionFactorRelativeCameraPose
-//     : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
-//                                       gtsam::Point3>,
-//       public StereoHybridMotionFactorBase {
-//  public:
-//   using This = StereoHybridMotionFactorRelativeCameraPose;
-//   using Base =
-//       gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Point3>;
-
-//   StereoHybridMotionFactorRelativeCameraPose(
-//     const gtsam::StereoPoint2& measured,
-//     const gtsam::Pose3& T_Xk_
-//     const gtsam::Pose3& L_e,
-//     const gtsam::SharedNoiseModel& model,
-//     gtsam::Cal3_S2Stereo::shared_ptr K,
-//     gtsam::Key X_k_key, gtsam::Key e_H_k_world_key,
-//     gtsam::Key m_L_key, bool throw_cheirality = false);
-
-//   gtsam::NonlinearFactor::shared_ptr clone() const override;
-//   void print(const std::string& s = "",
-//              const gtsam::KeyFormatter& keyFormatter =
-//                  DynosamKeyFormatter) const override;
-
-//   gtsam::Vector evaluateError(
-//       const gtsam::Pose3& X_k, const gtsam::Pose3& e_H_k_world,
-//       const gtsam::Point3& m_L,
-//       boost::optional<gtsam::Matrix&> J1 = boost::none,
-//       boost::optional<gtsam::Matrix&> J2 = boost::none,
-//       boost::optional<gtsam::Matrix&> J3 = boost::none) const override;
-// };
-
 /**
  * @brief Stereo Hybrid Motion factor \sigma(H, m) with a fixed camera pose X
  *

@@ -310,11 +310,11 @@ UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
 
     // depending on how the frontend is implemented we may have measurements in
     // the map at non-keyframes but only want to update objects at KFs
+    // TODO: this should actually checkk the NODE now!!
     if (isObjectKeyFrame(object_id, frame_id_k)) {
       Context context;
       context.object_node = object_node;
       context.frame_node = frame_node_k;
-      context.X_k_measured = getInitialOrLinearizedSensorPose(frame_id_k);
       context.starting_factor_slot = starting_factor_slot;
 
       LOG(INFO) << "Updating object " << info_string(frame_id_k, object_id);
@@ -468,48 +468,6 @@ void HybridFormulationKeyFrame::updateObject(
       if (result.debug_info) {
         result.debug_info->getObjectInfo(object_id).num_new_dynamic_points++;
       }
-
-      // at measurements of point if also seen at AKF
-      // most measurements wont actually be seen at the AFK
-      // since this is the first frame!
-      // what we really want to do is make sure we add measurements for the
-      // "from" -> "to"
-      // frame of the original motion (ie. the one from the frontend)
-      // if(obj_lmk_node->seenAtFrame(frame_id_akf)) {
-      //   addHybridMotionFactor(new_factors, pose_key_akf,
-      //   object_motion_key_akf, point_key,
-      //                     AKF_pose, obj_lmk_node, frame_node_akf);
-      //   if (result.debug_info) {
-      //     result.debug_info->getObjectInfo(context.getObjectId())
-      //         .num_dynamic_factors++;
-      //   }
-      //   num_points_seen_akf++;
-      // }
-
-      // add measurements at both Keyframes a point is seen at
-      // only needed if a point is new (I think!)
-      // if (obj_lmk_node->seenAtFrame(lRKF_id)) {
-      //   const gtsam::Key object_motion_key_lrkf =
-      //       frame_node_lrkf->makeObjectMotionKey(object_id);
-      //   const gtsam::Key pose_key_lrkf = frame_node_lrkf->makePoseKey();
-
-      //   addHybridMotionFactor(new_factors, pose_key_lrkf,
-      //                         object_motion_key_lrkf, point_key, AKF_pose,
-      //                         obj_lmk_node, frame_node_lrkf);
-      //   if (result.debug_info) {
-      //     result.debug_info->getObjectInfo(context.getObjectId())
-      //         .num_dynamic_factors++;
-      //   }
-      //   num_points_seen_akf++;
-      // }
-
-      // add at from frame if point is new
-      //  assume that once we have seen it we only need to add measurements
-      //  at the newest KF, since we will have added measurements
-      //  for the previous KF last iteration (if all works well!)
-      // addHybridMotionFactor(new_factors, pose_key, object_motion_key,
-      // point_key,
-      //                       AKF_pose, obj_lmk_node, frame_node_akf);
     }
 
     // check if we've added a factor at the regular from frame
@@ -632,6 +590,7 @@ void HybridFormulationKeyFrame::updateObject(
             << num_points_seen_akf;
 }
 
+// TODO: function is doing a lot!!!
 void HybridFormulationKeyFrame::addHybridMotionFactor(
     gtsam::NonlinearFactorGraph& new_factors, gtsam::Key pose_key,
     gtsam::Key object_motion_key, gtsam::Key point_key,
@@ -655,10 +614,58 @@ void HybridFormulationKeyFrame::addHybridMotionFactor(
                                                      noise_model);
   }
 
-  new_factors.emplace_shared<StereoHybridMotionFactor>(
-      measurement, KF_pose, noise_model, rgbd_camera_->getFakeStereoCalib(),
-      pose_key, object_motion_key, point_key, true /* throw cheirality*/
-  );
+  if (frame_node->isCameraKeyFrame()) {
+    new_factors.emplace_shared<StereoHybridMotionFactor>(
+        measurement, KF_pose, noise_model, rgbd_camera_->getFakeStereoCalib(),
+        pose_key, object_motion_key, point_key, true /* throw cheirality*/
+    );
+  } else {
+    // get closest frame that is a camera keyframe! thankfully the frontend sets
+    // this for us in each node
+    const FrameId closest_CKF_id = frame_node->getLastCameraKeyFrame();
+    const FrameId frame_id_k = frame_node->frameId();
+
+    // some sanity checks; must exist and must be a camera KF but shouldn't be
+    // at this frame
+    auto frame_node_closest_CKF = CHECK_NOTNULL(map_->getFrame(closest_CKF_id));
+    CHECK(frame_node_closest_CKF->frameId() != frame_id_k);
+    CHECK(frame_node_closest_CKF->isCameraKeyFrame());
+
+    // check that a VO transform from CKF to k exists
+    CHECK(frame_node_closest_CKF->hasRelativeEgoMotion(frame_id_k));
+    const gtsam::Pose3 T_CKF_k =
+        frame_node_closest_CKF->getRelativeEgoMotion(frame_id_k);
+
+    // actually not sure if this matters... everything should be self consisent
+    // //TODO: parse object id into function?
+    // // check if this frame is in the same backend range
+    // // if it is not, ignore it!
+    // const KeyFrameRange::ConstPtr range_CKF =
+    //     key_frame_data_.find(lmk_node->objectId(), closest_CKF_id);
+    // const KeyFrameRange::ConstPtr range_k =
+    //     key_frame_data_.find(lmk_node->objectId(), frame_id_k);
+    // CHECK(range);
+    // const auto [AKF_id_for_CKF, _] = range_CKF->dataPair();
+    // if (AKF_id_for_CKF != frame_id_k) {
+    //   return;
+    // }
+
+    LOG(INFO) << "Making StereoHybridMotionExtrapolatedFactor factor "
+              << " with KF camera at " << closest_CKF_id << " and motion at "
+              << frame_id_k << "for j=" << lmk_node->objectId();
+
+    gtsam::SharedNoiseModel extrapolated_noise_model =
+        factor_graph_tools::inflateNoise(noise_model, 3.0);
+    CHECK_NOTNULL(extrapolated_noise_model);
+
+    // here we use a different pose key, associated with closes_CKF
+    gtsam::Key X_W_CKF_key = frame_node_closest_CKF->makePoseKey();
+    new_factors.emplace_shared<StereoHybridMotionExtrapolatedFactor>(
+        measurement, KF_pose, T_CKF_k, extrapolated_noise_model,
+        rgbd_camera_->getFakeStereoCalib(), X_W_CKF_key, object_motion_key,
+        point_key, true /* throw cheirality*/
+    );
+  }
 
   // new_factors.emplace_shared<HybridMotionFactor>(
   //     pose_key, object_motion_key, point_key, measured_point_local, KF_pose,

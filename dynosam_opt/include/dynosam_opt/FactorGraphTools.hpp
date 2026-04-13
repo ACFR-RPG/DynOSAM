@@ -64,6 +64,11 @@ namespace factor_graph_tools {
  */
 gtsam::SharedNoiseModel robustifyHuber(double k, gtsam::SharedNoiseModel model);
 
+// k scales the sigmas (ie. k=2 means double the sigmas, ie higher uncertainty)
+//  keeps models as they are (ie. robust)
+gtsam::SharedNoiseModel inflateNoise(const gtsam::SharedNoiseModel& model,
+                                     double k);
+
 void addBetweenFactor(FrameId from_frame, FrameId to_frame,
                       const gtsam::Pose3 from_pose_to,
                       gtsam::SharedNoiseModel noise_model,

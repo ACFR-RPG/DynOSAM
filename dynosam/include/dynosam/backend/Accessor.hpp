@@ -509,12 +509,12 @@ class AccessorT : public DerivedAccessor {
   }
   const FormulationHooks& hooks() const { return shared_data_->hooks; }
 
+ private:  //! in the associated formulation
+  const SharedFormulationData::Ptr shared_data_;
+
  protected:
   //! Pointer to internal map structure
   typename Map::Ptr map_;
-
- private:  //! in the associated formulation
-  const SharedFormulationData::Ptr shared_data_;
 };
 
 }  // namespace dyno

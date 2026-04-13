@@ -387,7 +387,7 @@ class MultiObjectTrajectories
 
   bool hasFrame(ObjectId object_id, FrameId frame_id) const;
   EntryMap entriesAtFrame(FrameId frame_id) const;
-  Base trajectoriesAtFrame(FrameId frame_id) const;
+  MultiObjectTrajectories trajectoriesAtFrame(FrameId frame_id) const;
 
   // Most recent frame for any object
   FrameId lastFrame() const;

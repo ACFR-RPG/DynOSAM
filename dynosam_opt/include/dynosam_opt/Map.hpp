@@ -662,8 +662,9 @@ class LandmarkNodeBase {
   const M& getMeasurement(SharedFrame frame_node) const {
     CHECK_NOTNULL(frame_node);
     if (!asDerived().seenAtFrame(frame_node->frameId())) {
-      throw DynosamException("Missing measurement in landmark node with id " +
-                             std::to_string(tracklet_id_) + " at frame " +
+      throw DynosamException("Missing measurement in landmark node with i=" +
+                             std::to_string(tracklet_id_) +
+                             " j=" + std::to_string(object_id_) + " at frame " +
                              std::to_string(frame_node->frameId()));
     }
     return measurements_.at(frame_node);
@@ -683,7 +684,7 @@ class LandmarkNodeBase {
     if (!asDerived().seenAtFrame(frame_id)) {
       DYNO_THROW_MSG(DynosamException)
           << "Missing measurement in landmark node "
-          << "i=" << tracklet_id_ << " k=" << frame_id;
+          << "i=" << tracklet_id_ << " j=" << object_id_ << " k=" << frame_id;
     }
 
     const auto frames = asDerived().getSeenFrames();

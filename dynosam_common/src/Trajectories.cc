@@ -101,9 +101,9 @@ MultiObjectTrajectories::EntryMap MultiObjectTrajectories::entriesAtFrame(
   return entry_map;
 }
 
-MultiObjectTrajectories::Base MultiObjectTrajectories::trajectoriesAtFrame(
+MultiObjectTrajectories MultiObjectTrajectories::trajectoriesAtFrame(
     FrameId frame_id) const {
-  MultiObjectTrajectories::Base trajectories;
+  MultiObjectTrajectories trajectories;
   for (const auto& [object_id, trajectory] : *this) {
     if (this->hasFrame(object_id, frame_id)) {
       const auto& trajectory = this->at(object_id);
@@ -135,6 +135,10 @@ ObjectMotionMap MultiObjectTrajectories::toObjectMotionMap() const {
 
 bool MultiObjectTrajectories::getTemporalLastEntry(FrameId& frame_id,
                                                    Timestamp& timestamp) const {
+  if (this->empty()) {
+    return false;
+  }
+
   auto max_it = std::max_element(
       this->begin(), this->end(), [](const auto& a, const auto& b) {
         return a.second.maxFrame() < b.second.maxFrame();

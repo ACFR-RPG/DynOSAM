@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dynosam/backend/PoseChangeBackendModule.hpp"
-#include "dynosam/formulations/HybridEstimator.hpp"
+#include "dynosam/formulations/KeyFrameHybridEstimator.hpp"
 #include "dynosam/frontend/VIFrontend.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSolver.hpp"
 #include "dynosam_cv/RGBDCamera.hpp"
@@ -102,7 +102,7 @@ class PoseChangeVIFrontend : public VIFrontend {
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
-  MapVision::Ptr map_;
+  KeyFrameMap::Ptr map_;
   HybridObjectMotionSolver::UniquePtr object_motion_solver_;
 
   gtsam::NavState nav_state_km1_;

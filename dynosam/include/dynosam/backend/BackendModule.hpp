@@ -124,7 +124,16 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
 
     // TODO: should be global!?
     state->local_static_map = accessor->getFullStaticMap();
-    state->dynamic_map = accessor->getDynamicLandmarkEstimates(state->frame_id);
+
+    // TODO: this wrong for hybrid KF as there may be not motions at this CKF
+    // TODO: hack for dynamic objects in KF but may also be okay general
+    // solution
+    for (const auto [object_id, trajectory_j] : state->object_trajectories) {
+      state->dynamic_map += accessor->getDynamicLandmarkEstimates(
+          trajectory_j.maxFrame(), object_id);
+    }
+    // state->dynamic_map =
+    // accessor->getDynamicLandmarkEstimates(state->frame_id);
 
     return state;
   }
