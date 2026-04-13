@@ -38,16 +38,17 @@
 #include <exception>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"  //TODO: move implementation to factors?
 #include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/MotionBetweenFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
+#include "dynosam/formulations/HybridEstimator.hpp"
+"  //TODO: move implementation to factors?
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "internal/helpers.hpp"
 
-using namespace dyno;
+    using namespace dyno;
 
 TEST(LandmarkMotionPoseFactor, visualiseJacobiansWithNonZeros) {
   gtsam::Pose3 L1(gtsam::Rot3::Rodrigues(-0.1, 0.2, 0.25),

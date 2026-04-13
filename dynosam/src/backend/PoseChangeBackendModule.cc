@@ -60,19 +60,6 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   gtsam::Values optimised_values = smoother_interface.calculateEstimate();
   formulation_->updateTheta(optimised_values);
 
-  // for (const auto object_id : input->involved_objects) {
-  //   StatusLandmarkVector local_landmarks =
-  //       hybrid_accessor_->getLocalDynamicLandmarkEstimates(object_id);
-
-  //   std::string path = dyno::getOutputFilePath(
-  //       "refined_object_map_k" + std::to_string(input->frame_id) + "_j" +
-  //       std::to_string(object_id) + ".pcd");
-  //   VLOG(10) << "Writing object map of size " << local_landmarks.size() << "
-  //   - "
-  //            << path;
-  //   saveAsPointCloud(local_landmarks, path);
-  // }
-
   // alert frontend
   if (update_callback_) {
     PoseChangeUpdateComplete event;

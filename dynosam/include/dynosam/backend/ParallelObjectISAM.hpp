@@ -38,7 +38,7 @@
 #include <nlohmann/json.hpp>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"
+#include "dynosam/formulations/RegularHybridEstimator.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"  //only needed for factors
 #include "dynosam_opt/IncrementalOptimization.hpp"

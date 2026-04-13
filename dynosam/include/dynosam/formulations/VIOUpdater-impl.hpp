@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dynosam/backend/rgbd/VIOFormulation.hpp"
+#include "dynosam/formulations/VIOFormulation.hpp"
 
 namespace dyno {
 

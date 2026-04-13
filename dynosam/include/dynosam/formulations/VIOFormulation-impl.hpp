@@ -4,8 +4,8 @@
 #include <gtsam/navigation/NavState.h>
 
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/backend/rgbd/VIOFormulation.hpp"
-#include "dynosam/backend/rgbd/VIOUpdater-impl.hpp"
+#include "dynosam/formulations/VIOFormulation.hpp"
+#include "dynosam/formulations/VIOUpdater-impl.hpp"
 
 namespace dyno {
 

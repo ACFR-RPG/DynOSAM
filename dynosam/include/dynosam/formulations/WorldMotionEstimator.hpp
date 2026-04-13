@@ -32,7 +32,7 @@
 
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
+#include "dynosam/formulations/WorldPoseEstimator.hpp"
 #include "dynosam_opt/Map.hpp"
 
 namespace dyno {

@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
+#include "dynosam/formulations/WorldMotionEstimator.hpp"
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"

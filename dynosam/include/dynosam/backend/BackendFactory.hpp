@@ -40,10 +40,9 @@
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/PoseChangeBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"
-#include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
-#include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
-#include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
+#include "dynosam/formulations/HybridEstimator.hpp"
+#include "dynosam/formulations/WorldMotionEstimator.hpp"
+#include "dynosam/formulations/WorldPoseEstimator.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
 #include "dynosam_opt/IncrementalOptimization.hpp"     // for ErrorHandlingHooks
 
@@ -284,16 +283,9 @@ class BackendFactory
             << "Using Hybrid Structurless. Warning this is a testing only "
                "formulation!";
       } else if (this->backend_type_ == BackendType::TESTING_HYBRID_SMF) {
-        LOG(INFO)
+        LOG(FATAL)
             << "Using Hybrid Smart Motion Factor. Warning this is a testing "
                "only formulation!";
-        FormulationParams fp = formulation_params;
-        fp.min_dynamic_observations = 1u;
-        std::shared_ptr<test_hybrid::SmartStructurlessFormulation> formulation =
-            std::make_shared<test_hybrid::SmartStructurlessFormulation>(
-                fp, map, noise_models, sensors, formulation_hooks);
-        wrapper.display = policy_->createDisplay(formulation);
-        wrapper.formulation = formulation;
 
       } else {
         CHECK(false) << "Not implemented";

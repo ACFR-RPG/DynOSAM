@@ -113,7 +113,7 @@ class MeasurementWithCovariance {
    *
    * @param measurement const T&
    */
-  explicit MeasurementWithCovariance(const T& measurement)
+  MeasurementWithCovariance(const T& measurement)
       : measurement_(measurement), model_(nullptr) {}
 
   explicit MeasurementWithCovariance(const std::pair<T, Covariance>& pair)

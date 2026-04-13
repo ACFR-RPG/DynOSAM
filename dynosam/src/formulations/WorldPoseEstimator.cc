@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
+#include "dynosam/formulations/WorldPoseEstimator.hpp"
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/factors/LandmarkMotionPoseFactor.hpp"

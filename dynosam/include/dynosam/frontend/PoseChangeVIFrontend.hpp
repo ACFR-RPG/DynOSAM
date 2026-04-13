@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dynosam/backend/PoseChangeBackendModule.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"
+#include "dynosam/formulations/HybridEstimator.hpp"
 #include "dynosam/frontend/VIFrontend.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSolver.hpp"
 #include "dynosam_cv/RGBDCamera.hpp"

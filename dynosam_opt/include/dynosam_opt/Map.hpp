@@ -515,40 +515,50 @@ class FrameNodeBase {
   const Landmarks& staticLandmarks() const { return static_landmarks_; }
   Landmarks& staticLandmarks() { return static_landmarks_; }
 
+  Landmarks dynamicLandmarks(ObjectId object_id) const {
+    Landmarks landmarks_j;
+
+    if (!objectObserved(object_id)) {
+      return landmarks_j;
+    }
+
+    for (const auto& lmk_node : dynamic_landmarks_) {
+      if (lmk_node->objectId() == object_id) {
+        landmarks_j.insert(lmk_node);
+      }
+    }
+    return landmarks_j;
+  }
+
   /// @brief Const SharedLandmarkNode with corresponding Measurement value
   using LandmarkMeasurementPair = std::pair<const SharedLandmark, M>;
 
   std::vector<LandmarkMeasurementPair> staticMeasurements() const {
-    std::vector<LandmarkMeasurementPair> measurements;
-    measurements.reserve(static_landmarks_.size());
-
-    for (const auto& lmk_node : static_landmarks_) {
-      const M& m = lmk_node->getMeasurement(frame_id_);
-      measurements.push_back(std::make_pair(lmk_node, m));
-    }
-    return measurements;
+    return measurementsFromLandmarks(this->static_landmarks_);
   }
 
   std::vector<LandmarkMeasurementPair> dynamicMeasurements() const {
-    std::vector<LandmarkMeasurementPair> measurements;
-    measurements.reserve(dynamic_landmarks_.size());
-
-    for (const auto& lmk_node : dynamic_landmarks_) {
-      const M& m = lmk_node->getMeasurement(frame_id_);
-      measurements.push_back(std::make_pair(lmk_node, m));
-    }
-    return measurements;
+    return measurementsFromLandmarks(this->dynamic_landmarks_);
   }
 
   std::vector<LandmarkMeasurementPair> dynamicMeasurements(
       ObjectId object_id) const {
-    std::vector<LandmarkMeasurementPair> measurements;
+    const Landmarks lmks_j = dynamicLandmarks(object_id);
+    return measurementsFromLandmarks(lmks_j);
+  }
 
-    for (const auto& lmk_node : dynamic_landmarks_) {
-      if (lmk_node->objectId() == object_id) {
-        const M& m = lmk_node->getMeasurement(frame_id_);
-        measurements.push_back(std::make_pair(lmk_node, m));
-      }
+ private:
+  /** Construct a vector of LandmarkMeasurementPair from a set of input
+   * Landmarks using this frame for measurements
+   */
+  std::vector<LandmarkMeasurementPair> measurementsFromLandmarks(
+      const Landmarks& landmarks) const {
+    std::vector<LandmarkMeasurementPair> measurements;
+    measurements.reserve(landmarks.size());
+
+    for (const auto& lmk_node : landmarks) {
+      const M& m = lmk_node->getMeasurement(this->frameId());
+      measurements.push_back(std::make_pair(lmk_node, m));
     }
     return measurements;
   }
@@ -566,9 +576,13 @@ class FrameNodeBase {
   std::optional<Pose3Measurement> X_W_k_;
 };
 
-// change getSeenFrames and seenAtFrame for derived KF behaviour
+// by using derived, the only functions that need changing are getSeenFrames but
+// also add
 template <typename NodeTypes>
 class LandmarkNodeBase {
+ protected:
+  using Derived = typename NodeTypes::LandmarkNodeT;
+
  public:
   using M = typename NodeTypes::Measurement;
   using FrameNode = typename NodeTypes::FrameNodeT;
@@ -633,7 +647,9 @@ class LandmarkNodeBase {
    * @return true
    * @return false
    */
-  bool seenAtFrame(FrameId frame_id) const { return frames_.exists(frame_id); }
+  bool seenAtFrame(FrameId frame_id) const {
+    return asDerived().getSeenFrames().exists(frame_id);
+  }
 
   /**
    * @brief Get the measurement at the requested frame node.
@@ -645,7 +661,7 @@ class LandmarkNodeBase {
    */
   const M& getMeasurement(SharedFrame frame_node) const {
     CHECK_NOTNULL(frame_node);
-    if (!seenAtFrame(frame_node->frameId())) {
+    if (!asDerived().seenAtFrame(frame_node->frameId())) {
       throw DynosamException("Missing measurement in landmark node with id " +
                              std::to_string(tracklet_id_) + " at frame " +
                              std::to_string(frame_node->frameId()));
@@ -664,13 +680,14 @@ class LandmarkNodeBase {
    * @return const M&
    */
   const M& getMeasurement(FrameId frame_id) const {
-    if (!seenAtFrame(frame_id)) {
+    if (!asDerived().seenAtFrame(frame_id)) {
       DYNO_THROW_MSG(DynosamException)
           << "Missing measurement in landmark node "
           << "i=" << tracklet_id_ << " k=" << frame_id;
     }
 
-    SharedFrame frame = *frames_.find(frame_id);
+    const auto frames = asDerived().getSeenFrames();
+    SharedFrame frame = *frames.find(frame_id);
     return getMeasurement(frame);
   }
 
@@ -681,12 +698,12 @@ class LandmarkNodeBase {
     // slow call as we basically iterate over the frames twice
     // but idea is to reuse the getSeenFrames() function as often as
     // possible
-    const Frames& seen_frames = getSeenFrames();
+    const Frames& seen_frames = asDerived().getSeenFrames();
     return seen_frames.template collectKeys();
   }
 
   /** Return number of frames landmark is observed in */
-  size_t numObservations() const { return frames_.size(); }
+  size_t numObservations() const { return asDerived().getSeenFrames().size(); }
 
   /**
    * @brief Construcs a static landmark key for this landmark. The tracklet id
@@ -721,6 +738,14 @@ class LandmarkNodeBase {
     }
     return key;
   }
+
+ protected:
+ private:
+  const Derived& asDerived() const {
+    return static_cast<const Derived&>(*this);
+  }
+
+  Derived& asDerived() { return static_cast<Derived&>(*this); }
 
  protected:
   TrackletId tracklet_id_;
@@ -853,6 +878,10 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     static_assert(
         std::is_same_v<decltype(std::declval<const Node&>().getId()), KeyType>,
         "getId() must return the type specified by Node::KeyType");
+
+    // additionally all nodes must at least inherit from the XNodeBase class
+    // ie. LandmarkNodeBase<>, ObjectNodeBase<> and FrameNodeBase<>
+    // as the map class depends on these functionalities to exist!
   };
 
   typedef NodeTraitsValidator<FrameNodeTraitsT> FrameTraitsValidator;
@@ -918,6 +947,25 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     }
   }
 
+  template <typename DERIVEDSTATUS>
+  void updateObservations(const DERIVEDSTATUS& derived_status) {
+    updateObservations(
+        GenericTrackedStatusVector<DERIVEDSTATUS>({derived_status}));
+  }
+
+  /* Sets initial camera pose (X_W_k) and creates FrameNode if does not exist */
+  void setInitialSensorPose(FrameId frame_id, Timestamp timestamp,
+                            const Pose3Measurement& X_W_k) {
+    auto frame_interface = this->asFrameInterface();
+
+    if (!frame_interface->frameExists(frame_id)) {
+      frame_interface->emplace_shared(frame_id, timestamp);
+    }
+
+    auto frame_node = frame_interface->getFrame(frame_id);
+    frame_node->setInitialSensorPose(X_W_k);
+  }
+
  private:
   typedef GenericValueTrack<Measurement> GenericValueTrackT;
 
@@ -932,19 +980,22 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     CHECK((is_static && object_id == background_label) ||
           (!is_static && object_id != background_label));
 
-    if (!LandmarkNodeInterfaceT::landmarkExists(tracklet_id)) {
-      LandmarkNodeInterfaceT::push_back(
+    auto frame_interface = this->asFrameInterface();
+    auto landmark_interface = this->asLandmarkInterface();
+
+    if (!landmark_interface->landmarkExists(tracklet_id)) {
+      landmark_interface->push_back(
           std::make_shared<LandmarkNodeT>(tracklet_id, object_id));
     }
 
-    if (!FrameNodeInterfaceT::frameExists(frame_id)) {
-      FrameNodeInterfaceT::push_back(
+    if (!frame_interface->frameExists(frame_id)) {
+      frame_interface->push_back(
           std::make_shared<FrameNodeT>(frame_id, timestamp));
     }
 
     SharedLandmarkNodeT landmark_node =
-        LandmarkNodeInterfaceT::getLandmark(tracklet_id);
-    SharedFrameNodeT frame_node = FrameNodeInterfaceT::getFrame(frame_id);
+        landmark_interface->getLandmark(tracklet_id);
+    SharedFrameNodeT frame_node = frame_interface->getFrame(frame_id);
 
     CHECK_NOTNULL(landmark_node);
     CHECK_NOTNULL(frame_node);
@@ -961,13 +1012,12 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     } else {
       CHECK(object_id != background_label);
 
-      if (!ObjectNodeInterfaceT::objectExists(object_id)) {
-        ObjectNodeInterfaceT::push_back(
-            std::make_shared<ObjectNodeT>(object_id));
+      auto object_interface = this->asObjectInterface();
+      if (!object_interface->objectExists(object_id)) {
+        object_interface->push_back(std::make_shared<ObjectNodeT>(object_id));
       }
 
-      SharedObjectNodeT object_node =
-          ObjectNodeInterfaceT::getObject(object_id);
+      SharedObjectNodeT object_node = object_interface->getObject(object_id);
       CHECK_NOTNULL(object_node);
 
       object_node->landmarks().insert(landmark_node);
@@ -1091,19 +1141,6 @@ class RegularMap : public Map<RegularNodeTypes<M>> {
 
   static std::shared_ptr<This> create() {
     return std::make_shared<This>(Private());
-  }
-
-  /* Sets initial camera pose (X_W_k) and creates FrameNode if does not exist */
-  void setInitialSensorPose(FrameId frame_id, Timestamp timestamp,
-                            const Pose3Measurement& X_W_k) {
-    auto frame_interface = this->asFrameInterface();
-
-    if (!frame_interface->frameExists(frame_id)) {
-      frame_interface->emplace_shared(frame_id, timestamp);
-    }
-
-    auto frame_node = frame_interface->getFrame(frame_id);
-    frame_node->setInitialSensorPose(X_W_k);
   }
 
   void setInitialObjectMotions(FrameId frame_id,

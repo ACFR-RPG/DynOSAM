@@ -121,5 +121,5 @@ class VIOFormulation : public FormulationT<MAP> {
 
 }  // namespace dyno
 
-#include "dynosam/backend/rgbd/VIOFormulation-impl.hpp"
-#include "dynosam/backend/rgbd/VIOUpdater-impl.hpp"
+#include "dynosam/formulations/VIOFormulation-impl.hpp"
+#include "dynosam/formulations/VIOUpdater-impl.hpp"

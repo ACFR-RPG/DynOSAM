@@ -2,126 +2,127 @@
 
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/PoseChangeBackendModule.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"
+#include "dynosam/formulations/HybridEstimator.hpp"
+"
 #include "dynosam_ros/displays/BackendDisplayRos.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 
-namespace dyno {
+    namespace dyno {
 
-template <typename T>
-struct BackendModuleDisplayTraits;
+  template <typename T>
+  struct BackendModuleDisplayTraits;
 
-static HybridAccessorCommon::Ptr hybridAccessorCommonHelper(
-    Accessor::Ptr accessor) {
-  CHECK(accessor);
-  HybridAccessorCommon::Ptr hybrid_accessor_common =
-      std::dynamic_pointer_cast<HybridAccessorCommon>(accessor);
-  if (!hybrid_accessor_common) {
-    throw DynosamException(
-        "Accessor could not be cast to HybridAccessorCommon");
-  }
-  return hybrid_accessor_common;
-}
-
-class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
- public:
-  HybridModuleDisplayCommon(const DisplayParams& params, rclcpp::Node* node,
-                            HybridAccessorCommon::Ptr hybrid_accessor);
-
-  void publishObjectBoundingBoxes(const DynoState::ConstPtr& output);
-  void publishObjectKeyFrames(const FrameId frame_id,
-                              const Timestamp timestamp);
-
- private:
-  HybridAccessorCommon::Ptr hybrid_accessor_;
-  MarkerArrayPub::SharedPtr object_bounding_box_pub_;
-  MarkerArrayPub::SharedPtr object_key_frame_pub_;
-};
-
-class ParalleHybridModuleDisplay : public HybridModuleDisplayCommon {
- public:
-  ParalleHybridModuleDisplay(
-      const DisplayParams& params, rclcpp::Node* node,
-      std::shared_ptr<ParallelHybridBackendModule> module)
-      : HybridModuleDisplayCommon(
-            params, node, hybridAccessorCommonHelper(module->getAccessor())),
-        module_(CHECK_NOTNULL(module)) {}
-
-  void spinOnce(const DynoState::ConstPtr& output) override;
-
- private:
-  std::shared_ptr<ParallelHybridBackendModule> module_;
-};
-
-class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
- public:
-  RegularHybridFormulationDisplay(
-      const DisplayParams& params, rclcpp::Node* node,
-      std::shared_ptr<RegularHybridFormulation> module)
-      : HybridModuleDisplayCommon(
-            params, node, module->derivedAccessor<HybridAccessorCommon>()),
-        module_(CHECK_NOTNULL(module)) {
-    CHECK_NOTNULL(module);
+  static HybridAccessorCommon::Ptr hybridAccessorCommonHelper(
+      Accessor::Ptr accessor) {
+    CHECK(accessor);
+    HybridAccessorCommon::Ptr hybrid_accessor_common =
+        std::dynamic_pointer_cast<HybridAccessorCommon>(accessor);
+    if (!hybrid_accessor_common) {
+      throw DynosamException(
+          "Accessor could not be cast to HybridAccessorCommon");
+    }
+    return hybrid_accessor_common;
   }
 
-  void spinOnce(const DynoState::ConstPtr& output) override;
+  class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
+   public:
+    HybridModuleDisplayCommon(const DisplayParams& params, rclcpp::Node* node,
+                              HybridAccessorCommon::Ptr hybrid_accessor);
 
- private:
-  std::shared_ptr<RegularHybridFormulation> module_;
-};
+    void publishObjectBoundingBoxes(const DynoState::ConstPtr& output);
+    void publishObjectKeyFrames(const FrameId frame_id,
+                                const Timestamp timestamp);
 
-class HybridKeyFrameFormulationDisplay : public HybridModuleDisplayCommon {
- public:
-  HybridKeyFrameFormulationDisplay(
-      const DisplayParams& params, rclcpp::Node* node,
-      std::shared_ptr<HybridFormulationKeyFrame> module);
+   private:
+    HybridAccessorCommon::Ptr hybrid_accessor_;
+    MarkerArrayPub::SharedPtr object_bounding_box_pub_;
+    MarkerArrayPub::SharedPtr object_key_frame_pub_;
+  };
 
-  void spinOnce(const DynoState::ConstPtr& output) override;
+  class ParalleHybridModuleDisplay : public HybridModuleDisplayCommon {
+   public:
+    ParalleHybridModuleDisplay(
+        const DisplayParams& params, rclcpp::Node* node,
+        std::shared_ptr<ParallelHybridBackendModule> module)
+        : HybridModuleDisplayCommon(
+              params, node, hybridAccessorCommonHelper(module->getAccessor())),
+          module_(CHECK_NOTNULL(module)) {}
 
- private:
-  std::shared_ptr<HybridFormulationKeyFrame> module_;
-  MarkerArrayPub::SharedPtr initial_anchor_object_key_frame_pub_;
-};
+    void spinOnce(const DynoState::ConstPtr& output) override;
 
-class PoseChangeBakendModuleDisplay : public BackendModuleDisplayRos {
- public:
-  PoseChangeBakendModuleDisplay(
-      const DisplayParams& params, rclcpp::Node* node,
-      std::shared_ptr<PoseChangeVIBackendModule> module);
+   private:
+    std::shared_ptr<ParallelHybridBackendModule> module_;
+  };
 
-  void spinOnce(const DynoState::ConstPtr& output) override;
+  class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
+   public:
+    RegularHybridFormulationDisplay(
+        const DisplayParams& params, rclcpp::Node* node,
+        std::shared_ptr<RegularHybridFormulation> module)
+        : HybridModuleDisplayCommon(
+              params, node, module->derivedAccessor<HybridAccessorCommon>()),
+          module_(CHECK_NOTNULL(module)) {
+      CHECK_NOTNULL(module);
+    }
 
- private:
-  std::shared_ptr<PoseChangeVIBackendModule> module_;
-  HybridKeyFrameFormulationDisplay formulation_display_;
-};
+    void spinOnce(const DynoState::ConstPtr& output) override;
 
-// TODO: in light of now having many Hybrid formulations we should template on
-// HybridFormulation not on RegularHybridFormulation as the display should work
-// for all!!
+   private:
+    std::shared_ptr<RegularHybridFormulation> module_;
+  };
 
-/// @brief Register ParalleHybridModuleDisplay as the acting backend display for
-/// the Factory policy
-template <>
-struct BackendModuleDisplayTraits<ParallelHybridBackendModule> {
-  using type = ParalleHybridModuleDisplay;
-};
+  class HybridKeyFrameFormulationDisplay : public HybridModuleDisplayCommon {
+   public:
+    HybridKeyFrameFormulationDisplay(
+        const DisplayParams& params, rclcpp::Node* node,
+        std::shared_ptr<HybridFormulationKeyFrame> module);
 
-/// @brief Register RegularHybridFormulationDisplay as the acting backend
-/// display for the Factory policy
-template <>
-struct BackendModuleDisplayTraits<RegularHybridFormulation> {
-  using type = RegularHybridFormulationDisplay;
-};
+    void spinOnce(const DynoState::ConstPtr& output) override;
 
-template <>
-struct BackendModuleDisplayTraits<HybridFormulationKeyFrame> {
-  using type = HybridKeyFrameFormulationDisplay;
-};
+   private:
+    std::shared_ptr<HybridFormulationKeyFrame> module_;
+    MarkerArrayPub::SharedPtr initial_anchor_object_key_frame_pub_;
+  };
 
-template <>
-struct BackendModuleDisplayTraits<PoseChangeVIBackendModule> {
-  using type = PoseChangeBakendModuleDisplay;
-};
+  class PoseChangeBakendModuleDisplay : public BackendModuleDisplayRos {
+   public:
+    PoseChangeBakendModuleDisplay(
+        const DisplayParams& params, rclcpp::Node* node,
+        std::shared_ptr<PoseChangeVIBackendModule> module);
+
+    void spinOnce(const DynoState::ConstPtr& output) override;
+
+   private:
+    std::shared_ptr<PoseChangeVIBackendModule> module_;
+    HybridKeyFrameFormulationDisplay formulation_display_;
+  };
+
+  // TODO: in light of now having many Hybrid formulations we should template on
+  // HybridFormulation not on RegularHybridFormulation as the display should
+  // work for all!!
+
+  /// @brief Register ParalleHybridModuleDisplay as the acting backend display
+  /// for the Factory policy
+  template <>
+  struct BackendModuleDisplayTraits<ParallelHybridBackendModule> {
+    using type = ParalleHybridModuleDisplay;
+  };
+
+  /// @brief Register RegularHybridFormulationDisplay as the acting backend
+  /// display for the Factory policy
+  template <>
+  struct BackendModuleDisplayTraits<RegularHybridFormulation> {
+    using type = RegularHybridFormulationDisplay;
+  };
+
+  template <>
+  struct BackendModuleDisplayTraits<HybridFormulationKeyFrame> {
+    using type = HybridKeyFrameFormulationDisplay;
+  };
+
+  template <>
+  struct BackendModuleDisplayTraits<PoseChangeVIBackendModule> {
+    using type = PoseChangeBakendModuleDisplay;
+  };
 
 }  // namespace dyno

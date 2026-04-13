@@ -31,7 +31,7 @@
 #pragma once
 
 #include "dynosam/backend/Accessor.hpp"
-#include "dynosam/backend/rgbd/VIOFormulation.hpp"
+#include "dynosam/formulations/VIOFormulation.hpp"
 #include "dynosam_opt/Map.hpp"
 
 namespace dyno {

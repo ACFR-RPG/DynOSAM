@@ -35,7 +35,7 @@
 #include "dynosam/backend/BackendFormulationFactory.hpp"
 #include "dynosam/backend/BackendModule.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/backend/rgbd/VIOFormulation.hpp"
+#include "dynosam/formulations/VIOFormulation.hpp"
 #include "dynosam_common/Flags.hpp"
 #include "dynosam_opt/ISAM2.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
