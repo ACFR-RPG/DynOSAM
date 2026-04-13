@@ -1324,21 +1324,26 @@ class HybridAccessorCommon : public VIOAccessor {
 };
 
 /**
- * @brief Accessor for the Hybrid Formulation.
+ * @brief ccessor for the Hybrid Formulation.
  * The internal AccessorT is templated on MapVision to define the map type and
  * HybridAccessorCommon which extends the functionality of the base Acessor with
  * functionality specific to the Hybrid representation.
  *
+ * @tparam MAP Defaults to MapVision
  */
-class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
+template <typename MAP = MapVision>
+class HybridAccessor : public AccessorT<MAP, HybridAccessorCommon>,
                        public HybridFormulationProperties {
  public:
+  typedef AccessorT<MAP, HybridAccessorCommon> AccessorBase;
+  typedef typename AccessorBase::Map Map;
+
   DYNO_POINTER_TYPEDEFS(HybridAccessor)
 
   HybridAccessor(
-      const SharedFormulationData::Ptr& shared_data, MapVision::Ptr map,
+      const SharedFormulationData::Ptr& shared_data, typename Map::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
-      : AccessorT<MapVision, HybridAccessorCommon>(shared_data, map),
+      : AccessorBase(shared_data, map),
         shared_hybrid_formulation_data_(shared_hybrid_formulation_data) {}
   virtual ~HybridAccessor() {}
 
@@ -1435,21 +1440,19 @@ class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
   const SharedHybridFormulationData shared_hybrid_formulation_data_;
 };
 
-// TODO: for future proofing with new measurement stuff the formulation (at the
-// top level)
-//  should be templated on the map and then we use type traits to extract the
-//  measurements care about so it can be measurement generic... eventually need
-//  way to define (AND CHECK, becuase we cannot assume all types have the same
-//  compile-time properties) and get the measurement we are interested in
-class HybridFormulation : public VIOFormulation<MapVision>,
+template <typename MAP = MapVision>
+class HybridFormulation : public VIOFormulation<MAP>,
                           public HybridFormulationProperties {
  public:
-  using Base = VIOFormulation<MapVision>;
-  using Map = Base::Map;
-  using Base::AccessorTypePointer;
-  using Base::MapTraitsType;
-  using Base::ObjectUpdateContextType;
-  using Base::PointUpdateContextType;
+  using Base = VIOFormulation<MAP>;
+  using Map = typename Base::Map;
+  //! HybridAccessor templated on MAP
+  using HybridAccessorT = HybridAccessor<MAP>;
+  using typename Base::AccessorTypePointer;
+  using typename Base::MapTraitsType;
+  using typename Base::MeasurementTraits;
+  using typename Base::ObjectUpdateContextType;
+  using typename Base::PointUpdateContextType;
 
   DYNO_POINTER_TYPEDEFS(HybridFormulation)
 
@@ -1467,12 +1470,8 @@ class HybridFormulation : public VIOFormulation<MapVision>,
       gtsam::Values& new_values,
       gtsam::NonlinearFactorGraph& new_factors) override;
 
-  inline bool isDynamicTrackletInMap(
-      const typename MapTraitsType::SharedLandmarkNode& lmk_node)
-      const override {
-    const TrackletId tracklet_id = lmk_node->trackletId();
-    return is_dynamic_tracklet_in_map_.exists(tracklet_id);
-  }
+  bool isDynamicTrackletInMap(const typename MapTraitsType::SharedLandmarkNode&
+                                  lmk_node) const override;
 
  protected:
   // TODO: make this virtual for now - eventual move structureless etc
@@ -1483,31 +1482,13 @@ class HybridFormulation : public VIOFormulation<MapVision>,
     shared_hybrid_data.key_frame_data = &key_frame_data_;
     shared_hybrid_data.tracklet_id_to_keyframe = &all_dynamic_landmarks_;
 
-    return std::make_shared<HybridAccessor>(shared_data, this->map(),
-                                            shared_hybrid_data);
+    return std::make_shared<HybridAccessorT>(shared_data, this->map(),
+                                             shared_hybrid_data);
   }
 
   virtual std::string loggerPrefix() const override { return "hybrid"; }
 
  protected:
-  // bool addHybridMotionFactor3(
-  //   typename MapTraitsType::SharedFrameNode frame_node,
-  //   typename MapTraitsType::SharedLandmarkNode landmark_node,
-  //   const gtsam::Pose3& L_e,
-  //   const gtsam::Key& camera_pose_key,
-  //   const gtsam::Key& object_motion_key,
-  //   const gtsam::Key& m_key,
-  //   gtsam::NonlinearFactorGraph& graph) const;
-
-  // bool addStereoHybridMotionFactor(
-  //   typename MapTraitsType::SharedFrameNode frame_node,
-  //   typename MapTraitsType::SharedLandmarkNode landmark_node,
-  //   const gtsam::Pose3& L_e,
-  //   const gtsam::Key& camera_pose_key,
-  //   const gtsam::Key& object_motion_key,
-  //   const gtsam::Key& m_key,
-  // gtsam::NonlinearFactorGraph& graph) const;
-
   // TODO: this should be KF0_to_k
   struct IntermediateMotionInfo {
     //! frame id of the object keyframe (i.e. e)
@@ -1520,14 +1501,6 @@ class HybridFormulation : public VIOFormulation<MapVision>,
 
   virtual IntermediateMotionInfo getIntermediateMotionInfo(
       ObjectId object_id, FrameId frame_id) = 0;
-
-  // TODO: in the sliding window case the formulation gets reallcoated every
-  // time so that L0 map is different, but the values will share the same H
-  // (which is now from a different L0)!! make static (hack) for now
-  // TODO: bad!! should not be static as this will also get held between
-  // estimators!!!?
-  // gtsam::FastMap<ObjectId, std::pair<FrameId, gtsam::Pose3>> L0_;
-  // gtsam::FastMap<ObjectId, std::vector<KeyFrameRange>> L0_;
 
   // we need a separate way of tracking if a dynamic tracklet is in the map,
   // since each point is modelled uniquely simply used as an O(1) lookup, the
@@ -1560,15 +1533,7 @@ class HybridFormulation : public VIOFormulation<MapVision>,
   RGBDCamera::Ptr rgbd_camera_;
 };
 
-// class KeyFrameBackendLogger : public BackendLogger {
-
-// public:
-//   KeyFrameBackendLogger();
-
-// private:
-//   bool logObjectTrajectoryEntry(
-//       const PoseWithMotionEntry& entry, const ObjectId object_id,
-//       const std::optional<GroundTruthPacketMap>& gt_packets = {}) override;
-// };
-
 }  // namespace dyno
+
+#include "dynosam/formulations/HybridAccessor-impl.hpp"
+#include "dynosam/formulations/HybridFormulation-impl.hpp"

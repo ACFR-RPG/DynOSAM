@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dynosam/formulations/HybridEstimator.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
@@ -14,12 +15,15 @@ namespace dyno {
  * Used as is for the Parallal-Hybrid implementation.
  *
  */
-class HybridFormulationV1 : public HybridFormulation {
+class HybridFormulationV1 : public HybridFormulation<MapVision> {
  public:
-  using Base = HybridFormulation;
+  using Base = HybridFormulation<MapVision>;
+  //! The HybridAccessor templated on MapVision as returned by
+  //! Base::createAcessor
+  using HybridAccessorT = typename Base::HybridAccessorT;
   DYNO_POINTER_TYPEDEFS(HybridFormulationV1)
 
-  HybridFormulationV1(const FormulationParams& params, typename Map::Ptr map,
+  HybridFormulationV1(const FormulationParams& params, MapVision::Ptr map,
                       const NoiseModels& noise_models, const Sensors& sensors,
                       const FormulationHooks& hooks)
       : Base(params, map, noise_models, sensors, hooks) {}
@@ -30,6 +34,9 @@ class HybridFormulationV1 : public HybridFormulation {
                                                     ObjectId object_id);
 
  protected:
+  //! Alias to IntermediateMotionInfo taking into account the templated map tyoe
+  using IntermediateMotionInfo = Base::IntermediateMotionInfo;
+
   IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
                                                    FrameId frame_id) override;
 

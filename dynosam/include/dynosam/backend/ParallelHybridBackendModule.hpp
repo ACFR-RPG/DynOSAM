@@ -139,7 +139,9 @@ class ParallelHybridAccessor : public HybridAccessorCommon {
       const gtsam::Key key) const override;
 
   ParallelHybridBackendModule* parallel_hybrid_module_;
-  HybridAccessor::Ptr static_accessor_;
+
+  using HybridAccessorT = HybridFormulationV1::HybridAccessorT;
+  HybridAccessorT::Ptr static_accessor_;
 };
 
 class ParallelHybridBackendModule : public BackendModule<VisionImuPacket> {
@@ -148,9 +150,9 @@ class ParallelHybridBackendModule : public BackendModule<VisionImuPacket> {
 
   using Base = BackendModule<VisionImuPacket>;
 
-  ParallelHybridBackendModule(const BackendParams& backend_params,
-                              Camera::Ptr camera,
-                             const SharedGroundTruth& shared_ground_truth = {});
+  ParallelHybridBackendModule(
+      const BackendParams& backend_params, Camera::Ptr camera,
+      const SharedGroundTruth& shared_ground_truth = {});
   ~ParallelHybridBackendModule();
 
   void logGraphs();

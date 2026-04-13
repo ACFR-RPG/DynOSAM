@@ -36,6 +36,7 @@
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_opt/Map.hpp"
+#include "dynosam_opt/StateQuery.hpp"
 
 namespace dyno {
 
@@ -129,28 +130,6 @@ class Accessor {
    * @return MotionEstimateMap
    */
   virtual MotionEstimateMap getObjectMotions(FrameId frame_id) const = 0;
-
-  //   //TODO: depricate
-  //   /**
-  //    * @brief Collects all object poses for frame 0 to K.
-  //    * (Non-pure)Virtual function that may be overwritten.
-  //    *
-  //    * @return ObjectPoseMap
-  //    */
-  //   virtual ObjectPoseMap getObjectPoses() const = 0;
-
-  //     //TODO: depricate
-  //   /**
-  //    * @brief Collects all object motions from 1 to K (with the first motion
-  //    being
-  //    * from k-1 to k). (Non-pure) Virtual function that may be overwritten -
-  //    * default implementation uses the pure-virtual getObjectPoses to collect
-  //    all
-  //    * motions.
-  //    *
-  //    * @return ObjectMotionMap
-  //    */
-  //   virtual ObjectMotionMap getObjectMotions() const = 0;
 
   /**
    * @brief Get all dynamic landmarks for all objects (\mathcal{J}_k) at
@@ -524,15 +503,18 @@ class AccessorT : public DerivedAccessor {
  protected:
   typename Map::Ptr map() const { return map_; }
 
-  gtsam::Values values() const {
+  const gtsam::Values& values() const {
     const std::lock_guard<std::mutex> lock(shared_data_->theta);
     return shared_data_->theta;
   }
   const FormulationHooks& hooks() const { return shared_data_->hooks; }
 
+ protected:
+  //! Pointer to internal map structure
+  typename Map::Ptr map_;
+
  private:  //! in the associated formulation
   const SharedFormulationData::Ptr shared_data_;
-  typename Map::Ptr map_;  //! Pointer to internal map structure;
 };
 
 }  // namespace dyno

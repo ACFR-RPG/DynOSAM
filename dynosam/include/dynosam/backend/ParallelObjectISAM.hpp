@@ -86,7 +86,10 @@ class ParallelObjectISAM {
     gtsam::FastMap<FrameId, VariableStatus> motion_variable_status{};
   };
 
-  using Map = HybridFormulation::Map;
+  //! Alias to the fully defined map of the HybridFormulationV1
+  using Map = HybridFormulationV1::Map;
+  //! Alias to the fully defined Accessor of the HybridFormulationV1
+  using HybridAccessorT = HybridFormulationV1::HybridAccessorT;
 
   template <typename DERIVEDSTATUS>
   using MeasurementStatusVector = Map::MeasurementStatusVector<DERIVEDSTATUS>;
@@ -172,7 +175,7 @@ class ParallelObjectISAM {
   std::pair<FrameId, gtsam::Pose3> insertNewKeyFrame(FrameId frame_id);
 
   inline const gtsam::ISAM2& getSmoother() const { return *smoother_; }
-  inline HybridAccessor::Ptr accessor() const { return accessor_; }
+  inline HybridAccessorT::Ptr accessor() const { return accessor_; }
 
  private:
   template <typename DERIVEDSTATUS>
@@ -217,7 +220,7 @@ class ParallelObjectISAM {
   const ObjectId object_id_;
   Map::Ptr map_;
   HybridFormulationV1::Ptr decoupled_formulation_;
-  HybridAccessor::Ptr accessor_;
+  HybridAccessorT::Ptr accessor_;
   std::shared_ptr<gtsam::ISAM2> smoother_;
   Result result_;
   //! style of motion expected to be used as input. Set on the first run and all

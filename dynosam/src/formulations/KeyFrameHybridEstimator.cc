@@ -7,7 +7,8 @@ namespace dyno {
 
 TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
     const ObjectIds& objects) const {
-  auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
+  auto hybrid_accessor =
+      this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
 
   TrackedPointsPerObject points_per_object;
   for (ObjectId object_id : objects) {
@@ -47,7 +48,8 @@ HybridFormulationKeyFrameAccessor::getObjectMotionReferenceFrame(
 }
 
 TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints() const {
-  auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
+  auto hybrid_accessor =
+      this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
   return getObjectPoints(hybrid_accessor->getObjectIds());
 }
 
@@ -59,7 +61,8 @@ TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
 }
 
 HybridKeyFrameUpdate HybridFormulationKeyFrame::generateUpdateInfo() const {
-  auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
+  auto hybrid_accessor =
+      this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
 
   // what if things are optimising when we do this...?
   HybridKeyFrameUpdate info;
@@ -92,7 +95,9 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
   MultiObjectTrajectories full_trajectories_refined = full_trajectories;
 
   auto map = this->map();
-  HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+  HybridFormulationKeyFrameAccessor::Ptr accessor =
+      this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
+
   for (const auto& [object_id, trajectory_j] : full_trajectories) {
     gtsam::Values values;
     gtsam::NonlinearFactorGraph graph;
@@ -663,7 +668,7 @@ void HybridFormulationKeyFrame::addHybridMotionFactor(
 // TODO: this should mark objects with keyframes!
 void HybridFormulationKeyFrame::addObjects(
     FrameId frame_id, const ObjectPoseChangeInfoMap& object_motion_info) {
-  HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+  auto accessor = this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
   CHECK_NOTNULL(accessor);
 
   for (const auto& [object_id, object_info] : object_motion_info) {

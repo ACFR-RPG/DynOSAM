@@ -61,7 +61,7 @@ class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
-  HybridAccessor::Ptr hybrid_accessor_;
+  HybridFormulationKeyFrameAccessor::Ptr hybrid_accessor_;
   ErrorHandlingHooks error_hooks_;
 
   std::unique_ptr<gtsam::ISAM2> smoother_;

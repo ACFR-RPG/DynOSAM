@@ -57,8 +57,8 @@ ParallelObjectISAM::ParallelObjectISAM(
 
   decoupled_formulation_ = std::make_shared<HybridFormulationV1>(
       formulation_params, map_, noise_models, sensors, formulation_hooks);
-  accessor_ = std::dynamic_pointer_cast<HybridAccessor>(
-      decoupled_formulation_->accessorFromTheta());
+
+  accessor_ = decoupled_formulation_->derivedAccessor<HybridAccessorT>();
   CHECK_NOTNULL(accessor_);
 
   // setup error hooks for the optimisation

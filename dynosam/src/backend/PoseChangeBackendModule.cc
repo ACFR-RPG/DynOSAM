@@ -13,7 +13,8 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
     const SharedGroundTruth& shared_ground_truth)
     : Base(params, camera, shared_ground_truth),
       formulation_(CHECK_NOTNULL(formulation)) {
-  hybrid_accessor_ = formulation_->derivedAccessor<HybridAccessor>();
+  hybrid_accessor_ =
+      formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
   CHECK_NOTNULL(hybrid_accessor_);
 
   gtsam::ISAM2Params isam2_params;

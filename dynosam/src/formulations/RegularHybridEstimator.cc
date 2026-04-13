@@ -44,7 +44,7 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulationV1::forceNewKeyFrame(
   return result;
 }
 
-HybridFormulation::IntermediateMotionInfo
+HybridFormulationV1::IntermediateMotionInfo
 HybridFormulationV1::getIntermediateMotionInfo(ObjectId object_id,
                                                FrameId frame_id) {
   IntermediateMotionInfo info;
@@ -181,7 +181,8 @@ gtsam::Pose3 HybridFormulationV1::computeInitialH(ObjectId object_id,
       CHECK_EQ(initial_motion_frame.from(), s0);
       return initial_motion_frame;
     } else if (initial_motion_frame.style() == MotionRepresentationStyle::F2F) {
-      HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+      HybridAccessorT::Ptr accessor =
+          CHECK_NOTNULL(this->derivedAccessor<HybridAccessorT>());
       // we have a motion from the frontend that is k-1 to k
       // first check if we have a previous estimation motion that takes us from
       // s0 to k-1 in the map

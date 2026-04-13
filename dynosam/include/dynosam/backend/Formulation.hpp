@@ -490,6 +490,7 @@ class FormulationT : public Formulation {
   using PointUpdateContextType = PointUpdateContext<Map>;
   using ObjectUpdateContextType = ObjectUpdateContext<Map>;
 
+  // TODO: delete
   //! We only have these specalised alias for backwards compatability
   //! We used to not have a base Accessor that was independant of the map type
   //! so we needed an alias like Accessor<MAP>. No longer!

@@ -4,7 +4,7 @@
 
 namespace dyno {
 
-class HybridFormulationKeyFrameAccessor : public HybridAccessor {
+class HybridFormulationKeyFrameAccessor : public HybridAccessor<MapVision> {
  public:
   HybridFormulationKeyFrameAccessor(
       const SharedFormulationData::Ptr& shared_data, MapVision::Ptr map,
@@ -33,7 +33,7 @@ class HybridFormulationKeyFrameAccessor : public HybridAccessor {
   //     FrameId frame_id, ObjectId object_id) const; override;
 };
 
-class HybridFormulationKeyFrame : public HybridFormulation {
+class HybridFormulationKeyFrame : public HybridFormulation<MapVision> {
  public:
   using Base = HybridFormulation;
   using Base::MapTraitsType;

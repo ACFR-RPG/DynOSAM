@@ -4,22 +4,24 @@
 #include <gtsam/base/Testable.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>
 
+#include <boost/concept/assert.hpp>
+
 #include "dynosam_opt/Symbols.hpp"
 
 namespace dyno {
 
 template <class VALUE>
-class MotionBetweenFactor : public NoiseModelFactorN<VALUE, VALUE> {
+class MotionBetweenFactor : public gtsam::NoiseModelFactorN<VALUE, VALUE> {
   // Check that VALUE type is a testable Lie group
-  BOOST_CONCEPT_ASSERT((IsTestable<VALUE>));
-  BOOST_CONCEPT_ASSERT((IsLieGroup<VALUE>));
+  BOOST_CONCEPT_ASSERT((gtsam::IsTestable<VALUE>));
+  BOOST_CONCEPT_ASSERT((gtsam::IsLieGroup<VALUE>));
 
  public:
   typedef VALUE T;
 
  private:
   typedef MotionBetweenFactor<VALUE> This;
-  typedef NoiseModelFactorN<VALUE, VALUE> Base;
+  typedef gtsam::NoiseModelFactorN<VALUE, VALUE> Base;
 
   VALUE measured_; /** The measurement */
 

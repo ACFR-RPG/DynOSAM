@@ -110,7 +110,6 @@ add_library(${PROJECT_NAME} SHARED
 
   src/formulations/WorldMotionEstimator.cc
   src/formulations/WorldPoseEstimator.cc
-  src/formulations/HybridEstimator.cc
   src/formulations/RegularHybridEstimator.cc
   src/formulations/KeyFrameHybridEstimator.cc
   src/formulations/KeyFrameHybridMap.cc

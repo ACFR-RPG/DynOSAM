@@ -624,7 +624,9 @@ ParallelHybridAccessor::ParallelHybridAccessor(
     ParallelHybridBackendModule* parallel_hybrid_module)
     : parallel_hybrid_module_(CHECK_NOTNULL(parallel_hybrid_module)) {
   auto static_formulation = parallel_hybrid_module_->staticEstimator();
-  static_accessor_ = static_formulation->derivedAccessor<HybridAccessor>();
+
+  using HybridAccessorT = HybridFormulationV1::HybridAccessorT;
+  static_accessor_ = static_formulation->derivedAccessor<HybridAccessorT>();
   CHECK_NOTNULL(static_accessor_);
 }
 
@@ -673,11 +675,11 @@ StateQuery<gtsam::Point3> ParallelHybridAccessor::getDynamicLandmark(
         },
         [tracklet_id]() {
           return StateQuery<gtsam::Point3>::NotInMap(
-              HybridAccessor::makeDynamicKey(tracklet_id));
+              HybridFormulationProperties::makeDynamicKey(tracklet_id));
         });
   } else {
     return StateQuery<gtsam::Point3>::NotInMap(
-        HybridAccessor::makeDynamicKey(tracklet_id));
+        HybridFormulationProperties::makeDynamicKey(tracklet_id));
   }
 }
 

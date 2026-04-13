@@ -47,7 +47,8 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
   }
 
   if (FLAGS_pc_log_object_kf_structure) {
-    auto accessor = formulation_->derivedAccessor<HybridAccessor>();
+    auto accessor =
+        formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
 
     LOG(INFO) << "Logging estimated object structures...";
 
@@ -653,7 +654,8 @@ void PoseChangeVIFrontend::logBestEstimates() const {
   MultiObjectTrajectories full_object_trajectories_refined =
       formulation_->refinePerFrameMotionsPGO(full_object_trajectories_);
 
-  auto accessor = formulation_->derivedAccessor<HybridAccessor>();
+  auto accessor =
+      formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
   CHECK_NOTNULL(accessor);
 
   const PoseTrajectory& camera_trajectory = accessor->getCameraTrajectory();
