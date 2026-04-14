@@ -59,13 +59,18 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
             << " error after " << result.getErrorAfter();
   gtsam::Values optimised_values = smoother_interface.calculateEstimate();
-  formulation_->updateTheta(optimised_values);
+  // formulation_->updateTheta(optimised_values);
+  // just for now to test if the updating of the formulation asynchronously is
+  // the pain point!
+  // obviously we still want to update the formulation as immedialelt as
+  // possible! and so that the backend still outputs the latest viz
 
   // alert frontend
   if (update_callback_) {
     PoseChangeUpdateComplete event;
     event.frame_id = input->frame_id;
     event.timestamp = input->timestamp;
+    event.refined_states = optimised_values;
     update_callback_(event);
   }
 

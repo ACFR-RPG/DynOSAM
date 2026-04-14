@@ -263,8 +263,8 @@ gtsam::NavState VIOFormulation<MAP>::predictAndAddFactorsVO(
   const gtsam::NavState nav_state_prev =
       DYNO_GET_QUERY_DEBUG(accessor->getNavState(from_frame));
 
-  VLOG(10) << "Forward predicting k=" << frame_id_k << " t=" << timestamp_k
-           << " using VO";
+  VLOG(10) << "Forward predicting " << from_frame << " -> " << frame_id_k
+           << " t=" << timestamp_k << "VO";
   const gtsam::Pose3 X_W_km1 = nav_state_prev.pose();
   // apply relative pose
   const gtsam::Pose3 X_W_k = X_W_km1 * T_k_1_k;
@@ -303,13 +303,16 @@ gtsam::NavState VIOFormulation<MAP>::predictAndAddFactorsIMU(
   const FrameId from_frame = last_propogate_frame_;
   const FrameId to_frame = frame_id_k;
 
-  VLOG(10) << "Forward predicting frame=" << frame_id_k << " using PIM";
+  VLOG(10) << "Forward predicting " << from_frame << " -> " << frame_id_k
+           << " t=" << timestamp_k << " using PIM";
 
   VIOAccessor::Ptr accessor = this->getAsVIOAccessor();
   const gtsam::NavState nav_state_prev =
       DYNO_GET_QUERY_DEBUG(accessor->getNavState(from_frame));
   const gtsam::imuBias::ConstantBias imu_bias_prev =
       DYNO_GET_QUERY_DEBUG(accessor->getImuBias(from_frame));
+
+  LOG(INFO) << "Nav state prev " << nav_state_prev;
 
   const gtsam::NavState nav_state_k =
       pim->predict(nav_state_prev, imu_bias_prev);

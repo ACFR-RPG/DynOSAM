@@ -145,7 +145,9 @@ ImuFrontend::PimPtr ImuFrontend::preintegrateImuMeasurements(
     pim_->integrateMeasurement(measured_acc, measured_omega, delta_t);
   }
 
-  return copyPimShared();
+  return std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
+      safeCastToPreintegratedCombinedImuMeasurements(*pim_));
+  // return copyPimShared();
 }
 
 ImuFrontend::PimPtr ImuFrontend::copyPim(const ImuFrontend::PimPtr& pim) {

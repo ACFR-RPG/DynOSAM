@@ -20,6 +20,7 @@ enum class ObjectKeyFrameStatus {
 struct PoseChangeUpdateComplete {
   FrameId frame_id;
   Timestamp timestamp;
+  gtsam::Values refined_states;
 };
 
 using PoseChangeUpdateCompleteCallback =

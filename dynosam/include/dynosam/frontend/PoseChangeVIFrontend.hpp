@@ -45,15 +45,6 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   bool shouldFrameBeKeyFrame(Frame::Ptr frame_k, Frame::Ptr frame_km1) const;
 
-  size_t extractKeyFramedMotions(
-      ObjectPoseChangeInfoMap& kf_infos,
-      const ObjectPoseChangeInfoMap& all_infos) const;
-
-  void constructVisualFactors(const UpdateObservationParams& update_params,
-                              FrameId frame_k, gtsam::Values& new_values,
-                              gtsam::NonlinearFactorGraph& new_factors,
-                              PostUpdateData& post_update_data);
-
   void logBestEstimates() const;
   void logRealTimeObjectClouds(const ObjectIds& objects,
                                FrameId frame_id) const;
@@ -77,28 +68,29 @@ class PoseChangeVIFrontend : public VIFrontend {
     gtsam::Pose3 T_from_to;
   };
 
-  struct KeyFrameData {
-    FrameId kf_id;
-    FrameId kf_id_prev;
-    Frame::Ptr frame;
-    gtsam::NavState nav_state;
+  // struct KeyFrameData {
+  //   FrameId kf_id;
+  //   FrameId kf_id_prev;
+  //   Frame::Ptr frame;
+  //   gtsam::NavState nav_state;
 
-    //! If camera keyframe logic was true for this frame
-    bool camera_keyframe{false};
+  //   //! If camera keyframe logic was true for this frame
+  //   bool camera_keyframe{false};
 
-    bool retroactively_made_keyframe{false};
+  //   bool retroactively_made_keyframe{false};
 
-    //! Signifcies which objects had motion variables added at this frame (with
-    //! the kf_id being the "to" frame of each motion)
-    ObjectIds object_keyframes;
+  //   //! Signifcies which objects had motion variables added at this frame
+  //   (with
+  //   //! the kf_id being the "to" frame of each motion)
+  //   ObjectIds object_keyframes;
 
-    bool isObjectKeyframe() const { return !object_keyframes.empty(); }
+  //   bool isObjectKeyframe() const { return !object_keyframes.empty(); }
 
-    bool isObjectKeyFrame(const ObjectId object_id) const {
-      return std::find(object_keyframes.begin(), object_keyframes.end(),
-                       object_id) != object_keyframes.end();
-    }
-  };
+  //   bool isObjectKeyFrame(const ObjectId object_id) const {
+  //     return std::find(object_keyframes.begin(), object_keyframes.end(),
+  //                      object_id) != object_keyframes.end();
+  //   }
+  // };
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
@@ -125,7 +117,11 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   // Mapping of intermediate relative motions. Stored by to frame.
   gtsam::FastMap<FrameId, IntermediateMotion> intermediate_motions_;
-  gtsam::FastMap<FrameId, KeyFrameData> keyframes_;
+  // gtsam::FastMap<FrameId, KeyFrameData> keyframes_;
+
+  gtsam::Values refined_backend_states_;
+  std::atomic_bool has_updated_backend_values_{false};
+  std::mutex backend_update_mutex_;
 };
 
 }  // namespace dyno

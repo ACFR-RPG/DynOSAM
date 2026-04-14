@@ -41,6 +41,12 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
   // TODO: this is definitely not thread safe
   const FrameId frame_id = event.frame_id;
 
+  {
+    const std::lock_guard<std::mutex> lock(backend_update_mutex_);
+    has_updated_backend_values_ = true;
+    refined_backend_states_ = event.refined_states;
+  }
+
   if (FLAGS_pc_smoother_allow_backend_updates) {
     LOG(INFO) << "Recieved backend update at frame " << frame_id;
     object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
@@ -88,6 +94,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
   lkf_id_ = frame_id_k;
 
+  // no motion as first frame!
+  const gtsam::Pose3 T_km1_k = gtsam::Pose3::Identity();
+  T_km1_k_ = T_km1_k;
+  T_lkf_k_ = T_km1_k;
+
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
@@ -104,15 +115,15 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   intermediate_motion.T_from_to = gtsam::Pose3::Identity();
   intermediate_motions_.insert2(intermediate_motion.to, intermediate_motion);
 
-  KeyFrameData keyframe_data;
-  keyframe_data.kf_id = frame_id_k;
-  keyframe_data.kf_id_prev = lkf_id_;
-  keyframe_data.frame = frame_k;
-  keyframe_data.camera_keyframe = true;
-  // objects are not added becuase on the first frame they can only ever be a
-  // "from" frame
-  keyframe_data.nav_state = gtsam::NavState();
-  keyframes_.insert2(frame_id_k, keyframe_data);
+  // KeyFrameData keyframe_data;
+  // keyframe_data.kf_id = frame_id_k;
+  // keyframe_data.kf_id_prev = lkf_id_;
+  // keyframe_data.frame = frame_k;
+  // keyframe_data.camera_keyframe = true;
+  // // objects are not added becuase on the first frame they can only ever be a
+  // // "from" frame
+  // keyframe_data.nav_state = gtsam::NavState();
+  // keyframes_.insert2(frame_id_k, keyframe_data);
 
   CameraMeasurementStatusVector static_measurements;
   fillMeasurementsFromFeatureIterator(
@@ -150,8 +161,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   update_params.do_backtrack = false;
 
   PostUpdateData post_update_data(frame_id_k);
-  constructVisualFactors(update_params, frame_id_k, pc_input->new_values,
-                         pc_input->new_factors, post_update_data);
+  post_update_data.static_update_result =
+      formulation_->updateStaticObservations(frame_id_k, pc_input->new_values,
+                                             pc_input->new_factors,
+                                             update_params);
 
   logRealTimeOutput(realtime_output);
 
@@ -173,9 +186,22 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
 
+  {
+    // test is this asynchronous update is the pain point
+    // update in frontend when formulation is used to create factors
+    // only update when we know no work is being done formulation
+    const std::lock_guard<std::mutex> lock(backend_update_mutex_);
+    if (has_updated_backend_values_) {
+      formulation_->updateTheta(refined_backend_states_);
+      LOG(INFO) << "Has update";
+      has_updated_backend_values_ = false;
+    }
+  }
+
+  // TODO: make nav_state_lkf_
   ImuFrontend::PimPtr pim = nullptr;
   std::optional<gtsam::NavState> imu_propogated_nav_state_k =
-      tryPropogateImu(input, nav_state_lkf_, pim);
+      tryPropogateImu(input, nav_state_km1_, pim);
 
   //! Rotation from k-1 to k in k-1
   std::optional<gtsam::Rot3> R_km1_k;
@@ -183,6 +209,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     CHECK(pim);
     R_km1_k = nav_state_km1_.attitude().inverse() *
               imu_propogated_nav_state_k->attitude();
+
+    LOG(INFO) << *pim;
   }
 
   Frame::Ptr frame_k = featureTrack(input, R_km1_k);
@@ -216,7 +244,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // the backend is not immediately updating the frontend at which point we can
   // just use the best estimate in the case of the VO, the nav_state velocity
   const gtsam::NavState nav_state_k(frame_k->getPose(),
-                                    (imu_propogated_nav_state_k)
+                                    imu_propogated_nav_state_k
                                         ? imu_propogated_nav_state_k->velocity()
                                         : gtsam::Vector3(0, 0, 0));
 
@@ -231,9 +259,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   intermediate_motion.timestamp = timestamp_k;
   intermediate_motion.frame = frame_k;
   intermediate_motion.frontend_nav_state = nav_state_k;
-  intermediate_motion.pim = (pim) ? ImuFrontend::copyPim(pim) : nullptr;
-  intermediate_motion.imu_measurements =
-      input->imu_measurements.value_or(ImuMeasurements{});
+  // intermediate_motion.pim = (pim) ? ImuFrontend::copyPim(pim) : nullptr;
+  // intermediate_motion.imu_measurements =
+  //     input->imu_measurements.value_or(ImuMeasurements{});
   intermediate_motion.T_from_to = T_lkf_k_;
   intermediate_motions_.insert2(intermediate_motion.to, intermediate_motion);
 
@@ -304,7 +332,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   update_params.do_backtrack = false;
 
   PostUpdateData post_update_data(frame_id_k);
-
   // add static measurements if this is a camera keyframe or any object motion
   // as potentially was observed if no objects are observed and not a camera
   // keyframe no need to add anything to the map
@@ -317,22 +344,15 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
   if (ego_motion_keyframe) {
     CHECK_EQ(formulation_->getLastPropogatedFrame(), lkf_id_);
+    CHECK(map_->isCameraKeyFrame(lkf_id_));
+
+    map_->setCameraKeyFrame(frame_id_k);
+
     const gtsam::NavState predicted_nav_state =
         formulation_->addStatesPropogate(pc_input->new_values,
                                          pc_input->new_factors, frame_id_k,
                                          timestamp_k, T_lkf_k_, pim);
 
-    // this should include new dynamic measurements from any new keyframes we've
-    // added
-    // map_->updateObservations(dynamic_measurements_kf);
-    map_->setCameraKeyFrame(frame_id_k);
-
-    // NOTE: this is different from the nav state that is mantained in the
-    // frontend so the initial states may be slightly different (only if IMU)
-    // NOTE: must be after the updateObs -> these create new frames with the
-    // correct attrivutes (ie. timestamp) while setInitialSensorPose
-    // creates a new frame id necessary but does not populdate with timestamp!!
-    // this is a known bufg!!
     map_->setInitialSensorPose(frame_id_k, timestamp_k,
                                Pose3Measurement(predicted_nav_state.pose()));
 
@@ -343,347 +363,28 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
     imu_frontend_.resetIntegration();
     // this not predicted_nav_state?
+    // TOODO: may better get the nav state via the VIOformulation!
     nav_state_lkf_ = nav_state_k;
     lkf_id_ = frame_id_k;
-  } else {
-    // if not a camera keyframe, update KF node with relative ego motion data
-    auto frame_lkf_node = CHECK_NOTNULL(map_->getFrame(lkf_id_));
-    // TODO: this relative motion should be consistent with the
-    frame_lkf_node->addRelativeEgoMotion(T_lkf_k_, frame_id_k);
-  }
 
-  if (any_object_keyframes) {
-    // collect all dynamic measurements at k
-    CameraMeasurementStatusVector dynamic_measurements_kf_k;
-    for (const auto& dm : dynamic_measurements) {
-      const auto& object_id = dm.objectId();
-      if (kf_pose_change_infos.exists(object_id)) {
-        dynamic_measurements_kf_k.push_back(dm);
-      }
+    if (withBackend()) {
+      pose_change_backend_sink_(pc_input);
     }
-    // update map after collecting all measurements for this frame
-    map_->updateObservations(dynamic_measurements_kf_k);
-
-    for (const auto& [object_id, info] : kf_pose_change_infos) {
-      CHECK(info.isKeyFrame());
-      const auto& H_W_KF_k = info.H_W_KF_k;
-      const auto from_motion_frame_j = H_W_KF_k.from();
-      CHECK_EQ(H_W_KF_k.to(), frame_id_k);
-
-      // add dynamic measurements observed at the from frame
-      const IntermediateMotion& intermediate_motion_lkf_j =
-          intermediate_motions_.at(from_motion_frame_j);
-      CHECK_EQ(intermediate_motion_lkf_j.to, from_motion_frame_j);
-
-      LOG(INFO) << "Adding dynamic measurements j=" << object_id << " at "
-                << intermediate_motion_lkf_j.to;
-
-      // if object is already a keyframe at this frame then assume
-      // measurements have already been added
-      // jesse: is this correct? Since we never go back and add new features I
-      // think this is fine
-      if (!map_->isObjectKeyFrame(from_motion_frame_j, object_id)) {
-        // add measurements at from frame for object motion
-        CameraMeasurementStatusVector dynamic_measurements_kf;
-        auto num_added = fillMeasurementsFromFeatureIterator(
-            &dynamic_measurements_kf,
-            intermediate_motion_lkf_j.frame->usableDynamicIterator(object_id),
-            intermediate_motion_lkf_j.to, intermediate_motion_lkf_j.timestamp,
-            dynamic_pixel_sigmas_, dynamic_point_sigma_);
-
-        // update map after collecting all measurements for this frame
-        map_->updateObservations(dynamic_measurements_kf);
-
-        // mark object as keyframe for both the from and to (this frame) frames
-        // this indicates that a motion variable exists at both frames
-        CHECK(map_->setObjectKeyFrame(from_motion_frame_j, object_id));
-      }
-
-      // mark object as keyframe in this frame
-      //  the measurements for k have already been addded
-      CHECK(map_->setObjectKeyFrame(frame_id_k, object_id));
-
-      pc_input->involved_objects.push_back(object_id);
-    }
-    // add objects to backend with initial motion estimates
-    formulation_->addObjects(frame_id_k, kf_pose_change_infos);
-
-    // generate new factors for dynamic objects based on latest measurements
-    // and object keyframe states
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(
-            frame_id_k, pc_input->new_values, pc_input->new_factors,
-            update_params);
   }
 
-  // any keyframe triggered
-  if (withBackend() && is_any_keyframe) {
-    // UpdateObservationParams update_params;
-    // update_params.enable_debug_info = true;
-    // update_params.do_backtrack = false;
-
-    // PostUpdateData post_update_data(frame_id_k);
-    // constructVisualFactors(update_params, frame_id_k, pc_input->new_values,
-    //                        pc_input->new_factors, post_update_data);
-
-    // function call set is checked by withBackend
-    pose_change_backend_sink_(pc_input);
-  }
-
-  // if (withBackend() && is_keyframe) {
-  //   LOG(INFO) << "KF selected for k=" << frame_id_k
-  //             << " (ego kf= " << std::boolalpha << ego_motion_keyframe
-  //             << " #object KF " << num_object_keyframes << ")";
-  //   LOG(INFO) << "Last KF= " << lkf_id_;
-
-  //   // add KF data immediately so that the object keyframe logic knows about
-  //   // this frame
-  //   KeyFrameData keyframe_data;
-  //   keyframe_data.kf_id = frame_id_k;
-  //   keyframe_data.kf_id_prev = lkf_id_;
-  //   keyframe_data.frame = frame_k;
-  //   keyframe_data.camera_keyframe = ego_motion_keyframe;
-  //   keyframe_data.object_keyframes = objects_with_keyframes;
-  //   keyframe_data.nav_state = nav_state_k;
-  //   keyframes_.insert2(frame_id_k, keyframe_data);
-
-  //   CameraMeasurementStatusVector dynamic_measurements_kf;
-  //   for (const auto& dm : dynamic_measurements) {
-  //     const auto& object_id = dm.objectId();
-  //     if (kf_pose_change_infos.exists(object_id)) {
-  //       dynamic_measurements_kf.push_back(dm);
-  //     }
-  //   }
-
-  //   auto pc_input = std::make_shared<PoseChangeInput>();
-  //   pc_input->frame_id = frame_id_k;
-  //   pc_input->timestamp = timestamp_k;
-  //   // Ordered set of KF objects ordered by their "from" motion
-  //   // to make Keyframes at the from motion we need to propogate the
-  //   ego-motion
-  //   // states starting with the earliest
-  //   // TODO: what if multiple objects need adding at the same from frame?
-  //   // rely on gtsam::FastMap being ordered by std::less<>
-  //   gtsam::FastMap<FrameId, ObjectIds> objects_by_earliest_kf;
-
-  //   for (const auto& [object_id, info] : kf_pose_change_infos) {
-  //     CHECK(info.isKeyFrame());
-
-  //     const auto& H_W_KF_k = info.H_W_KF_k;
-  //     const auto from_motion_frame_j = H_W_KF_k.from();
-
-  //     if (!objects_by_earliest_kf.exists(from_motion_frame_j)) {
-  //       objects_by_earliest_kf.insert2(from_motion_frame_j, ObjectIds{});
-  //     }
-
-  //     // fill object that has a motion from_motion_frame_j -> k
-  //     objects_by_earliest_kf.at(from_motion_frame_j).push_back(object_id);
-  //     // if the from frame is smaller than the current last keyframe we
-  //     // (currently) have no way of fixing as all the factors relating to the
-  //     // last kf will be already in the smoother and we have no way of
-  //     // recovering this!! it is allowed as long as the from frame is not
-  //     // already a KF ie. if the from frame is new it must be greater than
-  //     the
-  //     // last kf
-  //     if (!keyframes_.exists(from_motion_frame_j)) {
-  //       CHECK_GE(from_motion_frame_j, lkf_id_) << " for j=" << object_id;
-  //     }
-
-  //     // also fill involved objects in the PoseChangeInput since we loop over
-  //     // the id's here anyway
-  //     pc_input->involved_objects.push_back(object_id);
-  //   }
-
-  //   for (const auto& [from_motion_frame_j, object_ids] :
-  //        objects_by_earliest_kf) {
-  //     // check that the last kf as considered by the frontend
-  //     // is the same as considered by the formulation
-  //     CHECK_EQ(lkf_id_, formulation_->getLastPropogatedFrame());
-  //     // from motion
-  //     const auto lkf_id_j = from_motion_frame_j;
-  //     LOG(INFO) << info_string(frame_id_k, object_ids)
-  //               << " added with keyframe with from motion " << lkf_id_j;
-
-  //     {
-  //       // sanity check
-  //       for (const ObjectId& j : object_ids) {
-  //         const ObjectPoseChangeInfo& info = kf_pose_change_infos.at(j);
-  //         const auto& H_W_KF_k = info.H_W_KF_k;
-  //         CHECK_EQ(lkf_id_j, H_W_KF_k.from());
-  //         CHECK_EQ(frame_id_k, H_W_KF_k.to());
-  //       }
-  //     }
-
-  //     const FrameId original_lkf_id = lkf_id_;
-  //     // if from object motion does not already exists as a keyframe
-
-  //     // TODO: not sure what happens if we are dealing with multiple objects
-  //     and
-  //     // there is somehow
-  //     //  keyframes before and after an existing one! This should never
-  //     happen!
-  //     //  all new KEyframes should be between original lf and kf!
-  //     //  CHECK_GE(lkf_id_j, original_lkf_id);
-  //     CHECK_LE(lkf_id_j, frame_id_k);
-
-  //     if (!keyframes_.exists(lkf_id_j)) {
-  //       VLOG(20) << info_string(frame_id_k, object_ids)
-  //                << " has a from motion k=" << lkf_id_j
-  //                << " that does not exist as a keyframe. Adding!";
-
-  //       // intermediate motion at desired keyframe
-  //       IntermediateMotion& intermediate_motion_lkf_j =
-  //           intermediate_motions_.at(lkf_id_j);
-  //       CHECK_EQ(intermediate_motion_lkf_j.to, lkf_id_j);
-  //       CHECK_EQ(intermediate_motion_lkf_j.from, original_lkf_id);
-
-  //       const auto& nav_state_lkf_j =
-  //           intermediate_motion_lkf_j.frontend_nav_state;
-
-  //       // update relative motions (ie. T_from_to and/or PIM)
-  //       // given we may have added new Keyframes in the past (earlier in this
-  //       // loop) such that the intermediate motions from motion is no longer
-  //       // from the most recent keyframe!
-  //       if (intermediate_motion_lkf_j.from != lkf_id_) {
-  //         // IMU is tricky lets ignore for now!!!
-  //         // intermediate motion at new last keyframe
-  //         // CHECK(intermediate_motions_.exists(lkf_id_));
-  //         const IntermediateMotion& intermediate_motion_lkf =
-  //             intermediate_motions_.at(lkf_id_);
-  //         const auto& nav_state_lkf =
-  //             intermediate_motion_lkf.frontend_nav_state;
-
-  //         // recalculate relative motion
-  //         intermediate_motion_lkf_j.T_from_to =
-  //             nav_state_lkf.pose().inverse() * nav_state_lkf_j.pose();
-  //         intermediate_motion_lkf_j.from = lkf_id_;
-
-  //         // auto& pim_lkf_j = intermediate_motion_lkf_j.pim;
-  //         // if(pim_lkf_j) {
-  //         //   imu_frontend_.resetIntegration();
-
-  //         //   // this should take us intermediate motion from -> to
-  //         //   intermediate_motion_lkf_j.pim =
-  //         //
-  //         imu_frontend_.preintegrateImuMeasurements(intermediate_motion_lkf_j.imu_measurements);
-  //         // }
-  //       }
-
-  //       const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
-  //       CHECK_EQ(lkf_data.kf_id, lkf_id_);
-
-  //       ObjectIds object_keyframes;
-  //       // propogate from current last keyframe to the desired keyframe
-  //       gtsam::NavState predicted_nav_state =
-  //       formulation_->addStatesPropogate(
-  //           pc_input->new_values, pc_input->new_factors,
-  //           intermediate_motion_lkf_j.to,
-  //           intermediate_motion_lkf_j.timestamp,
-  //           intermediate_motion_lkf_j.T_from_to,
-  //           intermediate_motion_lkf_j.pim);
-
-  //       // collect meaasurements
-  //       fillMeasurementsFromFeatureIterator(
-  //           &static_measurements,
-  //           intermediate_motion_lkf_j.frame->usableStaticIterator(),
-  //           intermediate_motion_lkf_j.to,
-  //           intermediate_motion_lkf_j.timestamp, static_pixel_sigmas_,
-  //           static_point_sigma_);
-
-  //       // fill dynamic_measurements_kf for all objects present at this frame
-  //       for (const ObjectId& j : object_ids) {
-  //         auto num_added = fillMeasurementsFromFeatureIterator(
-  //             &dynamic_measurements_kf,
-  //             intermediate_motion_lkf_j.frame->usableDynamicIterator(j),
-  //             intermediate_motion_lkf_j.to,
-  //             intermediate_motion_lkf_j.timestamp, dynamic_pixel_sigmas_,
-  //             dynamic_point_sigma_);
-
-  //         object_keyframes.push_back(j);
-
-  //         LOG(INFO) << "object j= " << j << " was not originally present at
-  //         k="
-  //                   << intermediate_motion_lkf_j.to
-  //                   << " # features added=" << num_added;
-  //       }
-
-  //       // NOTE: this is different from the nav state that is mantained in
-  //       the
-  //       // frontend so the initial states may be slightly different (only if
-  //       // IMU)
-  //       map_->setInitialSensorPose(
-  //           intermediate_motion_lkf_j.to,
-  //           intermediate_motion_lkf_j.timestamp,
-  //           Pose3Measurement(predicted_nav_state.pose()));
-
-  //       KeyFrameData keyframe_data;
-  //       keyframe_data.kf_id = intermediate_motion_lkf_j.to;
-  //       keyframe_data.kf_id_prev = lkf_id_;
-  //       keyframe_data.camera_keyframe = false;
-  //       keyframe_data.retroactively_made_keyframe = true;
-  //       // actually not sure this is right as these keyframes could be "from"
-  //       keyframe_data.object_keyframes = std::move(object_keyframes);
-  //       keyframe_data.frame = intermediate_motion_lkf_j.frame;
-  //       keyframe_data.nav_state = nav_state_lkf_j;
-  //       keyframes_.insert2(keyframe_data.kf_id, keyframe_data);
-
-  //       // progressively update internal keyframe related properties
-  //       lkf_id_ = intermediate_motion_lkf_j.to;
-  //       T_lkf_k_ = nav_state_lkf_j.pose().inverse() * nav_state_k.pose();
-  //       nav_state_lkf_ = nav_state_lkf_j;
-
-  //       // // also must update the pim so that it represents the motion from
-  //       the
-  //       // new lkf to k pim = intermediate_motion_lkf_j.pim;
-  //     } else {
-  //       // keyframe does exist! I sure hope we dont have to change the
-  //       // ego-motion propogation! how to check this
-  //       KeyFrameData& keyframe_data = keyframes_.at(lkf_id_j);
-  //       CHECK_EQ(keyframe_data.kf_id, lkf_id_j);
-  //       // cannot be a keyframe that was retroactively made
-  //       CHECK_EQ(keyframe_data.retroactively_made_keyframe, false);
-
-  //       // TODO: should add object to keyframe object data
-
-  //       // object was not initially present in the keyframe so measurements
-  //       will
-  //       // not exist at this frame
-  //       for (const ObjectId& j : object_ids) {
-  //         if (!keyframe_data.isObjectKeyFrame(j)) {
-  //           auto num_added = fillMeasurementsFromFeatureIterator(
-  //               &dynamic_measurements_kf,
-  //               keyframe_data.frame->usableDynamicIterator(j),
-  //               keyframe_data.kf_id, keyframe_data.frame->getTimestamp(),
-  //               dynamic_pixel_sigmas_, dynamic_point_sigma_);
-  //           LOG(INFO) << "object j= " << j
-  //                     << " was not originally present at k=" << lkf_id_j
-  //                     << " # features added=" << num_added;
-
-  //           keyframe_data.object_keyframes.push_back(j);
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   // NOTE: this is different from the nav state that is mantained in the
-  //   // frontend
-  //   /// hmmmm errr dont need to do this if we did this in the loop before!!!
-  //   // TODO: otherwise get Forward predicting k=16 t=16 using VO
+  // if (ego_motion_keyframe) {
   //   CHECK_EQ(formulation_->getLastPropogatedFrame(), lkf_id_);
+  //   CHECK(map_->isCameraKeyFrame(lkf_id_));
   //   const gtsam::NavState predicted_nav_state =
   //       formulation_->addStatesPropogate(pc_input->new_values,
   //                                        pc_input->new_factors, frame_id_k,
   //                                        timestamp_k, T_lkf_k_, pim);
 
-  //   map_->updateObservations(static_measurements);
   //   // this should include new dynamic measurements from any new keyframes
   //   we've
   //   // added
-  //   map_->updateObservations(dynamic_measurements_kf);
-
-  //   if(ego_motion_keyframe) {
-  //     map_->setCameraKeyFrame(frame_id_k);
-  //   }
+  //   // map_->updateObservations(dynamic_measurements_kf);
+  //   map_->setCameraKeyFrame(frame_id_k);
 
   //   // NOTE: this is different from the nav state that is mantained in the
   //   // frontend so the initial states may be slightly different (only if IMU)
@@ -695,30 +396,96 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   //   map_->setInitialSensorPose(frame_id_k, timestamp_k,
   //                              Pose3Measurement(predicted_nav_state.pose()));
 
-  //   formulation_->addObjects(frame_id_k, kf_pose_change_infos);
-
-  //   UpdateObservationParams update_params;
-  //   update_params.enable_debug_info = true;
-  //   update_params.do_backtrack = false;
-
-  //   PostUpdateData post_update_data(frame_id_k);
-  //   constructVisualFactors(update_params, frame_id_k, pc_input->new_values,
-  //                          pc_input->new_factors, post_update_data);
-
-  //   if (pose_change_backend_sink_) {
-  //     pose_change_backend_sink_(pc_input);
-  //   }
+  //   post_update_data.static_update_result =
+  //       formulation_->updateStaticObservations(frame_id_k,
+  //       pc_input->new_values,
+  //                                              pc_input->new_factors,
+  //                                              update_params);
 
   //   imu_frontend_.resetIntegration();
   //   // this not predicted_nav_state?
+  //   //TOODO: may better get the nav state via the VIOformulation!
   //   nav_state_lkf_ = nav_state_k;
   //   lkf_id_ = frame_id_k;
+  // } else {
+  //   // if not a camera keyframe, update KF node with relative ego motion data
+  //   auto frame_lkf_node = CHECK_NOTNULL(map_->getFrame(lkf_id_));
+  //   // TODO: this relative motion should be consistent with the frontend
+  //   // TODO: use IMU if available!
+  //   frame_lkf_node->addRelativeEgoMotion(T_lkf_k_, frame_id_k);
   // }
 
-  // add initial state/propogate
-  // add measurements to map
-  // add motion PC info to formulation (ie. what was pre-update)
-  // build factors
+  // if (any_object_keyframes) {
+  //   // collect all dynamic measurements at k
+  //   CameraMeasurementStatusVector dynamic_measurements_kf_k;
+  //   for (const auto& dm : dynamic_measurements) {
+  //     const auto& object_id = dm.objectId();
+  //     if (kf_pose_change_infos.exists(object_id)) {
+  //       dynamic_measurements_kf_k.push_back(dm);
+  //     }
+  //   }
+  //   // update map after collecting all measurements for this frame
+  //   map_->updateObservations(dynamic_measurements_kf_k);
+
+  //   for (const auto& [object_id, info] : kf_pose_change_infos) {
+  //     CHECK(info.isKeyFrame());
+  //     const auto& H_W_KF_k = info.H_W_KF_k;
+  //     const auto from_motion_frame_j = H_W_KF_k.from();
+  //     CHECK_EQ(H_W_KF_k.to(), frame_id_k);
+
+  //     // add dynamic measurements observed at the from frame
+  //     const IntermediateMotion& intermediate_motion_lkf_j =
+  //         intermediate_motions_.at(from_motion_frame_j);
+  //     CHECK_EQ(intermediate_motion_lkf_j.to, from_motion_frame_j);
+
+  //     LOG(INFO) << "Adding dynamic measurements j=" << object_id << " at "
+  //               << intermediate_motion_lkf_j.to;
+
+  //     // if object is already a keyframe at this frame then assume
+  //     // measurements have already been added
+  //     // jesse: is this correct? Since we never go back and add new features
+  //     I
+  //     // think this is fine
+  //     if (!map_->isObjectKeyFrame(from_motion_frame_j, object_id)) {
+  //       // add measurements at from frame for object motion
+  //       CameraMeasurementStatusVector dynamic_measurements_kf;
+  //       auto num_added = fillMeasurementsFromFeatureIterator(
+  //           &dynamic_measurements_kf,
+  //           intermediate_motion_lkf_j.frame->usableDynamicIterator(object_id),
+  //           intermediate_motion_lkf_j.to,
+  //           intermediate_motion_lkf_j.timestamp, dynamic_pixel_sigmas_,
+  //           dynamic_point_sigma_);
+
+  //       // update map after collecting all measurements for this frame
+  //       map_->updateObservations(dynamic_measurements_kf);
+
+  //       // mark object as keyframe for both the from and to (this frame)
+  //       frames
+  //       // this indicates that a motion variable exists at both frames
+  //       CHECK(map_->setObjectKeyFrame(from_motion_frame_j, object_id));
+  //     }
+
+  //     // mark object as keyframe in this frame
+  //     //  the measurements for k have already been addded
+  //     CHECK(map_->setObjectKeyFrame(frame_id_k, object_id));
+
+  //     pc_input->involved_objects.push_back(object_id);
+  //   }
+  //   // add objects to backend with initial motion estimates
+  //   formulation_->addObjects(frame_id_k, kf_pose_change_infos);
+
+  //   // generate new factors for dynamic objects based on latest measurements
+  //   // and object keyframe states
+  //   post_update_data.dynamic_update_result =
+  //       formulation_->updateDynamicObservations(
+  //           frame_id_k, pc_input->new_values, pc_input->new_factors,
+  //           update_params);
+  // }
+
+  // // any keyframe triggered
+  // if (withBackend() && is_any_keyframe) {
+  //   pose_change_backend_sink_(pc_input);
+  // }
 
   fillDebugImagery(realtime_output->debug_imagery, frame_k, frame_km1);
 
@@ -735,7 +502,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = false;
+  constexpr static bool kParallelSolve = true;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);
@@ -759,44 +526,10 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   // const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
   // const Frame::Ptr lkf_frame = lkf_data.frame;
 
-  return frame_k->getFrameId() % 10 == 0;
+  // return frame_k->getFrameId() % 10 == 0;
+  // return frame_k->getTrackingInfo()->new_static_detections;
   // FOR NOW!
-  // return true;
-}
-
-size_t PoseChangeVIFrontend::extractKeyFramedMotions(
-    ObjectPoseChangeInfoMap& kf_infos,
-    const ObjectPoseChangeInfoMap& all_infos) const {
-  for (const auto& [object_id, info] : all_infos) {
-    if (info.isKeyFrame()) {
-      kf_infos.insert2(object_id, info);
-    }
-  }
-  return kf_infos.size();
-}
-
-// TODO: depricate!
-void PoseChangeVIFrontend::constructVisualFactors(
-    const UpdateObservationParams& update_params, FrameId frame_k,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
-    PostUpdateData& post_update_data) {
-  {
-    utils::ChronoTimingStats timer("backend.update_static_obs");
-    post_update_data.static_update_result =
-        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
-                                               update_params);
-  }
-
-  {
-    // if (!FLAGS_regular_backend_static_only) {
-    // LOG(INFO) << "Starting updateDynamicObservations";
-    // TODO: better names
-    utils::ChronoTimingStats timer("backend.update_dynamic_obs");
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(frame_k, new_values,
-                                                new_factors, update_params);
-    // }
-  }
+  return true;
 }
 
 void PoseChangeVIFrontend::logBestEstimates() const {

@@ -503,10 +503,6 @@ class AccessorT : public DerivedAccessor {
  protected:
   typename Map::Ptr map() const { return map_; }
 
-  const gtsam::Values& values() const {
-    const std::lock_guard<std::mutex> lock(shared_data_->theta);
-    return shared_data_->theta;
-  }
   const FormulationHooks& hooks() const { return shared_data_->hooks; }
 
  private:  //! in the associated formulation

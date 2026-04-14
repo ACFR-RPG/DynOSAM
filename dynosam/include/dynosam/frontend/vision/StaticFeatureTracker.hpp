@@ -240,7 +240,11 @@ class KltFeatureTracker : public StaticFeatureTracker {
   //                                 const std::vector<cv::Point2f>& good_new)
   //                                 const;
 
-  bool shouldResample(const FeatureContainer& tracked_features) const;
+  bool shouldResample(const FeatureContainer& tracked_features,
+                      double survival_ratio) const;
+
+  /* Prune based on age and desired maximum number of features */
+  void pruneTracks(FeatureContainer& features) const;
 
   /**
    * @brief A more concise static feature constructor that the one in

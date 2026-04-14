@@ -54,9 +54,6 @@ class FeatureTracker : public FeatureTrackerBase {
  public:
   DYNO_POINTER_TYPEDEFS(FeatureTracker)
 
-  // and camera?
-  // does no processing with any depth
-  // if depth is a problem should be handled aftererds and separately
   FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
                  ImageDisplayQueue* display_queue = nullptr);
   virtual ~FeatureTracker() {}

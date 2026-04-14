@@ -47,6 +47,12 @@
 
 namespace dyno {
 
+// FeatureTracker(
+//     const FrontendParams& params,
+//     Camera::Ptr camera,
+//     StaticFeatureTracker::UniquePtr static_feature_tracker,
+//     ImageDisplayQueue* display_queue = nullptr);
+
 FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
                                ImageDisplayQueue* display_queue)
     : FeatureTrackerBase(params.tracker_params, camera, display_queue),

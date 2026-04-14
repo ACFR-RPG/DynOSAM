@@ -369,12 +369,12 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
-    run_hybrid_solver_comparison_kitti()
+    # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    # run_viodes()
+    run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

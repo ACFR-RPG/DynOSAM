@@ -360,13 +360,37 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
                   detection_mask_impl);
 
   // add mask over current static features
+  // improve masking for longer tracks by reducing supression for old tracks
+  const int base_radius =
+      params_.min_distance_btw_tracked_and_detected_static_features;
   for (const auto& feature : current_features) {
     const Keypoint kp = feature->keypoint();
     CHECK(feature->usable());
     CHECK(isWithinShrunkenImage(kp));
-    cv::circle(detection_mask_impl, utils::gtsamPointToCv(kp),
-               params_.min_distance_btw_tracked_and_detected_static_features,
-               cv::Scalar(0), cv::FILLED);
+
+    // int radius =
+    // params_.min_distance_btw_tracked_and_detected_static_features;
+    // // Reduce suppression for old tracks → allow replacement
+    // if (feature->age() > params_.max_feature_track_age * 0.7) {
+    //   radius = static_cast<int>(radius * 0.5);
+    // }
+
+    float age = static_cast<float>(feature->age());
+    float max_age = static_cast<float>(params_.max_feature_track_age);
+
+    float alpha = std::clamp(age / max_age, 0.0f, 1.0f);
+
+    // quadratic decay (recommended)
+    float scale = 1.0f - 0.7f * (alpha * alpha);
+
+    int radius = static_cast<int>(base_radius * scale);
+    radius = std::max(radius, 3);
+
+    // cv::circle(detection_mask_impl, utils::gtsamPointToCv(kp),
+    //            params_.min_distance_btw_tracked_and_detected_static_features,
+    //            cv::Scalar(0), cv::FILLED);
+    cv::circle(detection_mask_impl, utils::gtsamPointToCv(feature->keypoint()),
+               radius, cv::Scalar(0), cv::FILLED);
   }
 
   std::vector<cv::Point2f> detected_points;
@@ -523,27 +547,16 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
 
   std::vector<cv::Point2f> good_current, good_previous;
   TrackletIds good_tracklets;
+
+  const float kMaxErr = 20.0f;
   // can also look at the err?
   for (size_t i = 0; i < klt_status.size(); i++) {
-    if (klt_status[i]) {
+    if (klt_status[i] && err[i] < kMaxErr) {
       good_current.push_back(current_points.at(i));
       good_previous.push_back(previous_pts.at(i));
       good_tracklets.push_back(tracklet_ids.at(i));
     }
   }
-
-  // Geometric verification using RANSAC
-  // const cv::Mat geometric_verification_mask =
-  //     geometricVerification(good_previous, good_current);
-  // std::vector<cv::Point2f> verified_current, verified_previous;
-  // TrackletIds verified_tracklets;
-  // for (int i = 0; i < geometric_verification_mask.rows; ++i) {
-  //   if (geometric_verification_mask.at<uchar>(i)) {
-  //     verified_current.push_back(good_current.at(i));
-  //     verified_previous.push_back(good_previous.at(i));
-  //     verified_tracklets.push_back(good_tracklets.at(i));
-  //   }
-  // }
 
   std::vector<cv::Point2f> verified_current, verified_previous;
   TrackletIds verified_tracklets;
@@ -552,6 +565,11 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
                                         verified_current, verified_tracklets);
 
   CHECK_EQ(verified_tracklets.size(), verified_current.size());
+
+  const size_t n_prev = previous_pts.size();
+  const size_t n_verified = verified_tracklets.size();
+
+  const double survival_ratio = n_prev > 0 ? (double)n_verified / n_prev : 0.0;
 
   // add to tracked features
   for (size_t i = 0; i < verified_tracklets.size(); i++) {
@@ -583,6 +601,8 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
     }
   }
 
+  pruneTracks(tracked_features);
+
   // Get the outliers associated with the previous_features container by taking
   // the set difference between the verified and total tracklets NOTE: verified
   // tracklets are not necessary the same as the tracklets in tracked_features
@@ -599,7 +619,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   const auto& n_tracked = tracked_features.size();
   tracker_info.static_track_optical_flow = n_tracked;
 
-  if (shouldResample(tracked_features)) {
+  if (shouldResample(tracked_features, survival_ratio)) {
     utils::ChronoTimingStats timer("static_feature_track.detect");
     // if we do not have enough features, detect more on the current image
     detectFeatures(current_processed_img, image_container, tracked_features,
@@ -613,8 +633,8 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   return true;
 }
 
-bool KltFeatureTracker::shouldResample(
-    const FeatureContainer& tracked_features) const {
+bool KltFeatureTracker::shouldResample(const FeatureContainer& tracked_features,
+                                       double survival_ratio) const {
   const bool too_few_features =
       tracked_features.size() <
       static_cast<size_t>(params_.min_features_per_frame);
@@ -633,25 +653,48 @@ bool KltFeatureTracker::shouldResample(
     }
   }
   const bool many_old_points =
-      (double)are_geriatric / (double)tracked_features.size() > 0.8;
+      tracked_features.size() > 0 &&
+      (double)are_geriatric / (double)tracked_features.size() > 0.7;
 
-  return too_few_features || many_old_points;
+  const bool poor_tracking = survival_ratio < 0.6;
+
+  return too_few_features || many_old_points || poor_tracking;
 }
 
-// cv::Mat KltFeatureTracker::geometricVerification(
-//     const std::vector<cv::Point2f>& good_old,
-//     const std::vector<cv::Point2f>& good_new) const {
-//   if (good_old.size() >= 4) {  // Minimum number of points required for
-//   RANSAC
-//     cv::Mat mask;
-//     cv::findHomography(good_old, good_new, cv::RANSAC, 5.0, mask);
-//     return mask;
-//   } else {
-//     return cv::Mat::ones(
-//         good_old.size(), 1,
-//         CV_8U);  // If not enough points, assume all are inliers
-//   }
-// }
+void KltFeatureTracker::pruneTracks(FeatureContainer& features) const {
+  if (features.size() <= params_.max_features_per_frame) return;
+
+  std::vector<Feature::Ptr> vec(features.begin(), features.end());
+
+  // Prefer:
+  // 1. High age
+  // 2. Low motion noise (future: add score)
+  std::sort(vec.begin(), vec.end(),
+            [](const Feature::Ptr& a, const Feature::Ptr& b) {
+              return a->age() > b->age();
+            });
+
+  FeatureContainer pruned;
+
+  for (const auto& f : vec) {
+    if (pruned.size() >= params_.max_features_per_frame) break;
+
+    bool too_close = false;
+    for (const auto& kept : pruned) {
+      if ((f->keypoint() - kept->keypoint()).norm() <
+          params_.min_distance_btw_tracked_and_detected_static_features) {
+        too_close = true;
+        break;
+      }
+    }
+
+    if (!too_close) {
+      pruned.add(f);
+    }
+  }
+
+  features = std::move(pruned);
+}
 
 Feature::Ptr KltFeatureTracker::constructStaticFeatureFromPrevious(
     const Keypoint& kp_current, Feature::Ptr previous_feature,

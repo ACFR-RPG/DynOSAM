@@ -97,7 +97,6 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
 
   return std::make_shared<VIFrontendInput>(packet, ground_truth_packet,
                                            imu_measurements);
-  ;
 }
 
 SharedGroundTruth DataInterfacePipeline::getSharedGroundTruth() const {
