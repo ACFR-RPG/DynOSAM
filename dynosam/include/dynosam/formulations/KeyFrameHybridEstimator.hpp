@@ -187,11 +187,36 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
                     gtsam::Values& new_values,
                     gtsam::NonlinearFactorGraph& new_factors);
 
+  // void addHybridMotionFactor(gtsam::NonlinearFactorGraph& new_factors,
+  //                            gtsam::Key pose_key, gtsam::Key
+  //                            object_motion_key, gtsam::Key point_key, const
+  //                            gtsam::Pose3& KF_pose, SharedLandmarkNode
+  //                            lmk_node, SharedFrameNode frame_node);
+
   void addHybridMotionFactor(gtsam::NonlinearFactorGraph& new_factors,
-                             gtsam::Key pose_key, gtsam::Key object_motion_key,
-                             gtsam::Key point_key, const gtsam::Pose3& KF_pose,
+                             gtsam::Key point_key, ObjectId object_id,
+                             const gtsam::Pose3& KF_pose,
                              SharedLandmarkNode lmk_node,
                              SharedFrameNode frame_node);
+
+  void addHybridMotionFactorCameraKF(gtsam::NonlinearFactorGraph& new_factors,
+                                     gtsam::Key point_key, ObjectId object_id,
+                                     const gtsam::Pose3& KF_pose,
+                                     const gtsam::StereoPoint2& z,
+                                     const gtsam::SharedNoiseModel& z_model,
+                                     SharedFrameNode frame_node_CKF);
+
+  void addHybridMotionFactorNonCameraKF(
+      gtsam::NonlinearFactorGraph& new_factors, gtsam::Key point_key,
+      ObjectId object_id, const gtsam::Pose3& KF_pose,
+      const gtsam::StereoPoint2& z, const gtsam::SharedNoiseModel& z_model,
+      SharedFrameNode frame_node_nonCKF);
+
+  void addNewObjectMotionVariable(gtsam::Values& new_values,
+                                  SharedFrameNode frame_node,
+                                  ObjectId object_id,
+                                  const Motion3ReferenceFrame& motion);
+
   // helper function
   TrackedPointsPerObject getObjectPoints(const ObjectIds& objects) const;
 

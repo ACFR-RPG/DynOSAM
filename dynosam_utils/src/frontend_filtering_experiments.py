@@ -324,7 +324,7 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","test", kitti_dataset,
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","test", kitti_dataset,
                              "--use_backend=true",
                              "--hybrid_motion_solver=4")
 
@@ -369,13 +369,13 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
-    # run_hybrid_solver_comparison_kitti()
+    run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
     # run_viodes()
-    run_cluster()
+    # run_cluster()
     # run_tartan_air()
     # run_aria()
     # run_omd()

@@ -228,4 +228,31 @@ bool HybridFormulation<MAP>::isDynamicTrackletInMap(
   return is_dynamic_tracklet_in_map_.exists(tracklet_id);
 }
 
+template <typename MAP>
+FrameId HybridFormulation<MAP>::frameIdFromKFRange(ObjectId object_id,
+                                                   FrameId frame_id) const {
+  const auto [frame_id_KF, _] = getKeyframeRange(object_id, frame_id);
+  return frame_id_KF;
+}
+
+template <typename MAP>
+gtsam::Pose3 HybridFormulation<MAP>::pose3FromKeyframeRange(
+    ObjectId object_id, FrameId frame_id) const {
+  const auto [_, KF_pose] = getKeyframeRange(object_id, frame_id);
+  return KF_pose;
+}
+
+template <typename MAP>
+std::pair<FrameId, gtsam::Pose3> HybridFormulation<MAP>::getKeyframeRange(
+    ObjectId object_id, FrameId frame_id) const {
+  const KeyFrameRange::ConstPtr range =
+      key_frame_data_.find(object_id, frame_id);
+  if (!range) {
+    DYNO_THROW_MSG(DynosamException)
+        << "Frame range null for query " << info_string(frame_id, object_id);
+  }
+
+  return range->dataPair();
+}
+
 }  // namespace dyno

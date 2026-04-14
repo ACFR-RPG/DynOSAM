@@ -1473,6 +1473,18 @@ class HybridFormulation : public VIOFormulation<MAP>,
   bool isDynamicTrackletInMap(const typename MapTraitsType::SharedLandmarkNode&
                                   lmk_node) const override;
 
+  /* Helper function to get the stored frame id of a KF range from
+   * key_frame_data_ */
+  FrameId frameIdFromKFRange(ObjectId object_id, FrameId frame_id) const;
+  /* Helper function to get the stored pose of a KF range from key_frame_data_
+   */
+  gtsam::Pose3 pose3FromKeyframeRange(ObjectId object_id,
+                                      FrameId frame_id) const;
+  /* Helper function to get the KF range from key_frame_data_ and throws
+   * exception if null */
+  std::pair<FrameId, gtsam::Pose3> getKeyframeRange(ObjectId object_id,
+                                                    FrameId frame_id) const;
+
  protected:
   // TODO: make this virtual for now - eventual move structureless etc
   // properties into a class to encapsulate!

@@ -355,21 +355,11 @@ void HybridFormulationKeyFrame::updateObject(
   const auto frame_id_kf = context.getFrameId();
   const auto object_id = context.getObjectId();
 
-  const gtsam::Key object_motion_key_kf =
-      frame_node_kf->makeObjectMotionKey(object_id);
-  const gtsam::Key pose_key_kf = frame_node_kf->makePoseKey();
-
-  auto seen_lmks_k = object_node->landmarksSeenAtFrame(frame_id_kf);
-
-  CHECK(!is_other_values_in_map.exists(object_motion_key_kf));
   CHECK(initial_H_W_AKF_k_.exists(object_id, frame_id_kf));
 
-  const KeyFrameRange::ConstPtr kf_range =
-      key_frame_data_.find(object_id, frame_id_kf);
-  CHECK(kf_range);
-
   // TODO: should check if the AKF_id is different for the from and the to?
-  const auto [AKF_id, AKF_pose] = kf_range->dataPair();
+  const auto [AKF_id, AKF_pose] =
+      this->getKeyframeRange(object_id, frame_id_kf);
 
   Motion3ReferenceFrame H_W_AKF_k =
       initial_H_W_AKF_k_.at(object_id, frame_id_kf);
@@ -388,7 +378,7 @@ void HybridFormulationKeyFrame::updateObject(
   // measured from frame
   const auto& lRKF_id = H_W_lRKF_KF.from();
 
-  typename Map::Ptr map = this->map();
+  KeyFrameMap::Ptr map = this->map();
   auto frame_node_akf = map->getFrame(frame_id_akf);
   CHECK(frame_node_akf);
 
@@ -396,11 +386,18 @@ void HybridFormulationKeyFrame::updateObject(
   auto frame_node_lrkf = map->getFrame(lRKF_id);
   CHECK(frame_node_lrkf);
   // object motion key from the 'from' frame
-  const gtsam::Key object_motion_key_lkf =
-      frame_node_lrkf->makeObjectMotionKey(object_id);
+  // const gtsam::Key object_motion_key_lkf =
+  //     frame_node_lrkf->makeObjectMotionKey(object_id);
 
-  new_values.insert(object_motion_key_kf, H_W_AKF_k.estimate());
-  is_other_values_in_map.insert2(object_motion_key_kf, true);
+  // const gtsam::Key object_motion_key_kf =
+  //     frame_node_kf->makeObjectMotionKey(object_id);
+  // const gtsam::Key pose_key_kf = frame_node_kf->makePoseKey();
+
+  // CHECK(!is_other_values_in_map.exists(object_motion_key_kf));
+
+  // new_values.insert(object_motion_key_kf, H_W_AKF_k.estimate());
+  // is_other_values_in_map.insert2(object_motion_key_kf, true);
+  addNewObjectMotionVariable(new_values, frame_node_kf, object_id, H_W_AKF_k);
 
   result.updateAffectedObject(frame_id_kf, object_id);
 
@@ -421,22 +418,13 @@ void HybridFormulationKeyFrame::updateObject(
   }
 
   size_t num_points_seen_akf = 0;
+  auto seen_lmks_k = object_node->landmarksSeenAtFrame(frame_id_kf);
+
   for (const auto& obj_lmk_node : seen_lmks_k) {
     CHECK_EQ(obj_lmk_node->objectId(), object_id);
     const TrackletId tracklet_id = obj_lmk_node->trackletId();
     // LOG(INFO) << "Iterating through dynamic lmk " << tracklet_id;
     const gtsam::Key point_key = this->makeDynamicKey(tracklet_id);
-
-    // becuase we dont anchor the motion (like in the original Hybrid with an
-    // identity motion) we dont always have a motion at an anchor keyframe so
-    // the point doesnt need to be seen there
-    // TODO: depending in implementation of regular vs anchor KF, we may expect
-    // that at anchor frames a point is not necessarily
-    // seen at both the AKF and the RKF but should be seen at RKF-1 and RKF-k
-    // (ie. if the previous KF was only a RKF, points should be seen at both?
-    // MAYBE) CHECK(obj_lmk_node->seenAtFrame(frame_id_akf)) << "Lmk i=" <<
-    // tracklet_id << " Object " << object_id << " not seen at " << frame_id_akf
-    // << " but this is the from motion";
 
     // TODO: seen ay any frame!
     CHECK(obj_lmk_node->seenAtFrame(frame_id_kf))
@@ -484,12 +472,16 @@ void HybridFormulationKeyFrame::updateObject(
 
     // TODO: seen ay any frame!
     if (factor_not_added_for_lRKF && obj_lmk_node->seenAtFrame(lRKF_id)) {
-      const gtsam::Key object_motion_key_lrkf =
-          frame_node_lrkf->makeObjectMotionKey(object_id);
-      const gtsam::Key pose_key_lrkf = frame_node_lrkf->makePoseKey();
+      // const gtsam::Key object_motion_key_lrkf =
+      //     frame_node_lrkf->makeObjectMotionKey(object_id);
+      // const gtsam::Key pose_key_lrkf = frame_node_lrkf->makePoseKey();
 
-      addHybridMotionFactor(new_factors, pose_key_lrkf, object_motion_key_lrkf,
-                            point_key, AKF_pose, obj_lmk_node, frame_node_lrkf);
+      // addHybridMotionFactor(new_factors, pose_key_lrkf,
+      // object_motion_key_lrkf,
+      //                       point_key, AKF_pose, obj_lmk_node,
+      //                       frame_node_lrkf);
+      addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
+                            obj_lmk_node, frame_node_lrkf);
       if (result.debug_info) {
         result.debug_info->getObjectInfo(context.getObjectId())
             .num_dynamic_factors++;
@@ -498,8 +490,10 @@ void HybridFormulationKeyFrame::updateObject(
       frames_with_factors_added.insert(frame_node_lrkf->frameId());
     }
 
-    addHybridMotionFactor(new_factors, pose_key_kf, object_motion_key_kf,
-                          point_key, AKF_pose, obj_lmk_node, frame_node_kf);
+    // addHybridMotionFactor(new_factors, pose_key_kf, object_motion_key_kf,
+    //                       point_key, AKF_pose, obj_lmk_node, frame_node_kf);
+    addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
+                          obj_lmk_node, frame_node_kf);
     frames_with_factors_added.insert(frame_id_kf);
 
     // sanity check/ backwards adding of points to ensure measurements
@@ -509,10 +503,8 @@ void HybridFormulationKeyFrame::updateObject(
     for (const FrameId frame_with_z : frames_with_measurements) {
       // check if this frame is in the same backend range
       // if it is not, ignore it!
-      const KeyFrameRange::ConstPtr range =
-          key_frame_data_.find(object_id, frame_with_z);
-      CHECK(range);
-      const auto [AKF_id_for_z, _] = range->dataPair();
+      const auto [AKF_id_for_z, _] =
+          this->getKeyframeRange(object_id, frame_with_z);
       // if we have not added a measurement
       if (AKF_id_for_z != AKF_id) {
         continue;
@@ -528,13 +520,16 @@ void HybridFormulationKeyFrame::updateObject(
         auto frame_node_with_z = map->getFrame(frame_with_z);
         CHECK_NOTNULL(frame_node_with_z);
 
-        const gtsam::Key object_motion_key =
-            frame_node_with_z->makeObjectMotionKey(object_id);
-        const gtsam::Key pose_key = frame_node_with_z->makePoseKey();
+        // const gtsam::Key object_motion_key =
+        //     frame_node_with_z->makeObjectMotionKey(object_id);
+        // const gtsam::Key pose_key = frame_node_with_z->makePoseKey();
 
-        addHybridMotionFactor(new_factors, pose_key, object_motion_key,
-                              point_key, AKF_pose, obj_lmk_node,
-                              frame_node_with_z);
+        // addHybridMotionFactor(new_factors, pose_key, object_motion_key,
+        //                       point_key, AKF_pose, obj_lmk_node,
+        //                       frame_node_with_z);
+        addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
+                              obj_lmk_node, frame_node_with_z);
+
         if (result.debug_info) {
           result.debug_info->getObjectInfo(context.getObjectId())
               .num_dynamic_factors++;
@@ -542,43 +537,6 @@ void HybridFormulationKeyFrame::updateObject(
         frames_with_factors_added.insert(frame_with_z);
       }
     }
-
-    {
-      // do a sanity check that we've added all meaasurement factors for this
-      // point
-      // const FrameIds frames_with_measurements =
-      // obj_lmk_node->getSeenFrameIds(); FrameIds
-      // frames_with_factors_added_vec(frames_with_factors_added.begin(),
-      //                                        frames_with_factors_added.end());
-      // CHECK(equals_with_abs_tol(frames_with_measurements,
-      //                           frames_with_factors_added_vec))
-      //   << "Frames with measurements:" <<
-      //   container_to_string(frames_with_measurements)
-      //   << "\n"
-      //   << "Frames with factors:" <<
-      //   container_to_string(frames_with_factors_added_vec);
-    }
-
-    // if(!smoothing_factors_added_.exists(object_motion_key_kf)) {
-    //   // check we have the previous keyframed motion
-    //   is_other_values_in_map.exists(object_motion_key_lkf);
-
-    //   auto object_smoothing_noise = noise_models_.object_smoothing_noise;
-    //   CHECK(object_smoothing_noise);
-    //   CHECK_EQ(object_smoothing_noise->dim(), 6u);
-
-    //   new_factors.emplace_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
-    //     object_motion_key_lkf, object_motion_key_kf, H_W_lRKF_KF.estimate(),
-    //     object_smoothing_noise
-    //   );
-
-    //   if (result.debug_info)
-    //     result.debug_info->getObjectInfo(context.getObjectId())
-    //         .smoothing_factor_added = true;
-
-    //     // update internal containers
-    //   smoothing_factors_added_.insert(object_motion_key_kf);
-    // }
 
     if (result.debug_info) {
       result.debug_info->getObjectInfo(context.getObjectId())
@@ -590,86 +548,98 @@ void HybridFormulationKeyFrame::updateObject(
             << num_points_seen_akf;
 }
 
-// TODO: function is doing a lot!!!
 void HybridFormulationKeyFrame::addHybridMotionFactor(
-    gtsam::NonlinearFactorGraph& new_factors, gtsam::Key pose_key,
-    gtsam::Key object_motion_key, gtsam::Key point_key,
-    const gtsam::Pose3& KF_pose, SharedLandmarkNode lmk_node,
-    SharedFrameNode frame_node) {
-  // Landmark measured_point_local;
-  // gtsam::SharedNoiseModel measurement_covariance;
-  // std::tie(measured_point_local, measurement_covariance) =
-  //     MeasurementTraits::pointWithCovariance(
-  //         lmk_node->getMeasurement(frame_node));
-
+    gtsam::NonlinearFactorGraph& new_factors, gtsam::Key point_key,
+    ObjectId object_id, const gtsam::Pose3& KF_pose,
+    SharedLandmarkNode lmk_node, SharedFrameNode frame_node) {
   auto stereo_measurement =
       MeasurementTraits::stereo(lmk_node->getMeasurement(frame_node));
-
   // FOR NOW
   CHECK(stereo_measurement);
-  auto [measurement, noise_model] = *stereo_measurement;
+  auto [z, z_model] = *stereo_measurement;
 
+  if (frame_node->isCameraKeyFrame()) {
+    addHybridMotionFactorCameraKF(new_factors, point_key, object_id, KF_pose, z,
+                                  z_model, frame_node);
+  } else {
+    addHybridMotionFactorNonCameraKF(new_factors, point_key, object_id, KF_pose,
+                                     z, z_model, frame_node);
+  }
+}
+
+void HybridFormulationKeyFrame::addHybridMotionFactorCameraKF(
+    gtsam::NonlinearFactorGraph& new_factors, gtsam::Key point_key,
+    ObjectId object_id, const gtsam::Pose3& KF_pose,
+    const gtsam::StereoPoint2& z, const gtsam::SharedNoiseModel& z_model,
+    SharedFrameNode frame_node_CKF) {
+  gtsam::SharedNoiseModel noise_model = z_model;
   if (params_.makeDynamicMeasurementsRobust()) {
     noise_model = factor_graph_tools::robustifyHuber(params_.k_huber_3d_points_,
                                                      noise_model);
   }
+  CHECK_NOTNULL(noise_model);
 
-  if (frame_node->isCameraKeyFrame()) {
-    new_factors.emplace_shared<StereoHybridMotionFactor>(
-        measurement, KF_pose, noise_model, rgbd_camera_->getFakeStereoCalib(),
-        pose_key, object_motion_key, point_key, true /* throw cheirality*/
-    );
-  } else {
-    // get closest frame that is a camera keyframe! thankfully the frontend sets
-    // this for us in each node
-    const FrameId closest_CKF_id = frame_node->getLastCameraKeyFrame();
-    const FrameId frame_id_k = frame_node->frameId();
+  const gtsam::Key motion_key = frame_node_CKF->makeObjectMotionKey(object_id);
+  const gtsam::Key camera_pose_key = frame_node_CKF->makePoseKey();
 
-    // some sanity checks; must exist and must be a camera KF but shouldn't be
-    // at this frame
-    auto frame_node_closest_CKF = CHECK_NOTNULL(map_->getFrame(closest_CKF_id));
-    CHECK(frame_node_closest_CKF->frameId() != frame_id_k);
-    CHECK(frame_node_closest_CKF->isCameraKeyFrame());
+  new_factors.emplace_shared<StereoHybridMotionFactor>(
+      z, KF_pose, noise_model, rgbd_camera_->getFakeStereoCalib(),
+      camera_pose_key, motion_key, point_key, true /* throw cheirality*/
+  );
+}
 
-    // check that a VO transform from CKF to k exists
-    CHECK(frame_node_closest_CKF->hasRelativeEgoMotion(frame_id_k));
-    const gtsam::Pose3 T_CKF_k =
-        frame_node_closest_CKF->getRelativeEgoMotion(frame_id_k);
+void HybridFormulationKeyFrame::addHybridMotionFactorNonCameraKF(
+    gtsam::NonlinearFactorGraph& new_factors, gtsam::Key point_key,
+    ObjectId object_id, const gtsam::Pose3& KF_pose,
+    const gtsam::StereoPoint2& z, const gtsam::SharedNoiseModel& z_model,
+    SharedFrameNode frame_node_nonCKF) {
+  CHECK(!frame_node_nonCKF->isCameraKeyFrame());
+  const FrameId frame_id_k = frame_node_nonCKF->frameId();
 
-    // actually not sure if this matters... everything should be self consisent
-    // //TODO: parse object id into function?
-    // // check if this frame is in the same backend range
-    // // if it is not, ignore it!
-    // const KeyFrameRange::ConstPtr range_CKF =
-    //     key_frame_data_.find(lmk_node->objectId(), closest_CKF_id);
-    // const KeyFrameRange::ConstPtr range_k =
-    //     key_frame_data_.find(lmk_node->objectId(), frame_id_k);
-    // CHECK(range);
-    // const auto [AKF_id_for_CKF, _] = range_CKF->dataPair();
-    // if (AKF_id_for_CKF != frame_id_k) {
-    //   return;
-    // }
+  //! Closest camera keyframe before frame_id_k
+  auto frame_node_closest_CKF = map_->closestEarlierCameraKeyFrame(frame_id_k);
+  CHECK_NOTNULL(frame_node_closest_CKF);
+  CHECK_LT(frame_node_closest_CKF->frameId(), frame_id_k);
+  CHECK(frame_node_closest_CKF->isCameraKeyFrame());
+  // check that a VO transform from CKF to k exists
+  CHECK(frame_node_closest_CKF->hasRelativeEgoMotion(frame_id_k));
+  const gtsam::Pose3 T_CKF_k =
+      frame_node_closest_CKF->getRelativeEgoMotion(frame_id_k);
 
-    LOG(INFO) << "Making StereoHybridMotionExtrapolatedFactor factor "
-              << " with KF camera at " << closest_CKF_id << " and motion at "
-              << frame_id_k << "for j=" << lmk_node->objectId();
-
-    gtsam::SharedNoiseModel extrapolated_noise_model =
-        factor_graph_tools::inflateNoise(noise_model, 3.0);
-    CHECK_NOTNULL(extrapolated_noise_model);
-
-    // here we use a different pose key, associated with closes_CKF
-    gtsam::Key X_W_CKF_key = frame_node_closest_CKF->makePoseKey();
-    new_factors.emplace_shared<StereoHybridMotionExtrapolatedFactor>(
-        measurement, KF_pose, T_CKF_k, extrapolated_noise_model,
-        rgbd_camera_->getFakeStereoCalib(), X_W_CKF_key, object_motion_key,
-        point_key, true /* throw cheirality*/
-    );
+  gtsam::SharedNoiseModel noise_model = z_model;
+  gtsam::SharedNoiseModel extrapolated_noise_model =
+      factor_graph_tools::inflateNoise(noise_model, 3.0);
+  if (params_.makeDynamicMeasurementsRobust()) {
+    extrapolated_noise_model = factor_graph_tools::robustifyHuber(
+        params_.k_huber_3d_points_, extrapolated_noise_model);
   }
+  CHECK_NOTNULL(noise_model);
 
-  // new_factors.emplace_shared<HybridMotionFactor>(
-  //     pose_key, object_motion_key, point_key, measured_point_local, KF_pose,
-  //     noise_model);
+  LOG(INFO) << "Making StereoHybridMotionExtrapolatedFactor factor "
+            << " with KF camera at " << frame_node_closest_CKF->frameId()
+            << " and motion at " << frame_id_k << "for j=" << object_id;
+
+  const gtsam::Key motion_key =
+      frame_node_nonCKF->makeObjectMotionKey(object_id);
+  // here we use a different pose key, associated with closes_CKF
+  const gtsam::Key camera_pose_key = frame_node_closest_CKF->makePoseKey();
+  new_factors.emplace_shared<StereoHybridMotionExtrapolatedFactor>(
+      z, KF_pose, T_CKF_k, extrapolated_noise_model,
+      rgbd_camera_->getFakeStereoCalib(), camera_pose_key, motion_key,
+      point_key, true /* throw cheirality*/
+  );
+}
+
+void HybridFormulationKeyFrame::addNewObjectMotionVariable(
+    gtsam::Values& new_values, SharedFrameNode frame_node, ObjectId object_id,
+    const Motion3ReferenceFrame& motion) {
+  const gtsam::Key motion_key = frame_node->makeObjectMotionKey(object_id);
+
+  CHECK(!is_other_values_in_map.exists(motion_key));
+  CHECK_EQ(motion.to(), frame_node->frameId());
+
+  new_values.insert(motion_key, motion.estimate());
+  is_other_values_in_map.insert2(motion_key, true);
 }
 
 // TODO: this should mark objects with keyframes!

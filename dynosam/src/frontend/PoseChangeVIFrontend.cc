@@ -278,9 +278,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
         object_id, realtime_output->state.dynamic_map);
   }
 
-  // ObjectPoseChangeInfoMap kf_pose_change_infos;
-  // const size_t num_object_keyframes =
-  //     extractKeyFramedMotions(kf_pose_change_infos, pose_change_infos);
   const size_t num_object_keyframes = kf_pose_change_infos.size();
 
   ObjectIds objects_with_keyframes;
@@ -353,13 +350,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     auto frame_lkf_node = CHECK_NOTNULL(map_->getFrame(lkf_id_));
     // TODO: this relative motion should be consistent with the
     frame_lkf_node->addRelativeEgoMotion(T_lkf_k_, frame_id_k);
-  }
-
-  // before anything else, mark the closest keyframe to the current frame node
-  auto frame_node_k = map_->getFrame(frame_id_k);
-  // may not exist if no static measurements added at this frame
-  if (frame_node_k) {
-    frame_node_k->setLastCameraKeyFrame(lkf_id_);
   }
 
   if (any_object_keyframes) {

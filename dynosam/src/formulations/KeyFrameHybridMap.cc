@@ -34,18 +34,14 @@ bool FrameKFNode::isAnyObjectKeyFrame() const {
   return object_keyframes_.size() > 0u;
 }
 
-bool FrameKFNode::setCameraKeyFrame() {
+void FrameKFNode::setCameraKeyFrame() {
   is_camera_keyframe_ = true;
-
   updateLandmarksWithKF(this->static_landmarks_);
-  return true;
 }
 
-bool FrameKFNode::setObjectKeyFrame(ObjectId object_id) {
+void FrameKFNode::setObjectKeyFrame(ObjectId object_id) {
   object_keyframes_.insert(object_id);
-
   updateLandmarksWithKF(this->dynamicLandmarks(object_id));
-  return true;
 }
 
 bool FrameKFNode::isCameraKeyFrame() const { return is_camera_keyframe_; }
@@ -81,7 +77,9 @@ bool KeyFrameMap::setCameraKeyFrame(FrameId frame_id) {
     return false;
   }
 
-  return frame_node->setCameraKeyFrame();
+  frame_node->setCameraKeyFrame();
+  camera_keyframes_.insert(frame_node);
+  return true;
 }
 bool KeyFrameMap::setObjectKeyFrame(FrameId frame_id, ObjectId object_id) {
   auto frame_interface = this->asFrameInterface();
@@ -91,7 +89,8 @@ bool KeyFrameMap::setObjectKeyFrame(FrameId frame_id, ObjectId object_id) {
     return false;
   }
 
-  return frame_node->setObjectKeyFrame(object_id);
+  frame_node->setObjectKeyFrame(object_id);
+  return true;
 }
 
 bool KeyFrameMap::isAnyKeyFrame(FrameId frame_id) const {
@@ -123,6 +122,19 @@ bool KeyFrameMap::isObjectKeyFrame(FrameId frame_id, ObjectId object_id) const {
   }
 
   return frame_node->isObjectKeyFrame(object_id);
+}
+
+KeyFrameMap::SharedFrame KeyFrameMap::closestEarlierCameraKeyFrame(
+    FrameId frame_id) const {
+  // first element > query frame id
+  auto it = camera_keyframes_.upper_bound(frame_id);
+
+  if (it == camera_keyframes_.begin()) {
+    return nullptr;
+  } else {
+    --it;
+    return *it;
+  }
 }
 
 }  // namespace dyno
