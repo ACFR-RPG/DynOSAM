@@ -136,6 +136,19 @@ class FrameKFNode : public FrameNodeBase<KeyFrameNodeTypes> {
   gtsam::FastMap<FrameId, gtsam::Pose3> T_KF_k_;
 };
 
+struct SharedModuleStates {
+  //! Is the backend current optimizing
+  std::atomic_bool is_backend_optimizing{false};
+  //! Last frame optimized by the backend
+  std::atomic<FrameId> last_optimized_frame{0};
+  //! Indicates the last frame the frontend has finished processing
+  std::atomic<FrameId> current_frontend_frame{0};
+
+  bool isBackendOptimizing() const { return is_backend_optimizing; }
+
+  FrameId lastOptimizedFrame() const { return last_optimized_frame; }
+};
+
 class KeyFrameMap : public Map<KeyFrameNodeTypes> {
   struct Private {};
 
@@ -173,9 +186,18 @@ class KeyFrameMap : public Map<KeyFrameNodeTypes> {
    */
   SharedFrame closestEarlierCameraKeyFrame(FrameId frame_id) const;
 
+  const SharedModuleStates* getSharedModuleStates() const {
+    return &shared_states_;
+  }
+  SharedModuleStates* getSharedModuleStates() { return &shared_states_; }
+
  private:
   //! All camera keyframes. Update with a call to setCameraKeyFrame
   SharedFrameSet camera_keyframes_;
+
+  //! Maybe slightly hacky but it is convenient to store some shared data
+  //! between the frontend and the backend here
+  SharedModuleStates shared_states_;
 };
 
 }  // namespace dyno

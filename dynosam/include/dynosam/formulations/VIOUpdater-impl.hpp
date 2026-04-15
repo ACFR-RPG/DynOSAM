@@ -72,13 +72,10 @@ class VIOUpdaterImpl : public VIOUpdater<MAP> {
    * @return true
    * @return false
    */
-  virtual bool addLandmark(LmkNode& lmk, const FrameNode& frame,
-                           const UpdateObservationParams& update_params,
-                           gtsam::Values& values,
-                           gtsam::NonlinearFactorGraph& graph,
-                           gtsam::Key& point_key,
-                           UpdateObservationResult& result,
-                           std::optional<Landmark>& initial) {
+  virtual bool addLandmark(LmkNode&, const FrameNode&,
+                           const UpdateObservationParams&, gtsam::Values&,
+                           gtsam::NonlinearFactorGraph&, gtsam::Key&,
+                           UpdateObservationResult&, std::optional<Landmark>&) {
     throw DynosamException(
         "VIOUpdaterImpl::addLandmark not implemented in derived class");
   }
@@ -193,11 +190,10 @@ class GenericProjectionUpdater : public VIOUpdaterImpl<MAP> {
   GenericProjectionUpdater(VIOFormulation* vio_formulation)
       : VIOUpdaterImpl<MAP>(vio_formulation) {}
 
-  bool addLandmark(LmkNode& lmk, const FrameNode& frame,
-                   const UpdateObservationParams& update_params,
-                   gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
-                   gtsam::Key& point_key, UpdateObservationResult& result,
-                   std::optional<Landmark>& initial) override {
+  bool addLandmark(LmkNode&, const FrameNode&, const UpdateObservationParams&,
+                   gtsam::Values&, gtsam::NonlinearFactorGraph&, gtsam::Key&,
+                   UpdateObservationResult&,
+                   std::optional<Landmark>&) override {
     LOG(FATAL) << "Not implemented";
   }
 };
@@ -268,7 +264,10 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
         // use the initial pose
         // in the IMU case the optimised pose will be not so good until visual
         // odom starts working... or maybe not...
-        Pose3Measurement X_W_i = frame_node_i->initialSensorPose();
+        // Pose3Measurement X_W_i = frame_node_i->initialSensorPose();
+        gtsam::Pose3 X_W_i =
+            this->vio_formulation_->getInitialOrLinearizedSensorPose(
+                frame_id_i);
 
         const gtsam::Pose3 leftPose = X_W_i;
         const gtsam::Cal3_S2 monoCal = K_stereo_->calibration();

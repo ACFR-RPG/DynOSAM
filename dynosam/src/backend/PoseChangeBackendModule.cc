@@ -42,6 +42,10 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   SmootherInterface smoother_interface(smoother_.get());
   smoother_interface.setMaxExtraIterations(6);
 
+  SharedModuleStates* shared_module_states =
+      formulation_->map()->getSharedModuleStates();
+  shared_module_states->is_backend_optimizing = true;
+
   gtsam::ISAM2Result result;
   bool is_smoother_ok = smoother_interface.optimize(
       &result,
@@ -52,6 +56,11 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
       },
       error_hooks_);
 
+  // update frame first so anything waiting on the is_backend_optimizing flag
+  // will have the latest information about the frame
+  shared_module_states->last_optimized_frame = input->frame_id;
+  shared_module_states->is_backend_optimizing = false;
+
   if (!is_smoother_ok) {
     LOG(FATAL) << "Failed...";
   }
@@ -59,18 +68,21 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
             << " error after " << result.getErrorAfter();
   gtsam::Values optimised_values = smoother_interface.calculateEstimate();
-  // formulation_->updateTheta(optimised_values);
+  formulation_->updateTheta(optimised_values);
   // just for now to test if the updating of the formulation asynchronously is
   // the pain point!
   // obviously we still want to update the formulation as immedialelt as
   // possible! and so that the backend still outputs the latest viz
+
+  const auto camera_trajectory = hybrid_accessor_->getCameraTrajectory();
+  LOG(INFO) << "Camera trajectory has last frame in backend "
+            << camera_trajectory.maxFrame();
 
   // alert frontend
   if (update_callback_) {
     PoseChangeUpdateComplete event;
     event.frame_id = input->frame_id;
     event.timestamp = input->timestamp;
-    event.refined_states = optimised_values;
     update_callback_(event);
   }
 

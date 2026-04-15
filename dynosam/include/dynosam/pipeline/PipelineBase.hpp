@@ -328,7 +328,7 @@ class SIMOPipelineModule : public MIMOPipelineModule<INPUT, OUTPUT> {
   using Base::isShutdown;
 
   SIMOPipelineModule(const std::string& module_name, InputQueue* input_queue_,
-                     bool parallel_run = true)
+                     bool parallel_run = false)
       : MIMOPipelineModule<INPUT, OUTPUT>(module_name),
         input_queue(CHECK_NOTNULL(input_queue_)),
         parallel_run_(parallel_run) {}
@@ -339,14 +339,14 @@ class SIMOPipelineModule : public MIMOPipelineModule<INPUT, OUTPUT> {
   }
 
  protected:
-  InputConstSharedPtr getInputPacket() override;
+  virtual InputConstSharedPtr getInputPacket() override;
 
   void shutdownQueues() override;
 
   //! Checks if the module has work to do (should check input queues are empty)
   bool hasWork() const override;
 
- private:
+ protected:
   InputQueue* input_queue;
   std::atomic_bool parallel_run_;
 };

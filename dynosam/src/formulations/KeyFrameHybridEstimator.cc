@@ -27,6 +27,29 @@ TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
   return points_per_object;
 }
 
+PoseTrajectory HybridFormulationKeyFrameAccessor::getCameraTrajectory() const {
+  PoseTrajectory pose_trajectory;
+
+  // only go up to the last frame the backend has finished processing
+  const SharedModuleStates* shared_module_states =
+      map_->getSharedModuleStates();
+  const FrameId last_backend_frame = shared_module_states->lastOptimizedFrame();
+  for (const auto& frame_CKF : map_->getCameraKeyFrames()) {
+    const FrameId frame_id_CKF = frame_CKF->frameId();
+    // only include states that have been optimized
+    if (frame_id_CKF > last_backend_frame) {
+      continue;
+    }
+
+    const Timestamp timestamp = frame_CKF->timestamp();
+    const gtsam::Pose3 X_W_k =
+        DYNO_GET_QUERY_DEBUG(this->getSensorPose(frame_id_CKF));
+    pose_trajectory.insert(frame_id_CKF, timestamp, X_W_k);
+  }
+
+  return pose_trajectory;
+}
+
 StateQuery<Motion3ReferenceFrame>
 HybridFormulationKeyFrameAccessor::getObjectMotionReferenceFrame(
     FrameId frame_id, ObjectId object_id) const {

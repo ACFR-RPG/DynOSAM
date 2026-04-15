@@ -656,7 +656,7 @@ bool KltFeatureTracker::shouldResample(const FeatureContainer& tracked_features,
       tracked_features.size() > 0 &&
       (double)are_geriatric / (double)tracked_features.size() > 0.7;
 
-  const bool poor_tracking = survival_ratio < 0.6;
+  const bool poor_tracking = survival_ratio < 0.4;
 
   return too_few_features || many_old_points || poor_tracking;
 }

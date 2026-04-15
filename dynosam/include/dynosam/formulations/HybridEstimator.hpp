@@ -1540,6 +1540,7 @@ class HybridFormulation : public VIOFormulation<MAP>,
   gtsam::KeySet smoothing_factors_added_;
 
  protected:
+  //! Specifically for objects not cameras
   KeyFrameData key_frame_data_;
   //! Virtual RGBD camera
   RGBDCamera::Ptr rgbd_camera_;

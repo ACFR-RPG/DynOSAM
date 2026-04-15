@@ -81,7 +81,7 @@ class PipelineModuleProcessor : public SIMOPipelineModule<INPUT, OUTPUT> {
 
   virtual ~PipelineModuleProcessor() = default;
 
-  virtual inline OutputConstSharedPtr process(
+  inline OutputConstSharedPtr process(
       const InputConstSharedPtr& input) override {
     return module_->spinOnce(CHECK_NOTNULL(input));
   }

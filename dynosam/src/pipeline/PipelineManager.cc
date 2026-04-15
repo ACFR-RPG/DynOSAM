@@ -33,6 +33,7 @@
 #include <glog/logging.h>
 
 #include "dynosam/backend/BackendFactory.hpp"
+#include "dynosam/backend/PoseChangeBackendPipeline.hpp"
 #include "dynosam/frontend/PoseChangeVIFrontend.hpp"
 #include "dynosam/frontend/RegularVIFrontend.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
@@ -342,16 +343,15 @@ void DynoPipelineManager::loadPoseChangeModules(
 
   frontend_out = pc_vi_frontend;
 
-  using PoseChangePipeline =
-      PipelineModuleProcessor<PoseChangeInput, DynoState>;
-  using PoseChangeQueue = PoseChangePipeline::InputQueue;
+  using PoseChangeQueue = PoseChangeBackendPipeline::InputQueue;
   // construct backend pipeline and connect from frontend!!
   std::shared_ptr<PoseChangeQueue> backend_input_queue =
       std::make_shared<PoseChangeQueue>();
-  std::unique_ptr<PoseChangePipeline> backend_pipeline =
-      std::make_unique<PoseChangePipeline>("pose-change-vi-pipeline",
-                                           backend_input_queue.get(),
-                                           pose_change_backend);
+
+  // A special pipeline that batches the input
+  std::unique_ptr<PoseChangeBackendPipeline> backend_pipeline =
+      std::make_unique<PoseChangeBackendPipeline>(backend_input_queue.get(),
+                                                  pose_change_backend);
   backend_pipeline->parallelRun(parallel_run);
 
   if (FLAGS_use_backend) {
@@ -364,6 +364,8 @@ void DynoPipelineManager::loadPoseChangeModules(
     pc_vi_frontend->addPoseChangeOutputSink(
         [backend_input_queue](const PoseChangeInput::ConstPtr& pc_packet) {
           CHECK(backend_input_queue);
+          LOG(INFO) << "Pushing pc packet to backend " << pc_packet->frame_id
+                    << " queue size " << backend_input_queue->size();
           backend_input_queue->push(pc_packet);
         });
   }

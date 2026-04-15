@@ -187,16 +187,9 @@ PoseTrajectory AccessorT<MAP, DerivedAccessor>::getCameraTrajectory() const {
   for (const auto& [frame_id, frame_node] : map()->getFrames()) {
     const Timestamp timestamp = frame_node->timestamp();
 
-    // TODO: for now, allow some camera poses to not exist (only for KF Hybrid)
-    //  becuase we add many frames not not all are keyframes and
-    //  map()->getFrames() does not repsect only getting keyframes, this is a
-    //  problem! const gtsam::Pose3 X_W_k =
-    //      DYNO_GET_QUERY_DEBUG(this->getSensorPose(frame_id));
-    auto X_W_k_query = this->getSensorPose(frame_id);
-    if (X_W_k_query)
-      pose_trajectory.insert(frame_id, timestamp, X_W_k_query.get());
-
-    // pose_trajectory.insert(frame_id, timestamp, X_W_k);
+    const gtsam::Pose3 X_W_k =
+        DYNO_GET_QUERY_DEBUG(this->getSensorPose(frame_id));
+    pose_trajectory.insert(frame_id, timestamp, X_W_k);
   }
 
   return pose_trajectory;

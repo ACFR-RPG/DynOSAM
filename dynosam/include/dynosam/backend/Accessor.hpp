@@ -493,7 +493,7 @@ class AccessorT : public DerivedAccessor {
   gtsam::FastMap<ObjectId, gtsam::Point3> computeObjectCentroids(
       FrameId frame_id) const override;
 
-  PoseTrajectory getCameraTrajectory() const override;
+  virtual PoseTrajectory getCameraTrajectory() const override;
   PoseTrajectory getObjectPoseTrajectory(ObjectId object_id) const override;
   MotionTrajetory getObjectMotionTrajectory(ObjectId object_id) const override;
 

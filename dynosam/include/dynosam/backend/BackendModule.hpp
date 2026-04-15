@@ -112,6 +112,7 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
 
     DynoState::Ptr state = std::make_shared<DynoState>();
 
+    // shoudl really only go up to last propogated frame...
     const auto camera_trajectory = accessor->getCameraTrajectory();
 
     // expect frame and timestamp to be from the last entry

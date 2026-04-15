@@ -221,6 +221,8 @@ class ThreadsafeQueue : public ThreadsafeQueueBase<T> {
 
   bool popAll(std::vector<T>& data, size_t duration_ms = 0u);
 
+  bool popAllBlocking(std::vector<T>& data);
+
  private:
   using TQB::data_cond_;
   using TQB::data_queue_;
@@ -386,6 +388,32 @@ bool ThreadsafeQueue<T>::popAll(std::vector<T>& data, size_t duration_ms) {
   std::swap(data_queue_, queue);
   lk.unlock();
 
+  data.reserve(queue.size());
+  while (!queue.empty()) {
+    if (shutdown_) {
+      break;
+    }
+
+    data.push_back(std::move(*queue.front()));
+    queue.pop();
+  }
+
+  return !data.empty();
+}
+
+template <typename T>
+bool ThreadsafeQueue<T>::popAllBlocking(std::vector<T>& data) {
+  std::unique_lock<std::mutex> lk(mutex_);
+  data.clear();
+
+  data_cond_.wait(lk, [this] { return !data_queue_.empty() || shutdown_; });
+  if (shutdown_) return false;
+
+  typename TQB::InternalQueue queue;
+  std::swap(data_queue_, queue);
+  lk.unlock();
+
+  data.reserve(queue.size());
   while (!queue.empty()) {
     if (shutdown_) {
       break;

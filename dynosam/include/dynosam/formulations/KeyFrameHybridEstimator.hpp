@@ -12,6 +12,11 @@ class HybridFormulationKeyFrameAccessor : public HybridAccessor<KeyFrameMap> {
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
       : HybridAccessor(shared_data, map, shared_hybrid_formulation_data) {}
 
+  /** Get camera pose trajectory. Overwirtten to only include keyframes
+   * currently in the optimisation problem*/
+  PoseTrajectory getCameraTrajectory() const override;
+  // TODO: probably should do the same objects
+
   /**
    * @brief H_W_lKF_k as a  Motion3ReferenceFrame.
    *
