@@ -78,6 +78,11 @@ class VIOFormulation : public FormulationT<MAP> {
 
   FrameId getLastPropogatedFrame() const { return last_propogate_frame_; }
 
+  /* If a landmark exists in the estimation problem */
+  bool staticLandmarkExists(TrackletId tracklet_id) const;
+
+  gtsam::Point3 staticLandmarkEstimate(TrackletId tracklet_id) const;
+
  private:
   gtsam::NavState predictAndAddFactorsVO(
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
@@ -117,6 +122,8 @@ class VIOFormulation : public FormulationT<MAP> {
   // Only shared to keep implementation hidden
   using VIOUpdaterM = VIOUpdater<MAP>;
   std::shared_ptr<VIOUpdaterM> static_updater_;
+
+  Camera::CalibrationType::shared_ptr K_;
 };
 
 }  // namespace dyno

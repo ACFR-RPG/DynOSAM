@@ -2,6 +2,7 @@
 
 #include "dynosam/formulations/HybridEstimator.hpp"
 #include "dynosam/formulations/KeyFrameHybridMap.hpp"
+#include "dynosam/frontend/vision/Frame.hpp"
 
 namespace dyno {
 
@@ -159,6 +160,9 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
 
   MultiObjectTrajectories refinePerFrameMotionsPGO(
       const MultiObjectTrajectories& full_trajectories) const;
+
+  bool matchToStaticMap(Frame::Ptr frame, AbsolutePoseCorrespondences& matches,
+                        double* tracking_quality = nullptr) const;
 
  private:
   struct Context {

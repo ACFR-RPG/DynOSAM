@@ -255,7 +255,6 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
 
       // skip this frame if requested
       if (!include_keyframe) {
-        LOG(INFO) << "Skipping kf " << info_string(frame_id, object_id_);
         continue;
       }
 

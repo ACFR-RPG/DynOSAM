@@ -257,6 +257,30 @@ inline double calculateStandardDeviation(
   return std::sqrt(sum / static_cast<double>(vec.size()));
 }
 
+template <typename T>
+double calculateMedian(const std::vector<T>& v) {
+  if (v.empty()) {
+    return 0.0;
+  }
+
+  std::vector<T> tmp = v;  // unavoidable if input is const&
+
+  const size_t n = tmp.size();
+  const size_t mid = n / 2;
+
+  // place median element correctly
+  std::nth_element(tmp.begin(), tmp.begin() + mid, tmp.end());
+
+  if (n % 2 == 1) {
+    return static_cast<double>(tmp[mid]);
+  }
+
+  // even case: find max element in lower half (O(n), but no extra nth_element)
+  T left_max = *std::max_element(tmp.begin(), tmp.begin() + mid);
+
+  return 0.5 * (static_cast<double>(left_max) + static_cast<double>(tmp[mid]));
+}
+
 inline bool writeMatrixWithPythonFormat(const gtsam::Matrix& matrix,
                                         const std::string& filename) {
   std::ofstream file(filename);

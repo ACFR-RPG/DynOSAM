@@ -144,25 +144,26 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       values.insert(object_pose_key, pose_k);
 
       // // convert H_W_km1_k to relative motion constraint
-      // gtsam::Pose3 L_W_from = trajectory_j.at(from_frame).pose;
-      // gtsam::Pose3 H_L_from_to =
+      gtsam::Pose3 L_W_from = trajectory_j.at(from_frame).pose;
+      gtsam::Pose3 L_W_to = trajectory_j.at(to_frame).pose;
+      gtsam::Pose3 H_L_from_to = L_W_from.inverse() * L_W_to;
       //     L_W_from.inverse() * f2f_motion.estimate() * L_W_from;
 
       // // TODO: for now!!
       gtsam::SharedNoiseModel relative_noise_model =
           gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
 
-      using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
-      auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
-          object_pose_key_from, object_pose_key, f2f_motion.estimate(),
-          relative_noise_model);
-      graph += relative_object_motion;
-
-      // auto relative_object_motion =
-      //     boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
-      //         object_pose_key_from, object_pose_key, H_L_from_to,
-      //         relative_noise_model);
+      // using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
+      // auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
+      //     object_pose_key_from, object_pose_key, f2f_motion.estimate(),
+      //     relative_noise_model);
       // graph += relative_object_motion;
+
+      auto relative_object_motion =
+          boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+              object_pose_key_from, object_pose_key, H_L_from_to,
+              relative_noise_model);
+      graph += relative_object_motion;
 
       LOG(INFO) << "Adding relative motion constraint " << from_frame << " -> "
                 << to_frame;
@@ -304,6 +305,77 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
     }
   }
   return full_trajectories_refined;
+}
+
+bool HybridFormulationKeyFrame::matchToStaticMap(
+    Frame::Ptr frame, AbsolutePoseCorrespondences& matches,
+    double* tracking_quality) const {
+  HybridFormulationKeyFrameAccessor::Ptr accessor =
+      this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
+
+  FrameId frame_id_k = frame->getFrameId();
+
+  auto static_feature_itr = frame->usableStaticIterator();
+  for (const auto& feature : static_feature_itr) {
+    const TrackletId tracklet_id = feature->trackletId();
+
+    if (this->staticLandmarkExists(tracklet_id)) {
+      Landmark lmk_W_map = this->staticLandmarkEstimate(tracklet_id);
+      const Keypoint& kp = feature->keypoint();
+      matches.emplace_back(tracklet_id, lmk_W_map, kp);
+    }
+  }
+
+  // if tracking quality requested
+  if (tracking_quality) {
+    // remember matched points
+    double kptradius_ = 0.09;
+    int intersectionCount = 0;
+    int unionCount = 0;
+    int matchedPoints = 0;
+
+    const auto& cam_params = frame->getCamera()->getParams();
+
+    const int rows = cam_params.ImageHeight() / 10;
+    const int cols = cam_params.ImageWidth() / 10;
+
+    const double radius = double(std::min(rows, cols)) * kptradius_;
+
+    cv::Mat matches_img = cv::Mat::zeros(rows, cols, CV_8UC1);
+
+    for (const auto& match : matches) {
+      // keypoint from measurement
+      const Keypoint& kp = match.cur_;
+      const TrackletId tracklet_id = match.tracklet_id_;
+
+      // must exist if we have a match
+      CHECK(this->staticLandmarkExists(tracklet_id));
+
+      auto lmk_node = this->map_->getLandmark(tracklet_id);
+      CHECK_NOTNULL(lmk_node);
+
+      // make sure these are observed elsewhere
+      for (FrameId seen_frame_id : lmk_node->getSeenFrameIds()) {
+        if (seen_frame_id != frame_id_k) {
+          matchedPoints++;
+          cv::circle(matches_img, utils::gtsamPointToCv(kp) * 0.1, int(radius),
+                     cv::Scalar(255), cv::FILLED);
+          break;
+        }
+      }
+    }
+
+    // one point per image does not count.
+    const int pointArea = int(radius * radius * M_PI);
+    intersectionCount += std::max(0, cv::countNonZero(matches_img) - pointArea);
+    unionCount += rows * cols - pointArea;
+
+    *tracking_quality = matchedPoints < 8
+                            ? 0.0
+                            : double(intersectionCount) / double(unionCount);
+  }
+
+  return !matches.empty();
 }
 
 UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
@@ -638,9 +710,9 @@ void HybridFormulationKeyFrame::addHybridMotionFactorNonCameraKF(
   }
   CHECK_NOTNULL(noise_model);
 
-  LOG(INFO) << "Making StereoHybridMotionExtrapolatedFactor factor "
-            << " with KF camera at " << frame_node_closest_CKF->frameId()
-            << " and motion at " << frame_id_k << "for j=" << object_id;
+  // LOG(INFO) << "Making StereoHybridMotionExtrapolatedFactor factor "
+  //           << " with KF camera at " << frame_node_closest_CKF->frameId()
+  //           << " and motion at " << frame_id_k << "for j=" << object_id;
 
   const gtsam::Key motion_key =
       frame_node_nonCKF->makeObjectMotionKey(object_id);

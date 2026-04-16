@@ -37,6 +37,12 @@ void Formulation::updateTheta(const gtsam::Values& linearization) {
   shared_data_->threadSafeInsertOrAssignTheta(linearization);
 }
 
+bool Formulation::exists(gtsam::Key key) const {
+  const std::lock_guard<std::mutex> lock(shared_data_->theta_mutex);
+  const auto& theta = shared_data_->theta;
+  return theta.exists(key);
+}
+
 BackendLogger::UniquePtr Formulation::makeFullyQualifiedLogger() const {
   return std::make_unique<BackendLogger>(getFullyQualifiedName());
 }

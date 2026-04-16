@@ -47,63 +47,6 @@ FeatureTrackerBase::FeatureTrackerBase(const TrackerParams& params,
       camera_(camera),
       display_queue_(display_queue) {}
 
-bool FeatureTrackerBase::predictKeypointsGivenRotation(
-    std::vector<cv::Point2f>& predicted_pts_k,
-    const std::vector<cv::Point2f>& pts_km1, const gtsam::Rot3& R_km1_k) const {
-  // Handle case when rotation is small: just copy prev_kps
-  // Removed bcs even small rotations lead to huge optical flow at the borders
-  // of the image.
-  // Keep because then you save a lot of computation.
-  static constexpr double kSmallRotationTol = 1e-4;
-  if (std::abs(1.0 - std::abs(R_km1_k.toQuaternion().w())) <
-      kSmallRotationTol) {
-    predicted_pts_k = pts_km1;
-    return true;
-  }
-
-  const gtsam::Matrix K = camera_->getParams().getCameraMatrixEigen();
-  const gtsam::Matrix K_inv = K.inverse();
-
-  const cv::Matx33f K_cv = utils::gtsamMatrix3ToCvMat(K);
-  const cv::Matx33f K_inv_cv = utils::gtsamMatrix3ToCvMat(K_inv);
-  // R is a relative rotation which takes a vector from the last frame to
-  // the current frame.
-  const cv::Matx33f R = utils::gtsamMatrix3ToCvMat(R_km1_k.matrix());
-  // Get bearing vector for kpt, rotate knowing frame to frame rotation,
-  // get keypoints again
-  const cv::Matx33f H = K_cv * R * K_inv_cv;
-
-  const size_t& n_kps = pts_km1.size();
-  predicted_pts_k.reserve(n_kps);
-  for (size_t i = 0u; i < n_kps; ++i) {
-    // Create homogeneous keypoints.
-    const auto& prev_kpt = pts_km1[i];
-    cv::Vec3f p1(prev_kpt.x, prev_kpt.y, 1.0f);
-
-    cv::Vec3f p2 = H * p1;
-
-    // Project predicted bearing vectors to 2D again and re-homogenize.
-    cv::Point2f new_kpt;
-    if (p2[2] > 0.0f) {
-      new_kpt = cv::Point2f(p2[0] / p2[2], p2[1] / p2[2]);
-    } else {
-      LOG(WARNING) << "Landmark behind the camera:\n"
-                   << "- p1: " << p1 << '\n'
-                   << "- p2: " << p2;
-      new_kpt = prev_kpt;
-    }
-    // Check that keypoints remain inside the image boundaries!
-    if (isWithinShrunkenImage(new_kpt)) {
-      predicted_pts_k.push_back(new_kpt);
-    } else {
-      // Otw copy-paste previous keypoint.
-      predicted_pts_k.push_back(prev_kpt);
-    }
-  }
-
-  return true;
-}
-
 bool ImageTracksParams::showFrameInfo() const {
   return isDebug() && show_frame_info;
 }

@@ -13,18 +13,6 @@
 
 namespace dyno {
 
-// TODO: remove back to cc
-
-//! Correspondes format for a 3D->2D PnP solver. In the form of 3D Landmark in
-//! the world frame, and 2D observation in the current camera frame
-using AbsolutePoseCorrespondence = TrackletCorrespondance<Landmark, Keypoint>;
-using AbsolutePoseCorrespondences = std::vector<AbsolutePoseCorrespondence>;
-
-//! Correspondes format for a 2D->2D PnP solver. In the form of 2D observation
-//! in the ref camera frame, and 2D observation in the current camera frame
-using RelativePoseCorrespondence = TrackletCorrespondance<Keypoint, Keypoint>;
-using RelativePoseCorrespondences = std::vector<RelativePoseCorrespondence>;
-
 struct RansacProblemParams {
   double threshold = 1.0;
   double ransac_iterations = 500;

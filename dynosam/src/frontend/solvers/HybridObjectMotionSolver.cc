@@ -271,7 +271,7 @@ bool HybridObjectMotionSolver::solveImpl(
     // The object re-tracking
     // must be at least 2 for smoothing factor?
     if (previous_tracking_state != ObjectTrackingStatus::New &&
-        frame_k->getFrameId() % 15 == 0) {
+        frame_k->getFrameId() % 7 == 0) {
       LOG(INFO) << "New KF due to temporal frame";
       requires_new_keyframe = true;
       // TODO: should probably temporal frame since the last KF

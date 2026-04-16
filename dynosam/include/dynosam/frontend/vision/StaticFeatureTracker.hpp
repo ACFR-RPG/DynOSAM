@@ -227,18 +227,9 @@ class KltFeatureTracker : public StaticFeatureTracker {
                    const cv::Mat& detection_mask,
                    const std::optional<gtsam::Rot3>& R_km1_k);
 
-  //   /**
-  //    * @brief Geometric verification using homograph + RANSAC.
-  //    * Input vectors have the same size and are a 1-to-1 of feature
-  //    * correspondences between old (k-1) and new (k) featurs.
-  //    *
-  //    * @param good_old const std::vector<cv::Point2f>&
-  //    * @param good_new const std::vector<cv::Point2f>&
-  //    * @return cv::Mat
-  //    */
-  //   cv::Mat geometricVerification(const std::vector<cv::Point2f>& good_old,
-  //                                 const std::vector<cv::Point2f>& good_new)
-  //                                 const;
+  bool predictKeypointsGivenRotation(std::vector<cv::Point2f>& predicted_pts_k,
+                                     const std::vector<cv::Point2f>& pts_km1,
+                                     const gtsam::Rot3& R_km1_k) const;
 
   bool shouldResample(const FeatureContainer& tracked_features,
                       double survival_ratio) const;

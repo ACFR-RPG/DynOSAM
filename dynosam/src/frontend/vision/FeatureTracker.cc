@@ -654,9 +654,10 @@ void FeatureTracker::trackDynamicKLT(
       // check flow back
       std::vector<cv::Point2f> reverse_previous_feature_points = current_points;
       std::vector<uchar> klt_reverse_status;
-      cv::calcOpticalFlowPyrLK(mono, previous_mono, current_points,
-                               reverse_previous_feature_points,
-                               klt_reverse_status, err, cv::Size(21, 21), 5);
+      std::vector<float> reverse_err;
+      cv::calcOpticalFlowPyrLK(
+          mono, previous_mono, current_points, reverse_previous_feature_points,
+          klt_reverse_status, reverse_err, cv::Size(21, 21), 5);
       CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
 
       auto distance = [](const cv::Point2f& pt1,
@@ -727,6 +728,7 @@ void FeatureTracker::trackDynamicKLT(
         TrackletIds tracklets;
       };
 
+      const float kMaxErr = 20.0f;
       gtsam::FastMap<ObjectId, Tracklet2DVectors> good_tracks_per_object;
       // collect points per object for outlier rejection with homography
       // can also look at the err?

@@ -16,6 +16,9 @@ VIOFormulation<MAP>::VIOFormulation(const FormulationParams& params,
                                     const Sensors& sensors,
                                     const FormulationHooks& hooks)
     : Base(params, map, noise_models, sensors, hooks) {
+  std::shared_ptr<Camera> camera = CHECK_NOTNULL(sensors.camera);
+  K_ = camera->getGtsamCalibration();
+
   init_vel_prior_noise_ = gtsam::noiseModel::Isotropic::Sigma(3, 1e-5);
 
   gtsam::Vector6 prior_imu_bias_sigmas;
@@ -249,6 +252,23 @@ StateQuery<gtsam::NavState> VIOFormulation<MAP>::getNavState(FrameId frame_id) {
   VIOAccessor::Ptr accessor = this->getAsVIOAccessor();
   return accessor->getNavState(frame_id);
 };
+
+template <typename MAP>
+bool VIOFormulation<MAP>::staticLandmarkExists(TrackletId tracklet_id) const {
+  auto lmk_node = this->map_->getLandmark(tracklet_id);
+  if (!lmk_node) {
+    return false;
+  }
+
+  return this->exists(lmk_node->makeStaticKey());
+}
+
+template <typename MAP>
+gtsam::Point3 VIOFormulation<MAP>::staticLandmarkEstimate(
+    TrackletId tracklet_id) const {
+  VIOAccessor::Ptr accessor = this->getAsVIOAccessor();
+  return DYNO_GET_QUERY_DEBUG(accessor->getStaticLandmark(tracklet_id));
+}
 
 template <typename MAP>
 gtsam::NavState VIOFormulation<MAP>::predictAndAddFactorsVO(

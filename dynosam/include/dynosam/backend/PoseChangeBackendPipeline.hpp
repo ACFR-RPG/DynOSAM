@@ -28,9 +28,9 @@ class PoseChangeBackendPipeline
       PoseChangeInput::Ptr latest_pc_input =
           std::const_pointer_cast<PoseChangeInput>(batch_input.back());
 
-      LOG(INFO) << "Constructing batch PC input from "
-                << batch_input.front()->frame_id << " to "
-                << latest_pc_input->frame_id;
+      // LOG(INFO) << "Constructing batch PC input from "
+      //           << batch_input.front()->frame_id << " to "
+      //           << latest_pc_input->frame_id;
 
       for (auto it = batch_input.begin(); it != batch_input.end() - 1; ++it) {
         auto pc_input = std::const_pointer_cast<PoseChangeInput>(*it);

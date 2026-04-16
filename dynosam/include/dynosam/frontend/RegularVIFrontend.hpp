@@ -28,6 +28,32 @@ class RegularVIFrontend : public VIFrontend {
   SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
   SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
 
+  /**
+   * @brief Solve the visual odometry (k-1 to k) using PnP + Refinement with
+   * Optical Flow
+   *
+   * The input T_km1_k should be the best known relative camera motion (usually
+   * the relative motion from the previous frame) to act as constant motion
+   * model if the tracking fails.
+   *
+   * @param frame_k Frame::Ptr current frame at k
+   * @param frame_km1 Frame::Ptr previous frame at k-1
+   * @param nav_state_km1 const gtsam::NavState& previous nav state at k-1
+   * @param T_km1_k const gtsam::Pose3& relative camera motion to act as a
+   * constant velocity model.
+   * @param propogated_nav_state_k std::optional<gtsam::NavState> nav state at k
+   * as propogated by the IMU
+   * @param R_km1_k std::optional<gtsam::Rot3> relative camera rotation from k-1
+   * to k
+   * @return true
+   * @return false
+   */
+  bool solveAndRefineEgoMotion(
+      Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
+      const gtsam::NavState& nav_state_km1, const gtsam::Pose3& T_km1_k,
+      std::optional<gtsam::NavState> propogated_nav_state_k = std::nullopt,
+      std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
+
   void fillOutputPacketWithTracks(
       VisionImuPacket::Ptr vision_imu_packet, const Frame& frame,
       const gtsam::Pose3 X_W_k, const gtsam::Pose3& T_k_1_k,

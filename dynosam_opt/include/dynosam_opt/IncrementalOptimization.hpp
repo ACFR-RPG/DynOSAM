@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include <gtsam/geometry/StereoCamera.h>  // for Cheirality exception
 #include <gtsam/nonlinear/ISAM2.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
@@ -471,12 +472,15 @@ class IncrementalInterface {
         }
       }
 
-    } catch (gtsam::ValuesKeyDoesNotExist& e) {
+    } catch (const gtsam::ValuesKeyDoesNotExist& e) {
       LOG(FATAL) << "gtsam::ValuesKeyDoesNotExist with variable "
                  << DynosamKeyFormatter(e.key());
-    } catch (gtsam::ValuesKeyAlreadyExists& e) {
+    } catch (const gtsam::ValuesKeyAlreadyExists& e) {
       LOG(FATAL) << "gtsam::ValuesKeyAlreadyExists with variable "
                  << DynosamKeyFormatter(e.key());
+    } catch (const gtsam::StereoCheiralityException& e) {
+      LOG(FATAL) << "gtsam::StereoCheiralityException with nearbyVariable "
+                 << DynosamKeyFormatter(e.nearbyVariable());
     }
     return true;
   }
@@ -488,7 +492,9 @@ class IncrementalInterface {
       try {
         SmootherTraitsType::update(smoother, UpdateArguments{});
         SmootherTraitsType::calculateEstimate(smoother);
-
+      } catch (const gtsam::StereoCheiralityException& e) {
+        LOG(FATAL) << "gtsam::StereoCheiralityException with nearbyVariable "
+                   << DynosamKeyFormatter(e.nearbyVariable());
       } catch (const std::runtime_error& e) {
         LOG(WARNING) << "Smoother failed running extra update steps: "
                      << e.what();

@@ -68,29 +68,11 @@ class PoseChangeVIFrontend : public VIFrontend {
     gtsam::Pose3 T_from_to;
   };
 
-  // struct KeyFrameData {
-  //   FrameId kf_id;
-  //   FrameId kf_id_prev;
-  //   Frame::Ptr frame;
-  //   gtsam::NavState nav_state;
-
-  //   //! If camera keyframe logic was true for this frame
-  //   bool camera_keyframe{false};
-
-  //   bool retroactively_made_keyframe{false};
-
-  //   //! Signifcies which objects had motion variables added at this frame
-  //   (with
-  //   //! the kf_id being the "to" frame of each motion)
-  //   ObjectIds object_keyframes;
-
-  //   bool isObjectKeyframe() const { return !object_keyframes.empty(); }
-
-  //   bool isObjectKeyFrame(const ObjectId object_id) const {
-  //     return std::find(object_keyframes.begin(), object_keyframes.end(),
-  //                      object_id) != object_keyframes.end();
-  //   }
-  // };
+  bool solveAndRefineEgoMotion(
+      Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
+      AbsolutePoseCorrespondences& map_matches,
+      std::optional<gtsam::NavState> propogated_nav_state_k = std::nullopt,
+      std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
@@ -105,8 +87,8 @@ class PoseChangeVIFrontend : public VIFrontend {
   gtsam::Pose3 T_km1_k_;
   gtsam::Pose3 T_lkf_k_;
 
-  //! Last keyframe id
-  FrameId lkf_id_;
+  //! Last camera keyframe
+  Frame::Ptr lCKF_frame_;
 
   //! Current trajectories. Copied to the DynoState output.
   //! Only contains trajectories for objects observed at the latest frame

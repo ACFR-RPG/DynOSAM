@@ -307,17 +307,10 @@ void DynoPipelineManager::loadPoseChangeModules(
 
   const auto parallel_run = params_.parallelRun();
 
-  // copy of pipeline params to enforce specific behaviours
-  DynoParams pc_module_params = params_;
-  // pc_module_params.frontend_params_.tracker_params.max_feature_track_age =
-  // 1000;
-
   Sensors sensors;
   sensors.camera = camera;
-  // TODO: display queue not used anymore!!!
-  // TODO: ground truth!
   ModuleParams module_params;
-  module_params.backend_params = pc_module_params.backend_params_;
+  module_params.backend_params = params_.backend_params_;
   module_params.sensors = sensors;
   module_params.shared_ground_truth = data_interface_->getSharedGroundTruth();
   BackendWrapper backend_wrapper = factory->createModule(module_params);
@@ -337,7 +330,7 @@ void DynoPipelineManager::loadPoseChangeModules(
   CHECK_NOTNULL(kf_formulation);
 
   auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontend>(
-      pc_module_params, camera, kf_formulation, &display_queue_,
+      params_, camera, kf_formulation, &display_queue_,
       data_interface_->getSharedGroundTruth());
   LOG(INFO) << "Made PoseChangeVIFrontend";
 
@@ -364,8 +357,6 @@ void DynoPipelineManager::loadPoseChangeModules(
     pc_vi_frontend->addPoseChangeOutputSink(
         [backend_input_queue](const PoseChangeInput::ConstPtr& pc_packet) {
           CHECK(backend_input_queue);
-          LOG(INFO) << "Pushing pc packet to backend " << pc_packet->frame_id
-                    << " queue size " << backend_input_queue->size();
           backend_input_queue->push(pc_packet);
         });
   }

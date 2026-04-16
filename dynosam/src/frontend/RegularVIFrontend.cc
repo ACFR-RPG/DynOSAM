@@ -177,6 +177,85 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   return {State::Nominal, realtime_output};
 }
 
+bool RegularVIFrontend::solveAndRefineEgoMotion(
+    Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
+    const gtsam::NavState& nav_state_km1, const gtsam::Pose3& T_km1_k,
+    std::optional<gtsam::NavState> propogated_nav_state_k,
+    std::optional<gtsam::Rot3> R_km1_k) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".camera_motion");
+  const auto& frontend_params = dyno_params_.frontend_params_;
+
+  if (!frontend_params.use_ego_motion_pnp) {
+    LOG(WARNING) << "Frontend param use_ego_motion_pnp set to false but only "
+                    "PnP implemented";
+  }
+
+  AbsolutePoseCorrespondences correspondences;
+  frame_k->getCorrespondences(correspondences, *frame_km1, KeyPointType::STATIC,
+                              frame_k->landmarkWorldKeypointCorrespondance());
+
+  // solve PnP
+  Pose3SolverResult pnp_result =
+      pnp_ransac_.solve3d2d(correspondences, R_km1_k);
+
+  // sanity check
+  const TrackletIds tracklets = frame_k->static_features_.collectTracklets();
+  // tracklets shoudl be more (or same as) correspondances as there will be new
+  // points untracked
+  CHECK_GE(tracklets.size(),
+           pnp_result.inliers.size() + pnp_result.outliers.size());
+  frame_k->static_features_.markOutliers(pnp_result.outliers);
+
+  if (pnp_result.status != TrackingStatus::VALID ||
+      pnp_result.inliers.size() < 30) {
+    // try propogate pose with available models
+    if (propogated_nav_state_k) {
+      frame_k->T_world_camera_ = propogated_nav_state_k->pose();
+      VLOG(10) << "Number usable features invalid or too few at k= "
+               << frame_k->getFrameId()
+               << " - using IMU propogated pose to set camera pose!";
+    } else {
+      frame_k->T_world_camera_ = nav_state_km1.pose() * T_km1_k;
+      VLOG(10) << "Number usable features invalid or too few at k= "
+               << frame_k->getFrameId()
+               << " - using constant velocity model to propogated camera pose!";
+    }
+
+    // TODO: should almost definitely do this in future, but right now we use
+    // measurements to construct a framenode in the backend so if there are no
+    // measurements we get a frame_node null.... for now... make hack and set
+    // all ages of inliers to 1!!! since we need n measurements in the backend
+    // this will ensure that they dont get added to the
+    //  optimisation problem but will get added to the map...
+    // for (const auto& inlier : result.inliers) {
+    // frame_k->static_features_.getByTrackletId(inlier)->age(1u);
+    // }
+    return false;
+  } else {
+    // update camera pose
+    frame_k->T_world_camera_ = pnp_result.best_result;
+
+    if (frontend_params.refine_camera_pose_with_joint_of) {
+      VLOG(10) << "Refining camera pose with joint optical-flow";
+
+      utils::ChronoTimingStats timer(this->moduleName() +
+                                     ".camera_motion.refine");
+
+      const auto refinement_result =
+          optical_flow_pose_solver_.optimizeAndUpdate(
+              frame_km1, frame_k, pnp_result.inliers, pnp_result.best_result);
+
+      frame_k->T_world_camera_ = refinement_result.best_result.refined_pose;
+
+      VLOG(15) << "Refined camera pose with optical flow - error before: "
+               << refinement_result.error_before.value_or(NaN)
+               << " error_after: "
+               << refinement_result.error_after.value_or(NaN);
+    }
+    return true;
+  }
+}
+
 void RegularVIFrontend::fillOutputPacketWithTracks(
     VisionImuPacket::Ptr vision_imu_packet, const Frame& frame,
     const gtsam::Pose3 X_W_k, const gtsam::Pose3& T_k_1_k,

@@ -83,32 +83,6 @@ class VIFrontend : public Frontend {
                                     ImageContainer::Ptr image_container,
                                     FeaturePtrs& stereo_features_out);
 
-  /**
-   * @brief Solve the visual odometry (k-1 to k) using PnP + Refinement with
-   * Optical Flow
-   *
-   * The input T_km1_k should be the best known relative camera motion (usually
-   * the relative motion from the previous frame) to act as constant motion
-   * model if the tracking fails.
-   *
-   * @param frame_k Frame::Ptr current frame at k
-   * @param frame_km1 Frame::Ptr previous frame at k-1
-   * @param nav_state_km1 const gtsam::NavState& previous nav state at k-1
-   * @param T_km1_k const gtsam::Pose3& relative camera motion to act as a
-   * constant velocity model.
-   * @param propogated_nav_state_k std::optional<gtsam::NavState> nav state at k
-   * as propogated by the IMU
-   * @param R_km1_k std::optional<gtsam::Rot3> relative camera rotation from k-1
-   * to k
-   * @return true
-   * @return false
-   */
-  bool solveAndRefineEgoMotion(
-      Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
-      const gtsam::NavState& nav_state_km1, const gtsam::Pose3& T_km1_k,
-      std::optional<gtsam::NavState> propogated_nav_state_k = std::nullopt,
-      std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
-
   // TODO: add back object poses?
   void fillDebugImagery(DebugImagery& debug_imagery, const Frame::Ptr& frame_k,
                         const Frame::Ptr& frame_km1) const;

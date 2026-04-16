@@ -320,6 +320,9 @@ class Formulation {
    */
   void updateTheta(const gtsam::Values& linearization);
 
+  /** If a value exists in the current linearization */
+  bool exists(gtsam::Key key) const;
+
   /**
    * @brief Gets the current graph associated with the current theta and
    * constructed by the derived formulation. Along theta, this should be used by

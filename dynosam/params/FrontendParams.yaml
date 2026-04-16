@@ -51,7 +51,7 @@ tracker_params:
   max_feature_track_age: 20
   # currently min_features_per_frame should == max_features_per_frame
   # some internal bug that is yet to be sorted!
-  min_features_per_frame: 500
+  min_features_per_frame: 300
   # This should be wide to get a good spread.
   # Ideally should be calculated as some function of the input image size
   min_distance_btw_tracked_and_detected_static_features: 15
@@ -73,7 +73,7 @@ tracker_params:
   min_dynamic_tracks: 20
   # causes retracking if current mask IOU with new mask < min_dynamic_mask_iou
   # ie. smaller causes less triggering
-  min_dynamic_mask_iou: 0.3
+  min_dynamic_mask_iou: 0.5
 
 image_tracks_vis_params:
   is_debug: true

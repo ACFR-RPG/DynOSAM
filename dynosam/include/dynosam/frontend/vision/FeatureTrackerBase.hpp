@@ -147,13 +147,6 @@ class FeatureTrackerBase {
   bool drawStereoMatches(cv::Mat& output_image,
                          const Frame& current_frame) const;
 
-  bool predictKeypointsGivenRotation(std::vector<cv::Point2f>& predicted_pts_k,
-                                     const std::vector<cv::Point2f>& pts_km1,
-                                     const gtsam::Rot3& R_km1_k) const;
-
-  // bool predictSparseFlow(std::vector<cv::Point2f>& predicted_pts_k, const
-  // std::vector<cv::Point2f>& pts_km1, const gtsam::Rot3& R_km1_k )
-
  protected:
   /**
    * @brief Checks if a keypoint is within an image, taking into account the

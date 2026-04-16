@@ -86,7 +86,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
   dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, X_W_k_initial);
 
-  lkf_id_ = frame_id_k;
+  lCKF_frame_ = frame_k;
 
   // no motion as first frame!
   const gtsam::Pose3 T_km1_k = gtsam::Pose3::Identity();
@@ -100,7 +100,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   realtime_output->ground_truth = input->ground_truth_packet;
 
   IntermediateMotion intermediate_motion;
-  intermediate_motion.from = lkf_id_;
+  intermediate_motion.from = lCKF_frame_->getFrameId();
   intermediate_motion.to = frame_id_k;
   intermediate_motion.timestamp = timestamp_k;
   // NOT setting the nav state!
@@ -111,7 +111,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
   // KeyFrameData keyframe_data;
   // keyframe_data.kf_id = frame_id_k;
-  // keyframe_data.kf_id_prev = lkf_id_;
+  // keyframe_data.kf_id_prev = lCKF_frame_->getFrameId();
   // keyframe_data.frame = frame_k;
   // keyframe_data.camera_keyframe = true;
   // // objects are not added becuase on the first frame they can only ever be a
@@ -209,9 +209,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // actually filled by a prediction from the IMU - otherwise it will ne
   // nullopt. This tells the function to use a constant motion model from the
   // previous frame ie. T_km1_k_ if tracking fails
-  const bool ego_motion_solve =
-      solveAndRefineEgoMotion(frame_k, frame_km1, nav_state_km1_, T_km1_k_,
-                              imu_propogated_nav_state_k, R_km1_k);
+  AbsolutePoseCorrespondences matches;
+  const bool ego_motion_solve = solveAndRefineEgoMotion(
+      frame_k, frame_km1, matches, imu_propogated_nav_state_k, R_km1_k);
 
   if (stereo_matching_result) {
     // Need to match aagain after optical flow used to update the keypoints
@@ -236,7 +236,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   nav_state_km1_ = nav_state_k;
 
   IntermediateMotion intermediate_motion;
-  intermediate_motion.from = lkf_id_;
+  intermediate_motion.from = lCKF_frame_->getFrameId();
   intermediate_motion.to = frame_id_k;
   intermediate_motion.timestamp = timestamp_k;
   intermediate_motion.frame = frame_k;
@@ -325,8 +325,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   if (ego_motion_keyframe) {
-    CHECK_EQ(formulation_->getLastPropogatedFrame(), lkf_id_);
-    CHECK(map_->isCameraKeyFrame(lkf_id_));
+    LOG(INFO) << "New Camera Keyframe (CKF) at k=" << frame_id_k;
+    CHECK_EQ(formulation_->getLastPropogatedFrame(), lCKF_frame_->getFrameId());
+    CHECK(map_->isCameraKeyFrame(lCKF_frame_->getFrameId()));
     const gtsam::NavState predicted_nav_state =
         formulation_->addStatesPropogate(pc_input->new_values,
                                          pc_input->new_factors, frame_id_k,
@@ -352,10 +353,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     // this not predicted_nav_state?
     // TOODO: may better get the nav state via the VIOformulation!
     nav_state_lkf_ = nav_state_k;
-    lkf_id_ = frame_id_k;
+    lCKF_frame_ = frame_k;
   } else {
     // if not a camera keyframe, update KF node with relative ego motion data
-    auto frame_lkf_node = CHECK_NOTNULL(map_->getFrame(lkf_id_));
+    auto frame_lkf_node =
+        CHECK_NOTNULL(map_->getFrame(lCKF_frame_->getFrameId()));
     // TODO: this relative motion should be consistent with the frontend
     // TODO: use IMU if available!
     frame_lkf_node->addRelativeEgoMotion(T_lkf_k_, frame_id_k);
@@ -383,9 +385,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       const IntermediateMotion& intermediate_motion_lkf_j =
           intermediate_motions_.at(from_motion_frame_j);
       CHECK_EQ(intermediate_motion_lkf_j.to, from_motion_frame_j);
-
-      LOG(INFO) << "Adding dynamic measurements j=" << object_id << " at "
-                << intermediate_motion_lkf_j.to;
 
       // if object is already a keyframe at this frame then assume
       // measurements have already been added
@@ -443,6 +442,104 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   return {State::Nominal, realtime_output};
 }
 
+bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
+    Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
+    AbsolutePoseCorrespondences& map_matches,
+    std::optional<gtsam::NavState> propogated_nav_state_k,
+    std::optional<gtsam::Rot3> R_km1_k) {
+  AbsolutePoseCorrespondences m_matches;
+  double tracking_quality;
+
+  bool success =
+      formulation_->matchToStaticMap(frame_k, m_matches, &tracking_quality);
+
+  bool use_map = false;
+  if (success) {
+    // double median_repr = calculateMedian(repr_errors);
+    int num_matches = m_matches.size();
+
+    LOG(INFO) << "Tracking: k=" << frame_k->getFrameId()
+              << ": matches=" << m_matches.size()
+              << " tracking quality=" << tracking_quality;
+    double min_matches = 40;
+    // double repr_thresh = 2.0;
+    // from OKVIS < 0.3 is marginal and < 0.01 is LOST
+    double coverage_thresh = 0.3;
+
+    use_map =
+        (num_matches > min_matches) && (tracking_quality > coverage_thresh);
+  }
+
+  Pose3SolverResult pnp_result;
+  if (use_map) {
+    LOG(INFO) << "Tracking aginast MAP";
+    // solve PnP
+    pnp_result = pnp_ransac_.solve3d2d(m_matches, R_km1_k);
+  } else {
+    LOG(INFO) << "Tracking aginast Previous frame";
+    AbsolutePoseCorrespondences correspondences;
+    frame_k->getCorrespondences(correspondences, *frame_km1,
+                                KeyPointType::STATIC,
+                                frame_k->landmarkWorldKeypointCorrespondance());
+
+    // solve PnP
+    pnp_result = pnp_ransac_.solve3d2d(correspondences, R_km1_k);
+    // sanity check
+    const TrackletIds tracklets = frame_k->static_features_.collectTracklets();
+    // tracklets shoudl be more (or same as) correspondances as there will be
+    // new points untracked
+    CHECK_GE(tracklets.size(),
+             pnp_result.inliers.size() + pnp_result.outliers.size());
+  }
+
+  LOG(INFO) << "Solved PNP";
+
+  frame_k->static_features_.markOutliers(pnp_result.outliers);
+
+  if (pnp_result.status != TrackingStatus::VALID ||
+      pnp_result.inliers.size() < 30) {
+    // try propogate pose with available models
+    if (propogated_nav_state_k) {
+      frame_k->T_world_camera_ = propogated_nav_state_k->pose();
+      VLOG(10) << "Number usable features invalid or too few at k= "
+               << frame_k->getFrameId()
+               << " - using IMU propogated pose to set camera pose!";
+    } else {
+      frame_k->T_world_camera_ = nav_state_km1_.pose() * T_km1_k_;
+      VLOG(10) << "Number usable features invalid or too few at k= "
+               << frame_k->getFrameId()
+               << " - using constant velocity model to propogated camera pose!";
+    }
+
+    return false;
+  } else {
+    // update camera pose
+    frame_k->T_world_camera_ = pnp_result.best_result;
+
+    const auto& frontend_params = dyno_params_.frontend_params_;
+    if (frontend_params.refine_camera_pose_with_joint_of) {
+      VLOG(10) << "Refining camera pose with joint optical-flow";
+
+      utils::ChronoTimingStats timer(this->moduleName() +
+                                     ".camera_motion.refine");
+
+      // this is actually doing most of the heavy lifting in terms of making the
+      // VO smooth so would be nice to refine the flow w.r.t the map
+      const auto refinement_result =
+          optical_flow_pose_solver_.optimizeAndUpdate(
+              frame_km1, frame_k, pnp_result.inliers, pnp_result.best_result);
+
+      frame_k->T_world_camera_ = refinement_result.best_result.refined_pose;
+
+      VLOG(15) << "Refined camera pose with optical flow - error before: "
+               << refinement_result.error_before.value_or(NaN)
+               << " error_after: "
+               << refinement_result.error_after.value_or(NaN);
+    }
+    return true;
+  }
+}
+
 void PoseChangeVIFrontend::solveObjectMotions(
     MultiObjectTrajectories& trajectories, ObjectIds& object_with_new_motions,
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
@@ -468,17 +565,134 @@ void PoseChangeVIFrontend::solveObjectMotions(
 bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
                                                  Frame::Ptr frame_km1) const {
   // TODO: keyframes_ not used anymore?
-  // CHECK(keyframes_.exists(lkf_id_));
-  // const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
+  // CHECK(keyframes_.exists(lCKF_frame_->getFrameId()));
+  // const KeyFrameData& lkf_data = keyframes_.at(lCKF_frame_->getFrameId());
   // const Frame::Ptr lkf_frame = lkf_data.frame;
 
   // return frame_k->getFrameId() % 10 == 0;
 
-  // first 4 frames must keyframes to help initalise!
-  return frame_k->getTrackingInfo()->new_static_detections ||
-         frame_k->getFrameId() < 4;
-  // FOR NOW!
-  // return true;
+  if (frame_k->getFrameId() < 4) {
+    // just starting, so yes, we need this as a new keyframe
+    return true;
+  }
+
+  // double tracking_quality;
+  // AbsolutePoseCorrespondences matches;
+  // std::vector<double> repr_errors;
+
+  // formulation_->matchToStaticMap(
+  //   lCKF_frame_,
+  //   matches,
+  //   repr_errors,
+  //   &tracking_quality
+  // );
+
+  // LOG(INFO) << "Tracking: k=" << frame_k->getFrameId() << ": matches=" <<
+  // matches.size()
+  //    << " tracking quality=" << tracking_quality << " against CKF=" <<
+  //    lCKF_frame_->getFrameId();
+
+  const auto& cam_params = frame_k->getCamera()->getParams();
+
+  const int rows = cam_params.ImageHeight() / 10;
+  const int cols = cam_params.ImageWidth() / 10;
+
+  const double kptradius_ = 0.09;
+  const double radius = double(std::min(rows, cols)) * kptradius_;
+
+  cv::Mat matches = cv::Mat::zeros(rows, cols, CV_8UC1);
+  cv::Mat detections = cv::Mat::zeros(rows, cols, CV_8UC1);
+
+  const FeatureContainer& static_features_lCKF = lCKF_frame_->static_features_;
+
+  // For parallax
+  std::vector<double> displacements;
+
+  int num_detections = 0;
+  int num_matches = 0;
+
+  auto static_feature_itr = frame_k->usableStaticIterator();
+
+  for (const auto& feature : static_feature_itr) {
+    const TrackletId tracklet_id = feature->trackletId();
+    const Keypoint& kp = feature->keypoint();
+
+    const cv::Point2f pt = utils::gtsamPointToCv(kp) * 0.1;
+
+    // --- detections (denominator proxy)
+    cv::circle(detections, pt, int(radius), cv::Scalar(255), cv::FILLED);
+    num_detections++;
+
+    // --- matches (tracked from last keyframe)
+    if (static_features_lCKF.exists(tracklet_id)) {
+      cv::circle(matches, pt, int(radius), cv::Scalar(255), cv::FILLED);
+      num_matches++;
+
+      // --- compute displacement (parallax proxy)
+      const auto& kp_kf =
+          static_features_lCKF.getByTrackletId(tracklet_id)->keypoint();
+      const cv::Point2f pt_kf = utils::gtsamPointToCv(kp_kf) * 0.1;
+
+      double disp = cv::norm(pt - pt_kf);
+      displacements.push_back(disp);
+    }
+  }
+
+  // --- safety
+  if (num_detections < 20) {
+    // not enough features → don't create KF (tracking issue)
+    return false;
+  }
+
+  // ===============================
+  // 1. Coverage (IoU-style)
+  // ===============================
+  cv::Mat intersectionMask, unionMask;
+  cv::bitwise_and(matches, detections, intersectionMask);
+  cv::bitwise_or(matches, detections, unionMask);
+
+  double intersection = double(cv::countNonZero(intersectionMask));
+  double union_area = double(cv::countNonZero(unionMask));
+
+  double overlap = double(intersection) / double(union_area);
+
+  // ===============================
+  // 2. Parallax (median displacement)
+  // ===============================
+  double median_disp = calculateMedian(displacements);
+  // ===============================
+  // 3. Track retention (optional but useful)
+  // ===============================
+  double retention = double(num_matches) / double(num_detections);
+
+  // ===============================
+  // 4. Decision thresholds
+  // ===============================
+  const double overlap_thresh = 0.55;   // spatial redundancy
+  const double disp_thresh = 15.0;      // pixels (tune)
+  const double retention_thresh = 0.5;  // optional
+
+  // ===============================
+  // 5. Final decision
+  // ===============================
+
+  // Case A: not well explained by keyframe → new content
+  if (overlap < overlap_thresh) {
+    return true;
+  }
+
+  // Case B: strong motion → useful geometry
+  if (median_disp > disp_thresh) {
+    return true;
+  }
+
+  // Optional: tracking degrading relative to KF
+  if (retention < retention_thresh) {
+    return true;
+  }
+
+  // Otherwise: redundant frame
+  return false;
 }
 
 void PoseChangeVIFrontend::logBestEstimates() const {
