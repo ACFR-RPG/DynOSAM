@@ -242,8 +242,8 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
       gtsam::Values& new_values,
       gtsam::NonlinearFactorGraph& new_factors) override {}
 
-  inline IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
-                                                          FrameId frame_id) {}
+  inline RelEgoPoseInfoInfo getRelEgoPoseInfoInfo(ObjectId object_id,
+                                                  FrameId frame_id) {}
 
  private:
   TemporalObjectCentricMap<Motion3ReferenceFrame> initial_H_W_AKF_k_;

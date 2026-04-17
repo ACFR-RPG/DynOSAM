@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         if (previous_frame) {
           ImageTracksParams track_viz_params(true);
           track_viz_params.show_intermediate_tracking = true;
-          cv::Mat tracking = tracker->computeImageTracks(
+          cv::Mat tracking = tracker->computeFeatureTracks(
               *previous_frame, *frame, track_viz_params);
 
           if (!tracking.empty()) cv::imshow("Tracking", tracking);

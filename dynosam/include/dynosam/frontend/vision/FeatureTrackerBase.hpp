@@ -140,9 +140,9 @@ class FeatureTrackerBase {
   FeatureTrackerBase(const TrackerParams& params, Camera::Ptr camera,
                      ImageDisplayQueue* display_queue);
 
-  cv::Mat computeImageTracks(const Frame& previous_frame,
-                             const Frame& current_frame,
-                             const ImageTracksParams& config = false) const;
+  /** Computes debug image for frame-to-frame image tracks  */
+  cv::Mat computeFeatureTracks(const Frame& frame_km1, const Frame& frame_k,
+                               const ImageTracksParams& config = false) const;
 
   bool drawStereoMatches(cv::Mat& output_image,
                          const Frame& current_frame) const;

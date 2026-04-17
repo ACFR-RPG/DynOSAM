@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 
     cv::Mat tracking;
     if (previous_frame) {
-      tracking = tracker->computeImageTracks(*previous_frame, *frame, false);
+      tracking = tracker->computeFeatureTracks(*previous_frame, *frame, false);
       std_msgs::msg::Header hdr;
       sensor_msgs::msg::Image::SharedPtr msg =
           cv_bridge::CvImage(hdr, "bgr8", tracking).toImageMsg();

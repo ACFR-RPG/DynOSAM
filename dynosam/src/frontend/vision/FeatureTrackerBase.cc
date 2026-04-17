@@ -71,14 +71,13 @@ int ImageTracksParams::featureThickness() const {
 
 // doesnt make any sense for this function to be here?
 // Debug could be part of a global config singleton?
-cv::Mat FeatureTrackerBase::computeImageTracks(
-    const Frame& previous_frame, const Frame& current_frame,
+cv::Mat FeatureTrackerBase::computeFeatureTracks(
+    const Frame& frame_km1, const Frame& frame_k,
     const ImageTracksParams& config) const {
   const ImageWrapper<ImageType::RGBMono>& img_wrapper =
-      current_frame.image_container_.rgb();
+      frame_k.image_container_.rgb();
   cv::Mat img_rgb = img_wrapper.toRGB().clone();
-  const cv::Mat& object_mask =
-      current_frame.image_container_.objectMotionMask();
+  const cv::Mat& object_mask = frame_k.image_container_.objectMotionMask();
 
   const bool& debug = config.isDebug();
   const bool& show_intermediate_tracking = config.showIntermediateTracking();
@@ -91,16 +90,15 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
 
   int num_static_tracks = 0;
   // Add all keypoints in cur_frame with the tracks.
-  for (const Feature::Ptr& feature : current_frame.static_features_) {
+  for (const Feature::Ptr& feature : frame_k.static_features_) {
     const Keypoint& px_cur = feature->keypoint();
     const auto pc_cur = utils::gtsamPointToCv(px_cur);
     if (!feature->usable() &&
         show_intermediate_tracking) {  // Untracked landmarks are red.
-      cv::circle(img_rgb, pc_cur, static_point_thickness, red, 2);
+      cv::circle(img_rgb, pc_cur, static_point_thickness, red, 2, cv::LINE_AA);
     } else {
       const Feature::Ptr& prev_feature =
-          previous_frame.static_features_.getByTrackletId(
-              feature->trackletId());
+          frame_km1.static_features_.getByTrackletId(feature->trackletId());
       if (prev_feature) {
         // If feature was in previous frame, display tracked feature with
         // green circle/line:
@@ -119,25 +117,19 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
     }
   }
 
-  for (const Feature::Ptr& feature : current_frame.dynamic_features_) {
+  for (const Feature::Ptr& feature : frame_k.dynamic_features_) {
     const Keypoint& px_cur = feature->keypoint();
     if (!feature->usable()) {  // Untracked landmarks are red.
       // cv::circle(img_rgb,  utils::gtsamPointToCv(px_cur), 1, red, 2);
     } else {
       const Feature::Ptr& prev_feature =
-          previous_frame.dynamic_features_.getByTrackletId(
-              feature->trackletId());
+          frame_km1.dynamic_features_.getByTrackletId(feature->trackletId());
       if (prev_feature) {
-        // If feature was in previous frame, display tracked feature with
-        // green circle/line:
-        // cv::circle(img_rgb,  utils::gtsamPointToCv(px_cur), 6, green, 1);
         const Keypoint& px_prev = prev_feature->keypoint();
         const cv::Scalar colour = Color::uniqueId(feature->objectId()).bgra();
         cv::arrowedLine(img_rgb, utils::gtsamPointToCv(px_prev),
                         utils::gtsamPointToCv(px_cur), colour, 1, 8, 0, 0.1);
         cv::circle(img_rgb, utils::gtsamPointToCv(px_cur), 2, colour, -1);
-      } else {  // New feature tracks are blue.
-        // cv::circle(img_rgb, utils::gtsamPointToCv(px_cur), 1, blue, 1);
       }
     }
   }
@@ -145,8 +137,7 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
   const int bbox_thickness = config.bboxThickness();
 
   std::vector<ObjectId> objects_to_print;
-  for (const auto& object_observation_pair :
-       current_frame.object_observations_) {
+  for (const auto& object_observation_pair : frame_k.object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
     const cv::Rect& bb = object_observation_pair.second.bounding_box;
 
@@ -171,7 +162,7 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
 
   // draw text info
   std::stringstream ss;
-  ss << "Frame ID: " << current_frame.getFrameId() << " | ";
+  ss << "Frame ID: " << frame_k.getFrameId() << " | ";
   ss << "VO tracks: " << num_static_tracks << " | ";
   ss << "Objects: ";
 

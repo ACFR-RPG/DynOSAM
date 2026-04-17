@@ -147,11 +147,11 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       gtsam::Pose3 L_W_from = trajectory_j.at(from_frame).pose;
       gtsam::Pose3 L_W_to = trajectory_j.at(to_frame).pose;
       gtsam::Pose3 H_L_from_to = L_W_from.inverse() * L_W_to;
-      //     L_W_from.inverse() * f2f_motion.estimate() * L_W_from;
+      // //     L_W_from.inverse() * f2f_motion.estimate() * L_W_from;
 
       // // TODO: for now!!
       gtsam::SharedNoiseModel relative_noise_model =
-          gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
+          gtsam::noiseModel::Isotropic::Sigma(6u, 0.4);
 
       // using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
       // auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
@@ -166,7 +166,7 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       graph += relative_object_motion;
 
       LOG(INFO) << "Adding relative motion constraint " << from_frame << " -> "
-                << to_frame;
+                << to_frame << " graph error: " << graph.error(values);
 
       if (isObjectKeyFrame(object_id, to_frame)) {
         LOG(INFO) << to_frame << " is KF";
@@ -189,8 +189,6 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
 
         // we will validate the backend pose is the same as the frontend pose
         auto [akf_id, akf_pose_backend] = akf_range->dataPair();
-        LOG(INFO) << akf_id;
-
         // we expect to have a refined motion from some previous anchor frame
         // to the to_frame
         // importantly this motion will inform us what the anchor frame is
@@ -221,7 +219,8 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
                                      this->noiseModels().initial_pose_prior);
 
         LOG(INFO) << "Adding refined KF relative motion constraint " << akf_id
-                  << " -> " << to_frame;
+                  << " -> " << to_frame
+                  << " graph error: " << graph.error(values);
 
         // TODO: currently intermediate frame nodes will not exist!!
 
@@ -240,11 +239,13 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
 
           gtsam::Key anchor_object_pose_key =
               ObjectPoseSymbol(object_id, akf_id);
-          LOG(INFO) << "Adding pose prior at KF pose " << akf_id;
           // add a strong prior to anchor pose as this will not change!
           graph.addPrior<gtsam::Pose3>(anchor_object_pose_key,
                                        akf_pose_frontend,
                                        this->noiseModels().initial_pose_prior);
+
+          LOG(INFO) << "Adding pose prior at KF pose " << akf_id
+                    << " graph error: " << graph.error(values);
 
         } else if (kf_data.keyframe_status ==
                    ObjectKeyFrameStatus::RegularKeyFrame) {
@@ -769,19 +770,20 @@ void HybridFormulationKeyFrame::addObjects(
 
     // ad new initialisation points to backend
     // misleading print as we dont add this many points! Only new ones
-    VLOG(10) << "Adding initial object points of size "
-             << object_info.initial_object_points.size();
+    size_t num_new_lmks = 0;
     for (const auto& landmark_status : object_info.initial_object_points) {
       const TrackletId& tracklet_id = landmark_status.trackletId();
       const gtsam::Point3& m_L = landmark_status.value();
       // only add new ones?
       if (!m_L_initial_.exists(object_id, tracklet_id)) {
-        // LOG(INFO) << "Making initial object points j=" << object_id << "
-        // i="
-        // << tracklet_id;
         m_L_initial_.insert22(object_id, tracklet_id, m_L);
+        num_new_lmks++;
       }
     }
+
+    VLOG(10) << "Adding initial object points of size "
+             << object_info.initial_object_points.size()
+             << " new lmks=" << num_new_lmks;
 
     if (keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
       key_frame_data_.startNewActiveRange(object_id, H_W_RKF_k.from(),

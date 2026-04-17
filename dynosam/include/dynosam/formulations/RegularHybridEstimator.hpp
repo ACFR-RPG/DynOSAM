@@ -34,11 +34,11 @@ class HybridFormulationV1 : public HybridFormulation<MapVision> {
                                                     ObjectId object_id);
 
  protected:
-  //! Alias to IntermediateMotionInfo taking into account the templated map tyoe
-  using IntermediateMotionInfo = Base::IntermediateMotionInfo;
+  //! Alias to RelEgoPoseInfoInfo taking into account the templated map tyoe
+  using RelEgoPoseInfoInfo = Base::RelEgoPoseInfoInfo;
 
-  IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
-                                                   FrameId frame_id) override;
+  RelEgoPoseInfoInfo getRelEgoPoseInfoInfo(ObjectId object_id,
+                                           FrameId frame_id) override;
 
   std::pair<FrameId, gtsam::Pose3> getOrConstructL0(ObjectId object_id,
                                                     FrameId frame_id);

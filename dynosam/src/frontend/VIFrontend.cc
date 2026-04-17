@@ -172,7 +172,7 @@ bool VIFrontend::tryStereoMatchStaticFeatures(
 void VIFrontend::fillDebugImagery(DebugImagery& debug_imagery,
                                   const Frame::Ptr& frame_k,
                                   const Frame::Ptr& frame_km1) const {
-  debug_imagery.tracking_image = tracker_->computeImageTracks(
+  debug_imagery.tracking_image = tracker_->computeFeatureTracks(
       *frame_km1, *frame_k,
       dyno_params_.frontend_params_.image_tracks_vis_params);
 

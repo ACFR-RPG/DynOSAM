@@ -45,32 +45,44 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   bool shouldFrameBeKeyFrame(Frame::Ptr frame_k, Frame::Ptr frame_km1) const;
 
+  /**
+   * Contains relative ego motion information
+   * between the current frame j, the previous tracked frame i
+   * and the (camera) keyframe we are tracking against.
+   *
+   */
+  struct RelEgoPoseInfo {
+    //! The keyframe we are tracking against
+    FrameId lkf_id;
+    //! Previous frame we tracking against (ie. from). Usually j-1
+    FrameId i_id;
+    //! The current frame (i.e to)
+    FrameId j_id;
+    //! Frame ptr at current frame (ie. to)
+    Frame::Ptr frame_j;
+    //! Nav state at current frame (ie. to)
+    gtsam::NavState frontend_nav_state_j;
+    ImuFrontend::PimPtr pim_lk_j;
+    //! Should exist only if PIM is non null
+    ImuMeasurements imu_measurements;
+    //! Relative camera pose between from -> to frames
+    gtsam::Pose3 T_i_j;
+    //! Relative camera pose between last keyframe -> to frames
+    gtsam::Pose3 T_lkf_j;
+  };
+
+  void handleCameraKeyframe(const RelEgoPoseInfo& rel_lkf_k,
+                            const UpdateObservationParams& update_params,
+                            PostUpdateData& post_update_data,
+                            PoseChangeInput::Ptr pc_input);
+
   void logBestEstimates() const;
   void logRealTimeObjectClouds(const ObjectIds& objects,
                                FrameId frame_id) const;
 
-  struct IntermediateMotion {
-    //! Should be from a Keyframe
-    FrameId from;
-    //! To the current frame
-    FrameId to;
-    //! Timestamp at the current (ie. to) frame
-    Timestamp timestamp;
-
-    //! Frame ptr at current frame (ie. to)
-    Frame::Ptr frame;
-    //! Nav state at current frame (ie. to)
-    gtsam::NavState frontend_nav_state;
-
-    ImuFrontend::PimPtr pim;
-    //! Should exist only if PIM is non null
-    ImuMeasurements imu_measurements;
-    gtsam::Pose3 T_from_to;
-  };
-
   bool solveAndRefineEgoMotion(
       Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
-      AbsolutePoseCorrespondences& map_matches,
+      StatusLandmarkVector& points_W_used,
       std::optional<gtsam::NavState> propogated_nav_state_k = std::nullopt,
       std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
 
@@ -81,11 +93,6 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   gtsam::NavState nav_state_km1_;
   gtsam::NavState nav_state_lkf_;
-  //! The relative camera pose (T_k_1_k) from the previous frame
-  //! this is used as a constant velocity model when VO tracking fails and the
-  //! IMU is not available!
-  gtsam::Pose3 T_km1_k_;
-  gtsam::Pose3 T_lkf_k_;
 
   //! Last camera keyframe
   Frame::Ptr lCKF_frame_;
@@ -98,7 +105,7 @@ class PoseChangeVIFrontend : public VIFrontend {
   PoseChangeBackendSink pose_change_backend_sink_;
 
   // Mapping of intermediate relative motions. Stored by to frame.
-  gtsam::FastMap<FrameId, IntermediateMotion> intermediate_motions_;
+  gtsam::FastMap<FrameId, RelEgoPoseInfo> rel_egopose_infos_;
   // gtsam::FastMap<FrameId, KeyFrameData> keyframes_;
 };
 

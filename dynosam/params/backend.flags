@@ -35,14 +35,14 @@
 --dynamic_point_noise_sigma=0.01
 
 --static_pixel_noise_sigma=1.0
---dynamic_pixel_noise_sigma=1.0
+--dynamic_pixel_noise_sigma=3.0
 
 
 --opt_window_size=10
 --opt_window_overlap=4
 
 
---use_vo_factor=false
+--use_vo_factor=true
 --use_smoothing_factor=true
 
 # 0: Full-batch, 1: sliding-window, 2: incremental

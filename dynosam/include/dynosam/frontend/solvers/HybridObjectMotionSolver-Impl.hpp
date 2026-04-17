@@ -22,6 +22,8 @@ class HybridObjectMotionSolverImpl {
 
   ~HybridObjectMotionSolverImpl() = default;
 
+  ObjectId objectId() const { return object_id_; }
+
   virtual FrameId keyFrameId() const = 0;
   virtual FrameId frameId() const = 0;
   virtual Timestamp timestamp() const = 0;

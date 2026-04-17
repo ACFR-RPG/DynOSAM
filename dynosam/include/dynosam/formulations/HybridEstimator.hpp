@@ -1502,7 +1502,7 @@ class HybridFormulation : public VIOFormulation<MAP>,
 
  protected:
   // TODO: this should be KF0_to_k
-  struct IntermediateMotionInfo {
+  struct RelEgoPoseInfoInfo {
     //! frame id of the object keyframe (i.e. e)
     FrameId kf_id;
     //! Fixed pose associated with the embedded frame (i.e L_e)
@@ -1511,8 +1511,8 @@ class HybridFormulation : public VIOFormulation<MAP>,
     gtsam::Pose3 H_W_e_k_initial;
   };
 
-  virtual IntermediateMotionInfo getIntermediateMotionInfo(
-      ObjectId object_id, FrameId frame_id) = 0;
+  virtual RelEgoPoseInfoInfo getRelEgoPoseInfoInfo(ObjectId object_id,
+                                                   FrameId frame_id) = 0;
 
   // we need a separate way of tracking if a dynamic tracklet is in the map,
   // since each point is modelled uniquely simply used as an O(1) lookup, the

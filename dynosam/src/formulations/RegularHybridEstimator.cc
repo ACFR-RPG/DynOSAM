@@ -44,10 +44,10 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulationV1::forceNewKeyFrame(
   return result;
 }
 
-HybridFormulationV1::IntermediateMotionInfo
-HybridFormulationV1::getIntermediateMotionInfo(ObjectId object_id,
-                                               FrameId frame_id) {
-  IntermediateMotionInfo info;
+HybridFormulationV1::RelEgoPoseInfoInfo
+HybridFormulationV1::getRelEgoPoseInfoInfo(ObjectId object_id,
+                                           FrameId frame_id) {
+  RelEgoPoseInfoInfo info;
   bool keyframe_updated;
   info.H_W_e_k_initial =
       computeInitialH(object_id, frame_id, &keyframe_updated);

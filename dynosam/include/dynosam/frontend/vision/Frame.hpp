@@ -66,7 +66,7 @@ class Frame {
 
   // semantic instance label to object observation (by the actual observations
   // in the image) set in constructor
-  std::map<ObjectId, SingleDetectionResult> object_observations_;
+  gtsam::FastMap<ObjectId, SingleDetectionResult> object_observations_;
   MotionEstimateMap
       motion_estimates_;  // map of object ids to object motions that take the
                           // object from k-1 to k in W. Updated in the frontend
@@ -76,7 +76,8 @@ class Frame {
         const ImageContainer& image_container,
         const FeatureContainer& static_features,
         const FeatureContainer& dynamic_features,
-        const std::map<ObjectId, SingleDetectionResult>& object_observations,
+        const gtsam::FastMap<ObjectId, SingleDetectionResult>&
+            object_observations,
         std::optional<FeatureTrackerInfo> tracking_info = {});
 
   Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
@@ -98,11 +99,12 @@ class Frame {
    */
   const gtsam::Pose3& getPose() const { return T_world_camera_; }
 
-  inline const std::map<ObjectId, SingleDetectionResult>&
+  inline const gtsam::FastMap<ObjectId, SingleDetectionResult>&
   getObjectObservations() const {
     return object_observations_;
   }
-  inline std::map<ObjectId, SingleDetectionResult>& getObjectObservations() {
+  inline gtsam::FastMap<ObjectId, SingleDetectionResult>&
+  getObjectObservations() {
     return object_observations_;
   }
 

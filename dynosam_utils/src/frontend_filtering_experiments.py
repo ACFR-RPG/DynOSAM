@@ -149,7 +149,7 @@ def run_experiment_sequences(dataset_path, dataset_name, dataset_loader, *args):
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
 
 def run_viodes():
@@ -235,10 +235,18 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_50","dynoepts_uope_50_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_50","dynoepts_uope_50_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
-    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_25","dynoepts_uope_25", dynoepts,
+    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_25","dynoepts_uope_25_OK", dynoepts,
                              "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
                              "--pc_log_object_kf_structure=true",
+                             "--hybrid_motion_solver_temporal_kf=5",
                              "--init_object_pose_from_gt=true")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_51","dynoepts_uope_51_OK", dynoepts,
+    #                          "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
+    #                          "--pc_log_object_kf_structure=false",
+    #                          "--ending_frame=300",
+    #                          "--hybrid_motion_solver_temporal_kf=10",
+    #                          "--init_object_pose_from_gt=true")
 
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_25","dynoepts_uope_25_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
@@ -291,9 +299,10 @@ def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2", "--use_backend=true")
 
     run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_test", omd_dataset,
-        "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true",
+        "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true",
         "--pc_smoother_allow_backend_updates=false",
-        "--pc_log_object_kf_structure=true",
+        "--hybrid_motion_solver_temporal_kf=300",
+        "--pc_log_object_kf_structure=false",
         "--init_object_pose_from_gt=false")
 
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test_with_update", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
@@ -380,17 +389,16 @@ if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
-    run_dynoepts()
+    # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
     # run_viodes()
-    # run_cluster()
+    run_cluster()
     # run_tartan_air()
     # run_aria()
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
 
-    run_analysis("dynoepts_uope_25")
     # run_analysis("omd_test")
     # run_analysis("kitti00_MO")
     # run_analysis("kitti00_PnP")

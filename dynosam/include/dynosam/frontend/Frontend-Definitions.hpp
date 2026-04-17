@@ -56,6 +56,13 @@ enum class TrackingStatus {
   DISABLED
 };
 
+/// @brief Simple enum to denote the tracking quality (from OKVIS2!)
+enum class TrackingQuality {
+  Good,      ///< Good quality for at least 30% of the image containing tracks.
+  Marginal,  ///< Marginal quality below that 30% level.
+  Lost       ///< Lost, if only one or less keypoints are matched per image.
+};
+
 template <>
 inline std::string to_string(const TrackingStatus& status) {
   std::string status_str = "";

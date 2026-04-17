@@ -82,16 +82,16 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
 
-  gtsam::Pose3 X_W_k_initial = gtsam::Pose3::Identity();
+  gtsam::Pose3 identity_pose = gtsam::Pose3::Identity();
+  gtsam::Vector3 zero_velocity(0.0, 0.0, 0.0);
+  gtsam::NavState initial_state(identity_pose, zero_velocity);
 
-  dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, X_W_k_initial);
+  dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, identity_pose);
 
   lCKF_frame_ = frame_k;
 
   // no motion as first frame!
-  const gtsam::Pose3 T_km1_k = gtsam::Pose3::Identity();
-  T_km1_k_ = T_km1_k;
-  T_lkf_k_ = T_km1_k;
+  const gtsam::Pose3 I = gtsam::Pose3::Identity();
 
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
@@ -99,25 +99,18 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   realtime_output->ground_truth = input->ground_truth_packet;
 
-  IntermediateMotion intermediate_motion;
-  intermediate_motion.from = lCKF_frame_->getFrameId();
-  intermediate_motion.to = frame_id_k;
-  intermediate_motion.timestamp = timestamp_k;
-  // NOT setting the nav state!
-  intermediate_motion.frame = frame_k;
-  intermediate_motion.pim = nullptr;
-  intermediate_motion.T_from_to = gtsam::Pose3::Identity();
-  intermediate_motions_.insert2(intermediate_motion.to, intermediate_motion);
-
-  // KeyFrameData keyframe_data;
-  // keyframe_data.kf_id = frame_id_k;
-  // keyframe_data.kf_id_prev = lCKF_frame_->getFrameId();
-  // keyframe_data.frame = frame_k;
-  // keyframe_data.camera_keyframe = true;
-  // // objects are not added becuase on the first frame they can only ever be a
-  // // "from" frame
-  // keyframe_data.nav_state = gtsam::NavState();
-  // keyframes_.insert2(frame_id_k, keyframe_data);
+  RelEgoPoseInfo rel_egopose;
+  rel_egopose.lkf_id = lCKF_frame_->getFrameId();
+  rel_egopose.i_id = frame_id_k;
+  rel_egopose.j_id = frame_id_k;
+  rel_egopose.frame_j = frame_k;
+  rel_egopose.frontend_nav_state_j = initial_state;
+  rel_egopose.T_i_j = identity_pose;
+  rel_egopose.T_lkf_j = identity_pose;
+  rel_egopose.pim_lk_j = nullptr;
+  rel_egopose.imu_measurements =
+      input->imu_measurements.value_or(ImuMeasurements{});
+  rel_egopose_infos_.insert2(frame_id_k, rel_egopose);
 
   CameraMeasurementStatusVector static_measurements;
   fillMeasurementsFromFeatureIterator(
@@ -125,21 +118,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
       timestamp_k, static_pixel_sigmas_, static_point_sigma_,
       &realtime_output->state.local_static_map);
 
-  // // TODO: hack for now to add measurements at first frame!!!!
-  // CameraMeasurementStatusVector dynamic_measurements;
-  // fillMeasurementsFromFeatureIterator(
-  //     &dynamic_measurements, frame_k->usableDynamicIterator(),
-  //     frame_id_k, timestamp_k, dynamic_pixel_sigmas_, dynamic_point_sigma_,
-  //     &realtime_output->state.dynamic_map);
-
-  // // HACK for now = eventually should add measurments as needed based on
-  // // estimated from/to motions!
-  // map_->updateObservations(dynamic_measurements);
-
   // first frame is always KF
   map_->updateObservations(static_measurements);
   map_->setInitialSensorPose(frame_id_k, timestamp_k,
-                             Pose3Measurement(X_W_k_initial));
+                             Pose3Measurement(identity_pose));
   map_->setCameraKeyFrame(frame_id_k);
 
   auto pc_input = std::make_shared<PoseChangeInput>();
@@ -147,8 +129,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   pc_input->timestamp = timestamp_k;
 
   formulation_->addStatesInitalise(pc_input->new_values, pc_input->new_factors,
-                                   frame_id_k, timestamp_k, X_W_k_initial,
-                                   gtsam::Vector3(0, 0, 0));
+                                   frame_id_k, timestamp_k, identity_pose,
+                                   zero_velocity);
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
@@ -168,11 +150,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   if (pose_change_backend_sink_) {
     pose_change_backend_sink_(pc_input);
   }
-
-  // add initial state/propogate
-  // add measurements to map
-  // add motion PC info to formulation (ie. what was pre-update)
-  // build factors
 
   return {State::Nominal, realtime_output};
 }
@@ -205,13 +182,19 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   bool stereo_matching_result =
       tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_1);
 
+  RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
+  realtime_output->state.frame_id = frame_id_k;
+  realtime_output->state.timestamp = timestamp_k;
+
   // when providing the propogated imu state only provide if it was
   // actually filled by a prediction from the IMU - otherwise it will ne
   // nullopt. This tells the function to use a constant motion model from the
   // previous frame ie. T_km1_k_ if tracking fails
-  AbsolutePoseCorrespondences matches;
-  const bool ego_motion_solve = solveAndRefineEgoMotion(
-      frame_k, frame_km1, matches, imu_propogated_nav_state_k, R_km1_k);
+  StatusLandmarkVector& static_landmarks_used_vo =
+      realtime_output->state.local_static_map;
+  const bool ego_motion_solve =
+      solveAndRefineEgoMotion(frame_k, frame_km1, static_landmarks_used_vo,
+                              imu_propogated_nav_state_k, R_km1_k);
 
   if (stereo_matching_result) {
     // Need to match aagain after optical flow used to update the keypoints
@@ -230,22 +213,20 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
                                         ? imu_propogated_nav_state_k->velocity()
                                         : gtsam::Vector3(0, 0, 0));
 
-  T_km1_k_ = nav_state_km1_.pose().inverse() * nav_state_k.pose();
-  // this may be updated later
-  T_lkf_k_ = nav_state_lkf_.pose().inverse() * nav_state_k.pose();
+  RelEgoPoseInfo rel_egopose;
+  rel_egopose.lkf_id = lCKF_frame_->getFrameId();
+  rel_egopose.i_id = frame_km1->getFrameId();
+  rel_egopose.j_id = frame_id_k;
+  rel_egopose.frame_j = frame_k;
+  rel_egopose.frontend_nav_state_j = nav_state_k;
+  rel_egopose.T_i_j = nav_state_km1_.pose().inverse() * nav_state_k.pose();
+  rel_egopose.T_lkf_j = nav_state_lkf_.pose().inverse() * nav_state_k.pose();
+  rel_egopose.pim_lk_j = (pim) ? ImuFrontend::copyPim(pim) : nullptr;
+  rel_egopose.imu_measurements =
+      input->imu_measurements.value_or(ImuMeasurements{});
+  // very important to store this
+  rel_egopose_infos_.insert2(frame_id_k, rel_egopose);
   nav_state_km1_ = nav_state_k;
-
-  IntermediateMotion intermediate_motion;
-  intermediate_motion.from = lCKF_frame_->getFrameId();
-  intermediate_motion.to = frame_id_k;
-  intermediate_motion.timestamp = timestamp_k;
-  intermediate_motion.frame = frame_k;
-  intermediate_motion.frontend_nav_state = nav_state_k;
-  // intermediate_motion.pim = (pim) ? ImuFrontend::copyPim(pim) : nullptr;
-  // intermediate_motion.imu_measurements =
-  //     input->imu_measurements.value_or(ImuMeasurements{});
-  intermediate_motion.T_from_to = T_lkf_k_;
-  intermediate_motions_.insert2(intermediate_motion.to, intermediate_motion);
 
   dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k,
                                        nav_state_k.pose());
@@ -262,9 +243,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     full_object_trajectories_[j] = dyno_state_.object_trajectories.at(j);
   }
 
-  RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
-  realtime_output->state.frame_id = frame_id_k;
-  realtime_output->state.timestamp = timestamp_k;
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   realtime_output->state.object_trajectories = dyno_state_.object_trajectories;
   realtime_output->ground_truth = input->ground_truth_packet;
@@ -272,8 +250,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   CameraMeasurementStatusVector static_measurements;
   fillMeasurementsFromFeatureIterator(
       &static_measurements, frame_k->usableStaticIterator(), frame_id_k,
-      timestamp_k, static_pixel_sigmas_, static_point_sigma_,
-      &realtime_output->state.local_static_map);
+      timestamp_k, static_pixel_sigmas_, static_point_sigma_);
 
   CameraMeasurementStatusVector dynamic_measurements;
   fillMeasurementsFromFeatureIterator(
@@ -325,42 +302,15 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   if (ego_motion_keyframe) {
-    LOG(INFO) << "New Camera Keyframe (CKF) at k=" << frame_id_k;
-    CHECK_EQ(formulation_->getLastPropogatedFrame(), lCKF_frame_->getFrameId());
-    CHECK(map_->isCameraKeyFrame(lCKF_frame_->getFrameId()));
-    const gtsam::NavState predicted_nav_state =
-        formulation_->addStatesPropogate(pc_input->new_values,
-                                         pc_input->new_factors, frame_id_k,
-                                         timestamp_k, T_lkf_k_, pim);
-
-    map_->setCameraKeyFrame(frame_id_k);
-
-    // NOTE: this is different from the nav state that is mantained in the
-    // frontend so the initial states may be slightly different (only if IMU)
-    // NOTE: must be after the updateObs -> these create new frames with the
-    // correct attrivutes (ie. timestamp) while setInitialSensorPose
-    // creates a new frame id necessary but does not populdate with timestamp!!
-    // this is a known bufg!!
-    map_->setInitialSensorPose(frame_id_k, timestamp_k,
-                               Pose3Measurement(predicted_nav_state.pose()));
-
-    post_update_data.static_update_result =
-        formulation_->updateStaticObservations(frame_id_k, pc_input->new_values,
-                                               pc_input->new_factors,
-                                               update_params);
-
-    imu_frontend_.resetIntegration();
-    // this not predicted_nav_state?
-    // TOODO: may better get the nav state via the VIOformulation!
-    nav_state_lkf_ = nav_state_k;
-    lCKF_frame_ = frame_k;
+    handleCameraKeyframe(rel_egopose, update_params, post_update_data,
+                         pc_input);
   } else {
     // if not a camera keyframe, update KF node with relative ego motion data
     auto frame_lkf_node =
         CHECK_NOTNULL(map_->getFrame(lCKF_frame_->getFrameId()));
     // TODO: this relative motion should be consistent with the frontend
     // TODO: use IMU if available!
-    frame_lkf_node->addRelativeEgoMotion(T_lkf_k_, frame_id_k);
+    frame_lkf_node->addRelativeEgoMotion(rel_egopose.T_lkf_j, frame_id_k);
   }
 
   if (any_object_keyframes) {
@@ -378,25 +328,25 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     for (const auto& [object_id, info] : kf_pose_change_infos) {
       CHECK(info.isKeyFrame());
       const auto& H_W_KF_k = info.H_W_KF_k;
-      const auto from_motion_frame_j = H_W_KF_k.from();
+      const auto frame_id_motion_from = H_W_KF_k.from();
       CHECK_EQ(H_W_KF_k.to(), frame_id_k);
 
       // add dynamic measurements observed at the from frame
-      const IntermediateMotion& intermediate_motion_lkf_j =
-          intermediate_motions_.at(from_motion_frame_j);
-      CHECK_EQ(intermediate_motion_lkf_j.to, from_motion_frame_j);
+      const RelEgoPoseInfo& rel_egopose_lkf_j =
+          rel_egopose_infos_.at(frame_id_motion_from);
+      CHECK_EQ(rel_egopose_lkf_j.j_id, frame_id_motion_from);
 
       // if object is already a keyframe at this frame then assume
       // measurements have already been added
       // jesse: is this correct? Since we never go back and add new features I
       // think this is fine
-      if (!map_->isObjectKeyFrame(from_motion_frame_j, object_id)) {
+      if (!map_->isObjectKeyFrame(frame_id_motion_from, object_id)) {
         // add measurements at from frame for object motion
         CameraMeasurementStatusVector dynamic_measurements_kf;
-        auto num_added = fillMeasurementsFromFeatureIterator(
+        fillMeasurementsFromFeatureIterator(
             &dynamic_measurements_kf,
-            intermediate_motion_lkf_j.frame->usableDynamicIterator(object_id),
-            intermediate_motion_lkf_j.to, intermediate_motion_lkf_j.timestamp,
+            rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
+            rel_egopose_lkf_j.j_id, rel_egopose_lkf_j.frame_j->getTimestamp(),
             dynamic_pixel_sigmas_, dynamic_point_sigma_);
 
         // update map after collecting all measurements for this frame
@@ -404,7 +354,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
         // mark object as keyframe for both the from and to (this frame) frames
         // this indicates that a motion variable exists at both frames
-        CHECK(map_->setObjectKeyFrame(from_motion_frame_j, object_id));
+        CHECK(map_->setObjectKeyFrame(frame_id_motion_from, object_id));
       }
 
       // mark object as keyframe in this frame
@@ -444,7 +394,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
 bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
-    AbsolutePoseCorrespondences& map_matches,
+    StatusLandmarkVector& points_W_used,
     std::optional<gtsam::NavState> propogated_nav_state_k,
     std::optional<gtsam::Rot3> R_km1_k) {
   AbsolutePoseCorrespondences m_matches;
@@ -471,10 +421,12 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
   }
 
   Pose3SolverResult pnp_result;
+  AbsolutePoseCorrespondences correspondences_used;
   if (use_map) {
     LOG(INFO) << "Tracking aginast MAP";
     // solve PnP
     pnp_result = pnp_ransac_.solve3d2d(m_matches, R_km1_k);
+    correspondences_used = std::move(m_matches);
   } else {
     LOG(INFO) << "Tracking aginast Previous frame";
     AbsolutePoseCorrespondences correspondences;
@@ -484,6 +436,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
 
     // solve PnP
     pnp_result = pnp_ransac_.solve3d2d(correspondences, R_km1_k);
+    correspondences_used = std::move(correspondences);
     // sanity check
     const TrackletIds tracklets = frame_k->static_features_.collectTracklets();
     // tracklets shoudl be more (or same as) correspondances as there will be
@@ -492,7 +445,16 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
              pnp_result.inliers.size() + pnp_result.outliers.size());
   }
 
-  LOG(INFO) << "Solved PNP";
+  const FrameId frame_id_k = frame_k->getFrameId();
+  const Timestamp timestamp_k = frame_k->getTimestamp();
+
+  // collect points that were used for VO tracking
+  // used for frontend display
+  points_W_used.reserve(correspondences_used.size());
+  for (const auto& corr : correspondences_used) {
+    points_W_used.push_back(LandmarkStatus::StaticInGlobal(
+        corr.ref_, frame_id_k, timestamp_k, corr.tracklet_id_));
+  }
 
   frame_k->static_features_.markOutliers(pnp_result.outliers);
 
@@ -505,7 +467,14 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
                << frame_k->getFrameId()
                << " - using IMU propogated pose to set camera pose!";
     } else {
-      frame_k->T_world_camera_ = nav_state_km1_.pose() * T_km1_k_;
+      auto getLastRelativeEgoMotion = [&]() -> const gtsam::Pose3& {
+        return rel_egopose_infos_.rbegin()->second.T_i_j;
+      };
+      // T_i_j of the camera pose representng our latest motion model of the
+      // camera assume constant velocity model to propogate the model
+      //  ie T_km2_km1 = T_km1_k
+      const gtsam::Pose3& best_relative_motion = getLastRelativeEgoMotion();
+      frame_k->T_world_camera_ = nav_state_km1_.pose() * best_relative_motion;
       VLOG(10) << "Number usable features invalid or too few at k= "
                << frame_k->getFrameId()
                << " - using constant velocity model to propogated camera pose!";
@@ -693,6 +662,51 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
 
   // Otherwise: redundant frame
   return false;
+}
+
+void PoseChangeVIFrontend::handleCameraKeyframe(
+    const RelEgoPoseInfo& rel_lkf_k,
+    const UpdateObservationParams& update_params,
+    PostUpdateData& post_update_data, PoseChangeInput::Ptr pc_input) {
+  Frame::Ptr frame_k = rel_lkf_k.frame_j;
+  const FrameId frame_id_k = frame_k->getFrameId();
+  const Timestamp timestamp_k = frame_k->getTimestamp();
+
+  CHECK_EQ(rel_lkf_k.j_id, frame_id_k);
+  CHECK_EQ(rel_lkf_k.lkf_id, lCKF_frame_->getFrameId());
+  CHECK_EQ(formulation_->getLastPropogatedFrame(), lCKF_frame_->getFrameId());
+  CHECK(map_->isCameraKeyFrame(lCKF_frame_->getFrameId()));
+
+  const gtsam::Pose3& T_lk_k = rel_lkf_k.T_lkf_j;
+  ImuFrontend::PimPtr pim = rel_lkf_k.pim_lk_j;
+
+  LOG(INFO) << "New Camera Keyframe (CKF) at k=" << frame_id_k;
+  const gtsam::NavState predicted_nav_state = formulation_->addStatesPropogate(
+      pc_input->new_values, pc_input->new_factors, frame_id_k, timestamp_k,
+      T_lk_k, pim);
+
+  map_->setCameraKeyFrame(frame_id_k);
+
+  // NOTE: this is different from the nav state that is mantained in the
+  // frontend so the initial states may be slightly different (only if IMU)
+  // NOTE: must be after the updateObs -> these create new frames with the
+  // correct attrivutes (ie. timestamp) while setInitialSensorPose
+  // creates a new frame id necessary but does not populdate with timestamp!!
+  // this is a known bufg!!
+  map_->setInitialSensorPose(frame_id_k, timestamp_k,
+                             Pose3Measurement(predicted_nav_state.pose()));
+
+  post_update_data.static_update_result =
+      formulation_->updateStaticObservations(frame_id_k, pc_input->new_values,
+                                             pc_input->new_factors,
+                                             update_params);
+
+  imu_frontend_.resetIntegration();
+  // this not predicted_nav_state?
+  // TOODO: may better get the nav state via the VIOformulation!
+  const gtsam::NavState& nav_state_k = rel_lkf_k.frontend_nav_state_j;
+  nav_state_lkf_ = nav_state_k;
+  lCKF_frame_ = frame_k;
 }
 
 void PoseChangeVIFrontend::logBestEstimates() const {

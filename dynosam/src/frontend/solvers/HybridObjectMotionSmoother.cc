@@ -3,6 +3,7 @@
 #include <gtsam/linear/NoiseModel.h>
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
@@ -116,6 +117,19 @@ gtsam::Pose3 HybridObjectMotionSmoother::keyFramePose() const {
   return LKF;
 }
 
+gtsam::Pose3 HybridObjectMotionSmoother::getObjectPose(FrameId frame_id) const {
+  auto kf_data = keyframe_range_.find(frame_id);
+  CHECK(kf_data);
+
+  auto motion_key = ObjectMotionSymbol(object_id_, frame_id);
+  CHECK(all_states_.exists(motion_key));
+
+  const gtsam::Pose3 H_LKF_k = all_states_.at<gtsam::Pose3>(motion_key);
+
+  const auto [_, LKF] = *kf_data;
+  return H_LKF_k * LKF;
+}
+
 void HybridObjectMotionSmoother::receiveUpdate(
     const HybridKeyFrameUpdate& update_info) {
   // see if we have updates for this object. Either way we probably have camera
@@ -131,6 +145,164 @@ void HybridObjectMotionSmoother::receiveUpdate(
     has_point_update_ = true;
     updated_points_ = std::move(object_update->object_points);
   }
+}
+
+double HybridObjectMotionSmoother::reprojectionError(
+    Frame::Ptr frame, const TrackletIds& tracklets) const {
+  const FrameId frame_id_k = frame->getFrameId();
+
+  const auto& object_points = this->getObjectPoints();
+  const auto L_W_k = this->getObjectPose(frame_id_k);
+
+  double repr_error = 0;
+
+  // assume the pose is the same as the one used inside the smoother!
+  auto frame_camera = frame->getFrameCamera();
+
+  size_t count = 0;
+  for (auto tracklet_id : tracklets) {
+    auto feature = frame->at(tracklet_id);
+    CHECK_NOTNULL(feature);
+    CHECK_EQ(feature->objectId(), object_id_);
+
+    auto kp = feature->keypoint();
+
+    if (object_points.exists(tracklet_id)) {
+      const gtsam::Point3 m_W = L_W_k * object_points.at(tracklet_id);
+      double repr = frame_camera.reprojectionError(m_W, kp).norm();
+
+      repr_error += repr;
+      count++;
+    }
+  }
+
+  if (count == 0) {
+    return std::numeric_limits<double>::infinity();
+  } else {
+    return repr_error / (double)count;
+  }
+}
+
+bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
+  const auto& cam_params = frame->getCamera()->getParams();
+
+  const auto& object_observations = frame->getObjectObservations();
+
+  // Jesse: not even sure this should happen!
+  if (!object_observations.exists(object_id_)) {
+    return 0.0;
+  }
+
+  const ObjectDetection& obj_det = object_observations.at(object_id_);
+
+  // Downscale factor (same as before)
+  const int scale = 10;
+
+  const int rows = cam_params.ImageHeight() / scale;
+  const int cols = cam_params.ImageWidth() / scale;
+
+  const gtsam::Matrix33 K_inv = cam_params.getCameraMatrixEigen().inverse();
+
+  // --- Resize object mask to working resolution
+  cv::Mat object_mask_resized;
+  cv::resize(obj_det.mask, object_mask_resized, cv::Size(cols, rows), 0, 0,
+             cv::INTER_NEAREST);
+
+  // Ensure binary
+  cv::threshold(object_mask_resized, object_mask_resized, 1, 255,
+                cv::THRESH_BINARY);
+
+  // --- Masks
+  cv::Mat matches = cv::Mat::zeros(rows, cols, CV_8UC1);
+  cv::Mat detections = cv::Mat::zeros(rows, cols, CV_8UC1);
+
+  const FeatureContainer& dynamic_features_lOKF =
+      lOKF_frame_->dynamic_features_;
+
+  std::vector<double> displacements;
+  std::vector<double> parallax_angles;
+
+  int num_detections = 0;
+  int num_matches = 0;
+
+  auto feature_itr = frame->usableDynamicIterator(object_id_);
+
+  const double radius = 3.0;  // fixed radius (better for objects)
+
+  for (const auto& feature : feature_itr) {
+    const TrackletId tracklet_id = feature->trackletId();
+    const Keypoint& kp = feature->keypoint();
+
+    cv::Point2f pt = utils::gtsamPointToCv(kp) * (1.0 / scale);
+
+    // --- Only consider points inside object mask
+    if (pt.x < 0 || pt.x >= cols || pt.y < 0 || pt.y >= rows) continue;
+
+    // --- detections
+    cv::circle(detections, pt, int(radius), cv::Scalar(255), cv::FILLED);
+    num_detections++;
+
+    // --- matches (tracked from last object KF)
+    if (dynamic_features_lOKF.exists(tracklet_id)) {
+      cv::circle(matches, pt, int(radius), cv::Scalar(255), cv::FILLED);
+      num_matches++;
+
+      const auto& kp_kf =
+          dynamic_features_lOKF.getByTrackletId(tracklet_id)->keypoint();
+      cv::Point2f pt_kf = utils::gtsamPointToCv(kp_kf) * (1.0 / scale);
+
+      gtsam::Vector3 kp_kf_bearing =
+          gtsam::Vector3(K_inv * gtsam::Vector3(kp_kf(0), kp_kf(1), 1.0));
+      kp_kf_bearing.normalize();
+
+      gtsam::Vector3 kp_k_bearing =
+          gtsam::Vector3(K_inv * gtsam::Vector3(kp(0), kp(1), 1.0));
+      kp_k_bearing.normalize();
+
+      // NOTE: this does not account for the motion of the camera
+      // ie. motion of the camera will cause parallax
+      // but here we're working with assumption that any
+      // change in view makes a good keyframe
+      double cos_angle = kp_kf_bearing.dot(kp_k_bearing);
+      cos_angle = std::clamp(cos_angle, -1.0, 1.0);
+
+      double angle = std::acos(cos_angle);
+      parallax_angles.push_back(angle);
+
+      displacements.push_back(cv::norm(pt - pt_kf));
+    }
+  }
+
+  double median_parallax = calculateMedian(parallax_angles);
+
+  double object_area = double(cv::countNonZero(object_mask_resized));
+  double match_area = double(cv::countNonZero(matches & object_mask_resized));
+  // How much of the visible object is explained by KF tracks
+  double coverage = (object_area > 0.0) ? match_area / object_area : 0.0;
+
+  const FrameId frames_since_lkf = frame->getFrameId() - keyFrameId();
+
+  LOG(INFO) << "STATS object j=" << object_id_ << " coverage: " << coverage
+            << " median parallax: " << median_parallax
+            << " frames since kf:" << frames_since_lkf;
+
+  const double coverage_thresh = 0.3;  // spatial redundancy
+  double parallax_thresh = 0.05;
+  FrameId min_frames_dt = 15;
+
+  if (coverage < coverage_thresh) {
+    return true;
+  }
+
+  if (median_parallax > parallax_thresh) {
+    return true;
+  }
+
+  if (frames_since_lkf > min_frames_dt) {
+    return true;
+  }
+
+  return false;
 }
 
 bool HybridObjectMotionSmoother::createNewKeyedMotion(
@@ -149,6 +321,8 @@ bool HybridObjectMotionSmoother::createNewKeyedMotion(
 
   dyno::ISAM2 isam_copy = isam_;
   isam_ = dyno::ISAM2(DefaultISAM2Params());
+
+  lOKF_frame_ = frame;
 
   // update fixed trajectory using current kf state
   // must do this before temporal/keyframe data-structures are reset
@@ -764,6 +938,9 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   }
 
   factors_in_smoother = getFactors();
+
+  CHECK_EQ(new_factors.size(), new_factor_indicies.size());
+
   for (size_t i = 0; i < new_factors.size(); i++) {
     gtsam::FactorIndex new_index = new_factor_indicies.at(i);
     auto nonlinear_factor = new_factors.at(i);
@@ -813,7 +990,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       const TrackletFramePair tracklet_frame_pair{tracklet_id,
                                                   recovered_frame_id};
       CHECK(mo_factor_map_.exists(tracklet_frame_pair));
-
       auto factor = mo_factor_map_.at(tracklet_frame_pair).first;
 
       // LOG(INFO) << "Deleting factor " << DynosamKeyFormatter(factor->key1())

@@ -44,6 +44,7 @@ struct TrackletFramePair {
   }
 };
 
+// TODO: dont need the IMPL class
 class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
                                    public gtsam::FixedLagSmoother {
  public:
@@ -118,6 +119,11 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   gtsam::FastMap<TrackletId, gtsam::Point3> getObjectPoints() const override;
 
   void receiveUpdate(const HybridKeyFrameUpdate& update_info) override;
+
+  double reprojectionError(Frame::Ptr frame,
+                           const TrackletIds& tracklets) const;
+
+  bool shouldBeKeyframe(Frame::Ptr frame) const;
 
   /** Compute an estimate from the incomplete linear delta computed during the
    * last update. This delta is incomplete because it was not updated below
@@ -228,6 +234,8 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
     return camera_poses_.at(frame_id);
   }
 
+  gtsam::Pose3 getObjectPose(FrameId frame_id) const;
+
   const gtsam::Values& getValuesSinceLastKF() const { return state_since_lKF_; }
 
  protected:
@@ -244,6 +252,9 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   virtual void onNewKeyFrameMotion(const dyno::ISAM2& smoother_before_reset,
                                    const gtsam::Pose3 new_L_KF) = 0;
+
+  //! Last (object) keyframe for this object
+  Frame::Ptr lOKF_frame_;
 
   // Trajectory since last KF?
   // Updated when new KF made since past variables will not be updated

@@ -191,7 +191,7 @@ int main(int argc, char* argv[]) {
   // if (previous_frame) {
   //   ImageTracksParams track_viz_params(true);
   //   track_viz_params.show_intermediate_tracking = true;
-  //   tracking = tracker->computeImageTracks(*previous_frame, *frame,
+  //   tracking = tracker->computeFeatureTracks(*previous_frame, *frame,
   //                                          track_viz_params);
 
   // if (imu_measurements) {

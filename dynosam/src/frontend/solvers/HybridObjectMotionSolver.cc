@@ -8,6 +8,9 @@ DEFINE_int32(hybrid_motion_solver, 0,
              "Which solver to use. 0: EIF, 1: Smart Smoother, 2: Full "
              "Smoother, 3: PnP Only");
 
+DEFINE_int32(hybrid_motion_solver_temporal_kf, 7,
+             "How often to temporally force an object KF. For testing");
+
 namespace dyno {
 
 // A class that just uses PnP to solve the motion but looks like a solver object
@@ -202,6 +205,7 @@ bool HybridObjectMotionSolver::solveImpl(
 
   TrackletIds inlier_tracklets = geometric_result.inliers;
   const TrackletIds& outlier_tracklets = geometric_result.outliers;
+  frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
   if (is_resampled) {
     LOG(INFO) << "Resampled " << info_string(frame_k->getFrameId(), object_id)
@@ -264,18 +268,38 @@ bool HybridObjectMotionSolver::solveImpl(
     // const bool new_KF = false;
     auto solver = threadSafeFilterAccess(object_id);
 
-    requires_new_keyframe = object_retracked || is_resampled;
+    {
+      auto smoother =
+          std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
+      if (smoother) {
+        // for OMD
+        if (smoother /*&& smoother->objectId() == 4*/) {
+          requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
+          // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
+
+          // if(quality < 0.3) {
+          //   requires_new_keyframe = true;
+          // }
+        }
+      }
+    }
+
+    // TODO: now object is not deleted when lost!
+    // effects how is_new calculated!
+
+    // requires_new_keyframe = object_retracked || is_resampled;
 
     // Must be < min dynamic tracks otherwise there will be no factors
     // connecting the frames!!
     // The object re-tracking
     // must be at least 2 for smoothing factor?
-    if (previous_tracking_state != ObjectTrackingStatus::New &&
-        frame_k->getFrameId() % 7 == 0) {
-      LOG(INFO) << "New KF due to temporal frame";
-      requires_new_keyframe = true;
-      // TODO: should probably temporal frame since the last KF
-    }
+    // if (previous_tracking_state != ObjectTrackingStatus::New &&
+    //     frames_since_lkf % FLAGS_hybrid_motion_solver_temporal_kf == 0) {
+    //   LOG(INFO) << "New KF due to temporal frame";
+    //   requires_new_keyframe = true;
+    //   // TODO: should probably temporal frame since the last KF
+    //   // definitely since we dont see the object every frame!
+    // }
     // and not new? Dont want to make keyframe immedialte after making a
     // keyframe! const bool new_KF = object_retracked || frame_k->getFrameId() %
     // 35 == 0;
@@ -339,8 +363,6 @@ bool HybridObjectMotionSolver::solveImpl(
 
   const auto H_W_km1_k = solver->frameToFrameMotionReference();
   motion_estimate = H_W_km1_k;
-
-  frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
   logger_ << frame_k->getTimestamp() << frame_k->getFrameId() << update_time_ms
           << inlier_tracklets.size();
@@ -411,13 +433,14 @@ bool HybridObjectMotionSolver::solveImpl(
 
 void HybridObjectMotionSolver::deleteObject(ObjectId object_id) {
   {
-    const std::lock_guard<std::mutex> lock(solvers_mutex_);
-    solvers_.erase(object_id);
+      // const std::lock_guard<std::mutex> lock(solvers_mutex_);
+      // solvers_.erase(object_id);
   }
 
   {
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
-    num_kfs_per_object_.erase(object_id);
+    // num_kfs_per_object_.erase(object_id);
+    num_kfs_per_object_[object_id] = 0;
   }
 }
 

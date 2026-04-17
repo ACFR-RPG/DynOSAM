@@ -347,9 +347,9 @@ void drawLabeledBoundingBox(cv::Mat& image, const std::string& label,
   // Note: text origin starts from the bottom left corner of the text string in
   // the image and we add a pixel buffer along y to make it look better
   cv::putText(image, label, cv::Point(tlc.x, tlc.y - 2), kFontFace, kFontScale,
-              cv::Scalar(255, 255, 255), kThickness);
+              cv::Scalar(255, 255, 255), kThickness, cv::LINE_AA);
   // draw bounding box with line thickness
-  cv::rectangle(image, bounding_box, colour, bb_thickness);
+  cv::rectangle(image, bounding_box, colour, bb_thickness, cv::LINE_AA);
 }
 
 void drawObjectPoseAxes(cv::Mat& image, const cv::Mat& K, const cv::Mat& D,

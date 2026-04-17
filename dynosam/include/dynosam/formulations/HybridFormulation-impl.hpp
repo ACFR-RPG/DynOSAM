@@ -38,8 +38,8 @@ void HybridFormulation<MAP>::dynamicPointUpdateCallback(
       frame_node_k_1->makeObjectMotionKey(object_id);
 
   // gtsam::Pose3 L_e;
-  const IntermediateMotionInfo keyframe_info =
-      getIntermediateMotionInfo(object_id, frame_id_k_1);
+  const RelEgoPoseInfoInfo keyframe_info =
+      getRelEgoPoseInfoInfo(object_id, frame_id_k_1);
 
   const FrameId& s0 = keyframe_info.kf_id;
   const gtsam::Pose3& L_e = keyframe_info.keyframe_pose;
@@ -130,8 +130,8 @@ void HybridFormulation<MAP>::objectUpdateContext(
   const auto frame_id = context.getFrameId();
   const auto object_id = context.getObjectId();
 
-  const IntermediateMotionInfo keyframe_info =
-      getIntermediateMotionInfo(object_id, frame_id);
+  const RelEgoPoseInfoInfo keyframe_info =
+      getRelEgoPoseInfoInfo(object_id, frame_id);
 
   if (!this->is_other_values_in_map.exists(object_motion_key_k)) {
     // gtsam::Pose3 motion;

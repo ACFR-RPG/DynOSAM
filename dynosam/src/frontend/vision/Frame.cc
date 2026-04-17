@@ -44,7 +44,7 @@ Frame::Frame(
     const ImageContainer& image_container,
     const FeatureContainer& static_features,
     const FeatureContainer& dynamic_features,
-    const std::map<ObjectId, SingleDetectionResult>& object_observations,
+    const gtsam::FastMap<ObjectId, SingleDetectionResult>& object_observations,
     std::optional<FeatureTrackerInfo> tracking_info)
     : frame_id_(frame_id),
       timestamp_(timestamp),
