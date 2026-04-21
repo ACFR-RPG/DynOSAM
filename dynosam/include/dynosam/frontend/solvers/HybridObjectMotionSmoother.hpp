@@ -322,6 +322,9 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   // gtsam::ISAM2 isam_;
   dyno::ISAM2 isam_;
 
+  using SmootherInterface = ISAMInterface<dyno::ISAM2>;
+  SmootherInterface smoother_interface_;
+
   /** Store results of latest isam2 update */
   // gtsam::ISAM2Result isamResult_;
   dyno::ISAM2Result isamResult_;
@@ -400,6 +403,9 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
  private:
   // gtsam::FastMap<TrackletId, std::vector<std::pair<FrameId,
   // gtsam::StereoPoint2>>> awaiting_measurements_;
+
+  gtsam::FastMap<TrackletId, BatchStereoHybridMotionFactor3::shared_ptr>
+      batch_factor_map_;
 
   GenericFactorMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
       mo_factor_map_;

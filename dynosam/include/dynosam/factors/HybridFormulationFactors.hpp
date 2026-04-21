@@ -409,6 +409,8 @@ class BatchStereoHybridMotionFactor3 : public gtsam::NonlinearFactor {
   void add(const gtsam::StereoPoint2& measured, const gtsam::Pose3& X_W_k,
            gtsam::Key H_W_K_k_key);
 
+  const gtsam::Point3 point() const { return m_L_; }
+
  private:
 };
 

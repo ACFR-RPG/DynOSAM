@@ -23,6 +23,7 @@ HybridObjectMotionSmoother::HybridObjectMotionSmoother(ObjectId object_id,
       gtsam::FixedLagSmoother(smootherLag),
       logger_prefix_("hms_j" + std::to_string(object_id)),
       isam_(DefaultISAM2Params()),
+      smoother_interface_(&isam_),
       kf_decision_logger_(CsvHeader(
           "timestamp", "frame_id", "is_keyframe", "coverage", "median_parallax",
           "frames_since_lkf", "last_kf", "repr_error", "smoother_error")) {
@@ -307,13 +308,13 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
   FrameId min_frames_dt = 15;
 
   bool is_keyframe = false;
-  if (coverage < coverage_thresh) {
-    is_keyframe = true;
-  }
+  // if (coverage < coverage_thresh) {
+  //   is_keyframe = true;
+  // }
 
-  if (median_parallax > parallax_thresh) {
-    is_keyframe = true;
-  }
+  // if (median_parallax > parallax_thresh) {
+  //   is_keyframe = true;
+  // }
 
   if (frames_since_lkf > min_frames_dt) {
     is_keyframe = true;
@@ -343,6 +344,7 @@ bool HybridObjectMotionSmoother::createNewKeyedMotion(
 
   dyno::ISAM2 isam_copy = isam_;
   isam_ = dyno::ISAM2(DefaultISAM2Params());
+  smoother_interface_ = SmootherInterface(&isam_);
 
   lOKF_frame_ = frame;
 
@@ -571,10 +573,11 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
   utils::ChronoTimingStats update_timer(logger_prefix_ + ".isam_update", 10);
 
   // getDefaultILSErrorHandlingHooks(handle_failed_object)
-  using SmootherInterface = IncrementalInterface<decltype(isam_)>;
-  SmootherInterface smoother(&isam_);
-  smoother.setMaxExtraIterations(0);
-  result.solver_okay = smoother.optimize(
+  // using SmootherInterface = IncrementalInterface<decltype(isam_)>;
+  // using SmootherInterface = ISAMInterface<decltype(isam_)>;
+  // SmootherInterface smoother(&isam_);
+  smoother_interface_.setMaxExtraIterations(0);
+  result.solver_okay = smoother_interface_.optimize(
       &isamResult_,
       [&](const SmootherInterface::Smoother&,
           SmootherInterface::UpdateArguments& update_arguments) {
@@ -879,19 +882,44 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     const TrackletFramePair tracklet_frame_pair{tracklet_id, frame_id};
     CHECK(!mo_factor_map_.exists(tracklet_frame_pair)) << tracklet_frame_pair;
 
-    auto factor = boost::make_shared<StereoHybridMotionFactor3>(
-        stereo_measurement, L_KF, X_W_k, m_L_points_.at(tracklet_id),
-        stereo_noise_model, stereo_calibration_, H_key_k, false);
+    if (!batch_factor_map_.exists(tracklet_id)) {
+      auto batch_factor = boost::make_shared<BatchStereoHybridMotionFactor3>(
+          m_L_points_.at(tracklet_id), L_KF, stereo_noise_model,
+          stereo_calibration_);
+      new_factors += batch_factor;
+      batch_factor_map_.insert2(tracklet_id, batch_factor);
+    } else {
+      auto batch_factor = batch_factor_map_.at(tracklet_id);
+      gtsam::FactorIndex current_slot;
+      CHECK(smoother_interface_.safeGetFactorIndex(batch_factor, current_slot));
 
-    const Slot starting_slot = new_factors.size();
+      newly_affected_keys.insert2(current_slot, {H_key_k});
+      {
+        // test!
+        const auto factors_in_smoother = getFactors();
+        CHECK_LT(current_slot, factors_in_smoother.size());
 
-    mo_factor_map_.insert2(tracklet_frame_pair,
-                           std::make_pair(factor, starting_slot));
-    mo_factor_to_tracklet_id_.insert2(factor, tracklet_frame_pair);
-    trackletid_to_frame_ids_.at(tracklet_id).push_back(frame_id);
-    object_motion_to_tracklets_.at(H_key_k).push_back(tracklet_id);
+        auto factor_in_smoother = factors_in_smoother.at(current_slot);
+        CHECK_EQ(batch_factor, factor_in_smoother);
+      }
+    }
 
-    new_factors += factor;
+    auto batch_factor = batch_factor_map_.at(tracklet_id);
+    batch_factor->add(stereo_measurement, X_W_k, H_key_k);
+
+    // auto factor = boost::make_shared<StereoHybridMotionFactor3>(
+    //     stereo_measurement, L_KF, X_W_k, m_L_points_.at(tracklet_id),
+    //     stereo_noise_model, stereo_calibration_, H_key_k, false);
+
+    // const Slot starting_slot = new_factors.size();
+
+    // mo_factor_map_.insert2(tracklet_frame_pair,
+    //                        std::make_pair(factor, starting_slot));
+    // mo_factor_to_tracklet_id_.insert2(factor, tracklet_frame_pair);
+    // trackletid_to_frame_ids_.at(tracklet_id).push_back(frame_id);
+    // object_motion_to_tracklets_.at(H_key_k).push_back(tracklet_id);
+
+    // new_factors += factor;
 
     num_tracks_used++;
     avg_feature_age += feature->age();
@@ -938,8 +966,8 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       auto smoothing_factor = boost::make_shared<HybridSmoothingFactor>(
           H_key_km2, H_key_km1, H_key_k, L_KF, smoothing_motion_model);
 
-      // new_factors += smoothing_factor;
-      // smoothing_factors_.insert2(frame_id, smoothing_factor);
+      new_factors += smoothing_factor;
+      smoothing_factors_.insert2(frame_id, smoothing_factor);
     }
   }
 
@@ -953,15 +981,14 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   // therefore: something in the update or isam handling is wrong
   // not the concept....
 
-  // HybridObjectMotionSmoother::Result result =
-  //     this->updateSmoother(new_factors, new_values, timestamps,
-  //     update_params);
-  HybridObjectMotionSmoother::Result result;
-  result.solver_okay = true;
+  HybridObjectMotionSmoother::Result result =
+      this->updateSmoother(new_factors, new_values, timestamps, update_params);
 
   if (!result.solver_okay) {
     return result;
   }
+
+  LOG(INFO) << "here";
 
   const auto& isam_result = result.isam_result;
   const gtsam::FactorIndices& new_factor_indicies =
@@ -1074,6 +1101,8 @@ void HybridObjectMotionOnlySmoother::onNewKeyFrameMotion(
   mo_factor_to_tracklet_id_.clear();
   trackletid_to_frame_ids_.clear();
   object_motion_to_tracklets_.clear();
+
+  batch_factor_map_.clear();
 
   // awaiting_measurements_.clear();
   m_L_points_.clear();
@@ -1549,8 +1578,8 @@ HybridObjectMotionFullSmoother::updateFromInitialMotionImpl(
     if (isam_.valueExists(H_key_km1) && isam_.valueExists(H_key_km2)) {
       VLOG(10) << "Adding smoothing factor "
                << info_string(frame_id, object_id_);
-      new_factors.emplace_shared<HybridSmoothingFactor>(
-          H_key_km2, H_key_km1, H_key_k, L_KF, smoothing_motion_model);
+      // new_factors.emplace_shared<HybridSmoothingFactor>(
+      //     H_key_km2, H_key_km1, H_key_k, L_KF, smoothing_motion_model);
     }
   }
 

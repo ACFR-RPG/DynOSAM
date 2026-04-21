@@ -331,6 +331,7 @@ struct ErrorHandlingHooks {
 ErrorHandlingHooks getDefaultILSErrorHandlingHooks(
     const ErrorHandlingHooks::OnFailedObject& on_failed_object = nullptr);
 
+// TODO: should be called OptimizationInterface or something
 template <typename SMOOTHER>
 class IncrementalInterface {
  public:
@@ -342,6 +343,7 @@ class IncrementalInterface {
 
   IncrementalInterface(Smoother* smoother)
       : smoother_(CHECK_NOTNULL(smoother)) {}
+  virtual ~IncrementalInterface() = default;
 
   bool optimize(ResultType* result,
                 const FillArguments& update_arguments_filler,
@@ -398,9 +400,9 @@ class IncrementalInterface {
     return updateSmoother(result, smoother_arguments, error_hooks);
   }
 
-  bool updateSmoother(ResultType* result,
-                      const UpdateArguments& smoother_arguments,
-                      const ErrorHandlingHooks& error_hooks) {
+  virtual bool updateSmoother(ResultType* result,
+                              const UpdateArguments& smoother_arguments,
+                              const ErrorHandlingHooks& error_hooks) {
     // This is not doing a full deep copy: it is keeping same shared_ptrs for
     // factors but copying the isam result.
     Smoother smoother_backup(*smoother_);
@@ -515,6 +517,65 @@ class IncrementalInterface {
   ResultType result_;
   //! If last call to optimize succeeded
   bool was_smoother_ok_;
+};
+
+// needs persistance instance!!
+template <typename ISAMSmoother>
+class ISAMInterface : public IncrementalInterface<ISAMSmoother> {
+ public:
+  typedef IncrementalInterface<ISAMSmoother> Base;
+  typedef typename Base::Smoother Smoother;
+  typedef typename Base::ResultType ResultType;
+  typedef typename Base::UpdateArguments UpdateArguments;
+
+  ISAMInterface(Smoother* smoother) : Base(smoother) {}
+
+  bool safeGetFactorIndex(gtsam::NonlinearFactor::shared_ptr factor,
+                          gtsam::FactorIndex& slot) const {
+    if (!factor_map_.exists(factor)) {
+      return false;
+    }
+
+    auto retrieved_slot = factor_map_.at(factor);
+    // check not null?
+    slot = retrieved_slot;
+    return true;
+  }
+
+ protected:
+  bool updateSmoother(ResultType* result,
+                      const UpdateArguments& smoother_arguments,
+                      const ErrorHandlingHooks& error_hooks) override {
+    // const gtsam::FactorIndices factors_to_remove =
+    const gtsam::NonlinearFactorGraph new_factors =
+        smoother_arguments.new_factors;
+
+    const bool success =
+        Base::updateSmoother(result, smoother_arguments, error_hooks);
+    if (!success) {
+      return false;
+    }
+
+    // update internal bookkeeping
+    const gtsam::NonlinearFactorGraph factors_in_smoother = this->getFactors();
+    const gtsam::FactorIndices& new_factor_indicies = result->newFactorsIndices;
+    CHECK_EQ(new_factors.size(), new_factor_indicies.size());
+
+    // update factor slot position
+    for (size_t i = 0; i < new_factors.size(); i++) {
+      gtsam::FactorIndex new_index = new_factor_indicies.at(i);
+      auto nonlinear_factor = new_factors.at(i);
+      CHECK_EQ(nonlinear_factor, factors_in_smoother.at(new_index));
+      factor_map_[nonlinear_factor] = new_index;
+    }
+
+    // TODO: not handling removal of factors!!
+    return success;
+  }
+
+ private:
+  gtsam::FastMap<gtsam::NonlinearFactor::shared_ptr, gtsam::FactorIndex>
+      factor_map_;
 };
 
 struct ISAM2Stats {
