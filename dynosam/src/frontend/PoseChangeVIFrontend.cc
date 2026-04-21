@@ -21,7 +21,6 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
       map_(CHECK_NOTNULL(formulation->map())) {
   // TODo
   HybridObjectMotionSolverParams motion_params;
-  motion_params.pnp_ransac_params.ransac_threshold_pnp = 4.0;
 
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
@@ -41,6 +40,10 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
     const PoseChangeUpdateComplete& event) {
   // TODO: this is definitely not thread safe
   const FrameId frame_id = event.frame_id;
+  const FrameId starting_frame_id = event.starting_frame_id;
+
+  LOG(INFO) << "Recieved backend update for frames " << starting_frame_id
+            << " -> " << frame_id;
 
   if (FLAGS_pc_smoother_allow_backend_updates) {
     LOG(INFO) << "Recieved backend update at frame " << frame_id;
@@ -57,7 +60,15 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
     auto frame_node_k = map_->getFrame(frame_id);
     CHECK_NOTNULL(frame_node_k);
 
-    // only log for object seen at this frame
+    // what if this is not an object keyframe (the object structrure will be
+    // bad!) and since we batch the pose change input we dont know which objects
+    // are included! only log for object seen at this frame should log object
+    // structure for those with keyframes (but optimized) between starting_frame
+    // and frame_id todo this we need to know the map state when we made the
+    // PoseChangeInput since the map will be different now (ie. possibly more
+    // object keyframes) between the two batch input frames. should construct a
+    // map state (ie. which frames are keyframes etc) that is send with the
+    // PoseChangeInput and the PoseChangeUpdateComplete
     for (ObjectId object_id : frame_node_k->objectSeenIds()) {
       StatusLandmarkVector points_in_L =
           accessor->getLocalDynamicLandmarkEstimates(object_id);
@@ -521,7 +532,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = false;
+  constexpr static bool kParallelSolve = true;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);
@@ -741,6 +752,28 @@ void PoseChangeVIFrontend::logBestEstimates() const {
   logger->logCameraPose(camera_trajectory, ground_truths);
 
   logger->logObjectTrajectory(full_object_trajectories_refined, ground_truths);
+
+  // right now output of refinePerFrameMotionsPGO only goes up to last object
+  // keyframe
+  for (ObjectId object_id : full_object_trajectories_refined.objectIds()) {
+    FrameId last_okf_id =
+        full_object_trajectories_refined.at(object_id).maxFrame();
+
+    StatusLandmarkVector points_in_L =
+        accessor->getLocalDynamicLandmarkEstimates(object_id);
+
+    if (points_in_L.empty()) {
+      VLOG(20) << "No points for j=" << object_id << ": skipping logging!";
+      continue;
+    }
+
+    std::string path = dyno::getOutputFilePath(
+        "refined_object_map_k" + std::to_string(last_okf_id) + "_j" +
+        std::to_string(object_id) + ".pcd");
+    VLOG(10) << "Writing object map of size " << points_in_L.size() << " - "
+             << path;
+    saveAsPointCloud(points_in_L, path);
+  }
 }
 
 void PoseChangeVIFrontend::logRealTimeObjectClouds(const ObjectIds& objects,

@@ -210,11 +210,11 @@ def run_kitti():
 
 ##### SHOULD BE WITH --init_object_pose_from_gt=true
 def run_dynoepts():
-    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54", dynoepts,
-    #                          "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
-    #                          "--pc_log_object_kf_structure=false",
-    #                          "--hybrid_motion_solver_temporal_kf=5",
-    #                          "--init_object_pose_from_gt=true")
+    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54", dynoepts,
+                             "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
+                             "--pc_log_object_kf_structure=false",
+                             "--hybrid_motion_solver_temporal_kf=5",
+                             "--init_object_pose_from_gt=true")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
@@ -264,11 +264,11 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
-    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21", dynoepts,
-                             "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
-                             "--pc_log_object_kf_structure=false",
-                             "--hybrid_motion_solver_temporal_kf=5",
-                             "--init_object_pose_from_gt=true")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21", dynoepts,
+    #                          "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
+    #                          "--pc_log_object_kf_structure=false",
+    #                          "--hybrid_motion_solver_temporal_kf=5",
+    #                          "--init_object_pose_from_gt=true")
 
     # this one is hard due to rubber duck!
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_MO_test", dynoepts,
@@ -294,7 +294,7 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynopets_mocap/VAL10Seqs/7_others_jerry/","dynopets_val_7_other_jerry", dynoepts, "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynopets_mocap/VAL10Seqs/7_others_jerry/","dynopets_val_7_other_jerry", dynoepts,
     #                         "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
-    #                         "--pc_log_object_kf_structure=true",
+    #                         "--pc_log_object_kf_structure=false",
     #                         "--hybrid_motion_solver_temporal_kf=5",
     #                         "--init_object_pose_from_gt=true")
 
@@ -315,7 +315,7 @@ def run_dynoepts():
 
 
 def run_aria():
-    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=2")
+    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=4")
 
 ##### SHOULD BE WITH --init_object_pose_from_gt=false
 def run_hybrid_solver_comparison_omd():
@@ -415,9 +415,9 @@ def run_uts_tech_lab_solver_comparison_test():
 
 
 if __name__ == '__main__':
-    run_hybrid_solver_comparison_omd()
+    # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    # run_uts_tech_lab_solver_comparison_test()
+    run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()

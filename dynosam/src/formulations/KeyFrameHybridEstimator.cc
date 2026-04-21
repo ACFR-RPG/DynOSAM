@@ -113,19 +113,27 @@ HybridKeyFrameUpdate HybridFormulationKeyFrame::generateUpdateInfo() const {
   return info;
 }
 
+// output trajectories only up to last object keyframe
 MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
     const MultiObjectTrajectories& full_trajectories) const {
-  MultiObjectTrajectories full_trajectories_refined = full_trajectories;
-
   auto map = this->map();
   HybridFormulationKeyFrameAccessor::Ptr accessor =
       this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
 
-  for (const auto& [object_id, trajectory_j] : full_trajectories) {
+  MultiObjectTrajectories full_trajectories_refined;
+  for (const auto& [object_id, full_trajectory_j] : full_trajectories) {
     gtsam::Values values;
     gtsam::NonlinearFactorGraph graph;
 
     std::vector<std::pair<FrameId, FrameId>> pose_frame_pairs;
+
+    const auto object_node = map->getObject(object_id);
+    const FrameId last_okf_id = object_node->getLastSeenFrame();
+
+    // only include data up to (and including) the last object keyframe
+    const auto trajectory_j =
+        full_trajectory_j.range(std::nullopt, last_okf_id);
+    full_trajectories_refined.insert2(object_id, trajectory_j);
 
     for (const auto& entry_k : trajectory_j) {
       const Motion3ReferenceFrame& f2f_motion = entry_k.data.motion;
@@ -133,6 +141,12 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       const FrameId to_frame = f2f_motion.to();
       const FrameId from_frame = f2f_motion.from();
       CHECK_EQ(f2f_motion.style(), MotionRepresentationStyle::F2F);
+
+      // dont go past the last object keyframe
+      // while the full trajectory will have more motions!
+      if (to_frame > last_okf_id) {
+        continue;
+      }
 
       pose_frame_pairs.push_back(std::make_pair(from_frame, to_frame));
 
@@ -165,11 +179,11 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
               relative_noise_model);
       graph += relative_object_motion;
 
-      LOG(INFO) << "Adding relative motion constraint " << from_frame << " -> "
-                << to_frame << " graph error: " << graph.error(values);
+      // LOG(INFO) << "Adding relative motion constraint " << from_frame << " ->
+      // "
+      //           << to_frame << " graph error: " << graph.error(values);
 
       if (isObjectKeyFrame(object_id, to_frame)) {
-        LOG(INFO) << to_frame << " is KF";
         const KeyFrameMetaData& kf_data =
             key_frames_per_object_.at(object_id, to_frame);
 
@@ -218,9 +232,10 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
         graph.addPrior<gtsam::Pose3>(object_pose_key, L_W_k_refined,
                                      this->noiseModels().initial_pose_prior);
 
-        LOG(INFO) << "Adding refined KF relative motion constraint " << akf_id
-                  << " -> " << to_frame
-                  << " graph error: " << graph.error(values);
+        // LOG(INFO) << "Adding refined KF relative motion constraint " <<
+        // akf_id
+        //           << " -> " << to_frame
+        //           << " graph error: " << graph.error(values);
 
         // TODO: currently intermediate frame nodes will not exist!!
 
@@ -244,8 +259,8 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
                                        akf_pose_frontend,
                                        this->noiseModels().initial_pose_prior);
 
-          LOG(INFO) << "Adding pose prior at KF pose " << akf_id
-                    << " graph error: " << graph.error(values);
+          // LOG(INFO) << "Adding pose prior at KF pose " << akf_id
+          //           << " graph error: " << graph.error(values);
 
         } else if (kf_data.keyframe_status ==
                    ObjectKeyFrameStatus::RegularKeyFrame) {

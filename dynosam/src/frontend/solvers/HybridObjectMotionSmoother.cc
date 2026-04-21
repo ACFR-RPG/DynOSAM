@@ -324,8 +324,8 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
     is_keyframe = true;
   }
 
-  // need at least some matches to be a good keyframe
-  if (num_matches < 10) {
+  // need at least some detections to be a good keyframe
+  if (num_detections < 10) {
     is_keyframe = false;
   }
 
@@ -898,7 +898,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
       auto factor = boost::make_shared<StereoHybridMotionFactor2>(
           stereo_measurement, L_KF, X_W_k, stereo_noise_model,
-          stereo_calibration_, H_key_k, m_key, true /*throw ceirality*/
+          stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
       );
 
       structured_factors_.insert2(tracklet_id, {factor});
@@ -944,7 +944,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
         } else {
           auto factor = boost::make_shared<StereoHybridMotionFactor2>(
               stereo_measurement, L_KF, X_W_k, stereo_noise_model,
-              stereo_calibration_, H_key_k, m_key, true /*throw ceirality*/
+              stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
           );
 
           measurement_factors.push_back(factor);

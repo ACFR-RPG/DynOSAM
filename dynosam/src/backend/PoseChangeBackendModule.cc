@@ -69,18 +69,11 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
             << " error after " << result.getErrorAfter();
   gtsam::Values optimised_values = smoother_interface.calculateEstimate();
   formulation_->updateTheta(optimised_values);
-  // just for now to test if the updating of the formulation asynchronously is
-  // the pain point!
-  // obviously we still want to update the formulation as immedialelt as
-  // possible! and so that the backend still outputs the latest viz
-
-  const auto camera_trajectory = hybrid_accessor_->getCameraTrajectory();
-  LOG(INFO) << "Camera trajectory has last frame in backend "
-            << camera_trajectory.maxFrame();
 
   // alert frontend
   if (update_callback_) {
     PoseChangeUpdateComplete event;
+    event.starting_frame_id = input->starting_frame_id;
     event.frame_id = input->frame_id;
     event.timestamp = input->timestamp;
     update_callback_(event);

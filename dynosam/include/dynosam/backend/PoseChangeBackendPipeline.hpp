@@ -27,6 +27,7 @@ class PoseChangeBackendPipeline
       // TODO: get frame with latest timestamp
       PoseChangeInput::Ptr latest_pc_input =
           std::const_pointer_cast<PoseChangeInput>(batch_input.back());
+      latest_pc_input->starting_frame_id = batch_input.front()->frame_id;
 
       // LOG(INFO) << "Constructing batch PC input from "
       //           << batch_input.front()->frame_id << " to "

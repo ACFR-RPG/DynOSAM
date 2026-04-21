@@ -12,6 +12,8 @@ namespace dyno {
 struct PoseChangeInput {
   DYNO_POINTER_TYPEDEFS(PoseChangeInput)
 
+  // TODO: for now (batch)
+  FrameId starting_frame_id;
   //! Frame id associated with the creation of this input
   FrameId frame_id;
   //! Timestamp associated with the creation of this input
