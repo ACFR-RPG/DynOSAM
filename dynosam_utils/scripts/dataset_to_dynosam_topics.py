@@ -159,40 +159,67 @@ class DynosamDatasetPublisher(Node):
         if not os.path.exists(intrinsics_path):
             raise RuntimeError(f"Intrinsics file not found at: {intrinsics_path}")
 
-        vals = np.loadtxt(intrinsics_path)
-        cam_info = CameraInfo()
-        cam_info.distortion_model = "plumb_bob"
-        cam_info.d = [0.0] * 5
+        import json
+        with open(intrinsics_path, "r") as f:
+            data = json.load(f)
 
-        # Detect full K matrix
-        if vals.shape == (3, 3):
-            fx, fy = vals[0, 0], vals[1, 1]
-            cx, cy = vals[0, 2], vals[1, 2]
-            width, height = image_shape[1], image_shape[0] if image_shape else 0
-            self.get_logger().info(f"Loaded full K matrix: fx={fx}, fy={fy}, cx={cx}, cy={cy}")
-        elif vals.size == 4:
-            fx, fy, cx, cy = vals.flatten()
-            width, height = image_shape[1], image_shape[0] if image_shape else 0
-            self.get_logger().info(f"Loaded intrinsics vector fx,fy,cx,cy")
-        else:
-            raise RuntimeError(
-                f"Unsupported intrinsics format: {vals.shape}. Provide 3x3 K or fx fy cx cy"
-            )
+            ci = CameraInfo()
 
-        cam_info.width = int(width)
-        cam_info.height = int(height)
+            intr = data["color_intrinsics"]
 
-        cam_info.k = [
-            fx, 0.0, cx,
-            0.0, fy, cy,
-            0.0, 0.0, 1.0
-        ]
+            # Basic parameters
+            ci.width = intr["width"]
+            ci.height = intr["height"]
+            ci.distortion_model = intr["distortion_model"]
 
-        cam_info.p = [
-            fx, 0.0, cx, 0.0,
-            0.0, fy, cy, 0.0,
-            0.0, 0.0, 1.0, 0.0
-        ]
+            # Distortion coefficients
+            ci.d = intr["D"]
+
+            # Intrinsic camera matrix (3x3 row-major)
+            ci.k = intr["K"]
+
+            # Rectification matrix (3x3)
+            ci.r = intr["R"]
+
+            # Projection matrix (3x4)
+            ci.p = intr["P"]
+
+            return ci
+
+        # vals = np.loadtxt(intrinsics_path)
+        # cam_info = CameraInfo()
+        # cam_info.distortion_model = "plumb_bob"
+        # cam_info.d = [0.0] * 5
+
+        # # Detect full K matrix
+        # if vals.shape == (3, 3):
+        #     fx, fy = vals[0, 0], vals[1, 1]
+        #     cx, cy = vals[0, 2], vals[1, 2]
+        #     width, height = image_shape[1], image_shape[0] if image_shape else 0
+        #     self.get_logger().info(f"Loaded full K matrix: fx={fx}, fy={fy}, cx={cx}, cy={cy}")
+        # elif vals.size == 4:
+        #     fx, fy, cx, cy = vals.flatten()
+        #     width, height = image_shape[1], image_shape[0] if image_shape else 0
+        #     self.get_logger().info(f"Loaded intrinsics vector fx,fy,cx,cy")
+        # else:
+        #     raise RuntimeError(
+        #         f"Unsupported intrinsics format: {vals.shape}. Provide 3x3 K or fx fy cx cy"
+        #     )
+
+        # cam_info.width = int(width)
+        # cam_info.height = int(height)
+
+        # cam_info.k = [
+        #     fx, 0.0, cx,
+        #     0.0, fy, cy,
+        #     0.0, 0.0, 1.0
+        # ]
+
+        # cam_info.p = [
+        #     fx, 0.0, cx, 0.0,
+        #     0.0, fy, cy, 0.0,
+        #     0.0, 0.0, 1.0, 0.0
+        # ]
 
         return cam_info
 
@@ -319,8 +346,8 @@ def main():
     parser.add_argument(
         '-i',
         '--intrinsics_file',
-        default='intrinsics.txt',
-        help='Name of intrinsics file inside folder_path (default: intrinsics.txt)'
+        default='camera_parameters.json',
+        help='Name of intrinsics file inside folder_path (default: camera_parameters.json)'
     )
     parser.add_argument('--rgb', action='store_true')
     parser.add_argument('--depth', action='store_true')

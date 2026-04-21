@@ -163,8 +163,9 @@ void RGBDTypeCalibrationHelper::setupNewCameraParams(
   cv::Mat original_K = original_camera_params.getCameraMatrix();
   const cv::Mat distortion = original_camera_params.getDistortionCoeffs();
 
+  double alpha = 0.0;  // crop to valid region
   cv::Mat new_K = cv::getOptimalNewCameraMatrix(
-      original_K, distortion, original_size, 1.0, rescale_size);
+      original_K, distortion, original_size, alpha, rescale_size);
 
   cv::initUndistortRectifyMap(original_K, distortion, cv::Mat(), new_K,
                               rescale_size, CV_32FC1, mapx_, mapy_);
@@ -215,7 +216,7 @@ void RGBDTypeCalibrationHelper::getParamsFromRos(
 
 void RGBDTypeCalibrationHelper::undistortWithMaps(const cv::Mat& src,
                                                   cv::Mat& dst) const {
-  cv::remap(src, dst, mapx_, mapy_, cv::INTER_LINEAR);
+  cv::remap(src, dst, mapx_, mapy_, cv::INTER_LINEAR, cv::BORDER_REPLICATE);
   // output will have the same type as mapx/y so covnert back to required type
   dst.convertTo(dst, src.type());
 }

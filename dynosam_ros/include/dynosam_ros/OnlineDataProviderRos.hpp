@@ -31,6 +31,7 @@
 #pragma once
 
 #include "dynosam/pipeline/PipelineParams.hpp"
+#include "dynosam_cv/StereoCamera.hpp"
 #include "dynosam_ros/DataProviderRos.hpp"
 #include "dynosam_ros/MultiSync.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
@@ -138,6 +139,57 @@ class OnlineDataProviderRos : public DataProviderRos {
 
   std::atomic_bool is_connected{false};
 };
+
+// class ImageRescaler {
+// public:
+//   ImageRescaler(rclcpp::Node::SharedPtr node, const CameraParams&
+//   original_params);
+
+//   void rescale(const cv::Mat& src, cv::Mat& dst) const;
+
+//   CameraParams& getOriginalCameraParams() const;
+//   CameraParams& getRescaledCameraParams() const;
+
+// private:
+//   void setupRescaledCameraParams(
+//     const CameraParams& original_camera_params,
+//     CameraParams& new_camera_params,
+//     const int& rescale_width,
+//     const int& rescale_height);
+
+//   void getRescalingParamsFromRos(
+//     const CameraParams& original_camera_params,
+//     int& rescale_width, int& rescale_height);
+
+// protected:
+//   rclcpp::Node::SharedPtr node_;
+
+// private:
+//   CameraParams::Optional original_camera_params_;
+//   CameraParams::Optional camera_params_;
+
+//   //! Undistort maps
+//   cv::Mat mapx_;
+//   cv::Mat mapy_;
+
+// };
+
+// class StereoCalibrationHelper {
+// public:
+//   StereoCalibrationHelper(rclcpp::Node::SharedPtr node,
+//                             const OnlineDataProviderRosParams& params);
+//   virtual ~StereoCalibrationHelper() = default;
+
+//   const CameraParams::Optional& getOriginalCameraParams() const;
+//   const CameraParams::Optional& getCameraParams() const;
+
+//   void processLeft(const cv::Mat& src, cv::Mat& dst) const;
+//   void processRight(const cv::Mat& src, cv::Mat& dst) const;
+
+// private:
+//   StereoCamera::Ptr stereo_camera_;
+
+// };
 
 /**
  * @brief Class to help setup calibration for undistortion/resizing etc

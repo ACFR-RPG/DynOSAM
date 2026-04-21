@@ -87,9 +87,6 @@ MultiObjectTrajectories Accessor::getMultiObjectTrajectories() const {
     const MotionTrajetory motion_trajectory =
         this->getObjectMotionTrajectory(object_id);
 
-    LOG(INFO) << "j= " << object_id << " " << pose_trajectory;
-    LOG(INFO) << "j= " << object_id << " " << motion_trajectory;
-
     // a motion spans two poses but there *should* always be a but we can
     // consider the first motion of a segment to be identity since we have not
     // observed its motion yet depending on how the underlying formualtion is

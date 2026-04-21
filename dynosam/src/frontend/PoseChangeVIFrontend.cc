@@ -21,6 +21,7 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
       map_(CHECK_NOTNULL(formulation->map())) {
   // TODo
   HybridObjectMotionSolverParams motion_params;
+  motion_params.pnp_ransac_params.ransac_threshold_pnp = 4.0;
 
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
@@ -322,6 +323,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
         dynamic_measurements_kf_k.push_back(dm);
       }
     }
+    // TODO: this will fail when we start adding OKF's for LOST objects
+
     // update map after collecting all measurements for this frame
     map_->updateObservations(dynamic_measurements_kf_k);
 

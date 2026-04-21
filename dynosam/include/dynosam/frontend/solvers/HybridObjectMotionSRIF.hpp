@@ -270,6 +270,10 @@ class FullHybridObjectMotionSRIF : public HybridObjectMotionSolverImpl {
   void removeOutlierTracklets(const TrackletIds& to_remove);
   void marginalizeInInformationForm(const TrackletIds& to_remove);
 
+  void setTrajectory(const PoseWithMotionTrajectory& past_trajectory) override {
+    trajectory_ = past_trajectory;
+  }
+
   // TODO: FOR testing
  private:
   //! Nominal state (linearization point)

@@ -419,8 +419,8 @@ bool Frame::getDynamicCorrespondences(FeaturePairs& correspondences,
       // features on the object
       this->dynamic_features_, UsableObjectLabelPredicate(object_id));
 
-  // LOG(INFO) << "Found " << correspondences.size() << " correspondences for
-  // object instance " << object_id << " " << (correspondences.size() > 0u);
+  LOG(INFO) << "Found " << correspondences.size()
+            << " correspondences for object instance " << object_id;
 
   return correspondences.size() > 0u;
 }
@@ -457,15 +457,17 @@ void Frame::updateDepthsFeatureContainer(
   // auto iter = container.begin();
 
   int count = 0;
+  const cv::Mat depth_img = depth;
 
   // iterate over all features
   for (Feature::Ptr feature : container) {
     // CHECK(feature->usable());
     // const Feature::Ptr& feature = *iter;
-    // const int x = functional_keypoint::u(feature->keypoint_);
-    // const int y = functional_keypoint::v(feature->keypoint_);
-    // const Depth d = depth_mat.at<Depth>(y, x);
-    const Depth d = functional_keypoint::at<Depth>(feature->keypoint(), depth);
+    const int x = functional_keypoint::u(feature->keypoint());
+    const int y = functional_keypoint::v(feature->keypoint());
+    const Depth d = depth_img.at<Depth>(y, x);
+    // const Depth d = functional_keypoint::at<Depth>(feature->keypoint(),
+    // depth);
 
     if (d > max_depth || d <= 0) {
       feature->markInvalid();
@@ -485,8 +487,8 @@ void Frame::updateDepthsFeatureContainer(
     // }
   }
 
-  // LOG(INFO) << count << " features marked invalud due to depth out of " <<
-  // container.size() << " with max depth " << max_depth;
+  VLOG(200) << count << " features marked invalud due to depth out of "
+            << container.size() << " with max depth " << max_depth;
 }
 
 void Frame::constructDynamicObservations() {

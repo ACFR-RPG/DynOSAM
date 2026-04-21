@@ -82,15 +82,15 @@ int main(int argc, char* argv[]) {
   // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
   // CHECK_NOTNULL(detector);
 
-  DynopetsLoader loader(
-      "/root/data/dynoepts/UOPE56/others_20-29-002/others_25");
+  DynopetsLoader loader("/root/data/dynopets_mocap/VAL10Seqs/4_laptop");
 
   FrontendParams fp;
   fp.tracker_params.feature_detector_type =
       TrackerParams::FeatureDetectorType::GFFT_CUDA;
   fp.tracker_params.max_dynamic_features_per_frame = 300;
   fp.tracker_params.prefer_provided_optical_flow = false;
-  fp.tracker_params.prefer_provided_object_detection = false;
+  fp.tracker_params.prefer_provided_object_detection = true;
+  fp.tracker_params.max_dynamic_feature_age = 1000;
   // fp.tracker_params.feature_detector_type =
   // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
 
@@ -102,14 +102,39 @@ int main(int argc, char* argv[]) {
         LOG(INFO) << container->frameId() << " " << container->timestamp();
 
         cv::Mat rgb_viz, motion_viz, depth_viz;
-        motion_viz =
-            ImageType::MotionMask::toRGB(container->objectMotionMask());
+        // motion_viz =
+        //     ImageType::MotionMask::toRGB(container->objectMotionMask());
         depth_viz = ImageType::Depth::toRGB(container->depth());
-        rgb_viz = container->rgb();
+        // rgb_viz = container->rgb();
 
-        cv::imshow("RGB", rgb_viz);
+        // // cv::imshow("RGB", rgb_viz);
         cv::imshow("Depth", depth_viz);
-        cv::imshow("Motion", motion_viz);
+        // // cv::imshow("Motion", motion_viz);
+        // // cv::waitKey(1);
+
+        // ImageContainer image_container(frame_id, timestamp);
+        // image_container.rgb(rgb)
+        //     .depth(depth)
+        //     .opticalFlow(optical_flow)
+        //     .objectMotionMask(motion);
+
+        auto frame_id = container->frameId();
+        auto timestamp = container->timestamp();
+
+        auto frame = tracker->track(frame_id, timestamp, *container);
+        Frame::Ptr previous_frame = tracker->getPreviousFrame();
+
+        LOG(INFO) << to_string(tracker->getTrackerInfo());
+
+        if (previous_frame) {
+          ImageTracksParams track_viz_params(true);
+          track_viz_params.show_intermediate_tracking = true;
+          cv::Mat tracking = tracker->computeFeatureTracks(
+              *previous_frame, *frame, track_viz_params);
+
+          cv::imshow("Tracks", tracking);
+        }
+
         cv::waitKey(1);
       });
 

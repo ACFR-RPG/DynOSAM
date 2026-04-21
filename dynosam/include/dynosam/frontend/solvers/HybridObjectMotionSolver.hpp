@@ -72,7 +72,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   HybridObjectMotionSolverImpl::Ptr createAndInsertFilter(
       ObjectId object_id, Frame::Ptr frame, const TrackletIds& tracklets);
 
-  void deleteObject(ObjectId object_id);
+  void markObjectAsLost(ObjectId object_id);
 
   bool solverExists(ObjectId object_id) const {
     const std::lock_guard<std::mutex> lock(solvers_mutex_);
@@ -81,6 +81,30 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
 
   HybridObjectMotionSolverImpl::Ptr threadSafeFilterAccess(
       ObjectId object_id) const;
+
+  bool threadSafeGetObjectStatus(ObjectId object_id,
+                                 ObjectTrackingStatus& status) const {
+    const std::lock_guard<std::mutex> lock(object_status_mutex_);
+    if (!object_statuses_.exists(object_id)) {
+      return false;
+    }
+
+    status = object_statuses_.at(object_id);
+    return true;
+  }
+
+  bool threadSafeGetNumKeyframes(ObjectId object_id, int& num_keyframes) const {
+    const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
+    if (!num_kfs_per_object_.exists(object_id)) {
+      return false;
+    }
+
+    num_keyframes = num_kfs_per_object_.at(object_id);
+    return true;
+  }
+
+  ObjectPoseChangeInfo& appendPoseChangeInfo(
+      ObjectId object_id, ObjectKeyFrameStatus keyframe_status);
 
  private:
   HybridObjectMotionSolverParams params_;
@@ -91,7 +115,6 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   MultiObjectTrajectories object_trajectories_;
 
   gtsam::FastMap<ObjectId, HybridObjectMotionSolverImpl::Ptr> solvers_;
-  CsvWriter logger_;
   // Info from the last frame. ONly stores change info with keyframes
   gtsam::FastMap<ObjectId, ObjectPoseChangeInfo> pose_change_info_;
 
@@ -99,6 +122,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
 
  private:
   gtsam::FastMap<ObjectId, ObjectTrackingStatus> object_statuses_;
+  gtsam::FastMap<ObjectId, PoseWithMotionTrajectory> past_trajectories_;
   gtsam::FastMap<ObjectId, int> num_kfs_per_object_;
 
   mutable std::mutex object_status_mutex_;

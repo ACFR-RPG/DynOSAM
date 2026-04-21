@@ -41,6 +41,10 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
   PnPOnlySolver(ObjectId object_id, Camera::Ptr camera)
       : HybridObjectMotionSolverImpl(object_id, camera) {}
 
+  void setTrajectory(const PoseWithMotionTrajectory& past_trajectory) override {
+    trajectory_ = past_trajectory;
+  }
+
  public:
   DYNO_POINTER_TYPEDEFS(PnPOnlySolver)
 
@@ -117,17 +121,12 @@ HybridObjectMotionSolver::HybridObjectMotionSolver(
     : params_(params),
       pnp_ransac_solver_(params.pnp_ransac_params, camera_params),
       optical_flow_pose_solver_(params.optical_flow_solver_params),
-      shared_ground_truth_(shared_ground_truth),
-      logger_(
-          CsvHeader("timestamp", "frame_id", "solve_time", "number_tracks")) {
+      shared_ground_truth_(shared_ground_truth) {
   VLOG(10) << "HybridObjectMotionSolver initalised with ground truth "
            << std::boolalpha << shared_ground_truth_.valid();
 }
 
-HybridObjectMotionSolver::~HybridObjectMotionSolver() {
-  const std::string file_out = "hybrid_motion_solver_details.csv";
-  OfstreamWrapper::WriteOutCsvWriter(logger_, getOutputFilePath(file_out));
-}
+HybridObjectMotionSolver::~HybridObjectMotionSolver() {}
 
 void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
                                      MultiObjectTrajectories& trajectories_out,
@@ -144,16 +143,33 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
   for (const auto& [obj_id, _] : frame_k->object_observations_) {
     current_objects.insert(obj_id);
   }
+
+  // clear before solvers loop as we might add to pose change info for any lost
+  // objects
+  pose_change_info_.clear();
+
   for (const auto& [obj_id, _] : solvers_) {
     if (current_objects.find(obj_id) == current_objects.end()) {
-      object_statuses_[obj_id] = ObjectTrackingStatus::Lost;
-      deleteObject(obj_id);
+      // collect status data before marking as lost
+      ObjectTrackingStatus tracking_status;
+      CHECK(this->threadSafeGetObjectStatus(obj_id, tracking_status));
+
+      int num_keyframes;
+      CHECK(this->threadSafeGetNumKeyframes(obj_id, num_keyframes));
+
+      // // now also try and make this is keyframe to refine the whole
+      // trajectory if(tracking_status == ObjectTrackingStatus::WellTracked &&
+      //   num_keyframes > 1) {
+      //     LOG(INFO) << "Making RKF for object j=" << obj_id << ". Reason:
+      //     LOST"; appendPoseChangeInfo(obj_id,
+      //     ObjectKeyFrameStatus::RegularKeyFrame);
+      // }
+
+      markObjectAsLost(obj_id);
       LOG(INFO) << "Object " << obj_id << " marked as Lost at frame "
                 << frame_k->getFrameId();
     }
   }
-
-  pose_change_info_.clear();
 
   // Call base solve
   return ObjectMotionSolver::solve(frame_k, frame_km1, trajectories_out,
@@ -170,18 +186,10 @@ bool HybridObjectMotionSolver::solveImpl(
                                 frame_k->retracked_objects_.end(),
                                 object_id) != frame_k->retracked_objects_.end();
 
-  auto threadSafeGetObjectStatus =
-      [&](ObjectId object_id) -> ObjectTrackingStatus {
-    const std::lock_guard<std::mutex> lock(object_status_mutex_);
-    return object_statuses_[object_id];
-  };
-
   // How does this not break if there is no previous tracking status?
-  const ObjectTrackingStatus previous_tracking_state =
-      threadSafeGetObjectStatus(object_id);
-
-  LOG(INFO) << "Previous tracking state " << to_string(previous_tracking_state)
-            << " " << info_string(frame_k->getFrameId(), object_id);
+  ObjectTrackingStatus previous_tracking_state;
+  const bool has_previous_state =
+      threadSafeGetObjectStatus(object_id, previous_tracking_state);
 
   // get the corresponding feature pairs
   AbsolutePoseCorrespondences dynamic_correspondences;
@@ -207,6 +215,10 @@ bool HybridObjectMotionSolver::solveImpl(
   const TrackletIds& outlier_tracklets = geometric_result.outliers;
   frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
+  LOG(INFO) << "Solved j=" << object_id << "PnP with " << all_tracklets.size()
+            << "tracklets (" << inlier_tracklets.size() << "/"
+            << outlier_tracklets.size() << ")";
+
   if (is_resampled) {
     LOG(INFO) << "Resampled " << info_string(frame_k->getFrameId(), object_id)
               << " with matches n=" << n_matches
@@ -230,11 +242,16 @@ bool HybridObjectMotionSolver::solveImpl(
   }
 
   bool object_retracked = false;
-  if (previous_tracking_state == ObjectTrackingStatus::PoorlyTracked ||
-      previous_tracking_state == ObjectTrackingStatus::Lost) {
-    LOG(INFO) << "Previous tracking status "
-              << to_string(previous_tracking_state) << " setting to retracked";
-    object_retracked = true;
+  if (has_previous_state) {
+    if (previous_tracking_state == ObjectTrackingStatus::PoorlyTracked ||
+        previous_tracking_state == ObjectTrackingStatus::Lost) {
+      LOG(INFO) << "Previous tracking status "
+                << to_string(previous_tracking_state)
+                << " setting to retracked";
+      object_retracked = true;
+    }
+  } else {
+    CHECK(is_new);
   }
 
   const gtsam::Pose3 X_W_k = frame_k->getPose();
@@ -242,7 +259,7 @@ bool HybridObjectMotionSolver::solveImpl(
 
   gtsam::Pose3 G_W_inv = G_W.inverse();
 
-  if (true) {
+  if (false) {
     auto refinement_result = optical_flow_pose_solver_.optimizeAndUpdate(
         frame_km1, frame_k, inlier_tracklets, G_W);
     // still need to take the inverse as we get the inverse of G out
@@ -258,92 +275,115 @@ bool HybridObjectMotionSolver::solveImpl(
   PoseInitalisationMethod pose_init_method{
       PoseInitalisationMethod::NonKeyFrame};
 
+  // bool requires_new_keyframe = false;
+  // if (is_new) {
+  //   createAndInsertFilter(object_id, frame_km1, inlier_tracklets);
+  //   // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+  //   // requires_new_keyframe = true;
+  // } else {
+  //   // const bool new_KF = object_retracked;
+  //   // const bool new_KF = false;
+  //   auto solver = threadSafeFilterAccess(object_id);
+
+  //   {
+  //     auto smoother =
+  //         std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
+  //     if (smoother) {
+  //       // for OMD
+  //       if (smoother && previous_tracking_state != ObjectTrackingStatus::New)
+  //       {
+  //         requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
+  //         // LOG(INFO) << "object j=" << object_id << " TRACKING Q " <<
+  //         quality;
+
+  //         // if(quality < 0.3) {
+  //         //   requires_new_keyframe = true;
+  //         // }
+  //       }
+  //     }
+  //   }
+
+  //   // TODO: now object is not deleted when lost!
+  //   // effects how is_new calculated!
+
+  //   // requires_new_keyframe = object_retracked || is_resampled;
+
+  //   // Must be < min dynamic tracks otherwise there will be no factors
+  //   // connecting the frames!!
+  //   // The object re-tracking
+  //   // must be at least 2 for smoothing factor?
+  //   // if (previous_tracking_state != ObjectTrackingStatus::New &&
+  //   //     frames_since_lkf % FLAGS_hybrid_motion_solver_temporal_kf == 0) {
+  //   //   LOG(INFO) << "New KF due to temporal frame";
+  //   //   requires_new_keyframe = true;
+  //   //   // TODO: should probably temporal frame since the last KF
+  //   //   // definitely since we dont see the object every frame!
+  //   // }
+  //   // and not new? Dont want to make keyframe immedialte after making a
+  //   // keyframe! const bool new_KF = object_retracked ||
+  //   frame_k->getFrameId() %
+  //   // 35 == 0;
+  //   if (requires_new_keyframe) {
+  //     LOG(INFO) << "j=" << object_id << " requires new KF";
+  //     // if previously lost or previously poorly tracked
+  //     if (object_retracked) {
+  //       LOG(INFO) << "Object was poorly tracked or LOST previously. "
+  //                 << "Creating new KF from centroid "
+  //                 << info_string(frame_km1->getFrameId(), object_id);
+  //       // this is a bit like creating a new object so we dont want
+  //       // it to 1. send this motion to the backend or 2. create a new KF
+  //       motion auto new_KF_pose =
+  //           constructObjectPose(object_id, frame_km1, inlier_tracklets);
+  //       solver->createNewKeyedMotion(new_KF_pose, frame_km1,
+  //       inlier_tracklets);
+  //       // // prevents the re-creation of a keyframe at k
+  //       // // // requires new keyframe is true but we should not send this to
+  //       // the backend
+  //       // // // reset num kf to be zero so that upon next keyframe decsion,
+  //       the
+  //       // KF is an anchor
+  //       const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
+  //       num_kfs_per_object_.at(object_id) = 0;
+  //       requires_new_keyframe = false;
+  //       // // actually if we re-track then should we not create new keyframe
+  //       at
+  //       // km1 like as
+  //       // // if the object is new!?
+  //       // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+  //       // pose_init_method = PoseInitalisationMethod::Centroid;
+  //     } else {
+  //       CHECK_EQ(solver->frameId(), frame_km1->getFrameId())
+  //           << "j=" << object_id << " k=" << solver->frameId();
+  //       keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
+
+  //       const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
+  //       const int num_kf = num_kfs_per_object_.at(object_id);
+  //       // ie. is first keyframe
+  //       if (num_kf == 0) {
+  //         LOG(INFO) << "j=" << object_id << " made anchor frame as is first
+  //         KF"; keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+  //       }
+  //       // initalise with previous track
+  //       pose_init_method = PoseInitalisationMethod::Previous;
+  //     }
+  //   }
+  // }
+
   bool requires_new_keyframe = false;
   if (is_new) {
     createAndInsertFilter(object_id, frame_km1, inlier_tracklets);
     // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
     // requires_new_keyframe = true;
-  } else {
-    // const bool new_KF = object_retracked;
-    // const bool new_KF = false;
+  } else if (object_retracked) {
     auto solver = threadSafeFilterAccess(object_id);
+    auto new_KF_pose =
+        constructObjectPose(object_id, frame_km1, inlier_tracklets);
+    solver->createNewKeyedMotion(new_KF_pose, frame_km1, inlier_tracklets);
 
-    {
-      auto smoother =
-          std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
-      if (smoother) {
-        // for OMD
-        if (smoother /*&& smoother->objectId() == 4*/) {
-          requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
-          // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
-
-          // if(quality < 0.3) {
-          //   requires_new_keyframe = true;
-          // }
-        }
-      }
-    }
-
-    // TODO: now object is not deleted when lost!
-    // effects how is_new calculated!
-
-    // requires_new_keyframe = object_retracked || is_resampled;
-
-    // Must be < min dynamic tracks otherwise there will be no factors
-    // connecting the frames!!
-    // The object re-tracking
-    // must be at least 2 for smoothing factor?
-    // if (previous_tracking_state != ObjectTrackingStatus::New &&
-    //     frames_since_lkf % FLAGS_hybrid_motion_solver_temporal_kf == 0) {
-    //   LOG(INFO) << "New KF due to temporal frame";
-    //   requires_new_keyframe = true;
-    //   // TODO: should probably temporal frame since the last KF
-    //   // definitely since we dont see the object every frame!
-    // }
-    // and not new? Dont want to make keyframe immedialte after making a
-    // keyframe! const bool new_KF = object_retracked || frame_k->getFrameId() %
-    // 35 == 0;
-    if (requires_new_keyframe) {
-      LOG(INFO) << "j=" << object_id << " requires new KF";
-      // if previously lost or previously poorly tracked
-      if (object_retracked) {
-        LOG(INFO) << "Object was poorly tracked or LOST previously. "
-                  << "Creating new KF from centroid "
-                  << info_string(frame_km1->getFrameId(), object_id);
-        // this is a bit like creating a new object so we dont want
-        // it to 1. send this motion to the backend or 2. create a new KF motion
-        auto new_KF_pose =
-            constructObjectPose(object_id, frame_km1, inlier_tracklets);
-        solver->createNewKeyedMotion(new_KF_pose, frame_km1, inlier_tracklets);
-        // // prevents the re-creation of a keyframe at k
-        // // // requires new keyframe is true but we should not send this to
-        // the backend
-        // // // reset num kf to be zero so that upon next keyframe decsion, the
-        // KF is an anchor
-        const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
-        num_kfs_per_object_.at(object_id) = 0;
-        requires_new_keyframe = false;
-        // // actually if we re-track then should we not create new keyframe at
-        // km1 like as
-        // // if the object is new!?
-        // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
-        // pose_init_method = PoseInitalisationMethod::Centroid;
-      } else {
-        CHECK_EQ(solver->frameId(), frame_km1->getFrameId())
-            << "j=" << object_id << " k=" << solver->frameId();
-        keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
-
-        const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
-        const int num_kf = num_kfs_per_object_.at(object_id);
-        // ie. is first keyframe
-        if (num_kf == 0) {
-          LOG(INFO) << "j=" << object_id << " made anchor frame as is first KF";
-          keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
-        }
-        // initalise with previous track
-        pose_init_method = PoseInitalisationMethod::Previous;
-      }
-    }
+    const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
+    num_kfs_per_object_.at(object_id) = 0;
+  } else {
+    // auto solver = threadSafeFilterAccess(object_id);
   }
 
   auto solver = threadSafeFilterAccess(object_id);
@@ -364,8 +404,42 @@ bool HybridObjectMotionSolver::solveImpl(
   const auto H_W_km1_k = solver->frameToFrameMotionReference();
   motion_estimate = H_W_km1_k;
 
-  logger_ << frame_k->getTimestamp() << frame_k->getFrameId() << update_time_ms
-          << inlier_tracklets.size();
+  // now see if needs new keyframe
+  if (previous_tracking_state != ObjectTrackingStatus::New) {
+    auto smoother =
+        std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
+    if (smoother) {
+      // for OMD
+      if (smoother && previous_tracking_state != ObjectTrackingStatus::New) {
+        requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
+        // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
+
+        // if(quality < 0.3) {
+        //   requires_new_keyframe = true;
+        // }
+      }
+    }
+
+    if (requires_new_keyframe) {
+      CHECK_EQ(solver->frameId(), frame_k->getFrameId())
+          << "j=" << object_id << " k=" << solver->frameId();
+      keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
+
+      const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
+      const int num_kf = num_kfs_per_object_.at(object_id);
+      // ie. is first keyframe
+      if (num_kf == 0) {
+        LOG(INFO) << "j=" << object_id << " made anchor frame as is first KF";
+        keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+      }
+      // initalise with previous track
+      pose_init_method = PoseInitalisationMethod::Previous;
+    }
+  }
+
+  // double repr_error = solver->reprojectionError(frame_k, inlier_tracklets);
+  // LOG(INFO) << "j=" << object_id << " repr error: " << repr_error;
+
   // always add motion at k not k-1?
   if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
     CHECK(pose_init_method != PoseInitalisationMethod::NonKeyFrame);
@@ -373,12 +447,8 @@ bool HybridObjectMotionSolver::solveImpl(
     // then the estimated motion is from km-1 to k
     // which is NOT what we want to estimate
     // we want KF to k, (where k-1 is the new keyframe?)
-    ObjectPoseChangeInfo info;
-    info.frame_id = solver->frameId();
-    info.H_W_KF_k = solver->keyFrameMotionReference();
-    info.L_W_KF = solver->keyFramePose();
-    info.L_W_k = solver->pose();
-    info.keyframe_status = keyframe_status;
+    const ObjectPoseChangeInfo& info =
+        appendPoseChangeInfo(object_id, keyframe_status);
     CHECK_EQ(info.H_W_KF_k.to(), info.frame_id);
     CHECK_EQ(info.H_W_KF_k.to(), frame_k->getFrameId());
     CHECK(info.isKeyFrame());
@@ -387,12 +457,6 @@ bool HybridObjectMotionSolver::solveImpl(
               << "motion KF: " << info.H_W_KF_k.from()
               << " to: " << info.H_W_KF_k.to()
               << " with kf status: " << info.keyframe_status;
-
-    CHECK(getObjectStructureinL(object_id, info.initial_object_points));
-    {
-      const std::lock_guard<std::mutex> lock(pose_change_info_mutex_);
-      pose_change_info_.insert2(object_id, info);
-    }
   }
 
   // logic is sperate to keyframe status which determines if a new keyframe
@@ -431,16 +495,43 @@ bool HybridObjectMotionSolver::solveImpl(
   return true;
 }
 
-void HybridObjectMotionSolver::deleteObject(ObjectId object_id) {
+ObjectPoseChangeInfo& HybridObjectMotionSolver::appendPoseChangeInfo(
+    ObjectId object_id, ObjectKeyFrameStatus keyframe_status) {
+  auto solver = threadSafeFilterAccess(object_id);
+  CHECK_NOTNULL(solver);
+
+  ObjectPoseChangeInfo info;
+  info.frame_id = solver->frameId();
+  info.H_W_KF_k = solver->keyFrameMotionReference();
+  info.L_W_KF = solver->keyFramePose();
+  info.L_W_k = solver->pose();
+  info.keyframe_status = keyframe_status;
+
+  CHECK(getObjectStructureinL(object_id, info.initial_object_points));
+
+  const std::lock_guard<std::mutex> lock(pose_change_info_mutex_);
+  pose_change_info_.insert2(object_id, info);
+
+  return pose_change_info_.at(object_id);
+}
+
+void HybridObjectMotionSolver::markObjectAsLost(ObjectId object_id) {
   {
-      // const std::lock_guard<std::mutex> lock(solvers_mutex_);
-      // solvers_.erase(object_id);
+    const std::lock_guard<std::mutex> lock(object_status_mutex_);
+    object_statuses_[object_id] = ObjectTrackingStatus::Lost;
   }
 
   {
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
-    // num_kfs_per_object_.erase(object_id);
     num_kfs_per_object_[object_id] = 0;
+  }
+
+  {
+    const std::lock_guard<std::mutex> lock(solvers_mutex_);
+    // set past trajectory before erasing
+    past_trajectories_[object_id] = solvers_.at(object_id)->trajectory();
+
+    solvers_.erase(object_id);
   }
 }
 
@@ -622,6 +713,14 @@ HybridObjectMotionSolver::createAndInsertFilter(ObjectId object_id,
 
   {
     const std::lock_guard<std::mutex> lock(solvers_mutex_);
+
+    if (past_trajectories_.exists(object_id)) {
+      // if we've seen this object before, set its full trajectory
+      // this is mostly so that we can recover its full trajectory
+      // in updateTrajectories
+      solver->setTrajectory(past_trajectories_.at(object_id));
+    }
+
     solvers_.insert2(object_id, solver);
   }
 

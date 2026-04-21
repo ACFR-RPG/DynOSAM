@@ -111,6 +111,16 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
   objectDetection(boundary_mask_result, input_images);
 
+  if (input_images.hasDepth()) {
+    // if we have depth just ignore all places where we have invalid depth
+    // TODO: ideally we we split this based on the static/dynamic max threshold
+    // too so this is account for directly in the tracking
+    cv::Mat& binary_detection_mask = boundary_mask_result.boundary_mask;
+
+    const cv::Mat& depth_image = input_images.depth();
+    binary_detection_mask.setTo(0, depth_image == 0);
+  }
+
   if (!initial_computation_ && params_.use_propogate_mask) {
     utils::ChronoTimingStats timer("propogate_mask");
     propogateMask(input_images);
@@ -120,7 +130,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   std::set<ObjectId> object_keyframes;
 
   auto static_track = [&](FeatureContainer& static_features) {
-    VLOG(20) << "Starting static track";
+    VLOG(60) << "Starting static track";
     utils::ChronoTimingStats static_track_timer("static_feature_track");
     static_features = static_feature_tracker_->trackStatic(
         previous_frame_, input_images, info_,
@@ -129,9 +139,9 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   auto dynamic_track = [&](FeatureContainer& dynamic_features,
                            cv::Mat& dynamic_detection_mask) {
-    VLOG(30) << "Starting dynamic track";
+    VLOG(60) << "Starting dynamic track";
     if (params_.prefer_provided_optical_flow && input_images.hasOpticalFlow()) {
-      VLOG(30) << "Starting dense object feature tracking";
+      VLOG(60) << "Starting dense object feature tracking";
       utils::ChronoTimingStats dynamic_track_timer("dynamic_feature_track");
       trackDynamic(frame_id, input_images, dynamic_features, object_keyframes,
                    dynamic_detection_mask, boundary_mask_result);
@@ -141,7 +151,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
         LOG(WARNING) << "Params specify prefer provided optical flow but input "
                         "is missing! Falling back to KLT";
       }
-      VLOG(30) << "Starting KLT object feature tracking";
+      VLOG(60) << "Starting KLT object feature tracking";
       utils::ChronoTimingStats dynamic_track_timer("dynamic_feature_track_klt");
       trackDynamicKLT(frame_id, input_images, dynamic_features,
                       object_keyframes, dynamic_detection_mask,
@@ -175,11 +185,16 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
     observation.object_id = object_id;
     // bit of a hacky way to get the object masks as actually they should be
     // provided by the detection directly but also we want the dilated mask
+    // TODO: should clone? Really this should all be const
     observation.mask = boundary_mask_result.labelled_boundary_mask == object_id;
     // observation.object_features = dynamic_features.getByObject(object_id);
     observation.bounding_box = bb_detection;
 
     object_observations[object_id] = observation;
+
+    // DEBUG
+    LOG(INFO) << "j=" << object_id << " features size "
+              << dynamic_features.size(object_id);
   }
 
   utils::ChronoTimingStats f_timer("tracking_timer.frame_construction");
@@ -567,6 +582,9 @@ void FeatureTracker::trackDynamicKLT(
         .markInlier()
         .trackletId(tracklet_to_use)
         .keypoint(kp_current);
+
+    CHECK(feature->usable());
+
     return feature;
   };
 
@@ -607,6 +625,8 @@ void FeatureTracker::trackDynamicKLT(
         .trackletId(tracklet_to_use)
         .keypoint(kp_current);
 
+    CHECK(feature->usable());
+
     return feature;
   };
 
@@ -620,6 +640,8 @@ void FeatureTracker::trackDynamicKLT(
     for (const auto& inlier_feature : iter) {
       previous_inliers.add(inlier_feature);
     }
+
+    LOG(INFO) << "All previous dynamic inliers: " << previous_inliers.size();
 
     // All tracklet ids from the set of previous features to track
     TrackletIds tracklet_ids;
@@ -647,6 +669,8 @@ void FeatureTracker::trackDynamicKLT(
       int klt_flags = 0;
       std::vector<uchar> klt_status;
       std::vector<float> err;
+
+      const float kMaxErr = 20.0f;
 
       utils::ChronoTimingStats calc_LK_timer(
           "dynamic_feature_track_klt.calc_LK");
@@ -676,8 +700,9 @@ void FeatureTracker::trackDynamicKLT(
         const bool within_distance =
             distance(previous_pts.at(i),
                      reverse_previous_feature_points.at(i)) <= 0.5;
+        const bool within_error = reverse_err[i] < kMaxErr && err[i] < kMaxErr;
 
-        if (both_status_good && within_distance) {
+        if (both_status_good && within_distance && within_error) {
           klt_status.at(i) = 1;
         } else {
           klt_status.at(i) = 0;
@@ -730,8 +755,6 @@ void FeatureTracker::trackDynamicKLT(
         std::vector<cv::Point2f> previous;
         TrackletIds tracklets;
       };
-
-      const float kMaxErr = 20.0f;
       gtsam::FastMap<ObjectId, Tracklet2DVectors> good_tracks_per_object;
       // collect points per object for outlier rejection with homography
       // can also look at the err?
@@ -781,6 +804,8 @@ void FeatureTracker::trackDynamicKLT(
       }
 
       CHECK_EQ(verified_tracklets.size(), verified_current.size());
+
+      LOG(INFO) << "After verirication: " << verified_tracklets.size();
 
       for (size_t i = 0; i < verified_tracklets.size(); i++) {
         TrackletId tracklet_id = verified_tracklets.at(i);
@@ -1130,6 +1155,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
   VLOG(20) << "End parallel dynamic ANMS";
 }
 
+// TODO: this should really be covarage based somehow...
 void FeatureTracker::requiresSampling(
     std::set<ObjectId>& objects_to_sample, FeatureTrackerInfo& info,
     const ImageContainer& image_container,
@@ -1211,8 +1237,9 @@ void FeatureTracker::requiresSampling(
           are_geriatric++;
         }
       }
+      // TODO: this seems wrong.... should it not be the other way around!
       const bool many_old_points =
-          (double)are_geriatric / (double)num_tracked > 0.8;
+          ((double)are_geriatric / (double)num_tracked) > 0.8;
       // if we have less than N tracks
       const bool too_few_tracks = num_tracked < min_dynamic_tracks;
       // eventually also area based tings
@@ -1223,19 +1250,13 @@ void FeatureTracker::requiresSampling(
           boundary_mask_result.inner_boarder_object_bounding_boxes.at(i);
 
       // bounding box of the tracked feature points on the object
-      cv::Rect tracked_bb;
-      {
-        utils::ChronoTimingStats timing(
-            "dynamic_feature_track_klt.tracking_BB");
-        tracked_bb =
-            cv::boundingRect(per_object_tracks.toOpenCV(nullptr, true));
-      }
-      double iou;
-      {
-        utils::ChronoTimingStats timing("dynamic_feature_track_klt.iou");
-        iou = utils::calculateIoU(detection_bb, tracked_bb);
-      }
+      const cv::Rect tracked_bb =
+          cv::boundingRect(per_object_tracks.toOpenCV(nullptr, true));
+
+      const double iou = utils::calculateIoU(detection_bb, tracked_bb);
       const bool small_iou = iou < min_iou;
+
+      // TODO: should do coverage instead of IOU
 
       const bool needs_sampling =
           many_old_points || too_few_tracks || small_iou;

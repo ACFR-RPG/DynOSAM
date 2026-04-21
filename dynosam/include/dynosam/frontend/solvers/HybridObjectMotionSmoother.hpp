@@ -238,6 +238,10 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   const gtsam::Values& getValuesSinceLastKF() const { return state_since_lKF_; }
 
+  void setTrajectory(const PoseWithMotionTrajectory& past_trajectory) override {
+    trajectory_upto_lKF_ = past_trajectory;
+  }
+
  protected:
   HybridObjectMotionSmoother(ObjectId object_id, Camera::Ptr camera,
                              double smootherLag);
@@ -355,6 +359,8 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   gtsam::Values all_m_L_points_;
 
   gtsam::FastMap<FrameId, gtsam::Pose3> camera_poses_;
+
+  mutable CsvWriter kf_decision_logger_;
 
  private:
   inline gtsam::FixedLagSmootherResult update(

@@ -100,6 +100,7 @@ class VIFrontend : public Frontend {
     CHECK(measurements);
 
     size_t num_added = 0;
+    size_t count = 0;
     for (const Feature::Ptr& f : it) {
       CHECK_NOTNULL(f);
       const TrackletId tracklet_id = f->trackletId();
@@ -108,6 +109,7 @@ class VIFrontend : public Frontend {
       CHECK_EQ(f->objectId(), object_id);
       CHECK_EQ(f->frameId(), frame_id);
       CHECK(Feature::IsUsable(f));
+      count++;
 
       MeasurementWithCovariance<Keypoint> kp_measurement =
           MeasurementWithCovariance<Keypoint>::FromSigmas(kp, pixel_sigmas);
@@ -172,6 +174,8 @@ class VIFrontend : public Frontend {
           ReferenceFrame::LOCAL));
       num_added++;
     }
+
+    // LOG(INFO) << "Count: " << count << " added: " << num_added;
 
     return num_added;
   }

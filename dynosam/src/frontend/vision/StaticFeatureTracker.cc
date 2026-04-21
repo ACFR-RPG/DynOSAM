@@ -654,7 +654,7 @@ bool KltFeatureTracker::shouldResample(const FeatureContainer& tracked_features,
   }
   const bool many_old_points =
       tracked_features.size() > 0 &&
-      (double)are_geriatric / (double)tracked_features.size() > 0.7;
+      ((double)are_geriatric / (double)tracked_features.size()) > 0.7;
 
   const bool poor_tracking = survival_ratio < 0.4;
 
@@ -788,6 +788,8 @@ Feature::Ptr KltFeatureTracker::constructStaticFeatureFromPrevious(
       .trackletId(tracklet_to_use)
       .keypoint(kp_current);
 
+  CHECK(feature->usable());
+
   return feature;
 }
 
@@ -807,6 +809,9 @@ Feature::Ptr KltFeatureTracker::constructNewStaticFeature(
       .markInlier()
       .trackletId(tracklet_to_use)
       .keypoint(kp_current);
+
+  CHECK(feature->usable());
+
   return feature;
 }
 

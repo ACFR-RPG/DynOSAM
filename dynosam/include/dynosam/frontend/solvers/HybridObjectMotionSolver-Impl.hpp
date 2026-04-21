@@ -68,6 +68,10 @@ class HybridObjectMotionSolverImpl {
   virtual void receiveUpdate(const HybridKeyFrameUpdate&){};
 
  protected:
+  friend class HybridObjectMotionSolver;
+  virtual void setTrajectory(
+      const PoseWithMotionTrajectory& past_trajectory) = 0;
+
   const ObjectId object_id_;
   std::shared_ptr<RGBDCamera> rgbd_camera_;
   gtsam::Cal3_S2Stereo::shared_ptr stereo_calibration_;
