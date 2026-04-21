@@ -508,6 +508,7 @@ ISAM2Result ISAM2::update(const NonlinearFactorGraph& newFactors,
 
   if (params_.evaluateNonlinearError)
     update.error(nonlinearFactors_, calculateEstimate(), &result.errorAfter);
+
   return result;
 }
 

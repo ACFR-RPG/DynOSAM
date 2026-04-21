@@ -326,6 +326,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     // TODO: this will fail when we start adding OKF's for LOST objects
 
     // update map after collecting all measurements for this frame
+    LOG(INFO) << "Adding n=" << dynamic_measurements_kf_k.size()
+              << " dyn object measurements to map";
     map_->updateObservations(dynamic_measurements_kf_k);
 
     for (const auto& [object_id, info] : kf_pose_change_infos) {
@@ -346,11 +348,13 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       if (!map_->isObjectKeyFrame(frame_id_motion_from, object_id)) {
         // add measurements at from frame for object motion
         CameraMeasurementStatusVector dynamic_measurements_kf;
-        fillMeasurementsFromFeatureIterator(
+        size_t n = fillMeasurementsFromFeatureIterator(
             &dynamic_measurements_kf,
             rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
             rel_egopose_lkf_j.j_id, rel_egopose_lkf_j.frame_j->getTimestamp(),
             dynamic_pixel_sigmas_, dynamic_point_sigma_);
+        LOG(INFO) << "Adding n=" << n << " dyn object measurements to map at k="
+                  << frame_id_motion_from;
 
         // update map after collecting all measurements for this frame
         map_->updateObservations(dynamic_measurements_kf);
@@ -517,7 +521,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = true;
+  constexpr static bool kParallelSolve = false;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);

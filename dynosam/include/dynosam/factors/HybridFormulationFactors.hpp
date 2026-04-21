@@ -259,6 +259,8 @@ class StereoHybridMotionFactor2
       public StereoHybridMotionFactorBase {
  public:
   using This = StereoHybridMotionFactor2;
+  using shared_ptr = boost::shared_ptr<This>;
+
   using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Point3>;
 
   StereoHybridMotionFactor2(const gtsam::StereoPoint2& measured,
@@ -361,7 +363,6 @@ class BatchStereoHybridMotionFactor3 : public gtsam::NonlinearFactor {
   using Allocator = Eigen::aligned_allocator<StereoHybridMotionFactor3>;
   std::vector<StereoHybridMotionFactor3, Allocator> factors_;
   std::vector<gtsam::DenseIndex> indices_;
-  bool useHessianFactor_{false};
 
   //! Fixed observed point
   gtsam::Point3 m_L_;
@@ -370,11 +371,14 @@ class BatchStereoHybridMotionFactor3 : public gtsam::NonlinearFactor {
   gtsam::SharedNoiseModel noise_model_;
   gtsam::Cal3_S2Stereo::shared_ptr K_;
 
+  bool useHessianFactor_{false};
+
  public:
   BatchStereoHybridMotionFactor3(const gtsam::Point3& m_L,
                                  const gtsam::Pose3& L_KF,
                                  const gtsam::SharedNoiseModel& model,
-                                 gtsam::Cal3_S2Stereo::shared_ptr K);
+                                 gtsam::Cal3_S2Stereo::shared_ptr K,
+                                 bool use_hessian_factor = false);
 
   void print(const std::string& s = "",
              const gtsam::KeyFormatter& keyFormatter =

@@ -516,10 +516,11 @@ void HybridFormulationKeyFrame::updateObject(
   size_t num_points_seen_akf = 0;
   auto seen_lmks_k = object_node->landmarksSeenAtFrame(frame_id_kf);
 
+  LOG(INFO) << "j=" << object_id << " seen lmks= " << seen_lmks_k.size();
+
   for (const auto& obj_lmk_node : seen_lmks_k) {
     CHECK_EQ(obj_lmk_node->objectId(), object_id);
     const TrackletId tracklet_id = obj_lmk_node->trackletId();
-    // LOG(INFO) << "Iterating through dynamic lmk " << tracklet_id;
     const gtsam::Key point_key = this->makeDynamicKey(tracklet_id);
 
     // TODO: seen ay any frame!
@@ -568,14 +569,6 @@ void HybridFormulationKeyFrame::updateObject(
 
     // TODO: seen ay any frame!
     if (factor_not_added_for_lRKF && obj_lmk_node->seenAtFrame(lRKF_id)) {
-      // const gtsam::Key object_motion_key_lrkf =
-      //     frame_node_lrkf->makeObjectMotionKey(object_id);
-      // const gtsam::Key pose_key_lrkf = frame_node_lrkf->makePoseKey();
-
-      // addHybridMotionFactor(new_factors, pose_key_lrkf,
-      // object_motion_key_lrkf,
-      //                       point_key, AKF_pose, obj_lmk_node,
-      //                       frame_node_lrkf);
       addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
                             obj_lmk_node, frame_node_lrkf);
       if (result.debug_info) {
@@ -586,11 +579,14 @@ void HybridFormulationKeyFrame::updateObject(
       frames_with_factors_added.insert(frame_node_lrkf->frameId());
     }
 
-    // addHybridMotionFactor(new_factors, pose_key_kf, object_motion_key_kf,
-    //                       point_key, AKF_pose, obj_lmk_node, frame_node_kf);
     addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
                           obj_lmk_node, frame_node_kf);
     frames_with_factors_added.insert(frame_id_kf);
+
+    if (result.debug_info) {
+      result.debug_info->getObjectInfo(context.getObjectId())
+          .num_dynamic_factors++;
+    }
 
     // sanity check/ backwards adding of points to ensure measurements
     // are added for all possible frames
@@ -616,13 +612,6 @@ void HybridFormulationKeyFrame::updateObject(
         auto frame_node_with_z = map->getFrame(frame_with_z);
         CHECK_NOTNULL(frame_node_with_z);
 
-        // const gtsam::Key object_motion_key =
-        //     frame_node_with_z->makeObjectMotionKey(object_id);
-        // const gtsam::Key pose_key = frame_node_with_z->makePoseKey();
-
-        // addHybridMotionFactor(new_factors, pose_key, object_motion_key,
-        //                       point_key, AKF_pose, obj_lmk_node,
-        //                       frame_node_with_z);
         addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
                               obj_lmk_node, frame_node_with_z);
 

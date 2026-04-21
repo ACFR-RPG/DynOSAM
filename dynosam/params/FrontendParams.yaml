@@ -59,7 +59,7 @@ tracker_params:
   min_distance_btw_tracked_and_detected_static_features: 15
 
 
-  # subpixel_corner_refinement_params: true
+  subpixel_corner_refinement_params: false
   # use_clahe_filter: false
 
   prefer_provided_optical_flow: false

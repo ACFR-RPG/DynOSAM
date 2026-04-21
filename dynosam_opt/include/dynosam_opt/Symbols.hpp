@@ -71,6 +71,7 @@ class DynamicPointSymbol {
 
   /** Cast to integer */
   operator gtsam::Key() const { return key(); }
+  operator gtsam::Symbol() const { return asSymbol(); }
 
   /// Print
   void print(const std::string& s = "") const;

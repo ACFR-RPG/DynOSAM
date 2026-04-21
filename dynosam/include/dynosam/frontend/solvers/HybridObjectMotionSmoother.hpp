@@ -404,6 +404,15 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
   // gtsam::FastMap<TrackletId, std::vector<std::pair<FrameId,
   // gtsam::StereoPoint2>>> awaiting_measurements_;
 
+  // blah: in the current implementation points are not actually marginalized
+  // they are just deleted becuase we remove all factors
+  enum PointState { InState, Marginalized };
+
+  // shoudl replace m_L_points
+  gtsam::FastMap<TrackletId, std::pair<PointState, Landmark>> point_state_;
+  gtsam::FastMap<TrackletId, std::vector<StereoHybridMotionFactor2::shared_ptr>>
+      structured_factors_;
+
   gtsam::FastMap<TrackletId, BatchStereoHybridMotionFactor3::shared_ptr>
       batch_factor_map_;
 
@@ -424,7 +433,7 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
   gtsam::FastMap<gtsam::Key, TrackletIds> object_motion_to_tracklets_;
 
   // For motion only
-  gtsam::FastMap<TrackletId, gtsam::Point3> m_L_points_;
+  // gtsam::FastMap<TrackletId, gtsam::Point3> m_L_points_;
 };
 
 class HybridObjectMotionSmartSmoother : public HybridObjectMotionSmoother {

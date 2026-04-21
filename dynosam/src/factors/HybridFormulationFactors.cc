@@ -179,10 +179,11 @@ gtsam::Vector6 HybridObjectMotion::constantMotionResidual(
     boost::optional<gtsam::Matrix&> J1, boost::optional<gtsam::Matrix&> J2,
     boost::optional<gtsam::Matrix&> J3) {
   // note argument ordering is different!!
- auto residual =
-  [](const gtsam::Pose3& H_W_KF_km2, const gtsam::Pose3& L_W_KFkm2,
-     const gtsam::Pose3& H_W_KF_km1, const gtsam::Pose3& L_W_KFkm1,
-     const gtsam::Pose3& H_W_KF_k,   const gtsam::Pose3& L_W_KFk) -> gtsam::Vector6 {
+  auto residual =
+      [](const gtsam::Pose3& H_W_KF_km2, const gtsam::Pose3& L_W_KFkm2,
+         const gtsam::Pose3& H_W_KF_km1, const gtsam::Pose3& L_W_KFkm1,
+         const gtsam::Pose3& H_W_KF_k,
+         const gtsam::Pose3& L_W_KFk) -> gtsam::Vector6 {
     const gtsam::Pose3 L_k_2 = H_W_KF_km2 * L_W_KFkm2;
     const gtsam::Pose3 L_k_1 = H_W_KF_km1 * L_W_KFkm1;
     const gtsam::Pose3 L_k = H_W_KF_k * L_W_KFk;
@@ -196,34 +197,29 @@ gtsam::Vector6 HybridObjectMotion::constantMotionResidual(
                                               relative_motion);
   };
 
- // Proper wrapper: explicit ordering, no bind
-  auto f =
-    [L_W_KFkm2, L_W_KFkm1, L_W_KFk, &residual]
-    (const gtsam::Pose3& H_km2,
-     const gtsam::Pose3& H_km1,
-     const gtsam::Pose3& H_k) -> gtsam::Vector6 {
-
-      return residual(H_km2, L_W_KFkm2,
-                      H_km1, L_W_KFkm1,
-                      H_k,   L_W_KFk);
-    };
+  // Proper wrapper: explicit ordering, no bind
+  auto f = [L_W_KFkm2, L_W_KFkm1, L_W_KFk, &residual](
+               const gtsam::Pose3& H_km2, const gtsam::Pose3& H_km1,
+               const gtsam::Pose3& H_k) -> gtsam::Vector6 {
+    return residual(H_km2, L_W_KFkm2, H_km1, L_W_KFkm1, H_k, L_W_KFk);
+  };
 
   // Numerical Jacobians
   if (J1) {
-    *J1 = gtsam::numericalDerivative31<
-        gtsam::Vector6, gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>(
+    *J1 = gtsam::numericalDerivative31<gtsam::Vector6, gtsam::Pose3,
+                                       gtsam::Pose3, gtsam::Pose3>(
         f, H_W_KF_km2, H_W_KF_km1, H_W_KF_k);
   }
 
   if (J2) {
-    *J2 = gtsam::numericalDerivative32<
-        gtsam::Vector6, gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>(
+    *J2 = gtsam::numericalDerivative32<gtsam::Vector6, gtsam::Pose3,
+                                       gtsam::Pose3, gtsam::Pose3>(
         f, H_W_KF_km2, H_W_KF_km1, H_W_KF_k);
   }
 
   if (J3) {
-    *J3 = gtsam::numericalDerivative33<
-        gtsam::Vector6, gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>(
+    *J3 = gtsam::numericalDerivative33<gtsam::Vector6, gtsam::Pose3,
+                                       gtsam::Pose3, gtsam::Pose3>(
         f, H_W_KF_km2, H_W_KF_km1, H_W_KF_k);
   }
 
@@ -458,8 +454,13 @@ gtsam::Vector StereoHybridMotionFactor3::evaluateError(
 
 BatchStereoHybridMotionFactor3::BatchStereoHybridMotionFactor3(
     const gtsam::Point3& m_L, const gtsam::Pose3& L_KF,
-    const gtsam::SharedNoiseModel& model, gtsam::Cal3_S2Stereo::shared_ptr K)
-    : m_L_(m_L), L_KF_(L_KF), noise_model_(model), K_(K) {}
+    const gtsam::SharedNoiseModel& model, gtsam::Cal3_S2Stereo::shared_ptr K,
+    bool use_hessian_factor)
+    : m_L_(m_L),
+      L_KF_(L_KF),
+      noise_model_(model),
+      K_(K),
+      useHessianFactor_(use_hessian_factor) {}
 
 double BatchStereoHybridMotionFactor3::error(const gtsam::Values& c) const {
   double total_error = 0.0;

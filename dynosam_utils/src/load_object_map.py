@@ -153,8 +153,8 @@ if __name__ == "__main__":
     # directory = "/root/results/frontend_filtering/omd_MO_test_with_update/"
     directory = "/root/results/frontend_filtering/omd_test/"
     # directory = "/root/results/frontend_filtering/dynoepts_uope_25"
-    # prefix = "doo_"
+    prefix = "doo_"
     prefix = "refined_"
-    object_id = "j4"
+    object_id = "j2"
     pcd_files = load_sorted_object_pcds(directory, object_id, prefix=prefix)
     visualize_spinning_growth(pcd_files)
