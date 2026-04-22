@@ -200,16 +200,6 @@ class NonlinearOptimizer : public SOLVER {
       summary->message = "Solver initialised within error tolerance";
       return;
     }
-
-    // // Return if we already have too many iterations
-    // if (this->template iterations() >= params.maxIterations) {
-    //     if (params.verbosity >= NonlinearOptimizerParams::TERMINATION) {
-    //         // cout << "iterations: " << iterations() << " >? " <<
-    //         params.maxIterations << endl;
-    //     }
-    //     return;
-    // }
-
     // Iterative loop
     double newError = currentError;  // used to avoid repeated calls to error()
     int iterations = 0;
@@ -238,22 +228,8 @@ class NonlinearOptimizer : public SOLVER {
       if (!runCallbacks(options, iteration_summary, summary)) {
         break;
       }
-
-      // Maybe show output
-      // if (params.verbosity >= gtsam::NonlinearOptimizerParams::VALUES)
-      //     this->template values().print("newValues");
-      // if (params.verbosity >= gtsam::NonlinearOptimizerParams::ERROR)
-      // cout << "newError: " << newError << endl;
     } while (
         !shouldTerminate(iterations, currentError, newError, params, summary));
-
-    // Printing if verbose
-    if (params.verbosity >= gtsam::NonlinearOptimizerParams::TERMINATION) {
-      // cout << "iterations: " << iterations() << " >? " <<
-      // params.maxIterations << endl;
-      // if (this->template iterations() >= params.maxIterations)
-      // cout << "Terminating because reached maximum iterations" << endl;
-    }
 
     summary->final_error = newError;
 

@@ -219,6 +219,7 @@ class KltFeatureTracker : public StaticFeatureTracker {
    */
   bool trackPoints(const cv::Mat& current_processed_img,
                    const cv::Mat& previous_processed_img,
+                   const ImageContainer& previous_image_container,
                    const ImageContainer& image_container,
                    const FeatureContainer& previous_features,
                    FeatureContainer& tracked_features,
@@ -277,6 +278,7 @@ class KltFeatureTracker : public StaticFeatureTracker {
 
  private:
   SparseFeatureDetector::Ptr detector_;
+  SparseLKTracker::Ptr lk_tracker_;
 
   // for now!
   cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> lk_cuda_tracker_;

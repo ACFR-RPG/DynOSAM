@@ -21,6 +21,7 @@ struct OpticalFlowAndPoseSolverParams {
   double flow_prior_sigma{3.33};
   double k_huber{0.001};
   bool outlier_reject{true};
+  bool use_robust{false};
   // When true, this indicates that the optical flow images go from k to k+1
   // (rather than k-1 to k, when false) this left over from some original
   // implementations. This param is used when updated the frames after
@@ -60,9 +61,12 @@ class OpticalFlowAndPoseSolver {
     flow_prior_noise_ =
         gtsam::noiseModel::Isotropic::Sigma(2u, params_.flow_prior_sigma);
     flow_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, params_.flow_sigma);
-    flow_noise_ = gtsam::noiseModel::Robust::Create(
-        gtsam::noiseModel::mEstimator::Huber::Create(params_.k_huber),
-        flow_noise_);
+
+    if (params_.use_robust) {
+      flow_noise_ = gtsam::noiseModel::Robust::Create(
+          gtsam::noiseModel::mEstimator::Huber::Create(params_.k_huber),
+          flow_noise_);
+    }
 
     // TODO: if realtime
   }
@@ -167,8 +171,6 @@ class OpticalFlowAndPoseSolver {
     // graph we will mutate by removing outlier factors
     gtsam::NonlinearFactorGraph mutable_graph = graph;
 
-    // gtsam::Values optimised_values = solveLM(values, mutable_graph,
-    // ordering);
     gtsam::Values optimised_values = solveGN(values, mutable_graph, ordering);
 
     gtsam::FactorIndices outlier_factors;

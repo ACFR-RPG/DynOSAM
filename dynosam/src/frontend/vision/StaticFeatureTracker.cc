@@ -235,8 +235,10 @@ KltFeatureTracker::KltFeatureTracker(const TrackerParams& params,
   // default (0) flag
   int klt_flags = 0;
 
-  lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
-      klt_window_size, klt_max_level, klt_criteria.maxCount);
+  // lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
+  //     klt_window_size, klt_max_level, klt_criteria.maxCount);
+  lk_tracker_ = std::make_unique<SparseLKTracker>(
+      klt_window_size, klt_max_level, params.max_features_per_frame);
 
   CHECK_NOTNULL(detector_);
 }
@@ -290,10 +292,11 @@ FeatureContainer KltFeatureTracker::trackStatic(
     TrackletIds previous_outliers;
 
     // track features from the previous frame and detect new ones if necessary
-    CHECK(trackPoints(
-        current_equialized_greyscale, previous_equialized_greyscale,
-        image_container, previous_inliers, new_tracks_and_detections,
-        previous_outliers, tracker_info, detection_mask, R_km1_k));
+    CHECK(
+        trackPoints(current_equialized_greyscale, previous_equialized_greyscale,
+                    previous_frame->imageContainer(), image_container,
+                    previous_inliers, new_tracks_and_detections,
+                    previous_outliers, tracker_info, detection_mask, R_km1_k));
 
     // after tracking, mark features in the older frame as outliers
     // TODO: (jesse) actually not sure we HAVE to do this, but better to keep
@@ -425,15 +428,14 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
   return true;
 }
 
-bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
-                                    const cv::Mat& previous_processed_img,
-                                    const ImageContainer& image_container,
-                                    const FeatureContainer& previous_features,
-                                    FeatureContainer& tracked_features,
-                                    TrackletIds& outlier_previous_features,
-                                    FeatureTrackerInfo& tracker_info,
-                                    const cv::Mat& detection_mask,
-                                    const std::optional<gtsam::Rot3>& R_km1_k) {
+bool KltFeatureTracker::trackPoints(
+    const cv::Mat& current_processed_img, const cv::Mat& previous_processed_img,
+    const ImageContainer& previous_image_container,
+    const ImageContainer& image_container,
+    const FeatureContainer& previous_features,
+    FeatureContainer& tracked_features, TrackletIds& outlier_previous_features,
+    FeatureTrackerInfo& tracker_info, const cv::Mat& detection_mask,
+    const std::optional<gtsam::Rot3>& R_km1_k) {
   if (current_processed_img.empty() || previous_processed_img.empty() ||
       previous_features.empty()) {
     return false;
@@ -444,8 +446,8 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   const cv::Mat& motion_mask = image_container.objectMotionMask();
   const FrameId frame_k = image_container.frameId();
 
-  std::vector<uchar> klt_status;
-  std::vector<float> err;
+  // std::vector<uchar> klt_status;
+  // std::vector<float> err;
   // All tracklet ids from the set of previous features to track
   TrackletIds tracklet_ids;
 
@@ -455,92 +457,119 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   CHECK_EQ(previous_pts.size(), previous_features.size());
   CHECK_EQ(previous_pts.size(), tracklet_ids.size());
 
-  static const cv::Size klt_window_size(21, 21);  // Window size for KLT
-  static const int klt_max_level = 3;             // Max pyramid levels for KLT
-  static const cv::TermCriteria klt_criteria = cv::TermCriteria(
-      cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 30, 0.03);
+  // static const cv::Size klt_window_size(21, 21);  // Window size for KLT
+  // static const int klt_max_level = 3;             // Max pyramid levels for
+  // KLT static const cv::TermCriteria klt_criteria = cv::TermCriteria(
+  //     cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 30, 0.03);
 
   // used as flags argument for calcOpticalFlowPyrLK - initially starts as
   // default (0) flag
-  int klt_flags = 0;
-  std::vector<cv::Point2f> current_points;
+  // int klt_flags = 0;
+
+  // represetns optional current point prediction to parse to the
+  // SparseLKTracker
+  std::vector<cv::Point2f>* predicted_current_points_ptr = nullptr;
+  std::vector<cv::Point2f> predicted_current_points;
   if (R_km1_k) {
-    predictKeypointsGivenRotation(current_points, previous_pts, *R_km1_k);
-    klt_flags = cv::OPTFLOW_USE_INITIAL_FLOW;
-  } else {
-    // as per documentation the vector must have the same size as the input
-    current_points.resize(previous_pts.size());
+    predictKeypointsGivenRotation(predicted_current_points, previous_pts,
+                                  *R_km1_k);
+    CHECK_EQ(predicted_current_points.size(), previous_pts.size());
+    predicted_current_points_ptr = &predicted_current_points;
+    // klt_flags = cv::OPTFLOW_USE_INITIAL_FLOW;
   }
-  CHECK_EQ(current_points.size(), previous_pts.size());
+  // else {
+  //   // as per documentation the vector must have the same size as the input
+  //   current_points.resize(previous_pts.size());
+  // }
+  // CHECK_EQ(current_points.size(), previous_pts.size());
 
-  {
-    // utils::ChronoTimingStats timer("static_feature_track.calc_LK");
-    // cv::cuda::GpuMat gpu_prev_img(previous_processed_img);
-    // cv::cuda::GpuMat gpu_current_img(current_processed_img);
+  // {
+  // utils::ChronoTimingStats timer("static_feature_track.calc_LK");
+  // cv::cuda::GpuMat gpu_prev_img(previous_processed_img);
+  // cv::cuda::GpuMat gpu_current_img(current_processed_img);
 
-    // cv::cuda::GpuMat d_points1(previous_pts);    // upload points
-    // cv::cuda::GpuMat d_points2(current_points);  // output points
-    // cv::cuda::GpuMat d_status;                   // status of each point
-    // cv::cuda::GpuMat d_err;                      // error for each point
+  // cv::cuda::GpuMat d_points1(previous_pts);    // upload points
+  // cv::cuda::GpuMat d_points2(current_points);  // output points
+  // cv::cuda::GpuMat d_status;                   // status of each point
+  // cv::cuda::GpuMat d_err;                      // error for each point
 
-    // lk_cuda_tracker_->calc(gpu_prev_img, gpu_current_img, d_points1,
-    // d_points2,
-    //                        d_status, d_err);
+  // lk_cuda_tracker_->calc(gpu_prev_img, gpu_current_img, d_points1,
+  // d_points2,
+  //                        d_status, d_err);
 
-    // // Download results back to CPU
-    // d_points2.download(current_points);
-    // d_status.download(status);
+  // // Download results back to CPU
+  // d_points2.download(current_points);
+  // d_status.download(status);
 
-    cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
-                             previous_pts, current_points, klt_status, err,
-                             klt_window_size, klt_max_level, klt_criteria,
-                             klt_flags);
+  ImageContainer previous_processed_container(
+      previous_image_container.frameId(), previous_image_container.timestamp());
+  previous_processed_container.rgb(previous_processed_img);
 
-    // if we used OPTFLOW_USE_INITIAL_FLOW check that we actually got good flow
-    if (klt_flags == cv::OPTFLOW_USE_INITIAL_FLOW) {
-      static constexpr int kMinSuccessTracks = 10;
-      int succ_num = 0;
-      for (size_t i = 0; i < klt_status.size(); i++) {
-        if (klt_status[i]) succ_num++;
-      }
-      if (succ_num < kMinSuccessTracks) {
-        LOG(WARNING) << "Using initial flow for KLT tracking failed: only "
-                     << succ_num << " tracked!";
-        cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
-                                 previous_pts, current_points, klt_status, err,
-                                 klt_window_size, klt_max_level, klt_criteria);
-      }
-    }
+  ImageContainer curr_processed_container(image_container.frameId(),
+                                          image_container.timestamp());
+  curr_processed_container.rgb(current_processed_img);
 
-    // check flow back
-    std::vector<cv::Point2f> reverse_previous_feature_points = current_points;
-    std::vector<uchar> klt_reverse_status;
-    cv::calcOpticalFlowPyrLK(current_processed_img, previous_processed_img,
-                             current_points, reverse_previous_feature_points,
-                             klt_reverse_status, err, cv::Size(21, 21), 5);
-    CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
+  // predicted_current_points_ptr will not non null if we have predicted points
+  const LKWorkspace& lk_result =
+      lk_tracker_->track(previous_processed_container, curr_processed_container,
+                         previous_pts, predicted_current_points_ptr);
 
-    auto distance = [](const cv::Point2f& pt1,
-                       const cv::Point2f& pt2) -> float {
-      float dx = pt1.x - pt2.x;
-      float dy = pt1.y - pt2.y;
-      return std::sqrt(dx * dx + dy * dy);
-    };
-    // update klt status based on result from flow
-    for (size_t i = 0; i < klt_status.size(); i++) {
-      const bool both_status_good =
-          klt_status.at(i) && klt_reverse_status.at(i);
-      const bool within_distance =
-          distance(previous_pts.at(i), reverse_previous_feature_points.at(i)) <=
-          0.5;
+  //   cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
+  //                            previous_pts, current_points, klt_status, err,
+  //                            klt_window_size, klt_max_level, klt_criteria,
+  //                            klt_flags);
 
-      if (both_status_good && within_distance) {
-        klt_status.at(i) = 1;
-      } else {
-        klt_status.at(i) = 0;
-      }
-    }
-  }
+  //   // if we used OPTFLOW_USE_INITIAL_FLOW check that we actually got good
+  //   flow if (klt_flags == cv::OPTFLOW_USE_INITIAL_FLOW) {
+  //     static constexpr int kMinSuccessTracks = 10;
+  //     int succ_num = 0;
+  //     for (size_t i = 0; i < klt_status.size(); i++) {
+  //       if (klt_status[i]) succ_num++;
+  //     }
+  //     if (succ_num < kMinSuccessTracks) {
+  //       LOG(WARNING) << "Using initial flow for KLT tracking failed: only "
+  //                    << succ_num << " tracked!";
+  //       cv::calcOpticalFlowPyrLK(previous_processed_img,
+  //       current_processed_img,
+  //                                previous_pts, current_points, klt_status,
+  //                                err, klt_window_size, klt_max_level,
+  //                                klt_criteria);
+  //     }
+  //   }
+
+  //   // check flow back
+  //   std::vector<cv::Point2f> reverse_previous_feature_points =
+  //   current_points; std::vector<uchar> klt_reverse_status;
+  //   cv::calcOpticalFlowPyrLK(current_processed_img, previous_processed_img,
+  //                            current_points, reverse_previous_feature_points,
+  //                            klt_reverse_status, err, cv::Size(21, 21), 5);
+  //   CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
+
+  //   auto distance = [](const cv::Point2f& pt1,
+  //                      const cv::Point2f& pt2) -> float {
+  //     float dx = pt1.x - pt2.x;
+  //     float dy = pt1.y - pt2.y;
+  //     return std::sqrt(dx * dx + dy * dy);
+  //   };
+  //   // update klt status based on result from flow
+  //   for (size_t i = 0; i < klt_status.size(); i++) {
+  //     const bool both_status_good =
+  //         klt_status.at(i) && klt_reverse_status.at(i);
+  //     const bool within_distance =
+  //         distance(previous_pts.at(i), reverse_previous_feature_points.at(i))
+  //         <= 0.5;
+
+  //     if (both_status_good && within_distance) {
+  //       klt_status.at(i) = 1;
+  //     } else {
+  //       klt_status.at(i) = 0;
+  //     }
+  //   }
+  // }
+
+  const auto& klt_status = lk_result.status;
+  const auto& klt_err = lk_result.error;
+  const auto& current_points = lk_result.curr_pts;
 
   CHECK_EQ(previous_pts.size(), current_points.size());
   CHECK_EQ(klt_status.size(), current_points.size());
@@ -548,10 +577,10 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   std::vector<cv::Point2f> good_current, good_previous;
   TrackletIds good_tracklets;
 
+  // TODO: this now happens in the lk tracker!
   const float kMaxErr = 20.0f;
-  // can also look at the err?
   for (size_t i = 0; i < klt_status.size(); i++) {
-    if (klt_status[i] && err[i] < kMaxErr) {
+    if (klt_status[i] && klt_err[i] < kMaxErr) {
       good_current.push_back(current_points.at(i));
       good_previous.push_back(previous_pts.at(i));
       good_tracklets.push_back(tracklet_ids.at(i));

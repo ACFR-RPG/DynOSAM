@@ -110,13 +110,20 @@ double calculateIoU(const cv::Rect& a, const cv::Rect& b);
 bool cvSizeEqual(const cv::Size& a, const cv::Size& b);
 bool cvSizeEqual(const cv::Mat& a, const cv::Mat& b);
 
+template <typename T>
+float distance(const cv::Point_<T>& pt1, const cv::Point_<T>& pt2) {
+  const float dx = static_cast<float>(pt1.x) - static_cast<float>(pt2.x);
+  const float dy = static_cast<float>(pt1.y) - static_cast<float>(pt2.y);
+  return std::sqrt(dx * dx + dy * dy);
+}
+
 /**
  * @brief Returns true of the point is inside bounds of the cv::Mat.
- * 
+ *
  * @param x int. x coordinate to check (cols)
  * @param y int. y coordinate to check (rows)
- * @return true 
- * @return false 
+ * @return true
+ * @return false
  */
 inline bool matContains(const cv::Mat& mat, int x, int y) {
   return x >= 0 && y >= 0 && x < mat.cols && y < mat.rows;

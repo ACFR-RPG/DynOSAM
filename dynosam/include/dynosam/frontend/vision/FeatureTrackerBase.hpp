@@ -83,6 +83,83 @@ class TrackletIdManager {
   static std::unique_ptr<TrackletIdManager> instance_;
 };
 
+struct OpticalFlowPyramid {
+  FrameId frame_id{std::numeric_limits<FrameId>::max()};
+  std::vector<cv::Mat> levels;
+
+  void reserve(int maxLevel) { levels.resize(maxLevel + 1); }
+
+  void clear() {
+    for (auto& lvl : levels) {
+      lvl.release();  // keeps capacity, frees data if needed
+    }
+  }
+};
+
+struct LKWorkspace {
+  std::vector<uchar> status;
+  std::vector<float> error;
+  std::vector<cv::Point2f> curr_pts;
+
+  void reserve(size_t N) {
+    status.reserve(N);
+    error.reserve(N);
+    curr_pts.reserve(N);
+  }
+
+  void resize(size_t N) {
+    status.resize(N);
+    error.resize(N);
+    curr_pts.resize(N);
+  }
+};
+
+class PyramidBuilder {
+ public:
+  PyramidBuilder(const cv::Size& win_size, int max_level);
+  bool build(const ImageContainer& container, OpticalFlowPyramid& pyr) const;
+
+  const cv::Size& winSize() const { return win_size_; }
+  int maxLevel() const { return max_level_; }
+
+ private:
+  cv::Size win_size_;
+  int max_level_;
+};
+
+class SparseLKTracker {
+ public:
+  DYNO_POINTER_TYPEDEFS(SparseLKTracker)
+
+  SparseLKTracker(const cv::Size& win_size, int max_level,
+                  int expected_max_features);
+
+  // current_points if provided is an initial guess of the flow
+  const LKWorkspace& track(
+      const ImageContainer& image_container_km1,
+      const ImageContainer& image_container_k,
+      const std::vector<cv::Point2f>& prev_pts,
+      const std::vector<cv::Point2f>* current_points = nullptr);
+
+ private:
+  void trackImpl(const std::vector<cv::Point2f>& prev_pts,
+                 const OpticalFlowPyramid& previous_pyr,
+                 const OpticalFlowPyramid& current_pyr, int klt_flags,
+                 LKWorkspace& workspace) const;
+
+ private:
+  PyramidBuilder pyr_builder_;
+  cv::TermCriteria criteria_;
+
+  OpticalFlowPyramid previous_pyr_;
+  OpticalFlowPyramid current_pyr_;
+
+  size_t count{0};
+
+  LKWorkspace workspace_;
+  LKWorkspace reverse_workspace_;
+};
+
 /**
  * @brief Parameter struct to control the visualisation for
  * FeatureTrackerBase::computeImageTracks

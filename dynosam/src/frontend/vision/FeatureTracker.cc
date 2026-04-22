@@ -191,10 +191,6 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
     observation.bounding_box = bb_detection;
 
     object_observations[object_id] = observation;
-
-    // DEBUG
-    LOG(INFO) << "j=" << object_id << " features size "
-              << dynamic_features.size(object_id);
   }
 
   utils::ChronoTimingStats f_timer("tracking_timer.frame_construction");
@@ -641,8 +637,6 @@ void FeatureTracker::trackDynamicKLT(
       previous_inliers.add(inlier_feature);
     }
 
-    LOG(INFO) << "All previous dynamic inliers: " << previous_inliers.size();
-
     // All tracklet ids from the set of previous features to track
     TrackletIds tracklet_ids;
     std::vector<cv::Point2f> previous_pts =
@@ -687,19 +681,13 @@ void FeatureTracker::trackDynamicKLT(
           klt_reverse_status, reverse_err, cv::Size(21, 21), 5);
       CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
 
-      auto distance = [](const cv::Point2f& pt1,
-                         const cv::Point2f& pt2) -> float {
-        float dx = pt1.x - pt2.x;
-        float dy = pt1.y - pt2.y;
-        return std::sqrt(dx * dx + dy * dy);
-      };
       // update klt status based on result from flow
       for (size_t i = 0; i < klt_status.size(); i++) {
         const bool both_status_good =
             klt_status.at(i) && klt_reverse_status.at(i);
         const bool within_distance =
-            distance(previous_pts.at(i),
-                     reverse_previous_feature_points.at(i)) <= 0.5;
+            utils::distance(previous_pts.at(i),
+                            reverse_previous_feature_points.at(i)) <= 0.5;
         const bool within_error = reverse_err[i] < kMaxErr && err[i] < kMaxErr;
 
         if (both_status_good && within_distance && within_error) {

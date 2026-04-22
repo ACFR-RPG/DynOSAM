@@ -98,6 +98,7 @@ class Frame {
    * @return const gtsam::Pose3&
    */
   const gtsam::Pose3& getPose() const { return T_world_camera_; }
+  const ImageContainer& imageContainer() const { return image_container_; }
 
   inline const gtsam::FastMap<ObjectId, SingleDetectionResult>&
   getObjectObservations() const {
