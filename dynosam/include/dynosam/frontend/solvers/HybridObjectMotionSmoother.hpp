@@ -406,7 +406,7 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
 
   // blah: in the current implementation points are not actually marginalized
   // they are just deleted becuase we remove all factors
-  enum PointState { InState, Marginalized };
+  enum PointState { InState, Marginalized, PreviousKeyframe };
 
   // shoudl replace m_L_points
   gtsam::FastMap<TrackletId, std::pair<PointState, Landmark>> point_state_;
@@ -416,21 +416,21 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
   gtsam::FastMap<TrackletId, BatchStereoHybridMotionFactor3::shared_ptr>
       batch_factor_map_;
 
-  GenericFactorMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
-      mo_factor_map_;
+  // GenericFactorMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
+  //     mo_factor_map_;
 
   // actually dont think we need this...
   // By last frame, so expected frame-2 and frame-1 to be present
   gtsam::FastMap<FrameId, HybridSmoothingFactor::shared_ptr> smoothing_factors_;
 
-  // FactorMap<BatchStereoHybridMotionFactor3::shared_ptr> mo_factor_map_;
-  gtsam::FastMap<StereoHybridMotionFactor3::shared_ptr, TrackletFramePair>
-      mo_factor_to_tracklet_id_;
+  // // FactorMap<BatchStereoHybridMotionFactor3::shared_ptr> mo_factor_map_;
+  // gtsam::FastMap<StereoHybridMotionFactor3::shared_ptr, TrackletFramePair>
+  //     mo_factor_to_tracklet_id_;
 
-  gtsam::FastMap<TrackletId, FrameIds> trackletid_to_frame_ids_;
-  // Object Motion Symbol to observing tracklets
-  // Allows implicit lookup by frame id since ObjectMotionSymbol uses frame id
-  gtsam::FastMap<gtsam::Key, TrackletIds> object_motion_to_tracklets_;
+  // gtsam::FastMap<TrackletId, FrameIds> trackletid_to_frame_ids_;
+  // // Object Motion Symbol to observing tracklets
+  // // Allows implicit lookup by frame id since ObjectMotionSymbol uses frame
+  // id gtsam::FastMap<gtsam::Key, TrackletIds> object_motion_to_tracklets_;
 
   // For motion only
   // gtsam::FastMap<TrackletId, gtsam::Point3> m_L_points_;

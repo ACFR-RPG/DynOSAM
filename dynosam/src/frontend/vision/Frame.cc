@@ -382,34 +382,6 @@ bool Frame::getDynamicCorrespondences(FeaturePairs& correspondences,
     return false;
   }
 
-  // const SingleDetectionResult& observation =
-  // object_observations_.at(object_id);
-  // // TODO: need to put back on - if we have motion mask, we should just mark
-  // all objects as moving CHECK(observation.marked_as_moving_); const
-  // TrackletIds& tracklets = observation.object_features_;
-
-  // FeatureContainer feature_container;
-  // for(const TrackletId tracklet : tracklets) {
-  //     if(isFeatureUsable(tracklet)) {
-  //         feature_container.add(this->at(tracklet));
-  //     }
-  // }
-
-  // auto current_dynamic_features_iterator = FeatureFilterIterator(
-  //     const_cast<FeatureContainer&>(this->dynamic_features_),
-  //     [object_id](const Feature::Ptr& f) -> bool {
-  //       return Feature::IsUsable(f) && f->objectId() == object_id;
-  //     });
-
-  // // make iterator for the previous dynamic features that ensure each feature
-  // is
-  // // usable and has a matching instance label
-  // auto previous_dynamic_features_iterator = FeatureFilterIterator(
-  //     const_cast<FeatureContainer&>(previous_frame.dynamic_features_),
-  //     [object_id](const Feature::Ptr& f) -> bool {
-  //       return Feature::IsUsable(f) && f->objectId() == object_id;
-  //     });
-
   // get the correspondences from these two iterators
   // we iterate over the current feature container which should only contain
   // features on the object and compare against the container
@@ -418,9 +390,6 @@ bool Frame::getDynamicCorrespondences(FeaturePairs& correspondences,
       // we iterate over the current feature container which should only contain
       // features on the object
       this->dynamic_features_, UsableObjectLabelPredicate(object_id));
-
-  LOG(INFO) << "Found " << correspondences.size()
-            << " correspondences for object instance " << object_id;
 
   return correspondences.size() > 0u;
 }

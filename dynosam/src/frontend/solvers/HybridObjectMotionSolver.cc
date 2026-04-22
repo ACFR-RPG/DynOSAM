@@ -215,10 +215,6 @@ bool HybridObjectMotionSolver::solveImpl(
   const TrackletIds& outlier_tracklets = geometric_result.outliers;
   frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
-  LOG(INFO) << "Solved j=" << object_id << "PnP with " << all_tracklets.size()
-            << "tracklets (" << inlier_tracklets.size() << "/"
-            << outlier_tracklets.size() << ")";
-
   if (is_resampled) {
     LOG(INFO) << "Resampled " << info_string(frame_k->getFrameId(), object_id)
               << " with matches n=" << n_matches
@@ -405,7 +401,8 @@ bool HybridObjectMotionSolver::solveImpl(
   motion_estimate = H_W_km1_k;
 
   // now see if needs new keyframe
-  if (previous_tracking_state != ObjectTrackingStatus::New) {
+  // if (previous_tracking_state != ObjectTrackingStatus::New) {
+  if (previous_tracking_state == ObjectTrackingStatus::WellTracked) {
     auto smoother =
         std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
     if (smoother) {

@@ -28,9 +28,9 @@ HybridObjectMotionSmoother::HybridObjectMotionSmoother(ObjectId object_id,
       logger_prefix_("hms_j" + std::to_string(object_id)),
       isam_(DefaultISAM2Params()),
       smoother_interface_(&isam_),
-      kf_decision_logger_(CsvHeader(
-          "timestamp", "frame_id", "is_keyframe", "coverage", "median_parallax",
-          "frames_since_lkf", "last_kf", "repr_error", "smoother_error")) {
+      kf_decision_logger_(CsvHeader("timestamp", "frame_id", "is_keyframe",
+                                    "coverage", "shape_score", "scale_ratio",
+                                    "frames_since_lkf", "last_kf")) {
   CHECK_NOTNULL(stereo_calibration_);
 }
 
@@ -194,6 +194,156 @@ double HybridObjectMotionSmoother::reprojectionError(
   }
 }
 
+double coverageKeyframeSupportSIMD(const std::vector<Eigen::Vector2d>& pts_kf,
+                                   const std::vector<Eigen::Vector2d>& pts_cur,
+                                   double radius = 10.0) {
+  if (pts_kf.empty() || pts_cur.empty()) return 0.0;
+
+  const int N = pts_cur.size();
+  const double r2 = radius * radius;
+
+  // --- pack current points into matrix (2 x N)
+  Eigen::Matrix2Xd C(2, N);
+  for (int i = 0; i < N; ++i) C.col(i) = pts_cur[i];
+
+  int covered = 0;
+
+  for (const auto& k : pts_kf) {
+    // broadcast subtraction (vectorized)
+    Eigen::ArrayXd dx = C.row(0).array() - k.x();
+    Eigen::ArrayXd dy = C.row(1).array() - k.y();
+
+    // squared distances (SIMD)
+    Eigen::ArrayXd d2 = dx.square() + dy.square();
+
+    // check if any point is within radius
+    if ((d2 < r2).any()) {
+      covered++;
+    }
+  }
+
+  return static_cast<double>(covered) / pts_kf.size();
+}
+
+// bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
+//   // must at least have two frames!
+//   const FrameId frames_since_lkf = frame->getFrameId() - keyFrameId();
+//   if (frames_since_lkf < 2) {
+//     return false;
+//   }
+
+//   const auto& cam_params = frame->getCamera()->getParams();
+
+//   const auto& object_observations = frame->getObjectObservations();
+
+//   // Jesse: not even sure this should happen!
+//   if (!object_observations.exists(object_id_)) {
+//     return false;
+//   }
+
+//   std::vector<Eigen::Vector2d> pts_kf;
+//   std::vector<Eigen::Vector2d> pts_cur;
+
+//   const auto& dynamic_features_lOKF = lOKF_frame_->dynamic_features_;
+
+//   for (const auto& feature : frame->usableDynamicIterator(object_id_)) {
+//     const TrackletId id = feature->trackletId();
+
+//     if (!dynamic_features_lOKF.exists(id)) continue;
+
+//     pts_cur.push_back(feature->keypoint());
+//     pts_kf.push_back(
+//         dynamic_features_lOKF.getByTrackletId(id)->keypoint());
+//   }
+
+//   const auto computeCovariance = [](
+//     const std::vector<Eigen::Vector2d>& pts,
+//     Eigen::Matrix2d& cov,
+//     Eigen::Vector2d& mean) -> void
+//   {
+//      const int N = static_cast<int>(pts.size());
+
+//     if (N == 0) {
+//         cov.setIdentity();
+//         mean.setZero();
+//         return;
+//     }
+
+//     // --- stack into matrix (2 x N)
+//     Eigen::Matrix<double, 2, Eigen::Dynamic> X(2, N);
+
+//     for (int i = 0; i < N; ++i) {
+//         X.col(i) = pts[i];
+//     }
+
+//     // --- mean (vectorized)
+//     mean = X.rowwise().mean();
+
+//     // --- center in one shot
+//     Eigen::Matrix<double, 2, Eigen::Dynamic> Xc =
+//         X.colwise() - mean;
+
+//     // --- covariance (fully batched)
+//     cov = (Xc * Xc.transpose()) / double(N);
+//   };
+
+//   Eigen::Matrix2d cov_kf, cov_cur;
+//   Eigen::Vector2d mean_kf, mean_cur;
+
+//   computeCovariance(pts_kf, cov_kf, mean_kf);
+//   computeCovariance(pts_cur, cov_cur, mean_cur);
+
+//   // --- eigenvalues
+//   Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> solver_kf(cov_kf);
+//   Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> solver_cur(cov_cur);
+
+//   const Eigen::Vector2d eig_kf = solver_kf.eigenvalues();
+//   const Eigen::Vector2d eig_cur = solver_cur.eigenvalues();
+
+//   // --- scale ratio (0..1-ish)
+//   const double scale_ratio =
+//       std::sqrt((eig_cur.sum()) / (eig_kf.sum() + 1e-9));
+
+//   // --- shape score (0..1)
+//   // Eigen guarantees ascending order
+//   const double kf_min = eig_kf(0);
+//   const double kf_max = eig_kf(1);
+
+//   const double cur_min = eig_cur(0);
+//   const double cur_max = eig_cur(1);
+
+//   const double ratio_kf = kf_min / (kf_max + 1e-9);
+//   const double ratio_cur = cur_min / (cur_max + 1e-9);
+
+//   const double shape_score =
+//       std::min(ratio_cur / (ratio_kf + 1e-9),
+//               ratio_kf / (ratio_cur + 1e-9));
+
+//   double coverage = coverageKeyframeSupportSIMD(pts_kf, pts_cur);
+
+//   bool distribution_degraded =
+//     shape_score < 0.3;   // structure collapsed
+
+//   bool coverage_lost =
+//       coverage < 0.3;  // drift outside expected region
+
+//   // 1.0 (ish) means no scale change
+//   // > 1 is increase in size, < 1 is decrease in size.
+//   // scale change is the delta in change
+//   double scale_change = std::abs(scale_ratio - 1.0);
+
+//   bool large_scale_change = scale_change > 0.8;
+
+//   bool need_new_keyframe =
+//       distribution_degraded || coverage_lost || large_scale_change;
+
+//    kf_decision_logger_ << frame->getTimestamp() << frame->getFrameId()
+//                       << need_new_keyframe << coverage << shape_score
+//                       << scale_ratio << frames_since_lkf << keyFrameId();
+
+//   return need_new_keyframe;
+// }
+
 bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
   // must at least have two frames!
   const FrameId frames_since_lkf = frame->getFrameId() - keyFrameId();
@@ -329,10 +479,10 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
     is_keyframe = false;
   }
 
-  kf_decision_logger_ << frame->getTimestamp() << frame->getFrameId()
-                      << is_keyframe << coverage << median_parallax
-                      << frames_since_lkf << keyFrameId() << repr_error
-                      << graph_error;
+  // kf_decision_logger_ << frame->getTimestamp() << frame->getFrameId()
+  //                     << is_keyframe << coverage << median_parallax
+  //                     << frames_since_lkf << keyFrameId() << repr_error
+  //                     << graph_error;
 
   return is_keyframe;
 }
@@ -535,8 +685,6 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
   gtsam::FastVector<size_t> removedFactors;
   boost::optional<gtsam::FastMap<gtsam::Key, int>> constrainedKeys = {};
 
-  LOG(INFO) << "Beginning updateSmoother";
-
   Result result;
   // Update the Timestamps associated with the factor keys
   updateKeyTimestampMap(timestamps);
@@ -610,8 +758,6 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
 
   result.update_time_ms = update_timer.stop();
   result.isam_result = isamResult_;
-
-  LOG(INFO) << "Finished update";
 
   // Marginalize out any needed variables
   if (marginalizableKeys.size() > 0) {
@@ -864,7 +1010,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   size_t avg_feature_age = 0;
 
   size_t points_in_previous_kf = 0;
-  object_motion_to_tracklets_.insert2(H_key_k, TrackletIds{});
+  // object_motion_to_tracklets_.insert2(H_key_k, TrackletIds{});
 
   gtsam::FactorIndices factors_to_delete;
   gtsam::KeyVector keys_that_should_be_deleted;
@@ -886,8 +1032,20 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
     const gtsam::Symbol m_key(PointSymbol(tracklet_id));
 
-    // totally new point
+    // totally new point for this keyframe
     if (!point_state_.exists(tracklet_id)) {
+      // Landmark m_L_init;
+      // // point was in a previous keyframe so use this initalization
+      // if(all_object_points.exists(tracklet_id)) {
+      //   m_L_init = all_object_points.at(tracklet_id);
+      // }
+      // else {
+      //   // initalise new point from measurement
+      //   const gtsam::Point3 m_X_k = frame->backProjectToCamera(tracklet_id);
+      //   m_L_init = HybridObjectMotion::projectToObject3(
+      //       X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
+      // }
+
       const gtsam::Point3 m_X_k = frame->backProjectToCamera(tracklet_id);
       Landmark m_L_init = HybridObjectMotion::projectToObject3(
           X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
@@ -1247,16 +1405,17 @@ gtsam::Pose3 HybridObjectMotionOnlySmoother::keyFrameMotionImpl(
 
 void HybridObjectMotionOnlySmoother::onNewKeyFrameMotion(
     const dyno::ISAM2& smoother_before_reset, const gtsam::Pose3 new_L_KF) {
-  mo_factor_map_.clear();
-  mo_factor_to_tracklet_id_.clear();
-  trackletid_to_frame_ids_.clear();
-  object_motion_to_tracklets_.clear();
+  // mo_factor_map_.clear();
+  // mo_factor_to_tracklet_id_.clear();
+  // trackletid_to_frame_ids_.clear();
+  // object_motion_to_tracklets_.clear();
 
   batch_factor_map_.clear();
 
   // awaiting_measurements_.clear();
   // m_L_points_.clear();
 
+  // isam is cleared so we need to clear the structured factors
   structured_factors_.clear();
   point_state_.clear();
 }
