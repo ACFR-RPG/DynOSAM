@@ -401,8 +401,7 @@ bool HybridObjectMotionSolver::solveImpl(
   motion_estimate = H_W_km1_k;
 
   // now see if needs new keyframe
-  // if (previous_tracking_state != ObjectTrackingStatus::New) {
-  if (previous_tracking_state == ObjectTrackingStatus::WellTracked) {
+  if (previous_tracking_state != ObjectTrackingStatus::New) {
     auto smoother =
         std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
     if (smoother) {

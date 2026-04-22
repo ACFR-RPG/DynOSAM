@@ -9,11 +9,18 @@
 
 namespace dyno {
 
+// kinda hacky but the way the pipelines are set up we need a single type
+// between the frontend and backend
+// but for the PoseChange modules we need to convert the single input
+// into a batch in the pipeline
+// take advatange of polymorphism to do this
 struct PoseChangeInput {
   DYNO_POINTER_TYPEDEFS(PoseChangeInput)
+  virtual ~PoseChangeInput() = default;
+};
 
-  // TODO: for now (batch)
-  FrameId starting_frame_id;
+struct SinglePoseChangeInput : public PoseChangeInput {
+  DYNO_POINTER_TYPEDEFS(SinglePoseChangeInput)
   //! Frame id associated with the creation of this input
   FrameId frame_id;
   //! Timestamp associated with the creation of this input
@@ -21,8 +28,23 @@ struct PoseChangeInput {
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
-  //! Which objects (if any) were invoved in factors/values at this frame
-  ObjectIds involved_objects;
+  //! Record keyframes (objects/camera) for this frame so we know the state of
+  //! the map when this input was generated
+  KeyframeInfo keyframe_info;
+};
+
+// assume construced in temporal order
+struct BatchPoseChangeInput : public PoseChangeInput {
+  DYNO_POINTER_TYPEDEFS(BatchPoseChangeInput)
+  // store as ConstPtr becuase less copying when we construct this input from
+  // the pipeline since all pipelines construct ConstPtr
+  std::vector<SinglePoseChangeInput::ConstPtr> batch;
+
+  FrameId startingFrame() const;
+  FrameId endingFrame() const;
+
+  std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> newValuesAndFactors()
+      const;
 };
 
 class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {

@@ -39,7 +39,7 @@ PoseChangeVIFrontend::~PoseChangeVIFrontend() { logBestEstimates(); }
 void PoseChangeVIFrontend::onBackendUpdateComplete(
     const PoseChangeUpdateComplete& event) {
   // TODO: this is definitely not thread safe
-  const FrameId frame_id = event.frame_id;
+  const FrameId frame_id = event.ending_frame_id;
   const FrameId starting_frame_id = event.starting_frame_id;
 
   LOG(INFO) << "Recieved backend update for frames " << starting_frame_id
@@ -55,21 +55,29 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
         formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
 
     LOG(INFO) << "Logging estimated object structures...";
+    // only log for object keyframes that were part of the latest batch
+    // this prevents logging objects that were NOT keyframes and
+    // only includes objects that have actually been optimized
+    std::unordered_map<ObjectId, FrameId> latest_okf_per_object;
+    std::unordered_set<ObjectId> seen;
 
-    // TODO: later when we use a different map we can check for keyframes etc!!
-    auto frame_node_k = map_->getFrame(frame_id);
-    CHECK_NOTNULL(frame_node_k);
+    const auto& keyframe_infos = event.keyframe_infos;
+    // iterate from largest FrameId → smallest
+    for (auto it = keyframe_infos.rbegin(); it != keyframe_infos.rend(); ++it) {
+      const FrameId frame_id = it->first;
+      const KeyframeInfo& kf_info = it->second;
 
-    // what if this is not an object keyframe (the object structrure will be
-    // bad!) and since we batch the pose change input we dont know which objects
-    // are included! only log for object seen at this frame should log object
-    // structure for those with keyframes (but optimized) between starting_frame
-    // and frame_id todo this we need to know the map state when we made the
-    // PoseChangeInput since the map will be different now (ie. possibly more
-    // object keyframes) between the two batch input frames. should construct a
-    // map state (ie. which frames are keyframes etc) that is send with the
-    // PoseChangeInput and the PoseChangeUpdateComplete
-    for (ObjectId object_id : frame_node_k->objectSeenIds()) {
+      for (const auto& motion : kf_info.object_keyframes) {
+        const ObjectId obj_id = motion.object_id;
+
+        // first time we see it = latest occurrence
+        if (seen.insert(obj_id).second) {
+          latest_okf_per_object[obj_id] = frame_id;
+        }
+      }
+    }
+
+    for (const auto& [object_id, okf_id] : latest_okf_per_object) {
       StatusLandmarkVector points_in_L =
           accessor->getLocalDynamicLandmarkEstimates(object_id);
 
@@ -79,7 +87,7 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
       }
 
       std::string path = dyno::getOutputFilePath(
-          "refined_object_map_k" + std::to_string(frame_id) + "_j" +
+          "refined_object_map_k" + std::to_string(okf_id) + "_j" +
           std::to_string(object_id) + ".pcd");
       VLOG(10) << "Writing object map of size " << points_in_L.size() << " - "
                << path;
@@ -136,9 +144,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
                              Pose3Measurement(identity_pose));
   map_->setCameraKeyFrame(frame_id_k);
 
-  auto pc_input = std::make_shared<PoseChangeInput>();
+  auto pc_input = std::make_shared<SinglePoseChangeInput>();
   pc_input->frame_id = frame_id_k;
   pc_input->timestamp = timestamp_k;
+  pc_input->keyframe_info.camera_keyframe = true;
 
   formulation_->addStatesInitalise(pc_input->new_values, pc_input->new_factors,
                                    frame_id_k, timestamp_k, identity_pose,
@@ -294,9 +303,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   const bool is_any_keyframe = ego_motion_keyframe || any_object_keyframes;
 
   // TODO: may not be used if is_any_keyframe is false
-  auto pc_input = std::make_shared<PoseChangeInput>();
+  auto pc_input = std::make_shared<SinglePoseChangeInput>();
   pc_input->frame_id = frame_id_k;
   pc_input->timestamp = timestamp_k;
+  pc_input->keyframe_info.camera_keyframe = ego_motion_keyframe;
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
@@ -347,6 +357,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       const auto frame_id_motion_from = H_W_KF_k.from();
       CHECK_EQ(H_W_KF_k.to(), frame_id_k);
 
+      // record keyframe info for each object
+      KeyframeInfo::MotionPair object_kf_info{object_id, H_W_KF_k.from(),
+                                              H_W_KF_k.to()};
+      pc_input->keyframe_info.object_keyframes.push_back(object_kf_info);
+
       // add dynamic measurements observed at the from frame
       const RelEgoPoseInfo& rel_egopose_lkf_j =
           rel_egopose_infos_.at(frame_id_motion_from);
@@ -378,8 +393,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       // mark object as keyframe in this frame
       //  the measurements for k have already been addded
       CHECK(map_->setObjectKeyFrame(frame_id_k, object_id));
-
-      pc_input->involved_objects.push_back(object_id);
     }
     // add objects to backend with initial motion estimates
     formulation_->addObjects(frame_id_k, kf_pose_change_infos);
@@ -685,7 +698,7 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
 void PoseChangeVIFrontend::handleCameraKeyframe(
     const RelEgoPoseInfo& rel_lkf_k,
     const UpdateObservationParams& update_params,
-    PostUpdateData& post_update_data, PoseChangeInput::Ptr pc_input) {
+    PostUpdateData& post_update_data, SinglePoseChangeInput::Ptr pc_input) {
   Frame::Ptr frame_k = rel_lkf_k.frame_j;
   const FrameId frame_id_k = frame_k->getFrameId();
   const Timestamp timestamp_k = frame_k->getTimestamp();

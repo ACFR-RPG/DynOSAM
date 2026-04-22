@@ -16,29 +16,30 @@ enum class ObjectKeyFrameStatus {
   AnchorKeyFrame = 2
 };
 
+struct KeyframeInfo {
+  bool camera_keyframe{false};
+
+  struct MotionPair {
+    ObjectId object_id;
+    FrameId from_motion;
+    FrameId to_motion;
+  };
+  std::vector<MotionPair> object_keyframes;
+};
+
+/// @brief Map representing keyframe meta-data for each
+using KeyFrameInfoMap = gtsam::FastMap<FrameId, KeyframeInfo>;
+
 /** Data parsed from the backend to the frontend when an update is complete */
 struct PoseChangeUpdateComplete {
   // for batch data
+  FrameId ending_frame_id;
   FrameId starting_frame_id;
-  FrameId frame_id;
-  Timestamp timestamp;
+  // Records the state of the map for each frame in the batch input
+  // need to record separately as during the optimisation the map state will
+  // change (ie. new keyframes are made)
+  KeyFrameInfoMap keyframe_infos;
 };
-
-// struct KeyframeInfo {
-//   //! FrameId for when this keyframe meta data was created
-//   FrameId frame_id;
-//   bool camera_keyframe{false};
-
-//   struct MotionPair {
-//     ObjectId object_id;
-//     FrameId from_motion;
-//     FrameId to_motion;
-//   }
-//   std::vector<MotionPair> object_keyframes;
-// };
-
-// /// @brief Map representing keyframe meta-data for each
-// using KeyFrameInfoMap = gtsam::FastMap<FrameId, KeyframeInfo>;
 
 using PoseChangeUpdateCompleteCallback =
     std::function<void(const PoseChangeUpdateComplete&)>;

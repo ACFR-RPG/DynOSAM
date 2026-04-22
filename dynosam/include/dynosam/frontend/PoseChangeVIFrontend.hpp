@@ -74,7 +74,7 @@ class PoseChangeVIFrontend : public VIFrontend {
   void handleCameraKeyframe(const RelEgoPoseInfo& rel_lkf_k,
                             const UpdateObservationParams& update_params,
                             PostUpdateData& post_update_data,
-                            PoseChangeInput::Ptr pc_input);
+                            SinglePoseChangeInput::Ptr pc_input);
 
   void logBestEstimates() const;
   void logRealTimeObjectClouds(const ObjectIds& objects,
