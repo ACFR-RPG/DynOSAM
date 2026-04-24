@@ -883,15 +883,15 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
     if (last_okf_optimized < keyFrameId()) {
       // L_KF * L_okfopt^{-1} = H_W_okfopt_KF
-      gtsam::Pose3 L_lKF_opt_KF_ =
-          keyframePose() * range_l_okf_optimized->data.inverse();
+      gtsam::Pose3 H_W_lKF_opt_KF =
+          keyFramePose() * range_l_okf_optimized->data.inverse();
       const gtsam::Pose3 L_lKF_opt_refined =
-          optimized_trajectory.at(frame_id).pose;
+          optimized_trajectory.at(last_okf_optimized).pose;
 
       // using our best latest pose from the backend and the motion from the
       // frontend propogate the
       // TODO: I guess we want to do this all in W space?
-      L_KF_updated = H_W_lKF_opt_KF_ * L_lKF_opt_refined;
+      L_KF_updated = H_W_lKF_opt_KF * L_lKF_opt_refined;
     } else {
       // we have a optimized pose for this object that lies within the active
       // optimisation so we can update the pose directly
