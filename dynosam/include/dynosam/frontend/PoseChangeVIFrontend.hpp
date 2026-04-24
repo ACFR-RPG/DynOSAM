@@ -106,7 +106,6 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   // Mapping of intermediate relative motions. Stored by to frame.
   gtsam::FastMap<FrameId, RelEgoPoseInfo> rel_egopose_infos_;
-  // gtsam::FastMap<FrameId, KeyFrameData> keyframes_;
 };
 
 }  // namespace dyno

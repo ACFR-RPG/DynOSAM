@@ -223,7 +223,7 @@ class Accessor {
   virtual MotionTrajetory getObjectMotionTrajectory(
       ObjectId object_id) const = 0;
 
-  MultiObjectTrajectories getMultiObjectTrajectories() const;
+  virtual MultiObjectTrajectories getMultiObjectTrajectories() const;
 
   /**
    * @brief Get all landmarks (static and dynamic) at time-step k.

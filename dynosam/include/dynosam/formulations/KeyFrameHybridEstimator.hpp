@@ -8,6 +8,8 @@ namespace dyno {
 
 class HybridFormulationKeyFrameAccessor : public HybridAccessor<KeyFrameMap> {
  public:
+  typedef HybridAccessor<KeyFrameMap> Base;
+
   HybridFormulationKeyFrameAccessor(
       const SharedFormulationData::Ptr& shared_data, KeyFrameMap::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
@@ -17,6 +19,10 @@ class HybridFormulationKeyFrameAccessor : public HybridAccessor<KeyFrameMap> {
    * currently in the optimisation problem*/
   PoseTrajectory getCameraTrajectory() const override;
   // TODO: probably should do the same objects
+
+  /** Get multi-object trajectories. Overwirtten to only include keyframes
+   * currently in the optimisation problem*/
+  MultiObjectTrajectories getMultiObjectTrajectories() const override;
 
   /**
    * @brief H_W_lKF_k as a  Motion3ReferenceFrame.
@@ -154,9 +160,9 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
   TrackedPointsPerObject getObjectPoints() const;
   // object points in L for objects observed at frame_id
   TrackedPointsPerObject getObjectPoints(FrameId frame_id) const;
-
-  // uses last frame in state
-  HybridKeyFrameUpdate generateUpdateInfo() const;
+  // helper function
+  // points in local
+  TrackedPointsPerObject getObjectPoints(const ObjectIds& objects) const;
 
   MultiObjectTrajectories refinePerFrameMotionsPGO(
       const MultiObjectTrajectories& full_trajectories) const;
@@ -225,9 +231,6 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
                                   SharedFrameNode frame_node,
                                   ObjectId object_id,
                                   const Motion3ReferenceFrame& motion);
-
-  // helper function
-  TrackedPointsPerObject getObjectPoints(const ObjectIds& objects) const;
 
  protected:
   // neither overridden update callback is used as we directly overwrite the

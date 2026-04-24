@@ -33,11 +33,21 @@ PoseTrajectory HybridFormulationKeyFrameAccessor::getCameraTrajectory() const {
   // only go up to the last frame the backend has finished processing
   const SharedModuleStates* shared_module_states =
       map_->getSharedModuleStates();
-  const FrameId last_backend_frame = shared_module_states->lastOptimizedFrame();
+  const std::optional<FrameId> last_ckf_id_optimized =
+      shared_module_states->getLatestOptimizedFrame();
+
+  // No camera states have been optimized yet
+  if (!last_ckf_id_optimized) {
+    return pose_trajectory;
+  }
+
+  // sanitry check it is actually a keyframe
+  CHECK(map_->isCameraKeyFrame(last_ckf_id_optimized.value()));
+
   for (const auto& frame_CKF : map_->getCameraKeyFrames()) {
     const FrameId frame_id_CKF = frame_CKF->frameId();
     // only include states that have been optimized
-    if (frame_id_CKF > last_backend_frame) {
+    if (frame_id_CKF > last_ckf_id_optimized.value()) {
       continue;
     }
 
@@ -49,6 +59,37 @@ PoseTrajectory HybridFormulationKeyFrameAccessor::getCameraTrajectory() const {
 
   return pose_trajectory;
 }
+
+MultiObjectTrajectories
+HybridFormulationKeyFrameAccessor::getMultiObjectTrajectories() const {
+  // grossly this gets the trajectory with all variables including some not
+  // optimized yet but initlized from the frontend
+  MultiObjectTrajectories full_trajectories =
+      Base::getMultiObjectTrajectories();
+
+  const SharedModuleStates* shared_module_states =
+      map_->getSharedModuleStates();
+
+  MultiObjectTrajectories only_optimized;
+  for (const auto& [object_id, full_traj] : full_trajectories) {
+    const std::optional<FrameId> last_optimized_frame =
+        shared_module_states->getLatestOptimizedFrame(object_id);
+
+    if (!last_optimized_frame) {
+      // no variables for this object have been optimized yet
+      continue;
+    }
+
+    // sanitry check it is actually a keyframe
+    CHECK(map_->isObjectKeyFrame(last_optimized_frame.value(), object_id));
+
+    // get subset of trajectory up to optimized point
+    only_optimized.insert2(object_id,
+                           full_traj.range(std::nullopt, last_optimized_frame));
+  }
+
+  return only_optimized;
+};
 
 StateQuery<Motion3ReferenceFrame>
 HybridFormulationKeyFrameAccessor::getObjectMotionReferenceFrame(
@@ -83,42 +124,15 @@ TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
   return getObjectPoints(frame_node->objectSeenIds());
 }
 
-HybridKeyFrameUpdate HybridFormulationKeyFrame::generateUpdateInfo() const {
-  auto hybrid_accessor =
-      this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
-
-  // what if things are optimising when we do this...?
-  HybridKeyFrameUpdate info;
-  info.frame_id = hybrid_accessor->getLatestFrameId();
-  info.timestamp = hybrid_accessor->getLatestTimestamp();
-  info.camera_trajectory = hybrid_accessor->getCameraTrajectory();
-
-  auto object_trajectories = hybrid_accessor->getMultiObjectTrajectories();
-  auto object_points = getObjectPoints();
-
-  CHECK_EQ(object_trajectories.size(), object_points.size());
-
-  info.object_infos.reserve(object_trajectories.size());
-  for (const auto& [object_id, trajectory] : object_trajectories) {
-    CHECK(object_points.exists(object_id));
-
-    HybridKeyFrameUpdate::Object object_info;
-    object_info.object_id = object_id;
-    object_info.trajectory = trajectory;
-    object_info.object_points = object_points.at(object_id);
-
-    info.object_infos.push_back(std::move(object_info));
-  }
-
-  return info;
-}
-
 // output trajectories only up to last object keyframe
 MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
     const MultiObjectTrajectories& full_trajectories) const {
   auto map = this->map();
   HybridFormulationKeyFrameAccessor::Ptr accessor =
       this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
+
+  // only go up to the last frame the backend has finished processing
+  const SharedModuleStates* shared_module_states = map->getSharedModuleStates();
 
   MultiObjectTrajectories full_trajectories_refined;
   for (const auto& [object_id, full_trajectory_j] : full_trajectories) {
@@ -127,12 +141,21 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
 
     std::vector<std::pair<FrameId, FrameId>> pose_frame_pairs;
 
-    const auto object_node = map->getObject(object_id);
-    const FrameId last_okf_id = object_node->getLastSeenFrame();
+    // The last object keyframe that has actually been optimized
+    const std::optional<FrameId> last_okf_id_optimized =
+        shared_module_states->getLatestOptimizedFrame(object_id);
+
+    // no object states for this object have been optimized yet
+    if (!last_okf_id_optimized) {
+      continue;
+    }
+
+    // sanitry check it is actually a keyframe
+    CHECK(map->isObjectKeyFrame(last_okf_id_optimized.value(), object_id));
 
     // only include data up to (and including) the last object keyframe
     const auto trajectory_j =
-        full_trajectory_j.range(std::nullopt, last_okf_id);
+        full_trajectory_j.range(std::nullopt, last_okf_id_optimized);
     full_trajectories_refined.insert2(object_id, trajectory_j);
 
     for (const auto& entry_k : trajectory_j) {
@@ -141,12 +164,6 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
       const FrameId to_frame = f2f_motion.to();
       const FrameId from_frame = f2f_motion.from();
       CHECK_EQ(f2f_motion.style(), MotionRepresentationStyle::F2F);
-
-      // dont go past the last object keyframe
-      // while the full trajectory will have more motions!
-      if (to_frame > last_okf_id) {
-        continue;
-      }
 
       pose_frame_pairs.push_back(std::make_pair(from_frame, to_frame));
 
@@ -815,16 +832,16 @@ void HybridFormulationKeyFrame::addObjects(
 
       // hopefully the last regular KF is the from frame
       lRKF_id = H_W_RKF_k.from();
-      LOG(INFO) << "Last regular KF " << lRKF_id;
+      // LOG(INFO) << "Last regular KF " << lRKF_id;
 
       // TODO: if this is regular KF then the position of this KF will change
       // according to the motion that is refined
       //  as L_W_k = L_W_KF = H_W_AKF_KF * L_AKF
       front_end_keyframes_.startNewActiveRange(object_id, H_W_RKF_k.to(),
                                                object_info.L_W_k);
-      LOG(INFO) << "Making Regular KF for tracked object "
-                << info_string(H_W_RKF_k.to(), object_id) << " with motion "
-                << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
+      VLOG(40) << "Making Regular KF for tracked object "
+               << info_string(H_W_RKF_k.to(), object_id) << " with motion "
+               << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
 
       const KeyFrameRange::ConstPtr frontend_range =
           front_end_keyframes_.find(object_id, frame_id);
@@ -832,16 +849,16 @@ void HybridFormulationKeyFrame::addObjects(
       // the most recent motion added to the estimator should take us from
       // backend_kf_id to last_kf_id
       const auto [current_kf_id, current_kf_pose] = frontend_range->dataPair();
-      LOG(INFO) << "Current regular KF " << current_kf_id;
+      VLOG(40) << "Current regular KF " << current_kf_id;
 
       // get backend anchor point and confert motion if necessary
       const KeyFrameRange::ConstPtr backend_range =
           CHECK_NOTNULL(key_frame_data_.find(object_id, frame_id));
       const auto [backend_kf_id, backend_kf_pose] = backend_range->dataPair();
-      LOG(INFO) << "Anchor KF id: " << backend_kf_id;
+      VLOG(40) << "Anchor KF id: " << backend_kf_id;
 
-      LOG(INFO) << "Provided object odometry " << H_W_RKF_k.from() << " -> "
-                << H_W_RKF_k.to();
+      VLOG(40) << "Provided object odometry " << H_W_RKF_k.from() << " -> "
+               << H_W_RKF_k.to();
 
       // motion from anchor point to current k
       // this value will be added to the estimator
@@ -857,8 +874,8 @@ void HybridFormulationKeyFrame::addObjects(
 
         // need to transform into correct frame using (ideally the most up to
         // date, i.e estimated motion)
-        LOG(INFO) << "Looking up estimated motion from " << backend_kf_id
-                  << " -> " << lRKF_id;
+        VLOG(40) << "Looking up estimated motion from " << backend_kf_id
+                 << " -> " << lRKF_id;
 
         // TODO: eventually should come from optimizer
         CHECK(initial_H_W_AKF_k_.exists(object_id, lRKF_id));

@@ -106,6 +106,7 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/ParallelObjectISAM.cc
   src/backend/ParallelHybridBackendModule.cc
   src/backend/PoseChangeBackendModule.cc
+  src/backend/PoseChangeBackendPipeline.cc
 
 
   src/formulations/WorldMotionEstimator.cc

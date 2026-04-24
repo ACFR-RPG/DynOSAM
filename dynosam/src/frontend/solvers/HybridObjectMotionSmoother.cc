@@ -142,20 +142,20 @@ gtsam::Pose3 HybridObjectMotionSmoother::getObjectPose(FrameId frame_id) const {
 }
 
 void HybridObjectMotionSmoother::receiveUpdate(
-    const HybridKeyFrameUpdate& update_info) {
-  // see if we have updates for this object. Either way we probably have camera
-  // updates!
-  const HybridKeyFrameUpdate::Object* object_update =
-      update_info.getObject(object_id_);
-
-  if (object_update) {
-    LOG(INFO) << "j= " << object_id_ << " recieved "
-              << object_update->object_points.size() << " points for update";
-
-    const std::lock_guard<std::mutex> lock(update_point_mutex_);
-    has_point_update_ = true;
-    updated_points_ = std::move(object_update->object_points);
+    const PoseChangeUpdateComplete& update_info) {
+  // update does not involve this object (ie. this object did not have a
+  // keyframe in the last batch of optimization)
+  // TODO: we only get updates for objects that had new variables (ie were
+  // keyframes)
+  // but actually other objects may have changed due to joint-opt...!!!
+  if (!update_info.objects.exists(object_id_)) {
+    return;
   }
+
+  const std::lock_guard<std::mutex> lock(backend_update_mutex_);
+  has_backend_update_ = true;
+  // could save some copying by using a const-ptr...
+  backend_update_ = update_info;
 }
 
 double HybridObjectMotionSmoother::reprojectionError(
@@ -816,6 +816,18 @@ void HybridObjectMotionSmoother::createOrderingConstraints(
   }
 }
 
+bool HybridObjectMotionSmoother::takeBackendUpdate(
+    PoseChangeUpdateComplete& backend_update) {
+  const std::lock_guard<std::mutex> lock(backend_update_mutex_);
+  if (!has_backend_update_) {
+    return false;
+  }
+
+  backend_update = std::move(backend_update_);
+  has_backend_update_ = false;
+  return true;
+}
+
 HybridObjectMotionOnlySmoother::Result
 HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     gtsam::Values& smoother_state, const gtsam::Pose3& H_W_KF_k_initial,
@@ -836,72 +848,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
-
-  // is keyframe this frame
-  const bool is_keyframe = frame_id == keyFrameId();
-  // was keyframe one frame ago
-  const bool is_keyframe2 = frame_id - 1u == keyFrameId();
-  const bool try_cross_KF_smoothing =
-      frame_id >= 2 && (is_keyframe || is_keyframe2);
-  // for now lets just warm start the smoother with the last
-  // hack to way to determine if KF
-  // should also add on frame_id - 1 == keyframe id
-  if (false) {
-    const FrameId frame_km1 = frame_id - 1u;
-    const FrameId frame_km2 = frame_id - 2u;
-
-    const gtsam::Symbol H_key_km1(ObjectMotionSymbol(object_id_, frame_km1));
-    const gtsam::Symbol H_key_km2(ObjectMotionSymbol(object_id_, frame_km2));
-
-    if (all_states_.exists(H_key_km1) && all_states_.exists(H_key_km2)) {
-      LOG(INFO) << "On KF - found previous two motion states";
-
-      // All states should be updated to contain the latest state estimate
-      gtsam::Pose3 H_W_KF_km2 = all_states_.at<gtsam::Pose3>(H_key_km2);
-      gtsam::Pose3 H_W_KF_km1 = all_states_.at<gtsam::Pose3>(H_key_km1);
-
-      gtsam::SharedNoiseModel motion_prior =
-          gtsam::noiseModel::Isotropic::Sigma(6u, 0.001);
-
-      // get keyframe pose for previous motions and it SHOULD be different
-      auto kf_data_km2 = keyframe_range_.find(frame_km2);
-      CHECK(kf_data_km2);
-      const auto [KF_km2, LKF_km2] = *kf_data_km2;
-
-      auto kf_data_km1 = keyframe_range_.find(frame_km1);
-      CHECK(kf_data_km1);
-      const auto [KF_km1, LKF_km1] = *kf_data_km1;
-
-      // // previous motions should come from the same keyframe pose (I guess,
-      // // unless somehow tracking bad!?)
-      // CHECK_EQ(KF_km2, KF_km1);
-
-      // TODO: params
-      gtsam::SharedNoiseModel smoothing_motion_model =
-          gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
-
-      auto smoothing_factor = boost::make_shared<HybridSmoothingFactor2>(
-          H_key_km2, H_key_km1, H_key_k, LKF_km2, LKF_km1, L_KF,
-          smoothing_motion_model);
-      new_factors += smoothing_factor;
-
-      // only the latest motion will be in the smoother
-      // therefore add both previous motions so we can connect to them!
-      if (is_keyframe) {
-        CHECK(!isam_.valueExists(H_key_km2));
-        CHECK(!isam_.valueExists(H_key_km1));
-
-        new_values.insert(H_key_km1, H_W_KF_km1);
-        new_values.insert(H_key_km2, H_W_KF_km2);
-
-        //  add prior or marginal covariance?
-        // These shouldn't really change though....
-        new_factors.addPrior<gtsam::Pose3>(H_key_km2, H_W_KF_km2, motion_prior);
-
-        new_factors.addPrior<gtsam::Pose3>(H_key_km1, H_W_KF_km1, motion_prior);
-      }
-    }
-  }
+  gtsam::FastMap<gtsam::FactorIndex, gtsam::KeySet> newly_affected_keys;
 
   KeyTimestampMap timestamps;
   // add motions
@@ -912,18 +859,61 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
   new_values.insert(H_key_k, H_W_KF_k_initial);
 
-  std::vector<std::pair<TrackletId, gtsam::Point3>> points_with_update;
-  {
-    const std::lock_guard<std::mutex> lock(update_point_mutex_);
-    if (has_point_update_) {
-      points_with_update = updated_points_;
-      has_point_update_ = false;
+  PoseChangeUpdateComplete backend_update;
+  if (takeBackendUpdate(backend_update)) {
+    const PoseChangeUpdateComplete::Object& object_update =
+        backend_update.objects.at(object_id_);
+    const auto& optimized_trajectory = object_update.trajectory;
+
+    // TODO: actually trajectory up to current kf
+    // better name is "frozen" trajectory and maybe active trajectory (ie.
+    // local)
+    //  const auto& trajectory_upto_lKF = trajectory_upto_lKF_;
+
+    // in the case that lkast_okf  < current keyframe
+    // we dont have any optimized estimates that current overlap with the active
+    // optimisation but we can still use the latest pose update the keyframe
+    // pose
+    gtsam::Pose3 L_KF_updated;
+    FrameId last_okf_optimized = optimized_trajectory.maxFrame();
+
+    // Test that yes indeed the last frame was a keyframe
+    auto range_l_okf_optimized = keyframe_range_.find(last_okf_optimized);
+    CHECK_NOTNULL(range_l_okf_optimized);
+
+    if (last_okf_optimized < keyFrameId()) {
+      // L_KF * L_okfopt^{-1} = H_W_okfopt_KF
+      gtsam::Pose3 L_lKF_opt_KF_ =
+          keyframePose() * range_l_okf_optimized->data.inverse();
+      const gtsam::Pose3 L_lKF_opt_refined =
+          optimized_trajectory.at(frame_id).pose;
+
+      // using our best latest pose from the backend and the motion from the
+      // frontend propogate the
+      // TODO: I guess we want to do this all in W space?
+      L_KF_updated = H_W_lKF_opt_KF_ * L_lKF_opt_refined;
+    } else {
+      // we have a optimized pose for this object that lies within the active
+      // optimisation so we can update the pose directly
+      CHECK_EQ(last_okf_optimized, keyFrameId());
     }
+
+    // check how many poses/motions overlap with current update
+    FrameIds overlapping_frames;
+    for (FrameId frame_id : frames_since_lKF_) {
+      if (optimized_trajectory.exists(frame_id)) {
+        overlapping_frames.push_back(frame_id);
+      }
+    }
+
+    LOG(WARNING) << "j=" << object_id_ << " has update k=" << frame_id
+                 << ": recieved update with overlapping poses "
+                 << container_to_string(overlapping_frames)
+                 << " and optimized traj:" << optimized_trajectory
+                 << " with l_okf_opt= " << last_okf_optimized
+                 << " current okf=" << keyFrameId();
   }
-
-  gtsam::FastMap<gtsam::FactorIndex, gtsam::KeySet> newly_affected_keys;
-
-  auto factors_in_smoother = getFactors();
+  const gtsam::NonlinearFactorGraph& factors_in_smoother = getFactors();
 
   // if (!points_with_update.empty()) {
   //   // the oldest frame outside the sliding window that is about
@@ -1134,76 +1124,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
         batch_factor->add(stereo_measurement, X_W_k, H_key_k);
       }
     }
-    // if (!m_L_points_.exists(tracklet_id)) {
-    //   const gtsam::Point3 m_X_k = frame->backProjectToCamera(tracklet_id);
-    //   Landmark m_L_init = HybridObjectMotion::projectToObject3(
-    //       X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
-
-    //   // if(all_object_points.exists(tracklet_id)) {
-    //   //   m_L_init = all_object_points.at(tracklet_id);
-    //   // }
-    //   // else {
-    //   //   const gtsam::Point3 m_X_k =
-    //   frame->backProjectToCamera(tracklet_id);
-    //   // // gtsam::Point3 m_W_K_noisy = utils::perturbWithNoise(m_X_k, 0.05);
-
-    //   // // TODO: should use motion from last frame (ie optimzed) to
-    //   // // initalise points
-    //   // m_L_init = HybridObjectMotion::projectToObject3(
-    //   //     X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
-    //   // }
-
-    //   m_L_points_.insert2(tracklet_id, m_L_init);
-
-    //   trackletid_to_frame_ids_.insert2(tracklet_id, FrameIds{});
-
-    //   if (all_object_points.exists(tracklet_id)) {
-    //     points_in_previous_kf++;
-    //   }
-    // }
-    // const TrackletFramePair tracklet_frame_pair{tracklet_id, frame_id};
-    // CHECK(!mo_factor_map_.exists(tracklet_frame_pair)) <<
-    // tracklet_frame_pair;
-
-    // if (!batch_factor_map_.exists(tracklet_id)) {
-    //   auto batch_factor = boost::make_shared<BatchStereoHybridMotionFactor3>(
-    //       m_L_points_.at(tracklet_id), L_KF, stereo_noise_model,
-    //       stereo_calibration_);
-    //   new_factors += batch_factor;
-    //   batch_factor_map_.insert2(tracklet_id, batch_factor);
-    // } else {
-    //   auto batch_factor = batch_factor_map_.at(tracklet_id);
-    //   gtsam::FactorIndex current_slot;
-    //   CHECK(smoother_interface_.safeGetFactorIndex(batch_factor,
-    //   current_slot));
-
-    //   newly_affected_keys.insert2(current_slot, {H_key_k});
-    //   {
-    //     // test!
-    //     const auto factors_in_smoother = getFactors();
-    //     CHECK_LT(current_slot, factors_in_smoother.size());
-
-    //     auto factor_in_smoother = factors_in_smoother.at(current_slot);
-    //     CHECK_EQ(batch_factor, factor_in_smoother);
-    //   }
-    // }
-
-    // auto batch_factor = batch_factor_map_.at(tracklet_id);
-    // batch_factor->add(stereo_measurement, X_W_k, H_key_k);
-
-    // auto factor = boost::make_shared<StereoHybridMotionFactor3>(
-    //     stereo_measurement, L_KF, X_W_k, m_L_points_.at(tracklet_id),
-    //     stereo_noise_model, stereo_calibration_, H_key_k, false);
-
-    // const Slot starting_slot = new_factors.size();
-
-    // mo_factor_map_.insert2(tracklet_frame_pair,
-    //                        std::make_pair(factor, starting_slot));
-    // mo_factor_to_tracklet_id_.insert2(factor, tracklet_frame_pair);
-    // trackletid_to_frame_ids_.at(tracklet_id).push_back(frame_id);
-    // object_motion_to_tracklets_.at(H_key_k).push_back(tracklet_id);
-
-    // new_factors += factor;
 
     num_tracks_used++;
     avg_feature_age += feature->age();
@@ -1221,12 +1141,8 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     gtsam::SharedNoiseModel identity_motion_model =
         gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001);
 
-    // TODO: add prior on this first motion to make it identity!
     new_factors.addPrior<gtsam::Pose3>(H_key_k, gtsam::Pose3::Identity(),
                                        identity_motion_model);
-
-    LOG(INFO) << "# object points in previous kf " << points_in_previous_kf
-              << " new points " << num_tracks_used;
   }
 
   if (frame_id > 2) {
@@ -1244,9 +1160,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     // TODO: ALL motions should use the same L_KF_
     //  if L_KF_ is only updated when we reset internal ISAM then no problem!
     if (isam_.valueExists(H_key_km1) && isam_.valueExists(H_key_km2)) {
-      VLOG(10) << "Adding smoothing factor "
-               << info_string(frame_id, object_id_);
-
       auto smoothing_factor = boost::make_shared<HybridSmoothingFactor>(
           H_key_km2, H_key_km1, H_key_k, L_KF, smoothing_motion_model);
 
@@ -1283,12 +1196,10 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   const gtsam::FactorIndices& new_factor_indicies =
       isam_result.newFactorsIndices;
 
-  if (isam_result.errorBefore && isam_result.errorAfter) {
-    LOG(INFO) << "ISAM error - before: " << isam_result.getErrorBefore()
-              << " after: " << isam_result.getErrorAfter();
-  }
-
-  factors_in_smoother = getFactors();
+  // if (isam_result.errorBefore && isam_result.errorAfter) {
+  //   LOG(INFO) << "ISAM error - before: " << isam_result.getErrorBefore()
+  //             << " after: " << isam_result.getErrorAfter();
+  // }
 
   CHECK_EQ(new_factors.size(), new_factor_indicies.size());
 
@@ -1416,6 +1327,7 @@ void HybridObjectMotionOnlySmoother::onNewKeyFrameMotion(
   // m_L_points_.clear();
 
   // isam is cleared so we need to clear the structured factors
+  smoothing_factors_.clear();
   structured_factors_.clear();
   point_state_.clear();
 }

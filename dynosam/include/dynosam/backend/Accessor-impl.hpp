@@ -87,8 +87,6 @@ AccessorT<MAP, DerivedAccessor>::getObjectPoses(FrameId frame_id) const {
     return pose_estimates;
   }
 
-  // const auto object_seen =
-  //     frame_node->objects_seen.template collectIds<ObjectId>();
   const auto& objects_seen = frame_node->objectsSeen();
   for (const auto& object_node : objects_seen) {
     const ObjectId object_id = object_node->objectId();

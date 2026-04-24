@@ -2,19 +2,6 @@
 
 namespace dyno {
 
-const HybridKeyFrameUpdate::Object* HybridKeyFrameUpdate::getObject(
-    ObjectId object_id) const {
-  auto it = std::find_if(
-      object_infos.begin(), object_infos.end(),
-      [&object_id](const Object& obj) { return obj.object_id == object_id; });
-
-  if (it != object_infos.end()) {
-    return &(*it);
-  } else {
-    return nullptr;
-  }
-}
-
 template <>
 inline std::string to_string(const ObjectKeyFrameStatus& status) {
   std::string status_str = "";

@@ -8,9 +8,6 @@ DEFINE_int32(hybrid_motion_solver, 0,
              "Which solver to use. 0: EIF, 1: Smart Smoother, 2: Full "
              "Smoother, 3: PnP Only");
 
-DEFINE_int32(hybrid_motion_solver_temporal_kf, 7,
-             "How often to temporally force an object KF. For testing");
-
 namespace dyno {
 
 // A class that just uses PnP to solve the motion but looks like a solver object
@@ -586,7 +583,7 @@ bool HybridObjectMotionSolver::getObjectStructureinW(
 }
 
 void HybridObjectMotionSolver::receiveUpdate(
-    const HybridKeyFrameUpdate& update_info) {
+    const PoseChangeUpdateComplete& update_info) {
   LOG(INFO) << "Recieved point update!";
 
   const std::lock_guard<std::mutex> lock(solvers_mutex_);
@@ -594,13 +591,6 @@ void HybridObjectMotionSolver::receiveUpdate(
   for (auto [_, solver] : solvers_) {
     solver->receiveUpdate(update_info);
   }
-  // definitely need more checks, is same keyframe frame etc..
-
-  //
-  // for (const auto& [object_update] : points_per_object) {
-  //   CHECK(solverExists(object_id));
-  //   threadSafeFilterAccess(object_id)->updateObjectPoints(points);
-  // }
 }
 
 gtsam::Pose3 HybridObjectMotionSolver::constructObjectPose(

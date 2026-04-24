@@ -76,8 +76,8 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
 
   auto ground_truth = shared_ground_truth_.access();
   if (ground_truth && ground_truth->exists(packet->frameId())) {
-    VLOG(5) << "Gotten ground truth packet for frame id " << packet->frameId()
-            << ", timestamp=" << packet->timestamp();
+    VLOG(50) << "Gotten ground truth packet for frame id " << packet->frameId()
+             << ", timestamp=" << packet->timestamp();
     ground_truth_packet = ground_truth->at(packet->frameId());
   }
   const Timestamp& timestamp = packet->timestamp();

@@ -35,10 +35,12 @@
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
 
+#include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Timing.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/Symbols.hpp"
+
 // TODO: in latest gtsam this is in gtsam
 #include <gtsam_unstable/nonlinear/BatchFixedLagSmoother.h>
 
@@ -343,12 +345,21 @@ class IncrementalInterface {
 
   IncrementalInterface(Smoother* smoother)
       : smoother_(CHECK_NOTNULL(smoother)) {}
+
+  IncrementalInterface() : smoother_(nullptr) {}
+
   virtual ~IncrementalInterface() = default;
 
   bool optimize(ResultType* result,
                 const FillArguments& update_arguments_filler,
                 const ErrorHandlingHooks& error_hooks =
                     getDefaultILSErrorHandlingHooks()) {
+    if (!isValid()) {
+      LOG(WARNING) << "optimize called in IncrementalInterface with an invalid "
+                      "(null) smoother!";
+      return false;
+    }
+
     CHECK_NOTNULL(result);
     auto tic = utils::Timer::tic();
 
@@ -377,16 +388,22 @@ class IncrementalInterface {
     return *this;
   };
 
+  /* True if the smoother is not null */
+  bool isValid() const { return smoother_ != nullptr; }
+
   // getters
   gtsam::NonlinearFactorGraph getFactors() const {
+    checkAndThrow(isValid(), "Smoother is not valid in IncrementalInterface");
     return SmootherTraitsType::getFactors(*smoother_);
   }
 
   gtsam::Values calculateEstimate() const {
+    checkAndThrow(isValid(), "Smoother is not valid in IncrementalInterface");
     return SmootherTraitsType::calculateEstimate(*smoother_);
   }
 
   gtsam::Values getLinearizationPoint() const {
+    checkAndThrow(isValid(), "Smoother is not valid in IncrementalInterface");
     return SmootherTraitsType::getLinearizationPoint(*smoother_);
   }
 

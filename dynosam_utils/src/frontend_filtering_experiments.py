@@ -329,8 +329,7 @@ def run_hybrid_solver_comparison_omd():
 
     run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_test", omd_dataset,
         "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true",
-        "--pc_smoother_allow_backend_updates=false",
-        "--hybrid_motion_solver_temporal_kf=300",
+        "--pc_smoother_allow_backend_updates=true",
         "--pc_log_object_kf_structure=false",
         "--init_object_pose_from_gt=false")
 

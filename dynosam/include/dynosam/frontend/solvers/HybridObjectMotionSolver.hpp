@@ -45,8 +45,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
     return pose_change_info_;
   }
 
-  // points in L per object (j)
-  void receiveUpdate(const HybridKeyFrameUpdate& update_info);
+  void receiveUpdate(const PoseChangeUpdateComplete& update_info);
 
  protected:
   bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_km1, ObjectId object_id,

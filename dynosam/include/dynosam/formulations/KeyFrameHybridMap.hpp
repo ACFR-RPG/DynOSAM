@@ -137,16 +137,35 @@ class FrameKFNode : public FrameNodeBase<KeyFrameNodeTypes> {
 };
 
 struct SharedModuleStates {
+ public:
   //! Is the backend current optimizing
   std::atomic_bool is_backend_optimizing{false};
-  //! Last frame optimized by the backend
-  std::atomic<FrameId> last_optimized_frame{0};
   //! Indicates the last frame the frontend has finished processing
   std::atomic<FrameId> current_frontend_frame{0};
 
   bool isBackendOptimizing() const { return is_backend_optimizing; }
 
-  FrameId lastOptimizedFrame() const { return last_optimized_frame; }
+  /** Get the largest camera frame that has variables optimized (and therfore
+   * all earlier frames will also have been optimized) */
+  std::optional<FrameId> getLatestOptimizedFrame() const;
+  /** Get the largest object frame that has variables optimized (and therfore
+   * all earlier frames will also have been optimized) */
+  std::optional<FrameId> getLatestOptimizedFrame(ObjectId object_id) const;
+
+ private:
+  friend class PoseChangeVIBackendModule;
+
+  /** Updates internal data-structure by overwritting existing objects with new
+   * frame data */
+  void updateLatestOptFramePerObject(
+      const gtsam::FastMap<ObjectId, FrameId>& latest_frames);
+
+  //! Per object indicates which frame (k) is the latest to have variables
+  //! optimized by the backend. There will be variables corresponding to the
+  //! object which are at later frames becuase the frontend adds new variables
+  //! as they are processed Also includes the camera at j=0
+  gtsam::FastMap<ObjectId, FrameId> latest_optimized_frame_per_object_;
+  std::mutex latest_optimized_frame_per_object_mutex_;
 };
 
 class KeyFrameMap : public Map<KeyFrameNodeTypes> {
@@ -167,6 +186,7 @@ class KeyFrameMap : public Map<KeyFrameNodeTypes> {
   }
 
   bool setCameraKeyFrame(FrameId frame_id);
+
   bool setObjectKeyFrame(FrameId frame_id, ObjectId object_id);
 
   bool isAnyKeyFrame(FrameId frame_id) const;
@@ -174,6 +194,9 @@ class KeyFrameMap : public Map<KeyFrameNodeTypes> {
   bool isObjectKeyFrame(FrameId frame_id, ObjectId object_id) const;
 
   const SharedFrameSet& getCameraKeyFrames() const { return camera_keyframes_; }
+  const gtsam::FastMap<ObjectId, SharedFrameSet>& getObjectKeyFrames() const {
+    return object_keyframes_;
+  }
 
   /**
    * @brief Returns the temporally closest (but earlier) camera keyframe to the
@@ -194,6 +217,10 @@ class KeyFrameMap : public Map<KeyFrameNodeTypes> {
  private:
   //! All camera keyframes. Update with a call to setCameraKeyFrame
   SharedFrameSet camera_keyframes_;
+
+  // All object keyframes stored per object. Update with a call to
+  // setObjectKeyFrame
+  gtsam::FastMap<ObjectId, SharedFrameSet> object_keyframes_;
 
   //! Maybe slightly hacky but it is convenient to store some shared data
   //! between the frontend and the backend here

@@ -195,6 +195,29 @@ std::string type_name() {
 //! Expected label for the background in a semantic or motion mask
 constexpr static ObjectId background_label = 0u;
 
+// TODO: really should use this class a lot more but was only recently
+// introduced (~April 2026)
+//  ie in the object frame generic map raher than using nested maps!
+struct FrameObjectPair {
+  FrameId frame_id;
+  ObjectId object_id;
+
+  bool operator==(const FrameObjectPair& other) const {
+    return object_id == other.object_id && frame_id == other.frame_id;
+  }
+
+  bool operator<(const FrameObjectPair& other) const {
+    return std::tie(object_id, frame_id) <
+           std::tie(other.object_id, other.frame_id);
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const FrameObjectPair& t) {
+    os << "[frame id: " << t.frame_id << " ";
+    os << "object id: " << t.object_id << "]";
+    return os;
+  }
+};
+
 enum KeyPointType { STATIC, DYNAMIC };
 
 enum ReferenceFrame { GLOBAL, LOCAL, OBJECT };

@@ -793,8 +793,6 @@ void FeatureTracker::trackDynamicKLT(
 
       CHECK_EQ(verified_tracklets.size(), verified_current.size());
 
-      LOG(INFO) << "After verirication: " << verified_tracklets.size();
-
       for (size_t i = 0; i < verified_tracklets.size(); i++) {
         TrackletId tracklet_id = verified_tracklets.at(i);
 
@@ -1150,14 +1148,8 @@ void FeatureTracker::requiresSampling(
     const gtsam::FastMap<ObjectId, FeatureContainer>& features_per_object,
     const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
     const cv::Mat& dynamic_tracking_mask) const {
-  VLOG(20) << "Starting sampling check";
+  // VLOG(20) << "Starting sampling check";
   ObjectIds detected_objects = boundary_mask_result.objects_detected;
-
-  // {
-  //   utils::ChronoTimingStats
-  //   timing("dynamic_feature_track_klt.get_labels"); detected_objects =
-  //   vision_tools::getObjectLabels(image_container.objectMotionMask());
-  // }
 
   {
     // sanity check assert
@@ -1168,24 +1160,6 @@ void FeatureTracker::requiresSampling(
         << container_to_string(boundary_mask_result.objects_detected)
         << " this could happen if the object mask changes dramatically...!!";
   }
-
-  // NOTE: the object_reampled info is epeated on objects_to_sample
-  // but during testing trying not to change the functional interface!!
-  //  if (!previous_frame_) {
-  //    if (!detected_objects.empty()) {
-  //      VLOG(5) << "All objects sampled as first frame";
-  //      objects_to_sample.insert(detected_objects.begin(),
-  //                               detected_objects.end());
-  //      for(const ObjectId& object_id : objects_to_sample) {
-  //        CHECK(!info.dynamic_track.exists(object_id));
-  //        // this will make a new object status
-  //        auto& per_object_status = info.getObjectStatus(object_id);
-  //        per_object_status.object_new = true;
-  //        per_object_status.object_resampled = true;
-  //      }
-  //    }
-  //    return;
-  //  }
 
   const int& max_dynamic_point_age = params_.max_dynamic_feature_age;
   // bascially how early we want to retrack points based on their expiry
@@ -1270,8 +1244,6 @@ void FeatureTracker::requiresSampling(
       per_object_status.object_resampled = true;
     }
   }
-
-  VLOG(20) << "Finished sampling check";
 }
 
 bool FeatureTracker::objectDetection(
@@ -1300,7 +1272,7 @@ bool FeatureTracker::objectDetection(
       cv::Mat object_mask = image_container.objectMotionMask();
       // NOTE: importantly this will calculate the observed objects in this
       // frame so we dont need to recalculate!
-      VLOG(30) << "Using provided object detection mask k="
+      VLOG(50) << "Using provided object detection mask k="
                << image_container.frameId();
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, object_mask, scaled_boarder_thickness,
@@ -1312,7 +1284,7 @@ bool FeatureTracker::objectDetection(
     }
   } else {
     CHECK(object_detection_);
-    VLOG(30) << "Running object detection and tracking inference k="
+    VLOG(50) << "Running object detection and tracking inference k="
              << image_container.frameId();
     ObjectDetectionResult detection_result;
     {

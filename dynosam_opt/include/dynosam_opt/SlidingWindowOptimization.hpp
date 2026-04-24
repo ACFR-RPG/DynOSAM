@@ -91,7 +91,7 @@ class SlidingWindowOptimization {
   gtsam::NonlinearFactorGraph priorFactors_;
 
   std::deque<FrameId> frame_window_;
-  gtsam::FastMap<gtsam::Key, FrameId> key_frameid_map_;
+  gtsam::FastMap<gtsam::Key, FrameId> key_kf_index_map_;
 
   //! Keys that have been successfully marginalized
   gtsam::KeySet marginalized_keys_;

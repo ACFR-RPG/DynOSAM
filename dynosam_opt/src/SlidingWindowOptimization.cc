@@ -44,7 +44,7 @@ SWOptimizationResult SlidingWindowOptimization::update(
     const gtsam::Values& new_values, FrameId frame_id) {
   // initalise timestamps
   for (const auto& [key, _] : new_values) {
-    key_frameid_map_[key] = frame_id;
+    key_kf_index_map_[key] = frame_id;
   }
 
   current_frame_ = frame_id;
@@ -123,8 +123,8 @@ SWOptimizationResult SlidingWindowOptimization::optimizeWindow() {
 }
 
 bool SlidingWindowOptimization::isRecentKey(gtsam::Key key) const {
-  if (key_frameid_map_.exists(key)) {
-    return key_frameid_map_.at(key) > (current_frame_ - params_.overlap);
+  if (key_kf_index_map_.exists(key)) {
+    return key_kf_index_map_.at(key) > (current_frame_ - params_.overlap);
   }
   return false;
 }

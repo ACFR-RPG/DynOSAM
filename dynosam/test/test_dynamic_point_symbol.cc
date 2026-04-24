@@ -102,3 +102,23 @@ TEST(DynamicPointSymbol, testReconstructionSpecialCase) {
   EXPECT_EQ(dps, reconstructed_dps);
   EXPECT_EQ(bad_id, reconstructed_dps.trackletId());
 }
+
+TEST(DynamicPointSymbol, testPassesChrComparison) {
+  const auto x = 15;
+  const auto y = 79;
+
+  DynamicPointSymbol dps('m', x, y);
+
+  EXPECT_TRUE(gtsam::Symbol::ChrTest('m')(dps));
+}
+
+TEST(DynamicPointSymbol, testPassesChrComparisonAsKey) {
+  const auto x = 15;
+  const auto y = 79;
+
+  DynamicPointSymbol dps('m', x, y);
+  gtsam::Key key(dps);
+
+  EXPECT_TRUE(gtsam::Symbol::ChrTest('m')(key));
+  EXPECT_FALSE(gtsam::Symbol::ChrTest('b')(key));
+}

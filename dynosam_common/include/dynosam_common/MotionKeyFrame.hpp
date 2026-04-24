@@ -16,6 +16,10 @@ enum class ObjectKeyFrameStatus {
   AnchorKeyFrame = 2
 };
 
+/**
+ * @brief KeyframeInfo for a single frame k
+ *
+ */
 struct KeyframeInfo {
   bool camera_keyframe{false};
 
@@ -30,6 +34,10 @@ struct KeyframeInfo {
 /// @brief Map representing keyframe meta-data for each
 using KeyFrameInfoMap = gtsam::FastMap<FrameId, KeyframeInfo>;
 
+/// @brief Per object mapping of frame id to keyframe index (ie frame k (for
+/// object j) is the Nth keyframe)
+using FrameKeyframeIndexMapping = gtsam::FastMap<FrameObjectPair, int>;
+
 /** Data parsed from the backend to the frontend when an update is complete */
 struct PoseChangeUpdateComplete {
   // for batch data
@@ -39,28 +47,22 @@ struct PoseChangeUpdateComplete {
   // need to record separately as during the optimisation the map state will
   // change (ie. new keyframes are made)
   KeyFrameInfoMap keyframe_infos;
+
+  struct Object {
+    PoseWithMotionTrajectory trajectory;
+    //! Tracked object points in L (ie. ^Lm)
+    TrackedPointsPerObject::mapped_type points_m_L;
+  };
+  struct Camera {
+    PoseTrajectory trajectory;
+  };
+
+  gtsam::FastMap<ObjectId, Object> objects;
+  Camera camera;
 };
 
 using PoseChangeUpdateCompleteCallback =
     std::function<void(const PoseChangeUpdateComplete&)>;
-
-// TODO: so inconsistent with names!!! Hybrid/Keyframe/PoseChange!?
-struct HybridKeyFrameUpdate {
-  FrameId frame_id;
-  Timestamp timestamp;
-
-  struct Object {
-    ObjectId object_id;
-    PoseWithMotionTrajectory trajectory;
-    //! Tracked object points in L (ie. ^Lm)
-    TrackedPointsPerObject::mapped_type object_points;
-  };
-
-  PoseTrajectory camera_trajectory;
-  std::vector<Object> object_infos;
-
-  const Object* getObject(ObjectId object_id) const;
-};
 
 struct ObjectPoseChangeInfo {
   FrameId frame_id;

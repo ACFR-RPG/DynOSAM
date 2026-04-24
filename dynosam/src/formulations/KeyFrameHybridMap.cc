@@ -69,6 +69,29 @@ void FrameKFNode::updateLandmarksWithKF(const Base::Landmarks& lmks) {
   }
 }
 
+std::optional<FrameId> SharedModuleStates::getLatestOptimizedFrame() const {
+  // shortcut to the camera (j=0)
+  return getLatestOptimizedFrame(0);
+}
+std::optional<FrameId> SharedModuleStates::getLatestOptimizedFrame(
+    ObjectId object_id) const {
+  std::optional<FrameId> frame_id{std::nullopt};
+
+  if (latest_optimized_frame_per_object_.exists(object_id)) {
+    frame_id.emplace(latest_optimized_frame_per_object_.at(object_id));
+  }
+  return frame_id;
+}
+
+void SharedModuleStates::updateLatestOptFramePerObject(
+    const gtsam::FastMap<ObjectId, FrameId>& latest_frames) {
+  const std::lock_guard<std::mutex> lock(
+      latest_optimized_frame_per_object_mutex_);
+  for (const auto& [object_id, frame_id] : latest_frames) {
+    latest_optimized_frame_per_object_[object_id] = frame_id;
+  }
+}
+
 bool KeyFrameMap::setCameraKeyFrame(FrameId frame_id) {
   auto frame_interface = this->asFrameInterface();
   auto frame_node = frame_interface->getFrame(frame_id);
@@ -81,6 +104,7 @@ bool KeyFrameMap::setCameraKeyFrame(FrameId frame_id) {
   camera_keyframes_.insert(frame_node);
   return true;
 }
+
 bool KeyFrameMap::setObjectKeyFrame(FrameId frame_id, ObjectId object_id) {
   auto frame_interface = this->asFrameInterface();
   auto frame_node = frame_interface->getFrame(frame_id);
@@ -89,7 +113,14 @@ bool KeyFrameMap::setObjectKeyFrame(FrameId frame_id, ObjectId object_id) {
     return false;
   }
 
+  // record keyframe
+  if (!object_keyframes_.exists(object_id)) {
+    object_keyframes_.insert2(object_id, SharedFrameSet());
+  }
+  object_keyframes_.at(object_id).insert(frame_node);
+
   frame_node->setObjectKeyFrame(object_id);
+
   return true;
 }
 

@@ -196,6 +196,11 @@ class StereoHybridMotionFactorBase {
   const gtsam::Cal3_S2Stereo::shared_ptr calibration() const;
   const gtsam::Pose3& referencePose() const;
 
+  // allows external updating of the reference
+  // it is the users responsability to ensure the factor
+  // is correctly relinearized with the new point after update!
+  void referencePose(const gtsam::Pose3& L_KF) { L_KF_ = L_KF; }
+
   void print(
       const std::string& s = "",
       const gtsam::KeyFormatter& keyFormatter = DynosamKeyFormatter) const;

@@ -22,28 +22,6 @@
 
 namespace dyno {
 
-// see bottom of file for std::hash
-struct TrackletFramePair {
-  TrackletId tracklet_id;
-  FrameId frame_id;
-
-  bool operator==(const TrackletFramePair& other) const {
-    return tracklet_id == other.tracklet_id && frame_id == other.frame_id;
-  }
-
-  bool operator<(const TrackletFramePair& other) const {
-    return std::tie(tracklet_id, frame_id) <
-           std::tie(other.tracklet_id, other.frame_id);
-  }
-
-  friend std::ostream& operator<<(std::ostream& os,
-                                  const TrackletFramePair& t) {
-    os << "[frame id: " << t.frame_id << " ";
-    os << "tracklet id: " << t.tracklet_id << "]";
-    return os;
-  }
-};
-
 // TODO: dont need the IMPL class
 class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
                                    public gtsam::FixedLagSmoother {
@@ -118,7 +96,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   gtsam::FastMap<TrackletId, gtsam::Point3> getObjectPoints() const override;
 
-  void receiveUpdate(const HybridKeyFrameUpdate& update_info) override;
+  void receiveUpdate(const PoseChangeUpdateComplete& event) override;
 
   double reprojectionError(Frame::Ptr frame,
                            const TrackletIds& tracklets) const;
@@ -257,6 +235,10 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   virtual void onNewKeyFrameMotion(const dyno::ISAM2& smoother_before_reset,
                                    const gtsam::Pose3 new_L_KF) = 0;
 
+  // if there is a backend update moves ownershup to the input argument
+  // and marks the has_update_flag as false
+  bool takeBackendUpdate(PoseChangeUpdateComplete& backend_update);
+
   //! Last (object) keyframe for this object
   Frame::Ptr lOKF_frame_;
 
@@ -274,6 +256,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   // but also all motions will be related to a different KeyMotion pose
   // the trajectory from lkf to k is retrived with localTrajectory
   // trajectory is upto and inclusive of lKF
+  // TODO: this is up to CURRENT keyframe! noy last
   PoseWithMotionTrajectory trajectory_upto_lKF_;
   FrameRangeData<gtsam::Pose3> keyframe_range_;
 
@@ -313,10 +296,6 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
     return params;
   }
 
-  std::mutex update_point_mutex_;
-  std::atomic_bool has_point_update_{false};
-  // this is a really hack way to do this point update - just do for now!
-  std::vector<std::pair<TrackletId, gtsam::Point3>> updated_points_;
   /** An iSAM2 object used to perform inference. The smoother lag is controlled
    * by what factors are removed each iteration */
   // gtsam::ISAM2 isam_;
@@ -365,6 +344,16 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   mutable CsvWriter kf_decision_logger_;
 
+  // the update could actually be static for all solvers
+  // since all object information is contained within the update
+  // and is common since we do a joint solve!
+  std::mutex backend_update_mutex_;
+  std::atomic_bool has_backend_update_{false};
+  //! All solvers really share the same update I guess but each one is
+  //! responsible for
+  // checking if the update contains data relevant for the specific solver
+  PoseChangeUpdateComplete backend_update_;
+
  private:
   inline gtsam::FixedLagSmootherResult update(
       const gtsam::NonlinearFactorGraph&,
@@ -394,12 +383,7 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
                            const gtsam::Pose3 new_L_KF) override;
 
  private:
-  // size_t handleKeyFrame(gtsam::Values& smoother_state, const gtsam::Pose3&
-  // H_W_KF_k_initial,
-  //   Frame::Ptr frame, const TrackletIds& tracklets);
-  // size_t handleRegularFrame(gtsam::Values& smoother_state, const
-  // gtsam::Pose3& H_W_KF_k_initial,
-  //   Frame::Ptr frame, const TrackletIds& tracklets);
+  // void handleBackendUpdate(const PoseChangeUpdateComplete& backend_update);
  private:
   // gtsam::FastMap<TrackletId, std::vector<std::pair<FrameId,
   // gtsam::StereoPoint2>>> awaiting_measurements_;

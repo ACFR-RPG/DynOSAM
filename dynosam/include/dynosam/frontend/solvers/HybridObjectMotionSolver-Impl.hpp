@@ -64,8 +64,7 @@ class HybridObjectMotionSolverImpl {
    */
   virtual PoseWithMotionTrajectory localTrajectory() const = 0;
 
-  // points in L
-  virtual void receiveUpdate(const HybridKeyFrameUpdate&){};
+  virtual void receiveUpdate(const PoseChangeUpdateComplete&){};
 
  protected:
   friend class HybridObjectMotionSolver;
