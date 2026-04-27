@@ -427,7 +427,6 @@ void PoseChangeVIBackendModule::createPoseChangeUpdateComplete(
   // should be up to lates ckd
   event.camera.trajectory = state->camera_trajectory;
   // only send an update with the involved objects
-  // this is recalculated!
   const ObjectIds involved_objects = batch_input->involvedObjects();
   const auto object_points_m_L =
       formulation_->getObjectPoints(involved_objects);
