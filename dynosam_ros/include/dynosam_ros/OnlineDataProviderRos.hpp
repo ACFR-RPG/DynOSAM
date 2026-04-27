@@ -39,6 +39,8 @@
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/imu.hpp"
+#include "tf2_ros/buffer.h"
+#include "tf2_ros/transform_listener.h"
 
 namespace dyno {
 
@@ -174,22 +176,27 @@ class OnlineDataProviderRos : public DataProviderRos {
 
 // };
 
-// class StereoCalibrationHelper {
-// public:
-//   StereoCalibrationHelper(rclcpp::Node::SharedPtr node,
-//                             const OnlineDataProviderRosParams& params);
-//   virtual ~StereoCalibrationHelper() = default;
+class StereoCalibrationHelper {
+ public:
+  StereoCalibrationHelper(rclcpp::Node::SharedPtr node,
+                          const OnlineDataProviderRosParams& params);
+  virtual ~StereoCalibrationHelper() = default;
 
-//   const CameraParams::Optional& getOriginalCameraParams() const;
-//   const CameraParams::Optional& getCameraParams() const;
+  const CameraParams::Optional& getOriginalCameraParams() const;
+  const CameraParams::Optional& getCameraParams() const;
 
-//   void processLeft(const cv::Mat& src, cv::Mat& dst) const;
-//   void processRight(const cv::Mat& src, cv::Mat& dst) const;
+  void processPair(cv::Mat& rectify_left, cv::Mat& rectify_right,
+                   const cv::Mat& left, const cv::Mat& right) const;
 
-// private:
-//   StereoCamera::Ptr stereo_camera_;
+ private:
+  tf2_ros::Buffer buffer_;
+  tf2_ros::TransformListener listener_;
 
-// };
+  StereoCamera::Ptr stereo_camera_;
+
+  CameraParams::Optional original_camera_params_;
+  CameraParams::Optional camera_params_;
+};
 
 /**
  * @brief Class to help setup calibration for undistortion/resizing etc
@@ -223,7 +230,7 @@ class RGBDTypeCalibrationHelper {
 
   void getParamsFromRos(const CameraParams& original_camera_params,
                         int& rescale_width, int& rescale_height,
-                        double& depth_scale);
+                        double& depth_scale, double& baseline);
 
  private:
   rclcpp::Node::SharedPtr node_;
@@ -233,6 +240,9 @@ class RGBDTypeCalibrationHelper {
   //! Scale that will be multiplied by the depth image to convert to metric
   //! depth Set by ros params
   double depth_scale_{0.001};
+
+  //! Externally provided baseline of the RGB-D camera
+  double baseline_;
 
   //! Undistort maps
   cv::Mat mapx_;
@@ -316,6 +326,26 @@ class RGBDMOnlineProviderRos : public OnlineDataProviderRos {
 
  private:
   std::unique_ptr<RGBDMTypeCalibrationHelper> calibration_helper_;
+  MultiSyncBase::Ptr image_subscriber_;
+};
+
+/**
+ * @brief Class that subscribes to rgb, depth and masks
+ *
+ */
+class StereoOnlineProviderRos : public OnlineDataProviderRos {
+ public:
+  StereoOnlineProviderRos(rclcpp::Node::SharedPtr node,
+                          const OnlineDataProviderRosParams& params);
+
+  void subscribeImages() override;
+  void unsubscribeImages() override;
+  CameraParams::Optional getCameraParams() const override;
+
+  void updateAndCheckParams(DynoParams& dyno_params) override;
+
+ private:
+  std::unique_ptr<StereoCalibrationHelper> calibration_helper_;
   MultiSyncBase::Ptr image_subscriber_;
 };
 

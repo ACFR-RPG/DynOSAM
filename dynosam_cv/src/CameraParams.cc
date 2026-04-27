@@ -279,6 +279,12 @@ const std::string CameraParams::toString() const {
       << "- D: " << D_ << '\n'
       << "- P: " << P_ << '\n';
 
+  if (depth_) {
+    out << "Baseline " << depth_->virtual_baseline;
+  } else {
+    out << "No depth registered";
+  }
+
   return out.str();
 }
 

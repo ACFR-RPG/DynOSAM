@@ -88,6 +88,27 @@ bool dyno::convert(const Color& colour, std_msgs::msg::ColorRGBA& msg) {
 }
 
 template <>
+bool dyno::convert(const geometry_msgs::msg::Vector3& vec3,
+                   gtsam::Point3& point) {
+  point = gtsam::Point3(vec3.x, vec3.y, vec3.z);
+  return true;
+}
+
+template <>
+bool dyno::convert(const geometry_msgs::msg::Point& vec3,
+                   gtsam::Point3& point) {
+  point = gtsam::Point3(vec3.x, vec3.y, vec3.z);
+  return true;
+}
+
+template <>
+bool dyno::convert(const geometry_msgs::msg::Quaternion& orientation,
+                   gtsam::Rot3& rot) {
+  rot = gtsam::Rot3(orientation.w, orientation.x, orientation.y, orientation.z);
+  return true;
+}
+
+template <>
 bool dyno::convert(const gtsam::Pose3& pose, geometry_msgs::msg::Pose& msg) {
   const gtsam::Rot3& rotation = pose.rotation();
   const gtsam::Quaternion& quaternion = rotation.toQuaternion();
@@ -107,10 +128,17 @@ bool dyno::convert(const gtsam::Pose3& pose, geometry_msgs::msg::Pose& msg) {
 
 template <>
 bool dyno::convert(const geometry_msgs::msg::Pose& msg, gtsam::Pose3& pose) {
-  gtsam::Point3 translation(msg.position.x, msg.position.y, msg.position.z);
+  // gtsam::Point3 translation(msg.position.x, msg.position.y, msg.position.z);
 
-  gtsam::Rot3 rotation(msg.orientation.w, msg.orientation.x, msg.orientation.y,
-                       msg.orientation.z);
+  // gtsam::Rot3 rotation(msg.orientation.w, msg.orientation.x,
+  // msg.orientation.y,
+  //                      msg.orientation.z);
+
+  gtsam::Point3 translation;
+  convert(msg.position, translation);
+
+  gtsam::Rot3 rotation;
+  convert(msg.orientation, rotation);
 
   pose = gtsam::Pose3(rotation, translation);
   return true;
@@ -143,6 +171,19 @@ bool dyno::convert(const geometry_msgs::msg::Pose& pose,
 }
 
 template <>
+bool dyno::convert(const geometry_msgs::msg::Transform& transform,
+                   gtsam::Pose3& pose) {
+  gtsam::Point3 translation;
+  convert(transform.translation, translation);
+
+  gtsam::Rot3 rotation;
+  convert(transform.rotation, rotation);
+
+  pose = gtsam::Pose3(rotation, translation);
+  return true;
+}
+
+template <>
 bool dyno::convert(const gtsam::Pose3& pose,
                    geometry_msgs::msg::Transform& transform) {
   transform.translation.x = pose.x();
@@ -163,6 +204,13 @@ bool dyno::convert(const gtsam::Pose3& pose,
                    geometry_msgs::msg::TransformStamped& transform) {
   return convert<gtsam::Pose3, geometry_msgs::msg::Transform>(
       pose, transform.transform);
+}
+
+template <>
+bool dyno::convert(const geometry_msgs::msg::TransformStamped& transform,
+                   gtsam::Pose3& pose) {
+  return convert<geometry_msgs::msg::Transform, gtsam::Pose3>(
+      transform.transform, pose);
 }
 
 namespace dyno {

@@ -25,6 +25,13 @@ class PipelineBase {
  public:
   DYNO_POINTER_TYPEDEFS(PipelineBase)
 
+  // Timing Reported in milliseconds
+  struct SpinTimingStats {
+    double get_input_packet_ms{0.0};
+    double process_ms{0.0};
+    double push_packet_ms{0.0};
+  };
+
   struct ReturnCode {
     enum Code {
       SUCCESS,

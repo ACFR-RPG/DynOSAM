@@ -22,7 +22,7 @@ def generate_launch_description():
                 executable="dynosam_node",
                 output="screen",
                 parameters=[
-                    {"params_folder_path": LaunchConfiguration("params_path")},
+                    {"params_path": LaunchConfiguration("params_path")},
                     {"rescale_width": LaunchConfiguration("rescale_width")},
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},

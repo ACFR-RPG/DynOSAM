@@ -122,6 +122,9 @@ if "$USE_NVIDIA"; then
         --env QT_X11_NO_MITSHM=0 \
         --env QT_X11_NO_XRENDER=0 \
         --volume $XAUTH:$XAUTH:rw \
+        --device=/dev/bus/usb:/dev/bus/usb \
+        -v /dev:/dev \
+        -v /run/udev:/run/udev:ro \
         --net host \
         --pid host \
         --ipc host \

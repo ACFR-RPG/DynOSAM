@@ -555,6 +555,9 @@ void HybridFormulationKeyFrame::updateObject(
     const TrackletId tracklet_id = obj_lmk_node->trackletId();
     const gtsam::Key point_key = this->makeDynamicKey(tracklet_id);
 
+    // all (object keyframes) frames with measurements of this landmark
+    const FrameIds frames_with_measurements = obj_lmk_node->getSeenFrameIds();
+
     // TODO: seen ay any frame!
     CHECK(obj_lmk_node->seenAtFrame(frame_id_kf))
         << "Lmk i=" << tracklet_id << "Object " << object_id << " not seen at "
@@ -566,6 +569,11 @@ void HybridFormulationKeyFrame::updateObject(
       // somewhere CHECK(m_L_initial_.exists(object_id, tracklet_id)) <<
       // "Missing initalisation for j=" << object_id << " i=" << tracklet_id;
       if (!m_L_initial_.exists(object_id, tracklet_id)) {
+        continue;
+      }
+
+      // should be seen at least twice!
+      if (frames_with_measurements.size() < 3) {
         continue;
       }
 
@@ -623,7 +631,6 @@ void HybridFormulationKeyFrame::updateObject(
     // sanity check/ backwards adding of points to ensure measurements
     // are added for all possible frames
     // TODO: seenAtAnyFrame check for isKeyFrame(), add factors accordinfly!
-    const FrameIds frames_with_measurements = obj_lmk_node->getSeenFrameIds();
     for (const FrameId frame_with_z : frames_with_measurements) {
       // check if this frame is in the same backend range
       // if it is not, ignore it!
@@ -701,7 +708,7 @@ void HybridFormulationKeyFrame::addHybridMotionFactorCameraKF(
 
   new_factors.emplace_shared<StereoHybridMotionFactor>(
       z, KF_pose, noise_model, rgbd_camera_->getFakeStereoCalib(),
-      camera_pose_key, motion_key, point_key, true /* throw cheirality*/
+      camera_pose_key, motion_key, point_key, false /* throw cheirality*/
   );
 }
 
@@ -743,7 +750,7 @@ void HybridFormulationKeyFrame::addHybridMotionFactorNonCameraKF(
   new_factors.emplace_shared<StereoHybridMotionExtrapolatedFactor>(
       z, KF_pose, T_CKF_k, extrapolated_noise_model,
       rgbd_camera_->getFakeStereoCalib(), camera_pose_key, motion_key,
-      point_key, true /* throw cheirality*/
+      point_key, false /* throw cheirality*/
   );
 }
 

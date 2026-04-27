@@ -51,7 +51,7 @@ def _append_flag_files(params_folder):
 @launch_this
 def first_steps(
     dataset_path,
-    params_folder_path=None,
+    params_path=None,
     output_path="/root/results/DynoSAM",
     online=False,
     wait_for_camera_params=True,
@@ -63,12 +63,12 @@ def first_steps(
 
     bl = BetterLaunch()
 
-    if params_folder_path is None:
+    if params_path is None:
         bl.logger.info("Loading default dynosam params folder path which is expected to be in the share directory of the dynosam package")
-        params_folder_path = get_default_dynosam_params_path()
+        params_path = get_default_dynosam_params_path()
 
-    params_folder_path = validate_path(params_folder_path)
-    cmd_args = _append_flag_files(params_folder_path)
+    params_path = validate_path(params_path)
+    cmd_args = _append_flag_files(params_path)
 
     #parse kwargs as gflags. Do this after we append flag files so that any additionally provded commands
     # override the ones in the flag files
@@ -81,7 +81,7 @@ def first_steps(
 
     params = {
             "dataset_path": dataset_path,
-            "params_folder_path": params_folder_path,
+            "params_path": params_path,
             "output_path": output_path,
             "online": online,
             "wait_for_camera_params": wait_for_camera_params,

@@ -52,6 +52,8 @@ FrontendDSDRos::FrontendDSDRos(const DisplayParams& params,
     RCLCPP_INFO_STREAM(node->get_logger(), "Creating ground truth publishers");
     ground_truth_publishers_.emplace(params, ground_truth_node);
   }
+
+  dyno_state_publisher_.publishVisualOdomTF(true);
 }
 
 FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(

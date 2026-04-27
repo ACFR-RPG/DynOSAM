@@ -32,6 +32,7 @@
 
 #include "dynosam_common/Types.hpp"
 #include "dynosam_ros/RosUtils.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
 
 namespace dyno {
 
@@ -45,6 +46,10 @@ std::string to_string(const InputImageMode& input_image_mode) {
     }
     case InputImageMode::RGBD: {
       status_str = "RGBD";
+      break;
+    }
+    case InputImageMode::RGBDM: {
+      status_str = "RGBDM";
       break;
     }
     case InputImageMode::STEREO: {
@@ -112,6 +117,69 @@ void OnlineDataProviderRos::subscribeImu() {
       imu_sub_options);
 }
 
+StereoCalibrationHelper::StereoCalibrationHelper(
+    rclcpp::Node::SharedPtr node, const OnlineDataProviderRosParams& params)
+    : buffer_(node->get_clock()), listener_(buffer_) {
+  const CameraParams original_cam0_params = waitAndSetCameraParams(
+      node, "cam0/camera_info",
+      std::chrono::milliseconds(params.camera_params_timeout));
+  original_camera_params_ = original_cam0_params;
+
+  CameraParams original_cam1_params = waitAndSetCameraParams(
+      node, "cam1/camera_info",
+      std::chrono::milliseconds(params.camera_params_timeout));
+  // hardcoded sort of ish for the real-sense camera for now!
+  // stereo-camera uses extrinsics to work out baseline... even though this is
+  // provided as part of the projection matrix P our not-very-ideal handling of
+  // camera params data-structures means we dont even have access to this data
+  // out of ROS. Instead rely on the tf frames to get good extrinsics
+  // in this case we get the transform of T_c1_c2 (ie transform of camera 2 into
+  // camera) and set the inrinsics of cam1 such that the reference frame is cam!
+  geometry_msgs::msg::TransformStamped tf = buffer_.lookupTransform(
+      "camera_infra2_frame", "camera_infra1_frame", tf2::TimePointZero);
+
+  gtsam::Pose3 T_C1_C2;
+  convert(tf, T_C1_C2);
+  original_cam1_params.setExtrinsics(T_C1_C2);
+
+  stereo_camera_ = std::make_shared<StereoCamera>(original_cam0_params,
+                                                  original_cam1_params);
+
+  const gtsam::Cal3_S2Stereo& new_calibration =
+      stereo_camera_->getStereoCameraCalibration();
+
+  dyno::CameraParams::IntrinsicsCoeffs intrinsics{
+      new_calibration.fx(),
+      new_calibration.fy(),
+      new_calibration.px(),
+      new_calibration.py(),
+  };
+  dyno::CameraParams::DistortionCoeffs zero_distortion(4, 0);
+
+  // not sure if image size is correct here!
+  camera_params_ = CameraParams(intrinsics, zero_distortion,
+                                original_cam0_params.imageSize(),
+                                original_cam0_params.getDistortionModel());
+
+  camera_params_->setDepthParams(stereo_camera_->getBaseline());
+}
+
+const CameraParams::Optional& StereoCalibrationHelper::getOriginalCameraParams()
+    const {
+  return original_camera_params_;
+}
+const CameraParams::Optional& StereoCalibrationHelper::getCameraParams() const {
+  return camera_params_;
+}
+
+void StereoCalibrationHelper::processPair(cv::Mat& rectify_left,
+                                          cv::Mat& rectify_right,
+                                          const cv::Mat& left,
+                                          const cv::Mat& right) const {
+  stereo_camera_->undistortRectifyImages(rectify_left, rectify_right, left,
+                                         right);
+}
+
 RGBDTypeCalibrationHelper::RGBDTypeCalibrationHelper(
     rclcpp::Node::SharedPtr node, const OnlineDataProviderRosParams& params)
     : node_(node) {
@@ -122,7 +190,7 @@ RGBDTypeCalibrationHelper::RGBDTypeCalibrationHelper(
 
     int rescale_width, rescale_height;
     getParamsFromRos(original_camera_params, rescale_width, rescale_height,
-                     depth_scale_);
+                     depth_scale_, baseline_);
 
     CameraParams camera_params;
     setupNewCameraParams(original_camera_params, camera_params, rescale_width,
@@ -179,11 +247,13 @@ void RGBDTypeCalibrationHelper::setupNewCameraParams(
   new_camera_params = CameraParams(intrinsics, zero_distortion, rescale_size,
                                    original_camera_params.getDistortionModel(),
                                    original_camera_params.getExtrinsics());
+
+  new_camera_params.setDepthParams(baseline_);
 }
 
 void RGBDTypeCalibrationHelper::getParamsFromRos(
     const CameraParams& original_camera_params, int& rescale_width,
-    int& rescale_height, double& depth_scale) {
+    int& rescale_height, double& depth_scale, double& baseline) {
   rescale_width = ParameterConstructor(node_.get(), "rescale_width",
                                        original_camera_params.ImageWidth())
                       .description(
@@ -212,6 +282,12 @@ void RGBDTypeCalibrationHelper::getParamsFromRos(
                         "to metric depth")
                     .finish()
                     .get<double>();
+
+  baseline = ParameterConstructor(node_.get(), "baseline", 0.1)
+                 .description(
+                     "Stereo camera baseline needed for virtual-stereo system")
+                 .finish()
+                 .get<double>();
 }
 
 void RGBDTypeCalibrationHelper::undistortWithMaps(const cv::Mat& src,
@@ -487,6 +563,74 @@ void RGBDMOnlineProviderRos::updateAndCheckParams(DynoParams& dyno_params) {
                     "is false - param will be updated to true!!!";
     tracker_params.prefer_provided_object_detection = true;
   }
+}
+
+StereoOnlineProviderRos::StereoOnlineProviderRos(
+    rclcpp::Node::SharedPtr node, const OnlineDataProviderRosParams& params)
+    : OnlineDataProviderRos(node, params) {
+  LOG(INFO) << "Creating StereoOnlineProviderRos";
+  calibration_helper_ = std::make_unique<StereoCalibrationHelper>(node, params);
+}
+
+void StereoOnlineProviderRos::subscribeImages() {
+  rclcpp::Node& node_ref = *node_;
+  static const std::array<std::string, 2>& topics = {"cam0/image_raw",
+                                                     "cam1/image_raw"};
+
+  // make multiimage sync and and queue have similar depth
+  // reliable important so we dont drop frames we're quite reliant on frame
+  // to frame tracking!
+  static constexpr size_t queue_size = 1000;
+  auto image_qos = rclcpp::SensorDataQoS().keep_last(queue_size).reliable();
+
+  MultiSyncConfig config;
+  config.queue_size = queue_size;
+  config.subscriber_qos = image_qos;
+  // config.subscriber_options.callback_group =
+  //     node_ref.create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+  std::shared_ptr<MultiImageSync2> multi_image_sync =
+      std::make_shared<MultiImageSync2>(node_ref, topics, config);
+  multi_image_sync->registerCallback(
+      [this](const sensor_msgs::msg::Image::ConstSharedPtr& left_msg,
+             const sensor_msgs::msg::Image::ConstSharedPtr& right_msg) {
+        if (!image_container_callback_) {
+          RCLCPP_ERROR_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000,
+                                "Image Sync callback triggered but "
+                                "image_container_callback_ is not registered!");
+          return;
+        }
+
+        cv::Mat left = readRgbRosImage(left_msg).clone();
+        cv::Mat right = readRgbRosImage(right_msg).clone();
+        calibration_helper_->processPair(left, right, left, right);
+
+        const Timestamp timestamp = utils::fromRosTime(left_msg->header.stamp);
+        const FrameId frame_id = frame_id_;
+        frame_id_++;
+
+        auto image_container =
+            std::make_shared<ImageContainer>(frame_id, timestamp);
+        (*image_container).rgb(left).rightRgb(right);
+
+        image_container_callback_(image_container);
+      });
+  CHECK(multi_image_sync->connect());
+  image_subscriber_ = multi_image_sync;
+}
+
+void StereoOnlineProviderRos::unsubscribeImages() {
+  if (image_subscriber_) image_subscriber_->shutdown();
+}
+
+CameraParams::Optional StereoOnlineProviderRos::getCameraParams() const {
+  return calibration_helper_->getCameraParams();
+}
+
+void StereoOnlineProviderRos::updateAndCheckParams(DynoParams& dyno_params) {
+  // TODO: warning!
+  // TODO: not right logging as the hardcoded "ALL" is in this function!
+  updateAndCheckDynoParamsForRawImageInput(dyno_params);
 }
 
 }  // namespace dyno

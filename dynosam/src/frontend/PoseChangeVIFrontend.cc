@@ -101,6 +101,14 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   Frame::Ptr frame_k = featureTrack(input);
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
+  ImageContainer::Ptr image_container = input->image_container_;
+
+  // TODO: must set depth either by update depth or by stereo match.
+  //  currently updateDepths is in feature track but this function is not!
+  FeaturePtrs stereo_matches_1;
+  // TODO: should we not use the frame->imageContainer()?
+  tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_1);
+  (void)stereo_matches_1;
 
   gtsam::Pose3 identity_pose = gtsam::Pose3::Identity();
   gtsam::Vector3 zero_velocity(0.0, 0.0, 0.0);
@@ -220,6 +228,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       solveAndRefineEgoMotion(frame_k, frame_km1, static_landmarks_used_vo,
                               imu_propogated_nav_state_k, R_km1_k);
 
+  // TODO: amagamate this function and the frame->updateDepths for when we are
+  // stereo/rgbd
   if (stereo_matching_result) {
     // Need to match aagain after optical flow used to update the keypoints
     // This seems to make a pretty big difference!!
@@ -531,6 +541,13 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
       const auto refinement_result =
           optical_flow_pose_solver_.optimizeAndUpdate(
               frame_km1, frame_k, pnp_result.inliers, pnp_result.best_result);
+
+      // TODO: refresh depth or with stereo (NOT: we refresh depth with stereo
+      // outside this function)!!
+      //  refresh depth information for each frame
+      if (frame_k->imageContainer().hasDepth()) {
+        CHECK(frame_k->updateDepths());
+      }
 
       frame_k->T_world_camera_ = refinement_result.best_result.refined_pose;
 

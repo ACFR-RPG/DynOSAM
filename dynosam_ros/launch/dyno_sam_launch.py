@@ -20,7 +20,7 @@ def generate_launch_description():
             output="screen",
             parameters=[
                 {"dataset_path": LaunchConfiguration("dataset_path")},
-                {"params_folder_path": LaunchConfiguration("params_path")},
+                {"params_path": LaunchConfiguration("params_path")},
                 {"online": False},
             ],
         ),

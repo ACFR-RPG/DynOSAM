@@ -187,7 +187,7 @@ def load_dynosam_node(context, *args, **kwargs):
     nodes = []
 
     parameters=[
-        {"params_folder_path": dynosam_params_folder_config},
+        {"params_path": dynosam_params_folder_config},
         {"dataset_path": dynosam_dataset_path_config},
         {"online": online_config},
         {"wait_for_camera_params": wait_for_camera_params_config},

@@ -51,7 +51,7 @@
 DEFINE_string(path_to_kitti, "/root/data/kitti", "Path to KITTI dataset");
 // TODO: (jesse) many better ways to do this with ros - just for now
 DEFINE_string(
-    params_folder_path, "dynosam/params",
+    params_path, "dynosam/params",
     "Path to the folder containing the yaml files with the VIO parameters.");
 
 #include "dynosam/dataprovider/DynopetsDataProvider.hpp"

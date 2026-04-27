@@ -1,0 +1,89 @@
+
+scene_flow_mag_threshold: 0.12
+scene_flow_dist_threshold: 0.5
+# max_background_depth: 50.0
+# # max_object_depth: 30.0
+# max_object_depth: 20.0
+# max_background_depth: 40.0
+max_background_depth: 200.0
+max_object_depth: 50.0
+
+# max_object_depth: 8.0 #indoors
+
+# When using rgbd-pipeline, ego-motion will be solved using 3d-2d pnp, not stereo (3d-3d) pnp
+use_ego_motion_pnp: True
+# When using rgbd-pipeline, camera-motion will be solved using 3d-2d pnp, not stereo (3d-3d) pnp
+use_object_motion_pnp: True
+refine_camera_pose_with_joint_of: True
+
+object_motion_solver:
+  ransac_threshold_pnp: 1.0
+  refine_motion_with_joint_of: True
+  refine_motion_with_3d: False
+
+  ransac_iterations: 500
+  ransac_probability:  0.995
+
+  joint_optical_flow:
+    outlier_reject: False
+    k_huber: 0.1
+
+  object_motion_3d_refinement:
+    outlier_reject: True
+    k_huber: 0.01
+
+
+
+
+camera_motion_solver:
+  ransac_threshold_pnp: 1.0
+  ransac_iterations: 500
+  ransac_probability:  0.995
+
+
+tracker_params:
+  feature_detector_type: "GFFT_CUDA"
+
+  shrink_row: 0
+  shrink_col: 0
+  # max_nr_keypoints_before_anms: 1500 # 2000 good for cluster
+  max_nr_keypoints_before_anms: 800 # 2000 good for cluster
+  # max_features_per_frame: 800
+  max_features_per_frame: 600
+  # max_feature_track_age: 20
+  # for KF should be unlimited
+  max_feature_track_age: 1000
+  # currently min_features_per_frame should == max_features_per_frame
+  # some internal bug that is yet to be sorted!
+  min_features_per_frame: 300
+  # This should be wide to get a good spread.
+  # Ideally should be calculated as some function of the input image size
+  min_distance_btw_tracked_and_detected_static_features: 15
+
+
+  subpixel_corner_refinement_params: false
+  # use_clahe_filter: false
+
+  prefer_provided_optical_flow: false
+  prefer_provided_object_detection: true
+
+  max_dynamic_features_per_frame: 300
+  min_distance_btw_tracked_and_detected_dynamic_features: 2
+  # max_dynamic_feature_age: 20 #20
+  # for KF should be unlimited
+  max_dynamic_feature_age: 1000 #20
+
+
+  # dynamic keyframing criteria
+  dynamic_feature_age_buffer: 3
+  min_dynamic_tracks: 20
+  # causes retracking if current mask IOU with new mask < min_dynamic_mask_iou
+  # ie. smaller causes less triggering
+  min_dynamic_mask_iou: 0.5
+
+image_tracks_vis_params:
+  is_debug: true
+  show_frame_info: true
+  show_intermediate_tracking: false
+  draw_object_bounding_box: false
+  draw_object_mask: true

@@ -19,14 +19,35 @@ class DynosamNode(Node):
         if "executable" not in kwargs:
             kwargs.update("executable", DynosamNode.DEFAULT_EXECUTABLE_NAME)
 
+        self._dyno_kwargs = kwargs
         super().__init__(**kwargs)
         self._logger = launch.logging.get_logger("dynosam_launch.DynoSAMNode")
 
     def _get_dynamic_gflags(self, context):
         """Builds the GFlag argument list at runtime."""
-        params_path = LaunchConfiguration("params_path").perform(context)
-        verbose = LaunchConfiguration("v").perform(context)
-        output_path = LaunchConfiguration("output_path").perform(context)
+
+        def try_params_from_input_kwargs(key):
+            from launch.substitutions.substitution_failure import SubstitutionFailure
+            try:
+                return LaunchConfiguration(key).perform(context)
+            except SubstitutionFailure as e:
+                # try from direct arguments in case the user has directlly specified the value
+                # as part of the input arguments
+                user_parameters = self._dyno_kwargs["parameters"]
+                # user parameters is a list of key->value mappings
+                # search through to find the key
+                def find_value(data, key, default=None):
+                    return next((d[key] for d in data if key in d), default)
+                value_or_none = find_value(user_parameters, key)
+
+                if value_or_none is None:
+                    raise Exception(f"Could not get param '{key}' as was not specified as a LaunchConfiguration or in the input paramters")
+
+                return value_or_none
+
+        params_path = try_params_from_input_kwargs("params_path")
+        verbose = try_params_from_input_kwargs("v")
+        output_path = try_params_from_input_kwargs("output_path")
 
         flagfiles = [
             f"--flagfile={os.path.join(params_path, f)}"
@@ -67,6 +88,6 @@ class DynosamNode(Node):
         # (you can even call LaunchConfiguration.perform(context) here)
         # For example:
         # params_path = LaunchConfiguration("params_path").perform(context)
-        # self.parameters.append({"params_folder_path": params_path})
+        # self.parameters.append({"params_path": params_path})
 
         return actions

@@ -1,0 +1,90 @@
+# good for omd
+# --constant_object_motion_rotation_sigma=1.0
+# --constant_object_motion_translation_sigma=0.7
+
+# good for carla
+# --constant_object_motion_rotation_sigma=0.1
+# --constant_object_motion_translation_sigma=0.01
+
+# --constant_object_motion_rotation_sigma=0.01
+# --constant_object_motion_translation_sigma=0.2
+
+
+--constant_object_motion_rotation_sigma=0.1
+--constant_object_motion_translation_sigma=0.2
+
+
+
+# --motion_ternary_factor_noise_sigma=0.00000000001
+--motion_ternary_factor_noise_sigma=0.001
+
+# --odometry_rotation_sigma=0.05
+# --odometry_translation_sigma=0.01
+
+# --odometry_rotation_sigma=0.005
+# --odometry_translation_sigma=0.001
+
+#--odometry_rotation_sigma=0.05
+#--odometry_translation_sigma=0.01
+
+--odometry_rotation_sigma=2.0
+--odometry_translation_sigma=0.4
+
+
+--static_point_noise_sigma=0.01
+--dynamic_point_noise_sigma=0.01
+
+--static_pixel_noise_sigma=2.0
+--dynamic_pixel_noise_sigma=2.0
+
+
+--opt_window_size=10
+--opt_window_overlap=4
+
+
+--use_vo_factor=false
+--use_smoothing_factor=true
+
+# 0: Full-batch, 1: sliding-window, 2: incremental
+--optimization_mode=2
+
+# 0: PTP, 1: Generic Projection, 2: Stereo Projection
+--static_formulation_type=2
+
+# if true, only run as Static SLAM (mostly for debug/testing)
+--regular_backend_static_only=false
+
+--min_static_observations=0
+--min_dynamic_observations=0
+
+
+# for ISAM2 params using ParallelObjectSAM
+--use_marginal_covariance=false
+--use_relinearize_threshold_as_double=true
+--relinearize_threshold=0.1
+--X_trans_relinearize_threshold=20.0
+--X_rot_relinearize_threshold=20.0
+
+--H_trans_relinearize_threshold=20.0
+--H_rot_relinearize_threshold=20.0
+
+--m_relinearize_threshold=20.0
+
+--num_dynamic_optimize=0
+
+--save_per_frame_dynamic_cloud=false
+
+
+# currently only for rgbd, indicates which updater the rgbd backend should use
+# i.e which formulation is used for solving
+# MotionInWorld = 0, LLWorld=1, Parallel-Hybrid=3
+--backend_updater_enum=8
+
+--init_H_with_identity=true
+--updater_suffix=
+
+# for experiments only
+--use_identity_rot_L_for_init=false
+--corrupt_L_for_init=false
+--corrupt_L_for_init_sigma=0.2
+--init_LL_with_identity=false

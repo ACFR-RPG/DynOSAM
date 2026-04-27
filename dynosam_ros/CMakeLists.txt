@@ -33,7 +33,7 @@ find_package(dynosam REQUIRED)
 find_package(PCL REQUIRED conversions surface)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
-
+find_package(diagnostic_updater REQUIRED)
 
 
 # setup targets
@@ -75,6 +75,7 @@ set(LINK_LIBS
   sensor_msgs::sensor_msgs_library
   tf2_ros::static_transform_broadcaster_node
   tf2_ros::tf2_ros
+  diagnostic_updater::diagnostic_updater
 
 )
 
@@ -169,6 +170,11 @@ install(
 
 install(DIRECTORY
   launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  config
   DESTINATION share/${PROJECT_NAME}
 )
 

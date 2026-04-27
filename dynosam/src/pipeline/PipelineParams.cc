@@ -34,6 +34,8 @@
 #include <config_utilities/parsing/yaml.h>
 #include <gflags/gflags.h>
 
+#include <filesystem>
+
 #include "dynosam_common/utils/YamlParser.hpp"
 
 DEFINE_int32(
@@ -59,15 +61,17 @@ void declare_config(DynoParams::PipelineParams& config) {
   config.data_provider_type = FLAGS_data_provider_type;
 }
 
-DynoParams::DynoParams(const std::string& params_folder_path) {
+DynoParams::DynoParams(const std::string& params_path) {
+  std::filesystem::path params_folder_path(params_path);
+
   pipeline_params_ = config::fromYamlFile<PipelineParams>(
-      params_folder_path + "PipelineParams.yaml");
-  camera_params_ = config::fromYamlFile<CameraParams>(params_folder_path +
+      params_folder_path / "PipelineParams.yaml");
+  camera_params_ = config::fromYamlFile<CameraParams>(params_folder_path /
                                                       "CameraParams.yaml");
   frontend_params_ = config::fromYamlFile<FrontendParams>(
-      params_folder_path + "FrontendParams.yaml");
+      params_folder_path / "FrontendParams.yaml");
   imu_params_ =
-      config::fromYamlFile<ImuParams>(params_folder_path + "ImuParams.yaml");
+      config::fromYamlFile<ImuParams>(params_folder_path / "ImuParams.yaml");
 
   backend_type = static_cast<BackendType>(FLAGS_backend_updater_enum);
 }

@@ -30,6 +30,16 @@ DynoStatePublisher::DynoStatePublisher(const DisplayParams& params,
       node->create_publisher<sensor_msgs::msg::PointCloud2>("dynamic_cloud", 1);
 }
 
+DynoStatePublisher& DynoStatePublisher::publishVisualOdomTF(bool flag) {
+  publish_vo_tf_ = flag;
+  return *this;
+}
+
+DynoStatePublisher& DynoStatePublisher::publishObjectOdomTF(bool flag) {
+  publish_oo_tf_ = flag;
+  return *this;
+}
+
 void DynoStatePublisher::publish(const DynoState& state) {
   const FrameId frame_id = state.frame_id;
   const Timestamp timestamp = state.timestamp;

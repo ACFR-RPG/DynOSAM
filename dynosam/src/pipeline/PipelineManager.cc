@@ -238,6 +238,8 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     // mutable_camera_params.setDepthParams(0.07);
     mutable_camera_params.setDepthParams(0.1);
   }
+
+  LOG(INFO) << "Using camera params: " << mutable_camera_params.toString();
   Camera::Ptr camera = std::make_shared<Camera>(mutable_camera_params);
   CHECK_NOTNULL(camera);
 

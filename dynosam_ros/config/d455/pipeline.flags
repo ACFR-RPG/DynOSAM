@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# general flags for the pipeline
+
+# default output path - almost always overwritten when using the provided launch files
+--output_path=/root/results/DynoSAM/
+
+# KITTI: 0, VIRTUAL_KITTI: 1, CLUSTER: 2, OMD: 3, ZED2: 4
+--data_provider_type=2
+
+# flags for the dataset loaders in the DataProviderFactory
+# used to set the starting and ending frame when a dataset provider is used
+# if -1, defaults to 0 for starting frame (i.e the first frame) and ending_frame=dataset_size
+--starting_frame=-1
+--ending_frame=-1
+--use_backend=true
+
+--save_frontend_json=false
+
+# load the frontend using a .bson file
+# all the other parameters remain but the dataprovider is bypassed
+# and the bson file is searched for on output_path / <output_file>.json
+# where the output file name is determined by the frontend mode (RGB, mono)
+--frontend_from_file=false
+
+--use_opencv_display=true

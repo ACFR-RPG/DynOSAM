@@ -1,0 +1,23 @@
+enable_color: false
+rgb_camera.color_profile: "640x480x15"
+rgb_camera.color_format: "BGR8"
+
+enable_depth: false
+depth_module.emitter_enabled: 0
+
+enable_infra1: true
+enable_infra2: true
+depth_module.infra_profile: "640x480x15"
+
+align_depth.enable: false
+
+enable_sync: true
+pointcloud.enable: false
+
+
+enable_gyro: true
+gyro_fps: 200
+enable_accel: true
+accel_fps: 200
+unite_imu_method: 2
+enable_motion: true

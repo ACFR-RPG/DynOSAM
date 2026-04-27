@@ -71,7 +71,7 @@ constexpr static RuntimeSensorOptions DefaultRuntimeSensorOptions{
 
 class DynoParams {
  public:
-  DynoParams(const std::string& params_folder_path);
+  DynoParams(const std::string& params_path);
   /**
    * @brief For I/O construction
    *

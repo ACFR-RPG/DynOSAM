@@ -53,12 +53,12 @@ DEFINE_int32(ending_frame, -1,
 namespace dyno {
 
 DataProvider::Ptr DataProviderFactory::Create(
-    const std::string& dataset_folder_path,
-    const std::string& params_folder_path, DatasetType dataset_type) {
+    const std::string& dataset_folder_path, const std::string& params_path,
+    DatasetType dataset_type) {
   if (dataset_type == DatasetType::KITTI) {
     LOG(INFO) << "Using KITTI dataset at path: " << dataset_folder_path;
     KittiDataLoader::Params params =
-        KittiDataLoader::Params::fromYaml(params_folder_path);
+        KittiDataLoader::Params::fromYaml(params_path);
     auto loader =
         std::make_shared<KittiDataLoader>(dataset_folder_path, params);
 
@@ -68,7 +68,7 @@ DataProvider::Ptr DataProviderFactory::Create(
   } else if (dataset_type == DatasetType::VIRTUAL_KITTI) {
     LOG(INFO) << "Using Virtual KITTI dataset at path: " << dataset_folder_path;
     VirtualKittiDataLoader::Params params =
-        VirtualKittiDataLoader::Params::fromYaml(params_folder_path);
+        VirtualKittiDataLoader::Params::fromYaml(params_path);
     auto loader =
         std::make_shared<VirtualKittiDataLoader>(dataset_folder_path, params);
     loader->setStartingFrame(FLAGS_starting_frame);

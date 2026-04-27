@@ -1,0 +1,8 @@
+parallel_run: True
+
+# Use the camera params provided by the dataprovider (if available),
+# instead of the camera params specified by the CameraParams.yaml.
+# this is useful when running experiments as changing the dataset will change the camera extrinsics
+prefer_data_provider_camera_params: True
+# Same for the imu params!
+prefer_data_provider_imu_params: False

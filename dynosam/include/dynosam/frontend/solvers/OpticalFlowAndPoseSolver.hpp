@@ -367,9 +367,6 @@ class OpticalFlowAndPoseSolver {
       feature_k->markOutlier();
       feature_k_1->markOutlier();
     }
-
-    // refresh depth information for each frame
-    CHECK(frame_k->updateDepths());
   }
 
  private:

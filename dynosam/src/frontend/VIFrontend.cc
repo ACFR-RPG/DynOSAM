@@ -126,7 +126,8 @@ Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
   ImageContainer::Ptr image_container = input->image_container_;
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container, R_km1_k);
-  CHECK(frame->updateDepths());
+
+  if (image_container->hasDepth()) CHECK(frame->updateDepths());
   return frame;
 }
 
@@ -144,7 +145,7 @@ std::optional<gtsam::NavState> VIFrontend::tryPropogateImu(
 }
 
 bool VIFrontend::tryStereoMatch(Frame::Ptr frame,
-                                ImageContainer::Ptr image_container,
+                                const ImageContainer::Ptr image_container,
                                 FeaturePtrs& stereo_features_out,
                                 FeatureContainer& left_features_in_out) {
   if (!image_container->hasRightRgb()) {
@@ -163,7 +164,7 @@ bool VIFrontend::tryStereoMatch(Frame::Ptr frame,
 }
 
 bool VIFrontend::tryStereoMatchStaticFeatures(
-    Frame::Ptr frame, ImageContainer::Ptr image_container,
+    Frame::Ptr frame, const ImageContainer::Ptr image_container,
     FeaturePtrs& stereo_features_out) {
   return tryStereoMatch(frame, image_container, stereo_features_out,
                         frame->static_features_);

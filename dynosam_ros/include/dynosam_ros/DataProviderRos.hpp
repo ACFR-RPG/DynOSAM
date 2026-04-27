@@ -45,6 +45,32 @@
 
 namespace dyno {
 
+template <typename Adaptor, class Rep = int64_t, class Period = std::milli>
+typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
+    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
+    const std::chrono::duration<Rep, Period>& time_to_wait =
+        std::chrono::duration<Rep, Period>(-1)) {
+  using RosMsgType = typename Adaptor::ros_message_type;
+  using CustomMsgType = typename Adaptor::custom_type;
+
+  // it seems rclcpp::Adaptors do not work yet with wait for message
+  typename Adaptor::ros_message_type ros_msg;
+  if (rclcpp::wait_for_message<RosMsgType, Rep, Period>(ros_msg, node, topic,
+                                                        time_to_wait)) {
+    CustomMsgType custom_msg;
+    Adaptor::convert_to_custom(ros_msg, custom_msg);
+    return custom_msg;
+  } else {
+    const auto milliseconds =
+        std::chrono::duration_cast<std::chrono::milliseconds>(time_to_wait);
+    DYNO_THROW_MSG(DynosamException)
+        << "Failed to receive msg using adaptor " << type_name<Adaptor>()
+        << " on topic " << topic << " (waited with timeout "
+        << std::to_string(milliseconds.count()) << " ms).";
+    throw;
+  }
+}
+
 /**
  * @brief Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on
  * the specified topic. This function is blocking until a message is recieved
@@ -68,24 +94,10 @@ CameraParams waitAndSetCameraParams(
         std::chrono::duration<Rep, Period>(-1)) {
   RCLCPP_INFO_STREAM(node->get_logger(),
                      "Waiting for camera params on topic: " << topic);
-  // it seems rclcpp::Adaptors do not work yet with wait for message
-  sensor_msgs::msg::CameraInfo camera_info;
-  if (rclcpp::wait_for_message<sensor_msgs::msg::CameraInfo, Rep, Period>(
-          camera_info, node, topic, time_to_wait)) {
-    using Adaptor =
-        rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo>;
-    CameraParams camera_params;
-    Adaptor::convert_to_custom(camera_info, camera_params);
-    RCLCPP_INFO_STREAM(node->get_logger(),
-                       "Received camera params: " << camera_params.toString());
-    return camera_params;
-  } else {
-    const auto milliseconds =
-        std::chrono::duration_cast<std::chrono::milliseconds>(time_to_wait);
-    throw DynosamException("Failed to receive camera params on topic " + topic +
-                           " (waited with timeout " +
-                           std::to_string(milliseconds.count()) + " ms).");
-  }
+
+  using Adaptor =
+      rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo>;
+  return waitAndGetMessageViaAdaptor<Adaptor>(node, topic, time_to_wait);
 }
 
 /**

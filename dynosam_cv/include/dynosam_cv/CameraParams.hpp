@@ -151,6 +151,9 @@ class CameraParams {
    * @return gtsam::Pose3
    */
   inline gtsam::Pose3 getExtrinsics() const { return T_robot_camera_; }
+  void setExtrinsics(const gtsam::Pose3& T_robot_camera) {
+    T_robot_camera_ = T_robot_camera;
+  }
 
   inline DistortionModel getDistortionModel() const {
     return distortion_model_;

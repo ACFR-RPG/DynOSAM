@@ -102,6 +102,7 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider() {
           .finish()
           .get<int>());
 
+  // TODO: make image input mode like OKVIS (ie. all+imu)
   OnlineDataProviderRos::Ptr online_data_provider = nullptr;
   switch (image_mode) {
     case InputImageMode::ALL:
@@ -116,7 +117,10 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider() {
       online_data_provider = std::make_shared<RGBDMOnlineProviderRos>(
           this->create_sub_node("dataprovider"), online_params);
       break;
-
+    case InputImageMode::STEREO:
+      online_data_provider = std::make_shared<StereoOnlineProviderRos>(
+          this->create_sub_node("dataprovider"), online_params);
+      break;
     default:
       LOG(FATAL) << "Unknown image_mode";
       return nullptr;

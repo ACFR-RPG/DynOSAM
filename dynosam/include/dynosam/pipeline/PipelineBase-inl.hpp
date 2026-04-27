@@ -48,8 +48,6 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
   // 10
   static constexpr int intermediate_timing_glog_verbosity = 5;
   auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
-    // LOG(INFO) << "construct_intermediate_timers_as_stopped " <<
-    // construct_intermediate_timers_as_stopped;
     utils::ChronoTimingStats timing(module_name_ + ".get_input",
                                     intermediate_timing_glog_verbosity);
     InputConstSharedPtr input = nullptr;
