@@ -14,6 +14,8 @@ align_depth.enable: false
 enable_sync: true
 pointcloud.enable: false
 
+depth_module.enable_auto_exposure: true
+
 
 enable_gyro: true
 gyro_fps: 200

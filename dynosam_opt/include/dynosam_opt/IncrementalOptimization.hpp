@@ -282,7 +282,11 @@ struct iOptimizationTraits<gtsam::BatchFixedLagSmoother>
     : public batch_fixed_lag_traits {};
 
 struct ErrorHandlingHooks {
-  ErrorHandlingHooks() {}
+  ErrorHandlingHooks(const std::string& identifier_ = "None")
+      : identifier(identifier_) {}
+
+  //! String to aid wit logging so the user can label error handling messages
+  std::string identifier;
 
   /**
    * @brief IndeterminateLinearSystem (ILS) result that will be used by the
@@ -427,18 +431,21 @@ class IncrementalInterface {
     gtsam::Values new_values = smoother_arguments.new_values;
     gtsam::NonlinearFactorGraph new_factors = smoother_arguments.new_factors;
 
+    // accumulate error messages
+    std::stringstream ss;
     try {
       VLOG(100) << "Starting IncrementalInterface<" << type_name<Smoother>()
                 << ">::update";
       *result = SmootherTraitsType::update(*smoother_, smoother_arguments);
 
-    } catch (gtsam::IndeterminantLinearSystemException& e) {
+    } catch (const gtsam::IndeterminantLinearSystemException& e) {
       const gtsam::Key& var = e.nearbyVariable();
-      LOG(ERROR) << "gtsam::IndeterminantLinearSystemException with variable "
-                 << DynosamKeyFormatter(var);
+      ss << "gtsam::IndeterminantLinearSystemException with variable "
+         << DynosamKeyFormatter(var);
 
       if (!error_hooks.handle_ils_exception) {
-        throw e;
+        LOG(FATAL) << error_hooks.identifier << ": " << ss.str()
+                   << " missing ILS exception handle";
       }
       const gtsam::Values values =
           SmootherTraitsType::calculateEstimate(*smoother_);
@@ -464,7 +471,7 @@ class IncrementalInterface {
       // Update with graph and GN optimized values
       try {
         // Update smoother
-        LOG(ERROR) << "Attempting to update smoother with added prior factors";
+        ss << "\nAttempting to update smoother with added prior factors";
         // update smoother_arguments with new factors containing the priors
         // this should be the same as the original EXCEPT for the new factors
         UpdateArguments smoother_arguments_copy = smoother_arguments;
@@ -474,10 +481,10 @@ class IncrementalInterface {
             SmootherTraitsType::update(*smoother_, smoother_arguments_copy);
       } catch (...) {
         // Catch the rest of exceptions.
-        LOG(WARNING)
-            << "Smoother recovery failed. Most likely, the additional "
-               "prior factors were insufficient to keep the system from "
-               "becoming indeterminant. New values not added to system!";
+        ss << "\nSmoother recovery failed. Most likely, the additional "
+              "prior factors were insufficient to keep the system from "
+              "becoming indeterminant. New values not added to system!";
+        LOG(ERROR) << error_hooks.identifier << ": " << ss.str();
         return false;
       }
 
@@ -492,14 +499,17 @@ class IncrementalInterface {
       }
 
     } catch (const gtsam::ValuesKeyDoesNotExist& e) {
-      LOG(FATAL) << "gtsam::ValuesKeyDoesNotExist with variable "
-                 << DynosamKeyFormatter(e.key());
+      ss << "gtsam::ValuesKeyDoesNotExist with variable "
+         << DynosamKeyFormatter(e.key());
+      LOG(FATAL) << error_hooks.identifier << ": " << ss.str();
     } catch (const gtsam::ValuesKeyAlreadyExists& e) {
-      LOG(FATAL) << "gtsam::ValuesKeyAlreadyExists with variable "
-                 << DynosamKeyFormatter(e.key());
+      ss << "gtsam::ValuesKeyAlreadyExists with variable "
+         << DynosamKeyFormatter(e.key());
+      LOG(FATAL) << error_hooks.identifier << ": " << ss.str();
     } catch (const gtsam::StereoCheiralityException& e) {
-      LOG(FATAL) << "gtsam::StereoCheiralityException with nearbyVariable "
-                 << DynosamKeyFormatter(e.nearbyVariable());
+      ss << "gtsam::StereoCheiralityException with nearbyVariable "
+         << DynosamKeyFormatter(e.nearbyVariable());
+      LOG(FATAL) << error_hooks.identifier << ": " << ss.str();
     }
     return true;
   }
@@ -510,9 +520,15 @@ class IncrementalInterface {
     for (size_t n_iter = 1; n_iter < max_extra_iterations_; ++n_iter) {
       try {
         SmootherTraitsType::update(smoother, UpdateArguments{});
-        SmootherTraitsType::calculateEstimate(smoother);
+        // SmootherTraitsType::calculateEstimate(smoother);
+      } catch (const gtsam::IndeterminantLinearSystemException& e) {
+        LOG(FATAL)
+            << "During extra iterations: "
+               "gtsam::IndeterminantLinearSystemException with nearbyVariable "
+            << DynosamKeyFormatter(e.nearbyVariable());
       } catch (const gtsam::StereoCheiralityException& e) {
-        LOG(FATAL) << "gtsam::StereoCheiralityException with nearbyVariable "
+        LOG(FATAL) << "During extra iterations: "
+                      "gtsam::StereoCheiralityException with nearbyVariable "
                    << DynosamKeyFormatter(e.nearbyVariable());
       } catch (const std::runtime_error& e) {
         LOG(WARNING) << "Smoother failed running extra update steps: "
@@ -576,7 +592,11 @@ class ISAMInterface : public IncrementalInterface<ISAMSmoother> {
     // update internal bookkeeping
     const gtsam::NonlinearFactorGraph factors_in_smoother = this->getFactors();
     const gtsam::FactorIndices& new_factor_indicies = result->newFactorsIndices;
-    CHECK_EQ(new_factors.size(), new_factor_indicies.size());
+    // in the case that the smoother recovered by adding priors
+    // the num new factors indicies will be greater than the number of new
+    // factors however we take care the add the recovery (prior) factors at the
+    // end of the new factors so the indexing is not changed
+    CHECK_GE(new_factor_indicies.size(), new_factors.size());
 
     // update factor slot position
     for (size_t i = 0; i < new_factors.size(); i++) {

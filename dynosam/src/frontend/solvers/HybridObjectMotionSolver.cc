@@ -218,7 +218,11 @@ bool HybridObjectMotionSolver::solveImpl(
               << " inliers= " << inlier_tracklets.size();
   }
 
-  if (inlier_tracklets.size() < 4 ||
+  // TODO: for now - this will break on small objects like dynopets!
+  //  just for testing on real!
+  //  originally 4!
+  // TODO: new param 'min_dynamic_pnp_inliers'
+  if (inlier_tracklets.size() < 10 ||
       geometric_result.status != TrackingStatus::VALID) {
     LOG(WARNING) << "Could not make initial frame for object " << object_id
                  << " as not enough inlier tracks!";
@@ -252,7 +256,7 @@ bool HybridObjectMotionSolver::solveImpl(
 
   gtsam::Pose3 G_W_inv = G_W.inverse();
 
-  if (false) {
+  if (true) {
     auto refinement_result = optical_flow_pose_solver_.optimizeAndUpdate(
         frame_km1, frame_k, inlier_tracklets, G_W);
     // still need to take the inverse as we get the inverse of G out

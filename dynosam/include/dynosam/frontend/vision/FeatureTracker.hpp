@@ -65,6 +65,9 @@ class FeatureTracker : public FeatureTrackerBase {
                    const ImageContainer& image_container,
                    const std::optional<gtsam::Rot3>& R_km1_k = {});
 
+  bool stereoTrack(FeatureContainer& left_features,
+                   const ImageContainer& image_container) const;
+
   bool stereoTrack(FeaturePtrs& stereo_features,
                    FeatureContainer& left_features, const cv::Mat& left_image,
                    const cv::Mat& right_image,
@@ -177,6 +180,10 @@ class FeatureTracker : public FeatureTrackerBase {
 
   // for now!
   cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> lk_cuda_tracker_;
+
+  const cv::Size klt_window_size_{21, 21};
+  const int klt_max_level_ = 3;
+
   ObjectDetectionEngine::Ptr object_detection_;
 };
 

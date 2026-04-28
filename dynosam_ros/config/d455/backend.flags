@@ -42,7 +42,7 @@
 --opt_window_overlap=4
 
 
---use_vo_factor=false
+--use_vo_factor=true
 --use_smoothing_factor=true
 
 # 0: Full-batch, 1: sliding-window, 2: incremental

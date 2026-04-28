@@ -51,8 +51,16 @@ PyramidBuilder::PyramidBuilder(const cv::Size& win_size, int max_level)
     : win_size_(win_size), max_level_(max_level) {}
 
 bool PyramidBuilder::build(const ImageContainer& container,
+                           const std::string& img_key,
                            OpticalFlowPyramid& pyr) const {
   const FrameId frame_id = container.frameId();
+
+  if (!container.exists(img_key)) {
+    DYNO_THROW_MSG(DynosamException)
+        << "Cannot build image pyramid for k=" << frame_id
+        << ": requested image " << img_key
+        << " does not exist in the container!";
+  }
 
   bool needs_building = false;
   // Ensure correct size (no reallocation if already correct)
@@ -61,41 +69,48 @@ bool PyramidBuilder::build(const ImageContainer& container,
     needs_building = true;
   }
 
-  if (frame_id != pyr.frame_id) {
+  const std::string name = std::to_string(frame_id) + "+" + img_key;
+
+  if (name != pyr.name) {
     needs_building = true;
   }
 
   if (needs_building) {
-    cv::Mat image = ImageType::RGBMono::toMono(container.rgb());
+    // parse the image as an RGB image regardless of what it is!
+    cv::Mat image = ImageType::RGBMono::toMono(container.at(img_key));
 
     cv::buildOpticalFlowPyramid(image, pyr.levels, win_size_, max_level_, false,
                                 cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT,
                                 true  // critical for reuse
     );
-    pyr.frame_id = frame_id;
+    pyr.name = name;
   }
 
   return needs_building;
 }
 
 SparseLKTracker::SparseLKTracker(const cv::Size& win_size, int max_level,
-                                 int expected_max_features)
-    : pyr_builder_(win_size, max_level),
+                                 int expected_max_features,
+                                 const std::string& img1_key,
+                                 const std::string& img2_key)
+    : img1_key_(img1_key),
+      img2_key_(img2_key),
+      pyr_builder_(win_size, max_level),
       criteria_(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 30, 0.01) {
-  previous_pyr_.reserve(max_level);
-  current_pyr_.reserve(max_level);
+  img1_pyr_.reserve(max_level);
+  img2_pyr_.reserve(max_level);
   workspace_.reserve(expected_max_features);
   reverse_workspace_.reserve(expected_max_features);
 }
 
 const LKWorkspace& SparseLKTracker::track(
-    const ImageContainer& image_container_km1,
+    const ImageContainer& image_container_1,
     const ImageContainer& image_container_k,
-    const std::vector<cv::Point2f>& prev_pts,
-    const std::vector<cv::Point2f>* current_points) {
+    const std::vector<cv::Point2f>& img1_pts,
+    const std::vector<cv::Point2f>* img2_pts) {
   bool previous_allocated =
-      pyr_builder_.build(image_container_km1, previous_pyr_);
-  pyr_builder_.build(image_container_k, current_pyr_);
+      pyr_builder_.build(image_container_1, img1_key_, img1_pyr_);
+  pyr_builder_.build(image_container_k, img2_key_, img2_pyr_);
 
   if (count > 0) {
     CHECK(!previous_allocated);
@@ -104,14 +119,14 @@ const LKWorkspace& SparseLKTracker::track(
   // used as flags argument for calcOpticalFlowPyrLK - initially starts as
   // default (0) flag
   int klt_flags = 0;
-  if (current_points) {
-    CHECK_EQ(current_points->size(), prev_pts.size());
-    workspace_.curr_pts = *current_points;
+  if (img2_pts) {
+    CHECK_EQ(img2_pts->size(), img1_pts.size());
+    workspace_.pts = *img2_pts;
     klt_flags = cv::OPTFLOW_USE_INITIAL_FLOW;
   }
 
   // forwards track
-  trackImpl(prev_pts, previous_pyr_, current_pyr_, klt_flags, workspace_);
+  trackImpl(img1_pts, img1_pyr_, img2_pyr_, klt_flags, workspace_);
 
   // if we used OPTFLOW_USE_INITIAL_FLOW check that we actually got good flow
   if (klt_flags == cv::OPTFLOW_USE_INITIAL_FLOW) {
@@ -125,13 +140,15 @@ const LKWorkspace& SparseLKTracker::track(
                    << succ_num << " tracked!";
 
       // run again but with klt_flags=0 (ie. default)
-      trackImpl(prev_pts, previous_pyr_, current_pyr_, 0, workspace_);
+      trackImpl(img1_pts, img1_pyr_, img2_pyr_, 0, workspace_);
     }
   }
 
   // backwards track
-  const std::vector<cv::Point2f>& curr_pts = workspace_.curr_pts;
-  trackImpl(curr_pts, current_pyr_, previous_pyr_, klt_flags,
+  const std::vector<cv::Point2f>& curr_pts = workspace_.pts;
+  // use initial flow for reverse check
+  reverse_workspace_.pts = curr_pts;
+  trackImpl(curr_pts, img2_pyr_, img1_pyr_, cv::OPTFLOW_USE_INITIAL_FLOW,
             reverse_workspace_);
 
   // modified output
@@ -139,10 +156,10 @@ const LKWorkspace& SparseLKTracker::track(
   const auto& forward_error = workspace_.error;
 
   const auto& reverse_status = reverse_workspace_.status;
-  const auto& reverse_pts = reverse_workspace_.curr_pts;
+  const auto& reverse_pts = reverse_workspace_.pts;
   const auto& reverse_error = reverse_workspace_.error;
 
-  CHECK_EQ(prev_pts.size(), curr_pts.size());
+  CHECK_EQ(img1_pts.size(), curr_pts.size());
   CHECK_EQ(forwards_status.size(), curr_pts.size());
   CHECK_EQ(reverse_status.size(), curr_pts.size());
 
@@ -151,7 +168,7 @@ const LKWorkspace& SparseLKTracker::track(
   for (size_t i = 0; i < forwards_status.size(); i++) {
     const bool both_status_good = forwards_status.at(i) && reverse_status.at(i);
     const bool within_distance =
-        utils::distance(prev_pts.at(i), reverse_pts.at(i)) <= 0.5;
+        utils::distance(img1_pts.at(i), reverse_pts.at(i)) <= 0.5;
     const bool within_error =
         reverse_error[i] < kMaxErr && forward_error[i] < kMaxErr;
 
@@ -163,27 +180,27 @@ const LKWorkspace& SparseLKTracker::track(
     }
   }
 
-  previous_pyr_ = std::move(current_pyr_);
+  img1_pyr_ = std::move(img2_pyr_);
 
   count++;
 
   return workspace_;
 }
 
-void SparseLKTracker::trackImpl(const std::vector<cv::Point2f>& prev_pts,
-                                const OpticalFlowPyramid& previous_pyr,
-                                const OpticalFlowPyramid& current_pyr,
+void SparseLKTracker::trackImpl(const std::vector<cv::Point2f>& img1_pts,
+                                const OpticalFlowPyramid& img1_pyr,
+                                const OpticalFlowPyramid& img2_pyr,
                                 int klt_flags, LKWorkspace& workspace) const {
-  const size_t N = prev_pts.size();
+  const size_t N = img1_pts.size();
   // Resize WITHOUT realloc (capacity already reserved)
   // this should not affect worksapce.curr_pts if set (ie. initial gues)
   // as long as curr_pts.size() == prev_pts.size()
   workspace.resize(N);
 
-  cv::calcOpticalFlowPyrLK(previous_pyr.levels, current_pyr.levels, prev_pts,
-                           workspace.curr_pts, workspace.status,
-                           workspace.error, pyr_builder_.winSize(),
-                           pyr_builder_.maxLevel(), criteria_, klt_flags,
+  cv::calcOpticalFlowPyrLK(img1_pyr.levels, img2_pyr.levels, img1_pts,
+                           workspace.pts, workspace.status, workspace.error,
+                           pyr_builder_.winSize(), pyr_builder_.maxLevel(),
+                           criteria_, klt_flags,
                            1e-4  // minEigThreshold
   );
 }

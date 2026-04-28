@@ -54,6 +54,7 @@ TEST(testCameraParamss, basicConstructionCal3DS2) {
   const cv::Size size_expected(752, 480);
 
   const std::string expected_distortion_model = "radtan";
+  const std::string expected_reference_frame = "camera_frame";
 
   // Sensor extrinsics wrt. the body-frame.
   gtsam::Rot3 R_expected(0.0148655429818, -0.999880929698, 0.00414029679422,
@@ -63,10 +64,12 @@ TEST(testCameraParamss, basicConstructionCal3DS2) {
   gtsam::Pose3 pose_expected(R_expected, T_expected);
 
   CameraParams params(intrinsics_expected, distortion_expected, size_expected,
-                      expected_distortion_model, pose_expected);
+                      expected_distortion_model, pose_expected,
+                      expected_reference_frame);
 
   EXPECT_EQ(size_expected.width, params.ImageWidth());
   EXPECT_EQ(size_expected.height, params.ImageHeight());
+  EXPECT_EQ(expected_reference_frame, params.referenceFrame());
 
   // for (int c = 0u; c < 4u; c++)
   // {
@@ -170,6 +173,8 @@ TEST(testCameraParams, parseYAML) {
   EXPECT_DOUBLE_EQ(distortion_expected[1], gtsam_calib.k2());
   EXPECT_DOUBLE_EQ(distortion_expected[2], gtsam_calib.p1());
   EXPECT_DOUBLE_EQ(distortion_expected[3], gtsam_calib.p2());
+
+  EXPECT_EQ("camera_frame", cam_params.referenceFrame());
 
   LOG(INFO) << "Dyno printing " << cam_params.toString();
   LOG(INFO) << "CU printing " << config::toString(cam_params);

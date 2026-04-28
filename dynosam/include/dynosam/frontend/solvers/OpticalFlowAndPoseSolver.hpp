@@ -21,7 +21,7 @@ struct OpticalFlowAndPoseSolverParams {
   double flow_prior_sigma{3.33};
   double k_huber{0.001};
   bool outlier_reject{true};
-  bool use_robust{true};
+  bool use_robust{false};
   // When true, this indicates that the optical flow images go from k to k+1
   // (rather than k-1 to k, when false) this left over from some original
   // implementations. This param is used when updated the frames after
@@ -396,10 +396,10 @@ class OpticalFlowAndPoseSolver {
       CHECK(solver.solve(optimised_values, options, &summary));
     }
 
-    LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
-              << summary.final_error << " time[s] "
-              << summary.cumulative_time_in_seconds
-              << " #iterations= " << summary.numIterations();
+    VLOG(10) << "Initial error: " << summary.initial_error << " final error "
+             << summary.final_error << " time[s] "
+             << summary.cumulative_time_in_seconds
+             << " #iterations= " << summary.numIterations();
 
     return optimised_values;
   }
@@ -409,7 +409,7 @@ class OpticalFlowAndPoseSolver {
                         const gtsam::Ordering& ordering) const {
     gtsam::GaussNewtonParams opt_params;
     // for speed
-    opt_params.setMaxIterations(10);
+    opt_params.setMaxIterations(3);
     // this is basically a set of prior looking factors on a pose so we know we
     // need to eliminate the pose last to avoid fill in therefore we use our own
     // custom ordering that has the pose last
@@ -430,10 +430,10 @@ class OpticalFlowAndPoseSolver {
       CHECK(solver.solve(optimised_values, options, &summary));
     }
 
-    LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
-              << summary.final_error << " time[s] "
-              << summary.cumulative_time_in_seconds
-              << " #iterations= " << summary.numIterations();
+    VLOG(10) << "Initial error: " << summary.initial_error << " final error "
+             << summary.final_error << " time[s] "
+             << summary.cumulative_time_in_seconds
+             << " #iterations= " << summary.numIterations();
 
     return optimised_values;
   }

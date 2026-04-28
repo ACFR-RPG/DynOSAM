@@ -16,7 +16,8 @@ gtsam::Symbol PointSymbol(TrackletId tracklet_id) {
   // gtsam::Symbol::ChrTest(kDynamicLandmarkSymbolChar)) to
   // return all the dynamic landmarks which does not work with
   // DynamicPointSymbol
-  return gtsam::Symbol(kDynamicLandmarkSymbolChar, tracklet_id);
+  return gtsam::Symbol(kDynamicLandmarkSymbolChar,
+                       static_cast<std::uint64_t>(tracklet_id));
 }
 
 // TODO: really should initalise with frame and tracklet ids...
@@ -114,7 +115,7 @@ HybridObjectMotionSmoother::getObjectPoints() const {
   gtsam::FastMap<TrackletId, gtsam::Point3> object_point_map;
   for (const auto& [key, point] : keyed_object_point_map) {
     gtsam::Symbol sym(key);
-    TrackletId tracklet_id = (TrackletId)sym.index();
+    TrackletId tracklet_id = static_cast<TrackletId>(sym.index());
     object_point_map.insert2(tracklet_id, point);
   }
   return object_point_map;
@@ -457,18 +458,19 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
             << " median parallax: " << median_parallax
             << " frames since kf:" << frames_since_lkf;
 
-  const double coverage_thresh = 0.3;  // spatial redundancy
+  // const double coverage_thresh = 0.3;  // spatial redundancy
+  const double coverage_thresh = 0.1;  // spatial redundancy
   double parallax_thresh = 0.05;
   FrameId min_frames_dt = 15;
 
   bool is_keyframe = false;
-  if (coverage < coverage_thresh) {
-    is_keyframe = true;
-  }
+  // if (coverage < coverage_thresh) {
+  //   is_keyframe = true;
+  // }
 
-  if (median_parallax > parallax_thresh) {
-    is_keyframe = true;
-  }
+  // if (median_parallax > parallax_thresh) {
+  //   is_keyframe = true;
+  // }
 
   if (frames_since_lkf > min_frames_dt) {
     is_keyframe = true;
@@ -741,10 +743,9 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
 
   utils::ChronoTimingStats update_timer(logger_prefix_ + ".isam_update", 10);
 
-  // getDefaultILSErrorHandlingHooks(handle_failed_object)
-  // using SmootherInterface = IncrementalInterface<decltype(isam_)>;
-  // using SmootherInterface = ISAMInterface<decltype(isam_)>;
-  // SmootherInterface smoother(&isam_);
+  auto error_hooks = getDefaultILSErrorHandlingHooks();
+  error_hooks.identifier = "hybrid_smoother_j" + std::to_string(object_id_);
+
   smoother_interface_.setMaxExtraIterations(0);
   result.solver_okay = smoother_interface_.optimize(
       &isamResult_,
@@ -754,7 +755,7 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
         update_arguments.new_factors = newFactors;
         update_arguments.update_params = mutable_update_params;
       },
-      getDefaultILSErrorHandlingHooks());
+      error_hooks);
 
   result.update_time_ms = update_timer.stop();
   result.isam_result = isamResult_;
@@ -993,7 +994,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   gtsam::SharedNoiseModel stereo_noise_model =
       gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);
   stereo_noise_model =
-      factor_graph_tools::robustifyHuber(0.01, stereo_noise_model);
+      factor_graph_tools::robustifyHuber(0.001, stereo_noise_model);
 
   // for debug stats
   size_t num_tracks_used = 0;
@@ -1006,7 +1007,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   gtsam::KeyVector keys_that_should_be_deleted;
 
   for (const TrackletId& tracklet_id : tracklets) {
-    const Feature::Ptr feature = frame->at(tracklet_id);
+    Feature::Ptr feature = frame->at(tracklet_id);
     CHECK(feature);
 
     auto [stereo_keypoint_status, stereo_measurement] =
@@ -1017,6 +1018,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
     double disparity = stereo_measurement.uL() - stereo_measurement.uR();
     if (disparity < 0.5) {
+      feature->markOutlier();
       continue;
     }
 
@@ -1278,20 +1280,35 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   //   object_motion_to_tracklets_.erase(key);
   // }
 
-  smoother_state = calculateEstimate();
+  // only add points once they are marginalized?
+  // this means the backend will only get initial point estimates once
+  // they are refined
+  // and by using the m_l_init value in the backend we wait for these initial
+  // points even though the map is getting measurements filled make sure that
+  // the point is seen across enough keyframes otherwise it will enever end up
+  // int eh map smoother_state = calculateEstimate();
+  gtsam::Values active_state = calculateEstimate();
+
+  auto active_motion_estimates = active_state.extract<gtsam::Pose3>(
+      gtsam::Symbol::ChrTest(kObjectMotionSymbolChar));
+  for (const auto& [key, value] : active_motion_estimates) {
+    smoother_state.insert(key, value);
+  }
 
   for (auto& [tracklet_id, point_state_pair] : point_state_) {
     const gtsam::Symbol m_key(PointSymbol(tracklet_id));
     const PointState& point_state = point_state_pair.first;
 
     if (point_state == PointState::InState) {
-      CHECK(smoother_state.exists(m_key));
+      // CHECK(smoother_state.exists(m_key));
+      CHECK(active_state.exists(m_key));
       // update variable
-      point_state_pair.second = smoother_state.at<gtsam::Point3>(m_key);
+      point_state_pair.second = active_state.at<gtsam::Point3>(m_key);
     } else {
       // removed
       CHECK(!smoother_state.exists(m_key));
       const Landmark& m_L_point = point_state_pair.second;
+      // add points once they are removed
       smoother_state.insert(m_key, m_L_point);
     }
   }

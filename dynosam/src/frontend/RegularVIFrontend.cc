@@ -85,9 +85,7 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
 
   VLOG(5) << to_string(tracker_->getTrackerInfo());
 
-  FeaturePtrs stereo_matches_1;
-  bool stereo_matching_result =
-      tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_1);
+  bool stereo_matching_result = stereoMatch(frame_k);
 
   // when providing the propogated imu state only provide if it was
   // actually filled by a prediction from the IMU - otherwise it will ne
@@ -100,8 +98,7 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   if (stereo_matching_result) {
     // Need to match aagain after optical flow used to update the keypoints
     // This seems to make a pretty big difference!!
-    FeaturePtrs stereo_matches_2;
-    tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_2);
+    stereo_matching_result &= stereoMatch(frame_k);
   }
 
   // we currently use the frame pose as the nav state - this value can come from

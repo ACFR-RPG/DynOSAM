@@ -61,6 +61,8 @@ struct rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo> {
         source.getDistortionModel(), destination.distortion_model,
         camera_model));
     (void)camera_model;
+
+    destination.header.frame_id = source.referenceFrame();
   }
 
   static void convert_to_custom(const ros_message_type& source,
@@ -79,9 +81,12 @@ struct rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo> {
                                                     source.d.end());
     cv::Size size(source.width, source.height);
     const std::string& distortion_model = source.distortion_model;
+    const std::string& reference_frame = source.header.frame_id;
 
+    // dont know the extrinsics of the camera yet so we have to set identity!
     destination =
-        dyno::CameraParams(intrinsics, distortion, size, distortion_model);
+        dyno::CameraParams(intrinsics, distortion, size, distortion_model,
+                           gtsam::Pose3::Identity(), reference_frame);
   }
 };
 

@@ -43,6 +43,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_cv/RGBDCamera.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
 
 namespace dyno {
@@ -62,10 +63,8 @@ FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
   CHECK(!img_size_.empty());
 
   LOG(INFO) << "Creating cv::cuda::SparsePyrLKOpticalFlow";
-  static const cv::Size klt_window_size(21, 21);  // Window size for KLT
-  static const int klt_max_level = 3;             // Max pyramid levels for KLT
   lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
-      klt_window_size, klt_max_level, 30);
+      klt_window_size_, klt_max_level_, 30);
 
   if (!params_.prefer_provided_object_detection) {
     LOG(INFO) << "Creating object detection engine";
@@ -213,6 +212,139 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   boarder_detection_mask_ = boundary_mask_result.boundary_mask;
 
   return new_frame;
+}
+
+bool FeatureTracker::stereoTrack(FeatureContainer& left_features,
+                                 const ImageContainer& image_container) const {
+  if (!image_container.hasRightRgb()) {
+    return false;
+  }
+
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+  CHECK(rgbd_camera) << "Stereo imagery provided at k= "
+                     << image_container.frameId()
+                     << " but rgbd camera is null!";
+
+  // TODO: reuse image pyramids from before!
+  utils::ChronoTimingStats timing("stereo_track_timer");
+  TrackletIds tracklets_ids;
+  std::vector<cv::Point2f> left_feature_points =
+      left_features.toOpenCV(&tracklets_ids, true);
+
+  if (left_feature_points.size() < 8) {
+    LOG(WARNING) << "Not enough left feature points for stereo matching...";
+    return false;
+  }
+
+  // should share left image pyramid between trackers...!
+  // specify tracking between left and right images
+  SparseLKTracker stereo_lk_tracker(klt_window_size_, klt_max_level_,
+                                    left_features.size(), ImageContainer::kRGB,
+                                    ImageContainer::kRightRgb);
+
+  const LKWorkspace& lk_result = stereo_lk_tracker.track(
+      image_container, image_container, left_feature_points);
+
+  const auto& klt_status = lk_result.status;
+  const auto& klt_err = lk_result.error;
+  const auto& right_feature_points = lk_result.pts;
+
+  CHECK_EQ(left_feature_points.size(), right_feature_points.size());
+  CHECK_EQ(tracklets_ids.size(), right_feature_points.size());
+  CHECK_EQ(tracklets_ids.size(), klt_status.size());
+
+  // apply fundamental matrix calc to each feature track with different id since
+  // they have independant motions
+  struct Tracklet2DVectors {
+    std::vector<cv::Point2f> left;
+    std::vector<cv::Point2f> right;
+    TrackletIds tracklets;
+  };
+  gtsam::FastMap<ObjectId, Tracklet2DVectors> good_tracks_per_object;
+
+  // collect points per object for outlier rejection with homography
+  for (size_t i = 0; i < klt_status.size(); i++) {
+    if (!klt_status[i]) {
+      continue;
+    }
+
+    TrackletId tracklet_id = tracklets_ids.at(i);
+    const Feature::Ptr feature = left_features.getByTrackletId(tracklet_id);
+
+    const ObjectId object_id = feature->objectId();
+    if (!good_tracks_per_object.exists(object_id)) {
+      good_tracks_per_object.insert2(object_id, Tracklet2DVectors{});
+    }
+
+    Tracklet2DVectors& tracklet_vectors = good_tracks_per_object.at(object_id);
+    tracklet_vectors.left.push_back(left_feature_points.at(i));
+    tracklet_vectors.right.push_back(right_feature_points.at(i));
+    tracklet_vectors.tracklets.push_back(tracklet_id);
+  }
+
+  // geometrically verified feature tracks and tracklets for all objects
+  std::vector<cv::Point2f> verified_left;
+  std::vector<cv::Point2f> verified_right;
+  TrackletIds verified_tracklets;
+  // apply outlier rejection via fundamental matrix for each object
+  for (const auto& [object_id, tracklet_vectors] : good_tracks_per_object) {
+    // need more than 8 points for fundamental matrix calc with ransac
+    // points will not be marked as inliers (verified) and threfore will
+    // be marked as outliers later
+    if (tracklet_vectors.tracklets.size() < 8) {
+      continue;
+    }
+
+    std::vector<uchar> epipolar_inliers;
+    cv::findFundamentalMat(tracklet_vectors.left, tracklet_vectors.right,
+                           cv::FM_RANSAC, 1.0, 0.99, epipolar_inliers);
+
+    for (size_t i = 0; i < epipolar_inliers.size(); ++i) {
+      auto tracklet_id = tracklet_vectors.tracklets.at(i);
+      if (epipolar_inliers[i]) {
+        verified_left.push_back(tracklet_vectors.left[i]);
+        verified_right.push_back(tracklet_vectors.right[i]);
+
+        CHECK(left_features.getByTrackletId(tracklet_id))
+            << "Somehow tracklet id " << tracklet_id << " is missing!";
+        verified_tracklets.push_back(tracklet_id);
+      }
+    }
+  }
+
+  const auto& fx = camera_->getParams().fx();
+  for (size_t i = 0; i < verified_tracklets.size(); i++) {
+    auto inlier_stereo_track = verified_tracklets.at(i);
+    Feature::Ptr feature = left_features.getByTrackletId(inlier_stereo_track);
+    CHECK(feature);
+    CHECK(feature->usable());
+
+    double uL = static_cast<double>(verified_left[i].x);
+    double v = static_cast<double>(verified_left[i].y);
+    double uR = static_cast<double>(verified_right[i].x);
+
+    double disparity = uL - uR;
+    // Reject near-zero disparity
+    // this will also mean far away points.... multi-view triangulation
+    // across frames is needed here... fall back on depth map...
+    if (disparity <= 1.0 || uR < 0.0f) {
+      feature->markOutlier();
+      continue;
+    }
+
+    // TODO: should use RGBDCamera class!
+    double depth = rgbd_camera->depthFromDisparity(disparity);
+    // for testing
+    // TODO: no max depth
+    feature->depth(depth);
+    feature->rightKeypoint(Keypoint(uR, v));
+  }
+
+  TrackletIds outlier_tracklets;
+  determineOutlierIds(verified_tracklets, tracklets_ids, outlier_tracklets);
+
+  left_features.markOutliers(outlier_tracklets);
+  return true;
 }
 
 bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
@@ -631,11 +763,8 @@ void FeatureTracker::trackDynamicKLT(
     cv::Mat previous_mono =
         ImageType::RGBMono::toMono(previous_frame_->image_container_.rgb());
 
-    FeatureContainer previous_inliers;
-    auto iter = previous_frame_->dynamic_features_.usableIterator();
-    for (const auto& inlier_feature : iter) {
-      previous_inliers.add(inlier_feature);
-    }
+    FeatureContainer previous_inliers(
+        previous_frame_->dynamic_features_.usableIterator());
 
     // All tracklet ids from the set of previous features to track
     TrackletIds tracklet_ids;
@@ -653,8 +782,8 @@ void FeatureTracker::trackDynamicKLT(
     if (tracklet_ids.size() > 0) {
       utils::ChronoTimingStats tracking_t("dynamic_feature_track_klt.tracking");
 
-      static const cv::Size klt_window_size(21, 21);  // Window size for KLT
-      static const int klt_max_level = 3;  // Max pyramid levels for KLT
+      static const cv::Size klt_window_size(24, 24);  // Window size for KLT
+      static const int klt_max_level = 4;  // Max pyramid levels for KLT
       static const cv::TermCriteria klt_criteria = cv::TermCriteria(
           cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 30, 0.03);
 
@@ -673,12 +802,14 @@ void FeatureTracker::trackDynamicKLT(
                                klt_max_level, klt_criteria, klt_flags);
 
       // check flow back
+      // use initial flow to start
       std::vector<cv::Point2f> reverse_previous_feature_points = current_points;
       std::vector<uchar> klt_reverse_status;
       std::vector<float> reverse_err;
       cv::calcOpticalFlowPyrLK(
           mono, previous_mono, current_points, reverse_previous_feature_points,
-          klt_reverse_status, reverse_err, cv::Size(21, 21), 5);
+          klt_reverse_status, reverse_err, cv::Size(21, 21), 5, klt_criteria,
+          cv::OPTFLOW_USE_INITIAL_FLOW);
       CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
 
       // update klt status based on result from flow

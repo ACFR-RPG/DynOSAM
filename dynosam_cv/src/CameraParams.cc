@@ -104,30 +104,36 @@ void declare_config(CameraParams& config) {
         distortion_model + ", camera model: " + camera_model);
   }
 
-  config =
-      CameraParams(intrinsics, distortion, image_size, model, T_robot_camera);
+  std::string reference_frame;
+  field(reference_frame, "reference_frame");
+
+  config = CameraParams(intrinsics, distortion, image_size, model,
+                        T_robot_camera, reference_frame);
 }
 
 CameraParams::CameraParams(const IntrinsicsCoeffs& intrinsics,
                            const DistortionCoeffs& distortion,
                            const cv::Size& image_size,
                            const std::string& distortion_model,
-                           const gtsam::Pose3& T_robot_camera)
+                           const gtsam::Pose3& T_robot_camera,
+                           const std::string& reference_frame)
     : CameraParams(
           intrinsics, distortion, image_size,
           CameraParams::stringToDistortion(distortion_model, "pinhole"),
-          T_robot_camera) {}
+          T_robot_camera, reference_frame) {}
 
 CameraParams::CameraParams(const IntrinsicsCoeffs& intrinsics,
                            const DistortionCoeffs& distortion,
                            const cv::Size& image_size,
                            const DistortionModel& distortion_model,
-                           const gtsam::Pose3& T_robot_camera)
+                           const gtsam::Pose3& T_robot_camera,
+                           const std::string& reference_frame)
     : intrinsics_(intrinsics),
       distortion_coeff_(distortion),
       image_size_(image_size),
       distortion_model_(distortion_model),
-      T_robot_camera_(T_robot_camera) {
+      T_robot_camera_(T_robot_camera),
+      reference_frame_(reference_frame) {
   CHECK_EQ(intrinsics_.size(), 4u)
       << "Intrinsics must be of length 4 - [fx fy cu cv]";
   CHECK_GT(distortion_coeff_.size(), 0u);
@@ -276,6 +282,7 @@ const std::string CameraParams::toString() const {
       << "\nimage_size: \n- width: " << ImageWidth()
       << "\n- height: " << ImageHeight() << "\n- K: " << K_ << '\n'
       << "- Distortion Model: " << to_string(distortion_model_) << '\n'
+      << "- Reference frame:" << reference_frame_ << '\n'
       << "- D: " << D_ << '\n'
       << "- P: " << P_ << '\n';
 

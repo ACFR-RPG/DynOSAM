@@ -301,6 +301,15 @@ class ImageContainer {
   }
   inline size_t size() const { return images_.size(); }
 
+  cv::Mat at(const std::string& key) const {
+    if (!exists(key)) {
+      throw ImageKeyDoesNotExist(key);
+    }
+
+    // ptr will cast to a cv::Mat
+    return *images_.at(key).ptr;
+  }
+
   // Specific getters for known/expected image types
   inline bool hasRgb() const { return exists(kRGB); }
   inline bool hasDepth() const { return exists(kDepth); }

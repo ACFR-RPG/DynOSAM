@@ -43,11 +43,16 @@ camera_motion_solver:
 
 tracker_params:
   feature_detector_type: "GFFT_CUDA"
+  # feature_detector_type: "ORB_SLAM_ORB"
+
+# SUPER IMPORTANT for good optical flow!
+  gfft_params:
+    quality_level: 0.01
 
   shrink_row: 0
   shrink_col: 0
   # max_nr_keypoints_before_anms: 1500 # 2000 good for cluster
-  max_nr_keypoints_before_anms: 800 # 2000 good for cluster
+  max_nr_keypoints_before_anms: 1500 # 2000 good for cluster
   # max_features_per_frame: 800
   max_features_per_frame: 600
   # max_feature_track_age: 20
@@ -55,19 +60,19 @@ tracker_params:
   max_feature_track_age: 1000
   # currently min_features_per_frame should == max_features_per_frame
   # some internal bug that is yet to be sorted!
-  min_features_per_frame: 300
+  min_features_per_frame: 150
   # This should be wide to get a good spread.
   # Ideally should be calculated as some function of the input image size
   min_distance_btw_tracked_and_detected_static_features: 15
 
 
   subpixel_corner_refinement_params: false
-  # use_clahe_filter: false
+  use_clahe_filter: false
 
   prefer_provided_optical_flow: false
   prefer_provided_object_detection: true
 
-  max_dynamic_features_per_frame: 300
+  max_dynamic_features_per_frame: 150
   min_distance_btw_tracked_and_detected_dynamic_features: 2
   # max_dynamic_feature_age: 20 #20
   # for KF should be unlimited

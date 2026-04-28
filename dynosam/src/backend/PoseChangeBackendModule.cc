@@ -95,9 +95,10 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
   smoother_ = std::make_unique<gtsam::ISAM2>(isam2_params);
 
   smoother_interface_ = SmootherInterface(smoother_.get());
-  smoother_interface_.setMaxExtraIterations(6);
+  smoother_interface_.setMaxExtraIterations(0);
 
   error_hooks_ = formulation_->getCustomErrorHooks();
+  error_hooks_.identifier = "pc-backend";
 }
 
 PoseChangeVIBackendModule::~PoseChangeVIBackendModule() {}

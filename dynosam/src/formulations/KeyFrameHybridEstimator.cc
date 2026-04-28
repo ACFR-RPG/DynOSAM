@@ -548,7 +548,11 @@ void HybridFormulationKeyFrame::updateObject(
   size_t num_points_seen_akf = 0;
   auto seen_lmks_k = object_node->landmarksSeenAtFrame(frame_id_kf);
 
-  LOG(INFO) << "j=" << object_id << " seen lmks= " << seen_lmks_k.size();
+  size_t num_factors_not_enough_obs = 0;
+  size_t num_factors_added_k = 0;
+  size_t num_factors_added_lrkf = 0;
+  size_t num_other_factors_added = 0;
+  size_t num_missing_point_init = 0;
 
   for (const auto& obj_lmk_node : seen_lmks_k) {
     CHECK_EQ(obj_lmk_node->objectId(), object_id);
@@ -569,11 +573,13 @@ void HybridFormulationKeyFrame::updateObject(
       // somewhere CHECK(m_L_initial_.exists(object_id, tracklet_id)) <<
       // "Missing initalisation for j=" << object_id << " i=" << tracklet_id;
       if (!m_L_initial_.exists(object_id, tracklet_id)) {
+        num_missing_point_init++;
         continue;
       }
 
       // should be seen at least twice!
       if (frames_with_measurements.size() < 3) {
+        num_factors_not_enough_obs++;
         continue;
       }
 
@@ -617,11 +623,13 @@ void HybridFormulationKeyFrame::updateObject(
       }
       num_points_seen_akf++;
       frames_with_factors_added.insert(frame_node_lrkf->frameId());
+      num_factors_added_lrkf++;
     }
 
     addHybridMotionFactor(new_factors, point_key, object_id, AKF_pose,
                           obj_lmk_node, frame_node_kf);
     frames_with_factors_added.insert(frame_id_kf);
+    num_factors_added_k++;
 
     if (result.debug_info) {
       result.debug_info->getObjectInfo(context.getObjectId())
@@ -659,6 +667,7 @@ void HybridFormulationKeyFrame::updateObject(
               .num_dynamic_factors++;
         }
         frames_with_factors_added.insert(frame_with_z);
+        num_other_factors_added++;
       }
     }
 
@@ -668,8 +677,13 @@ void HybridFormulationKeyFrame::updateObject(
     }
   }
 
-  LOG(INFO) << "Num factors added for measuemenets at AKF "
-            << num_points_seen_akf;
+  LOG(INFO) << info_string(frame_id_kf, object_id)
+            << " seen lmks= " << seen_lmks_k.size()
+            << " factors added at k=" << num_factors_added_k
+            << " at lrkf=" << num_factors_added_lrkf << " others "
+            << num_other_factors_added
+            << " not enough obs: " << num_factors_not_enough_obs
+            << " missing point init " << num_missing_point_init;
 }
 
 void HybridFormulationKeyFrame::addHybridMotionFactor(
@@ -809,9 +823,9 @@ void HybridFormulationKeyFrame::addObjects(
       }
     }
 
-    VLOG(10) << "Adding initial object points of size "
-             << object_info.initial_object_points.size()
-             << " new lmks=" << num_new_lmks;
+    LOG(INFO) << "Adding initial object points of size "
+              << object_info.initial_object_points.size()
+              << " new lmks=" << num_new_lmks;
 
     if (keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
       key_frame_data_.startNewActiveRange(object_id, H_W_RKF_k.from(),

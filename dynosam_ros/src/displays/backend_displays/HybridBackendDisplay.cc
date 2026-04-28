@@ -149,7 +149,7 @@ HybridKeyFrameFormulationDisplay::HybridKeyFrameFormulationDisplay(
 
 void HybridKeyFrameFormulationDisplay::spinOnce(
     const DynoState::ConstPtr& output) {
-  LOG(INFO) << "In HybridKeyFrameFormulationDisplay::spin";
+  VLOG(30) << "In HybridKeyFrameFormulationDisplay::spin";
 
   auto ros_time = utils::toRosTime(output->timestamp);
 

@@ -144,30 +144,24 @@ std::optional<gtsam::NavState> VIFrontend::tryPropogateImu(
   return pim_out->predict(nav_state_lIMU, gtsam::imuBias::ConstantBias{});
 }
 
-bool VIFrontend::tryStereoMatch(Frame::Ptr frame,
-                                const ImageContainer::Ptr image_container,
-                                FeaturePtrs& stereo_features_out,
-                                FeatureContainer& left_features_in_out) {
-  if (!image_container->hasRightRgb()) {
+bool VIFrontend::stereoMatch(Frame::Ptr frame) {
+  const ImageContainer& container = frame->imageContainer();
+
+  if (!container.hasRightRgb()) {
     return false;
   }
 
-  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
-  CHECK(rgbd_camera) << "Stereo imagery provided at k= " << frame->getFrameId()
-                     << " but rgbd camera is null!";
+  // collect all features
+  FeatureContainer features;
+  for (const auto& f : frame->static_features_.usableIterator()) {
+    features.add(f);
+  }
 
-  const cv::Mat& left_rgb = image_container->rgb();
-  const cv::Mat& right_rgb = image_container->rightRgb();
+  for (const auto& f : frame->dynamic_features_.usableIterator()) {
+    features.add(f);
+  }
 
-  return tracker_->stereoTrack(stereo_features_out, left_features_in_out,
-                               left_rgb, right_rgb, rgbd_camera->baseline());
-}
-
-bool VIFrontend::tryStereoMatchStaticFeatures(
-    Frame::Ptr frame, const ImageContainer::Ptr image_container,
-    FeaturePtrs& stereo_features_out) {
-  return tryStereoMatch(frame, image_container, stereo_features_out,
-                        frame->static_features_);
+  return tracker_->stereoTrack(features, container);
 }
 
 void VIFrontend::fillDebugImagery(DebugImagery& debug_imagery,

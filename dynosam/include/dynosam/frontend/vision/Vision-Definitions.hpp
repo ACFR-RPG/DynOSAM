@@ -34,8 +34,6 @@
 
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/Feature.hpp"
-#include "dynosam_cv/ImageContainer.hpp"
 
 namespace dyno {
 

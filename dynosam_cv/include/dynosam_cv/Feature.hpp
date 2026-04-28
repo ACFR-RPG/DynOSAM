@@ -458,6 +458,13 @@ class FeatureContainer {
   // Move assignment
   FeatureContainer& operator=(FeatureContainer&& other) noexcept;
 
+  template <typename Iterator>
+  FeatureContainer(Iterator itr) : FeatureContainer() {
+    for (const auto& feature : itr) {
+      this->add(feature);
+    }
+  }
+
   /**
    * @brief Adds a new feature to the container.
    * Uses feature.trackletId() to set the tracklet key.

@@ -21,6 +21,7 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
       map_(CHECK_NOTNULL(formulation->map())) {
   // TODo
   HybridObjectMotionSolverParams motion_params;
+  motion_params.optical_flow_solver_params.use_robust = false;
 
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
@@ -105,10 +106,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
   // TODO: must set depth either by update depth or by stereo match.
   //  currently updateDepths is in feature track but this function is not!
-  FeaturePtrs stereo_matches_1;
-  // TODO: should we not use the frame->imageContainer()?
-  tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_1);
-  (void)stereo_matches_1;
+  stereoMatch(frame_k);
 
   gtsam::Pose3 identity_pose = gtsam::Pose3::Identity();
   gtsam::Vector3 zero_velocity(0.0, 0.0, 0.0);
@@ -208,11 +206,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
   CHECK(frame_km1);
 
-  VLOG(5) << to_string(tracker_->getTrackerInfo());
+  VLOG(1) << to_string(tracker_->getTrackerInfo());
 
-  FeaturePtrs stereo_matches_1;
-  bool stereo_matching_result =
-      tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_1);
+  bool stereo_matching_result = stereoMatch(frame_k);
 
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
@@ -233,8 +229,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   if (stereo_matching_result) {
     // Need to match aagain after optical flow used to update the keypoints
     // This seems to make a pretty big difference!!
-    FeaturePtrs stereo_matches_2;
-    tryStereoMatchStaticFeatures(frame_k, image_container, stereo_matches_2);
+    stereo_matching_result &= stereoMatch(frame_k);
   }
 
   // we currently use the frame pose as the nav state - this value can come from
@@ -315,6 +310,15 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   const bool any_object_keyframes = num_object_keyframes > 0;
   const bool is_any_keyframe = ego_motion_keyframe || any_object_keyframes;
 
+  if (is_any_keyframe) {
+    std::stringstream ss;
+    if (ego_motion_keyframe) ss << "CKF";
+    if (any_object_keyframes)
+      ss << " OKF: " << container_to_string(objects_with_keyframes);
+
+    LOG(INFO) << "Keyframe info k=" << frame_id_k << " " << ss.str();
+  }
+
   // TODO: may not be used if is_any_keyframe is false
   auto pc_input = std::make_shared<SinglePoseChangeInput>();
   pc_input->frame_id = frame_id_k;
@@ -324,8 +328,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   auto& new_dynamic_factors = pc_input->new_dynamic_fg_input.factors;
 
   UpdateObservationParams update_params;
-  update_params.enable_debug_info = true;
   update_params.do_backtrack = false;
+  if (VLOG_IS_ON(10)) update_params.enable_debug_info = true;
 
   PostUpdateData post_update_data(frame_id_k);
   // add static measurements if this is a camera keyframe or any object motion
@@ -363,8 +367,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     // TODO: this will fail when we start adding OKF's for LOST objects
 
     // update map after collecting all measurements for this frame
-    LOG(INFO) << "Adding n=" << dynamic_measurements_kf_k.size()
-              << " dyn object measurements to map";
     map_->updateObservations(dynamic_measurements_kf_k);
 
     for (const auto& [object_id, info] : kf_pose_change_infos) {
@@ -390,8 +392,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
             rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
             rel_egopose_lkf_j.j_id, rel_egopose_lkf_j.frame_j->getTimestamp(),
             dynamic_pixel_sigmas_, dynamic_point_sigma_);
-        LOG(INFO) << "Adding n=" << n << " dyn object measurements to map at k="
-                  << frame_id_motion_from;
+        // LOG(INFO) << "Adding n=" << n << " dyn object measurements to map at
+        // k="
+        //           << frame_id_motion_from;
 
         // update map after collecting all measurements for this frame
         map_->updateObservations(dynamic_measurements_kf);
@@ -432,6 +435,12 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
   pushImageToDisplayQueue("Tracks",
                           realtime_output->debug_imagery.tracking_image);
+
+  if (stereo_matching_result) {
+    cv::Mat stereo_track;
+    tracker_->drawStereoMatches(stereo_track, *frame_k);
+    pushImageToDisplayQueue("Stereo-Matches", stereo_track);
+  }
 
   logRealTimeOutput(realtime_output);
 
@@ -575,8 +584,9 @@ void PoseChangeVIFrontend::solveObjectMotions(
     object_with_new_motions.push_back(object_id);
   }
 
-  LOG(INFO) << "Solved motions " << container_to_string(object_with_new_motions)
-            << " k=" << frame_k->getFrameId();
+  // LOG(INFO) << "Solved motions " <<
+  // container_to_string(object_with_new_motions)
+  //           << " k=" << frame_k->getFrameId();
 
   // only keyframes!!
   infos = std::move(object_motion_solver_->poseChangeInfoMap());
@@ -701,15 +711,15 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
     return true;
   }
 
-  // Case B: strong motion → useful geometry
-  if (median_disp > disp_thresh) {
-    return true;
-  }
+  // // Case B: strong motion → useful geometry
+  // if (median_disp > disp_thresh) {
+  //   return true;
+  // }
 
-  // Optional: tracking degrading relative to KF
-  if (retention < retention_thresh) {
-    return true;
-  }
+  // // Optional: tracking degrading relative to KF
+  // if (retention < retention_thresh) {
+  //   return true;
+  // }
 
   // Otherwise: redundant frame
   return false;

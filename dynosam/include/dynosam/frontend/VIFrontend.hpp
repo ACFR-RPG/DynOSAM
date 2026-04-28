@@ -75,14 +75,12 @@ class VIFrontend : public Frontend {
       const VIFrontendInput::ConstPtr input,
       const gtsam::NavState& nav_state_lIMU, ImuFrontend::PimPtr& pim_out);
 
-  bool tryStereoMatch(Frame::Ptr frame,
-                      const ImageContainer::Ptr image_container,
-                      FeaturePtrs& stereo_features_out,
-                      FeatureContainer& left_features_in_out);
+  bool stereoMatch(Frame::Ptr frame);
 
-  bool tryStereoMatchStaticFeatures(Frame::Ptr frame,
-                                    const ImageContainer::Ptr image_container,
-                                    FeaturePtrs& stereo_features_out);
+  // bool tryStereoMatchStaticFeatures(Frame::Ptr frame,
+  //                                   const ImageContainer::Ptr
+  //                                   image_container, FeaturePtrs&
+  //                                   stereo_features_out);
 
   // TODO: add back object poses?
   void fillDebugImagery(DebugImagery& debug_imagery, const Frame::Ptr& frame_k,

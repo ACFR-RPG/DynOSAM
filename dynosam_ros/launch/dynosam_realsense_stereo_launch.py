@@ -66,9 +66,15 @@ def generate_launch_description():
             ],
         )
 
+    # wait a few seconds for the realsense to launch properly
+    delay_node = TimerAction(
+        period=2.0,
+        actions=[dynosam_node]
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument("output_path", default_value="/root/results/misc/"),
-        DeclareLaunchArgument("v", default_value="30"),
+        DeclareLaunchArgument("v", default_value="0"),
         rs_node,
-        dynosam_node
+        delay_node
     ])

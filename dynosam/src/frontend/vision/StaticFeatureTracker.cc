@@ -226,8 +226,8 @@ KltFeatureTracker::KltFeatureTracker(const TrackerParams& params,
   auto detector = FunctionalDetector::FactoryCreate(params);
   detector_ = std::make_shared<SparseFeatureDetector>(params, detector);
 
-  static const cv::Size klt_window_size(21, 21);  // Window size for KLT
-  static const int klt_max_level = 3;             // Max pyramid levels for KLT
+  static const cv::Size klt_window_size(24, 24);  // Window size for KLT
+  static const int klt_max_level = 4;             // Max pyramid levels for KLT
   static const cv::TermCriteria klt_criteria = cv::TermCriteria(
       cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 30, 0.03);
 
@@ -238,7 +238,8 @@ KltFeatureTracker::KltFeatureTracker(const TrackerParams& params,
   // lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
   //     klt_window_size, klt_max_level, klt_criteria.maxCount);
   lk_tracker_ = std::make_unique<SparseLKTracker>(
-      klt_window_size, klt_max_level, params.max_features_per_frame);
+      klt_window_size, klt_max_level, params.max_features_per_frame,
+      ImageContainer::kRGB, ImageContainer::kRGB);
 
   CHECK_NOTNULL(detector_);
 }
@@ -269,12 +270,8 @@ FeatureContainer KltFeatureTracker::trackStatic(
     equalizeImage(previous_frame->image_container_,
                   previous_equialized_greyscale);
 
-    FeatureContainer previous_inliers;
-    auto iter = previous_frame->static_features_.usableIterator();
-    for (const auto& inlier_feature : iter) {
-      previous_inliers.add(inlier_feature);
-    }
-
+    FeatureContainer previous_inliers(
+        previous_frame->static_features_.usableIterator());
     // if we dont actually have any previous tracks
     // this may be in cases where we have an IMU and so we have some odometry
     // but no feature tracks from the previous frame!
@@ -315,9 +312,9 @@ void KltFeatureTracker::equalizeImage(const ImageContainer& image_container,
   CHECK(!mono.empty());
 
   mono.copyTo(equialized_greyscale);
-  // CHECK(clahe_);
 
-  // clahe_->apply(mono, equialized_greyscale);
+  // cv::GaussianBlur(equialized_greyscale, equialized_greyscale, cv::Size(3,3),
+  // 0);
 }
 
 std::vector<cv::Point2f> KltFeatureTracker::detectRawFeatures(
@@ -389,11 +386,12 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
     int radius = static_cast<int>(base_radius * scale);
     radius = std::max(radius, 3);
 
-    // cv::circle(detection_mask_impl, utils::gtsamPointToCv(kp),
-    //            params_.min_distance_btw_tracked_and_detected_static_features,
-    //            cv::Scalar(0), cv::FILLED);
-    cv::circle(detection_mask_impl, utils::gtsamPointToCv(feature->keypoint()),
-               radius, cv::Scalar(0), cv::FILLED);
+    cv::circle(detection_mask_impl, utils::gtsamPointToCv(kp),
+               params_.min_distance_btw_tracked_and_detected_static_features,
+               cv::Scalar(0), cv::FILLED);
+    // cv::circle(detection_mask_impl,
+    // utils::gtsamPointToCv(feature->keypoint()),
+    //            radius, cv::Scalar(0), cv::FILLED);
   }
 
   std::vector<cv::Point2f> detected_points;
@@ -569,7 +567,7 @@ bool KltFeatureTracker::trackPoints(
 
   const auto& klt_status = lk_result.status;
   const auto& klt_err = lk_result.error;
-  const auto& current_points = lk_result.curr_pts;
+  const auto& current_points = lk_result.pts;
 
   CHECK_EQ(previous_pts.size(), current_points.size());
   CHECK_EQ(klt_status.size(), current_points.size());

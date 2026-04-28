@@ -120,12 +120,14 @@ class CameraParams {
   CameraParams(const IntrinsicsCoeffs& intrinsics,
                const DistortionCoeffs& distortion, const cv::Size& image_size,
                const std::string& distortion_model,
-               const gtsam::Pose3& T_robot_camera = gtsam::Pose3::Identity());
+               const gtsam::Pose3& T_robot_camera = gtsam::Pose3::Identity(),
+               const std::string& reference_frame = "camera_optical_frame");
 
   CameraParams(const IntrinsicsCoeffs& intrinsics,
                const DistortionCoeffs& distortion, const cv::Size& image_size,
                const DistortionModel& distortion_model,
-               const gtsam::Pose3& T_robot_camera = gtsam::Pose3::Identity());
+               const gtsam::Pose3& T_robot_camera = gtsam::Pose3::Identity(),
+               const std::string& reference_frame = "camera_optical_frame");
 
   virtual ~CameraParams() = default;
 
@@ -135,6 +137,7 @@ class CameraParams {
   inline double cv() const { return intrinsics_[3]; }
   inline int ImageWidth() const { return image_size_.width; }
   inline int ImageHeight() const { return image_size_.height; }
+  inline const std::string& referenceFrame() const { return reference_frame_; }
 
   inline const cv::Size& imageSize() const { return image_size_; }
 
@@ -235,6 +238,8 @@ class CameraParams {
   IntrinsicsCoeffs intrinsics_;
   DistortionCoeffs distortion_coeff_;
   cv::Size image_size_;
+
+  std::string reference_frame_;
 
   //! Distortion parameters
   DistortionModel distortion_model_;
