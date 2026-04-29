@@ -75,6 +75,9 @@ tartan_air = 5
 viode = 6
 dynoepts=7
 
+# helpful globals
+run_post_analysis = False
+
 def run_online_sequence(name, *args):
     rosbag = "/root/data/craig_integration/realsense/realsense_2025-02-07-14-57-13_0/"
     run_dynosam_rgbd_from_rosbag(
@@ -149,7 +152,7 @@ def run_experiment_sequences(dataset_path, dataset_name, dataset_loader, *args):
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=run_post_analysis)
 
 
 def run_viodes():
@@ -329,7 +332,7 @@ def run_hybrid_solver_comparison_omd():
 
     run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_test", omd_dataset,
         "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true",
-        "--pc_smoother_allow_backend_updates=true",
+        "--pc_smoother_allow_backend_updates=false",
         "--pc_log_object_kf_structure=false",
         "--init_object_pose_from_gt=false")
 
@@ -414,6 +417,7 @@ def run_uts_tech_lab_solver_comparison_test():
 
 
 if __name__ == '__main__':
+    run_post_analysis = True
     run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
@@ -426,7 +430,7 @@ if __name__ == '__main__':
     # run_aria()
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
-
+    # run_analysis("omd_test")
     # run_analysis("dynoepts_uope_54")
     # run_analysis("kitti00_MO")
     # run_analysis("kitti00_PnP")

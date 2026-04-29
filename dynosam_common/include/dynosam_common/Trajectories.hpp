@@ -225,6 +225,15 @@ class TrajectoryBase {
     return true;
   }
 
+  std::optional<Entry> getPrevious(const Entry& query) const {
+    Entry previous_entry;
+    if (getPrevious(previous_entry, query)) {
+      return previous_entry;
+    } else {
+      return {};
+    }
+  }
+
   std::vector<Entry> toVector() const {
     std::vector<Entry> destination;
     destination.reserve(size());
@@ -240,6 +249,15 @@ class TrajectoryBase {
 
     std::transform(begin(), end(), std::back_inserter(destination),
                    [](auto entry) { return entry.data; });
+    return destination;
+  }
+
+  FrameIds toFrameIds() const {
+    FrameIds destination;
+    destination.reserve(size());
+
+    std::transform(begin(), end(), std::back_inserter(destination),
+                   [](auto entry) { return entry.frame_id; });
     return destination;
   }
 

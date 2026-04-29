@@ -171,6 +171,22 @@ bool dyno::convert(const geometry_msgs::msg::Pose& pose,
 }
 
 template <>
+bool dyno::convert(const gtsam::Vector6& vel,
+                   geometry_msgs::msg::Twist& twist) {
+  // linear velocity components
+  twist.linear.x = vel(3);
+  twist.linear.y = vel(4);
+  twist.linear.z = vel(5);
+
+  // angular velocity components
+  twist.angular.x = vel(0);
+  twist.angular.y = vel(1);
+  twist.angular.z = vel(2);
+
+  return true;
+}
+
+template <>
 bool dyno::convert(const geometry_msgs::msg::Transform& transform,
                    gtsam::Pose3& pose) {
   gtsam::Point3 translation;

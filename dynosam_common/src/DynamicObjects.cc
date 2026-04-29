@@ -78,15 +78,27 @@ std::ostream& operator<<(std::ostream& os,
   return os;
 }
 
-gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
-                                   const gtsam::Pose3& w_L_k_1) {
-  const gtsam::Point3& t_motion = w_k_1_H_k.translation();
-  const gtsam::Rot3& R_motion = w_k_1_H_k.rotation();
-  const gtsam::Point3& t_pose = w_L_k_1.translation();
+gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& H_W_km1_k,
+                                   const gtsam::Pose3& L_W_km1,
+                                   Timestamp timestamp_k,
+                                   Timestamp timestamp_km1) {
+  double dt = timestamp_k - timestamp_km1;
+  if (dt <= 1e-6) {
+    LOG(WARNING) << "Bad timestamp detected! Return zero velocity!";
+    return gtsam::Vector6::Zero();
+  }
 
-  static const gtsam::Rot3 I = gtsam::Rot3::Identity();
+  // Compose to get the new pose
+  gtsam::Pose3 L_W_k = H_W_km1_k * L_W_km1;
 
-  return t_motion - (gtsam::Rot3(I.matrix() - R_motion.matrix())) * t_pose;
+  // Relative motion in the LOCAL (body) frame
+  gtsam::Pose3 L_km1_H_L_k = L_W_km1.between(L_W_k);
+
+  // Use GTSAM Logmap to get twist (ω, v)
+  gtsam::Vector6 xi = gtsam::Pose3::Logmap(L_km1_H_L_k);
+
+  // Convert to velocity
+  return xi / dt;
 }
 
 void propogateObjectTrajectory(

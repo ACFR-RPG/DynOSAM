@@ -95,8 +95,8 @@ void DynoStatePublisher::publishObjects(
 
   for (const auto& [object_id, object_trajectory] : object_trajectories_k) {
     // latest object odometry
-    ObjectOdometry object_odometry =
-        constructObjectOdometry(object_id, object_trajectory.last());
+    ObjectOdometry object_odometry = constructObjectOdometry(
+        object_id, object_trajectory.maxFrame(), object_trajectory);
     object_odom_publisher_->publish(object_odometry);
 
     if (publish_oo_tf_) {
@@ -116,10 +116,11 @@ void DynoStatePublisher::publishObjects(
     path_per_segment.object_id = object_id;
     path_per_segment.path_segment = 0;
     path_per_segment.header = multi_object_odom_paths.header;
-    for (const auto& entry : object_trajectory) {
+    for (FrameId frame_i : object_trajectory.toFrameIds()) {
       path_per_segment.object_odometries.push_back(
-          constructObjectOdometry(object_id, entry));
+          constructObjectOdometry(object_id, frame_i, object_trajectory));
     }
+
     multi_object_odom_paths.paths.push_back(path_per_segment);
     // // construct full paths
     // const auto trajectory_segments = object_trajectory.segments();
@@ -147,28 +148,51 @@ void DynoStatePublisher::publishObjects(
 }
 
 ObjectOdometry DynoStatePublisher::constructObjectOdometry(
-    ObjectId object_id, const PoseWithMotionEntry& pose_with_motion) const {
+    ObjectId object_id, FrameId frame_id,
+    const PoseWithMotionTrajectory& trajectory) const {
+  CHECK(trajectory.exists(frame_id));
+
+  const PoseWithMotionEntry& pose_with_motion = trajectory.get(frame_id);
   const auto& entry = pose_with_motion.data;
   const auto L_W_k = entry.pose;
   const auto H_W_km1_k = entry.motion;
-  const auto timestamp = pose_with_motion.timestamp;
-  const auto frame_id = pose_with_motion.frame_id;
+  const auto timestamp_k = pose_with_motion.timestamp;
+  const auto frame_id_k = pose_with_motion.frame_id;
 
   CHECK_EQ(H_W_km1_k.to(), frame_id);
-  // TODO: from
+  CHECK_EQ(frame_id_k, frame_id);
+  // backend may not send F2F
+  // CHECK_EQ(H_W_km1_k.style(), MotionRepresentationStyle::F2F);
 
   const auto frame_link = params_.world_frame_id;
   const auto child_link = "object_" + std::to_string(object_id) + "_link";
 
   ObjectOdometry object_odom;
-  utils::convertWithHeader(L_W_k, object_odom.odom, timestamp, frame_link,
+  utils::convertWithHeader(L_W_k, object_odom.odom, timestamp_k, frame_link,
                            child_link);
 
   dyno::convert(H_W_km1_k.estimate(), object_odom.h_w_km1_k.pose);
 
+  const std::optional<PoseWithMotionEntry> previous_entry =
+      trajectory.getPrevious(pose_with_motion);
+  // may not be velocity in the case of the backend currentlly due to keyframing
+  if (previous_entry && H_W_km1_k.from() == previous_entry->frame_id) {
+    // this also implicitly checks that the previous entry is the immediately
+    // // previous entry
+    // CHECK_EQ(H_W_km1_k.from(), previous_entry->frame_id);
+
+    const gtsam::Pose3 L_W_km1 = previous_entry->data.pose;
+    const Timestamp timestamp_km1 = previous_entry->timestamp;
+
+    gtsam::Vector6 body_velocity =
+        calculateBodyMotion(H_W_km1_k, L_W_km1, timestamp_k, timestamp_km1);
+
+    dyno::convert(body_velocity, object_odom.odom.twist.twist);
+  }
+
   // TODO: body velocity
   object_odom.object_id = object_id;
-  object_odom.sequence = frame_id;
+  object_odom.sequence = frame_id_k;
 
   return object_odom;
 }

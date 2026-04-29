@@ -711,6 +711,16 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
     return true;
   }
 
+  const Timestamp lkf_time = lCKF_frame_->getTimestamp();
+  const Timestamp k_time = frame_k->getTimestamp();
+
+  // more than 10 seconds since last keyframe?
+  // since we've improved tracking less CKF's are made. Could also inforce this
+  // with setting max_tracklet_id back to around 30
+  // if(k_time - lkf_time > 10.0) {
+  //   return true;
+  // }
+
   // // Case B: strong motion → useful geometry
   // if (median_disp > disp_thresh) {
   //   return true;

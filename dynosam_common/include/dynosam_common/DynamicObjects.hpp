@@ -153,14 +153,20 @@ struct ObjectDetectionResult {
 
 /**
  * @brief Calculate the local body velocity given the motion in world from k-1
- * to k and the object pose at k-1. This returns the body velocity at k-1.
+ * to k and the object pose at k-1. This returns the body velocity at k-1
+ * with first three elements representation angular velocity and last three
+ * representing linear velocity
  *
- * @param w_k_1_H_k const gtsam::Pose3&
- * @param w_L_k_1 const gtsam::Pose3&
- * @return gtsam::Vector3
+ * @param H_W_km1_k const gtsam::Pose3&
+ * @param L_W_km1 const gtsam::Pose3&
+ * @param timestamp_k Timestamp
+ * @param timestamp_km1 Timestamp
+ * @return gtsam::Vector6
  */
-gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
-                                   const gtsam::Pose3& w_L_k_1);
+gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& H_W_km1_k,
+                                   const gtsam::Pose3& L_W_km1,
+                                   Timestamp timestamp_k,
+                                   Timestamp timestamp_km1);
 
 enum PropogateType {
   InitGT,

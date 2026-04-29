@@ -74,7 +74,8 @@ class DynoStatePublisher {
                       const MultiObjectTrajectories& object_trajectories);
 
   ObjectOdometry constructObjectOdometry(
-      ObjectId object_id, const PoseWithMotionEntry& pose_with_motion) const;
+      ObjectId object_id, FrameId frame_id,
+      const PoseWithMotionTrajectory& trajectory) const;
 
   void sendObjectOdometryTransform(const ObjectOdometry& object_odom);
 

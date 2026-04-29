@@ -459,18 +459,18 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
             << " frames since kf:" << frames_since_lkf;
 
   // const double coverage_thresh = 0.3;  // spatial redundancy
-  const double coverage_thresh = 0.1;  // spatial redundancy
+  const double coverage_thresh = 0.3;  // spatial redundancy
   double parallax_thresh = 0.05;
   FrameId min_frames_dt = 15;
 
   bool is_keyframe = false;
-  // if (coverage < coverage_thresh) {
-  //   is_keyframe = true;
-  // }
+  if (coverage < coverage_thresh) {
+    is_keyframe = true;
+  }
 
-  // if (median_parallax > parallax_thresh) {
-  //   is_keyframe = true;
-  // }
+  if (median_parallax > parallax_thresh) {
+    is_keyframe = true;
+  }
 
   if (frames_since_lkf > min_frames_dt) {
     is_keyframe = true;
@@ -1280,43 +1280,55 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   //   object_motion_to_tracklets_.erase(key);
   // }
 
+  smoother_state = calculateEstimate();
+  for (auto& [tracklet_id, point_state_pair] : point_state_) {
+    const gtsam::Symbol m_key(PointSymbol(tracklet_id));
+    const PointState& point_state = point_state_pair.first;
+
+    if (point_state == PointState::InState) {
+      CHECK(smoother_state.exists(m_key));
+      // update variable
+      point_state_pair.second = smoother_state.at<gtsam::Point3>(m_key);
+    } else {
+      // removed
+      CHECK(!smoother_state.exists(m_key));
+      const Landmark& m_L_point = point_state_pair.second;
+      smoother_state.insert(m_key, m_L_point);
+    }
+  }
+
   // only add points once they are marginalized?
   // this means the backend will only get initial point estimates once
   // they are refined
   // and by using the m_l_init value in the backend we wait for these initial
   // points even though the map is getting measurements filled make sure that
   // the point is seen across enough keyframes otherwise it will enever end up
-  // int eh map smoother_state = calculateEstimate();
-  gtsam::Values active_state = calculateEstimate();
+  // int eh map
+  // smoother_state = calculateEstimate();
+  // gtsam::Values active_state = calculateEstimate();
 
-  auto active_motion_estimates = active_state.extract<gtsam::Pose3>(
-      gtsam::Symbol::ChrTest(kObjectMotionSymbolChar));
-  for (const auto& [key, value] : active_motion_estimates) {
-    smoother_state.insert(key, value);
-  }
+  // auto active_motion_estimates = active_state.extract<gtsam::Pose3>(
+  //     gtsam::Symbol::ChrTest(kObjectMotionSymbolChar));
+  // for (const auto& [key, value] : active_motion_estimates) {
+  //   smoother_state.insert(key, value);
+  // }
 
-  for (auto& [tracklet_id, point_state_pair] : point_state_) {
-    const gtsam::Symbol m_key(PointSymbol(tracklet_id));
-    const PointState& point_state = point_state_pair.first;
-
-    if (point_state == PointState::InState) {
-      // CHECK(smoother_state.exists(m_key));
-      CHECK(active_state.exists(m_key));
-      // update variable
-      point_state_pair.second = active_state.at<gtsam::Point3>(m_key);
-    } else {
-      // removed
-      CHECK(!smoother_state.exists(m_key));
-      const Landmark& m_L_point = point_state_pair.second;
-      // add points once they are removed
-      smoother_state.insert(m_key, m_L_point);
-    }
-  }
-
-  // fill states with points
-  // for (const auto& [tracklet_id, point] : m_L_points_) {
+  // for (auto& [tracklet_id, point_state_pair] : point_state_) {
   //   const gtsam::Symbol m_key(PointSymbol(tracklet_id));
-  //   smoother_state.insert(PointSymbol(tracklet_id), point);
+  //   const PointState& point_state = point_state_pair.first;
+
+  //   if (point_state == PointState::InState) {
+  //     // CHECK(smoother_state.exists(m_key));
+  //     CHECK(active_state.exists(m_key));
+  //     // update variable
+  //     point_state_pair.second = active_state.at<gtsam::Point3>(m_key);
+  //   } else {
+  //     // removed
+  //     CHECK(!smoother_state.exists(m_key));
+  //     const Landmark& m_L_point = point_state_pair.second;
+  //     // add points once they are removed
+  //     smoother_state.insert(m_key, m_L_point);
+  //   }
   // }
 
   // TODO: debug
