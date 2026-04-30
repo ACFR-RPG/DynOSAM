@@ -21,7 +21,7 @@ struct OpticalFlowAndPoseSolverParams {
   double flow_prior_sigma{3.33};
   double k_huber{0.001};
   bool outlier_reject{true};
-  bool use_robust{false};
+  bool use_robust{true};
   // When true, this indicates that the optical flow images go from k to k+1
   // (rather than k-1 to k, when false) this left over from some original
   // implementations. This param is used when updated the frames after

@@ -333,7 +333,7 @@ def run_hybrid_solver_comparison_omd():
     run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_test", omd_dataset,
         "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true",
         "--pc_smoother_allow_backend_updates=false",
-        "--pc_log_object_kf_structure=false",
+        "--pc_log_object_kf_structure=true",
         "--init_object_pose_from_gt=false")
 
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test_with_update", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
