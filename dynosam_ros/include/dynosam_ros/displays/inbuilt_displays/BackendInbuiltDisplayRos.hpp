@@ -44,7 +44,7 @@ namespace dyno {
 
 class BackendInbuiltDisplayRos : public BackendDisplay, InbuiltDisplayCommon {
  public:
-  BackendInbuiltDisplayRos(const DisplayParams params,
+  BackendInbuiltDisplayRos(const ReferenceFrameDefinitions params,
                            rclcpp::Node::SharedPtr node);
 
   void spinOnceImpl(

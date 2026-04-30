@@ -56,8 +56,8 @@ def first_steps(
     online=False,
     wait_for_camera_params=True,
     camera_params_timeout=-1,
-    camera_frame_id="camera",
-    world_frame_id="world",
+    camera_frame="camera",
+    odom_frame="world",
     world_to_robot_tf = True,
     **kwargs):
 
@@ -86,8 +86,8 @@ def first_steps(
             "online": online,
             "wait_for_camera_params": wait_for_camera_params,
             "camera_params_timeout": camera_params_timeout,
-            "camera_frame_id": camera_frame_id,
-            "world_frame_id": world_frame_id
+            "camera_frame": camera_frame,
+            "odom_frame": odom_frame
         }
 
     if online:
@@ -114,7 +114,7 @@ def first_steps(
                     "--pitch", "-1.57",
                     "--yaw", "0.0",
                     "--roll", "-1.57",
-                    "--frame-id", str(world_frame_id),
+                    "--frame-id", str(odom_frame),
                     "--child-frame-id", "robot"],
                 raw=True
             )

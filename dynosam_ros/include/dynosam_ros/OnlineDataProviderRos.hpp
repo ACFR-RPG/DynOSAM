@@ -33,6 +33,7 @@
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_cv/StereoCamera.hpp"
 #include "dynosam_ros/DataProviderRos.hpp"
+#include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/MultiSync.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
 #include "rclcpp/node.hpp"
@@ -129,7 +130,7 @@ class OnlineDataProviderRos : public DataProviderRos {
 
   OnlineDataProviderRosParams params_;
   //! Driving frame id for the enture dynosam pipeline
-  FrameId frame_id_;
+  FrameId frame_id_{0};
 
  private:
   void subscribeImu();

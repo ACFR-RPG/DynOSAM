@@ -46,37 +46,161 @@
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/parameter.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 namespace dyno {
 
 DynoNode::DynoNode(const std::string& node_name,
                    const rclcpp::NodeOptions& options)
-    : Node(node_name, "dynosam", options) {
+    : Node(node_name, "dynosam", options),
+      broadcaster_(this),
+      tf_buffer_(this->get_clock()),
+      tf_listener_(tf_buffer_) {
   RCLCPP_INFO_STREAM(this->get_logger(), "Starting DynoNode");
   auto params_path = getParamsPath();
   RCLCPP_INFO_STREAM(this->get_logger(),
                      "Loading Dyno VO params from: " << params_path);
+
+  auto dyno_params = std::make_unique<DynoParams>(params_path);
 
   is_online_ = ParameterConstructor(this, "online", false)
                    .description("If the online DataProvider should be used")
                    .finish()
                    .get<bool>();
 
-  dyno_params_ = std::make_unique<DynoParams>(params_path);
+  // dyno params may additionally get modified with the online data provider
+  dyno::DataProvider::Ptr data_provider =
+      createDataProvider(*dyno_params, is_online_);
+  CHECK_NOTNULL(data_provider);
+  // optionally update imu and camera params with config from the data-provider
+  // if required
+  updateSensorParams(*dyno_params, data_provider);
+  // once the sensor params have finally been updated we know which camera
+  // params we will use. Use this to set the camera_frame value in
+  // rf_definitions which indicates the reference frame of the camera we are
+  // using and will form the basis of the odom_frame -> camera_frame tf
+  // published by the Displays
+  loadReferenceFrameDefinitions(rf_definitions_, *dyno_params);
+
+  // set up tf tree which contains camera (usually optical) to base frame
+  // (usually camera link) setupTFTree(rf_definitions_);
+  dyno_params_ = std::move(dyno_params);
+  data_provider_ = data_provider;
 }
 
-dyno::DataProvider::Ptr DynoNode::createDataProvider() {
-  if (is_online_) {
-    return createOnlineDataProvider();
+dyno::DataProvider::Ptr DynoNode::createDataProvider(DynoParams& dyno_params,
+                                                     bool is_online) {
+  if (is_online) {
+    RCLCPP_INFO_STREAM(this->get_logger(), "Creating online data-provider");
+    return createOnlineDataProvider(dyno_params);
   } else {
-    return createDatasetDataProvider();
+    return createDatasetDataProvider(dyno_params);
   }
 }
 
-dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider() {
-  RCLCPP_INFO_STREAM(this->get_logger(),
-                     "Online DataProvider selected. Waiting for ROS topics...");
+void DynoNode::loadReferenceFrameDefinitions(
+    ReferenceFrameDefinitions& rf_definitions, const DynoParams& dyno_params) {
+  rf_definitions.base_frame =
+      ParameterConstructor(this, "base_frame", rf_definitions.base_frame)
+          .description("ROS frame id for base link of the robot")
+          .finish()
+          .get<std::string>();
+  rf_definitions.odom_frame =
+      ParameterConstructor(this, "odom_frame", rf_definitions.odom_frame)
+          .description("ROS frame id for the static workd frame (ie. odometry)")
+          .finish()
+          .get<std::string>();
 
+  rf_definitions.imu_frame =
+      ParameterConstructor(this, "imu_frame", rf_definitions.imu_frame)
+          .description("ROS frame id imu frame")
+          .finish()
+          .get<std::string>();
+
+  // now we have a full set of camera params, set the camera_frame param used
+  // for publishes the VO
+  rf_definitions.camera_frame = dyno_params.camera_params_.referenceFrame();
+  RCLCPP_INFO_STREAM(this->get_logger(),
+                     "Camera frame: " << rf_definitions.camera_frame);
+  RCLCPP_INFO_STREAM(this->get_logger(),
+                     "Odom frame: " << rf_definitions.odom_frame);
+}
+
+void DynoNode::updateSensorParams(
+    DynoParams& dyno_params, const dyno::DataProvider::Ptr& data_provider) {
+  // update dyno params with parameters from data-provider
+  if (dyno_params.preferDataProviderCameraParams() &&
+      data_provider->getCameraParams().has_value()) {
+    RCLCPP_INFO_STREAM(
+        this->get_logger(),
+        "Using camera params from DataProvider, not the config in the "
+        "CameraParams.yaml!");
+    dyno_params.camera_params_ = *data_provider->getCameraParams();
+  } else {
+    RCLCPP_INFO_STREAM(this->get_logger(),
+                       "Using camera params specified in CameraParams.yaml");
+  }
+
+  ImuParams imu_params;
+  if (dyno_params.preferDataProviderImuParams() &&
+      data_provider->getImuParams().has_value()) {
+    RCLCPP_INFO_STREAM(
+        this->get_logger(),
+        "Using imu params from DataProvider, not the config in the "
+        "ImuParams.yaml!");
+    imu_params = *data_provider->getImuParams();
+  } else {
+    RCLCPP_INFO_STREAM(this->get_logger(),
+                       "Using imu params specified in ImuParams.yaml!");
+    imu_params = dyno_params.imu_params_;
+  }
+  // update the imu params that will actually get sent to the frontend
+  dyno_params.frontend_params_.imu_params = imu_params;
+  dyno_params.imu_params_ = imu_params;
+}
+
+void DynoNode::setupTFTree(const ReferenceFrameDefinitions& rf_definitions) {
+  const std::string camera_frame = rf_definitions.camera_frame;
+  const std::string base_frame = rf_definitions.base_frame;
+
+  RCLCPP_INFO_STREAM(this->get_logger(), "Publishing " << base_frame << " to "
+                                                       << camera_frame
+                                                       << " transform");
+
+  geometry_msgs::msg::TransformStamped T_B_C;
+
+  T_B_C.header.stamp = this->now();
+  T_B_C.header.frame_id = base_frame;
+  T_B_C.child_frame_id = camera_frame;
+
+  if (isOnline()) {
+    // look up link between camera (usually optical frame) and robot base frame
+    // (usually camera_link) and republish
+    const tf2::Transform base_link_pose_camera_optical =
+        getLatestTransform(base_frame, camera_frame);
+
+    T_B_C.transform = tf2::toMsg(base_link_pose_camera_optical);
+  } else {
+    // if offline, just use the cv->robot rotation as a transform
+    // No translation
+    T_B_C.transform.translation.x = 0.0;
+    T_B_C.transform.translation.y = 0.0;
+    T_B_C.transform.translation.z = 0.0;
+
+    // Rotation: ROS base_link → OpenCV optical frame
+    tf2::Quaternion q;
+    q.setRPY(-M_PI_2, 0.0, -M_PI_2);  // roll, pitch, yaw
+
+    T_B_C.transform.rotation.x = q.x();
+    T_B_C.transform.rotation.y = q.y();
+    T_B_C.transform.rotation.z = q.z();
+    T_B_C.transform.rotation.w = q.w();
+  }
+  broadcaster_.sendTransform(T_B_C);
+}
+
+dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
+    DynoParams& dyno_params) {
   OnlineDataProviderRosParams online_params;
   online_params.wait_for_camera_params =
       ParameterConstructor(this, "wait_for_camera_params",
@@ -128,15 +252,15 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider() {
 
   CHECK(online_data_provider);
   // update any params in case they do not conflixt with the expected input
-  online_data_provider->updateAndCheckParams(*dyno_params_);
+  online_data_provider->updateAndCheckParams(dyno_params);
   online_data_provider->setupSubscribers();
   return online_data_provider;
 }
 
-dyno::DataProvider::Ptr DynoNode::createDatasetDataProvider() {
+dyno::DataProvider::Ptr DynoNode::createDatasetDataProvider(
+    const DynoParams& dyno_params) {
   auto params_path = getParamsPath();
   auto dataset_path = getDatasetPath();
-  auto dyno_params = getDynoParams();
 
   RCLCPP_INFO_STREAM(this->get_logger(),
                      "Loading dataset from: " << dataset_path);
@@ -162,6 +286,34 @@ std::string DynoNode::searchForPathWithParams(
   return path;
 }
 
+tf2::Transform DynoNode::getLatestTransform(const std::string& target,
+                                            const std::string& source) const {
+  geometry_msgs::msg::TransformStamped transform_stamped;
+  tf2::Transform pose;
+
+  // Time out duration for TF tree lookup before throwing an exception.
+  constexpr int32_t kTimeOutSeconds = 10;
+
+  try {
+    if (!tf_buffer_.canTransform(target, source, tf2::TimePointZero,
+                                 tf2::durationFromSec(kTimeOutSeconds))) {
+      RCLCPP_ERROR(
+          this->get_logger(),
+          "Transform is impossible. canTransform(%s->%s) returns false",
+          target.c_str(), source.c_str());
+    }
+    transform_stamped =
+        tf_buffer_.lookupTransform(target, source, tf2::TimePointZero,
+                                   tf2::durationFromSec(kTimeOutSeconds));
+    tf2::fromMsg(transform_stamped.transform, pose);
+  } catch (tf2::TransformException& ex) {
+    RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",
+                source.c_str(), target.c_str(), ex.what());
+    throw std::runtime_error("Could not find the requested transform!");
+  }
+  return pose;
+}
+
 DynoPipelineManagerRos::DynoPipelineManagerRos(
     const rclcpp::NodeOptions& options)
     : DynoNode("dynosam", options) {}
@@ -171,37 +323,22 @@ void DynoPipelineManagerRos::initalisePipeline() {
 
   // load data provider first as this could change some params to ensure
   // they match with the data-provider selected!
-  auto data_loader = createDataProvider();
+  auto data_loader = getDataProvider();
   auto params = getDynoParams();
-
-  // setup display params
-  DisplayParams display_params;
-  display_params.camera_frame_id =
-      ParameterConstructor(this, "camera_frame_id",
-                           display_params.camera_frame_id)
-          .description(
-              "ROS frame id for the camera (ie. the measured odometry)")
-          .finish()
-          .get<std::string>();
-  display_params.world_frame_id =
-      ParameterConstructor(this, "world_frame_id",
-                           display_params.world_frame_id)
-          .description("ROS frame id for the static workd frame (ie. odometry)")
-          .finish()
-          .get<std::string>();
+  auto rf_definitions = getReferenceFrameDefinitions();
 
   auto frontend_display = std::make_shared<dyno::FrontendDisplayRos>(
-      display_params, this->create_sub_node("frontend"),
+      rf_definitions, this->create_sub_node("frontend"),
       this->create_sub_node("ground_truth"));
   auto backend_display = std::make_shared<dyno::BackendDisplayRos>(
-      display_params, this->create_sub_node("backend"));
+      rf_definitions, this->create_sub_node("backend"));
 
   ExternalHooks::Ptr hooks = std::make_shared<ExternalHooks>();
   // if online then we are using OnlineDataProviderRos, which should collect the
   // timestamp from ROS anyway. Otherwise, the timestamp comes from the dynosam
   // DataLoaders and so we need to artifially tell the ROS network what the time
   // is
-  if (!is_online_) {
+  if (!isOnline()) {
     RCLCPP_INFO_STREAM(this->get_logger(),
                        "Update time external hook created. This will publish "
                        "internal dynosam timestamp's to /clock!");
@@ -219,7 +356,7 @@ void DynoPipelineManagerRos::initalisePipeline() {
   // on the formulation/module requested
   using RosBackendFactory = BackendFactory<BackendModulePolicyRos>;
   auto factory =
-      RosBackendFactory::Create(params.backend_type, display_params, this);
+      RosBackendFactory::Create(params.backend_type, rf_definitions, this);
 
   pipeline_ = std::make_unique<DynoPipelineManager>(
       params, data_loader, frontend_display, backend_display, factory, hooks);

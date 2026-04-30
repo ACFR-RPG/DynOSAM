@@ -108,13 +108,8 @@ const LKWorkspace& SparseLKTracker::track(
     const ImageContainer& image_container_k,
     const std::vector<cv::Point2f>& img1_pts,
     const std::vector<cv::Point2f>* img2_pts) {
-  bool previous_allocated =
-      pyr_builder_.build(image_container_1, img1_key_, img1_pyr_);
+  pyr_builder_.build(image_container_1, img1_key_, img1_pyr_);
   pyr_builder_.build(image_container_k, img2_key_, img2_pyr_);
-
-  if (count > 0) {
-    CHECK(!previous_allocated);
-  }
 
   // used as flags argument for calcOpticalFlowPyrLK - initially starts as
   // default (0) flag
@@ -181,8 +176,6 @@ const LKWorkspace& SparseLKTracker::track(
   }
 
   img1_pyr_ = std::move(img2_pyr_);
-
-  count++;
 
   return workspace_;
 }

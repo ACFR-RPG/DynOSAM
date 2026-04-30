@@ -263,8 +263,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // ObjectPoseChangeInfoMap pose_change_infos;
   ObjectIds objects_with_new_motions;
   ObjectPoseChangeInfoMap kf_pose_change_infos;
-  solveObjectMotions(dyno_state_.object_trajectories, objects_with_new_motions,
-                     kf_pose_change_infos, frame_k, frame_km1);
+  // solveObjectMotions(dyno_state_.object_trajectories,
+  // objects_with_new_motions,
+  //                    kf_pose_change_infos, frame_k, frame_km1);
 
   // update full_object_trajectories_ with trajectories for objects observed at
   // this frame

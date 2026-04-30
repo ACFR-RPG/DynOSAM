@@ -43,7 +43,8 @@ namespace dyno {
 
 class FrontendDSDRos : public FrontendDisplay {
  public:
-  FrontendDSDRos(const DisplayParams& params, rclcpp::Node::SharedPtr node,
+  FrontendDSDRos(const ReferenceFrameDefinitions& params,
+                 rclcpp::Node::SharedPtr node,
                  rclcpp::Node::SharedPtr ground_truth_node = nullptr);
   ~FrontendDSDRos() = default;
 
@@ -61,7 +62,7 @@ class FrontendDSDRos : public FrontendDisplay {
     //! Accumulated ground truth state
     DynoState ground_truth_state_;
 
-    GroundTruthPublishers(const DisplayParams& params,
+    GroundTruthPublishers(const ReferenceFrameDefinitions& params,
                           rclcpp::Node::SharedPtr ground_truth_node);
   };
   DynoStatePublisher dyno_state_publisher_;

@@ -1,11 +1,11 @@
 enable_color: true
 rgb_camera.color_profile: "640x480x15"
 rgb_camera.color_format: "BGR8"
-rgb_camera.enable_auto_exposure: false
+rgb_camera.enable_auto_exposure: true
 
 enable_depth: true
 depth_module.depth_profile: "640x480x15"
-depth_module.enable_auto_exposure: false
+depth_module.enable_auto_exposure: true
 
 enable_infra1: false
 enable_infra2: false
@@ -17,6 +17,12 @@ align_depth.enable: true
 
 enable_sync: true
 pointcloud.enable: false
+
+# Disable filters that add latency
+decimation_filter.enable: False
+spatial_filter.enable: False
+temporal_filter.enable: False
+hole_filling_filter.enable: False
 
 
 enable_gyro: true

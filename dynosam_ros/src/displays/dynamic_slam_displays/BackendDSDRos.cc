@@ -39,7 +39,7 @@
 
 namespace dyno {
 
-BackendDSDRos::BackendDSDRos(const DisplayParams& params,
+BackendDSDRos::BackendDSDRos(const ReferenceFrameDefinitions& params,
                              rclcpp::Node::SharedPtr node)
     : BackendDisplay(),
       display_params_(params),
@@ -117,7 +117,7 @@ void BackendDSDRos::spinOnce(const DynoState::ConstPtr& backend_output) {
   // // OKAY: this freezes somehow with the curreny keyframeing thing!!!
   // DSDTransport::Publisher object_poses_publisher =
   // dsd_transport_.addObjectInfo(
-  //     object_motions, object_poses, params_.world_frame_id, timestamp_map,
+  //     object_motions, object_poses, params_.odom_frame, timestamp_map,
   //     backend_output->getFrameId(), backend_output->getTimestamp());
 
   // object_poses_publisher.publishObjectOdometry();
@@ -256,7 +256,7 @@ void BackendDSDRos::publishTemporalDynamicMaps(
 
   // sensor_msgs::msg::PointCloud2 pc2_msg;
   // pcl::toROSMsg(temporal_cloud, pc2_msg);
-  // pc2_msg.header.frame_id = params_.world_frame_id;
+  // pc2_msg.header.frame_id = params_.odom_frame;
   // temporal_dynamic_points_pub_->publish(pc2_msg);
 }
 
@@ -287,7 +287,7 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
     convert(Color::uniqueId(object_id), colour_msg);
 
     visualization_msgs::msg::Marker marker;
-    marker.header.frame_id = display_params_.world_frame_id;
+    marker.header.frame_id = display_params_.odom_frame;
     marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
     marker.ns = "object_wireframe";
     marker.id = object_id;
@@ -355,7 +355,7 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
 
     //   // Build LINE_LIST marker
     // visualization_msgs::msg::Marker marker;
-    // marker.header.frame_id = display_params_.world_frame_id;
+    // marker.header.frame_id = display_params_.odom_frame;
     // marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
     // marker.ns = "object_wireframe";
     // marker.id = object_id;

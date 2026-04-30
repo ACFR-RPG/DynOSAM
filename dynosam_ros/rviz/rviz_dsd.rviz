@@ -6,14 +6,11 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Backend1
         - /Backend1/Visual Odometry1/Status1
         - /Backend1/Visual Odometry1/Shape1
-        - /Frontend1
         - /Frontend1/ObjectOdometryPath1
         - /Frontend1/ObjectOdometryPath1/Topic1
         - /Frontend1/Visual Odometry1/Shape1
-        - /Ground Truth1
         - /Ground Truth1/Visual Odometry1/Topic1
         - /Ground Truth1/Visual Odometry1/Shape1
         - /Ground Truth1/Camera Path1/Topic1
@@ -40,7 +37,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Static Map
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:

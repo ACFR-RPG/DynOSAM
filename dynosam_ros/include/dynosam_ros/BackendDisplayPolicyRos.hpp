@@ -44,7 +44,8 @@ struct has_backend_module_display<
  */
 class BackendModulePolicyRos {
  public:
-  BackendModulePolicyRos(const DisplayParams& params, rclcpp::Node* node)
+  BackendModulePolicyRos(const ReferenceFrameDefinitions& params,
+                         rclcpp::Node* node)
       : params_(params), node_(node) {
     VLOG(10) << "Creating BackendModulePolicyRos";
   }
@@ -57,7 +58,7 @@ class BackendModulePolicyRos {
    * If the module has an associated display type (derived from
    * BackendModuleDisplayRos) it will be constructed. The display type
    * (DisplayT) must have a constructor in the form DisplayT(const
-   * DisplayParams&, rclcpp::Node*, std::shared_ptr<T>).
+   * ReferenceFrameDefinitions&, rclcpp::Node*, std::shared_ptr<T>).
    *
    *
    * @tparam T
@@ -79,13 +80,13 @@ class BackendModulePolicyRos {
   }
 
  private:
-  DisplayParams params_;
+  ReferenceFrameDefinitions params_;
   rclcpp::Node* node_;
 };
 
 // class BackendModuleFactoryRos : public BackendModuleFactory {
 // public:
-//     BackendModuleFactoryRos(const DisplayParams& params,
+//     BackendModuleFactoryRos(const ReferenceFrameDefinitions& params,
 //     rclcpp::Node::SharedPtr node)
 //         : params_(params), node_(node) {}
 
@@ -109,7 +110,7 @@ class BackendModulePolicyRos {
 //     }
 
 // private:
-//     DisplayParams params_;
+//     ReferenceFrameDefinitions params_;
 //     rclcpp::Node::SharedPtr node_;
 
 // };
@@ -117,9 +118,9 @@ class BackendModulePolicyRos {
 // class BackendModuleDisplayFactory {
 // public:
 //     using Creator = std::function<std::unique_ptr<BackendDisplayRos>(const
-//     DisplayParams&, rclcpp::Node::SharedPtr)>;
+//     ReferenceFrameDefinitions&, rclcpp::Node::SharedPtr)>;
 
-//     BackendModuleDisplayFactory(const DisplayParams& params,
+//     BackendModuleDisplayFactory(const ReferenceFrameDefinitions& params,
 //     rclcpp::Node::SharedPtr node)
 //         : params_(params), node_(node) {}
 
@@ -150,7 +151,7 @@ class BackendModulePolicyRos {
 //     }
 
 // private:
-//     DisplayParams params_;
+//     ReferenceFrameDefinitions params_;
 //     rclcpp::Node::SharedPtr node_;
 
 //     static std::unordered_map<std::type_index, Creator> type_creators_;
@@ -162,8 +163,8 @@ class BackendModulePolicyRos {
 //     BackendModuleDisplayRegistrar(const std::string& name) {
 //         BackendModuleDisplayFactory::template registerViz<Module>(
 //             name,
-//             std::bind([](const DisplayParams& params, rclcpp::Node::SharedPtr
-//             node) {
+//             std::bind([](const ReferenceFrameDefinitions& params,
+//             rclcpp::Node::SharedPtr node) {
 //                 return std::make_unique<DisplayT>(params, node);
 //             }, std::placeholders::_1, std::placeholders::_2)
 //         );

@@ -55,8 +55,8 @@ def generate_launch_description():
                 {"online": True},
                 {"input_image_mode": 1}, # Corresponds with InputImageMode::RGBD}
                 {"baseline": 0.095},
-                {"camera_frame_id": "camera_color_optical_frame"},
-                {"world_frame_id": "odom"}
+                {"base_frame": "camera_link"},
+                {"odom_frame": "odom"}
             ],
             remappings=[
                 ('image/rgb', f'{camera_prefix}/color/image_raw'),

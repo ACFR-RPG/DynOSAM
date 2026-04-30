@@ -108,7 +108,7 @@ class DataProvider {
    * pipeline, as these may be available from the dataset.
    *
    * By default returns std::nullopt but the derived data-provider can overwrite
-   * this and return the loaded params
+   * this and return the loaded params.
    *
    * @return CameraParams::Optional
    */

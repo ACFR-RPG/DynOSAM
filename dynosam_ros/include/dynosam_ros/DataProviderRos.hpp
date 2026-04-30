@@ -83,32 +83,35 @@ typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
  *
  * @tparam Rep int64_t,
  * @tparam Period std::milli
- * @param time_to_wait const std::chrono::duration<Rep, Period>&
  * @param topic const std::string&. Defaults to "image/camera_info"
+ * @param time_to_wait_topic const std::chrono::duration<Rep, Period>&. Time to
+ * wait for camera params to arrive.
  * @return const CameraParams&
  */
 template <class Rep = int64_t, class Period = std::milli>
 CameraParams waitAndSetCameraParams(
     std::shared_ptr<rclcpp::Node> node, const std::string& topic,
-    const std::chrono::duration<Rep, Period>& time_to_wait =
+    const std::chrono::duration<Rep, Period>& time_to_wait_topic =
         std::chrono::duration<Rep, Period>(-1)) {
   RCLCPP_INFO_STREAM(node->get_logger(),
                      "Waiting for camera params on topic: " << topic);
 
   using Adaptor =
       rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo>;
-  return waitAndGetMessageViaAdaptor<Adaptor>(node, topic, time_to_wait);
+  return waitAndGetMessageViaAdaptor<Adaptor>(node, topic, time_to_wait_topic);
 }
 
 /**
  * @brief Base Dataprovider for ROS that implements common image processing
- * functionalities.
+ * and other misc functionalities.
  *
  */
 class DataProviderRos : public DataProvider {
  public:
   DataProviderRos(rclcpp::Node::SharedPtr node);
   virtual ~DataProviderRos() = default;
+
+  rclcpp::Node::SharedPtr getNode() const { return node_; }
 
   /**
    * @brief Convers a sensor_msgs::msg::Image to a cv::Mat while testing that

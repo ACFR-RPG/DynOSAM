@@ -11,12 +11,13 @@ class BackendModuleDisplayRos : public BackendModuleDisplay {
  public:
   DYNO_POINTER_TYPEDEFS(BackendModuleDisplayRos)
 
-  BackendModuleDisplayRos(const DisplayParams& params, rclcpp::Node* node)
+  BackendModuleDisplayRos(const ReferenceFrameDefinitions& params,
+                          rclcpp::Node* node)
       : params_(params), node_(CHECK_NOTNULL(node)) {}
   virtual ~BackendModuleDisplayRos() = default;
 
  protected:
-  DisplayParams params_;
+  ReferenceFrameDefinitions params_;
   rclcpp::Node* node_;
 };
 

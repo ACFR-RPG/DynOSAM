@@ -8,7 +8,7 @@
 namespace dyno {
 
 HybridModuleDisplayCommon::HybridModuleDisplayCommon(
-    const DisplayParams& params, rclcpp::Node* node,
+    const ReferenceFrameDefinitions& params, rclcpp::Node* node,
     HybridAccessorCommon::Ptr hybrid_accessor)
     : BackendModuleDisplayRos(params, node),
       hybrid_accessor_(CHECK_NOTNULL(hybrid_accessor)) {
@@ -30,7 +30,7 @@ void HybridModuleDisplayCommon::publishObjectBoundingBoxes(
         pcl::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>(object_cloud));
 
     std::vector<Marker> markers = DisplayCommon::objectBBXToRvizMarker(
-        bbx, object_id, output->timestamp, params_.world_frame_id);
+        bbx, object_id, output->timestamp, params_.odom_frame);
     array.markers.insert(array.markers.end(), markers.begin(), markers.end());
   }
 
@@ -60,7 +60,7 @@ void HybridModuleDisplayCommon::publishObjectKeyFrames(
 
         visualization_msgs::msg::Marker marker;
         // Header and Metadata
-        marker.header.frame_id = params_.world_frame_id;
+        marker.header.frame_id = params_.odom_frame;
         marker.header.stamp = ros_time;
         marker.ns = "obj_" + std::to_string(object_id) + "_keyframe";
         marker.id = count;
@@ -136,7 +136,7 @@ void RegularHybridFormulationDisplay::spinOnce(
 }
 
 HybridKeyFrameFormulationDisplay::HybridKeyFrameFormulationDisplay(
-    const DisplayParams& params, rclcpp::Node* node,
+    const ReferenceFrameDefinitions& params, rclcpp::Node* node,
     std::shared_ptr<HybridFormulationKeyFrame> module)
     : HybridModuleDisplayCommon(
           params, node, module->derivedAccessor<HybridAccessorCommon>()),
@@ -179,7 +179,7 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
 
       visualization_msgs::msg::Marker marker;
       // Header and Metadata
-      marker.header.frame_id = params_.world_frame_id;
+      marker.header.frame_id = params_.odom_frame;
       marker.header.stamp = ros_time;
 
       marker.ns = "obj_" + std::to_string(object_id) + "_keyframe_pose";
@@ -245,7 +245,7 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
 }
 
 PoseChangeBakendModuleDisplay::PoseChangeBakendModuleDisplay(
-    const DisplayParams& params, rclcpp::Node* node,
+    const ReferenceFrameDefinitions& params, rclcpp::Node* node,
     std::shared_ptr<PoseChangeVIBackendModule> module)
     : BackendModuleDisplayRos(params, node),
       module_(module),

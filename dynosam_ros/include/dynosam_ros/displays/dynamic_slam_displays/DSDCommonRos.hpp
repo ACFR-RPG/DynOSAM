@@ -60,7 +60,8 @@ using ObjectOdometryMap = gtsam::FastMap<std::string, ObjectOdometry>;
 
 class DynoStatePublisher {
  public:
-  DynoStatePublisher(const DisplayParams& params, rclcpp::Node::SharedPtr node);
+  DynoStatePublisher(const ReferenceFrameDefinitions& params,
+                     rclcpp::Node::SharedPtr node);
 
   DYNO_POINTER_TYPEDEFS(DynoStatePublisher)
 
@@ -122,7 +123,7 @@ class DynoStatePublisher {
   }
 
  protected:
-  const DisplayParams params_;
+  const ReferenceFrameDefinitions params_;
   rclcpp::Node::SharedPtr node_;
   //! TF broadcaster for the odometry.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

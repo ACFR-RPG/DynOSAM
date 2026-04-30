@@ -34,9 +34,12 @@
 
 namespace dyno {
 
-struct DisplayParams {
-  std::string world_frame_id = "world";
-  std::string camera_frame_id = "camera";
+struct ReferenceFrameDefinitions {
+  std::string odom_frame = "odom";
+  std::string base_frame = "camera_link";
+  //! This is the one we actually publish in!
+  std::string camera_frame = "camera_optical_frame";
+  std::string imu_frame = "imu_frame";
 };
 
 }  // namespace dyno

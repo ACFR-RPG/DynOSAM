@@ -164,8 +164,6 @@ class SparseLKTracker {
   OpticalFlowPyramid img1_pyr_;
   OpticalFlowPyramid img2_pyr_;
 
-  size_t count{0};
-
   LKWorkspace workspace_;
   LKWorkspace reverse_workspace_;
 };

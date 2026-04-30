@@ -54,9 +54,9 @@ def generate_launch_description():
                 {"params_path": dynosam_params},
                 {"online": True},
                 {"input_image_mode": 2}, # Corresponds with InputImageMode::Stereo}
-                {"baseline": 0.095},
-                {"camera_frame_id": "camera_infra1_frame"},
-                {"world_frame_id": "odom"}
+                # {"baseline": 0.095},
+                {"base_frame": "camera_link"},
+                {"odom_frame": "odom"}
             ],
             remappings=[
                 ('cam0/image_raw', f'{camera_prefix}/infra1/image_rect_raw'),

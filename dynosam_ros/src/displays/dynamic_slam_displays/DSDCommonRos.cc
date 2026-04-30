@@ -9,7 +9,7 @@
 
 namespace dyno {
 
-DynoStatePublisher::DynoStatePublisher(const DisplayParams& params,
+DynoStatePublisher::DynoStatePublisher(const ReferenceFrameDefinitions& params,
                                        rclcpp::Node::SharedPtr node)
     : params_(params), node_(node) {
   vo_publisher_ =
@@ -46,26 +46,25 @@ void DynoStatePublisher::publish(const DynoState& state) {
 
   const gtsam::Pose3 X_W_k = state.camera_trajectory.last().data;
   DisplayCommon::publishOdometry(vo_publisher_, X_W_k, timestamp,
-                                 params_.world_frame_id,
-                                 params_.camera_frame_id);
+                                 params_.odom_frame, params_.camera_frame);
   if (publish_vo_tf_) {
     std_msgs::msg::Header header;
     header.stamp = utils::toRosTime(timestamp);
-    header.frame_id = params_.world_frame_id;
-    sendTransform(X_W_k, header, params_.camera_frame_id);
+    header.frame_id = params_.odom_frame;
+    sendTransform(X_W_k, header, params_.camera_frame);
   }
 
   // publish trajectory
   DisplayCommon::publishOdometryPath(vo_path_publisher_,
                                      state.camera_trajectory.toDataVector(),
-                                     timestamp, params_.world_frame_id);
+                                     timestamp, params_.odom_frame);
 
   // publish local(?) static points
   DisplayCommon::publishPointCloud(static_points_pub_, state.local_static_map,
-                                   X_W_k, params_.world_frame_id);
+                                   X_W_k, params_.odom_frame);
 
   DisplayCommon::publishPointCloud(dynamic_points_pub_, state.dynamic_map,
-                                   X_W_k, params_.world_frame_id);
+                                   X_W_k, params_.odom_frame);
 
   publishObjects(frame_id, state.object_trajectories);
 }
@@ -91,7 +90,7 @@ void DynoStatePublisher::publishObjects(
   MultiObjectOdometryPath multi_object_odom_paths;
   multi_object_odom_paths.header.stamp =
       utils::toRosTime(object_trajectories_k.lastTimestamp());
-  multi_object_odom_paths.header.frame_id = params_.world_frame_id;
+  multi_object_odom_paths.header.frame_id = params_.odom_frame;
 
   for (const auto& [object_id, object_trajectory] : object_trajectories_k) {
     // latest object odometry
@@ -164,7 +163,7 @@ ObjectOdometry DynoStatePublisher::constructObjectOdometry(
   // backend may not send F2F
   // CHECK_EQ(H_W_km1_k.style(), MotionRepresentationStyle::F2F);
 
-  const auto frame_link = params_.world_frame_id;
+  const auto frame_link = params_.odom_frame;
   const auto child_link = "object_" + std::to_string(object_id) + "_link";
 
   ObjectOdometry object_odom;

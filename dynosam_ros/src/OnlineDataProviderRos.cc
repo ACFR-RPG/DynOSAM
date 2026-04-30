@@ -125,6 +125,7 @@ StereoCalibrationHelper::StereoCalibrationHelper(
       std::chrono::milliseconds(params.camera_params_timeout));
   original_camera_params_ = original_cam0_params;
 
+  // TODO: leave hardcoded for now!
   CameraParams original_cam1_params = waitAndSetCameraParams(
       node, "cam1/camera_info",
       std::chrono::milliseconds(params.camera_params_timeout));
@@ -136,11 +137,14 @@ StereoCalibrationHelper::StereoCalibrationHelper(
   // in this case we get the transform of T_c1_c2 (ie transform of camera 2 into
   // camera) and set the inrinsics of cam1 such that the reference frame is cam!
   geometry_msgs::msg::TransformStamped tf = buffer_.lookupTransform(
-      "camera_infra2_frame", "camera_infra1_frame", tf2::TimePointZero);
+      "camera_infra1_optical_frame", "camera_infra2_optical_frame",
+      tf2::TimePointZero);
 
-  gtsam::Pose3 T_C1_C2;
-  convert(tf, T_C1_C2);
-  original_cam1_params.setExtrinsics(T_C1_C2);
+  gtsam::Pose3 T_C1_C0;
+  convert(tf, T_C1_C0);
+  // this is needed so that the StereoCamera can use the relative pose between
+  // the two cameras
+  original_cam1_params.setExtrinsics(T_C1_C0);
 
   stereo_camera_ = std::make_shared<StereoCamera>(original_cam0_params,
                                                   original_cam1_params);
@@ -156,10 +160,13 @@ StereoCalibrationHelper::StereoCalibrationHelper(
   };
   dyno::CameraParams::DistortionCoeffs zero_distortion(4, 0);
 
-  // not sure if image size is correct here!
-  camera_params_ = CameraParams(intrinsics, zero_distortion,
-                                original_cam0_params.imageSize(),
-                                original_cam0_params.getDistortionModel());
+  // extrinsics will be wrong (we dont know them here)
+  // but important to set reference frame
+  // for the tf tree
+  camera_params_ = CameraParams(
+      intrinsics, zero_distortion, original_cam0_params.imageSize(),
+      original_cam0_params.getDistortionModel(), gtsam::Pose3::Identity(),
+      "camera_infra1_optical_frame");
 
   camera_params_->setDepthParams(stereo_camera_->getBaseline());
 }
@@ -246,7 +253,8 @@ void RGBDTypeCalibrationHelper::setupNewCameraParams(
 
   new_camera_params = CameraParams(intrinsics, zero_distortion, rescale_size,
                                    original_camera_params.getDistortionModel(),
-                                   original_camera_params.getExtrinsics());
+                                   original_camera_params.getExtrinsics(),
+                                   original_camera_params.referenceFrame());
 
   new_camera_params.setDepthParams(baseline_);
 }
