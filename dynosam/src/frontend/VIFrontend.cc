@@ -128,6 +128,14 @@ Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
                                      *image_container, R_km1_k);
 
   if (image_container->hasDepth()) CHECK(frame->updateDepths());
+
+  // TODO: for now (testing with retroactive frame)
+  //  should onlly do this for the set of features we re-troactively tracked
+  //  and update the depth - definitely for stereo too!
+  Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
+  if (frame_km1 && frame_km1->imageContainer().hasDepth()) {
+    frame_km1->updateDepths();
+  }
   return frame;
 }
 

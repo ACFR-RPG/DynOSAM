@@ -181,8 +181,10 @@ class FeatureTracker : public FeatureTrackerBase {
   // for now!
   cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> lk_cuda_tracker_;
 
-  const cv::Size klt_window_size_{21, 21};
-  const int klt_max_level_ = 3;
+  SparseLKTracker::Ptr lk_tracker_dynamic_;
+
+  const cv::Size klt_window_size_{24, 24};
+  const int klt_max_level_ = 4;
 
   ObjectDetectionEngine::Ptr object_detection_;
 };
