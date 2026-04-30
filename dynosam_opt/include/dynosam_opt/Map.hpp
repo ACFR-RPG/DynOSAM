@@ -602,6 +602,14 @@ class LandmarkNodeBase {
   TrackletId trackletId() const { return tracklet_id_; }
   ObjectId objectId() const { return object_id_; }
 
+  // TODO: for testing
+  virtual std::string verboseInfo() {
+    std::stringstream ss;
+    ss << "LMK node i=" << trackletId() << " j=" << objectId() << " ";
+    ss << " seen at frames: " << container_to_string(getSeenFrameIds());
+    return ss.str();
+  }
+
   /**
    * @brief Returns true if the landmark is static.
    *

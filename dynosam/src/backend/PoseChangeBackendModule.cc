@@ -99,6 +99,21 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
 
   error_hooks_ = formulation_->getCustomErrorHooks();
   error_hooks_.identifier = "pc-backend";
+
+  auto afs = std::make_shared<ApplyFunctionalSymbol>();
+  afs->dynamicLandmark([&](TrackletId tracklet_id, const DynamicPointSymbol&) {
+    auto map = formulation_->map();
+    LOG(INFO) << "Debig ILS exception with landmark: " << tracklet_id;
+
+    auto lmk = map->getLandmark(tracklet_id);
+    CHECK_NOTNULL(lmk);
+    LOG(INFO) << lmk->verboseInfo();
+  });
+  auto ils_debug_callback = [afs](gtsam::Key key) {
+    LOG(ERROR) << DynosamKeyFormatter(key);
+    afs->operator()(key);
+  };
+  error_hooks_.ils_debug_callbacks.push_back(ils_debug_callback);
 }
 
 PoseChangeVIBackendModule::~PoseChangeVIBackendModule() {}

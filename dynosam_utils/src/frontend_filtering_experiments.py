@@ -331,9 +331,9 @@ def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2", "--use_backend=true")
 
     run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_test", omd_dataset,
-        "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=false",
+        "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true",
         "--pc_smoother_allow_backend_updates=false",
-        "--pc_log_object_kf_structure=true",
+        "--pc_log_object_kf_structure=false",
         "--init_object_pose_from_gt=false")
 
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test_with_update", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
@@ -417,14 +417,14 @@ def run_uts_tech_lab_solver_comparison_test():
 
 
 if __name__ == '__main__':
-    run_post_analysis = True
-    run_hybrid_solver_comparison_omd()
+    run_post_analysis = False
+    # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    # run_viodes()
+    run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

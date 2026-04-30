@@ -310,6 +310,8 @@ struct ErrorHandlingHooks {
   using OnFailedObject =
       std::function<void(const std::pair<FrameId, ObjectId>&)>;
 
+  using OnIndeterminateLinearSystemDebug = std::function<void(gtsam::Key)>;
+
   //! Called when smoother update throws a
   //! gtsam::IndeterminantLinearSystemException Usually used to add additional
   //! priors to the set of existing factors in order to handle the error
@@ -318,6 +320,9 @@ struct ErrorHandlingHooks {
   //! has been attempted to be stabilised with new priors from the
   //! handle_ils_exception
   OnFailedObject handle_failed_object;
+
+  //! Triggered on any ils_handle
+  std::vector<OnIndeterminateLinearSystemDebug> ils_debug_callbacks;
 };
 
 /**
@@ -442,6 +447,11 @@ class IncrementalInterface {
       const gtsam::Key& var = e.nearbyVariable();
       ss << "gtsam::IndeterminantLinearSystemException with variable "
          << DynosamKeyFormatter(var);
+
+      // do any additional debug callbacks before trying to handle the exception
+      for (auto cb : error_hooks.ils_debug_callbacks) {
+        cb(var);
+      }
 
       if (!error_hooks.handle_ils_exception) {
         LOG(FATAL) << error_hooks.identifier << ": " << ss.str()
