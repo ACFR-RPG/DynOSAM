@@ -60,6 +60,10 @@ class Frame {
   //! Objects that required new detection/sampling this frame.
   ObjectIds retracked_objects_;
 
+  //! Features that were retroactively tracked on the previous frame
+  //! These are all new features this frame
+  TrackletIds retroactive_tracks;
+
   std::optional<FeatureTrackerInfo>
       tracking_info_;  //! information from the tracker that was used to created
                        //! this frame

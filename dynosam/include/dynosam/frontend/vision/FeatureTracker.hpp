@@ -113,7 +113,7 @@ class FeatureTracker : public FeatureTrackerBase {
   void trackDynamicKLT(
       FrameId frame_id, const ImageContainer& image_container,
       FeatureContainer& dynamic_features, std::set<ObjectId>& object_keyframes,
-      cv::Mat& dynamic_detection_mask,
+      TrackletIds& retroactive_trackslet_ids, cv::Mat& dynamic_detection_mask,
       const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result);
 
   void sampleDynamic(FrameId frame_id, const ImageContainer& image_container,

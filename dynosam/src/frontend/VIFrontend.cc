@@ -129,12 +129,15 @@ Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
 
   if (image_container->hasDepth()) CHECK(frame->updateDepths());
 
-  // TODO: for now (testing with retroactive frame)
-  //  should onlly do this for the set of features we re-troactively tracked
-  //  and update the depth - definitely for stereo too!
+  const bool has_retroactive_tracks = frame->retroactive_tracks.size() > 0;
   Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
-  if (frame_km1 && frame_km1->imageContainer().hasDepth()) {
-    frame_km1->updateDepths();
+  if (frame_km1 && has_retroactive_tracks) {
+    // TODO: and in depth mode!
+    if (frame_km1->imageContainer().hasDepth()) {
+      frame_km1->updateDepths();
+    } else {
+      CHECK(stereoMatch(frame_km1, frame->retroactive_tracks));
+    }
   }
   return frame;
 }
@@ -167,6 +170,26 @@ bool VIFrontend::stereoMatch(Frame::Ptr frame) {
 
   for (const auto& f : frame->dynamic_features_.usableIterator()) {
     features.add(f);
+  }
+
+  return tracker_->stereoTrack(features, container);
+}
+
+bool VIFrontend::stereoMatch(Frame::Ptr frame,
+                             const TrackletIds& tracklets_to_match) {
+  const ImageContainer& container = frame->imageContainer();
+
+  if (!container.hasRightRgb()) {
+    return false;
+  }
+
+  // collect all features
+  FeatureContainer features;
+  for (TrackletId tracklet_id : tracklets_to_match) {
+    Feature::Ptr feature = frame->at(tracklet_id);
+    CHECK_NOTNULL(feature);
+
+    features.add(feature);
   }
 
   return tracker_->stereoTrack(features, container);

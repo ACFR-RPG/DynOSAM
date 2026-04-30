@@ -134,6 +134,10 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   // data-structure to handle which objects required re-tracking/sampling
   std::set<ObjectId> object_keyframes;
+  // which dynamic features (are new and) were retroactively tracked on the
+  // previous frame these features require initial depth estimation which will
+  // be done by the frontend
+  TrackletIds retroactive_tracks;
 
   auto static_track = [&](FeatureContainer& static_features) {
     VLOG(60) << "Starting static track";
@@ -160,8 +164,8 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
       VLOG(60) << "Starting KLT object feature tracking";
       utils::ChronoTimingStats dynamic_track_timer("dynamic_feature_track_klt");
       trackDynamicKLT(frame_id, input_images, dynamic_features,
-                      object_keyframes, dynamic_detection_mask,
-                      boundary_mask_result);
+                      object_keyframes, retroactive_tracks,
+                      dynamic_detection_mask, boundary_mask_result);
     }
   };
 
@@ -207,6 +211,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // update tracking/sampling information for dynamic obejcts
   new_frame->retracked_objects_ =
       ObjectIds(object_keyframes.begin(), object_keyframes.end());
+  new_frame->retroactive_tracks = retroactive_tracks;
 
   // update depth threshold information
   new_frame->setMaxBackgroundDepth(frontend_params_.max_background_depth);
@@ -666,7 +671,7 @@ void FeatureTracker::trackDynamic(
 void FeatureTracker::trackDynamicKLT(
     FrameId frame_id, const ImageContainer& image_container,
     FeatureContainer& dynamic_features, std::set<ObjectId>& object_keyframes,
-    cv::Mat& dynamic_detection_mask,
+    TrackletIds& retroactive_trackslet_ids, cv::Mat& dynamic_detection_mask,
     const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result) {
   const cv::Mat& rgb = image_container.rgb();
   cv::Mat mono = ImageType::RGBMono::toMono(image_container.rgb());
@@ -1173,13 +1178,14 @@ void FeatureTracker::trackDynamicKLT(
         if (!feature_previous) {
           continue;
         }
+        const TrackletId tracklet_id = feature_previous->trackletId();
 
         feature_current = constructDynamicFeatureFromPrevious(
-            keypoint, feature_previous, feature_previous->trackletId(),
-            object_id, frame_id);
+            keypoint, feature_previous, tracklet_id, object_id, frame_id);
 
         if (feature_current && feature_previous) {
           previous_frame_->dynamic_features_.add(feature_previous);
+          retroactive_trackslet_ids.push_back(tracklet_id);
         }
       } else {
         // assume we only have new detections no track

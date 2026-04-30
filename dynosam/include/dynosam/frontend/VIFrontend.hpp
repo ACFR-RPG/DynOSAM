@@ -76,6 +76,7 @@ class VIFrontend : public Frontend {
       const gtsam::NavState& nav_state_lIMU, ImuFrontend::PimPtr& pim_out);
 
   bool stereoMatch(Frame::Ptr frame);
+  bool stereoMatch(Frame::Ptr frame, const TrackletIds& tracklets_to_match);
 
   // bool tryStereoMatchStaticFeatures(Frame::Ptr frame,
   //                                   const ImageContainer::Ptr
