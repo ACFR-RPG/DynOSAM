@@ -148,11 +148,11 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
   for (const auto& [obj_id, _] : solvers_) {
     if (current_objects.find(obj_id) == current_objects.end()) {
       // collect status data before marking as lost
-      ObjectTrackingStatus tracking_status;
-      CHECK(this->threadSafeGetObjectStatus(obj_id, tracking_status));
+      // ObjectTrackingStatus tracking_status;
+      // CHECK(this->threadSafeGetObjectStatus(obj_id, tracking_status));
 
-      int num_keyframes;
-      CHECK(this->threadSafeGetNumKeyframes(obj_id, num_keyframes));
+      // int num_keyframes;
+      // CHECK(this->threadSafeGetNumKeyframes(obj_id, num_keyframes));
 
       // // now also try and make this is keyframe to refine the whole
       // trajectory if(tracking_status == ObjectTrackingStatus::WellTracked &&
@@ -162,7 +162,7 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
       //     ObjectKeyFrameStatus::RegularKeyFrame);
       // }
 
-      markObjectAsLost(obj_id);
+      markObjectAsLost(obj_id, frame_k->getFrameId());
       LOG(INFO) << "Object " << obj_id << " marked as Lost at frame "
                 << frame_k->getFrameId();
     }
@@ -177,16 +177,15 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
 bool HybridObjectMotionSolver::solveImpl(
     Frame::Ptr frame_k, Frame::Ptr frame_km1, ObjectId object_id,
     Motion3ReferenceFrame& motion_estimate) {
+  const FrameId frame_id_k = frame_k->getFrameId();
   // Initialize or update tracking status
   bool is_new = !solverExists(object_id);
   bool is_resampled = std::find(frame_k->retracked_objects_.begin(),
                                 frame_k->retracked_objects_.end(),
                                 object_id) != frame_k->retracked_objects_.end();
 
-  // How does this not break if there is no previous tracking status?
-  ObjectTrackingStatus previous_tracking_state;
-  const bool has_previous_state =
-      threadSafeGetObjectStatus(object_id, previous_tracking_state);
+  std::optional<ObjectTrackingStatus> maybe_previous_tracking_state =
+      object_statuses_.getStatus(object_id);
 
   // get the corresponding feature pairs
   AbsolutePoseCorrespondences dynamic_correspondences;
@@ -213,7 +212,7 @@ bool HybridObjectMotionSolver::solveImpl(
   frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
   if (is_resampled) {
-    LOG(INFO) << "Resampled " << info_string(frame_k->getFrameId(), object_id)
+    LOG(INFO) << "Resampled " << info_string(frame_id_k, object_id)
               << " with matches n=" << n_matches
               << " inliers= " << inlier_tracklets.size();
   }
@@ -226,24 +225,22 @@ bool HybridObjectMotionSolver::solveImpl(
       geometric_result.status != TrackingStatus::VALID) {
     LOG(WARNING) << "Could not make initial frame for object " << object_id
                  << " as not enough inlier tracks!";
-    const std::lock_guard<std::mutex> lock(object_status_mutex_);
-    object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
-
+    object_statuses_.setStatus(object_id, frame_id_k,
+                               ObjectTrackingStatus::PoorlyTracked);
     return false;
   }
 
   // To get here we must be in a well tracked state
-  {
-    const std::lock_guard<std::mutex> lock(object_status_mutex_);
-    object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
-  }
+  object_statuses_.setStatus(object_id, frame_id_k,
+                             ObjectTrackingStatus::WellTracked);
 
   bool object_retracked = false;
-  if (has_previous_state) {
-    if (previous_tracking_state == ObjectTrackingStatus::PoorlyTracked ||
-        previous_tracking_state == ObjectTrackingStatus::Lost) {
+  if (maybe_previous_tracking_state) {
+    if (maybe_previous_tracking_state.value() ==
+            ObjectTrackingStatus::PoorlyTracked ||
+        maybe_previous_tracking_state.value() == ObjectTrackingStatus::Lost) {
       LOG(INFO) << "Previous tracking status "
-                << to_string(previous_tracking_state)
+                << to_string(maybe_previous_tracking_state.value())
                 << " setting to retracked";
       object_retracked = true;
     }
@@ -390,11 +387,9 @@ bool HybridObjectMotionSolver::solveImpl(
   auto update_time_ms = update_timer.stop();
 
   if (!solver_okay) {
-    LOG(WARNING) << "Solver failed "
-                 << info_string(frame_k->getFrameId(), object_id);
-    const std::lock_guard<std::mutex> lock(object_status_mutex_);
-    object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
-
+    LOG(WARNING) << "Solver failed " << info_string(frame_id_k, object_id);
+    object_statuses_.setStatus(object_id, frame_id_k,
+                               ObjectTrackingStatus::PoorlyTracked);
     return false;
   }
 
@@ -402,12 +397,13 @@ bool HybridObjectMotionSolver::solveImpl(
   motion_estimate = H_W_km1_k;
 
   // now see if needs new keyframe
-  if (previous_tracking_state != ObjectTrackingStatus::New) {
+  if (maybe_previous_tracking_state &&
+      maybe_previous_tracking_state.value() != ObjectTrackingStatus::New) {
     auto smoother =
         std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
     if (smoother) {
       // for OMD
-      if (smoother && previous_tracking_state != ObjectTrackingStatus::New) {
+      if (smoother /*&& previous_tracking_state != ObjectTrackingStatus::New*/) {
         requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
         // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
 
@@ -418,7 +414,7 @@ bool HybridObjectMotionSolver::solveImpl(
     }
 
     if (requires_new_keyframe) {
-      CHECK_EQ(solver->frameId(), frame_k->getFrameId())
+      CHECK_EQ(solver->frameId(), frame_id_k)
           << "j=" << object_id << " k=" << solver->frameId();
       keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
 
@@ -447,7 +443,7 @@ bool HybridObjectMotionSolver::solveImpl(
     const ObjectPoseChangeInfo& info =
         appendPoseChangeInfo(object_id, keyframe_status);
     CHECK_EQ(info.H_W_KF_k.to(), info.frame_id);
-    CHECK_EQ(info.H_W_KF_k.to(), frame_k->getFrameId());
+    CHECK_EQ(info.H_W_KF_k.to(), frame_id_k);
     CHECK(info.isKeyFrame());
 
     LOG(INFO) << "Making hybrid info for j=" << object_id << " with "
@@ -512,11 +508,9 @@ ObjectPoseChangeInfo& HybridObjectMotionSolver::appendPoseChangeInfo(
   return pose_change_info_.at(object_id);
 }
 
-void HybridObjectMotionSolver::markObjectAsLost(ObjectId object_id) {
-  {
-    const std::lock_guard<std::mutex> lock(object_status_mutex_);
-    object_statuses_[object_id] = ObjectTrackingStatus::Lost;
-  }
+void HybridObjectMotionSolver::markObjectAsLost(ObjectId object_id,
+                                                FrameId frame_id) {
+  object_statuses_.setStatus(object_id, frame_id, ObjectTrackingStatus::Lost);
 
   {
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);

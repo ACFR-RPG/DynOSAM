@@ -301,6 +301,7 @@ class ImageContainer {
   }
   inline size_t size() const { return images_.size(); }
 
+  /* Raw access to the cv mat*/
   cv::Mat at(const std::string& key) const {
     if (!exists(key)) {
       throw ImageKeyDoesNotExist(key);

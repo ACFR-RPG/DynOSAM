@@ -359,151 +359,6 @@ bool FeatureTracker::stereoTrack(FeatureContainer& left_features,
   return true;
 }
 
-bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
-                                 FeatureContainer& left_features,
-                                 const cv::Mat& left_image,
-                                 const cv::Mat& right_image,
-                                 const double& virtual_baseline) const {
-  utils::ChronoTimingStats timing("stereo_track_timer");
-  TrackletIds tracklets_ids;
-  // collect left feature points to cv::point2f
-  std::vector<cv::Point2f> left_feature_points =
-      left_features.toOpenCV(&tracklets_ids, true);
-
-  if (left_feature_points.size() < 8) {
-    LOG(WARNING) << "Not enough left feature points for stereo matching...";
-    return false;
-  }
-
-  std::vector<cv::Point2f> right_feature_points;
-  std::vector<uchar> klt_status;
-  std::vector<float> err;
-
-  const cv::Mat& left_rgb = left_image;
-  cv::Mat left_mono = ImageType::RGBMono::toMono(left_rgb);
-  CHECK(!left_mono.empty());
-  cv::Mat right_mono = ImageType::RGBMono::toMono(right_image);
-  CHECK(!right_mono.empty());
-
-  right_feature_points = left_feature_points;
-
-  cv::calcOpticalFlowPyrLK(left_mono, right_mono, left_feature_points,
-                           right_feature_points, klt_status, err,
-                           cv::Size(21, 21), 5);
-  CHECK_EQ(klt_status.size(), tracklets_ids.size());
-
-  // check flow back
-  std::vector<cv::Point2f> reverse_left_feature_points = right_feature_points;
-  std::vector<uchar> klt_reverse_status;
-  cv::calcOpticalFlowPyrLK(right_mono, left_mono, right_feature_points,
-                           reverse_left_feature_points, klt_reverse_status, err,
-                           cv::Size(21, 21), 5);
-  CHECK_EQ(klt_reverse_status.size(), tracklets_ids.size());
-
-  auto distance = [](const cv::Point2f& pt1, const cv::Point2f& pt2) -> float {
-    float dx = pt1.x - pt2.x;
-    float dy = pt1.y - pt2.y;
-    return std::sqrt(dx * dx + dy * dy);
-  };
-  // update klt status based on result from flow
-  // for (size_t i = 0; i < klt_status.size(); i++) {
-  //   const bool both_status_good = klt_status.at(i) &&
-  //   klt_reverse_status.at(i); const bool within_image =
-  //   isWithinShrunkenImage(right_feature_points.at(i)); const bool
-  //   within_distance =
-  //       distance(left_feature_points.at(i),
-  //                reverse_left_feature_points.at(i)) <= 0.5;
-
-  //   if (both_status_good && within_image && within_distance) {
-  //     klt_status.at(i) = 1;
-  //   } else {
-  //     klt_status.at(i) = 0;
-  //   }
-  // }
-
-  TrackletIds good_stereo_tracklets;
-
-  std::vector<cv::Point2f> pts_left_tracked, pts_right_tracked;
-  for (size_t i = 0; i < klt_status.size(); ++i) {
-    auto tracklet_id = tracklets_ids.at(i);
-    // LOG(INFO) << tracklet_id;
-    if (klt_status[i]) {
-      pts_left_tracked.push_back(left_feature_points[i]);
-      pts_right_tracked.push_back(right_feature_points[i]);
-      good_stereo_tracklets.push_back(tracklet_id);
-    }
-  }
-  // LOG(INFO) << "Stereo KLT tracked: " << pts_left_tracked.size() << "
-  // points";
-
-  // need more than 8 points for fundamental matrix calc with ransac
-  TrackletIds inlier_stereo_tracklets;
-  if (pts_left_tracked.size() < 8) {
-    LOG(WARNING)
-        << "Not enough stereo matches to perform fundamental matrix calc";
-    return false;
-  } else {
-    std::vector<uchar> epipolar_inliers;
-    cv::Mat F =
-        cv::findFundamentalMat(pts_left_tracked, pts_right_tracked,
-                               cv::FM_RANSAC, 1.0, 0.99, epipolar_inliers);
-    CHECK_EQ(epipolar_inliers.size(), good_stereo_tracklets.size());
-
-    std::vector<cv::Point2f> pts_left_inlier, pts_right_inlier;
-    for (size_t i = 0; i < epipolar_inliers.size(); ++i) {
-      auto tracklet_id = good_stereo_tracklets.at(i);
-      if (epipolar_inliers[i]) {
-        pts_left_inlier.push_back(pts_left_tracked[i]);
-        pts_right_inlier.push_back(pts_right_tracked[i]);
-
-        CHECK(left_features.getByTrackletId(tracklet_id))
-            << "Somehow tracklet id " << tracklet_id << " is missing!";
-        inlier_stereo_tracklets.push_back(tracklet_id);
-      }
-    }
-
-    LOG(INFO) << "After epipolar filtering: " << inlier_stereo_tracklets.size()
-              << " inliers";
-    const auto& fx = camera_->getParams().fx();
-
-    for (size_t i = 0; i < inlier_stereo_tracklets.size(); i++) {
-      auto inlier_stereo_track = inlier_stereo_tracklets.at(i);
-      Feature::Ptr feature = left_features.getByTrackletId(inlier_stereo_track);
-      CHECK(feature);
-      CHECK(feature->usable());
-
-      double uL = static_cast<double>(pts_left_inlier[i].x);
-      double v = static_cast<double>(pts_left_inlier[i].y);
-      double uR = static_cast<double>(pts_right_inlier[i].x);
-
-      double disparity = uL - uR;
-      // Reject near-zero disparity
-      // this will also mean far away points.... multi-view triangulation
-      // across frames is needed here... fall back on depth map...
-      if (disparity <= 1.0 || uR < 0.0f) {
-        feature->markOutlier();
-        continue;
-      }
-
-      // TODO: should use RGBDCamera class!
-      double depth = fx * virtual_baseline / disparity;
-      // for testing
-      // TODO: no max depth
-      feature->depth(depth);
-      feature->rightKeypoint(Keypoint(uR, v));
-
-      stereo_features.push_back(feature);
-    }
-
-    TrackletIds outlier_stereo_tracklets;
-    determineOutlierIds(inlier_stereo_tracklets, tracklets_ids,
-                        outlier_stereo_tracklets);
-
-    left_features.markOutliers(outlier_stereo_tracklets);
-    return true;
-  }
-}
-
 void FeatureTracker::trackDynamic(
     FrameId frame_id, const ImageContainer& image_container,
     FeatureContainer& dynamic_features, std::set<ObjectId>& object_keyframes,
@@ -982,7 +837,6 @@ void FeatureTracker::trackDynamicKLT(
 
   cv::Mat previous_mono;
   cv::Mat previous_motion_mask;
-  cv::Mat previous_rgb;
 
   if (previous_frame_) {
     previous_mono =
@@ -1074,20 +928,15 @@ void FeatureTracker::trackDynamicKLT(
           }
 
           std::vector<cv::Point2f> verified_current_j, verified_previous_j;
-          // dont actually need this but the function call requires it
-          // just fill with garbage but size needs to match
-          TrackletIds temporary_ids;
-          temporary_ids.resize(good_current_j.size());
-          vision_tools::outlierRejectHomography(
-              good_previous_j, good_current_j, temporary_ids,
-              verified_previous_j, verified_current_j, temporary_ids);
-          (void)temporary_ids;
+          vision_tools::outlierRejectHomography(good_previous_j, good_current_j,
+                                                verified_previous_j,
+                                                verified_current_j);
 
           // fill keypoints with only good tracks
           keypoints.reserve(verified_previous_j.size());
           indexed_retroactive_keypoints.resize(verified_previous_j.size());
           for (size_t i = 0; i < verified_previous_j.size(); i++) {
-            // use the temporaary id as correspondance so we can recover the
+            // use the index is as correspondance so we can recover the
             // correct previous flow after ANMS
             KeypointCV kp_curr;
             kp_curr.pt = verified_current_j.at(i);
@@ -1150,7 +999,6 @@ void FeatureTracker::trackDynamicKLT(
       CHECK_EQ(new_keypoints.size(), retroactive_tracks.size());
     }
 
-    // for (const KeypointCV& cv_keypoint : keypoints) {
     for (size_t i = 0; i < new_keypoints.size(); i++) {
       const auto& cv_keypoint = new_keypoints.at(i);
       Keypoint keypoint = utils::cvKeypointToGtsam(cv_keypoint);

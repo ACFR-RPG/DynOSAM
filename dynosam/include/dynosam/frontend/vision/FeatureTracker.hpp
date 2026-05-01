@@ -68,11 +68,6 @@ class FeatureTracker : public FeatureTrackerBase {
   bool stereoTrack(FeatureContainer& left_features,
                    const ImageContainer& image_container) const;
 
-  bool stereoTrack(FeaturePtrs& stereo_features,
-                   FeatureContainer& left_features, const cv::Mat& left_image,
-                   const cv::Mat& right_image,
-                   const double& virtual_baseline) const;
-
   /**
    * @brief Get the previous frame.
    *

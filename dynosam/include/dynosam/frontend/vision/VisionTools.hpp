@@ -147,6 +147,11 @@ void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
                              std::vector<cv::Point2f>& verified_current,
                              TrackletIds& verified_tracklet_ids);
 
+void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
+                             const std::vector<cv::Point2f>& current,
+                             std::vector<cv::Point2f>& verified_previous,
+                             std::vector<cv::Point2f>& verified_current);
+
 // unique object labels as present in a semantic/motion segmented image -> does
 // not include background label
 

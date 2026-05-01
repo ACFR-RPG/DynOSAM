@@ -111,11 +111,18 @@ const LKWorkspace& SparseLKTracker::track(
   pyr_builder_.build(image_container_1, img1_key_, img1_pyr_);
   pyr_builder_.build(image_container_k, img2_key_, img2_pyr_);
 
+  // prepare workspace
+  // should not allocate memory if workspace is already at correct size
+  workspace_.resize(img1_pts.size());
+
   // used as flags argument for calcOpticalFlowPyrLK - initially starts as
   // default (0) flag
   int klt_flags = 0;
   if (img2_pts) {
     CHECK_EQ(img2_pts->size(), img1_pts.size());
+    // prepare workspace for initial flow
+    // allocate all data and then set the
+    // initial points using the input
     workspace_.pts = *img2_pts;
     klt_flags = cv::OPTFLOW_USE_INITIAL_FLOW;
   }
@@ -142,6 +149,9 @@ const LKWorkspace& SparseLKTracker::track(
   // backwards track
   const std::vector<cv::Point2f>& curr_pts = workspace_.pts;
   // use initial flow for reverse check
+  // prepare workspace
+  // should not allocate memory if workspace is already at correct size
+  reverse_workspace_.resize(curr_pts.size());
   reverse_workspace_.pts = curr_pts;
   trackImpl(curr_pts, img2_pyr_, img1_pyr_, cv::OPTFLOW_USE_INITIAL_FLOW,
             reverse_workspace_);
@@ -184,12 +194,7 @@ void SparseLKTracker::trackImpl(const std::vector<cv::Point2f>& img1_pts,
                                 const OpticalFlowPyramid& img1_pyr,
                                 const OpticalFlowPyramid& img2_pyr,
                                 int klt_flags, LKWorkspace& workspace) const {
-  const size_t N = img1_pts.size();
-  // Resize WITHOUT realloc (capacity already reserved)
-  // this should not affect worksapce.curr_pts if set (ie. initial gues)
-  // as long as curr_pts.size() == prev_pts.size()
-  workspace.resize(N);
-
+  // the workspace must be correctly allocated with memory prior
   cv::calcOpticalFlowPyrLK(img1_pyr.levels, img2_pyr.levels, img1_pts,
                            workspace.pts, workspace.status, workspace.error,
                            pyr_builder_.winSize(), pyr_builder_.maxLevel(),

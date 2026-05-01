@@ -91,6 +91,26 @@ inline std::string to_string(const TrackingStatus& status) {
   return status_str;
 }
 
+template <>
+inline std::string to_string(const TrackingQuality& quality) {
+  std::string status_str = "";
+  switch (quality) {
+    case TrackingQuality::Good: {
+      status_str = "Good";
+      break;
+    }
+    case TrackingQuality::Marginal: {
+      status_str = "Marginal";
+      break;
+    }
+    case TrackingQuality::Lost: {
+      status_str = "Lost";
+      break;
+    }
+  }
+  return status_str;
+}
+
 using json = nlohmann::json;
 
 // map KeyPointType values to JSON as strings

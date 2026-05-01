@@ -46,58 +46,21 @@ namespace dyno {
 
 namespace vision_tools {
 
-// LKWrapper::LKWrapper(const cv::Size& win_size,
-//               int max_level,
-//               const cv::TermCriteria& criteria,
-//               int flags,
-//               double min_eig_threshold,)
-//         : win_size_(win_size),
-//         max_level_(max_level),
-//         criteria_(criteria),
-//         flags_(flags),
-//         min_eig_threshold_(min_eig_threshold)
-// {
+// helper function to homography
+cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
+                       const std::vector<cv::Point2f>& current) {
+  CHECK_EQ(previous.size(), current.size());
 
-//   use_cuda_ = false;
-//   #ifdef DYNO_CUDA_OPENCV_ENABLED
-//     if(utils::opencvCudaAvailable()) {
-//       lk_cuda_ = cv::cuda::OpticalFlowPyrLK::create(win_size_, max_level_,
-//                                                           criteria_.maxCount,
-//                                                           criteria_.epsilon,
-//                                                           flags_,
-//                                                           min_eig_threshold_);
-//       use_cuda_ = true;
-//     }
-//   #endif
-
-// }
-
-// void getCorrespondences(FeaturePairs& correspondences,
-//                         const FeatureFilterIterator& previous_features,
-//                         const FeatureFilterIterator& current_features) {
-//   // correspondences.clear();
-
-//   // const FeatureContainer& previous_feature_container =
-//   //     previous_features.getContainer();
-
-//   // for (const auto& curr_feature : current_features) {
-//   //   // check if previous feature and is valid
-//   //   if (previous_feature_container.exists(curr_feature->trackletId())) {
-//   //     const auto prev_feature =
-//   previous_feature_container.getByTrackletId(
-//   //         curr_feature->trackletId());
-//   //     CHECK(prev_feature);
-
-//   //     // having checked that feature is in the previous set, also check
-//   that it
-//   //     // ahderes to the filter
-//   //     if (!previous_features(prev_feature)) {
-//   //       continue;
-//   //     }
-//   //     correspondences.push_back({prev_feature, curr_feature});
-//   //   }
-//   // }
-// }
+  // Minimum number of points required for RANSAC
+  if (previous.size() >= 4) {
+    cv::Mat mask;
+    cv::findHomography(previous, current, cv::RANSAC, 5.0, mask);
+    return mask;
+  } else {
+    // If not enough points, assume all are inliers
+    return cv::Mat::ones(previous.size(), 1, CV_8U);
+  }
+}
 
 void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
                              const std::vector<cv::Point2f>& current,
@@ -105,22 +68,8 @@ void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
                              std::vector<cv::Point2f>& verified_previous,
                              std::vector<cv::Point2f>& verified_current,
                              TrackletIds& verified_tracklet_ids) {
-  CHECK_EQ(previous.size(), current.size());
   CHECK_EQ(tracklet_ids.size(), previous.size());
-
-  auto find_homograph = [&previous, &current]() -> cv::Mat {
-    if (previous.size() >= 4) {  // Minimum number of points required for RANSAC
-      cv::Mat mask;
-      cv::findHomography(previous, current, cv::RANSAC, 5.0, mask);
-      return mask;
-    } else {
-      return cv::Mat::ones(
-          previous.size(), 1,
-          CV_8U);  // If not enough points, assume all are inliers
-    }
-  };
-
-  const cv::Mat geometric_verification_mask = find_homograph();
+  const cv::Mat geometric_verification_mask = findHomography(previous, current);
 
   for (int i = 0; i < geometric_verification_mask.rows; ++i) {
     if (geometric_verification_mask.at<uchar>(i)) {
@@ -131,22 +80,21 @@ void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
   }
 }
 
-ObjectIds getObjectLabels(const cv::Mat& image) {
-  // CHECK(!image.empty());
-  // std::unordered_set<ObjectId> unique_labels;
-  // for (auto it = image.begin<ObjectId>(); it != image.end<ObjectId>(); ++it)
-  // {
-  //   if (*it != background_label) {
-  //     unique_labels.insert(*it);
-  //   }
-  // }
-  // return ObjectIds(unique_labels.begin(), unique_labels.end());
-  // std::vector<ObjectId> v(image.ptr<ObjectId>(), image.ptr<ObjectId>() +
-  // image.total()); std::sort(v.begin(), v.end()); auto last =
-  // std::unique(v.begin(), v.end()); v.erase(last, v.end());
-  // v.erase(std::remove(v.begin(), v.end(), 0), v.end());
-  // return v;
+void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
+                             const std::vector<cv::Point2f>& current,
+                             std::vector<cv::Point2f>& verified_previous,
+                             std::vector<cv::Point2f>& verified_current) {
+  const cv::Mat geometric_verification_mask = findHomography(previous, current);
 
+  for (int i = 0; i < geometric_verification_mask.rows; ++i) {
+    if (geometric_verification_mask.at<uchar>(i)) {
+      verified_current.push_back(current.at(i));
+      verified_previous.push_back(previous.at(i));
+    }
+  }
+}
+
+ObjectIds getObjectLabels(const cv::Mat& image) {
   // from testing in test_code_concepts.cc (CodeConcepts.uniqueLabelSpeed)
   // this implementation is up to 28x faster than a simple a std::set approach!!
   const int numThreads =
@@ -529,7 +477,7 @@ gtsam::FastMap<ObjectId, Histogram> makeTrackletLengthHistorgram(
 
   const auto& dyamic_features = frame->dynamic_features_;
   auto itr = dyamic_features.beginObjectIterator();
-  for (itr; itr != dyamic_features.endObjectIterator(); itr++) {
+  for (; itr != dyamic_features.endObjectIterator(); itr++) {
     auto [object_id, feature_per_object] = *itr;
 
     Histogram hist(bh::make_histogram(bh::axis::variable<>(bins)));

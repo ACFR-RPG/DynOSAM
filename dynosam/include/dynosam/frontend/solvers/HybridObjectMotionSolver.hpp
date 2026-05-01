@@ -71,7 +71,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   HybridObjectMotionSolverImpl::Ptr createAndInsertFilter(
       ObjectId object_id, Frame::Ptr frame, const TrackletIds& tracklets);
 
-  void markObjectAsLost(ObjectId object_id);
+  void markObjectAsLost(ObjectId object_id, FrameId frame_id);
 
   bool solverExists(ObjectId object_id) const {
     const std::lock_guard<std::mutex> lock(solvers_mutex_);
@@ -80,17 +80,6 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
 
   HybridObjectMotionSolverImpl::Ptr threadSafeFilterAccess(
       ObjectId object_id) const;
-
-  bool threadSafeGetObjectStatus(ObjectId object_id,
-                                 ObjectTrackingStatus& status) const {
-    const std::lock_guard<std::mutex> lock(object_status_mutex_);
-    if (!object_statuses_.exists(object_id)) {
-      return false;
-    }
-
-    status = object_statuses_.at(object_id);
-    return true;
-  }
 
   bool threadSafeGetNumKeyframes(ObjectId object_id, int& num_keyframes) const {
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
@@ -120,11 +109,46 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   enum PoseInitalisationMethod { NonKeyFrame, Centroid, Previous };
 
  private:
-  gtsam::FastMap<ObjectId, ObjectTrackingStatus> object_statuses_;
+  struct TrackingStatusHistory {
+    std::vector<std::pair<FrameId, ObjectTrackingStatus>> statuses;
+    ObjectTrackingStatus currentStatus() const {
+      return statuses.back().second;
+    }
+    void add(FrameId frame_id, ObjectTrackingStatus status) {
+      statuses.push_back(std::make_pair(frame_id, status));
+    }
+  };
+
+  struct ObjectTrackingStatuses {
+    mutable std::mutex mutex;
+    gtsam::FastMap<ObjectId, TrackingStatusHistory> statuses;
+
+    bool exists(ObjectId object_id) const {
+      const std::lock_guard<std::mutex> lock(mutex);
+      return statuses.exists(object_id);
+    }
+    void setStatus(ObjectId object_id, FrameId frame_id,
+                   ObjectTrackingStatus status) {
+      const std::lock_guard<std::mutex> lock(mutex);
+      if (!statuses.exists(object_id)) {
+        statuses[object_id] = TrackingStatusHistory{};
+      }
+      statuses.at(object_id).add(frame_id, status);
+    }
+
+    std::optional<ObjectTrackingStatus> getStatus(ObjectId object_id) const {
+      std::optional<ObjectTrackingStatus> status;
+      const std::lock_guard<std::mutex> lock(mutex);
+      if (statuses.exists(object_id)) {
+        status.emplace(statuses.at(object_id).currentStatus());
+      }
+      return status;
+    }
+  };
+
+  ObjectTrackingStatuses object_statuses_;
   gtsam::FastMap<ObjectId, PoseWithMotionTrajectory> past_trajectories_;
   gtsam::FastMap<ObjectId, int> num_kfs_per_object_;
-
-  mutable std::mutex object_status_mutex_;
   mutable std::mutex num_kfs_per_object_mutex_;
   mutable std::mutex solvers_mutex_;
   mutable std::mutex pose_change_info_mutex_;
