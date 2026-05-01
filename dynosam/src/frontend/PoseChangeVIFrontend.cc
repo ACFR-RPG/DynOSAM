@@ -438,8 +438,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // fillDebugImagery(realtime_output->debug_imagery, frame_k, frame_km1);
   // set only the debug tracking imagery to avoid also calling the (somewhat
   // depricated) computeTracks function from the tracker
+  ViTrackingViz::Data viz_data;
+  viz_data.camera_tracking_quality = camera_tracking_quality;
+  viz_data.keyframe_info = pc_input->keyframe_info;
   realtime_output->debug_imagery.tracking_image =
-      tracking_viz_.vizTracking(*frame_km1, *frame_k);
+      tracking_viz_.vizTracking(*frame_km1, *frame_k, viz_data);
 
   pushImageToDisplayQueue("Tracks",
                           realtime_output->debug_imagery.tracking_image);
