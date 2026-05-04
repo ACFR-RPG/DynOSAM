@@ -49,6 +49,16 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
   LOG(INFO) << "Recieved backend update for frames " << starting_frame_id
             << " -> " << frame_id;
 
+  const SharedModuleStates* shared_module_states =
+      map_->getSharedModuleStates();
+  auto maybe_last_optimized_CKF =
+      shared_module_states->getLatestOptimizedFrame();
+  if (maybe_last_optimized_CKF &&
+      maybe_last_optimized_CKF.value() >= lCKF_frame_->getFrameId()) {
+    LOG(INFO) << "last CKF has camera pose update!";
+    lCKF_has_update_.store(true);
+  }
+
   if (FLAGS_pc_smoother_allow_backend_updates) {
     LOG(INFO) << "Recieved backend update at frame " << frame_id;
     object_motion_solver_->receiveUpdate(event);
@@ -193,6 +203,34 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
 
+  // check if we have a camera pose update for the last CKF
+  // what if we get an update during the consuming!!!
+  if (lCKF_has_update_) {
+    //   LOG(WARNING) << "Consuming ckf update";
+    //   auto accessor =
+    //     formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
+    //  CHECK_NOTNULL(accessor);
+    //  gtsam::Pose3 X_W_LCKF = DYNO_GET_QUERY_DEBUG(
+    //       accessor->getSensorPose(lCKF_frame_->getFrameId()));
+    //   lCKF_frame_->T_world_camera_ = X_W_LCKF;
+
+    //   // update nav_state_km1_ with the best we can (ideally imu if we have)
+    //   const RelEgoPoseInfo& rel_egopose_lkf_km1 =
+    //         rel_egopose_infos_.at(frame_id_k-1);
+    //   gtsam::Pose3 X_W_km1 = X_W_LCKF * rel_egopose_lkf_km1.T_lkf_j;
+
+    //   // this is probably going to be very wrong with velocity really should
+    //   consider
+    //   //imu propogateion if we have
+    //   // should use get nav state at lckf!
+    //   // and velocity should be rotated by new pose rotation (ie. apply
+    //   rotation in world frame
+    //   // to body velocity!)
+    //   //velocity not updated?
+    //   nav_state_km1_ = gtsam::NavState(X_W_km1, nav_state_km1_.velocity());
+    //   lCKF_has_update_.store(false);
+  }
+
   ImuFrontend::PimPtr pim = nullptr;
   std::optional<gtsam::NavState> imu_propogated_nav_state_k =
       tryPropogateImu(input, nav_state_lkf_, pim);
@@ -277,12 +315,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // TODO: slow and rematching all points again!
   //  need to rematch after solving flow with objects
   stereoMatch(frame_k);
-
-  // test noisy on object motions now W is aligned
-  for (auto& [object_id, info] : kf_pose_change_infos) {
-    gtsam::Pose3& est = info.H_W_KF_k;
-    // est = utils::perturbWithNoise(est, 0.03);
-  }
 
   // update full_object_trajectories_ with trajectories for objects observed at
   // this frame
@@ -889,6 +921,7 @@ ViTrackingViz::ViTrackingViz(const ImageTracksParams& viz_params)
 
 cv::Mat ViTrackingViz::vizTracking(const Frame& frame_km1, const Frame& frame_k,
                                    const Data& data) {
+  utils::ChronoTimingStats timer("pc-frontend.viz-tracking");
   const ImageWrapper<ImageType::RGBMono>& img_wrapper =
       frame_k.imageContainer().rgb();
   cv::Mat img_rgb = img_wrapper.toRGB().clone();

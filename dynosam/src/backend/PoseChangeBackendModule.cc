@@ -149,14 +149,6 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
     LOG(FATAL) << "Failed...";
   }
 
-  // update the shared module state with the latest updated frames per object
-  // this indicates up to which frame variables have been optimized for since
-  // backend lags compared to the frontend which adds variables as each frame is
-  // processed
-  shared_module_states->updateLatestOptFramePerObject(
-      batch_input->latestKeyframes());
-  shared_module_states->is_backend_optimizing = false;
-
   LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
             << " error after " << result.getErrorAfter();
   gtsam::Values optimised_values = smoother_interface_.calculateEstimate();
@@ -167,6 +159,13 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   //  the current linearization gtsam::Values optimised_values =
   //  smoother_interface_.getLinearizationPoint();
   formulation_->updateTheta(optimised_values);
+  // update the shared module state with the latest updated frames per object
+  // this indicates up to which frame variables have been optimized for since
+  // backend lags compared to the frontend which adds variables as each frame is
+  // processed
+  shared_module_states->updateLatestOptFramePerObject(
+      batch_input->latestKeyframes());
+  shared_module_states->is_backend_optimizing = false;
 
   DynoState::Ptr state = makeOutput();
 

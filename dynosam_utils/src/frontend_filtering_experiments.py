@@ -159,14 +159,14 @@ def run_viodes():
 
 #     run_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    # run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true")
+    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true")
 # # zero_elements_ratio
 #     run_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
 
     # run_experiment_sequences("/root/data/VIODE/parking_lot/mid", "parking_lot_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
-    run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true")
+    # run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true")
 
 
 def run_omd():
@@ -408,7 +408,7 @@ def run_hybrid_solver_comparison_kitti():
     # run_analysis("kitti00_PnP")
 
 def run_uts_tech_lab_solver_comparison_test():
-    run_online_sequence("tech_lab_1_MO_test1", "--ending_frame=300", "--hybrid_motion_solver=4")
+    run_online_sequence("tech_lab_1_MO_test1", "--ending_frame=300", "--hybrid_motion_solver=4",  "--use_backend=false")
     # run_online_sequence("tech_lab_1_SS", "--ending_frame=300", "--hybrid_motion_solver=1")
     # run_online_sequence("tech_lab_1_FS", "--ending_frame=300", "--hybrid_motion_solver=2")
     # run_online_sequence("tech_lab_1_FS_test1", "--ending_frame=300", "--hybrid_motion_solver=2")
@@ -419,7 +419,7 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     run_post_analysis = False
-    run_hybrid_solver_comparison_omd()
+    # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
@@ -431,7 +431,7 @@ if __name__ == '__main__':
     # run_aria()
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
-    # run_analysis("omd_test")
+    run_analysis("omd_test")
     # run_analysis("dynoepts_uope_54")
     # run_analysis("kitti00_MO")
     # run_analysis("kitti00_PnP")

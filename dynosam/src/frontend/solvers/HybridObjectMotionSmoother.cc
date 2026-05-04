@@ -1074,6 +1074,8 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
         // convert to batch factor
         if (measurement_factors.size() > 3) {
+          // TBH these match factors probably not so good becuas we re-linearize
+          // every time!
           auto batch_factor =
               boost::make_shared<BatchStereoHybridMotionFactor3>(
                   m_L_point, L_KF, stereo_noise_model, stereo_calibration_,

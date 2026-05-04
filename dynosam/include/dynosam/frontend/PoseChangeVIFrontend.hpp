@@ -171,6 +171,9 @@ class PoseChangeVIFrontend : public VIFrontend {
   // Mapping of intermediate relative motions. Stored by to frame.
   gtsam::FastMap<FrameId, RelEgoPoseInfo> rel_egopose_infos_;
 
+  //! Maybe just for now (mark as having an update for the current keyframe)
+  std::atomic_bool lCKF_has_update_{false};
+
   //! Special visualizer ;)
   ViTrackingViz tracking_viz_;
 };

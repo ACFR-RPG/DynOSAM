@@ -408,6 +408,7 @@ bool HybridObjectMotionSolver::solveImpl(
     if (smoother) {
       // for OMD
       if (smoother /*&& previous_tracking_state != ObjectTrackingStatus::New*/) {
+        utils::ChronoTimingStats timer("object_motion_solver.is_keyframe");
         requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
         // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
 
