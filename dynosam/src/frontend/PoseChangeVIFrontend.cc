@@ -236,6 +236,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     stereo_matching_result &= stereoMatch(frame_k);
   }
 
+  // if(input->ground_truth_packet) {
+  //   frame_k->T_world_camera_ = input->ground_truth_packet->X_world_;
+  // }
+
   // we currently use the frame pose as the nav state - this value can come from
   // either the VO OR the IMU, depending on the result from the
   // solveCameraMotion this is only relevant since we dont solve incremental so
@@ -269,6 +273,16 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   ObjectPoseChangeInfoMap kf_pose_change_infos;
   solveObjectMotions(dyno_state_.object_trajectories, objects_with_new_motions,
                      kf_pose_change_infos, frame_k, frame_km1);
+
+  // TODO: slow and rematching all points again!
+  //  need to rematch after solving flow with objects
+  stereoMatch(frame_k);
+
+  // test noisy on object motions now W is aligned
+  for (auto& [object_id, info] : kf_pose_change_infos) {
+    gtsam::Pose3& est = info.H_W_KF_k;
+    // est = utils::perturbWithNoise(est, 0.03);
+  }
 
   // update full_object_trajectories_ with trajectories for objects observed at
   // this frame
@@ -447,11 +461,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   pushImageToDisplayQueue("Tracks",
                           realtime_output->debug_imagery.tracking_image);
 
-  if (stereo_matching_result) {
-    cv::Mat stereo_track;
-    tracker_->drawStereoMatches(stereo_track, *frame_k);
-    pushImageToDisplayQueue("Stereo-Matches", stereo_track);
-  }
+  // if (stereo_matching_result) {
+  //   cv::Mat stereo_track;
+  //   tracker_->drawStereoMatches(stereo_track, *frame_k);
+  //   pushImageToDisplayQueue("Stereo-Matches", stereo_track);
+  // }
 
   logRealTimeOutput(realtime_output);
 
@@ -712,7 +726,8 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   // ===============================
   // 4. Decision thresholds
   // ===============================
-  const double overlap_thresh = 0.55;   // spatial redundancy
+  // const double overlap_thresh = 0.55;   // spatial redundancy
+  const double overlap_thresh = 0.65;   // spatial redundancy
   const double disp_thresh = 15.0;      // pixels (tune)
   const double retention_thresh = 0.5;  // optional
 

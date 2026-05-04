@@ -31,6 +31,7 @@ class HybridObjectMotionSolverImpl {
   virtual gtsam::Pose3 keyFrameMotion() const = 0;
   virtual gtsam::Pose3 keyFramePose() const = 0;
   virtual Motion3ReferenceFrame frameToFrameMotionReference() const = 0;
+  virtual gtsam::Pose3 keyFrameCameraPose() const = 0;
 
   virtual Motion3ReferenceFrame keyFrameMotionReference() const {
     return Motion3ReferenceFrame(

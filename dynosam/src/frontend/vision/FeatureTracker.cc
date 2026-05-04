@@ -344,12 +344,19 @@ bool FeatureTracker::stereoTrack(FeatureContainer& left_features,
       continue;
     }
 
+    Keypoint right_kp(uR, v);
+    if (!(camera_->isKeypointContained(right_kp) &&
+          isWithinShrunkenImage(right_kp))) {
+      feature->markOutlier();
+      continue;
+    }
+
     // TODO: should use RGBDCamera class!
     double depth = rgbd_camera->depthFromDisparity(disparity);
     // for testing
     // TODO: no max depth
     feature->depth(depth);
-    feature->rightKeypoint(Keypoint(uR, v));
+    feature->rightKeypoint(right_kp);
   }
 
   TrackletIds outlier_tracklets;
@@ -845,149 +852,151 @@ void FeatureTracker::trackDynamicKLT(
   }
 
   utils::ChronoTimingStats detection_t("dynamic_feature_track_klt.detection");
-  tbb::parallel_for_each(
-      object_keyframes.begin(), object_keyframes.end(), [&](auto& object_id) {
-        cv::Mat obj_mask = (motion_mask == object_id);
-        // ignore additonal features from the tracking mask
-        cv::Mat combined_mask;
-        cv::bitwise_and(obj_mask, detection_mask_impl, combined_mask);
+  // tbb::parallel_for_each(
+  //     object_keyframes.begin(), object_keyframes.end(), [&](auto& object_id)
+  //     {
+  for (ObjectId object_id : object_keyframes) {
+    cv::Mat obj_mask = (motion_mask == object_id);
+    // ignore additonal features from the tracking mask
+    cv::Mat combined_mask;
+    cv::bitwise_and(obj_mask, detection_mask_impl, combined_mask);
 
-        std::vector<cv::Point2f> detected_points;
-        cv::goodFeaturesToTrack(mono, detected_points, max_features_to_track,
-                                qualityLevel, min_feature_distance,
-                                combined_mask);
+    std::vector<cv::Point2f> detected_points;
+    cv::goodFeaturesToTrack(mono, detected_points, max_features_to_track,
+                            qualityLevel, min_feature_distance, combined_mask);
 
-        // the actual set of keypoints to use for ANMS
-        // if we have previous frame and therefore previous tracks
-        // this will only be the set of keypoints with flow
-        std::vector<KeypointCV> keypoints;
-        std::vector<KeypointCV> indexed_retroactive_keypoints;
-        // do track back so new features already have two observations
-        // so we can immediately begin tracking!
-        const bool object_exists_in_previous =
-            previous_frame_
-                ? previous_frame_->getObjectObservations().exists(object_id)
-                : false;
-        const bool retroactively_tracked =
-            !previous_mono.empty() && object_exists_in_previous;
+    // the actual set of keypoints to use for ANMS
+    // if we have previous frame and therefore previous tracks
+    // this will only be the set of keypoints with flow
+    std::vector<KeypointCV> keypoints;
+    std::vector<KeypointCV> indexed_retroactive_keypoints;
+    // do track back so new features already have two observations
+    // so we can immediately begin tracking!
+    const bool object_exists_in_previous =
+        previous_frame_
+            ? previous_frame_->getObjectObservations().exists(object_id)
+            : false;
+    const bool retroactively_tracked = !previous_mono.empty() &&
+                                       object_exists_in_previous &&
+                                       !detected_points.empty();
 
-        if (retroactively_tracked) {
-          // specific tracker to track from current to previous
-          SparseLKTracker klt_tracker(
-              klt_window_size_, klt_max_level_, detected_points.size(),
-              ImageContainer::kRGB, ImageContainer::kRGB);
+    if (retroactively_tracked) {
+      // specific tracker to track from current to previous
+      // TODO: ideally reuse the pyramids... between objects...
+      SparseLKTracker klt_tracker(klt_window_size_, klt_max_level_,
+                                  detected_points.size(), ImageContainer::kRGB,
+                                  ImageContainer::kRGB);
 
-          // track from newly detected points to points on the previous frame
-          const LKWorkspace& lk_result = klt_tracker.track(
-              image_container, previous_frame_->imageContainer(),
-              detected_points);
+      // track from newly detected points to points on the previous frame
+      const LKWorkspace& lk_result = klt_tracker.track(
+          image_container, previous_frame_->imageContainer(), detected_points);
 
-          const auto& klt_status = lk_result.status;
-          const auto& previous_points = lk_result.pts;
-          const auto& current_points = detected_points;
+      const auto& klt_status = lk_result.status;
+      const auto& previous_points = lk_result.pts;
+      const auto& current_points = detected_points;
 
-          std::vector<cv::Point2f> good_current_j, good_previous_j;
-          for (size_t i = 0; i < klt_status.size(); i++) {
-            if (!klt_status[i]) {
-              continue;
-            }
-
-            const cv::Point2f& kp_previous = previous_points.at(i);
-            const cv::Point2f& kp_current = current_points.at(i);
-
-            // check image region
-            if (!isWithinShrunkenImage(utils::cvPointToGtsam(kp_previous))) {
-              continue;
-            }
-
-            if (!isWithinShrunkenImage(utils::cvPointToGtsam(kp_current))) {
-              continue;
-            }
-
-            // check same object in both images
-            const ObjectId previous_label =
-                previous_motion_mask.at<ObjectId>(kp_previous);
-            if (previous_label != object_id) {
-              continue;
-            }
-
-            // check a a valid image patch on the previous image
-            bool valid_detection = true;
-            // check detection mask on the previous frame
-            if (!dynamic_detection_mask_.empty()) {
-              // 0 is invalid and therefore will cast to false
-              valid_detection = static_cast<bool>(
-                  dynamic_detection_mask_.at<unsigned char>(kp_previous));
-            }
-            if (!valid_detection) {
-              continue;
-            }
-
-            good_current_j.push_back(kp_current);
-            good_previous_j.push_back(kp_previous);
-          }
-
-          std::vector<cv::Point2f> verified_current_j, verified_previous_j;
-          vision_tools::outlierRejectHomography(good_previous_j, good_current_j,
-                                                verified_previous_j,
-                                                verified_current_j);
-
-          // fill keypoints with only good tracks
-          keypoints.reserve(verified_previous_j.size());
-          indexed_retroactive_keypoints.resize(verified_previous_j.size());
-          for (size_t i = 0; i < verified_previous_j.size(); i++) {
-            // use the index is as correspondance so we can recover the
-            // correct previous flow after ANMS
-            KeypointCV kp_curr;
-            kp_curr.pt = verified_current_j.at(i);
-            kp_curr.class_id = static_cast<int>(i);
-            keypoints.push_back(kp_curr);
-
-            KeypointCV kp_prev;
-            kp_prev.pt = verified_previous_j.at(i);
-            kp_prev.class_id = static_cast<int>(i);
-            indexed_retroactive_keypoints[i] = kp_prev;
-          }
-        } else {
-          // no previous tracks so just use the keypoints as is
-          cv::KeyPoint::convert(detected_points, keypoints);
+      std::vector<cv::Point2f> good_current_j, good_previous_j;
+      for (size_t i = 0; i < klt_status.size(); i++) {
+        if (!klt_status[i]) {
+          continue;
         }
 
-        // keypoints are either direct detections or detections+retroactive
-        // tracking
-        std::vector<KeypointCV>& max_keypoints = keypoints;
-        const size_t detected_size = max_keypoints.size();
+        const cv::Point2f& kp_previous = previous_points.at(i);
+        const cv::Point2f& kp_current = current_points.at(i);
 
-        const int nr_corners_needed = getNumberCornersNeeded(object_id);
-
-        AdaptiveNonMaximumSuppression non_maximum_supression(
-            AnmsAlgorithmType::RangeTree);
-        max_keypoints = non_maximum_supression.suppressNonMax(
-            keypoints, nr_corners_needed, tolerance, img_size_.width,
-            img_size_.height, 5, 5, binning_mask);
-
-        VLOG(10) << "Kps: " << max_keypoints.size() << " for j=" << object_id
-                 << " after ANMS (originally " << detected_size
-                 << ", requested " << nr_corners_needed << ")";
-
-        std::vector<KeypointCV> max_previous_keypoints;
-        if (retroactively_tracked) {
-          max_previous_keypoints.reserve(max_keypoints.size());
-          CHECK_EQ(indexed_retroactive_keypoints.size(), detected_size);
-          // go through and re associate tracks on previous image
-          // using the class id as the cache index
-          for (const auto& kp_cv : max_keypoints) {
-            KeypointCV previous_kp =
-                indexed_retroactive_keypoints[kp_cv.class_id];
-            max_previous_keypoints.push_back(previous_kp);
-          }
+        // check image region
+        if (!isWithinShrunkenImage(kp_previous)) {
+          continue;
         }
 
-        keypoints_per_object.insert(
-            {object_id, DetectionsWithTrack{std::move(max_keypoints),
-                                            std::move(max_previous_keypoints),
-                                            retroactively_tracked}});
-      });
+        if (!isWithinShrunkenImage(kp_current)) {
+          continue;
+        }
+
+        // check same object in both images
+        const ObjectId previous_label =
+            previous_motion_mask.at<ObjectId>(kp_previous);
+        if (previous_label != object_id) {
+          continue;
+        }
+
+        // check a a valid image patch on the previous image
+        bool valid_detection = true;
+        // check detection mask on the previous frame
+        if (!dynamic_detection_mask_.empty()) {
+          // 0 is invalid and therefore will cast to false
+          valid_detection = static_cast<bool>(
+              dynamic_detection_mask_.at<unsigned char>(kp_previous));
+        }
+
+        if (!valid_detection) {
+          continue;
+        }
+
+        good_current_j.push_back(kp_current);
+        good_previous_j.push_back(kp_previous);
+      }
+
+      std::vector<cv::Point2f> verified_current_j, verified_previous_j;
+      vision_tools::outlierRejectHomography(good_previous_j, good_current_j,
+                                            verified_previous_j,
+                                            verified_current_j);
+
+      // fill keypoints with only good tracks
+      keypoints.reserve(verified_previous_j.size());
+      indexed_retroactive_keypoints.resize(verified_previous_j.size());
+      for (size_t i = 0; i < verified_previous_j.size(); i++) {
+        // use the index is as correspondance so we can recover the
+        // correct previous flow after ANMS
+        KeypointCV kp_curr;
+        kp_curr.pt = verified_current_j.at(i);
+        kp_curr.class_id = static_cast<int>(i);
+        keypoints.push_back(kp_curr);
+
+        KeypointCV kp_prev;
+        kp_prev.pt = verified_previous_j.at(i);
+        kp_prev.class_id = static_cast<int>(i);
+        indexed_retroactive_keypoints[i] = kp_prev;
+      }
+    } else {
+      // no previous tracks so just use the keypoints as is
+      cv::KeyPoint::convert(detected_points, keypoints);
+    }
+
+    // keypoints are either direct detections or detections+retroactive
+    // tracking
+    std::vector<KeypointCV>& max_keypoints = keypoints;
+    const size_t detected_size = max_keypoints.size();
+
+    const int nr_corners_needed = getNumberCornersNeeded(object_id);
+
+    AdaptiveNonMaximumSuppression non_maximum_supression(
+        AnmsAlgorithmType::RangeTree);
+    max_keypoints = non_maximum_supression.suppressNonMax(
+        keypoints, nr_corners_needed, tolerance, img_size_.width,
+        img_size_.height, 5, 5, binning_mask);
+
+    VLOG(10) << "Kps: " << max_keypoints.size() << " for j=" << object_id
+             << " after ANMS (originally " << detected_size << ", requested "
+             << nr_corners_needed << ")";
+
+    std::vector<KeypointCV> max_previous_keypoints;
+    if (retroactively_tracked) {
+      max_previous_keypoints.reserve(max_keypoints.size());
+      CHECK_EQ(indexed_retroactive_keypoints.size(), detected_size);
+      // go through and re associate tracks on previous image
+      // using the class id as the cache index
+      for (const auto& kp_cv : max_keypoints) {
+        KeypointCV previous_kp = indexed_retroactive_keypoints[kp_cv.class_id];
+        max_previous_keypoints.push_back(previous_kp);
+      }
+    }
+
+    keypoints_per_object.insert(
+        {object_id, DetectionsWithTrack{max_keypoints, max_previous_keypoints,
+                                        retroactively_tracked}});
+    // });
+  }
 
   for (const auto& [object_id, detections_with_track] : keypoints_per_object) {
     const auto& new_keypoints = detections_with_track.detections_current;
@@ -1001,7 +1010,7 @@ void FeatureTracker::trackDynamicKLT(
 
     for (size_t i = 0; i < new_keypoints.size(); i++) {
       const auto& cv_keypoint = new_keypoints.at(i);
-      Keypoint keypoint = utils::cvKeypointToGtsam(cv_keypoint);
+      const Keypoint keypoint = utils::cvKeypointToGtsam(cv_keypoint);
 
       if (!isWithinShrunkenImage(keypoint)) {
         continue;

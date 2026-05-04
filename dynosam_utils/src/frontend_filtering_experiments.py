@@ -216,7 +216,6 @@ def run_dynoepts():
     run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54", dynoepts,
                              "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=false",
                              "--pc_log_object_kf_structure=false",
-                             "--hybrid_motion_solver_temporal_kf=5",
                              "--init_object_pose_from_gt=true")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
@@ -373,7 +372,7 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti_test", kitti_dataset,
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti_test", kitti_dataset,
                              "--use_backend=true",
                              "--hybrid_motion_solver=4")
 

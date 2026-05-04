@@ -45,7 +45,22 @@ FeatureTrackerBase::FeatureTrackerBase(const TrackerParams& params,
     : params_(params),
       img_size_(camera->getParams().imageSize()),
       camera_(camera),
-      display_queue_(display_queue) {}
+      display_queue_(display_queue) {
+  setImageBounds();
+}
+
+void FeatureTrackerBase::setImageBounds() {
+  const int shrink_row = std::max(0, params_.shrink_row);
+  const int shrink_col = std::max(0, params_.shrink_col);
+  const int image_rows = img_size_.height;
+  const int image_cols = img_size_.width;
+
+  shrunken_row_min_ = shrink_row;
+  shrunken_row_max_ = image_rows - shrink_row;
+
+  shrunken_col_min_ = shrink_col;
+  shrunken_col_max_ = image_cols - shrink_col;
+}
 
 PyramidBuilder::PyramidBuilder(const cv::Size& win_size, int max_level)
     : win_size_(win_size), max_level_(max_level) {}
@@ -113,7 +128,7 @@ const LKWorkspace& SparseLKTracker::track(
 
   // prepare workspace
   // should not allocate memory if workspace is already at correct size
-  workspace_.resize(img1_pts.size());
+  workspace_.reserve(img1_pts.size());
 
   // used as flags argument for calcOpticalFlowPyrLK - initially starts as
   // default (0) flag
@@ -151,7 +166,7 @@ const LKWorkspace& SparseLKTracker::track(
   // use initial flow for reverse check
   // prepare workspace
   // should not allocate memory if workspace is already at correct size
-  reverse_workspace_.resize(curr_pts.size());
+  reverse_workspace_.reserve(curr_pts.size());
   reverse_workspace_.pts = curr_pts;
   trackImpl(curr_pts, img2_pyr_, img1_pyr_, cv::OPTFLOW_USE_INITIAL_FLOW,
             reverse_workspace_);
@@ -401,22 +416,26 @@ bool FeatureTrackerBase::drawStereoMatches(cv::Mat& output_image,
 }
 
 bool FeatureTrackerBase::isWithinShrunkenImage(const Keypoint& kp) const {
-  const auto shrunken_row = params_.shrink_row;
-  const auto shrunken_col = params_.shrink_col;
-
-  const int predicted_col = functional_keypoint::u(kp);
-  const int predicted_row = functional_keypoint::v(kp);
-
-  const auto image_rows = img_size_.height;
-  const auto image_cols = img_size_.width;
-  return (predicted_row > shrunken_row &&
-          predicted_row < (image_rows - shrunken_row) &&
-          predicted_col > shrunken_col &&
-          predicted_col < (image_cols - shrunken_col));
+  // involves double casting (keypoint to a cv::Pointf)
+  // which then casts to a cv::Pointi.
+  // We do this to take advantage of the cv::Point casting implementation
+  // which handles rounding of floating point x/y values to ensure
+  // that pixel locations on the edge of images (ie. 99.85 for an image edge of
+  // 100) does not exceed the max image region this is important becase
+  // accessing an image (ie cv::mat<>::at) uses discrete (ie integer) pixel
+  // location and therefore accessing from a floating point type may be invalid
+  return isWithinShrunkenImage(utils::gtsamPointToCv<float>(kp));
 }
 
 bool FeatureTrackerBase::isWithinShrunkenImage(const cv::Point2f& kp) const {
-  return isWithinShrunkenImage(utils::cvPointToGtsam(kp));
+  return isWithinShrunkenImage(static_cast<cv::Point2i>(kp));
+}
+
+bool FeatureTrackerBase::isWithinShrunkenImage(const cv::Point2i& kp) const {
+  const int r = kp.y;
+  const int c = kp.x;
+  return (r >= shrunken_row_min_ && r < shrunken_row_max_ &&
+          c >= shrunken_col_min_ && c < shrunken_col_max_);
 }
 
 void declare_config(ImageTracksParams& config) {

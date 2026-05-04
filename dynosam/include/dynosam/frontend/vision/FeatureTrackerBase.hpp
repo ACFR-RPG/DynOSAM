@@ -244,8 +244,14 @@ class FeatureTrackerBase {
    * @return false
    */
   bool isWithinShrunkenImage(const Keypoint& kp) const;
-
   bool isWithinShrunkenImage(const cv::Point2f& kp) const;
+
+  /* All isWithinShrunkenImage variants eventually use this function. Where it
+    is important to correctly construct the cv::Point2i from a floating point
+    cv::Point type. The internal cv casting does some rounding to ensure the
+    point is actually within the image bounds.
+  */
+  bool isWithinShrunkenImage(const cv::Point2i& kp) const;
 
  protected:
   const TrackerParams params_;
@@ -253,6 +259,19 @@ class FeatureTrackerBase {
 
   Camera::Ptr camera_;
   ImageDisplayQueue* display_queue_;
+
+ private:
+  /* From the set params and img_size, set the min/max rows and cols for use in
+   * isWithinShrunkenImage*/
+  void setImageBounds();
+  // min/max of image size taking int account the
+  // shrunkin row/col params
+  // cached for use in the isWithinShrunkenImage
+  // and set on init
+  int shrunken_row_min_;
+  int shrunken_row_max_;
+  int shrunken_col_min_;
+  int shrunken_col_max_;
 };
 
 }  // namespace dyno

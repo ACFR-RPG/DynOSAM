@@ -25,6 +25,8 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
   Timestamp timestamp_;
 
   FrameId frame_id_km1_;
+  //! Camera pose at the reference KF
+  gtsam::Pose3 X_W_KF_;
 
   PoseWithMotionTrajectory trajectory_;
 
@@ -83,6 +85,7 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
 
     L_KF_ = L_KF;
     H_W_KF_k_ = gtsam::Pose3::Identity();
+    X_W_KF_ = frame->getPose();
     return true;
   }
 
@@ -101,6 +104,7 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
   }
 
   gtsam::Pose3 keyFramePose() const override { return L_KF_; }
+  gtsam::Pose3 keyFrameCameraPose() const override { return X_W_KF_; }
 
   FrameId keyFrameId() const override { return frame_id_KF_; }
   FrameId frameId() const override { return frame_id_; }
@@ -498,6 +502,7 @@ ObjectPoseChangeInfo& HybridObjectMotionSolver::appendPoseChangeInfo(
   info.H_W_KF_k = solver->keyFrameMotionReference();
   info.L_W_KF = solver->keyFramePose();
   info.L_W_k = solver->pose();
+  info.X_W_KF = solver->keyFrameCameraPose();
   info.keyframe_status = keyframe_status;
 
   CHECK(getObjectStructureinL(object_id, info.initial_object_points));

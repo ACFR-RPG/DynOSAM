@@ -93,6 +93,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   Motion3ReferenceFrame frameToFrameMotionReference() const override;
   gtsam::Pose3 keyFramePose() const override;
+  gtsam::Pose3 keyFrameCameraPose() const override;
 
   gtsam::FastMap<TrackletId, gtsam::Point3> getObjectPoints() const override;
 

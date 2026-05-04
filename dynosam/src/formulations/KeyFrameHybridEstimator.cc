@@ -159,6 +159,9 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
     full_trajectories_refined.insert2(object_id, trajectory_j);
 
     for (const auto& entry_k : trajectory_j) {
+      // TODO: as this is motion from the frontend it needs to be converted into
+      // the reference frame
+      //  of the backend!
       const Motion3ReferenceFrame& f2f_motion = entry_k.data.motion;
       const gtsam::Pose3 pose_k = entry_k.data.pose;
       const FrameId to_frame = f2f_motion.to();
@@ -577,11 +580,11 @@ void HybridFormulationKeyFrame::updateObject(
         continue;
       }
 
-      // // should be seen at least twice!
-      if (frames_with_measurements.size() < 3) {
-        num_factors_not_enough_obs++;
-        continue;
-      }
+      // // // should be seen at least twice!
+      // if (frames_with_measurements.size() < 3) {
+      //   num_factors_not_enough_obs++;
+      //   continue;
+      // }
 
       // uuuh need to update these becuase something in the accessor
       //  needs them!
@@ -788,10 +791,27 @@ void HybridFormulationKeyFrame::addObjects(
 
   for (const auto& [object_id, object_info] : object_motion_info) {
     CHECK(object_info.isKeyFrame());
-    // estimated keyframe motioa from the frontend
+    // estimated keyframe motioan from the frontend
     // in this case k is the current but will now also be the latest KF
-    const Motion3ReferenceFrame& H_W_RKF_k = object_info.H_W_KF_k;
+    // const Motion3ReferenceFrame& H_W_RKF_k_frontend = object_info.H_W_KF_k;
+    Motion3ReferenceFrame H_W_RKF_k = object_info.H_W_KF_k;
     const ObjectKeyFrameStatus keyframe_status = object_info.keyframe_status;
+
+    // TODO: for now (only when solved in parallel_run=False)
+    //  convert motion from frontend reference frame to backend reference frame
+    FrameId from_frame_id = H_W_RKF_k.from();
+    // dont like the naming of this function
+    // get the camera pose either directly from the state or approximated via
+    // the VIO
+    auto [X_W_KFm1_opt, _] = this->getBestCameraPose(from_frame_id);
+    const gtsam::Pose3 X_W_KFm1_frontend = object_info.X_W_KF;
+
+    // do weird change of basis to put the motion in the optimized camera pose
+    // reference frame
+    gtsam::Pose3 H_W_KF_k_in_opt = X_W_KFm1_opt * X_W_KFm1_frontend.inverse() *
+                                   H_W_RKF_k.estimate() * X_W_KFm1_frontend *
+                                   X_W_KFm1_opt.inverse();
+    H_W_RKF_k.estimate_ = H_W_KF_k_in_opt;
 
     KeyFrameMetaData kf_data;
     kf_data.keyframe_status = keyframe_status;
@@ -928,6 +948,30 @@ void HybridFormulationKeyFrame::addObjects(
       initial_H_W_AKF_k_.insert22(object_id, H_W_AKF_KF_initial.to(),
                                   H_W_AKF_KF_initial);
     }
+  }
+}
+
+std::pair<gtsam::Pose3, HybridFormulationKeyFrame::CameraPoseExtraction>
+HybridFormulationKeyFrame::getBestCameraPose(FrameId frame_id) const {
+  auto accessor = this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
+
+  if (map_->isCameraKeyFrame(frame_id)) {
+    gtsam::Pose3 X_W_k =
+        DYNO_GET_QUERY_DEBUG(accessor->getSensorPose(frame_id));
+    return {X_W_k, CameraPoseExtraction::Keyframe};
+  } else {
+    auto frame_node_closest_CKF = map_->closestEarlierCameraKeyFrame(frame_id);
+    CHECK_NOTNULL(frame_node_closest_CKF);
+    CHECK(frame_node_closest_CKF->isCameraKeyFrame());
+    // check that a VO transform from CKF to k exists
+    CHECK(frame_node_closest_CKF->hasRelativeEgoMotion(frame_id));
+    const gtsam::Pose3 T_CKF_k =
+        frame_node_closest_CKF->getRelativeEgoMotion(frame_id);
+    // get optimized CKF pose
+    gtsam::Pose3 X_W_CKF = DYNO_GET_QUERY_DEBUG(
+        accessor->getSensorPose(frame_node_closest_CKF->frameId()));
+    gtsam::Pose3 X_W_k = X_W_CKF * T_CKF_k;
+    return {X_W_k, CameraPoseExtraction::Interpolated};
   }
 }
 

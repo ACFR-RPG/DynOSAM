@@ -76,6 +76,9 @@ struct ObjectPoseChangeInfo {
   //! keyframe at k
   Motion3ReferenceFrame H_W_KF_k;
   gtsam::Pose3 L_W_k;
+  //! The camera pose at KF used in the smoother when estimating the motion
+  //! H_W_KF_K
+  gtsam::Pose3 X_W_KF;
 
   ObjectKeyFrameStatus keyframe_status{ObjectKeyFrameStatus::NonKeyFrame};
 

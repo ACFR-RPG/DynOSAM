@@ -1260,6 +1260,7 @@ HybridObjectMotionSRIFResult FullHybridObjectMotionSRIF::update(
 
 bool FullHybridObjectMotionSRIF::createNewKeyedMotion(
     const gtsam::Pose3& L_KF, Frame::Ptr frame, const TrackletIds& tracklets) {
+  X_W_KF_ = frame->getPose();
   resetState(L_KF, frame->getFrameId(), frame->getTimestamp());
   update(gtsam::Pose3::Identity(), frame, tracklets);
   // TODO: for now!

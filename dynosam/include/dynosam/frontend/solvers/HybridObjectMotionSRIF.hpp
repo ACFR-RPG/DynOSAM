@@ -182,6 +182,7 @@ class FullHybridObjectMotionSRIF : public HybridObjectMotionSolverImpl {
   // Timestamp getKeyFrameTimestamp() const;
   FrameId frameId() const override;
   Timestamp timestamp() const override;
+  gtsam::Pose3 keyFrameCameraPose() const override { return X_W_KF_; }
 
   PoseWithMotionTrajectory trajectory() const override { return trajectory_; }
   PoseWithMotionTrajectory localTrajectory() const override {
@@ -297,6 +298,7 @@ class FullHybridObjectMotionSRIF : public HybridObjectMotionSolverImpl {
   FrameId frame_id_;
   //! Timestamp used for the last update
   Timestamp timestamp_;
+  gtsam::Pose3 X_W_KF_;
 
   // gtsam::Matrix R_info_;
   // gtsam::Vector d_info_;

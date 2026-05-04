@@ -191,6 +191,9 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
     Motion3ReferenceFrame H_W_lRKF_KF;
   };
 
+  /** How the camera pose was extracted */
+  enum CameraPoseExtraction { Keyframe, Interpolated };
+
   void preUpdate(const PreUpdateData&) override {}
   void postUpdate(const PostUpdateData&) override {}
 
@@ -207,6 +210,11 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
   //                            object_motion_key, gtsam::Key point_key, const
   //                            gtsam::Pose3& KF_pose, SharedLandmarkNode
   //                            lmk_node, SharedFrameNode frame_node);
+
+  // get a camera pose at possibly a non-ckf frame
+  // TODo: better name (either from state or interpolated via VIO)
+  std::pair<gtsam::Pose3, CameraPoseExtraction> getBestCameraPose(
+      FrameId frame_id) const;
 
   void addHybridMotionFactor(gtsam::NonlinearFactorGraph& new_factors,
                              gtsam::Key point_key, ObjectId object_id,

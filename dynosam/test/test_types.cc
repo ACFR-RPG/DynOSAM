@@ -32,6 +32,7 @@
 #include <nlohmann/json.hpp>  //for gt packet seralize tests
 
 #include "dynosam/frontend/VIFrontendInput.hpp"
+#include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/logger/Logger.hpp"
@@ -1127,4 +1128,38 @@ TEST(Statistics, testGetModules) {
             std::vector<std::string>({"global_stats"}));
   EXPECT_EQ(utils::Statistics::getTagByModule("ns"),
             std::vector<std::string>({"ns.spin", "ns.spin1"}));
+}
+
+class FeatureTrackerBaseTest : public FeatureTrackerBase {
+ public:
+  FeatureTrackerBaseTest(Camera::Ptr camera)
+      : FeatureTrackerBase(TrackerParams{}, camera, nullptr) {}
+
+  using FeatureTrackerBase::isWithinShrunkenImage;
+};
+
+TEST(FeatureTrackerBase, isWithinShrunkenImage1) {
+  CameraParams::IntrinsicsCoeffs intrinsics(4);
+  CameraParams::DistortionCoeffs distortion(4);
+  intrinsics.at(0) = 554.256;  // fx
+  intrinsics.at(1) = 554.256;  // fy
+  intrinsics.at(2) = 640 / 2;  // u0
+  intrinsics.at(3) = 480 / 2;  // v0
+
+  // specicific test case to fail
+  CameraParams cam_params(intrinsics, distortion, cv::Size(752, 480), "radtan");
+  FeatureTrackerBaseTest test(std::make_shared<Camera>(cam_params));
+
+  cv::Mat img = cv::Mat::zeros(480, 752, CV_8U);
+  Keypoint kp(440.197, 479.823);
+  cv::Point2f kp_f = utils::gtsamPointToCv(kp);
+  cv::Point2i kp_i = utils::gtsamPointToCv<int>(kp);
+  LOG(INFO) << kp_f;
+  LOG(INFO) << kp_i;
+
+  LOG(INFO) << kp << " " << dyno::to_string(img.size());
+
+  LOG(INFO) << test.isWithinShrunkenImage(kp);
+  LOG(INFO) << test.isWithinShrunkenImage(kp_f);
+  img.at<unsigned char>(kp_i);
 }
