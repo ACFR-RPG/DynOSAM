@@ -431,14 +431,17 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
                                               H_W_KF_k.to()};
       pc_input->keyframe_info.object_keyframes.push_back(object_kf_info);
     }
-    // add objects to backend with initial motion estimates
-    formulation_->addObjects(frame_id_k, kf_pose_change_infos);
+    pc_input->kf_pose_change_infos = kf_pose_change_infos;
+    // TODO: testing delayed construction of dynamic motion factors
+    //  add objects to backend with initial motion estimates
+    //  formulation_->addObjects(frame_id_k, kf_pose_change_infos);
 
-    // generate new factors for dynamic objects based on latest measurements
-    // and object keyframe states
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(
-            frame_id_k, new_dynamic_values, new_dynamic_factors, update_params);
+    // // generate new factors for dynamic objects based on latest measurements
+    // // and object keyframe states
+    // post_update_data.dynamic_update_result =
+    //     formulation_->updateDynamicObservations(
+    //         frame_id_k, new_dynamic_values, new_dynamic_factors,
+    //         update_params);
   }
 
   SharedModuleStates* shared_module_states = map_->getSharedModuleStates();
@@ -756,9 +759,9 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   // }
 
   // // Optional: tracking degrading relative to KF
-  // if (retention < retention_thresh) {
-  //   return true;
-  // }
+  if (retention < retention_thresh) {
+    return true;
+  }
 
   // Otherwise: redundant frame
   return false;
@@ -953,7 +956,7 @@ void ViTrackingViz::drawStaticTracks(cv::Mat& img, std::string& info,
   }
 
   std::stringstream ss;
-  ss << "Frame: " << frame_k.getFrameId() << " | ";
+  ss << "Frame: " << frame_k.getFrameId() << " ";
   ss << "[VO tracks: " << num_points_tracked << " ";
   ss << "Cam KFs: " << CKF_count << " ";
   ss << "quailty: " << to_string(data.camera_tracking_quality) << "]";
@@ -984,6 +987,15 @@ void ViTrackingViz::drawDynamicTracks(cv::Mat& img, std::string& info,
       cv::Point br(px_cur.x + half, px_cur.y + half);
       cv::rectangle(img, tl, br, colour, 2, -1);
     }
+  }
+
+  // mark new object keyframes
+  for (const auto& kf_info : data.keyframe_info.object_keyframes) {
+    ObjectId object_id = kf_info.object_id;
+    if (!OKF_count_.exists(object_id)) {
+      OKF_count_[object_id] = 0;
+    }
+    OKF_count_[object_id]++;
   }
 
   std::vector<ObjectId> objects_to_print;
@@ -1026,19 +1038,19 @@ void ViTrackingViz::drawDynamicTracks(cv::Mat& img, std::string& info,
   }
 
   std::stringstream ss;
-  ss << "[ Objects: ";
+  ss << " [Objects (KF): ";
 
   if (objects_to_print.empty()) {
-    ss << "None ]";
+    ss << "None";
   } else {
     for (size_t i = 0; i < objects_to_print.size(); ++i) {
-      ss << objects_to_print[i];
+      ss << objects_to_print[i] << " (" << OKF_count_[objects_to_print[i]]
+         << ")";
       if (i != objects_to_print.size() - 1) {
         ss << ", ";  // Add comma between elements
       }
     }
   }
-
   ss << "]";
 
   info = ss.str();

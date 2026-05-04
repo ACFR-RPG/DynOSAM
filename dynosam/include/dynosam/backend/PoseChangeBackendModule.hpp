@@ -38,6 +38,11 @@ struct SinglePoseChangeInput : public PoseChangeInput {
   //! Record keyframes (objects/camera) for this frame so we know the state of
   //! the map when this input was generated
   KeyframeInfo keyframe_info;
+
+  // HACK FOR NOW
+  // delay construction of dynamic object factors until we have the best
+  // possible camera pose estimate
+  ObjectPoseChangeInfoMap kf_pose_change_infos;
 };
 
 // assume construced in temporal order
@@ -196,7 +201,7 @@ class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
   ErrorHandlingHooks error_hooks_;
 
   // keyframe lag for fixed-lag marginalization
-  const int fixed_lag_{5};
+  const int fixed_lag_{7};
 
   //! Mapping of keyframe indices/keys per object. Used to manually manage
   //! fixed-lag smoothing When we do the fixed-lag we look at the current set of

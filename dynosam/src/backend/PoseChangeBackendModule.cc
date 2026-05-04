@@ -160,6 +160,12 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
   LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
             << " error after " << result.getErrorAfter();
   gtsam::Values optimised_values = smoother_interface_.calculateEstimate();
+  // TODO: testing marginalisation - calling calculateEstimate causes an
+  // internal theta = theta + delta
+  //  in isam and this is currently breaking...
+  //  get linearization point just returns the current theta without updating
+  //  the current linearization gtsam::Values optimised_values =
+  //  smoother_interface_.getLinearizationPoint();
   formulation_->updateTheta(optimised_values);
 
   DynoState::Ptr state = makeOutput();
@@ -270,11 +276,26 @@ void PoseChangeVIBackendModule::prepareArgumentsForUpdate(
     new_values.insert_or_assign(new_static_values);
     new_factors += new_static_factors;
 
-    // handle dynamic only variables + factors
-    const gtsam::Values& new_dynamic_values =
-        entry->new_dynamic_fg_input.values;
-    const gtsam::NonlinearFactorGraph& new_dynamic_factors =
-        entry->new_dynamic_fg_input.factors;
+    // do what we did in the frontend only here to delay the initalisation
+    // of object motions
+    formulation_->addObjects(frame_id_k, entry->kf_pose_change_infos);
+
+    UpdateObservationParams update_params;
+    update_params.enable_debug_info = true;
+    update_params.do_backtrack = false;
+
+    // generate new factors for dynamic objects based on latest measurements
+    // and object keyframe states
+    gtsam::Values new_dynamic_values;
+    gtsam::NonlinearFactorGraph new_dynamic_factors;
+    formulation_->updateDynamicObservations(frame_id_k, new_dynamic_values,
+                                            new_dynamic_factors, update_params);
+
+    // // // handle dynamic only variables + factors
+    // const gtsam::Values& new_dynamic_values =
+    //     entry->new_dynamic_fg_input.values;
+    // const gtsam::NonlinearFactorGraph& new_dynamic_factors =
+    //     entry->new_dynamic_fg_input.factors;
 
     // TODO: not actually even using the keyframe info
     for (const auto& key_value : new_dynamic_values) {
@@ -306,34 +327,42 @@ bool PoseChangeVIBackendModule::optimize(
     const gtsam::FastMap<ObjectId, KeyFrameIndexMap>& new_kf_indices_per_object,
     const gtsam::ISAM2UpdateParams& update_params) {
   // all keys to be marginalized
-  gtsam::KeyVector marginalizable_keys;
-  // merged constrained keys
-  gtsam::FastMap<gtsam::Key, int> all_constrained_keys;
+  // gtsam::KeyVector marginalizable_keys;
+  // // merged constrained keys
+  // gtsam::FastMap<gtsam::Key, int> all_constrained_keys;
 
-  // Record so that we can delete these keys from the relevant data-structures
-  // later
-  gtsam::FastMap<ObjectId, gtsam::KeyVector> marginalizable_keys_per_object;
+  // // Record so that we can delete these keys from the relevant
+  // data-structures
+  // // later
+  // gtsam::FastMap<ObjectId, gtsam::KeyVector> marginalizable_keys_per_object;
 
   // // Do a pass over all new keyframe-indicies for each involved object
-  // (including camera)
+  // // (including camera)
   // // This is equivalent to parsing the timestamp (key->timestamp) to a
-  // regular fixed-lag-smoother
+  // // regular fixed-lag-smoother
   // // where we update the temporal mapping and then get the set of keys to be
-  // marginalized
+  // // marginalized
   // // in our case we do this independantly for each object/camera and
-  // construct a full set of
+  // // construct a full set of
   // // keys to be marginalized for the entire problem
   // for(const auto& [object_id, new_frame_indices] : new_kf_indices_per_object)
   // {
   //   // also create boookeping KeyframeIndexBookkeeping for object if new
-  //   if(!key_frame_to_frameIndex_.exists(object_id)) {
-  //     key_frame_to_frameIndex_.insert2(object_id,
+  //   if(!key_keyframe_indices_.exists(object_id)) {
+  //     key_keyframe_indices_.insert2(object_id,
   //     KeyframeIndexBookkeeping(fixed_lag_));
   //   }
 
-  //   KeyframeIndexBookkeeping& lag_bk_j =
-  //   key_frame_to_frameIndex_.at(object_id); LOG(INFO) << "updating
-  //   key->keframe indices for j=" << object_id;
+  //   //TODO: for testing
+  //   // dont marginalize camera poses
+  //   // since objects may be involved with the camera poses at non-CKF's
+  //   // arguably we can probably get away with not marginalising camera stuff
+  //   if(object_id == 0) {
+  //     continue;
+  //   }
+
+  //   KeyframeIndexBookkeeping& lag_bk_j = key_keyframe_indices_.at(object_id);
+  //   LOG(INFO) << "updating key->keframe indices for j=" << object_id;
 
   //   std::cout << "New frame indices ";
   //   for (const auto& [key, index] : new_frame_indices) {
@@ -348,7 +377,7 @@ bool PoseChangeVIBackendModule::optimize(
   //   current_keyframe_index;
 
   //   gtsam::KeyVector marginalizable_keys_j =
-  //   lag_bk_j.findMarginalizableKeys();
+  //     lag_bk_j.findMarginalizableKeys();
   //   marginalizable_keys_per_object[object_id] = marginalizable_keys_j;
 
   //   // create ordering for these keys and merge to the full data-structure
@@ -356,7 +385,8 @@ bool PoseChangeVIBackendModule::optimize(
   //   // Force iSAM2 to put the marginalizable variables at the beginning
   //   lag_bk_j.createOrderingConstraints(marginalizable_keys_j,
   //   constrained_keys_j);
-  // NOTE existing keys are not overwittten!
+
+  //   // NOTE existing keys are not overwittten!
   //   all_constrained_keys.merge(constrained_keys_j);
 
   //   marginalizable_keys.insert(marginalizable_keys.end(),
@@ -408,7 +438,7 @@ bool PoseChangeVIBackendModule::optimize(
       },
       error_hooks_);
 
-  // // Marginalize out any needed variables
+  // // // // Marginalize out any needed variables
   // if (marginalizable_keys.size() > 0) {
   //   gtsam::FastList<gtsam::Key> leafKeys(marginalizable_keys.begin(),
   //                                        marginalizable_keys.end());
@@ -419,8 +449,7 @@ bool PoseChangeVIBackendModule::optimize(
 
   // for(const auto& [object_id, marginalizable_keys_j] :
   // marginalizable_keys_per_object) {
-  //   KeyframeIndexBookkeeping& lag_bk_j =
-  //   key_frame_to_frameIndex_.at(object_id);
+  //   KeyframeIndexBookkeeping& lag_bk_j = key_keyframe_indices_.at(object_id);
   //   lag_bk_j.eraseKeyFrameIndexMap(marginalizable_keys_j);
   // }
 

@@ -70,7 +70,9 @@ class ViTrackingViz {
 
   // internal camera keyframe count to incremental when a new CKF is made
   // just for display
+  // shoulkd shoudl be equivalent to the CKF_index utilised in the backend
   int CKF_count = 0;
+  gtsam::FastMap<ObjectId, int> OKF_count_;
 };
 
 class PoseChangeVIFrontend : public VIFrontend {
