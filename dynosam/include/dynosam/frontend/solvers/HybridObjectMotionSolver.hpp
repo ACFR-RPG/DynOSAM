@@ -45,6 +45,14 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
     return pose_change_info_;
   }
 
+  /* Get all tracking status for objects observed at the latest frame.
+    This may included objects that are not well tracked (e.g. Lost, poorly
+    tracked etc)
+  */
+  const ObjectTrackingStatusMap& currentObjectTrackingStatuses() const {
+    return latest_object_statuses_;
+  }
+
   void receiveUpdate(const PoseChangeUpdateComplete& update_info);
 
  protected:
@@ -147,6 +155,9 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   };
 
   ObjectTrackingStatuses object_statuses_;
+  // Cache of latest object tracking statuses set during solve and clearned
+  // every frame Retured by
+  ObjectTrackingStatusMap latest_object_statuses_;
   gtsam::FastMap<ObjectId, PoseWithMotionTrajectory> past_trajectories_;
   gtsam::FastMap<ObjectId, int> num_kfs_per_object_;
   mutable std::mutex num_kfs_per_object_mutex_;

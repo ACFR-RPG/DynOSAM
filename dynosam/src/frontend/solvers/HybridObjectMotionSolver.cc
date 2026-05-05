@@ -173,8 +173,25 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
   }
 
   // Call base solve
-  return ObjectMotionSolver::solve(frame_k, frame_km1, trajectories_out,
-                                   motion_estimate_out, parallel_solve);
+  ObjectMotionSolver::solve(frame_k, frame_km1, trajectories_out,
+                            motion_estimate_out, parallel_solve);
+  // for each object seen update the object status cache
+  latest_object_statuses_.clear();
+  for (ObjectId object_id : current_objects) {
+    std::optional<ObjectTrackingStatus> maybe_status =
+        object_statuses_.getStatus(object_id);
+
+    // sanity check
+    //  if object has a motion estimate it must be well tracked
+    if (motion_estimate_out.exists(object_id)) {
+      CHECK(maybe_status);
+      CHECK_EQ(maybe_status.value(), ObjectTrackingStatus::WellTracked);
+    }
+
+    if (maybe_status) {
+      latest_object_statuses_.insert2(object_id, maybe_status.value());
+    }
+  }
 }
 
 ////////// THIS ONE IS GOOOD!!!???????/////////////////

@@ -47,6 +47,9 @@ enum class ObjectTrackingStatus {
   ReTracked = 3,
   Lost = 4
 };
+
+using ObjectTrackingStatusMap = gtsam::FastMap<ObjectId, ObjectTrackingStatus>;
+
 std::ostream& operator<<(std::ostream& os,
                          const dyno::ObjectTrackingStatus& status);
 

@@ -113,6 +113,10 @@ class Frame {
     return object_observations_;
   }
 
+  /* Get the image based detection of the requested object if it exists */
+  std::optional<SingleDetectionResult> objectDetection(
+      ObjectId object_id) const;
+
   // note: this doesnt mean inliers/outliers in the current frame (as this
   // happens after tracking)
   inline const std::optional<FeatureTrackerInfo>& getTrackingInfo() const {

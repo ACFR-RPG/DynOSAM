@@ -75,6 +75,15 @@ Frame::Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
   constructDynamicObservations();
 }
 
+std::optional<SingleDetectionResult> Frame::objectDetection(
+    ObjectId object_id) const {
+  std::optional<SingleDetectionResult> result;
+  if (object_observations_.exists(object_id)) {
+    result.emplace(object_observations_.at(object_id));
+  }
+  return result;
+}
+
 bool Frame::exists(TrackletId tracklet_id) const {
   const bool result = static_features_.exists(tracklet_id) ||
                       dynamic_features_.exists(tracklet_id);

@@ -306,11 +306,12 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k,
                                        nav_state_k.pose());
 
-  // ObjectPoseChangeInfoMap pose_change_infos;
   ObjectIds objects_with_new_motions;
   ObjectPoseChangeInfoMap kf_pose_change_infos;
+  ObjectTrackingStatusMap object_tracking_status;
   solveObjectMotions(dyno_state_.object_trajectories, objects_with_new_motions,
-                     kf_pose_change_infos, frame_k, frame_km1);
+                     object_tracking_status, kf_pose_change_infos, frame_k,
+                     frame_km1);
 
   // TODO: slow and rematching all points again!
   //  need to rematch after solving flow with objects
@@ -490,6 +491,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   ViTrackingViz::Data viz_data;
   viz_data.camera_tracking_quality = camera_tracking_quality;
   viz_data.keyframe_info = pc_input->keyframe_info;
+  viz_data.object_tracking_statuses = std::move(object_tracking_status);
   realtime_output->debug_imagery.tracking_image =
       tracking_viz_.vizTracking(*frame_km1, *frame_k, viz_data);
 
@@ -634,6 +636,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
 
 void PoseChangeVIFrontend::solveObjectMotions(
     MultiObjectTrajectories& trajectories, ObjectIds& object_with_new_motions,
+    ObjectTrackingStatusMap& object_tracking_status,
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
@@ -647,10 +650,8 @@ void PoseChangeVIFrontend::solveObjectMotions(
     object_with_new_motions.push_back(object_id);
   }
 
-  // LOG(INFO) << "Solved motions " <<
-  // container_to_string(object_with_new_motions)
-  //           << " k=" << frame_k->getFrameId();
-
+  object_tracking_status =
+      object_motion_solver_->currentObjectTrackingStatuses();
   // only keyframes!!
   infos = std::move(object_motion_solver_->poseChangeInfoMap());
 }
@@ -1033,9 +1034,20 @@ void ViTrackingViz::drawDynamicTracks(cv::Mat& img, std::string& info,
 
   std::vector<ObjectId> objects_to_print;
   double now = frame_k.getTimestamp();
-  for (const auto& object_observation_pair : frame_k.getObjectObservations()) {
-    const ObjectId object_id = object_observation_pair.first;
-    const cv::Rect& bb = object_observation_pair.second.bounding_box;
+
+  for (const auto& [object_id, motion_track_status] :
+       data.object_tracking_statuses) {
+    // only draw well tracked objects
+    if (motion_track_status != ObjectTrackingStatus::WellTracked) {
+      continue;
+    }
+
+    std::optional<SingleDetectionResult> maybe_detection_result =
+        frame_k.objectDetection(object_id);
+    if (!maybe_detection_result) {
+      continue;
+    }
+    const cv::Rect& bb = maybe_detection_result->bounding_box;
 
     if (bb.empty()) continue;
 

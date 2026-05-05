@@ -102,8 +102,23 @@ class PoseChangeVIFrontend : public VIFrontend {
     return (bool)pose_change_backend_sink_;
   }
 
+  /**
+   * @brief
+   *
+   *
+   *
+   * @param trajectories
+   * @param object_with_new_motions All well tracked objects that have a new
+   * object estimate this frame.
+   * @param object_tracking_status All objects observed this frame but not
+   * necessary well tracked (ie. have observations but not an estimate)
+   * @param infos
+   * @param frame_k
+   * @param frame_km1
+   */
   void solveObjectMotions(MultiObjectTrajectories& trajectories,
                           ObjectIds& object_with_new_motions,
+                          ObjectTrackingStatusMap& object_tracking_status,
                           ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k,
                           Frame::Ptr frame_km1);
 
