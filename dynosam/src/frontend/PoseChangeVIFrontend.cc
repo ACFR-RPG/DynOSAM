@@ -206,29 +206,32 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // check if we have a camera pose update for the last CKF
   // what if we get an update during the consuming!!!
   if (lCKF_has_update_) {
-    //   LOG(WARNING) << "Consuming ckf update";
-    //   auto accessor =
-    //     formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
-    //  CHECK_NOTNULL(accessor);
-    //  gtsam::Pose3 X_W_LCKF = DYNO_GET_QUERY_DEBUG(
-    //       accessor->getSensorPose(lCKF_frame_->getFrameId()));
-    //   lCKF_frame_->T_world_camera_ = X_W_LCKF;
+    LOG(WARNING) << "Consuming ckf update";
+    auto accessor =
+        formulation_->derivedAccessor<HybridFormulationKeyFrameAccessor>();
+    CHECK_NOTNULL(accessor);
+    gtsam::Pose3 X_W_LCKF = DYNO_GET_QUERY_DEBUG(
+        accessor->getSensorPose(lCKF_frame_->getFrameId()));
+    lCKF_frame_->T_world_camera_ = X_W_LCKF;
 
-    //   // update nav_state_km1_ with the best we can (ideally imu if we have)
-    //   const RelEgoPoseInfo& rel_egopose_lkf_km1 =
-    //         rel_egopose_infos_.at(frame_id_k-1);
-    //   gtsam::Pose3 X_W_km1 = X_W_LCKF * rel_egopose_lkf_km1.T_lkf_j;
+    // update nav_state_km1_ with the best we can (ideally imu if we have)
+    const RelEgoPoseInfo& rel_egopose_lkf_km1 =
+        rel_egopose_infos_.at(frame_id_k - 1);
+    gtsam::Pose3 X_W_km1 = X_W_LCKF * rel_egopose_lkf_km1.T_lkf_j;
 
-    //   // this is probably going to be very wrong with velocity really should
-    //   consider
-    //   //imu propogateion if we have
-    //   // should use get nav state at lckf!
-    //   // and velocity should be rotated by new pose rotation (ie. apply
-    //   rotation in world frame
-    //   // to body velocity!)
-    //   //velocity not updated?
-    //   nav_state_km1_ = gtsam::NavState(X_W_km1, nav_state_km1_.velocity());
-    //   lCKF_has_update_.store(false);
+    // any factor that uses the relative motion T_KF_k is now going to be
+    // wrong... yay!
+
+    // this is probably going to be very wrong with velocity really should
+    // consider
+    // //imu propogateion if we have
+    // // should use get nav state at lckf!
+    // // and velocity should be rotated by new pose rotation (ie. apply
+    // rotation in world frame
+    // to body velocity!)
+    // velocity not updated?
+    nav_state_km1_ = gtsam::NavState(X_W_km1, nav_state_km1_.velocity());
+    lCKF_has_update_.store(false);
   }
 
   ImuFrontend::PimPtr pim = nullptr;
