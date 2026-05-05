@@ -312,7 +312,6 @@ void PoseChangeVIBackendModule::prepareArgumentsForUpdate(
         // LOG(INFO) << "Adding dynamic key " << DynosamKeyFormatter(key) << "
         // with kf index=" << okf_index;
       }
-      // else if()
     }
 
     new_values.insert_or_assign(new_dynamic_values);

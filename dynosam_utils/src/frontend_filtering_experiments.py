@@ -419,7 +419,7 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     run_post_analysis = False
-    # run_hybrid_solver_comparison_omd()
+    run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
@@ -431,7 +431,7 @@ if __name__ == '__main__':
     # run_aria()
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
-    run_analysis("omd_test")
+    # run_analysis("omd_test")
     # run_analysis("dynoepts_uope_54")
     # run_analysis("kitti00_MO")
     # run_analysis("kitti00_PnP")
