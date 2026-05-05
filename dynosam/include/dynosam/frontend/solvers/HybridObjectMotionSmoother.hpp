@@ -403,6 +403,15 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
 
   // GenericFactorMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
   //     mo_factor_map_;
+  gtsam::FastMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
+      mo_factor_map_;
+  gtsam::FastMap<StereoHybridMotionFactor3::shared_ptr, TrackletFramePair>
+      mo_factor_to_tracklet_id_;
+
+  gtsam::FastMap<TrackletId, FrameIds> trackletid_to_frame_ids_;
+  // Object Motion Symbol to observing tracklets
+  // Allows implicit lookup by frame id since ObjectMotionSymbol uses frame id
+  gtsam::FastMap<gtsam::Key, TrackletIds> object_motion_to_tracklets_;
 
   // actually dont think we need this...
   // By last frame, so expected frame-2 and frame-1 to be present

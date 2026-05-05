@@ -547,7 +547,8 @@ void ISAM2::marginalizeLeaves(const FastList<Key>& leafKeysList,
           throw std::runtime_error(
               "Requesting to marginalize variables that are not leaves, "
               "the ISAM2 object is now in an inconsistent state so should "
-              "no longer be used.");
+              "no longer be used. Key: " +
+              DynosamKeyFormatter(frontal));
 #endif
       }
     }

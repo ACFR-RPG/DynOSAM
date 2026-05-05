@@ -302,7 +302,7 @@ def run_tests():
     cv2.imshow("metrics_white_bg", grid)
     cv2.waitKey(0)
 
-    # cv2.imwrite("metrics_visualization_white.png", grid)
+    # cv2.imwrite("okf_criteria.png", grid)
 
 if __name__ == "__main__":
     run_tests()

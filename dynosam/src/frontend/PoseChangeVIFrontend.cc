@@ -1173,7 +1173,7 @@ void ViTrackingViz::drawAnimatedBox(cv::Mat& img, const cv::Rect& bbox,
   // ----------------------------
   // far-to-near scale (lock-on feel)
   // ----------------------------
-  const float start_scale = 3.0f;
+  const float start_scale = 1.6f;
   const float scale = 1.0f + (start_scale - 1.0f) * (1.0f - smooth_lock);
 
   // ----------------------------

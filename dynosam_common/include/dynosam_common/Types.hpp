@@ -218,6 +218,27 @@ struct FrameObjectPair {
   }
 };
 
+struct TrackletFramePair {
+  TrackletId tracklet_id;
+  FrameId frame_id;
+
+  bool operator==(const TrackletFramePair& other) const {
+    return tracklet_id == other.tracklet_id && frame_id == other.frame_id;
+  }
+
+  bool operator<(const TrackletFramePair& other) const {
+    return std::tie(tracklet_id, frame_id) <
+           std::tie(other.tracklet_id, other.frame_id);
+  }
+
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const TrackletFramePair& t) {
+    os << "[frame id: " << t.frame_id << " ";
+    os << "tracklet id: " << t.tracklet_id << "]";
+    return os;
+  }
+};
+
 enum KeyPointType { STATIC, DYNAMIC };
 
 enum ReferenceFrame { GLOBAL, LOCAL, OBJECT };
