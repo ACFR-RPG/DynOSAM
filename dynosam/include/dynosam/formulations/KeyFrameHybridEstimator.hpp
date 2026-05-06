@@ -235,10 +235,14 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
       const gtsam::StereoPoint2& z, const gtsam::SharedNoiseModel& z_model,
       SharedFrameNode frame_node_nonCKF);
 
-  void addNewObjectMotionVariable(gtsam::Values& new_values,
-                                  SharedFrameNode frame_node,
-                                  ObjectId object_id,
-                                  const Motion3ReferenceFrame& motion);
+  gtsam::Key addNewObjectMotionVariable(gtsam::Values& new_values,
+                                        SharedFrameNode frame_node,
+                                        ObjectId object_id,
+                                        const Motion3ReferenceFrame& motion);
+
+  /* Checks internal data-structure not the set of values itself */
+  bool motionIsInValues(ObjectId object_id, FrameId frame_id) const;
+  bool motionIsInValues(const gtsam::Key key) const;
 
  protected:
   // neither overridden update callback is used as we directly overwrite the

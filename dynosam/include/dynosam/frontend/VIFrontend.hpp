@@ -189,6 +189,7 @@ class VIFrontend : public Frontend {
   OpticalFlowAndPoseSolver<Camera::CalibrationType> optical_flow_pose_solver_;
 
   ImuFrontend imu_frontend_;
+  gtsam::imuBias::ConstantBias imu_bias_;
   FeatureTracker::UniquePtr tracker_;
 
   //! Cached rgbd-camera

@@ -152,7 +152,7 @@ std::optional<gtsam::NavState> VIFrontend::tryPropogateImu(
   auto imu_measurements = input->imu_measurements.value();
 
   pim_out = imu_frontend_.preintegrateImuMeasurements(imu_measurements);
-  return pim_out->predict(nav_state_lIMU, gtsam::imuBias::ConstantBias{});
+  return pim_out->predict(nav_state_lIMU, imu_bias_);
 }
 
 bool VIFrontend::stereoMatch(Frame::Ptr frame) {

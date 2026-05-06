@@ -10,6 +10,13 @@
 
 namespace dyno {
 
+/**
+ * @brief Implements a between factor using a global transform rather than a
+ * relative transform ie. ^WXj = ^WZ_ij * ^WX_i and therefore Z = ^WX_j
+ * ^WX_i^{-1}
+ *
+ * @tparam VALUE
+ */
 template <class VALUE>
 class MotionBetweenFactor : public gtsam::NoiseModelFactorN<VALUE, VALUE> {
   // Check that VALUE type is a testable Lie group

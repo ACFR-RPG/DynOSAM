@@ -86,6 +86,7 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/VIFrontend.cc
   src/frontend/RegularVIFrontend.cc
   src/frontend/PoseChangeVIFrontend.cc
+  src/frontend/PoseChangeVIFrontendViz.cc
   src/frontend/VisionImuOutputPacket.cc
   src/frontend/vision/ORBextractor.cc
   src/frontend/vision/FeatureTracker.cc
@@ -311,6 +312,7 @@ if(BUILD_TESTING)
     test/test_numerical.cc
     test/test_params.cc
     test/test_optimizations.cc
+    test/test_camera_tracking_factors.cc
 )
 
   target_include_directories(${PROJECT_NAME}_test

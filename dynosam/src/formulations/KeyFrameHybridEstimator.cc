@@ -513,13 +513,6 @@ void HybridFormulationKeyFrame::updateObject(
   auto frame_node_akf = map->getFrame(frame_id_akf);
   CHECK(frame_node_akf);
 
-  // frame node for last regular KF
-  auto frame_node_lrkf = map->getFrame(lRKF_id);
-  CHECK(frame_node_lrkf);
-  // object motion key from the 'from' frame
-  // const gtsam::Key object_motion_key_lkf =
-  //     frame_node_lrkf->makeObjectMotionKey(object_id);
-
   // const gtsam::Key object_motion_key_kf =
   //     frame_node_kf->makeObjectMotionKey(object_id);
   // const gtsam::Key pose_key_kf = frame_node_kf->makePoseKey();
@@ -528,7 +521,28 @@ void HybridFormulationKeyFrame::updateObject(
 
   // new_values.insert(object_motion_key_kf, H_W_AKF_k.estimate());
   // is_other_values_in_map.insert2(object_motion_key_kf, true);
-  addNewObjectMotionVariable(new_values, frame_node_kf, object_id, H_W_AKF_k);
+  const gtsam::Key object_motion_key_kf = addNewObjectMotionVariable(
+      new_values, frame_node_kf, object_id, H_W_AKF_k);
+
+  // frame node for last regular KF
+  auto frame_node_lrkf = map->getFrame(lRKF_id);
+  CHECK(frame_node_lrkf);
+  // object motion key from the 'from' frame
+  const gtsam::Key object_motion_key_lkf =
+      frame_node_lrkf->makeObjectMotionKey(object_id);
+
+  // motion model helps soo soo soo much ;)
+  if (motionIsInValues(object_motion_key_lkf)) {
+    gtsam::SharedNoiseModel relative_noise_model =
+        gtsam::noiseModel::Isotropic::Sigma(6u, 0.1);
+    // add relative motion constraint!
+    using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
+    // TODO: this is in world so unsure how it well effect covariance!
+    auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
+        object_motion_key_lkf, object_motion_key_kf, H_W_lRKF_KF,
+        relative_noise_model);
+    new_factors += relative_object_motion;
+  }
 
   result.updateAffectedObject(frame_id_kf, object_id);
 
@@ -571,20 +585,17 @@ void HybridFormulationKeyFrame::updateObject(
         << frame_id_kf << " but this is the to motion";
 
     if (!isDynamicTrackletInMap(obj_lmk_node)) {
-      // we may have more seen landmarks than points in the filter
-      // This "shouldn't" happen but is maybe some slightly bug in bookkeeping
-      // somewhere CHECK(m_L_initial_.exists(object_id, tracklet_id)) <<
-      // "Missing initalisation for j=" << object_id << " i=" << tracklet_id;
+      // missing a point may mean its not ready yet from the frontend!
       if (!m_L_initial_.exists(object_id, tracklet_id)) {
         num_missing_point_init++;
         continue;
       }
 
       // // // should be seen at least twice!
-      // if (frames_with_measurements.size() < 3) {
-      //   num_factors_not_enough_obs++;
-      //   continue;
-      // }
+      if (frames_with_measurements.size() < 2) {
+        num_factors_not_enough_obs++;
+        continue;
+      }
 
       // uuuh need to update these becuase something in the accessor
       //  needs them!
@@ -598,6 +609,11 @@ void HybridFormulationKeyFrame::updateObject(
 
       gtsam::Point3 m_L_initial = m_L_initial_.at(object_id, tracklet_id);
       new_values.insert(point_key, m_L_initial);
+
+      gtsam::SharedNoiseModel lmk_prior =
+          gtsam::noiseModel::Isotropic::Sigma(3u, 0.15);
+      // test add small prior on landmark
+      new_factors.addPrior<gtsam::Point3>(point_key, m_L_initial, lmk_prior);
 
       if (result.debug_info) {
         result.debug_info->getObjectInfo(object_id).num_new_dynamic_points++;
@@ -771,7 +787,7 @@ void HybridFormulationKeyFrame::addHybridMotionFactorNonCameraKF(
   );
 }
 
-void HybridFormulationKeyFrame::addNewObjectMotionVariable(
+gtsam::Key HybridFormulationKeyFrame::addNewObjectMotionVariable(
     gtsam::Values& new_values, SharedFrameNode frame_node, ObjectId object_id,
     const Motion3ReferenceFrame& motion) {
   const gtsam::Key motion_key = frame_node->makeObjectMotionKey(object_id);
@@ -781,6 +797,24 @@ void HybridFormulationKeyFrame::addNewObjectMotionVariable(
 
   new_values.insert(motion_key, motion.estimate());
   is_other_values_in_map.insert2(motion_key, true);
+
+  return motion_key;
+}
+
+bool HybridFormulationKeyFrame::motionIsInValues(ObjectId object_id,
+                                                 FrameId frame_id) const {
+  auto frame_node = this->map_->getFrame(frame_id);
+  if (!frame_node) {
+    return false;
+  }
+
+  const gtsam::Key motion_key = frame_node->makeObjectMotionKey(object_id);
+  return motionIsInValues(motion_key);
+}
+
+bool HybridFormulationKeyFrame::motionIsInValues(const gtsam::Key key) const {
+  // TODO: assert key is for a motion!
+  return is_other_values_in_map.exists(key);
 }
 
 // TODO: this should mark objects with keyframes!
@@ -788,6 +822,10 @@ void HybridFormulationKeyFrame::addObjects(
     FrameId frame_id, const ObjectPoseChangeInfoMap& object_motion_info) {
   auto accessor = this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
   CHECK_NOTNULL(accessor);
+
+  // const auto maybe_latest_camera_frame =
+  // this->map_->getSharedModuleStates()->getLatestOptimizedFrame();
+  // CHECK(maybe_latest_camera_frame);
 
   for (const auto& [object_id, object_info] : object_motion_info) {
     CHECK(object_info.isKeyFrame());
@@ -803,6 +841,7 @@ void HybridFormulationKeyFrame::addObjects(
     // dont like the naming of this function
     // get the camera pose either directly from the state or approximated via
     // the VIO
+    // CHECK_GE(maybe_latest_camera_frame.value(), from_frame_id);
     auto [X_W_KFm1_opt, _] = this->getBestCameraPose(from_frame_id);
     const gtsam::Pose3 X_W_KFm1_frontend = object_info.X_W_KF;
 

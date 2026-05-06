@@ -114,7 +114,7 @@ class FrameKFNode : public FrameNodeBase<KeyFrameNodeTypes> {
   }
 
  private:
-  //! So it can access the interal setCameraKeyFrame and setObjectKeyFrame
+  //! So it can access the interal setter functions
   friend class KeyFrameMap;
   //! To only be used by the KeyFrameMap
   void setCameraKeyFrame();

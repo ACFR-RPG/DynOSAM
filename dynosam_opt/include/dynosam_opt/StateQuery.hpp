@@ -5,6 +5,8 @@
 #include <optional>
 
 #include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_opt/Symbols.hpp"
 
 namespace dyno {
 
@@ -12,6 +14,10 @@ namespace dyno {
 /// StateQuery class so that the type of status is independant of the StateQuery
 /// template.
 enum StateQueryStatus { VALID, NOT_IN_MAP, WAS_IN_MAP, INVALID_MAP };
+
+template <>
+std::string to_string(const StateQueryStatus& status);
+
 /**
  * @brief Represents an optional value with meta-data that is retrieved from the
  * map.
@@ -43,7 +49,7 @@ class StateQuery : public std::optional<ValueType> {
       DYNO_THROW_MSG(DynosamException)
           << "StateQuery has no value for query type "
           << type_name<ValueType>() + " with key " << DynosamKeyFormatter(key_)
-          << " and status " << std::to_string(status());
+          << " and status " << to_string(status());
     }
     return Base::value();
   }

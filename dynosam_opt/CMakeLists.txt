@@ -30,6 +30,7 @@ add_library(${PROJECT_NAME} SHARED
     src/ISAM2Params.cc
     src/IncrementalOptimization.cc
     src/TimeBudgetOptimizationCallback.cc
+    src/StateQuery.cc
 
 )
 
