@@ -287,6 +287,11 @@ class StereoHybridMotionFactor2
 
   const gtsam::Pose3& cameraPose() const { return X_W_k_; }
 
+  // allows external updating of the internal camera pose
+  // it is the users responsability to ensure the factor
+  // is correctly relinearized with the new point after update!
+  void cameraPose(const gtsam::Pose3& X_W_k) { X_W_k_ = X_W_k; }
+
  private:
   //! Fixed camera pose
   gtsam::Pose3 X_W_k_;
@@ -337,6 +342,11 @@ class StereoHybridMotionFactor3 : public gtsam::NoiseModelFactor1<gtsam::Pose3>,
   // is correctly relinearized with the new point after update!
   void objectPoint(const gtsam::Point3& m_L) { m_L_ = m_L; }
 
+  // allows external updating of the internal camera pose
+  // it is the users responsability to ensure the factor
+  // is correctly relinearized with the new point after update!
+  void cameraPose(const gtsam::Pose3& X_W_k) { X_W_k_ = X_W_k; }
+
  private:
   //! Fixed camera pose
   gtsam::Pose3 X_W_k_;
@@ -364,7 +374,8 @@ class BatchStereoHybridMotionFactor3 : public gtsam::NonlinearFactor {
   using shared_ptr = boost::shared_ptr<BatchStereoHybridMotionFactor3>;
   using This = BatchStereoHybridMotionFactor3;
 
- private:
+  // for testing!
+ public:
   using Allocator = Eigen::aligned_allocator<StereoHybridMotionFactor3>;
   std::vector<StereoHybridMotionFactor3, Allocator> factors_;
   std::vector<gtsam::DenseIndex> indices_;

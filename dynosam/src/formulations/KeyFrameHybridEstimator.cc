@@ -534,14 +534,14 @@ void HybridFormulationKeyFrame::updateObject(
   // motion model helps soo soo soo much ;)
   if (motionIsInValues(object_motion_key_lkf)) {
     gtsam::SharedNoiseModel relative_noise_model =
-        gtsam::noiseModel::Isotropic::Sigma(6u, 0.1);
+        gtsam::noiseModel::Isotropic::Sigma(6u, 0.4);
     // add relative motion constraint!
     using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
     // TODO: this is in world so unsure how it well effect covariance!
     auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
         object_motion_key_lkf, object_motion_key_kf, H_W_lRKF_KF,
         relative_noise_model);
-    new_factors += relative_object_motion;
+    // new_factors += relative_object_motion;
   }
 
   result.updateAffectedObject(frame_id_kf, object_id);
@@ -611,9 +611,9 @@ void HybridFormulationKeyFrame::updateObject(
       new_values.insert(point_key, m_L_initial);
 
       gtsam::SharedNoiseModel lmk_prior =
-          gtsam::noiseModel::Isotropic::Sigma(3u, 0.15);
+          gtsam::noiseModel::Isotropic::Sigma(3u, 0.3);
       // test add small prior on landmark
-      new_factors.addPrior<gtsam::Point3>(point_key, m_L_initial, lmk_prior);
+      // new_factors.addPrior<gtsam::Point3>(point_key, m_L_initial, lmk_prior);
 
       if (result.debug_info) {
         result.debug_info->getObjectInfo(object_id).num_new_dynamic_points++;

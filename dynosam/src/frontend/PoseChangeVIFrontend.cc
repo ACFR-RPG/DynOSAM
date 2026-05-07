@@ -53,7 +53,10 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(
 
   if (FLAGS_pc_smoother_allow_backend_updates) {
     LOG(INFO) << "Recieved backend update at frame " << frame_id;
-    object_motion_solver_->receiveUpdate(event);
+    auto event_copy = event;
+    // hack and slow for now!
+    event_copy.camera.trajectory = this->refinePerFrameCameraPGO();
+    object_motion_solver_->receiveUpdate(event_copy);
   }
 
   if (FLAGS_pc_log_object_kf_structure) {
@@ -921,10 +924,17 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
         refined_poses[frame_id] = X_W_k_updated;
       }
 
-      dyno_state_.camera_trajectory.update(frame_id, refined_poses[frame_id]);
+      // dyno_state_.camera_trajectory.update(frame_id,
+      // refined_poses[frame_id]);
     }
 
+    // absolutely haneious we do a PGO every frame (JUST FOR NOW)
+    dyno_state_.camera_trajectory = this->refinePerFrameCameraPGO();
+
     // update stored relative ego motion data directly
+    // TODo: actually I think we should not update the relative pose information
+    // and insted store the measurements (ie T_i_j and T_lkf_j) somehow
+    // separatrely
     gtsam::FastMap<FrameId, RelEgoPoseInfo> rel_egopose_info =
         rel_egopose_infos_;
     for (auto& [frame_id, info] : rel_egopose_info) {
@@ -935,9 +945,10 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
         info.frame_j->T_world_camera_ = refined_poses.at(frame_j);
       }
 
-      // dont upodate the relative pose....
-      // check if we have an update for the keyframe and update relative pose
-      // info FrameId frame_lkf = info.lkf_id;
+      // NEVER upodate the relative pose....
+      // this is used for relative motion information when smmothing and seems
+      // to break things... check if we have an update for the keyframe and
+      // update relative pose info FrameId frame_lkf = info.lkf_id;
       // if(refined_poses.exists(frame_lkf)) {
       //   const gtsam::Pose3& X_W_KF = refined_poses.at(frame_lkf);
       //   info.T_lkf_j = X_W_KF.inverse() * info.frame_j->T_world_camera_;
@@ -1019,6 +1030,61 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
 
   // no update consumed
   return false;
+}
+
+PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO() const {
+  // opimized camera trajectory only containing keyframes
+  const PoseTrajectory& camera_trajectory_kf = accessor_->getCameraTrajectory();
+  auto noise_models = formulation_->noiseModels();
+
+  gtsam::Values values;
+  gtsam::NonlinearFactorGraph graph;
+
+  for (const auto& [frame_id, relative_ego_motion] : rel_egopose_infos_) {
+    gtsam::Key key = CameraPoseSymbol(frame_id);
+    values.insert(key, relative_ego_motion.frame_j->getPose());
+
+    if (camera_trajectory_kf.exists(frame_id)) {
+      gtsam::Pose3 X_W_k_refined = camera_trajectory_kf.at(frame_id);
+      graph.addPrior<gtsam::Pose3>(key, X_W_k_refined,
+                                   noise_models.initial_pose_prior);
+    }
+
+    // add relative motion constraint
+    CHECK(camera_trajectory_kf.exists(relative_ego_motion.lkf_id));
+    // TODO: use pim
+    graph.push_back(boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+        CameraPoseSymbol(relative_ego_motion.lkf_id), key,
+        relative_ego_motion.T_lkf_j, noise_models.odometry_noise));
+  }
+
+  using LMOptimizer =
+      dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer>;
+  LMOptimizer solver(graph, values);
+
+  NonlinearOptimizerSummary summary;
+  NonlinearOptimizerOptions options;
+
+  LOG(INFO) << "Beginning Camera PGO";
+  gtsam::Values optimised_values;
+  CHECK(solver.solve(optimised_values, options, &summary));
+
+  LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
+            << summary.final_error << " time[s] "
+            << summary.cumulative_time_in_seconds
+            << " #iterations= " << summary.numIterations();
+
+  PoseTrajectory optimized_camera_trajectory;
+  for (const auto& [frame_id, relative_ego_motion] : rel_egopose_infos_) {
+    gtsam::Key key = CameraPoseSymbol(frame_id);
+    gtsam::Pose3 X_W_k_refined = optimised_values.at<gtsam::Pose3>(key);
+
+    optimized_camera_trajectory.insert(relative_ego_motion.j_id,
+                                       relative_ego_motion.timestamp(),
+                                       X_W_k_refined);
+  }
+
+  return optimized_camera_trajectory;
 }
 
 }  // namespace dyno

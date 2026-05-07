@@ -320,9 +320,9 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
 
   double coverage = coverageKeyframeSupportSIMD(pts_kf, pts_cur);
 
-  bool distribution_degraded = shape_score < 0.2;  // structure collapsed
+  bool distribution_degraded = shape_score < 0.3;  // structure collapsed
 
-  bool coverage_lost = coverage < 0.2;  // drift outside expected region
+  bool coverage_lost = coverage < 0.3;  // drift outside expected region
 
   // 1.0 (ish) means no scale change
   // > 1 is increase in size, < 1 is decrease in size.
@@ -1272,6 +1272,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     const PoseChangeUpdateComplete::Object& object_update =
         backend_update.objects.at(object_id_);
     const auto& optimized_trajectory = object_update.trajectory;
+    const auto& optimized_camera_trajectory = backend_update.camera.trajectory;
 
     // TODO: actually trajectory up to current kf
     // better name is "frozen" trajectory and maybe active trajectory (ie.
@@ -1283,44 +1284,94 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     // active
     // optimisation but we can still use the latest pose update the keyframe
     // pose
+
+    LOG(WARNING) << "j=" << object_id_ << " has update k=" << frame_id
+                 << " current okf=" << keyFrameId();
+
     gtsam::Pose3 L_KF_updated;
     FrameId last_okf_optimized = optimized_trajectory.maxFrame();
 
-    // Test that yes indeed the last frame was a keyframe
-    auto range_l_okf_optimized = keyframe_range_.find(last_okf_optimized);
-    CHECK_NOTNULL(range_l_okf_optimized);
+    // update all current fractors current in estimate with new camera pose
+    // this is basically like doing batch every step since we relinearize all
+    // but this is just for testing to see how much of an issue this makes
+    // TODO: only do if we actually have updates! (or maybe significant
+    // updates!)
+    for (auto& [_, factors] : structured_factors_) {
+      for (auto& m_factor : factors) {
+        CHECK(m_factor);
+        const gtsam::Key H_key_k = m_factor->key1();
+        LOG(INFO) << DynosamKeyFormatter(H_key_k);
 
-    if (last_okf_optimized < keyFrameId()) {
-      // L_KF * L_okfopt^{-1} = H_W_okfopt_KF
-      gtsam::Pose3 H_W_lKF_opt_KF =
-          keyFramePose() * range_l_okf_optimized->data.inverse();
-      const gtsam::Pose3 L_lKF_opt_refined =
-          optimized_trajectory.at(last_okf_optimized).pose;
+        ObjectId recovered_object_id;
+        FrameId recovered_frame_id;
+        CHECK(reconstructMotionInfo(H_key_k, recovered_object_id,
+                                    recovered_frame_id));
+        CHECK(optimized_camera_trajectory.exists(recovered_frame_id));
 
-      // using our best latest pose from the backend and the motion from the
-      // frontend propogate the
-      // TODO: I guess we want to do this all in W space?
-      L_KF_updated = H_W_lKF_opt_KF * L_lKF_opt_refined;
-    } else {
-      // we have a optimized pose for this object that lies within the active
-      // optimisation so we can update the pose directly
-      CHECK_EQ(last_okf_optimized, keyFrameId());
-    }
+        // // assume that the factor will get re-lineairized but
+        m_factor->cameraPose(
+            optimized_camera_trajectory.at(recovered_frame_id));
 
-    // check how many poses/motions overlap with current update
-    FrameIds overlapping_frames;
-    for (FrameId frame_id : frames_since_lKF_) {
-      if (optimized_trajectory.exists(frame_id)) {
-        overlapping_frames.push_back(frame_id);
+        // gtsam::FactorIndex slot;
+        // CHECK(smoother_interface_.safeGetFactorIndex(m_factor, slot));
+        // newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] =
+        // {H_key_k, m_factor->key2()};
       }
     }
 
-    LOG(WARNING) << "j=" << object_id_ << " has update k=" << frame_id
-                 << ": recieved update with overlapping poses "
-                 << container_to_string(overlapping_frames)
-                 << " and optimized traj:" << optimized_trajectory
-                 << " with l_okf_opt= " << last_okf_optimized
-                 << " current okf=" << keyFrameId();
+    for (auto& [_, factor] : batch_factor_map_) {
+      CHECK(factor);
+      gtsam::FactorIndex slot;
+      CHECK(smoother_interface_.safeGetFactorIndex(factor, slot));
+
+      // gtsam::KeySet affected_keys(factor->keys().begin(),
+      // factor->keys().end());
+      // newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] =
+      // affected_keys;
+
+      for (auto& m_factor : factor->factors_) {
+        const gtsam::Key H_key_k = m_factor.key1();
+        LOG(INFO) << DynosamKeyFormatter(H_key_k);
+
+        ObjectId recovered_object_id;
+        FrameId recovered_frame_id;
+        CHECK(reconstructMotionInfo(H_key_k, recovered_object_id,
+                                    recovered_frame_id));
+        CHECK(optimized_camera_trajectory.exists(recovered_frame_id));
+
+        // assume that the factor will get re-lineairized but
+        m_factor.cameraPose(optimized_camera_trajectory.at(recovered_frame_id));
+      }
+    }
+
+    // // Test that yes indeed the last frame was a keyframe
+    // auto range_l_okf_optimized = keyframe_range_.find(last_okf_optimized);
+    // CHECK_NOTNULL(range_l_okf_optimized);
+
+    // if (last_okf_optimized < keyFrameId()) {
+    //   // L_KF * L_okfopt^{-1} = H_W_okfopt_KF
+    //   gtsam::Pose3 H_W_lKF_opt_KF =
+    //       keyFramePose() * range_l_okf_optimized->data.inverse();
+    //   const gtsam::Pose3 L_lKF_opt_refined =
+    //       optimized_trajectory.at(last_okf_optimized).pose;
+
+    //   // using our best latest pose from the backend and the motion from the
+    //   // frontend propogate the
+    //   // TODO: I guess we want to do this all in W space?
+    //   L_KF_updated = H_W_lKF_opt_KF * L_lKF_opt_refined;
+    // } else {
+    //   // we have a optimized pose for this object that lies within the active
+    //   // optimisation so we can update the pose directly
+    //   CHECK_EQ(last_okf_optimized, keyFrameId());
+    // }
+
+    // // check how many poses/motions overlap with current update
+    // FrameIds overlapping_frames;
+    // for (FrameId frame_id : frames_since_lKF_) {
+    //   if (optimized_trajectory.exists(frame_id)) {
+    //     overlapping_frames.push_back(frame_id);
+    //   }
+    // }
   }
   const gtsam::NonlinearFactorGraph& factors_in_smoother = getFactors();
 

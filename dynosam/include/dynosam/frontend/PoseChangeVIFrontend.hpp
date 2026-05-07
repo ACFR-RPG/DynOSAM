@@ -85,6 +85,8 @@ class PoseChangeVIFrontend : public VIFrontend {
     gtsam::Pose3 T_i_j;
     //! Relative camera pose between last keyframe -> to frames
     gtsam::Pose3 T_lkf_j;
+
+    inline Timestamp timestamp() const { return frame_j->getTimestamp(); }
   };
 
   void handleCameraKeyframe(const RelEgoPoseInfo& rel_lkf_k,
@@ -104,6 +106,8 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   /** Check if we have an update from the backend and consume the update */
   bool checkAndConsumeUpdate(FrameId frame_id_k);
+
+  PoseTrajectory refinePerFrameCameraPGO() const;
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;

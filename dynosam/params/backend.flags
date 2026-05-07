@@ -35,7 +35,7 @@
 --dynamic_point_noise_sigma=0.01
 
 --static_pixel_noise_sigma=2.0
---dynamic_pixel_noise_sigma=5.0
+--dynamic_pixel_noise_sigma=2.0
 
 
 --opt_window_size=10
