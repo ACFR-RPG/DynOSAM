@@ -34,6 +34,7 @@
 
 #include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam_common/ModuleBase.hpp"
+#include "dynosam_common/utils/Diagnostics.hpp"
 
 namespace dyno {
 
@@ -55,7 +56,8 @@ namespace dyno {
  * @tparam OUTPUT
  */
 template <typename INPUT, typename OUTPUT>
-class PipelineModuleProcessor : public SIMOPipelineModule<INPUT, OUTPUT> {
+class PipelineModuleProcessor : public SIMOPipelineModule<INPUT, OUTPUT>,
+                                public DiagnosticTaskRunner {
  public:
   using Input = INPUT;
   using Output = OUTPUT;
@@ -84,6 +86,25 @@ class PipelineModuleProcessor : public SIMOPipelineModule<INPUT, OUTPUT> {
   inline OutputConstSharedPtr process(
       const InputConstSharedPtr& input) override {
     return module_->spinOnce(CHECK_NOTNULL(input));
+  }
+
+  bool run(DiagnosticsStatus& status) override {
+    status.level = DiagnosticsStatus::Okay;
+    status.name = this->moduleName();
+    status.hardware_id = "none";
+
+    auto timing_stats = this->constructTimingStats();
+    status.add("spin [ms]", timing_stats.spin_ms);
+    status.add("spin [hz]", timing_stats.spin_hz);
+
+    if (timing_stats.get_input_packet_ms)
+      status.add("input packet [ms]", timing_stats.get_input_packet_ms.value());
+    if (timing_stats.process_ms)
+      status.add("module process [ms]", timing_stats.process_ms.value());
+    if (timing_stats.push_packet_ms)
+      status.add("push packet [ms]", timing_stats.push_packet_ms.value());
+
+    return true;
   }
 
  protected:

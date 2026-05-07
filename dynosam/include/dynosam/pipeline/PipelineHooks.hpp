@@ -33,6 +33,7 @@
 #include <functional>
 
 #include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Diagnostics.hpp"
 
 namespace dyno {
 
@@ -40,9 +41,12 @@ struct ExternalHooks {
   DYNO_POINTER_TYPEDEFS(ExternalHooks)
 
   using UpdateTime = std::function<void(Timestamp)>;
-
   //! Hook to alert an external module as to the new timestamp
   UpdateTime update_time;
+
+  using RegisterDiagnosticsTask =
+      std::function<void(const std::string& name, DiagnosticTaskRunner* task)>;
+  RegisterDiagnosticsTask register_diagnostics_task;
 };
 
 }  // namespace dyno

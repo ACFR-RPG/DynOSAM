@@ -84,6 +84,7 @@ class DynoPipelineManager {
   void shutdownPipelines();
 
   void loadPipelines(const CameraParams& camera_params,
+                     const ExternalHooks::Ptr external_hooks,
                      FrontendDisplay::Ptr frontend_display,
                      BackendDisplay::Ptr backend_display,
                      BackendModuleFactory::Ptr factory);

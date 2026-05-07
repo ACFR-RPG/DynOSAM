@@ -308,15 +308,15 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   CameraMeasurementStatusVector dynamic_measurements;
   fillMeasurementsFromFeatureIterator(
       &dynamic_measurements, frame_k->usableDynamicIterator(), frame_id_k,
-      timestamp_k, dynamic_pixel_sigmas_, dynamic_point_sigma_
-      /*&realtime_output->state.dynamic_map*/);
+      timestamp_k, dynamic_pixel_sigmas_, dynamic_point_sigma_,
+      &realtime_output->state.dynamic_map);
 
   // fill output dynamic map with current structure
-  for (const auto& object_id : objects_with_new_motions) {
-    // assume that getObjectStructureinW does not clear the vector
-    object_motion_solver_->getObjectStructureinW(
-        object_id, realtime_output->state.dynamic_map);
-  }
+  // for (const auto& object_id : objects_with_new_motions) {
+  //   // assume that getObjectStructureinW does not clear the vector
+  //   object_motion_solver_->getObjectStructureinW(
+  //       object_id, realtime_output->state.dynamic_map);
+  // }
 
   const size_t num_object_keyframes = kf_pose_change_infos.size();
 
@@ -366,7 +366,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     map_->updateObservations(static_measurements);
   }
 
-  if (ego_motion_keyframe) {
+  // lets test make all OKF's are also camera keyframes
+  if (ego_motion_keyframe || any_object_keyframes) {
     // call also updates the keyframe info for the pc_input
     handleCameraKeyframe(rel_egopose, update_params, post_update_data,
                          pc_input);
@@ -471,6 +472,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   pushImageToDisplayQueue("Tracks",
                           realtime_output->debug_imagery.tracking_image);
 
+  cv::Mat okf_debug_metrics = object_motion_solver_->keyframeDebugImage();
+  pushImageToDisplayQueue("OKF Keyframe Metrics", okf_debug_metrics);
+
   // if (stereo_matching_result) {
   //   cv::Mat stereo_track;
   //   tracker_->drawStereoMatches(stereo_track, *frame_k);
@@ -518,10 +522,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
   } else {
     VLOG(5) << "Tracking aginast Previous frame";
     AbsolutePoseCorrespondences correspondences;
-    // frame_k->getCorrespondences(correspondences, *frame_km1,
-    //                             KeyPointType::STATIC,
-    //                             frame_k->landmarkWorldKeypointCorrespondance());
-    frame_k->getCorrespondences(correspondences, *lCKF_frame_,
+    frame_k->getCorrespondences(correspondences, *frame_km1,
                                 KeyPointType::STATIC,
                                 frame_k->landmarkWorldKeypointCorrespondance());
 
@@ -617,7 +618,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = true;
+  constexpr static bool kParallelSolve = false;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);
@@ -929,7 +930,7 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
     }
 
     // absolutely haneious we do a PGO every frame (JUST FOR NOW)
-    dyno_state_.camera_trajectory = this->refinePerFrameCameraPGO();
+    // dyno_state_.camera_trajectory = this->refinePerFrameCameraPGO();
 
     // update stored relative ego motion data directly
     // TODo: actually I think we should not update the relative pose information

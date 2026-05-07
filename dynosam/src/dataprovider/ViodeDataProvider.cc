@@ -518,25 +518,27 @@ ViodeLoader::ViodeLoader(const fs::path& dataset_path)
     if (ground_truth_packet_callback_)
       ground_truth_packet_callback_(gt_object_pose_gt);
 
-    if (cached_imu_measurements.size() > 0 && !imu_measurements_sent) {
-      if (!imu_single_input_callback_) {
-        LOG(WARNING) << "imu_single_input_callback_ has not been registered!! "
-                        "Skipping IMU data...";
+    // if (cached_imu_measurements.size() > 0 && !imu_measurements_sent) {
+    //   if (!imu_single_input_callback_) {
+    //     LOG(WARNING) << "imu_single_input_callback_ has not been registered!!
+    //     "
+    //                     "Skipping IMU data...";
 
-      } else {
-        for (const auto& imu_measurement : cached_imu_measurements) {
-          imu_single_input_callback_(imu_measurement);
-        }
-      }
-      imu_measurements_sent = true;
-    }
+    //   } else {
+    //     for (const auto& imu_measurement : cached_imu_measurements) {
+    //       imu_single_input_callback_(imu_measurement);
+    //     }
+    //   }
+    //   imu_measurements_sent = true;
+    // }
 
     // if (imu_multi_input_callback_ && imu_measurements)
     //   imu_multi_input_callback_(imu_measurements.value());
 
     ImageContainer image_container(frame_id, timestamp);
-    image_container.rgb(rgb)
-        .depth(depth)
+    image_container
+        .rgb(rgb)
+        // .depth(depth)
         .opticalFlow(optical_flow)
         .objectMotionMask(instance_mask);
 

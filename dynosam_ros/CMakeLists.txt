@@ -55,6 +55,7 @@ set(SRC_FILES
   src/Utils.cc
   src/DataProviderRos.cc
   src/OnlineDataProviderRos.cc
+  src/Diagnostics.cc
 
   src/displays/backend_displays/HybridBackendDisplay.cc
   src/displays/DisplaysCommon.cc

@@ -316,7 +316,27 @@ tf2::Transform DynoNode::getLatestTransform(const std::string& target,
 
 DynoPipelineManagerRos::DynoPipelineManagerRos(
     const rclcpp::NodeOptions& options)
-    : DynoNode("dynosam", options) {}
+    : DynoNode("dynosam", options), diagnostics_updater_(nullptr) {
+  bool publish_diagnostics =
+      ParameterConstructor(this, "publish_diagnostics", true)
+          .description(
+              "If the diagnostics publisher should run, reporting stats for all"
+              " pipelines and modules.")
+          .finish()
+          .get<bool>();
+
+  if (publish_diagnostics) {
+    diagnostics_updater_ = std::make_unique<DynoDiagnosticsTaskManager>(this);
+  }
+}
+
+DynoPipelineManagerRos::~DynoPipelineManagerRos() {
+  // stop diagnostic updater before pipeline as all the pipeline owns
+  //  the memory for all diagnostics tasks which are only stored in the
+  //  updater with references/raw pointers
+  if (diagnostics_updater_) diagnostics_updater_.reset(nullptr);
+  if (pipeline_) pipeline_.reset(nullptr);
+}
 
 void DynoPipelineManagerRos::initalisePipeline() {
   RCLCPP_INFO_STREAM(this->get_logger(), "Starting DynoPipelineManagerRos");
@@ -348,6 +368,19 @@ void DynoPipelineManagerRos::initalisePipeline() {
       auto msg = rosgraph_msgs::msg::Clock();
       msg.clock = utils::toRosTime(timestamp);
       CHECK_NOTNULL(clock_pub)->publish(msg);
+    };
+  }
+
+  // proxy for checking if diagnostics should be published
+  // if true set up task register for the pipeline
+  if (diagnostics_updater_) {
+    hooks->register_diagnostics_task = [&](const std::string& name,
+                                           DiagnosticTaskRunner* task) {
+      CHECK_NOTNULL(task);
+      RCLCPP_INFO_STREAM(this->get_logger(),
+                         "Registering diagnostics task: " << name);
+      diagnostics_updater_->registerTask(
+          std::make_shared<DynoDiagnosticsTask>(name, task));
     };
   }
 

@@ -128,7 +128,8 @@ DynoPipelineManager::DynoPipelineManager(
   // update the imu params that will actually get sent to the frontend
   params_.frontend_params_.imu_params = imu_params;
 
-  loadPipelines(camera_params, frontend_display, backend_display, factory);
+  loadPipelines(camera_params, external_hooks, frontend_display,
+                backend_display, factory);
 
   std::string cuda_enabled_message;
   utils::opencvCudaAvailable(&cuda_enabled_message);
@@ -227,6 +228,7 @@ void DynoPipelineManager::launchSpinners() {
 }
 
 void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
+                                        const ExternalHooks::Ptr external_hooks,
                                         FrontendDisplay::Ptr frontend_display,
                                         BackendDisplay::Ptr backend_display,
                                         BackendModuleFactory::Ptr factory) {
@@ -267,6 +269,13 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
   const auto parallel_run = params_.parallelRun();
   frontend_pipeline_derived->parallelRun(parallel_run);
   frontend_pipeline_derived->registerOutputQueue(&frontend_viz_input_queue_);
+
+  // register frontend diagnostics
+  if (external_hooks && external_hooks->register_diagnostics_task) {
+    DiagnosticTaskRunner* task = frontend_pipeline_derived.get();
+    external_hooks->register_diagnostics_task("Frontend Pipeline Timing", task);
+  }
+
   // conver pipeline to base type
   frontend_pipeline_ = std::move(frontend_pipeline_derived);
 

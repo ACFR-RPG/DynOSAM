@@ -41,8 +41,63 @@
 
 namespace dyno {
 
+PipelineBase::TimingNaming::TimingNaming(const std::string& module_name)
+    : module(module_name),
+      input_packet_wrapped("get_input"),
+      process_wrapped("process"),
+      output_timing_wrapped("push_output") {}
+
+utils::ChronoTimingStats PipelineBase::TimingNaming::inputPacketTimer() const {
+  return utils::ChronoTimingStats{module + "." + input_packet_wrapped,
+                                  intermediate_timing_glog_verbosity};
+}
+utils::ChronoTimingStats PipelineBase::TimingNaming::processTimer() const {
+  return utils::ChronoTimingStats{module + "." + process_wrapped,
+                                  intermediate_timing_glog_verbosity};
+}
+utils::ChronoTimingStats PipelineBase::TimingNaming::outputTiming() const {
+  return utils::ChronoTimingStats{module + "." + output_timing_wrapped,
+                                  intermediate_timing_glog_verbosity};
+}
+
+PipelineBase::SpinTimingStats PipelineBase::TimingNaming::constructTimingStats()
+    const {
+  // helper lambda to get and set statistics value
+  auto set_mean_statistic =
+      [](const std::string& tag) -> std::optional<double> {
+    std::string used_tag = tag + " [ms]";
+    std::optional<double> value;
+    if (utils::Statistics::HasHandle(used_tag)) {
+      value.emplace(utils::Statistics::GetMean(used_tag));
+    }
+    return value;
+  };
+
+  // helper lambda to get and set statistics value
+  auto set_hz_statistic = [](const std::string& tag) -> std::optional<double> {
+    std::string used_tag = tag + " [ms]";
+    std::optional<double> value;
+    if (utils::Statistics::HasHandle(used_tag)) {
+      value.emplace(utils::Statistics::GetHz(used_tag));
+    }
+    return value;
+  };
+
+  SpinTimingStats timing_stats;
+  timing_stats.spin_ms = set_mean_statistic(this->module).value_or(0.0);
+  timing_stats.spin_hz = set_hz_statistic(this->module).value_or(0.0);
+
+  timing_stats.get_input_packet_ms =
+      set_mean_statistic(module + "." + input_packet_wrapped);
+  timing_stats.process_ms = set_mean_statistic(module + "." + process_wrapped);
+  timing_stats.push_packet_ms =
+      set_mean_statistic(module + "." + output_timing_wrapped);
+
+  return timing_stats;
+}
+
 bool PipelineBase::spin() {
-  LOG(INFO) << "Starting module " << module_name_;
+  LOG(INFO) << "Starting module " << this->moduleName();
   while (!isShutdown()) {
     spinOnce();
     using namespace std::chrono_literals;
@@ -53,7 +108,7 @@ bool PipelineBase::spin() {
 }
 
 void PipelineBase::shutdown() {
-  LOG(INFO) << "Shutting down module " << module_name_;
+  LOG(INFO) << "Shutting down module " << this->moduleName();
   is_shutdown_ = true;
   shutdownQueues();
 }
@@ -65,7 +120,8 @@ void PipelineBase::notifyFailures(const PipelineBase::ReturnCode& result) {
     if (failure_callbacks) {
       failure_callbacks(result);
     } else {
-      LOG(ERROR) << "Invalid OnFailureCallback for module: " << module_name_;
+      LOG(ERROR) << "Invalid OnFailureCallback for module: "
+                 << this->moduleName();
     }
   }
 }

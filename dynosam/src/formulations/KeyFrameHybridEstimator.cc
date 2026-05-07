@@ -592,7 +592,7 @@ void HybridFormulationKeyFrame::updateObject(
       }
 
       // // // should be seen at least twice!
-      if (frames_with_measurements.size() < 2) {
+      if (frames_with_measurements.size() < 3) {
         num_factors_not_enough_obs++;
         continue;
       }
@@ -765,7 +765,7 @@ void HybridFormulationKeyFrame::addHybridMotionFactorNonCameraKF(
 
   gtsam::SharedNoiseModel noise_model = z_model;
   gtsam::SharedNoiseModel extrapolated_noise_model =
-      factor_graph_tools::inflateNoise(noise_model, 3.0);
+      factor_graph_tools::inflateNoise(noise_model, 1.0);
   if (params_.makeDynamicMeasurementsRobust()) {
     extrapolated_noise_model = factor_graph_tools::robustifyHuber(
         params_.k_huber_3d_points_, extrapolated_noise_model);
@@ -852,6 +852,12 @@ void HybridFormulationKeyFrame::addObjects(
                                    X_W_KFm1_opt.inverse();
     H_W_RKF_k.estimate_ = H_W_KF_k_in_opt;
 
+    // and apply to object
+    const gtsam::Pose3 L_Wfrontend_KF = object_info.L_W_KF;
+
+    gtsam::Pose3 L_Xfrontend_KF = X_W_KFm1_frontend.inverse() * L_Wfrontend_KF;
+    gtsam::Pose3 L_Wbackend_KF = X_W_KFm1_opt * L_Xfrontend_KF;
+
     KeyFrameMetaData kf_data;
     kf_data.keyframe_status = keyframe_status;
     kf_data.H_W_lRKF_KF = H_W_RKF_k;
@@ -877,7 +883,9 @@ void HybridFormulationKeyFrame::addObjects(
       const gtsam::Point3& m_L = landmark_status.value();
       // only add new ones?
       if (!m_L_initial_.exists(object_id, tracklet_id)) {
-        m_L_initial_.insert22(object_id, tracklet_id, m_L);
+        gtsam::Point3 m_Lbackend =
+            L_Wbackend_KF.inverse() * L_Wfrontend_KF * m_L;
+        m_L_initial_.insert22(object_id, tracklet_id, m_Lbackend);
         num_new_lmks++;
       }
     }
@@ -888,7 +896,7 @@ void HybridFormulationKeyFrame::addObjects(
 
     if (keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
       key_frame_data_.startNewActiveRange(object_id, H_W_RKF_k.from(),
-                                          object_info.L_W_KF);
+                                          L_Wbackend_KF);
       LOG(INFO) << "Making Anchor KF for NEW object "
                 << info_string(H_W_RKF_k.from(), object_id) << " with motion "
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
@@ -896,7 +904,7 @@ void HybridFormulationKeyFrame::addObjects(
       // the frontend range is always "to" because it indicates the start
       // of the next range and a single motion represents one
       front_end_keyframes_.startNewActiveRange(object_id, H_W_RKF_k.from(),
-                                               object_info.L_W_KF);
+                                               L_Wbackend_KF);
       LOG(INFO) << "Making Regular KF for NEW object "
                 << info_string(H_W_RKF_k.from(), object_id) << " with motion "
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();

@@ -30,6 +30,7 @@
 
 #pragma once
 #include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Diagnostics.hpp"
 
 namespace dyno {
 
@@ -48,7 +49,7 @@ namespace dyno {
  * @tparam OUTPUT
  */
 template <typename INPUT, typename OUTPUT>
-class ModuleBase {
+class ModuleBase : public DiagnosticTaskRunner {
  public:
   using Input = INPUT;
   using Output = OUTPUT;

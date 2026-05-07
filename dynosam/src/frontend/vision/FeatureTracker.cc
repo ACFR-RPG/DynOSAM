@@ -879,7 +879,6 @@ void FeatureTracker::trackDynamicKLT(
     const bool retroactively_tracked = !previous_mono.empty() &&
                                        object_exists_in_previous &&
                                        !detected_points.empty();
-
     if (retroactively_tracked) {
       // specific tracker to track from current to previous
       // TODO: ideally reuse the pyramids... between objects...
@@ -1271,7 +1270,11 @@ void FeatureTracker::requiresSampling(
       }
       const FeatureContainer& per_object_tracks =
           features_per_object.at(object_id);
-      size_t num_tracked = per_object_status.num_track;
+      const size_t num_tracked = per_object_status.num_track;
+      const size_t num_previous = per_object_status.num_previous_track;
+      const double survival_ratio =
+          num_previous > 0 ? (double)num_tracked / (double)num_previous : 0.0;
+
       CHECK_EQ(num_tracked, per_object_tracks.size());
       // if more than 80% of points on the object are going to expire within the
       // next (at least 3) frames
@@ -1284,7 +1287,7 @@ void FeatureTracker::requiresSampling(
       }
       // TODO: this seems wrong.... should it not be the other way around!
       const bool many_old_points =
-          ((double)are_geriatric / (double)num_tracked) > 0.8;
+          ((double)are_geriatric / (double)num_tracked) > 0.7;
       // if we have less than N tracks
       const bool too_few_tracks = num_tracked < min_dynamic_tracks;
       // eventually also area based tings
@@ -1301,10 +1304,10 @@ void FeatureTracker::requiresSampling(
       const double iou = utils::calculateIoU(detection_bb, tracked_bb);
       const bool small_iou = iou < min_iou;
 
-      // TODO: should do coverage instead of IOU
+      const bool poor_tracking = survival_ratio < 0.4;
 
       const bool needs_sampling =
-          many_old_points || too_few_tracks || small_iou;
+          many_old_points || too_few_tracks || small_iou || poor_tracking;
 
       if (needs_sampling) {
         objects_to_sample.insert(object_id);
@@ -1316,6 +1319,7 @@ void FeatureTracker::requiresSampling(
         VLOG_IF(5, many_old_points) << "Sampling reason: too many old points";
         VLOG_IF(5, too_few_tracks) << "Sampling reason: too few points";
         VLOG_IF(5, small_iou) << "Sampling reason: IoU too small";
+        VLOG_IF(5, poor_tracking) << "Sampling reason: Poor tracking";
       }
     } else {
       objects_to_sample.insert(object_id);

@@ -33,6 +33,7 @@
 #include "dynosam/dataprovider/DataProvider.hpp"
 #include "dynosam/pipeline/PipelineManager.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
+#include "dynosam_ros/Diagnostics.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "rclcpp/node.hpp"
@@ -123,7 +124,7 @@ class DynoPipelineManagerRos : public DynoNode {
  public:
   explicit DynoPipelineManagerRos(
       const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-  ~DynoPipelineManagerRos() = default;
+  ~DynoPipelineManagerRos();
 
   void initalisePipeline();
 
@@ -135,6 +136,7 @@ class DynoPipelineManagerRos : public DynoNode {
   }
 
  private:
+  DynoDiagnosticsTaskManager::UniquePtr diagnostics_updater_;
   DynoPipelineManager::UniquePtr pipeline_;
 };
 

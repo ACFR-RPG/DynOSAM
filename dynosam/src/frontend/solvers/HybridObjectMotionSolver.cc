@@ -149,6 +149,8 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
   // objects
   pose_change_info_.clear();
 
+  keyframe_debug_image_ = frame_k->imageContainer().rgb().clone();
+
   for (const auto& [obj_id, _] : solvers_) {
     if (current_objects.find(obj_id) == current_objects.end()) {
       // collect status data before marking as lost
@@ -257,6 +259,8 @@ bool HybridObjectMotionSolver::solveImpl(
 
   bool object_retracked = false;
   if (maybe_previous_tracking_state) {
+    LOG(INFO) << "Previous tracking status "
+              << to_string(maybe_previous_tracking_state.value());
     if (maybe_previous_tracking_state.value() ==
             ObjectTrackingStatus::PoorlyTracked ||
         maybe_previous_tracking_state.value() == ObjectTrackingStatus::Lost) {
@@ -282,6 +286,34 @@ bool HybridObjectMotionSolver::solveImpl(
     G_W_inv = refinement_result.best_result.refined_pose.inverse();
     // inliers should be a subset of the original refined inlier tracks
     inlier_tracklets = refinement_result.inliers;
+
+    // afrwards run ransac again
+    // get the corresponding feature pairs
+    AbsolutePoseCorrespondences dynamic_correspondences;
+    bool corr_result = frame_k->getDynamicCorrespondences(
+        dynamic_correspondences, *frame_km1, object_id,
+        frame_k->landmarkWorldKeypointCorrespondance());
+
+    const size_t& n_matches = dynamic_correspondences.size();
+
+    TrackletIds all_tracklets;
+    std::transform(dynamic_correspondences.begin(),
+                   dynamic_correspondences.end(),
+                   std::back_inserter(all_tracklets),
+                   [](const AbsolutePoseCorrespondence& corres) {
+                     return corres.tracklet_id_;
+                   });
+    CHECK_EQ(all_tracklets.size(), n_matches);
+
+    utils::ChronoTimingStats update_timer("hybrid_motion_solver.solve_impl",
+                                          50);
+    geometric_result = pnp_ransac_solver_.solve3d2d(dynamic_correspondences);
+
+    TrackletIds inlier_tracklets = geometric_result.inliers;
+    const TrackletIds& outlier_tracklets = geometric_result.outliers;
+    frame_k->dynamic_features_.markOutliers(outlier_tracklets);
+
+    G_W_inv = geometric_result.best_result.inverse();
   }
 
   const gtsam::Pose3 H_W_km1_k_pnp = X_W_k * G_W_inv;
@@ -426,7 +458,8 @@ bool HybridObjectMotionSolver::solveImpl(
       // for OMD
       if (smoother /*&& previous_tracking_state != ObjectTrackingStatus::New*/) {
         utils::ChronoTimingStats timer("object_motion_solver.is_keyframe");
-        requires_new_keyframe = smoother->shouldBeKeyframe(frame_k);
+        requires_new_keyframe =
+            smoother->shouldBeKeyframe(frame_k, &keyframe_debug_image_);
         // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
 
         // if(quality < 0.3) {

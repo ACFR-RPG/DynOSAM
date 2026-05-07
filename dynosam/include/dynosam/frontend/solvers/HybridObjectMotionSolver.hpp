@@ -53,6 +53,8 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
     return latest_object_statuses_;
   }
 
+  cv::Mat keyframeDebugImage() const { return keyframe_debug_image_; }
+
   void receiveUpdate(const PoseChangeUpdateComplete& update_info);
 
  protected:
@@ -163,6 +165,8 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   mutable std::mutex num_kfs_per_object_mutex_;
   mutable std::mutex solvers_mutex_;
   mutable std::mutex pose_change_info_mutex_;
+
+  cv::Mat keyframe_debug_image_;
 };
 
 }  // namespace dyno

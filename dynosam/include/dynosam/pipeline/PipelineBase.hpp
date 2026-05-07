@@ -18,6 +18,7 @@
 
 #include "dynosam/pipeline/ThreadSafeQueue.hpp"
 #include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 
@@ -26,10 +27,14 @@ class PipelineBase {
   DYNO_POINTER_TYPEDEFS(PipelineBase)
 
   // Timing Reported in milliseconds
+  // Computed as average over sliding window
+  // from Statistics
   struct SpinTimingStats {
-    double get_input_packet_ms{0.0};
-    double process_ms{0.0};
-    double push_packet_ms{0.0};
+    double spin_ms{0.0};
+    double spin_hz{0.0};
+    std::optional<double> get_input_packet_ms{};
+    std::optional<double> process_ms{};
+    std::optional<double> push_packet_ms{};
   };
 
   struct ReturnCode {
@@ -57,7 +62,7 @@ class PipelineBase {
 
   using OnPipelineFailureCallback = std::function<void(ReturnCode)>;
 
-  PipelineBase(const std::string& module_name) : module_name_(module_name) {}
+  PipelineBase(const std::string& module_name) : timing_names_(module_name) {}
 
   virtual ~PipelineBase() = default;
   /**
@@ -94,7 +99,11 @@ class PipelineBase {
    *
    * @return std::string
    */
-  inline std::string getModuleName() const { return module_name_; }
+  inline const std::string& moduleName() const { return timing_names_.module; }
+
+  SpinTimingStats constructTimingStats() const {
+    return timing_names_.constructTimingStats();
+  }
 
   virtual void shutdown();
 
@@ -133,7 +142,24 @@ class PipelineBase {
   virtual ReturnCode spinOnce() = 0;
 
  protected:
-  const std::string module_name_;
+  struct TimingNaming {
+    TimingNaming(const std::string& _module_name);
+    const std::string module;
+    const std::string input_packet_wrapped;
+    const std::string process_wrapped;
+    const std::string output_timing_wrapped;
+
+    utils::ChronoTimingStats inputPacketTimer() const;
+    utils::ChronoTimingStats processTimer() const;
+    utils::ChronoTimingStats outputTiming() const;
+
+    SpinTimingStats constructTimingStats() const;
+
+    // log timing explicitly if VLOG >= value
+    static constexpr int intermediate_timing_glog_verbosity = 5;
+  };
+
+  const TimingNaming timing_names_;
   std::atomic_bool is_thread_working_{false};
 
  private:

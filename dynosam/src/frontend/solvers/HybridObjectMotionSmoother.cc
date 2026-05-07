@@ -230,15 +230,72 @@ double coverageKeyframeSupportSIMD(const std::vector<Eigen::Vector2d>& pts_kf,
   return static_cast<double>(covered) / pts_kf.size();
 }
 
-bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
-  // must at least have two frames!
-  const FrameId frames_since_lkf = frame->getFrameId() - keyFrameId();
-  if (frames_since_lkf < 2) {
-    return false;
+void drawEllipse(cv::Mat& img,
+                 const Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>& solver,
+                 const Eigen::Vector2d& mean, const cv::Scalar& color) {
+  Eigen::Vector2d eigvals = solver.eigenvalues();
+  Eigen::Matrix2d eigvecs = solver.eigenvectors();
+
+  // Largest eigenvalue/vector
+  int idx = eigvals(0) > eigvals(1) ? 0 : 1;
+
+  double angle = std::atan2(eigvecs(1, idx), eigvecs(0, idx)) * 180.0 / M_PI;
+
+  cv::Size axes(static_cast<int>(std::sqrt(eigvals(0)) * 2.0),
+                static_cast<int>(std::sqrt(eigvals(1)) * 2.0));
+
+  const cv::Point p(utils::gtsamPointToCv<int>(mean));
+  if (!utils::matContains(img, p)) {
+    return;
   }
 
-  const auto& cam_params = frame->getCamera()->getParams();
+  cv::ellipse(img, p, axes, angle, 0.0, 360.0, color, 1, cv::LINE_AA);
+}
 
+const cv::Scalar KF_COLOR = cv::Scalar(0, 255, 0);
+const cv::Scalar CUR_COLOR = cv::Scalar(0, 0, 255);
+const cv::Scalar ELLIPSE_KF = cv::Scalar(0, 200, 0);
+const cv::Scalar ELLIPSE_CUR = cv::Scalar(0, 0, 200);
+
+const cv::Scalar TEXT_BG = cv::Scalar(50, 50, 50);
+const cv::Scalar TEXT_COLOR = cv::Scalar(255, 255, 255);
+
+void drawTextBlock(cv::Mat& img, const std::vector<std::string>& lines,
+                   const cv::Point& origin = cv::Point(10, 10)) {
+  int x = origin.x;
+  int y = origin.y;
+
+  constexpr int line_height = 20;
+  constexpr int padding = 5;
+
+  int width = 0;
+
+  for (const auto& line : lines) {
+    int baseline = 0;
+
+    cv::Size text_size =
+        cv::getTextSize(line, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseline);
+
+    width = std::max(width, text_size.width);
+  }
+
+  int height = line_height * static_cast<int>(lines.size());
+
+  // Background rectangle
+  cv::rectangle(img, cv::Point(x - padding, y - padding),
+                cv::Point(x + width + padding, y + height + padding), TEXT_BG,
+                -1);
+
+  // Text
+  for (size_t i = 0; i < lines.size(); ++i) {
+    cv::putText(img, lines[i],
+                cv::Point(x, y + static_cast<int>((i + 1) * line_height - 5)),
+                cv::FONT_HERSHEY_SIMPLEX, 0.5, TEXT_COLOR, 1, cv::LINE_AA);
+  }
+}
+
+bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame,
+                                                  cv::Mat* debug_image) const {
   const auto& object_observations = frame->getObjectObservations();
 
   // Jesse: not even sure this should happen!
@@ -249,15 +306,27 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
   std::vector<Eigen::Vector2d> pts_kf;
   std::vector<Eigen::Vector2d> pts_cur;
 
+  size_t num_detections = 0;
   const auto& dynamic_features_lOKF = lOKF_frame_->dynamic_features_;
 
   for (const auto& feature : frame->usableDynamicIterator(object_id_)) {
     const TrackletId id = feature->trackletId();
+    num_detections++;
 
     if (!dynamic_features_lOKF.exists(id)) continue;
 
-    pts_cur.push_back(feature->keypoint());
-    pts_kf.push_back(dynamic_features_lOKF.getByTrackletId(id)->keypoint());
+    auto kp_cur = feature->keypoint();
+    auto kp_kf = dynamic_features_lOKF.getByTrackletId(id)->keypoint();
+
+    pts_cur.push_back(kp_cur);
+    pts_kf.push_back(kp_kf);
+
+    if (debug_image) {
+      cv::circle(*debug_image, utils::gtsamPointToCv<int>(kp_cur), 2, CUR_COLOR,
+                 -1, cv::LINE_AA);
+      cv::circle(*debug_image, utils::gtsamPointToCv<int>(kp_kf), 2, KF_COLOR,
+                 -1, cv::LINE_AA);
+    }
   }
 
   const auto computeCovariance = [](const std::vector<Eigen::Vector2d>& pts,
@@ -320,6 +389,17 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
 
   double coverage = coverageKeyframeSupportSIMD(pts_kf, pts_cur);
 
+  if (debug_image) {
+    drawEllipse(*debug_image, solver_cur, mean_cur, ELLIPSE_CUR);
+    drawEllipse(*debug_image, solver_kf, mean_kf, ELLIPSE_KF);
+
+    std::vector<std::string> lines = {
+        "Object Keyframe metrics", "scale: " + cv::format("%.2f", scale_ratio),
+        "shape: " + cv::format("%.2f", shape_score),
+        "coverage: " + cv::format("%.2f", coverage)};
+    drawTextBlock(*debug_image, lines);
+  }
+
   bool distribution_degraded = shape_score < 0.3;  // structure collapsed
 
   bool coverage_lost = coverage < 0.3;  // drift outside expected region
@@ -335,7 +415,7 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame) const {
       distribution_degraded || coverage_lost || large_scale_change;
 
   // need at least some detections to be a good keyframe
-  if (pts_kf.size() < 10) {
+  if (num_detections < 10) {
     need_new_keyframe = false;
   }
 

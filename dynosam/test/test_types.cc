@@ -38,6 +38,7 @@
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/JsonUtils.hpp"
 #include "dynosam_common/utils/Statistics.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/utils/Variant.hpp"
 #include "dynosam_cv/Feature.hpp"
 #include "internal/helpers.hpp"
@@ -1128,6 +1129,38 @@ TEST(Statistics, testGetModules) {
             std::vector<std::string>({"global_stats"}));
   EXPECT_EQ(utils::Statistics::getTagByModule("ns"),
             std::vector<std::string>({"ns.spin", "ns.spin1"}));
+}
+
+// some nice hacky global variables for testing the mock timing generator ;)
+size_t start_called{0};
+size_t stop_called{0};
+
+struct MockTimingGenerator {
+  void onStart() { start_called++; }
+  void onStop() { stop_called++; }
+
+  double calcDelta() const { return 0.0; }
+};
+
+class MockTimingStats
+    : public utils::BaseTimingStatsCollector<MockTimingGenerator> {
+ public:
+  using Base = utils::BaseTimingStatsCollector<MockTimingGenerator>;
+  MockTimingStats(const std::string& tag, int glog_level = 0,
+                  bool construct_stopped = false)
+      : Base(MockTimingGenerator{}, tag, glog_level, construct_stopped) {}
+};
+
+MockTimingStats createMockTimingStats() {
+  return MockTimingStats{"mock_timing_stats"};
+}
+
+TEST(TimingStats, functionReturnDoesNotTriggerLog) {
+  MockTimingStats timing_stats = createMockTimingStats();
+
+  EXPECT_EQ(start_called, 1);
+  EXPECT_EQ(stop_called, 0);
+  EXPECT_TRUE(timing_stats.isTiming());
 }
 
 class FeatureTrackerBaseTest : public FeatureTrackerBase {

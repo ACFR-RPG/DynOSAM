@@ -102,7 +102,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   double reprojectionError(Frame::Ptr frame,
                            const TrackletIds& tracklets) const;
 
-  bool shouldBeKeyframe(Frame::Ptr frame) const;
+  bool shouldBeKeyframe(Frame::Ptr frame, cv::Mat* debug_image = nullptr) const;
 
   /** Compute an estimate from the incomplete linear delta computed during the
    * last update. This delta is incomplete because it was not updated below

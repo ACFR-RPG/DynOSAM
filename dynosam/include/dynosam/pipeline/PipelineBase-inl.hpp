@@ -44,12 +44,8 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
     return ReturnCode::IS_SHUTDOWN;
   }
 
-  // log get_input, process and get_output packet timing explicitly if VLOG >=
-  // 10
-  static constexpr int intermediate_timing_glog_verbosity = 5;
   auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
-    utils::ChronoTimingStats timing(module_name_ + ".get_input",
-                                    intermediate_timing_glog_verbosity);
+    utils::ChronoTimingStats timing = timing_names_.inputPacketTimer();
     InputConstSharedPtr input = nullptr;
     is_thread_working_ = false;
     input = getInputPacket();
@@ -58,8 +54,7 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
   };
 
   auto processWrapped = [&](InputConstSharedPtr input) -> OutputConstSharedPtr {
-    utils::ChronoTimingStats timing(module_name_ + ".process",
-                                    intermediate_timing_glog_verbosity);
+    utils::ChronoTimingStats timing = timing_names_.processTimer();
     OutputConstSharedPtr output = nullptr;
     output = process(input);
     return output;
@@ -67,14 +62,13 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
 
   auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
     // Received a valid output, send to output queue
-    utils::ChronoTimingStats timing(module_name_ + ".push_output",
-                                    intermediate_timing_glog_verbosity);
+    utils::ChronoTimingStats timing = timing_names_.outputTiming();
     const bool push_packet_result = pushOutputPacket(output);
     return push_packet_result;
   };
 
   ReturnCode return_code;
-  utils::ChronoTimingStats timing_stats(module_name_);
+  utils::ChronoTimingStats timing_stats(moduleName());
 
   InputConstSharedPtr input = getInputPacketWrapped();
 
@@ -86,7 +80,7 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
     if (output) {
       if (!pushOutputPacketWrapped(output)) {
         LOG_EVERY_N(WARNING, 100)
-            << "Module: " << module_name_ << " - Output push failed.";
+            << "Module: " << this->moduleName() << " - Output push failed.";
         is_thread_working_ = false;
         return_code = ReturnCode::OUTPUT_PUSH_FAILURE;
       } else {
@@ -156,7 +150,7 @@ bool MIMOPipelineModule<INPUT, OUTPUT>::pushOutputPacket(
   static constexpr auto kTimeLimitCallbacks = std::chrono::milliseconds(10);
   auto callbacks_duration = utils::Timer::toc(tic_callbacks);
   LOG_IF(WARNING, callbacks_duration > kTimeLimitCallbacks)
-      << "Pushing output packet to queues for module: " << this->module_name_
+      << "Pushing output packet to queues for module: " << this->moduleName()
       << " are taking very long! Current latency: "
       << callbacks_duration.count() << " ms.";
   return true;
@@ -181,7 +175,7 @@ SIMOPipelineModule<INPUT, OUTPUT>::getInputPacket() {
   } else {
     LOG_IF_EVERY_N(WARNING, !Base::isShutdown() && !hasWork() && VLOG_IS_ON(50),
                    100)
-        << "Module: " << Base::module_name_ << " - didn't return an output.";
+        << "Module: " << Base::moduleName() << " - didn't return an output.";
     return nullptr;
   }
 }

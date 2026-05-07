@@ -108,6 +108,20 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
     auto lmk = map->getLandmark(tracklet_id);
     CHECK_NOTNULL(lmk);
     LOG(INFO) << lmk->verboseInfo();
+    LOG(INFO) << "ALL CKS: "
+              << container_to_string(map->getCameraKeyFrames().collectKeys());
+
+    auto object_id = lmk->objectId();
+    auto obj_node = map->getObject(object_id);
+
+    std::stringstream ss;
+    // print seen frames and anchor frame
+    for (FrameId okf : obj_node->getSeenFrameIds()) {
+      FrameId anchor_frame = formulation_->frameIdFromKFRange(object_id, okf);
+      ss << okf << "(" << anchor_frame << ") ";
+    }
+
+    LOG(INFO) << "OKF's j=" << object_id << ": " << ss.str();
   });
   auto ils_debug_callback = [afs](gtsam::Key key) {
     LOG(ERROR) << DynosamKeyFormatter(key);
@@ -413,6 +427,9 @@ bool PoseChangeVIBackendModule::optimize(
   //                                     additionalKeys.end());
 
   gtsam::ISAM2UpdateParams mutable_update_params = update_params;
+  // do full solve to effecticely do batch every step
+  // mutable_update_params.force_relinearize = true;
+  // mutable_update_params.forceFullSolve = true;
   // if (!mutable_update_params.extraReelimKeys) {
   //   mutable_update_params.extraReelimKeys = gtsam::KeyList{};
   // }
@@ -427,6 +444,7 @@ bool PoseChangeVIBackendModule::optimize(
   using SmootherT = SmootherInterface::Smoother;
   using ArgumentsT = SmootherInterface::UpdateArguments;
 
+  // bool is_smoother_ok = true;
   bool is_smoother_ok = smoother_interface_.optimize(
       result,
       [&](const SmootherT&, ArgumentsT& update_arguments) {
