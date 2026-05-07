@@ -367,7 +367,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   // lets test make all OKF's are also camera keyframes
-  if (ego_motion_keyframe || any_object_keyframes) {
+  if (ego_motion_keyframe) {
     // call also updates the keyframe info for the pc_input
     handleCameraKeyframe(rel_egopose, update_params, post_update_data,
                          pc_input);
@@ -977,6 +977,7 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
     // TODO: not updating velocity or bias!
     // TODO: by proxy of updating the frames this should also update the
     // lCKF_frame_
+    // TODO: I think this is the most vital one...
     auto maybe_nav_state_km1 = accessor_->getNavState(nav_state_km1_.frame_id);
     if (maybe_nav_state_km1) {
       nav_state_km1_.state = maybe_nav_state_km1.get();

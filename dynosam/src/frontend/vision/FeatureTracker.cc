@@ -876,9 +876,10 @@ void FeatureTracker::trackDynamicKLT(
         previous_frame_
             ? previous_frame_->getObjectObservations().exists(object_id)
             : false;
-    const bool retroactively_tracked = !previous_mono.empty() &&
-                                       object_exists_in_previous &&
-                                       !detected_points.empty();
+
+    bool retroactively_tracked = !previous_mono.empty() &&
+                                 object_exists_in_previous &&
+                                 !detected_points.empty();
     if (retroactively_tracked) {
       // specific tracker to track from current to previous
       // TODO: ideally reuse the pyramids... between objects...

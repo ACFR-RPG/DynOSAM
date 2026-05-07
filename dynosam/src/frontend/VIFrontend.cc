@@ -133,10 +133,12 @@ Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
   Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
   if (frame_km1 && has_retroactive_tracks) {
     // TODO: and in depth mode!
+    // TODo: ah dont do this when we have depth! Check first for stereo (ie only
+    // do one!?)
     if (frame_km1->imageContainer().hasDepth()) {
       frame_km1->updateDepths();
     } else {
-      CHECK(stereoMatch(frame_km1, frame->retroactive_tracks));
+      stereoMatch(frame_km1, frame->retroactive_tracks);
     }
   }
   return frame;
