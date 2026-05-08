@@ -363,29 +363,38 @@ class FeatureContainer {
       internal::FilterView<const FeatureContainer, UsableObjectLabelPredicate>;
 
   template <typename FeatureT>
-  struct ObjectFeatureViewT {
+  class ObjectFeatureViewT {
+   private:
+    //! Tight integration with the parent feature container is necessary
+    friend class FeatureContainer;
+
     using This = ObjectFeatureViewT<FeatureT>;
-    ObjectId object_id;
-    FeatureContainer* container = nullptr;
+    ObjectId object_id_;
+    FeatureContainer* container_ = nullptr;
     //! Set of tracklet ids for object id j
-    TrackletIdSet tracklets{};
+    TrackletIdSet tracklets_{};
 
     ObjectFeatureViewT(const ObjectId j, FeatureContainer* c)
-        : object_id(j), container(c) {}
+        : object_id_(j), container_(c) {}
 
     void rebindContainer(FeatureContainer* new_owner) {
       CHECK_NOTNULL(new_owner);
-      container = new_owner;
+      container_ = new_owner;
     }
 
     void insert(const TrackletId& tracklet_id) {
-      tracklets.insert(tracklet_id);
+      tracklets_.insert(tracklet_id);
     }
-    size_t size() const { return tracklets.size(); }
+
+   public:
+    size_t size() const { return tracklets_.size(); }
+    ObjectId objectId() const { return object_id_; }
+    const TrackletIdSet& tracklets() const { return tracklets_; }
 
     struct iterator {
+     public:
       using iterator_type = TrackletIdSet::const_iterator;
-      // FeatureT determines if const Feature::Ptr or Feature::Ptr
+      // FeatureT determines if const Feature::Ptr or Feature::ConstPtr
       using value_type = FeatureT;
       using reference = value_type&;
       using const_reference = const reference;
@@ -393,12 +402,17 @@ class FeatureContainer {
       using difference_type = std::ptrdiff_t;
       using iterator_category = std::forward_iterator_tag;
 
+     private:
+      //! Tight integration with the parent view
+      friend class ObjectFeatureViewT;
+
       iterator_type it_;
       //! Somewhat unsafe immutable pointer to the feature container
       FeatureContainer* container_;
       iterator(iterator_type it, FeatureContainer* container)
           : it_(it), container_(CHECK_NOTNULL(container)) {}
 
+     public:
       // NOTE: we return the actual value from the feature map rather than using
       // the more safe container_->getByTrackletId() this is becuase we need to
       // return a reference so that the view can operate like a real iterator
@@ -431,10 +445,10 @@ class FeatureContainer {
       }
     };
 
-    iterator begin() const { return iterator(tracklets.begin(), container); }
-    iterator end() const { return iterator(tracklets.end(), container); }
-    iterator begin() { return iterator(tracklets.begin(), container); }
-    iterator end() { return iterator(tracklets.end(), container); }
+    iterator begin() const { return iterator(tracklets_.begin(), container_); }
+    iterator end() const { return iterator(tracklets_.end(), container_); }
+    iterator begin() { return iterator(tracklets_.begin(), container_); }
+    iterator end() { return iterator(tracklets_.end(), container_); }
   };
 
   using ObjectFeatureView = ObjectFeatureViewT<Feature::Ptr>;
@@ -586,10 +600,10 @@ class FeatureContainer {
         object_feature_map_.insert2(object_id,
                                     ObjectFeatureView(object_id, this));
       }
-      const auto& oth_tracklets = other_feature_view.tracklets;
+      const auto& oth_tracklets = other_feature_view.tracklets();
       // insert new tracklets per object if necessary
-      object_feature_map_.at(object_id).tracklets.insert(oth_tracklets.begin(),
-                                                         oth_tracklets.end());
+      object_feature_map_.at(object_id).tracklets_.insert(oth_tracklets.begin(),
+                                                          oth_tracklets.end());
     }
     // object_feature_map_.insert(other.object_feature_map_.begin(),
     //                            other.object_feature_map_.end());
@@ -603,6 +617,15 @@ class FeatureContainer {
   inline const_iterator begin() const {
     return const_iterator(feature_map_.cbegin());
   }
+
+  /* Get the a feature view over all features associated with object id. Use
+   * with hasObject */
+  const ObjectFeatureView& featuresByObject(ObjectId object_id) const;
+  /* Get the a feature view over all features associated with object id. Use
+     with hasObject. The view itself is immutable due to private access but the
+     internal features may be modified
+  */
+  ObjectFeatureView& featuresByObject(ObjectId object_id);
 
   // vector end
   inline iterator end() { return iterator(feature_map_.end()); }

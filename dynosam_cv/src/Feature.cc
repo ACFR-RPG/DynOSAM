@@ -32,6 +32,8 @@
 
 #include <glog/logging.h>
 
+#include "dynosam_common/Exceptions.hpp"
+
 namespace dyno {
 
 Feature::Feature(const Feature& other) {
@@ -304,7 +306,7 @@ void FeatureContainer::remove(TrackletId tracklet_id) {
   CHECK(object_feature_map_.exists(object_id));
   // remove tracklet id from tracklet set and if the set is now empty
   // remove object id entirely
-  auto& tracklets_per_object = object_feature_map_.at(object_id).tracklets;
+  auto& tracklets_per_object = object_feature_map_.at(object_id).tracklets_;
   tracklets_per_object.erase(tracklet_id);
 
   if (tracklets_per_object.empty()) {
@@ -322,7 +324,7 @@ void FeatureContainer::removeByObjectId(ObjectId object_id) {
 
   // this->remove will act on the same tracklet object
   //  make copy of tracklets to ensure correct iteration
-  const auto tracklets_to_remove = object_feature_map_.at(object_id).tracklets;
+  const auto tracklets_to_remove = object_feature_map_.at(object_id).tracklets_;
   for (const auto tracklet_id : tracklets_to_remove) {
     this->remove(tracklet_id);
   }
@@ -380,12 +382,30 @@ bool FeatureContainer::exists(TrackletId tracklet_id) const {
 
 TrackletIds FeatureContainer::getByObject(ObjectId object_id) const {
   if (object_feature_map_.exists(object_id)) {
-    const auto& tracklets = object_feature_map_.at(object_id).tracklets;
+    const auto& tracklets = object_feature_map_.at(object_id).tracklets();
     // convert unordered_set to vector
     return TrackletIds(tracklets.begin(), tracklets.end());
   } else {
     return TrackletIds{};
   }
+}
+
+const FeatureContainer::ObjectFeatureView& FeatureContainer::featuresByObject(
+    ObjectId object_id) const {
+  checkAndThrow(
+      hasObject(object_id),
+      "FeatureContainer::featuresByObject error: no features with object " +
+          std::to_string(object_id));
+  return object_feature_map_.at(object_id);
+}
+
+FeatureContainer::ObjectFeatureView& FeatureContainer::featuresByObject(
+    ObjectId object_id) {
+  checkAndThrow(
+      hasObject(object_id),
+      "FeatureContainer::featuresByObject error: no features with object " +
+          std::to_string(object_id));
+  return object_feature_map_.at(object_id);
 }
 
 FeatureContainer::ObjectToFeatureMap::iterator

@@ -39,6 +39,23 @@ namespace dyno {
 
 decltype(TrackletIdManager::instance_) TrackletIdManager::instance_;
 
+// TrackletIdManager& TrackletIdManager::instance() {
+//     static TrackletIdManager instance;
+//     return instance;
+//   }
+
+// TrackletId TrackletIdManager::getTrackletIdCount() const noexcept {
+//   return tracklet_count_.load(std::memory_order_relaxed);
+// }
+
+// void TrackletIdManager::incrementTrackletIdCount() noexcept {
+//   tracklet_count_.fetch_add(1, std::memory_order_relaxed);
+// }
+
+// TrackletId TrackletIdManager::getAndIncrementTrackletId() noexcept {
+//   return tracklet_count_.fetch_add(1, std::memory_order_relaxed);
+// }
+
 FeatureTrackerBase::FeatureTrackerBase(const TrackerParams& params,
                                        Camera::Ptr camera,
                                        ImageDisplayQueue* display_queue)

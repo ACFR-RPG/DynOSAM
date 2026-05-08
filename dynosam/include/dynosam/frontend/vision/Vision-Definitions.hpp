@@ -64,21 +64,23 @@ using RelativePoseCorrespondences = std::vector<RelativePoseCorrespondence>;
 
 struct PerObjectStatus {
   ObjectId object_id;
-  size_t num_previous_track{0};  // number of (inlier) features tracked in the
-                                 // previous frame that MAY be used
-  size_t num_track{
-      0};  // actual number of features tracked (ie. used) from the previous
-           // frame - does not include newly sampled points!
-  size_t num_sampled{
-      0};  // num new points sampled and added to the set of features
+  // number of (inlier) features tracked in the
+  // previous frame that MAY be used
+  size_t num_previous_track{0};
+  // actual number of features tracked (ie. used) from the previous
+  // frame - does not include newly sampled points!
+  size_t num_track{0};
+  // num new points sampled and added to the set of features
+  size_t num_sampled{0};
   size_t num_outside_shrunken_image{0};  // sampled or tracked
   size_t num_zero_flow{0};               // sampled or tracked
-  size_t num_tracked_with_different_label{
-      0};  // number of points tracked from previous frame where the current
-           // label is different
-  size_t num_tracked_with_background_label{
-      0};  // number of points tracked from previous frame wehre current label
-           // is the background
+  // number of points tracked from previous frame where the current
+  // label is different
+  size_t num_tracked_with_different_label{0};
+  // number of points tracked from previous frame wehre current label
+  // is the background
+  size_t num_tracked_with_background_label{0};
+  size_t num_retroactive_tracks{0};
   // would be nice to have some histogram data about each tracked point etc...
   bool object_new{false};
   bool object_resampled{false};
@@ -123,6 +125,8 @@ inline std::string to_string(const FeatureTrackerInfo& info) {
     ss << "\t- Object: " << object_id << ": \n";
     ss << "\t\t - num_track " << object_status.num_track << "\n";
     ss << "\t\t - num_sampled " << object_status.num_sampled << "\n";
+    ss << "\t\t - num_retroactive_tracks "
+       << object_status.num_retroactive_tracks << "\n";
     ss << "\t\t - is new " << std::boolalpha << object_status.object_new
        << "\n";
     ss << "\t\t - resampled " << std::boolalpha

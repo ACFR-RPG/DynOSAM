@@ -47,6 +47,22 @@ namespace dyno {
  * Accessors and modifiers are thread-safe.
  *
  */
+// class TrackletIdManager {
+//  public:
+//   DYNO_POINTER_TYPEDEFS(TrackletIdManager)
+
+//   static TrackletIdManager& instance();
+
+//   TrackletId getTrackletIdCount() const noexcept;
+//   void incrementTrackletIdCount() noexcept;
+//   TrackletId getAndIncrementTrackletId() noexcept;
+
+//  private:
+//   TrackletIdManager() = default;
+//   //! GLobal thread safe tracked id count
+//   std::atomic<TrackletId> tracklet_count_{0};
+// };
+
 class TrackletIdManager {
  public:
   DYNO_POINTER_TYPEDEFS(TrackletIdManager)
