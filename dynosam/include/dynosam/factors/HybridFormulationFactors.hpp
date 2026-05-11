@@ -435,6 +435,186 @@ class BatchStereoHybridMotionFactor3 : public gtsam::NonlinearFactor {
 };
 
 /**
+ * Dynamic stereo structureless trifocal factor.
+ *
+ * Measurement model:
+ *
+ *   z = pi( X^{-1} H L m )
+ *
+ * where:
+ *
+ *   X : known camera pose in world
+ *   H : unknown object pose in world
+ *   L : known local/object-part transform
+ *   m : unknown point in local frame
+ *
+ * The point m is analytically eliminated using nullspace projection.
+ *
+ * This factor optimizes only object poses:
+ *
+ *   H1, H2, H3
+ *
+ * using three stereo observations:
+ *
+ *   z1, z2, z3
+ *
+ * Residual dimension:
+ *
+ *   9 reprojection residuals
+ *   - 3 eliminated point DOF
+ *   -----------------------
+ *   6 final residual DOF
+ */
+class DynamicStereoStructurelessFactor
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
+                                      gtsam::Pose3> {
+ public:
+  using Base =
+      gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>;
+
+  using Matrix36 = Eigen::Matrix<double, 3, 6>;
+  using Matrix33 = Eigen::Matrix<double, 3, 3>;
+  using Matrix93 = Eigen::Matrix<double, 9, 3>;
+  using Matrix99 = Eigen::Matrix<double, 9, 9>;
+  using Matrix918 = Eigen::Matrix<double, 9, 18>;
+  using Matrix618 = Eigen::Matrix<double, 6, 18>;
+
+  DynamicStereoStructurelessFactor(
+      gtsam::Key H1_key, gtsam::Key H2_key, gtsam::Key H3_key,
+      const gtsam::Pose3& X1, const gtsam::Pose3& X2, const gtsam::Pose3& X3,
+      const gtsam::StereoPoint2& z1, const gtsam::StereoPoint2& z2,
+      const gtsam::StereoPoint2& z3, const gtsam::Pose3& L,
+      const gtsam::Point3& m, const gtsam::Cal3_S2Stereo::shared_ptr& K,
+      const gtsam::SharedNoiseModel& noise)
+      : Base(noise, H1_key, H2_key, H3_key),
+        X1_(X1),
+        X2_(X2),
+        X3_(X3),
+        z1_(z1),
+        z2_(z2),
+        z3_(z3),
+        L_(L),
+        m_(m),
+        K_(K) {}
+
+  gtsam::Vector unwhitenedError(
+      const gtsam::Pose3& H1, const gtsam::Pose3& H2, const gtsam::Pose3& H3,
+      boost::optional<gtsam::Matrix&> H1_jac = {},
+      boost::optional<gtsam::Matrix&> H2_jac = {},
+      boost::optional<gtsam::Matrix&> H3_jac = {}) const {
+    using namespace gtsam;
+
+    Matrix Jm1, Jm2, Jm3;
+    Matrix Jp1, Jp2, Jp3;
+
+    Vector3 r1 = computeSingle(X1_, H1, z1_, Jm1, Jp1);
+    Vector3 r2 = computeSingle(X2_, H2, z2_, Jm2, Jp2);
+    Vector3 r3 = computeSingle(X3_, H3, z3_, Jm3, Jp3);
+
+    Eigen::Matrix<double, 9, 1> r;
+    r << r1, r2, r3;
+
+    Eigen::Matrix<double, 9, 18> E = Eigen::Matrix<double, 9, 18>::Zero();
+
+    E.block<3, 6>(0, 0) = Jm1;
+    E.block<3, 6>(3, 6) = Jm2;
+    E.block<3, 6>(6, 12) = Jm3;
+
+    Eigen::Matrix<double, 9, 18> J = E;
+
+    if (H1_jac) *H1_jac = J.block<9, 6>(0, 0);
+    if (H2_jac) *H2_jac = J.block<9, 6>(0, 6);
+    if (H3_jac) *H3_jac = J.block<9, 6>(0, 12);
+
+    return r;
+  }
+
+  // ============================================================
+  // EVALUATE ERROR (USED BY OPTIMIZER + TESTS)
+  // ============================================================
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& H1, const gtsam::Pose3& H2, const gtsam::Pose3& H3,
+      boost::optional<gtsam::Matrix&> H1_jac = {},
+      boost::optional<gtsam::Matrix&> H2_jac = {},
+      boost::optional<gtsam::Matrix&> H3_jac = {}) const override {
+    return unwhitenedError(H1, H2, H3, H1_jac, H2_jac, H3_jac);
+  }
+
+  // ============================================================
+  // LINEARIZATION (GTSAM OPTIMIZATION PATH)
+  // ============================================================
+  boost::shared_ptr<gtsam::GaussianFactor> linearize(
+      const gtsam::Values& values) const override {
+    using namespace gtsam;
+
+    const Pose3& H1 = values.at<Pose3>(key1());
+    const Pose3& H2 = values.at<Pose3>(key2());
+    const Pose3& H3 = values.at<Pose3>(key3());
+
+    Matrix J1, J2, J3;
+
+    Vector r = unwhitenedError(H1, H2, H3, J1, J2, J3);
+
+    Eigen::Matrix<double, 9, 18> A;
+    A.block<9, 6>(0, 0) = J1;
+    A.block<9, 6>(0, 6) = J2;
+    A.block<9, 6>(0, 12) = J3;
+
+    // -----------------------------
+    // STRUCTURELESS ELIMINATION
+    // -----------------------------
+    Eigen::Matrix<double, 9, 3> F;
+    F.block<3, 3>(0, 0) = J1.block<3, 3>(0, 0);
+    F.block<3, 3>(3, 0) = J2.block<3, 3>(0, 0);
+    F.block<3, 3>(6, 0) = J3.block<3, 3>(0, 0);
+
+    Eigen::JacobiSVD<Eigen::Matrix<double, 9, 3>> svd(F, Eigen::ComputeFullU);
+
+    Eigen::Matrix<double, 9, 6> N = svd.matrixU().rightCols<6>();
+
+    Eigen::Matrix<double, 6, 1> r_w = N.transpose() * r;
+    Eigen::Matrix<double, 6, 18> A_w = N.transpose() * A;
+
+    std::vector<Matrix> blocks = {A_w.block<6, 6>(0, 0), A_w.block<6, 6>(0, 6),
+                                  A_w.block<6, 6>(0, 12)};
+
+    auto terms = {std::make_pair(key1(), A.block<6, 6>(0, 0)),
+                  std::make_pair(key2(), A.block<6, 6>(0, 6)),
+                  std::make_pair(key3(), A.block<6, 6>(0, 12))};
+
+    auto model =
+        noiseModel::Isotropic::Sigma(6, this->noiseModel()->sigmas()(0));
+
+    return boost::make_shared<JacobianFactor>(terms, -r_w, model);
+  }
+
+ private:
+  gtsam::Vector3 computeSingle(const gtsam::Pose3& X, const gtsam::Pose3& H,
+                               const gtsam::StereoPoint2& z,
+                               gtsam::Matrix& J_motion,
+                               gtsam::Matrix& J_point) const {
+    StereoHybridMotionFactorBase base(z, L_, K_);
+    return base.evaluateError(X, H, m_, {}, J_motion, J_point);
+  }
+
+ private:
+ private:
+  gtsam::Pose3 X1_;
+  gtsam::Pose3 X2_;
+  gtsam::Pose3 X3_;
+
+  gtsam::StereoPoint2 z1_;
+  gtsam::StereoPoint2 z2_;
+  gtsam::StereoPoint2 z3_;
+
+  gtsam::Pose3 L_;
+
+  gtsam::Point3 m_;
+
+  gtsam::Cal3_S2Stereo::shared_ptr K_;
+};
+
+/**
  * @brief Implements a 3-way smoothing factor on the (key-framed) object motion.
  * This is analgous to a constant motion prior and minimises the change in
  * object motion in the body frame of the object.

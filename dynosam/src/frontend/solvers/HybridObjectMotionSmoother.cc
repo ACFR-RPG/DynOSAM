@@ -1645,7 +1645,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
             measurement_factors = structured_factors_.at(tracklet_id);
 
         // convert to batch factor
-        if (measurement_factors.size() > 3) {
+        if (measurement_factors.size() > 2) {
           // TBH these match factors probably not so good becuas we
           // re-linearize
           // every time!

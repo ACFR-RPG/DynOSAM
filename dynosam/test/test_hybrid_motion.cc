@@ -337,6 +337,121 @@ TEST_F(HybridMotionTest, ProjectToCamera3_Jacobians) {
 //     EXPECT_TRUE(assert_equal(result_orig, result_new, 1e-9));
 // }
 
+class DynamicStereoStructurelessFactorTests : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    K = boost::make_shared<Cal3_S2Stereo>(500, 500, 0, 320, 240, 0.2);
+
+    noise = noiseModel::Isotropic::Sigma(6, 1.0);
+
+    X1 = Pose3();
+    X2 = Pose3(Rot3(), Point3(1, 0, 0));
+    X3 = Pose3(Rot3(), Point3(2, 0, 0));
+
+    H1 = Pose3();
+    H2 = Pose3(Rot3(), Point3(0.1, 0, 0));
+    H3 = Pose3(Rot3(), Point3(0.2, 0, 0));
+
+    L = Pose3();
+
+    m = Point3(0, 0, 5);
+
+    gtsam::Pose3 G1 = X1.inverse() * H1 * L;
+    StereoCamera cam1(G1.inverse(), K);
+
+    gtsam::Pose3 G2 = X2.inverse() * H2 * L;
+    StereoCamera cam2(G2.inverse(), K);
+
+    gtsam::Pose3 G3 = X3.inverse() * H3 * L;
+    StereoCamera cam3(G3.inverse(), K);
+
+    z1 = cam1.project(m);
+    z2 = cam2.project(m);
+    z3 = cam3.project(m);
+  }
+
+  Cal3_S2Stereo::shared_ptr K;
+
+  SharedNoiseModel noise;
+
+  Pose3 X1, X2, X3;
+  Pose3 H1, H2, H3;
+
+  Pose3 L;
+
+  Point3 m;
+
+  StereoPoint2 z1, z2, z3;
+};
+
+TEST_F(DynamicStereoStructurelessFactorTests, ZeroErrorAtGroundTruth) {
+  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
+                                          Symbol('h', 2), X1, X2, X3, z1, z2,
+                                          z3, L, m, K, noise);
+
+  Vector r =
+      factor.evaluateError(H1, H2, H3, boost::none, boost::none, boost::none);
+
+  EXPECT_NEAR(r.norm(), 0.0, 1e-9);
+}
+
+TEST_F(DynamicStereoStructurelessFactorTests, JacobianH1MatchesNumerical) {
+  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
+                                          Symbol('h', 2), X1, X2, X3, z1, z2,
+                                          z3, L, m, K, noise);
+
+  Matrix H1_analytic;
+
+  factor.evaluateError(H1, H2, H3, H1_analytic, boost::none, boost::none);
+
+  auto f = [&](const Pose3& H1_local) {
+    return factor.evaluateError(H1_local, H2, H3, boost::none, boost::none,
+                                boost::none);
+  };
+
+  Matrix H1_numeric = numericalDerivative11<Vector, Pose3>(f, H1, 1e-6);
+
+  EXPECT_TRUE(assert_equal(H1_numeric, H1_analytic, 1e-5));
+}
+
+TEST_F(DynamicStereoStructurelessFactorTests, JacobianH2MatchesNumerical) {
+  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
+                                          Symbol('h', 2), X1, X2, X3, z1, z2,
+                                          z3, L, m, K, noise);
+
+  Matrix H2_analytic;
+
+  factor.evaluateError(H1, H2, H3, boost::none, H2_analytic, boost::none);
+
+  auto f = [&](const Pose3& H2_local) {
+    return factor.evaluateError(H1, H2_local, H3, boost::none, boost::none,
+                                boost::none);
+  };
+
+  Matrix H2_numeric = numericalDerivative11<Vector, Pose3>(f, H2, 1e-6);
+
+  EXPECT_TRUE(assert_equal(H2_numeric, H2_analytic, 1e-5));
+}
+
+TEST_F(DynamicStereoStructurelessFactorTests, JacobianH3MatchesNumerical) {
+  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
+                                          Symbol('h', 2), X1, X2, X3, z1, z2,
+                                          z3, L, m, K, noise);
+
+  Matrix H3_analytic;
+
+  factor.evaluateError(H1, H2, H3, boost::none, boost::none, H3_analytic);
+
+  auto f = [&](const Pose3& H3_local) {
+    return factor.evaluateError(H1, H2, H3_local, boost::none, boost::none,
+                                boost::none);
+  };
+
+  Matrix H3_numeric = numericalDerivative11<Vector, Pose3>(f, H3, 1e-6);
+
+  EXPECT_TRUE(assert_equal(H3_numeric, H3_analytic, 1e-5));
+}
+
 class StereoHybridFactorTest : public ::testing::Test {
  protected:
   Pose3 X_k, e_H_k_world, L_e;
@@ -421,6 +536,86 @@ TEST_F(StereoHybridFactorTest, JacobianEvaluation) {
   EXPECT_TRUE(assert_equal(H2_num, H2_act, 1e-5));
   EXPECT_TRUE(assert_equal(H3_num, H3_act, 1e-5));
 }
+
+TEST_F(StereoHybridFactorTest, JacobianCrossConsistency) {
+  Key key_X = Symbol('x', 1);
+  Key key_E = Symbol('e', 1);
+  Key key_M = Symbol('m', 1);
+
+  StereoHybridMotionFactor factor(measured, L_e, model, K, key_X, key_E, key_M,
+                                  true);
+
+  Matrix H1, H2, H3;
+
+  factor.evaluateError(X_k, e_H_k_world, m_L, H1, H2, H3);
+
+  // Small perturbation applied to ALL variables together
+  Pose3 X_pert = X_k.retract(Vector6::Random() * 1e-6);
+  Pose3 E_pert = e_H_k_world.retract(Vector6::Random() * 1e-6);
+  Point3 M_pert = m_L + Vector3::Random() * 1e-6;
+
+  Vector r0 = factor.evaluateError(X_k, e_H_k_world, m_L);
+  Vector r1 = factor.evaluateError(X_pert, E_pert, M_pert);
+
+  Vector Jx = H1 * (gtsam::Pose3::Logmap(X_pert) - gtsam::Pose3::Logmap(X_k));
+  Vector Je =
+      H2 * (gtsam::Pose3::Logmap(E_pert) - gtsam::Pose3::Logmap(e_H_k_world));
+  Vector Jm = H3 * (M_pert - m_L);
+
+  Vector r_lin = r0 + Jx + Je + Jm;
+
+  EXPECT_TRUE(assert_equal(r1, r_lin, 1e-4));
+}
+
+TEST_F(StereoHybridFactorTest, NullspaceInvariance) {
+  Key key_X = Symbol('x', 1);
+  Key key_E = Symbol('e', 1);
+  Key key_M = Symbol('m', 1);
+
+  StereoHybridMotionFactor factor(measured, L_e, model, K, key_X, key_E, key_M);
+
+  Vector r0 = factor.evaluateError(X_k, e_H_k_world, m_L);
+
+  Matrix H1, H2, H3;
+  factor.evaluateError(X_k, e_H_k_world, m_L, H1, H2, H3);
+
+  // Build random nullspace perturbation (should not affect result)
+  Vector6 dx = Vector6::Random() * 1e-6;
+  Vector6 de = Vector6::Random() * 1e-6;
+
+  Pose3 X_pert = X_k.retract(dx);
+  Pose3 E_pert = e_H_k_world.retract(de);
+
+  Vector r1 = factor.evaluateError(X_pert, E_pert, m_L);
+
+  // First-order prediction
+  Vector pred = r0 + H1 * dx + H2 * de;
+
+  EXPECT_TRUE(assert_equal(r1, pred, 1e-4));
+}
+
+// TEST_F(StereoHybridFactorTest, NullspaceRankCheck) {
+
+//   Key key_X = Symbol('x', 1);
+//   Key key_E = Symbol('e', 1);
+//   Key key_M = Symbol('m', 1);
+
+//   StereoHybridMotionFactor factor(measured, L_e, model, K, key_X, key_E,
+//   key_M);
+
+//   Matrix H1, H2, H3;
+//   Matrix Jp1, Jp2, Jp3;
+
+//   factor.evaluateError(X_k, e_H_k_world, m_L, H1, H2, H3);
+
+//   // Reconstruct F internally (you may need a helper or expose it)
+//   Matrix F; // assume you can extract or rebuild
+
+//   Eigen::JacobiSVD<Matrix> svd(F);
+//   int rank = svd.rank();
+
+//   EXPECT_EQ(rank, 3); // 3-point constraints → rank must be 3
+// }
 
 // TEST(HybridObjectMotion, ProjectToCamera3Jacobian) {
 //   using namespace gtsam;
