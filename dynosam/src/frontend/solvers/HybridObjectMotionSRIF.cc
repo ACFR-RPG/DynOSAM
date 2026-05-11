@@ -1258,7 +1258,7 @@ HybridObjectMotionSRIFResult FullHybridObjectMotionSRIF::update(
   // return HybridObjectMotionSRIFResult{0.0, 0.0};
 }
 
-bool FullHybridObjectMotionSRIF::createNewKeyedMotion(
+bool FullHybridObjectMotionSRIF::resetWithNewKeyedMotion(
     const gtsam::Pose3& L_KF, Frame::Ptr frame, const TrackletIds& tracklets) {
   X_W_KF_ = frame->getPose();
   resetState(L_KF, frame->getFrameId(), frame->getTimestamp());

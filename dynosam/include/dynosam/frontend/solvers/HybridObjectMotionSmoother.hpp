@@ -48,21 +48,23 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
     auto smoother = std::shared_ptr<DERIVED>(
         new DERIVED(object_id, frame_km1->getCamera(), smoother_lag));
 
-    smoother->createNewKeyedMotion(L_KF_km1, frame_km1, tracklets);
+    smoother->resetWithNewKeyedMotion(L_KF_km1, frame_km1, tracklets);
     return smoother;
   }
 
   ~HybridObjectMotionSmoother();
 
-  // should only be called once a valid createNewKeyedMotion has been called!
+  // should only be called once a valid resetWithNewKeyedMotion has been called!
   bool update(const gtsam::Pose3& H_w_km1_k_predict, Frame::Ptr frame,
               const TrackletIds& tracklets) override;
 
   // This is basically reset
   //  What information from the previous state do we propogate over (ie.
   //  points?) if any
-  bool createNewKeyedMotion(const gtsam::Pose3& L_KF, Frame::Ptr frame,
-                            const TrackletIds& tracklets) override;
+  bool resetWithNewKeyedMotion(const gtsam::Pose3& L_KF, Frame::Ptr frame,
+                               const TrackletIds& tracklets) override;
+
+  bool setNewKeyframe(Frame::Ptr frame) override;
 
   // trajectory should with F2F motion!!
   PoseWithMotionTrajectory trajectory() const override;

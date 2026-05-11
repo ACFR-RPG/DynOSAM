@@ -61,7 +61,7 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
       const TrackletIds& tracklets) {
     auto smoother = std::shared_ptr<PnPOnlySolver>(
         new PnPOnlySolver(object_id, frame_k->getCamera()));
-    smoother->createNewKeyedMotion(L_KF_k, frame_k, tracklets);
+    smoother->resetWithNewKeyedMotion(L_KF_k, frame_k, tracklets);
     return smoother;
   }
 
@@ -84,8 +84,8 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
     return true;
   }
 
-  bool createNewKeyedMotion(const gtsam::Pose3& L_KF, Frame::Ptr frame,
-                            const TrackletIds& tracklets) override {
+  bool resetWithNewKeyedMotion(const gtsam::Pose3& L_KF, Frame::Ptr frame,
+                               const TrackletIds& tracklets) override {
     frame_id_ = frame->getFrameId();
     timestamp_ = frame->getTimestamp();
     frame_id_KF_ = frame->getFrameId();
@@ -396,7 +396,7 @@ bool HybridObjectMotionSolver::solveImpl(
   //       // it to 1. send this motion to the backend or 2. create a new KF
   //       motion auto new_KF_pose =
   //           constructObjectPose(object_id, frame_km1, inlier_tracklets);
-  //       solver->createNewKeyedMotion(new_KF_pose, frame_km1,
+  //       solver->resetWithNewKeyedMotion(new_KF_pose, frame_km1,
   //       inlier_tracklets);
   //       // // prevents the re-creation of a keyframe at k
   //       // // // requires new keyframe is true but we should not send this to
@@ -464,7 +464,7 @@ bool HybridObjectMotionSolver::solveImpl(
 
     auto new_KF_pose =
         constructObjectPose(object_id, frame_km1, inlier_tracklets);
-    solver->createNewKeyedMotion(new_KF_pose, frame_km1, inlier_tracklets);
+    solver->resetWithNewKeyedMotion(new_KF_pose, frame_km1, inlier_tracklets);
 
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
     num_kfs_per_object_.at(object_id) = 0;
@@ -544,6 +544,7 @@ bool HybridObjectMotionSolver::solveImpl(
               << "motion KF: " << info.H_W_KF_k.from()
               << " to: " << info.H_W_KF_k.to()
               << " with kf status: " << info.keyframe_status;
+    solver->setNewKeyframe(frame_k);
   }
 
   // logic is sperate to keyframe status which determines if a new keyframe
@@ -568,14 +569,18 @@ bool HybridObjectMotionSolver::solveImpl(
     // for frame k during the update we should really want till thr next frame
     // where we have new measurements (seen in k and k+1) as this will be
     // different to the current set of inlier tracks.
-    solver->createNewKeyedMotion(new_KF_pose, frame_k, inlier_tracklets);
+    // solver->resetWithNewKeyedMotion(new_KF_pose, frame_k, inlier_tracklets);
 
     if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
+      // reset the solver every N
       // increment number of KF's here to ensure that the solving is good
       // and that the keyframe is actually created!!
       // Only increment if a keyframe was sent to the backend!
       // TODO: use internal keyframe count for smoother?
       const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
+      // const int num_kf = num_kfs_per_object_.at(object_id);
+      // if(num_kf == 0 )
+
       num_kfs_per_object_.at(object_id)++;
     }
   }

@@ -600,7 +600,7 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame,
 //   return is_keyframe;
 // }
 
-bool HybridObjectMotionSmoother::createNewKeyedMotion(
+bool HybridObjectMotionSmoother::resetWithNewKeyedMotion(
     const gtsam::Pose3& L_KF, Frame::Ptr frame, const TrackletIds& tracklets) {
   if (VLOG_IS_ON(10)) {
     const std::string current_frame =
@@ -667,6 +667,11 @@ bool HybridObjectMotionSmoother::createNewKeyedMotion(
   // the frame
   return updateFromInitialMotion(gtsam::Pose3::Identity(), frame, tracklets)
       .solver_okay;
+}
+
+bool HybridObjectMotionSmoother::setNewKeyframe(Frame::Ptr frame) {
+  lOKF_frame_ = frame;
+  return true;
 }
 
 bool HybridObjectMotionSmoother::update(const gtsam::Pose3& H_W_km1_k_predict,

@@ -595,7 +595,7 @@ void HybridFormulationKeyFrame::updateObject(
       }
 
       // TODO: bring this back!
-      if (frames_with_measurements.size() < 3) {
+      if (frames_with_measurements.size() < 2) {
         num_factors_not_enough_obs++;
         continue;
       }

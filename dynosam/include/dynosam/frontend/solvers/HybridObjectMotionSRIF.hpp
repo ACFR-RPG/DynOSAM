@@ -198,8 +198,8 @@ class FullHybridObjectMotionSRIF : public HybridObjectMotionSolverImpl {
   bool update(const gtsam::Pose3& H_w_km1_k_predict, Frame::Ptr frame,
               const TrackletIds& tracklets) override;
 
-  bool createNewKeyedMotion(const gtsam::Pose3& L_KF, Frame::Ptr frame,
-                            const TrackletIds& tracklets) override;
+  bool resetWithNewKeyedMotion(const gtsam::Pose3& L_KF, Frame::Ptr frame,
+                               const TrackletIds& tracklets) override;
 
   /**
    * @brief Recovers the state perturbation delta_w by solving R * delta_w = d.
