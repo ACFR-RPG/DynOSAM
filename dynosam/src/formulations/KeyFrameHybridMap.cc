@@ -49,6 +49,10 @@ bool FrameKFNode::isObjectKeyFrame(ObjectId object_id) const {
   return object_keyframes_.find(object_id) != object_keyframes_.end();
 }
 
+ObjectIds FrameKFNode::objectKeyFrameIds() const {
+  return ObjectIds{object_keyframes_.begin(), object_keyframes_.end()};
+}
+
 void FrameKFNode::addRelativeEgoMotion(const gtsam::Pose3& T_KF_k,
                                        FrameId frame_id_k) {
   CHECK(!T_KF_k_.exists(frame_id_k));
@@ -166,6 +170,83 @@ KeyFrameMap::SharedFrame KeyFrameMap::closestEarlierCameraKeyFrame(
     --it;
     return *it;
   }
+}
+
+std::string KeyFrameMap::verboseInfo(FrameId query_frame_id, int n) const {
+  if (camera_keyframes_.empty()) {
+    return "No frames.";
+  }
+
+  FrameId starting_frame =
+      static_cast<FrameId>(std::max(static_cast<int>(query_frame_id) - n, 0));
+  FrameId ending_frame = starting_frame + 2 * n + 1;
+
+  std::stringstream ss;
+  for (FrameId k = starting_frame; k < ending_frame; k++) {
+    auto frame_node = this->getFrame(k);
+    if (!frame_node) {
+      continue;
+    }
+
+    if (frame_node->isAnyKeyFrame()) {
+      ss << "Frame k " << k;
+      if (frame_node->isCameraKeyFrame()) {
+        ss << " CKF ";
+      }
+      auto object_keyframe_ids = frame_node->objectKeyFrameIds();
+      if (!object_keyframe_ids.empty()) {
+        ss << "OKFS: ";
+        ss << container_to_string(object_keyframe_ids);
+      }
+      ss << "\n";
+    }
+  }
+
+  // auto getFrame = [&]() -> KeyFrameMap::SharedFrame {
+  //   if(isCameraKeyFrame(query_frame_id)) {
+  //     return this->getFrame(query_frame_id);
+  //   }
+  //   else {
+  //     return closestEarlierCameraKeyFrame(query_frame_id);
+  //   }
+  // };
+
+  // KeyFrameMap::SharedFrame frame_node = getFrame();
+  // auto it = camera_keyframes_.find(frame_node);
+
+  // // Find lower bound for backward traversal
+  // auto begin_it = it;
+  // for (int i = 0; i < n; ++i) {
+  //   if (begin_it == camera_keyframes_.begin()) {
+  //     break;
+  //   }
+  //   --begin_it;
+  // }
+
+  // // Print from begin_it to +2n around query
+  // auto curr = begin_it;
+  // int count = 0;
+
+  // std::stringstream ss;
+  // while (curr != camera_keyframes_.end() && count < (2 * n + 1)) {
+  //   auto frame_node = *curr;
+  //   const FrameId frame_id = frame_node->frameId();
+  //   // const auto& frame = curr->second;
+
+  //   ss << (frame_id == query_frame_id ? " --> " : "     ");
+  //   ss << "Frame " << frame_id;
+  //   ss << "\t OKF" << container_to_string(frame_node->objectSeenIds());
+
+  //   // Example custom frame printing
+  //   // std::cout << " timestamp=" << frame.timestamp;
+
+  //   ss << "\n";
+
+  //   ++curr;
+  //   ++count;
+  // }
+
+  return ss.str();
 }
 
 }  // namespace dyno

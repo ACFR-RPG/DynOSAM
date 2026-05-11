@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/Types.hpp"
 
@@ -81,6 +82,7 @@ struct ObjectPoseChangeInfo {
   gtsam::Pose3 X_W_KF;
 
   ObjectKeyFrameStatus keyframe_status{ObjectKeyFrameStatus::NonKeyFrame};
+  ObjectTrackingStatus tracking_status{};
 
   bool isKeyFrame() const {
     return keyframe_status != ObjectKeyFrameStatus::NonKeyFrame;

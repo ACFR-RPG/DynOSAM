@@ -81,7 +81,10 @@ HybridFormulationKeyFrameAccessor::getMultiObjectTrajectories() const {
     }
 
     // sanitry check it is actually a keyframe
-    CHECK(map_->isObjectKeyFrame(last_optimized_frame.value(), object_id));
+    CHECK(map_->isObjectKeyFrame(last_optimized_frame.value(), object_id))
+        << "Last object frame: " << last_optimized_frame.value()
+        << " j= " << object_id
+        << " map info: " << map_->verboseInfo(last_optimized_frame.value(), 8);
 
     // get subset of trajectory up to optimized point
     only_optimized.insert2(object_id,
@@ -591,7 +594,7 @@ void HybridFormulationKeyFrame::updateObject(
         continue;
       }
 
-      // // // should be seen at least twice!
+      // TODO: bring this back!
       if (frames_with_measurements.size() < 3) {
         num_factors_not_enough_obs++;
         continue;
@@ -819,7 +822,7 @@ bool HybridFormulationKeyFrame::motionIsInValues(const gtsam::Key key) const {
 
 // TODO: this should mark objects with keyframes!
 void HybridFormulationKeyFrame::addObjects(
-    FrameId frame_id, const ObjectPoseChangeInfoMap& object_motion_info) {
+    FrameId /*frame_id*/, const ObjectPoseChangeInfoMap& object_motion_info) {
   auto accessor = this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
   CHECK_NOTNULL(accessor);
 
@@ -838,6 +841,7 @@ void HybridFormulationKeyFrame::addObjects(
     // TODO: for now (only when solved in parallel_run=False)
     //  convert motion from frontend reference frame to backend reference frame
     FrameId from_frame_id = H_W_RKF_k.from();
+    FrameId to_frame_id = H_W_RKF_k.to();
     // dont like the naming of this function
     // get the camera pose either directly from the state or approximated via
     // the VIO
@@ -862,11 +866,13 @@ void HybridFormulationKeyFrame::addObjects(
     kf_data.keyframe_status = keyframe_status;
     kf_data.H_W_lRKF_KF = H_W_RKF_k;
 
-    CHECK_EQ(frame_id, H_W_RKF_k.to());
+    // will not be true when we have a lost object
+    // CHECK_EQ(frame_id, H_W_RKF_k.to());
 
-    key_frames_per_object_.insert22(object_id, frame_id, kf_data);
+    key_frames_per_object_.insert22(object_id, to_frame_id, kf_data);
 
-    LOG(INFO) << "Processing object track: " << info_string(frame_id, object_id)
+    LOG(INFO) << "Processing object track: "
+              << info_string(to_frame_id, object_id)
               << " keyframe status: " << keyframe_status;
 
     // TODO: we initalie the new KF with the pose provided from the frontend
@@ -885,7 +891,7 @@ void HybridFormulationKeyFrame::addObjects(
       if (!m_L_initial_.exists(object_id, tracklet_id)) {
         gtsam::Point3 m_Lbackend =
             L_Wbackend_KF.inverse() * L_Wfrontend_KF * m_L;
-        m_L_initial_.insert22(object_id, tracklet_id, m_Lbackend);
+        m_L_initial_.insert22(object_id, tracklet_id, m_L);
         num_new_lmks++;
       }
     }
@@ -913,9 +919,9 @@ void HybridFormulationKeyFrame::addObjects(
       CHECK_EQ(keyframe_status, ObjectKeyFrameStatus::RegularKeyFrame);
 
       const KeyFrameRange::ConstPtr last_frontend_range =
-          front_end_keyframes_.find(object_id, frame_id);
-      CHECK(last_frontend_range)
-          << "Failed for tracked object " << info_string(frame_id, object_id);
+          front_end_keyframes_.find(object_id, to_frame_id);
+      CHECK(last_frontend_range) << "Failed for tracked object "
+                                 << info_string(to_frame_id, object_id);
       auto [lRKF_id, L_lRKF] = last_frontend_range->dataPair();
 
       // hopefully the last regular KF is the from frame
@@ -932,7 +938,7 @@ void HybridFormulationKeyFrame::addObjects(
                << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
 
       const KeyFrameRange::ConstPtr frontend_range =
-          front_end_keyframes_.find(object_id, frame_id);
+          front_end_keyframes_.find(object_id, to_frame_id);
       CHECK(frontend_range);
       // the most recent motion added to the estimator should take us from
       // backend_kf_id to last_kf_id
@@ -941,7 +947,7 @@ void HybridFormulationKeyFrame::addObjects(
 
       // get backend anchor point and confert motion if necessary
       const KeyFrameRange::ConstPtr backend_range =
-          CHECK_NOTNULL(key_frame_data_.find(object_id, frame_id));
+          CHECK_NOTNULL(key_frame_data_.find(object_id, to_frame_id));
       const auto [backend_kf_id, backend_kf_pose] = backend_range->dataPair();
       VLOG(40) << "Anchor KF id: " << backend_kf_id;
 

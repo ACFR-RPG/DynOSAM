@@ -104,6 +104,8 @@ class PoseChangeVIFrontend : public VIFrontend {
       std::optional<gtsam::NavState> propogated_nav_state_k = std::nullopt,
       std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
 
+  bool addMeasurementsForObjectKeyframe(FrameId frame_id, ObjectId object_id);
+
   /** Check if we have an update from the backend and consume the update */
   bool checkAndConsumeUpdate(FrameId frame_id_k);
 

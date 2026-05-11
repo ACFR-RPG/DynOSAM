@@ -113,6 +113,9 @@ class FrameKFNode : public FrameNodeBase<KeyFrameNodeTypes> {
     return T_KF_k_.at(frame_id_k);
   }
 
+  /* Object ids of object keyframes stored at this frame */
+  ObjectIds objectKeyFrameIds() const;
+
  private:
   //! So it can access the interal setter functions
   friend class KeyFrameMap;
@@ -213,6 +216,9 @@ class KeyFrameMap : public Map<KeyFrameNodeTypes> {
     return &shared_states_;
   }
   SharedModuleStates* getSharedModuleStates() { return &shared_states_; }
+
+  /** Print keyframe info about the map nearby frame_id with print radius n */
+  std::string verboseInfo(FrameId query_frame_id, int n = 3) const;
 
  private:
   //! All camera keyframes. Update with a call to setCameraKeyFrame

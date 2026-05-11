@@ -2,6 +2,7 @@
 
 #include <gflags/gflags.h>
 
+#include "dynosam/frontend/vision/FeatureTrackerBase.hpp"  // just for tracklet mananger
 #include "dynosam_common/PointCloudProcess.hpp"
 
 DEFINE_int32(hybrid_motion_solver, 0,
@@ -9,6 +10,14 @@ DEFINE_int32(hybrid_motion_solver, 0,
              "Smoother, 3: PnP Only");
 
 namespace dyno {
+
+bool isWellTracked(
+    const std::optional<ObjectTrackingStatus>& maybe_tracking_Status) {
+  if (!maybe_tracking_Status) {
+    return false;
+  }
+  return *maybe_tracking_Status == ObjectTrackingStatus::WellTracked;
+}
 
 // A class that just uses PnP to solve the motion but looks like a solver object
 // so it integrates in with the HybridObjectMotionSmoother
@@ -140,8 +149,10 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
   // and not just the set of objects that were observed.
   // The base ObjectMotionSolver::solve function should erase the observations
   // with with failed solves!
+  const FrameId frame_id_k = frame_k->getFrameId();
+
   std::set<ObjectId> current_objects;
-  for (const auto& [obj_id, _] : frame_k->object_observations_) {
+  for (const auto& [obj_id, _] : frame_k->getObjectObservations()) {
     current_objects.insert(obj_id);
   }
 
@@ -151,22 +162,26 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
 
   keyframe_debug_image_ = frame_k->imageContainer().rgb().clone();
 
-  for (const auto& [obj_id, _] : solvers_) {
+  for (const auto& [obj_id, solver] : solvers_) {
     if (current_objects.find(obj_id) == current_objects.end()) {
       // collect status data before marking as lost
-      // ObjectTrackingStatus tracking_status;
-      // CHECK(this->threadSafeGetObjectStatus(obj_id, tracking_status));
+      std::optional<ObjectTrackingStatus> maybe_tracking_state =
+          object_statuses_.getStatus(obj_id);
 
-      // int num_keyframes;
-      // CHECK(this->threadSafeGetNumKeyframes(obj_id, num_keyframes));
-
-      // // now also try and make this is keyframe to refine the whole
-      // trajectory if(tracking_status == ObjectTrackingStatus::WellTracked &&
-      //   num_keyframes > 1) {
-      //     LOG(INFO) << "Making RKF for object j=" << obj_id << ". Reason:
-      //     LOST"; appendPoseChangeInfo(obj_id,
-      //     ObjectKeyFrameStatus::RegularKeyFrame);
-      // }
+      auto smoother =
+          std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
+      if (smoother && isWellTracked(maybe_tracking_state)) {
+        // Cannot be lost immediately after making only one keyframe
+        if (smoother->numKeyframes() > 1 &&
+            smoother->numFramesSinceKeyframe() > 2) {
+          LOG(INFO) << "Making RKF for object j=" << obj_id << ". Reason: LOST";
+          // mark as post before adding pose change info so the resulting
+          // PC-info object has the correct tracking status
+          // object_statuses_.setStatus(obj_id, frame_id_k,
+          // ObjectTrackingStatus::Lost);
+          // appendPoseChangeInfo(obj_id,ObjectKeyFrameStatus::RegularKeyFrame);
+        }
+      }
 
       markObjectAsLost(obj_id, frame_k->getFrameId());
       LOG(INFO) << "Object " << obj_id << " marked as Lost at frame "
@@ -423,6 +438,30 @@ bool HybridObjectMotionSolver::solveImpl(
     // requires_new_keyframe = true;
   } else if (object_retracked) {
     auto solver = threadSafeFilterAccess(object_id);
+
+    // HACK FOR NOW: to ensure we dont have tracklets across poor poses (ie
+    // non-well tracked) just relabal all tracklets in km1 and k
+    auto& tracklet_manager = TrackletIdManager::instance();
+    TrackletIds new_inlier_tracklets;
+    new_inlier_tracklets.reserve(inlier_tracklets.size());
+    for (TrackletId old_tracklet : inlier_tracklets) {
+      Feature::Ptr feature_km1 = frame_km1->at(old_tracklet);
+      Feature::Ptr feature_k = frame_k->at(old_tracklet);
+
+      frame_km1->dynamic_features_.remove(old_tracklet);
+      frame_k->dynamic_features_.remove(old_tracklet);
+
+      auto new_tracklet_id = tracklet_manager.getAndIncrementTrackletId();
+      feature_km1->trackletId(new_tracklet_id);
+      feature_k->trackletId(new_tracklet_id);
+
+      frame_km1->dynamic_features_.add(feature_km1);
+      frame_k->dynamic_features_.add(feature_k);
+
+      new_inlier_tracklets.push_back(new_tracklet_id);
+    }
+    inlier_tracklets = new_inlier_tracklets;
+
     auto new_KF_pose =
         constructObjectPose(object_id, frame_km1, inlier_tracklets);
     solver->createNewKeyedMotion(new_KF_pose, frame_km1, inlier_tracklets);
@@ -535,6 +574,7 @@ bool HybridObjectMotionSolver::solveImpl(
       // increment number of KF's here to ensure that the solving is good
       // and that the keyframe is actually created!!
       // Only increment if a keyframe was sent to the backend!
+      // TODO: use internal keyframe count for smoother?
       const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
       num_kfs_per_object_.at(object_id)++;
     }
@@ -555,6 +595,12 @@ ObjectPoseChangeInfo& HybridObjectMotionSolver::appendPoseChangeInfo(
   info.L_W_k = solver->pose();
   info.X_W_KF = solver->keyFrameCameraPose();
   info.keyframe_status = keyframe_status;
+
+  // should either be well-tracked or lost
+  std::optional<ObjectTrackingStatus> maybe_tracking_state =
+      object_statuses_.getStatus(object_id);
+  CHECK(maybe_tracking_state);
+  info.tracking_status = *maybe_tracking_state;
 
   CHECK(getObjectStructureinL(object_id, info.initial_object_points));
 

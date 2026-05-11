@@ -48,6 +48,25 @@ HybridObjectMotionSmoother::~HybridObjectMotionSmoother() {
   }
 }
 
+size_t HybridObjectMotionSmoother::numKeyframes() const {
+  return keyframe_ids_.size();
+}
+
+size_t HybridObjectMotionSmoother::numFramesSinceKeyframe() const {
+  return frameId() - keyFrameId();
+}
+
+const FrameIds& HybridObjectMotionSmoother::frameIds() const {
+  return frame_ids_;
+}
+const FrameIds& HybridObjectMotionSmoother::keyframeIds() const {
+  return keyframe_ids_;
+}
+
+FrameId HybridObjectMotionSmoother::firstKeyframe() const {
+  return keyframe_ids_.front();
+}
+
 PoseWithMotionTrajectory HybridObjectMotionSmoother::trajectory() const {
   // only from KF -> k (assume continuous?)
   PoseWithMotionTrajectory trajectory = trajectory_upto_lKF_;
@@ -419,6 +438,11 @@ bool HybridObjectMotionSmoother::shouldBeKeyframe(Frame::Ptr frame,
     need_new_keyframe = false;
   }
 
+  // but also need at least some initial points
+  if (all_m_L_points_.size() < 10) {
+    need_new_keyframe = false;
+  }
+
   LOG(INFO) << "KF stats j=" << object_id_ << " cov " << coverage
             << " scale_change " << scale_change << " shape_score "
             << shape_score;
@@ -635,6 +659,7 @@ bool HybridObjectMotionSmoother::createNewKeyedMotion(
   timestampKeyMap_.clear();
   keyTimestampMap_.clear();
 
+  keyframe_ids_.push_back(frame->getFrameId());
   keyframe_range_.startNewActiveRange(frame->getFrameId(), L_KF);
 
   // update and add points at initial frame corresponding with an identity
@@ -655,6 +680,8 @@ bool HybridObjectMotionSmoother::update(const gtsam::Pose3& H_W_km1_k_predict,
   if (smoother_state_.exists(ObjectMotionSymbol(object_id_, frameId()))) {
     H_W_KF_km1 = keyFrameMotionImpl(frameId(), smoother_state_);
   }
+
+  frame_ids_.push_back(frame->getFrameId());
   // propogate initial guess
   const gtsam::Pose3 H_W_KF_k = H_W_km1_k_predict * H_W_KF_km1;
   return updateFromInitialMotion(H_W_KF_k, frame, tracklets).solver_okay;

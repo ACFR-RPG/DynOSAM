@@ -10,6 +10,7 @@
 #include "dynosam_common/ModuleBase.hpp"
 #include "dynosam_common/RealtimeOutput.hpp"
 #include "dynosam_common/Trajectories.hpp"
+#include "dynosam_common/utils/Variant.hpp"
 #include "dynosam_cv/RGBDCamera.hpp"
 
 namespace dyno {
@@ -87,18 +88,37 @@ class VIFrontend : public Frontend {
   void fillDebugImagery(DebugImagery& debug_imagery, const Frame::Ptr& frame_k,
                         const Frame::Ptr& frame_km1) const;
 
+  using CameraMeasurementsByObject =
+      gtsam::FastMap<ObjectId, CameraMeasurementStatusVector>;
+
+  /* Helper function to define compile dispatch for
+   * CameraMeasurementStatusVector insertion  */
+  static inline void insertMeasurement(CameraMeasurementStatusVector& container,
+                                       CameraMeasurementStatus&& measurement,
+                                       ObjectId /*object_id*/) {
+    container.push_back(std::move(measurement));
+  }
+
+  /* Helper function to define compile dispatch for CameraMeasurementsByObject
+   * insertion  */
+  static inline void insertMeasurement(CameraMeasurementsByObject& container,
+                                       CameraMeasurementStatus&& measurement,
+                                       ObjectId object_id) {
+    container[object_id].push_back(std::move(measurement));
+  }
   // NOTE: the ConstFeatureIterator is a little bit misleading as the features
   // do actually get
   //  modified in this function (since ConstFeatureIterator is const on the
   //  iterator but the features are non-const pointers)
-  template <typename FeatureContainer, typename Predicate>
+  // MeasurementContainer should be either CameraMeasurementsByObject or
+  // CameraMeasurementStatusVector
+  template <typename MeasurementContainer, typename FeatureContainer,
+            typename Predicate>
   size_t fillMeasurementsFromFeatureIterator(
-      CameraMeasurementStatusVector* measurements,
+      MeasurementContainer& measurements,
       internal::FilterView<FeatureContainer, Predicate> it, FrameId frame_id,
       Timestamp timestamp, const gtsam::Vector2& pixel_sigmas,
       double depth_sigma, StatusLandmarkVector* landmarks = nullptr) const {
-    CHECK(measurements);
-
     size_t num_added = 0;
     size_t count = 0;
     for (const Feature::Ptr& f : it) {
@@ -169,13 +189,15 @@ class VIFrontend : public Frontend {
         CHECK_NE(object_id, background_label);
       }
 
-      measurements->push_back(CameraMeasurementStatus(
+      CameraMeasurementStatus measurement_status(
           camera_measurement, frame_id, timestamp, tracklet_id, object_id,
-          ReferenceFrame::LOCAL));
+          ReferenceFrame::LOCAL);
+
+      // compile time dispatch for measurements based on templated type
+      insertMeasurement(measurements, std::move(measurement_status), object_id);
+
       num_added++;
     }
-
-    // LOG(INFO) << "Count: " << count << " added: " << num_added;
 
     return num_added;
   }

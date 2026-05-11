@@ -88,6 +88,15 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
     return timestamps_since_lKF_.back();
   }
 
+  /** Total number of keyframes */
+  size_t numKeyframes() const;
+  size_t numFramesSinceKeyframe() const;
+  /* All involved frames */
+  const FrameIds& frameIds() const;
+  /* All keyframe ids */
+  const FrameIds& keyframeIds() const;
+  FrameId firstKeyframe() const;
+
   // Motion3ReferenceFrame getKeyFramedMotionReference() const override;
   gtsam::Pose3 keyFrameMotion() const override;
 
@@ -354,6 +363,9 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   //! responsible for
   // checking if the update contains data relevant for the specific solver
   PoseChangeUpdateComplete backend_update_;
+
+  FrameIds frame_ids_;
+  FrameIds keyframe_ids_;
 
  private:
   inline gtsam::FixedLagSmootherResult update(

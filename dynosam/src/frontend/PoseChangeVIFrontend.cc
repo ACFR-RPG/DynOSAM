@@ -146,7 +146,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
   CameraMeasurementStatusVector static_measurements;
   fillMeasurementsFromFeatureIterator(
-      &static_measurements, frame_k->usableStaticIterator(), frame_id_k,
+      static_measurements, frame_k->usableStaticIterator(), frame_id_k,
       timestamp_k, static_pixel_sigmas_, static_point_sigma_,
       &realtime_output->state.local_static_map);
 
@@ -302,14 +302,14 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
   CameraMeasurementStatusVector static_measurements;
   fillMeasurementsFromFeatureIterator(
-      &static_measurements, frame_k->usableStaticIterator(), frame_id_k,
+      static_measurements, frame_k->usableStaticIterator(), frame_id_k,
       timestamp_k, static_pixel_sigmas_, static_point_sigma_);
 
-  CameraMeasurementStatusVector dynamic_measurements;
-  fillMeasurementsFromFeatureIterator(
-      &dynamic_measurements, frame_k->usableDynamicIterator(), frame_id_k,
-      timestamp_k, dynamic_pixel_sigmas_, dynamic_point_sigma_
-      /*&realtime_output->state.dynamic_map*/);
+  // CameraMeasurementsByObject dynamic_measurements_per_object;
+  // fillMeasurementsFromFeatureIterator(
+  //     dynamic_measurements_per_object, frame_k->usableDynamicIterator(),
+  //     frame_id_k, timestamp_k, dynamic_pixel_sigmas_, dynamic_point_sigma_
+  //     /*&realtime_output->state.dynamic_map*/);
 
   // fill output dynamic map with current structure
   for (const auto& object_id : objects_with_new_motions) {
@@ -382,57 +382,82 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   if (any_object_keyframes) {
-    // collect all dynamic measurements at k
-    CameraMeasurementStatusVector dynamic_measurements_kf_k;
-    for (const auto& dm : dynamic_measurements) {
-      const auto& object_id = dm.objectId();
-      if (kf_pose_change_infos.exists(object_id)) {
-        dynamic_measurements_kf_k.push_back(dm);
-      }
-    }
-    // TODO: this will fail when we start adding OKF's for LOST objects
+    // // collect all dynamic measurements at k
+    // CameraMeasurementStatusVector dynamic_measurements_kf_k;
+    // for (const auto& dm : dynamic_measurements) {
+    //   const auto& object_id = dm.objectId();
+    //   if (kf_pose_change_infos.exists(object_id)) {
+    //     dynamic_measurements_kf_k.push_back(dm);
+    //   }
+    // }
+    // // TODO: this will fail when we start adding OKF's for LOST objects
 
     // update map after collecting all measurements for this frame
-    map_->updateObservations(dynamic_measurements_kf_k);
+    // map_->updateObservations(dynamic_measurements_kf_k);
 
     for (const auto& [object_id, info] : kf_pose_change_infos) {
       CHECK(info.isKeyFrame());
       const auto& H_W_KF_k = info.H_W_KF_k;
       const auto frame_id_motion_from = H_W_KF_k.from();
-      CHECK_EQ(H_W_KF_k.to(), frame_id_k);
 
-      // add dynamic measurements observed at the from frame
-      const RelEgoPoseInfo& rel_egopose_lkf_j =
-          rel_egopose_infos_.at(frame_id_motion_from);
-      CHECK_EQ(rel_egopose_lkf_j.j_id, frame_id_motion_from);
-
-      // if object is already a keyframe at this frame then assume
-      // measurements have already been added
-      // jesse: is this correct? Since we never go back and add new features I
-      // think this is fine
-      if (!map_->isObjectKeyFrame(frame_id_motion_from, object_id)) {
-        // add measurements at from frame for object motion
-        CameraMeasurementStatusVector dynamic_measurements_kf;
-        size_t n = fillMeasurementsFromFeatureIterator(
-            &dynamic_measurements_kf,
-            rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
-            rel_egopose_lkf_j.j_id, rel_egopose_lkf_j.frame_j->getTimestamp(),
-            dynamic_pixel_sigmas_, dynamic_point_sigma_);
-        // LOG(INFO) << "Adding n=" << n << " dyn object measurements to map at
-        // k="
-        //           << frame_id_motion_from;
-
-        // update map after collecting all measurements for this frame
-        map_->updateObservations(dynamic_measurements_kf);
-
-        // mark object as keyframe for both the from and to (this frame) frames
-        // this indicates that a motion variable exists at both frames
-        CHECK(map_->setObjectKeyFrame(frame_id_motion_from, object_id));
+      // we should have two cases
+      // 1. Object is well tracked and therefore has a keyframe at this frame
+      // 2. Is lost and therefore has an estimate in the last frame
+      if (info.tracking_status == ObjectTrackingStatus::WellTracked) {
+        CHECK_EQ(H_W_KF_k.to(), frame_id_k);
+      } else if (info.tracking_status == ObjectTrackingStatus::Lost) {
+        CHECK_EQ(H_W_KF_k.to(), frame_km1->getFrameId());
+        // in this case measurements of the object will not be included in
+        // dynamic_measurements_kf_k so we need to additionally add them
+      } else {
+        throw DynosamException(
+            "To have an object keyframe status must be either WellTracked or "
+            "Lost!");
       }
 
-      // mark object as keyframe in this frame
-      //  the measurements for k have already been addded
-      CHECK(map_->setObjectKeyFrame(frame_id_k, object_id));
+      // attempt measurement update at both to and from frames
+      addMeasurementsForObjectKeyframe(H_W_KF_k.to(), object_id);
+      addMeasurementsForObjectKeyframe(H_W_KF_k.from(), object_id);
+
+      CHECK(map_->isObjectKeyFrame(H_W_KF_k.to(), object_id));
+      CHECK(map_->isObjectKeyFrame(H_W_KF_k.from(), object_id));
+
+      // // add dynamic measurements observed at the from frame
+      // const RelEgoPoseInfo& rel_egopose_lkf_j =
+      //     rel_egopose_infos_.at(frame_id_motion_from);
+      // CHECK_EQ(rel_egopose_lkf_j.j_id, frame_id_motion_from);
+
+      // // if object is already a keyframe at this frame then assume
+      // // measurements have already been added
+      // // jesse: is this correct? Since we never go back and add new features
+      // I
+      // // think this is fine
+      // if (!map_->isObjectKeyFrame(frame_id_motion_from, object_id)) {
+      //   // add measurements at from frame for object motion
+      //   CameraMeasurementStatusVector dynamic_measurements_kf;
+      //   size_t n = fillMeasurementsFromFeatureIterator(
+      //       &dynamic_measurements_kf,
+      //       rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
+      //       rel_egopose_lkf_j.j_id,
+      //       rel_egopose_lkf_j.frame_j->getTimestamp(), dynamic_pixel_sigmas_,
+      //       dynamic_point_sigma_);
+      //   // LOG(INFO) << "Adding n=" << n << " dyn object measurements to map
+      //   at
+      //   // k="
+      //   //           << frame_id_motion_from;
+
+      //   // update map after collecting all measurements for this frame
+      //   map_->updateObservations(dynamic_measurements_kf);
+
+      //   // mark object as keyframe for both the from and to (this frame)
+      //   frames
+      //   // this indicates that a motion variable exists at both frames
+      //   CHECK(map_->setObjectKeyFrame(frame_id_motion_from, object_id));
+      // }
+
+      // // mark object as keyframe in this frame
+      // //  the measurements for k have already been addded
+      // CHECK(map_->setObjectKeyFrame(frame_id_k, object_id));
 
       // record keyframe info for each object
       KeyframeInfo::MotionPair object_kf_info{object_id, H_W_KF_k.from(),
@@ -611,6 +636,33 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     }
     return true;
   }
+}
+
+bool PoseChangeVIFrontend::addMeasurementsForObjectKeyframe(
+    FrameId frame_id, ObjectId object_id) {
+  const RelEgoPoseInfo& rel_egopose_lkf_j = rel_egopose_infos_.at(frame_id);
+  CHECK_EQ(rel_egopose_lkf_j.j_id, frame_id);
+
+  // assume measurements have been added if already keyframe
+  if (map_->isObjectKeyFrame(frame_id, object_id)) {
+    return false;
+  }
+
+  // add measurements at from frame for object motion
+  CameraMeasurementStatusVector dynamic_measurements_kf;
+  fillMeasurementsFromFeatureIterator(
+      dynamic_measurements_kf,
+      rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
+      rel_egopose_lkf_j.j_id, rel_egopose_lkf_j.frame_j->getTimestamp(),
+      dynamic_pixel_sigmas_, dynamic_point_sigma_);
+
+  // update map after collecting all measurements for this frame
+  map_->updateObservations(dynamic_measurements_kf);
+
+  // mark object as keyframe for both the from and to (this frame) frames
+  // this indicates that a motion variable exists at both frames
+  CHECK(map_->setObjectKeyFrame(frame_id, object_id));
+  return true;
 }
 
 void PoseChangeVIFrontend::solveObjectMotions(
