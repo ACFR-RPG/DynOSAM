@@ -508,6 +508,8 @@ void HybridFormulationKeyFrame::updateObject(
       key_frames_per_object_.at(object_id, frame_id_kf);
   // measured motion from the frontend.
   const Motion3ReferenceFrame& H_W_lRKF_KF = kf_meta_data.H_W_lRKF_KF;
+  // relative pose transform
+  const gtsam::Pose3 H_lRKF_kf = kf_meta_data.H_lRKF_KF;
   CHECK_EQ(H_W_lRKF_KF.to(), frame_id_kf);
   // measured from frame
   const auto& lRKF_id = H_W_lRKF_KF.from();
@@ -536,14 +538,20 @@ void HybridFormulationKeyFrame::updateObject(
 
   // motion model helps soo soo soo much ;)
   if (motionIsInValues(object_motion_key_lkf)) {
+    gtsam::Vector6 sigmas;
+    sigmas << 1.5, 1.5, 1.5, 0.3, 0.3, 0.3;
     gtsam::SharedNoiseModel relative_noise_model =
-        gtsam::noiseModel::Isotropic::Sigma(6u, 0.4);
+        gtsam::noiseModel::Isotropic::Sigmas(sigmas);
     // add relative motion constraint!
-    using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
-    // TODO: this is in world so unsure how it well effect covariance!
-    auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
-        object_motion_key_lkf, object_motion_key_kf, H_W_lRKF_KF,
-        relative_noise_model);
+    // using BetweenMotion3Factor = MotionBetweenFactor<gtsam::Pose3>;
+    // // TODO: this is in world so unsure how it well effect covariance!
+    // auto relative_object_motion = boost::make_shared<BetweenMotion3Factor>(
+    //     object_motion_key_lkf, object_motion_key_kf, H_W_lRKF_KF,
+    //     relative_noise_model);
+    auto relative_object_motion =
+        boost::make_shared<BetweenMotionsWithRelativeTransform>(
+            object_motion_key_lkf, object_motion_key_kf, H_lRKF_kf, AKF_pose,
+            relative_noise_model);
     // new_factors += relative_object_motion;
   }
 
@@ -595,10 +603,10 @@ void HybridFormulationKeyFrame::updateObject(
       }
 
       // TODO: bring this back!
-      if (frames_with_measurements.size() < 2) {
-        num_factors_not_enough_obs++;
-        continue;
-      }
+      // if (frames_with_measurements.size() < 2) {
+      //   num_factors_not_enough_obs++;
+      //   continue;
+      // }
 
       // uuuh need to update these becuase something in the accessor
       //  needs them!
@@ -865,6 +873,7 @@ void HybridFormulationKeyFrame::addObjects(
     KeyFrameMetaData kf_data;
     kf_data.keyframe_status = keyframe_status;
     kf_data.H_W_lRKF_KF = H_W_RKF_k;
+    kf_data.H_lRKF_KF = object_info.H_Lkf_k;
 
     // will not be true when we have a lost object
     // CHECK_EQ(frame_id, H_W_RKF_k.to());

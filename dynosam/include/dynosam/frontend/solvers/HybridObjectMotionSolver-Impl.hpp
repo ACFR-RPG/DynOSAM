@@ -33,6 +33,12 @@ class HybridObjectMotionSolverImpl {
   virtual Motion3ReferenceFrame frameToFrameMotionReference() const = 0;
   virtual gtsam::Pose3 keyFrameCameraPose() const = 0;
 
+  /* Relative motion of the object in Lkf */
+  virtual gtsam::Pose3 relativeTransform() const {
+    const gtsam::Pose3 L_kf = keyFramePose();
+    return L_kf.inverse() * keyFrameMotion() * L_kf;
+  }
+
   virtual Motion3ReferenceFrame keyFrameMotionReference() const {
     return Motion3ReferenceFrame(
         keyFrameMotion(), Motion3ReferenceFrame::Style::KF,

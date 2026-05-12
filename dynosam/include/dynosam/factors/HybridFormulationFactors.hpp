@@ -434,184 +434,174 @@ class BatchStereoHybridMotionFactor3 : public gtsam::NonlinearFactor {
  private:
 };
 
-/**
- * Dynamic stereo structureless trifocal factor.
- *
- * Measurement model:
- *
- *   z = pi( X^{-1} H L m )
- *
- * where:
- *
- *   X : known camera pose in world
- *   H : unknown object pose in world
- *   L : known local/object-part transform
- *   m : unknown point in local frame
- *
- * The point m is analytically eliminated using nullspace projection.
- *
- * This factor optimizes only object poses:
- *
- *   H1, H2, H3
- *
- * using three stereo observations:
- *
- *   z1, z2, z3
- *
- * Residual dimension:
- *
- *   9 reprojection residuals
- *   - 3 eliminated point DOF
- *   -----------------------
- *   6 final residual DOF
- */
-class DynamicStereoStructurelessFactor
-    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
-                                      gtsam::Pose3> {
+template <size_t DIM = 3u, typename MOTION = gtsam::Pose3>
+class SmartMotionFactor2 : public gtsam::NonlinearFactor {
  public:
-  using Base =
-      gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>;
+  using Base = gtsam::NonlinearFactor;
+  using Motion = MOTION;
+  using This = SmartMotionFactor2<DIM, MOTION>;
+  using shared_ptr = boost::shared_ptr<This>;
 
-  using Matrix36 = Eigen::Matrix<double, 3, 6>;
-  using Matrix33 = Eigen::Matrix<double, 3, 3>;
-  using Matrix93 = Eigen::Matrix<double, 9, 3>;
-  using Matrix99 = Eigen::Matrix<double, 9, 9>;
-  using Matrix918 = Eigen::Matrix<double, 9, 18>;
-  using Matrix618 = Eigen::Matrix<double, 6, 18>;
+  // Dimensions for Point (3), Motion (6), and Measurement (3)
+  static constexpr size_t ZDim = 3;
+  static constexpr size_t MDim = 6;
+  static constexpr size_t PDim = 3;  // Point3
 
-  DynamicStereoStructurelessFactor(
-      gtsam::Key H1_key, gtsam::Key H2_key, gtsam::Key H3_key,
-      const gtsam::Pose3& X1, const gtsam::Pose3& X2, const gtsam::Pose3& X3,
-      const gtsam::StereoPoint2& z1, const gtsam::StereoPoint2& z2,
-      const gtsam::StereoPoint2& z3, const gtsam::Pose3& L,
-      const gtsam::Point3& m, const gtsam::Cal3_S2Stereo::shared_ptr& K,
-      const gtsam::SharedNoiseModel& noise)
-      : Base(noise, H1_key, H2_key, H3_key),
-        X1_(X1),
-        X2_(X2),
-        X3_(X3),
-        z1_(z1),
-        z2_(z2),
-        z3_(z3),
-        L_(L),
-        m_(m),
-        K_(K) {}
+  // Typedefs for GTSAM compatibility
+  using GBlocks = std::vector<gtsam::Matrix>;  // Jacobians w.r.t Motion
+  using EBlocks = std::vector<gtsam::Matrix>;  // Jacobians w.r.t Point
 
-  gtsam::Vector unwhitenedError(
-      const gtsam::Pose3& H1, const gtsam::Pose3& H2, const gtsam::Pose3& H3,
-      boost::optional<gtsam::Matrix&> H1_jac = {},
-      boost::optional<gtsam::Matrix&> H2_jac = {},
-      boost::optional<gtsam::Matrix&> H3_jac = {}) const {
-    using namespace gtsam;
+ private:
+  gtsam::Pose3 L_e_;  // Embedded object frame
+  mutable gtsam::TriangulationResult result_;
+  gtsam::SharedNoiseModel noise_model_;
+  gtsam::Cal3_S2Stereo::shared_ptr K_;
+  //   SmartMotionFactorParams params_;
 
-    Matrix Jm1, Jm2, Jm3;
-    Matrix Jp1, Jp2, Jp3;
+  std::vector<StereoHybridMotionFactorBase> measured_;
+  //   std::vector<gtsam::Point3> measured_;      // Measurements
+  std::vector<gtsam::Pose3> poses_;  // FIXED camera poses (not keys)
 
-    Vector3 r1 = computeSingle(X1_, H1, z1_, Jm1, Jp1);
-    Vector3 r2 = computeSingle(X2_, H2, z2_, Jm2, Jp2);
-    Vector3 r3 = computeSingle(X3_, H3, z3_, Jm3, Jp3);
+ public:
+  SmartMotionFactor2(const gtsam::Pose3& L_e, const gtsam::Point3& m_L,
+                     const gtsam::SharedNoiseModel& noise_model,
+                     gtsam::Cal3_S2Stereo::shared_ptr K)
+      : Base(), L_e_(L_e), result_(m_L), noise_model_(noise_model), K_(K) {}
 
-    Eigen::Matrix<double, 9, 1> r;
-    r << r1, r2, r3;
-
-    Eigen::Matrix<double, 9, 18> E = Eigen::Matrix<double, 9, 18>::Zero();
-
-    E.block<3, 6>(0, 0) = Jm1;
-    E.block<3, 6>(3, 6) = Jm2;
-    E.block<3, 6>(6, 12) = Jm3;
-
-    Eigen::Matrix<double, 9, 18> J = E;
-
-    if (H1_jac) *H1_jac = J.block<9, 6>(0, 0);
-    if (H2_jac) *H2_jac = J.block<9, 6>(0, 6);
-    if (H3_jac) *H3_jac = J.block<9, 6>(0, 12);
-
-    return r;
+  /**
+   * @brief Add a measurement. Pose is passed as a constant value, not a Key.
+   */
+  void add(const gtsam::StereoPoint2& measured, const gtsam::Key& motion_key,
+           const gtsam::Pose3& fixed_camera_pose) {
+    this->measured_.emplace_back(measured, L_e_, K_);
+    this->keys_.push_back(motion_key);
+    this->poses_.push_back(fixed_camera_pose);
   }
 
-  // ============================================================
-  // EVALUATE ERROR (USED BY OPTIMIZER + TESTS)
-  // ============================================================
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& H1, const gtsam::Pose3& H2, const gtsam::Pose3& H3,
-      boost::optional<gtsam::Matrix&> H1_jac = {},
-      boost::optional<gtsam::Matrix&> H2_jac = {},
-      boost::optional<gtsam::Matrix&> H3_jac = {}) const override {
-    return unwhitenedError(H1, H2, H3, H1_jac, H2_jac, H3_jac);
+  double error(const gtsam::Values& values) const override {
+    if (this->active(values)) {
+      std::vector<Motion> motions;
+      for (const auto& k : keys_) motions.push_back(values.at<Motion>(k));
+
+      triangulateSafe(motions);
+      if (!result_) return 0.0;
+
+      gtsam::Vector b = unwhitenedError(motions, *result_);
+      if (noise_model_)
+        return noise_model_->loss(noise_model_->squaredMahalanobisDistance(b));
+      else
+        return 0.5 * b.squaredNorm();
+    }
+    return 0.0;
   }
 
-  // ============================================================
-  // LINEARIZATION (GTSAM OPTIMIZATION PATH)
-  // ============================================================
   boost::shared_ptr<gtsam::GaussianFactor> linearize(
       const gtsam::Values& values) const override {
-    using namespace gtsam;
+    std::vector<Motion> motions;
+    for (const auto& k : keys_) motions.push_back(values.at<Motion>(k));
 
-    const Pose3& H1 = values.at<Pose3>(key1());
-    const Pose3& H2 = values.at<Pose3>(key2());
-    const Pose3& H3 = values.at<Pose3>(key3());
+    triangulateSafe(motions);
+    if (!result_) return boost::make_shared<gtsam::JacobianFactor>();
 
-    Matrix J1, J2, J3;
+    GBlocks Gs;  // W.R.T Motion
+    EBlocks Es;  // W.R.T Point
+    gtsam::Vector b;
 
-    Vector r = unwhitenedError(H1, H2, H3, J1, J2, J3);
+    // 1. Compute Jacobians
+    b = -unwhitenedError(motions, *result_, &Gs, &Es);
 
-    Eigen::Matrix<double, 9, 18> A;
-    A.block<9, 6>(0, 0) = J1;
-    A.block<9, 6>(0, 6) = J2;
-    A.block<9, 6>(0, 12) = J3;
+    // 2. Whiten
+    if (noise_model_) {
+      for (auto& G : Gs) G = noise_model_->Whiten(G);
+      for (auto& E : Es) E = noise_model_->Whiten(E);
+      b = noise_model_->whiten(b);
+    }
 
-    // -----------------------------
-    // STRUCTURELESS ELIMINATION
-    // -----------------------------
-    Eigen::Matrix<double, 9, 3> F;
-    F.block<3, 3>(0, 0) = J1.block<3, 3>(0, 0);
-    F.block<3, 3>(3, 0) = J2.block<3, 3>(0, 0);
-    F.block<3, 3>(6, 0) = J3.block<3, 3>(0, 0);
+    // 3. Schur Complement Elimination of Point
+    // Matrix E is (3*m x 3), Matrix G is (3*m x 6*m) block diagonal
+    gtsam::Matrix E_stacked(ZDim * measured_.size(), PDim);
+    for (size_t i = 0; i < Es.size(); ++i)
+      E_stacked.block<ZDim, PDim>(ZDim * i, 0) = Es[i];
 
-    Eigen::JacobiSVD<Eigen::Matrix<double, 9, 3>> svd(F, Eigen::ComputeFullU);
+    gtsam::Matrix EtE = E_stacked.transpose() * E_stacked;
+    gtsam::Matrix P = EtE.inverse();  // Information inverse for the point
 
-    Eigen::Matrix<double, 9, 6> N = svd.matrixU().rightCols<6>();
+    // Construct the Reduced Hessian (Smart Factor logic)
+    // H_reduced = G'G - G'E * (E'E)^-1 * E'G
+    // b_reduced = G'b - G'E * (E'E)^-1 * E'b
 
-    Eigen::Matrix<double, 6, 1> r_w = N.transpose() * r;
-    Eigen::Matrix<double, 6, 18> A_w = N.transpose() * A;
+    size_t m = keys_.size();
+    std::vector<Eigen::DenseIndex> dims(m + 1);
+    std::fill(dims.begin(), dims.end() - 1, MDim);
+    dims.back() = 1;
+    gtsam::SymmetricBlockMatrix augmentedHessian(dims);
 
-    std::vector<Matrix> blocks = {A_w.block<6, 6>(0, 0), A_w.block<6, 6>(0, 6),
-                                  A_w.block<6, 6>(0, 12)};
+    for (size_t i = 0; i < m; ++i) {
+      for (size_t j = i; j < m; ++j) {
+        // Hessian Block (i, j)
+        gtsam::Matrix Hij = Gs[i].transpose() * Gs[j];
+        gtsam::Matrix E_correction =
+            (Gs[i].transpose() * Es[i]) * P * (Es[j].transpose() * Gs[j]);
+        augmentedHessian.aboveDiagonalBlock(i, j) = Hij - E_correction;
+      }
+      // Info vector block (i, last)
+      gtsam::Vector bi = Gs[i].transpose() * b.segment<ZDim>(i * ZDim);
+      gtsam::Vector b_correction =
+          (Gs[i].transpose() * Es[i]) * P * (E_stacked.transpose() * b);
+      augmentedHessian.aboveDiagonalBlock(i, m) = bi - b_correction;
+    }
 
-    auto terms = {std::make_pair(key1(), A.block<6, 6>(0, 0)),
-                  std::make_pair(key2(), A.block<6, 6>(0, 6)),
-                  std::make_pair(key3(), A.block<6, 6>(0, 12))};
+    // Constant term (last, last)
+    augmentedHessian.aboveDiagonalBlock(m, m) = gtsam::Matrix11(
+        b.dot(b) - (b.transpose() * E_stacked * P * E_stacked.transpose() * b));
 
-    auto model =
-        noiseModel::Isotropic::Sigma(6, this->noiseModel()->sigmas()(0));
-
-    return boost::make_shared<JacobianFactor>(terms, -r_w, model);
+    return boost::make_shared<gtsam::RegularHessianFactor<MDim>>(
+        keys_, augmentedHessian);
   }
 
  private:
-  gtsam::Vector3 computeSingle(const gtsam::Pose3& X, const gtsam::Pose3& H,
-                               const gtsam::StereoPoint2& z,
-                               gtsam::Matrix& J_motion,
-                               gtsam::Matrix& J_point) const {
-    StereoHybridMotionFactorBase base(z, L_, K_);
-    return base.evaluateError(X, H, m_, {}, J_motion, J_point);
+  gtsam::Vector unwhitenedError(const std::vector<Motion>& motions,
+                                const gtsam::Point3& point_l,
+                                GBlocks* Gs = nullptr,
+                                EBlocks* Es = nullptr) const {
+    size_t m = measured_.size();
+    gtsam::Vector b(ZDim * m);
+
+    CHECK_EQ(motions.size(), this->poses_);
+
+    if (Gs) Gs->resize(m);
+    if (Es) Es->resize(m);
+
+    for (size_t i = 0; i < m; ++i) {
+      gtsam::Matrix G;
+      gtsam::Matrix E;
+      gtsam::Vector3 err = measured_[i].evaluateError(
+          poses_.at(i), motions.at(i), point_l, {}, G, E);
+
+      //   // h(x) = cam_T_w * (Motion_i * L_e * point_l)
+      //   auto project = [&](const Motion& mi, const gtsam::Point3& pl) ->
+      //   gtsam::Point3 {
+      //     return cam_T_w * (mi * (L_e_ * pl));
+      //   };
+
+      if (Gs) (*Gs)[i] = G;
+      if (Es) (*Es)[i] = E;
+
+      //   if (Gs) (*Gs)[i] = gtsam::numericalDerivative21<gtsam::Point3,
+      //   Motion, gtsam::Point3>(project, motions[i], point_l); if (Es)
+      //   (*Es)[i] = gtsam::numericalDerivative22<gtsam::Point3, Motion,
+      //   gtsam::Point3>(project, motions[i], point_l);
+
+      b.segment<ZDim>(i * ZDim) = err;
+    }
+    return b;
   }
 
- private:
- private:
-  gtsam::Pose3 X1_;
-  gtsam::Pose3 X2_;
-  gtsam::Pose3 X3_;
-
-  gtsam::StereoPoint2 z1_;
-  gtsam::StereoPoint2 z2_;
-  gtsam::StereoPoint2 z3_;
-
-  gtsam::Pose3 L_;
-
-  gtsam::Point3 m_;
-
-  gtsam::Cal3_S2Stereo::shared_ptr K_;
+  void triangulateSafe(const std::vector<Motion>& motions) const {
+    // Logic similar to your provided triangulateSafe,
+    // but using this->poses_ (fixed) instead of keys.
+    // ... Implementation of triangulation ...
+  }
 };
 
 /**

@@ -3,6 +3,7 @@
 #include <gtsam/base/debug.h>
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam/formulations/KeyFrameHybridEstimator.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
@@ -273,6 +274,140 @@ TEST_F(HybridMotionTest, ProjectToCamera3_Jacobians) {
   EXPECT_TRUE(assert_equal(num_H_m, H_m, 1e-5));
 }
 
+gtsam::Pose3 makePose(double rx, double ry, double rz, double tx, double ty,
+                      double tz) {
+  gtsam::Rot3 R = gtsam::Rot3::RzRyRx(rx, ry, rz);
+  gtsam::Point3 t(tx, ty, tz);
+  return gtsam::Pose3(R, t);
+}
+
+using namespace gtsam;
+
+TEST(BetweenMotionsWithRelativeTransform, ZeroError) {
+  Pose3 Lo = makePose(0.1, -0.05, 0.03, 1.0, 2.0, -0.3);
+
+  Pose3 oHi = makePose(0.2, 0.1, -0.1, 0.5, -1.0, 2.0);
+
+  Pose3 oHj = makePose(-0.1, 0.05, 0.2, 1.5, 0.3, 2.5);
+
+  Pose3 Li = oHi.compose(Lo);
+  Pose3 Lj = oHj.compose(Lo);
+
+  Pose3 T_meas = Li.between(Lj);
+
+  auto noise = noiseModel::Diagonal::Sigmas(Vector6::Ones());
+
+  BetweenMotionsWithRelativeTransform factor(Symbol('x', 0), Symbol('x', 1),
+                                             T_meas, Lo, noise);
+
+  Vector error = factor.evaluateError(oHi, oHj);
+
+  EXPECT_TRUE(assert_equal(Vector6::Zero(), error, 1e-9));
+}
+
+TEST(BetweenMotionsWithRelativeTransform, NonZeroError) {
+  Pose3 Lo = makePose(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+
+  Pose3 oHi = makePose(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+  Pose3 oHj = makePose(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+
+  Pose3 wrong_measurement = makePose(0.0, 0.0, 0.0, 5.0, 0.0, 0.0);
+
+  auto noise = noiseModel::Diagonal::Sigmas(Vector6::Ones());
+
+  BetweenMotionsWithRelativeTransform factor(Symbol('x', 0), Symbol('x', 1),
+                                             wrong_measurement, Lo, noise);
+
+  Vector error = factor.evaluateError(oHi, oHj);
+
+  EXPECT_GT(error.norm(), 1e-3);
+}
+
+TEST(BetweenMotionsWithRelativeTransform, JacobianWrtFirstPose) {
+  Pose3 Lo = makePose(0.1, -0.2, 0.05, 0.4, -0.3, 1.2);
+
+  Pose3 oHi = makePose(0.2, 0.1, -0.3, 1.0, 2.0, 3.0);
+
+  Pose3 oHj = makePose(-0.1, 0.4, 0.2, -2.0, 0.5, 1.0);
+
+  Pose3 T_meas = oHi.compose(Lo).between(oHj.compose(Lo));
+
+  auto noise = noiseModel::Diagonal::Sigmas(Vector6::Ones());
+
+  BetweenMotionsWithRelativeTransform factor(Symbol('x', 0), Symbol('x', 1),
+                                             T_meas, Lo, noise);
+
+  Matrix H1_analytic;
+  Matrix H2_dummy;
+
+  factor.evaluateError(oHi, oHj, H1_analytic, H2_dummy);
+
+  Matrix H1_numeric = numericalDerivative11<Vector, Pose3>(
+      [&](const Pose3& x1) { return factor.evaluateError(x1, oHj); }, oHi,
+      1e-6);
+
+  EXPECT_TRUE(assert_equal(H1_numeric, H1_analytic, 1e-6));
+}
+
+TEST(BetweenMotionsWithRelativeTransform, JacobianWrtSecondPose) {
+  Pose3 Lo = makePose(-0.1, 0.15, 0.07, 0.8, 1.2, -0.4);
+
+  Pose3 oHi = makePose(0.3, -0.1, 0.2, -1.0, 2.5, 0.3);
+
+  Pose3 oHj = makePose(-0.2, 0.5, -0.4, 1.2, -0.7, 2.2);
+
+  Pose3 T_meas = oHi.compose(Lo).between(oHj.compose(Lo));
+
+  auto noise = noiseModel::Diagonal::Sigmas(Vector6::Ones());
+
+  BetweenMotionsWithRelativeTransform factor(Symbol('x', 0), Symbol('x', 1),
+                                             T_meas, Lo, noise);
+
+  Matrix H1_dummy;
+  Matrix H2_analytic;
+
+  factor.evaluateError(oHi, oHj, H1_dummy, H2_analytic);
+
+  Matrix H2_numeric = numericalDerivative11<Vector, Pose3>(
+      [&](const Pose3& x2) { return factor.evaluateError(oHi, x2); }, oHj,
+      1e-6);
+
+  EXPECT_TRUE(assert_equal(H2_numeric, H2_analytic, 1e-6));
+}
+
+TEST(BetweenMotionsWithRelativeTransform, BothJacobians) {
+  Pose3 Lo = makePose(0.12, -0.08, 0.03, 0.5, 0.2, -1.0);
+
+  Pose3 oHi = makePose(0.4, -0.2, 0.1, 1.0, -1.0, 0.5);
+
+  Pose3 oHj = makePose(-0.3, 0.25, -0.15, -0.5, 2.0, 1.5);
+
+  Pose3 T_meas = oHi.compose(Lo).between(oHj.compose(Lo));
+
+  auto noise = noiseModel::Diagonal::Sigmas(Vector6::Ones());
+
+  BetweenMotionsWithRelativeTransform factor(Symbol('x', 0), Symbol('x', 1),
+                                             T_meas, Lo, noise);
+
+  Matrix H1_analytic;
+  Matrix H2_analytic;
+
+  factor.evaluateError(oHi, oHj, H1_analytic, H2_analytic);
+
+  Matrix H1_numeric = numericalDerivative11<Vector, Pose3>(
+      [&](const Pose3& x1) { return factor.evaluateError(x1, oHj); }, oHi,
+      1e-6);
+
+  Matrix H2_numeric = numericalDerivative11<Vector, Pose3>(
+      [&](const Pose3& x2) { return factor.evaluateError(oHi, x2); }, oHj,
+      1e-6);
+
+  EXPECT_TRUE(assert_equal(H1_numeric, H1_analytic, 1e-6));
+
+  EXPECT_TRUE(assert_equal(H2_numeric, H2_analytic, 1e-6));
+}
+
 // TEST(HybridSmoothingFactor, JacobiansMatchNumerical)
 // {
 //     gtsam::Pose3 H_km2 = utils::createRandomAroundIdentity<gtsam::Pose3>(2.0,
@@ -336,121 +471,6 @@ TEST_F(HybridMotionTest, ProjectToCamera3_Jacobians) {
 
 //     EXPECT_TRUE(assert_equal(result_orig, result_new, 1e-9));
 // }
-
-class DynamicStereoStructurelessFactorTests : public ::testing::Test {
- protected:
-  void SetUp() override {
-    K = boost::make_shared<Cal3_S2Stereo>(500, 500, 0, 320, 240, 0.2);
-
-    noise = noiseModel::Isotropic::Sigma(6, 1.0);
-
-    X1 = Pose3();
-    X2 = Pose3(Rot3(), Point3(1, 0, 0));
-    X3 = Pose3(Rot3(), Point3(2, 0, 0));
-
-    H1 = Pose3();
-    H2 = Pose3(Rot3(), Point3(0.1, 0, 0));
-    H3 = Pose3(Rot3(), Point3(0.2, 0, 0));
-
-    L = Pose3();
-
-    m = Point3(0, 0, 5);
-
-    gtsam::Pose3 G1 = X1.inverse() * H1 * L;
-    StereoCamera cam1(G1.inverse(), K);
-
-    gtsam::Pose3 G2 = X2.inverse() * H2 * L;
-    StereoCamera cam2(G2.inverse(), K);
-
-    gtsam::Pose3 G3 = X3.inverse() * H3 * L;
-    StereoCamera cam3(G3.inverse(), K);
-
-    z1 = cam1.project(m);
-    z2 = cam2.project(m);
-    z3 = cam3.project(m);
-  }
-
-  Cal3_S2Stereo::shared_ptr K;
-
-  SharedNoiseModel noise;
-
-  Pose3 X1, X2, X3;
-  Pose3 H1, H2, H3;
-
-  Pose3 L;
-
-  Point3 m;
-
-  StereoPoint2 z1, z2, z3;
-};
-
-TEST_F(DynamicStereoStructurelessFactorTests, ZeroErrorAtGroundTruth) {
-  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
-                                          Symbol('h', 2), X1, X2, X3, z1, z2,
-                                          z3, L, m, K, noise);
-
-  Vector r =
-      factor.evaluateError(H1, H2, H3, boost::none, boost::none, boost::none);
-
-  EXPECT_NEAR(r.norm(), 0.0, 1e-9);
-}
-
-TEST_F(DynamicStereoStructurelessFactorTests, JacobianH1MatchesNumerical) {
-  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
-                                          Symbol('h', 2), X1, X2, X3, z1, z2,
-                                          z3, L, m, K, noise);
-
-  Matrix H1_analytic;
-
-  factor.evaluateError(H1, H2, H3, H1_analytic, boost::none, boost::none);
-
-  auto f = [&](const Pose3& H1_local) {
-    return factor.evaluateError(H1_local, H2, H3, boost::none, boost::none,
-                                boost::none);
-  };
-
-  Matrix H1_numeric = numericalDerivative11<Vector, Pose3>(f, H1, 1e-6);
-
-  EXPECT_TRUE(assert_equal(H1_numeric, H1_analytic, 1e-5));
-}
-
-TEST_F(DynamicStereoStructurelessFactorTests, JacobianH2MatchesNumerical) {
-  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
-                                          Symbol('h', 2), X1, X2, X3, z1, z2,
-                                          z3, L, m, K, noise);
-
-  Matrix H2_analytic;
-
-  factor.evaluateError(H1, H2, H3, boost::none, H2_analytic, boost::none);
-
-  auto f = [&](const Pose3& H2_local) {
-    return factor.evaluateError(H1, H2_local, H3, boost::none, boost::none,
-                                boost::none);
-  };
-
-  Matrix H2_numeric = numericalDerivative11<Vector, Pose3>(f, H2, 1e-6);
-
-  EXPECT_TRUE(assert_equal(H2_numeric, H2_analytic, 1e-5));
-}
-
-TEST_F(DynamicStereoStructurelessFactorTests, JacobianH3MatchesNumerical) {
-  DynamicStereoStructurelessFactor factor(Symbol('h', 0), Symbol('h', 1),
-                                          Symbol('h', 2), X1, X2, X3, z1, z2,
-                                          z3, L, m, K, noise);
-
-  Matrix H3_analytic;
-
-  factor.evaluateError(H1, H2, H3, boost::none, boost::none, H3_analytic);
-
-  auto f = [&](const Pose3& H3_local) {
-    return factor.evaluateError(H1, H2, H3_local, boost::none, boost::none,
-                                boost::none);
-  };
-
-  Matrix H3_numeric = numericalDerivative11<Vector, Pose3>(f, H3, 1e-6);
-
-  EXPECT_TRUE(assert_equal(H3_numeric, H3_analytic, 1e-5));
-}
 
 class StereoHybridFactorTest : public ::testing::Test {
  protected:

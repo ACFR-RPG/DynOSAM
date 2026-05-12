@@ -596,6 +596,7 @@ ObjectPoseChangeInfo& HybridObjectMotionSolver::appendPoseChangeInfo(
   ObjectPoseChangeInfo info;
   info.frame_id = solver->frameId();
   info.H_W_KF_k = solver->keyFrameMotionReference();
+  info.H_Lkf_k = solver->relativeTransform();
   info.L_W_KF = solver->keyFramePose();
   info.L_W_k = solver->pose();
   info.X_W_KF = solver->keyFrameCameraPose();

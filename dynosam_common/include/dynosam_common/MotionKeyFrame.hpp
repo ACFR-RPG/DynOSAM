@@ -76,6 +76,8 @@ struct ObjectPoseChangeInfo {
   //! This is the preintegrated motion immediately before the current
   //! keyframe at k
   Motion3ReferenceFrame H_W_KF_k;
+  //! Relative motion of the object in Lkf
+  gtsam::Pose3 H_Lkf_k;
   gtsam::Pose3 L_W_k;
   //! The camera pose at KF used in the smoother when estimating the motion
   //! H_W_KF_K

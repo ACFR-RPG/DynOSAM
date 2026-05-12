@@ -115,6 +115,86 @@ class StereoHybridMotionExtrapolatedFactor
   gtsam::Pose3 T_i_j_;  // fixed transform
 };
 
+/**
+ * Constrains two object motions H_W_kf_i and H_W_kf_j using a fixed
+ * landmark/object offset Lo.
+ *
+ * Definitions:
+ *
+ *   Li = H_W_kf_i * Lo
+ *   Lj = H_W_kf_j * Lo
+ *
+ * Measured relative transform:
+ *
+ *   T_meas = Li^{-1} * Lj
+ *
+ * Predicted:
+ *
+ *   T_pred = (H_W_kf_i * Lo)^{-1} * (H_W_kf_j * Lo)
+ *
+ * Error:
+ *
+ *   e = Logmap(T_meas^{-1} * T_pred)
+ *
+ */
+class BetweenMotionsWithRelativeTransform
+    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3> {
+ public:
+  using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
+
+  BetweenMotionsWithRelativeTransform(gtsam::Key H_key_i, gtsam::Key H_key_j,
+                                      const gtsam::Pose3& T_i_j,
+                                      const gtsam::Pose3& L_kf,
+                                      const gtsam::SharedNoiseModel& model)
+      : Base(model, H_key_i, H_key_j), T_i_j_(T_i_j), L_kf_(L_kf) {}
+
+  ~BetweenMotionsWithRelativeTransform() override = default;
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& H_W_kf_i, const gtsam::Pose3& H_W_kf_j,
+      boost::optional<gtsam::Matrix&> H1 = boost::none,
+      boost::optional<gtsam::Matrix&> H2 = boost::none) const override {
+    using namespace gtsam;
+
+    Matrix66 H_comp1;
+    Matrix66 H_comp2;
+    Matrix66 H_between1;
+    Matrix66 H_between2;
+    Matrix66 H_local;
+
+    // Li = H_W_kf_i * Lo
+    Pose3 Li = H_W_kf_i.compose(L_kf_, H_comp1, boost::none);
+
+    // Lj = H_W_kf_j * Lo
+    Pose3 Lj = H_W_kf_j.compose(L_kf_, H_comp2);
+
+    // T_pred = Li^{-1} * Lj
+    Pose3 T_pred = Li.between(Lj, H_between1, H_between2);
+
+    // residual = Logmap(T_meas^{-1} * T_pred)
+    Pose3 err_pose = T_i_j_.between(T_pred);
+    Vector6 error = Pose3::Logmap(err_pose, H_local);
+
+    if (H1) {
+      *H1 = H_local * H_between1 * H_comp1;
+    }
+
+    if (H2) {
+      *H2 = H_local * H_between2 * H_comp2;
+    }
+
+    return error;
+  }
+
+  const gtsam::Pose3& measurement() const { return T_i_j_; }
+
+  // const gtsam::Pose3& Lo() const { return Lo_; }
+
+ private:
+  gtsam::Pose3 T_i_j_;
+  gtsam::Pose3 L_kf_;
+};
+
 class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
  public:
   using Base = HybridFormulation;
@@ -189,6 +269,8 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
     //! Measured object motion from the frontend
     //! Taking us from last RKF to most recent KF (ie. k)
     Motion3ReferenceFrame H_W_lRKF_KF;
+    //! Relative object pose transform from lrkf to kf in lrkf
+    gtsam::Pose3 H_lRKF_KF;
   };
 
   /** How the camera pose was extracted */

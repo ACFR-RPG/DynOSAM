@@ -444,15 +444,15 @@ bool PoseChangeVIBackendModule::optimize(
   using SmootherT = SmootherInterface::Smoother;
   using ArgumentsT = SmootherInterface::UpdateArguments;
 
-  bool is_smoother_ok = true;
-  // bool is_smoother_ok = smoother_interface_.optimize(
-  //     result,
-  //     [&](const SmootherT&, ArgumentsT& update_arguments) {
-  //       update_arguments.new_values = new_values;
-  //       update_arguments.new_factors = new_factors;
-  //       update_arguments.update_params = mutable_update_params;
-  //     },
-  //     error_hooks_);
+  // bool is_smoother_ok = true;
+  bool is_smoother_ok = smoother_interface_.optimize(
+      result,
+      [&](const SmootherT&, ArgumentsT& update_arguments) {
+        update_arguments.new_values = new_values;
+        update_arguments.new_factors = new_factors;
+        update_arguments.update_params = mutable_update_params;
+      },
+      error_hooks_);
 
   // // // // Marginalize out any needed variables
   // if (marginalizable_keys.size() > 0) {

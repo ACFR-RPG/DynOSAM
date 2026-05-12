@@ -412,6 +412,10 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
   gtsam::FastMap<TrackletId, std::vector<StereoHybridMotionFactor2::shared_ptr>>
       structured_factors_;
 
+  using StereoSmartFactor = SmartMotionFactor2<3, gtsam::Pose3>;
+  gtsam::FastMap<TrackletId, std::vector<StereoSmartFactor::shared_ptr>>
+      smart_factor_map_;
+
   gtsam::FastMap<TrackletId, BatchStereoHybridMotionFactor3::shared_ptr>
       batch_factor_map_;
 
