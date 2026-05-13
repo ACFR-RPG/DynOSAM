@@ -215,7 +215,8 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
       const gtsam::NonlinearFactorGraph& newFactors,
       const gtsam::Values& newTheta,
       const KeyTimestampMap& timestamps = KeyTimestampMap(),
-      const dyno::ISAM2UpdateParams& update_params = dyno::ISAM2UpdateParams());
+      const dyno::ISAM2UpdateParams& update_params = dyno::ISAM2UpdateParams(),
+      const gtsam::KeyVector& additional_keys_marginalize = {});
 
   PoseWithMotionTrajectory localTrajectoryImpl(
       bool include_keyframe = false) const;
@@ -296,9 +297,10 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
     // part of the additional params. New affected keys as part of smart factors
     // are NOT part of the relin keys and therefore the cached LINEAR factor
     // will be used (which does not include the new variable!)
-    params.cacheLinearizedFactors = false;
+    // params.cacheLinearizedFactors = false;
+    params.cacheLinearizedFactors = true;
     params.keyFormatter = DynosamKeyFormatter;
-    params.relinearizeThreshold = 0.01;
+    // params.relinearizeThreshold = 0.01;
     // this value is very important for accuracy
     // and if we want to do multiple update iterations!
     // also if this is not 1 then maybe factors that have a value update may not
@@ -418,6 +420,10 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
 
   gtsam::FastMap<TrackletId, BatchStereoHybridMotionFactor3::shared_ptr>
       batch_factor_map_;
+
+  // TODO: for now use better data-structure
+  gtsam::FastMap<TrackletId, gtsam::FastMap<FrameId, gtsam::StereoPoint2>>
+      stereo_measurements_;
 
   // GenericFactorMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
   //     mo_factor_map_;
