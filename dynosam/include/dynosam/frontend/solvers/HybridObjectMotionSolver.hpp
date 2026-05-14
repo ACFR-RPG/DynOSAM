@@ -19,6 +19,15 @@ struct HybridObjectMotionSolverParams {
   OpticalFlowAndPoseSolverParams optical_flow_solver_params;
 };
 
+struct OKFTrackingMetrics {
+  ObjectTrackingStatus tracking_status;
+  double scale_ratio;
+  double shape_score;
+  double coverage;
+  // Error with map
+  double repr_error;
+};
+
 class HybridObjectMotionSolver : public ObjectMotionSolver {
  public:
   DYNO_POINTER_TYPEDEFS(HybridObjectMotionSolver)
