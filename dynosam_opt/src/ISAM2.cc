@@ -41,6 +41,7 @@
 #include <utility>
 #include <variant>
 
+#include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/ISAM2-impl.hpp"
 #include "dynosam_opt/ISAM2Result.hpp"
 
@@ -168,14 +169,22 @@ void ISAM2::recalculate(const ISAM2UpdateParams& updateParams,
                           conditional->endFrontals());
     gttoc(affectedKeys);
 
+    // std::cout << "Affect keys" << std::endl;
+    // for(auto key : affectedKeys) {
+    //   std::cout << DefaultKeyFormatter(key) << " ";
+    // }
+    // std::cout << std::endl;
+
     KeySet affectedKeysSet;
     static const double kBatchThreshold = 0.65;
     if (affectedKeys.size() >= theta_.size() * kBatchThreshold) {
       // Do a batch step - reorder and relinearize all variables
       result->isBatch = true;
+      utils::ChronoTimingStats timer("isam2.recalculateBatch", 10);
       recalculateBatch(updateParams, &affectedKeysSet, result);
     } else {
       result->isBatch = false;
+      utils::ChronoTimingStats timer("isam2.recalculateIncremental", 10);
       recalculateIncremental(updateParams, relinKeys, affectedKeys,
                              &affectedKeysSet, &orphans, result);
     }
@@ -403,6 +412,21 @@ void ISAM2::addVariables(const Values& newTheta,
 void ISAM2::removeVariables(const KeySet& unusedKeys) {
   gttic(removeVariables);
 
+  auto printFactors =
+      [&](const VariableIndex::const_iterator& entry) -> std::string {
+    for (const auto& slot : entry->second)
+      nonlinearFactors_[slot]->print("Bad factor ");
+    return "";
+  };
+
+  for (auto key : unusedKeys) {
+    auto entry = variableIndex_.find(key);
+
+    CHECK(entry->second.empty())
+        << "Bad key: " << gtsam::DefaultKeyFormatter(key) << " "
+        << container_to_string(entry->second) << " " << printFactors(entry);
+  }
+
   variableIndex_.removeUnusedVariables(unusedKeys.begin(), unusedKeys.end());
   for (Key key : unusedKeys) {
     delta_.erase(key);
@@ -460,17 +484,30 @@ ISAM2Result ISAM2::update(const NonlinearFactorGraph& newFactors,
 
   update.computeUnusedKeys(newFactors, variableIndex_,
                            result.keysWithRemovedFactors, &result.unusedKeys);
-
   // 2. Compute new error to check for relinearization
   if (params_.evaluateNonlinearError)
     update.error(nonlinearFactors_, calculateEstimate(), &result.errorBefore);
+
+  // std::cout << "Unused keys" << std::endl;
+  //   for(auto key : result.unusedKeys) {
+  //     std::cout << DefaultKeyFormatter(key) << " ";
+  //   }
+  //   std::cout << std::endl;
 
   // 3. Mark linear update
   update.gatherInvolvedKeys(newFactors, nonlinearFactors_,
                             result.keysWithRemovedFactors, &result.markedKeys);
 
+  //  std::cout << "Initial marked keys (ie involved)" << std::endl;
+  //   for(auto key : result.markedKeys) {
+  //     std::cout << DefaultKeyFormatter(key) << " ";
+  //   }
+  //   std::cout << std::endl;
+
   update.updateKeys(result.markedKeys, &result);
   result.involvedVariables = result.markedKeys.size();
+
+  utils::ChronoTimingStats timer1("isam2.block1", 10);
 
   KeySet relinKeys;
   result.variablesRelinearized = 0;
@@ -480,6 +517,13 @@ ISAM2Result ISAM2::update(const NonlinearFactorGraph& newFactors,
     // 4. Mark keys in \Delta above threshold \beta:
     relinKeys = update.gatherRelinearizeKeys(roots_, delta_, fixedVariables_,
                                              &result.markedKeys);
+
+    // std::cout << "Marked keys due to delta" << std::endl;
+    // for(auto key : result.markedKeys) {
+    //   std::cout << DefaultKeyFormatter(key) << " ";
+    // }
+    // std::cout << std::endl;
+
     result.onlyRelinearizedVariables = relinKeys.size();
     update.recordRelinearizeDetail(relinKeys, result.details());
     if (!relinKeys.empty()) {
@@ -493,6 +537,9 @@ ISAM2Result ISAM2::update(const NonlinearFactorGraph& newFactors,
     }
     result.variablesRelinearized = result.markedKeys.size();
   }
+  timer1.stop();
+
+  utils::ChronoTimingStats timer2("isam2.block2", 10);
 
   // 7. Linearize new factors
   update.linearizeNewFactors(newFactors, theta_, nonlinearFactors_.size(),
@@ -501,8 +548,11 @@ ISAM2Result ISAM2::update(const NonlinearFactorGraph& newFactors,
   update.augmentVariableIndex(newFactors, result.newFactorsIndices,
                               &variableIndex_);
 
+  timer2.stop();
+
   // 8. Redo top of Bayes tree and update data structures
   recalculate(updateParams, relinKeys, &result);
+
   if (!result.unusedKeys.empty()) removeVariables(result.unusedKeys);
   result.cliques = this->nodes().size();
 
@@ -612,6 +662,7 @@ void ISAM2::marginalizeLeaves(const FastList<Key>& leafKeysList,
         for (const sharedClique& child : clique->children) {
           // Remove subtree if child depends on any marginalized keys
           for (Key parent : child->conditional()->parents()) {
+            std::cout << gtsam::DefaultKeyFormatter(parent) << std::endl;
             if (leafKeys.exists(parent)) {
               subtreesToRemove.push_back(child);
               graph.push_back(child->cachedFactor());  // Add child marginal
@@ -633,9 +684,10 @@ void ISAM2::marginalizeLeaves(const FastList<Key>& leafKeysList,
         // TODO(dellaert): reuse cached linear factors
         KeySet factorsFromMarginalizedInClique_step1;
         for (Key frontal : clique->conditional()->frontals()) {
-          if (leafKeys.exists(frontal))
+          if (leafKeys.exists(frontal)) {
             factorsFromMarginalizedInClique_step1.insert(
                 variableIndex_[frontal].begin(), variableIndex_[frontal].end());
+          }
         }
         // Remove any factors in subtrees that we're removing at this step
         for (const sharedClique& removedChild : childrenRemoved) {
@@ -662,8 +714,9 @@ void ISAM2::marginalizeLeaves(const FastList<Key>& leafKeysList,
             graph, Ordering(cliqueFrontalsToEliminate));
 
         // Add the resulting marginal
-        if (eliminationResult1.second)
+        if (eliminationResult1.second) {
           marginalFactors[cg->front()].push_back(eliminationResult1.second);
+        }
 
         // Split the current clique
         // Find the position of the last leaf key in this clique

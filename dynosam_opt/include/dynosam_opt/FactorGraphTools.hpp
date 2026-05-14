@@ -55,6 +55,37 @@ namespace dyno {
 namespace factor_graph_tools {
 
 /**
+ * @brief Prints a container of gtsam keys using the given formatter.
+ * KeyContainer must be any iterable containing a gtsam::Key or equivalent (ie.
+ * Symbol etc.)
+ *
+ * @tparam KeyContainer
+ * @param keys
+ * @param formatter
+ * @return std::string
+ */
+template <typename KeyContainer>
+std::string printKeys(
+    const KeyContainer& keys,
+    const gtsam::KeyFormatter& formatter = DynosamKeyFormatter) {
+  std::stringstream ss;
+  for (const auto key : keys) ss << formatter(key) << " ";
+  return ss.str();
+}
+
+/**
+ * @brief Helper function to print the keys of any factor using a given
+ * formatter
+ *
+ * @param factor
+ * @param formatter
+ * @return std::string
+ */
+std::string printFactorKeys(
+    const gtsam::Factor& factor,
+    const gtsam::KeyFormatter& formatter = DynosamKeyFormatter);
+
+/**
  * @brief Wrapper on the creation of a robust Huber noise model from a Shared
  * noise model
  *

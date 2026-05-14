@@ -408,7 +408,7 @@ def run_hybrid_solver_comparison_kitti():
     # run_analysis("kitti00_PnP")
 
 def run_uts_tech_lab_solver_comparison_test():
-    run_online_sequence("tech_lab_1_MO_test1", "--ending_frame=300", "--hybrid_motion_solver=4",  "--use_backend=true")
+    run_online_sequence("tech_lab_1_MO_test1", "--ending_frame=300", "--hybrid_motion_solver=4",  "--use_backend=false")
     # run_online_sequence("tech_lab_1_SS", "--ending_frame=300", "--hybrid_motion_solver=1")
     # run_online_sequence("tech_lab_1_FS", "--ending_frame=300", "--hybrid_motion_solver=2")
     # run_online_sequence("tech_lab_1_FS_test1", "--ending_frame=300", "--hybrid_motion_solver=2")
@@ -421,11 +421,11 @@ if __name__ == '__main__':
     run_post_analysis = False
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    # run_uts_tech_lab_solver_comparison_test()
+    run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    run_viodes()
+    # run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

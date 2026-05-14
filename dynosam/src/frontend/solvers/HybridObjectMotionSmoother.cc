@@ -182,8 +182,7 @@ void HybridObjectMotionSmoother::receiveUpdate(
   backend_update_ = update_info;
 }
 
-double HybridObjectMotionSmoother::reprojectionError(
-    Frame::Ptr frame, const TrackletIds& tracklets) const {
+double HybridObjectMotionSmoother::reprojectionError(Frame::Ptr frame) const {
   const FrameId frame_id_k = frame->getFrameId();
 
   const auto& object_points = this->getObjectPoints();
@@ -195,12 +194,9 @@ double HybridObjectMotionSmoother::reprojectionError(
   auto frame_camera = frame->getFrameCamera();
 
   size_t count = 0;
-  for (auto tracklet_id : tracklets) {
-    auto feature = frame->at(tracklet_id);
-    CHECK_NOTNULL(feature);
-    CHECK_EQ(feature->objectId(), object_id_);
-
-    auto kp = feature->keypoint();
+  for (const Feature::Ptr& feature : frame->usableDynamicIterator(object_id_)) {
+    const auto kp = feature->keypoint();
+    const auto tracklet_id = feature->trackletId();
 
     if (object_points.exists(tracklet_id)) {
       const gtsam::Point3 m_W = L_W_k * object_points.at(tracklet_id);
@@ -827,29 +823,42 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
 
   result.marginalized_keys = marginalizableKeys;
 
-  // std::cout << "Gets to marginalize due to filter: ";
-  // for (const auto& key : marginalizableKeys) {
-  //   std::cout << DynosamKeyFormatter(key) << " ";
+  std::cout << "Gets to marginalize due to filter: ";
+  for (const auto& key : marginalizableKeys) {
+    std::cout << gtsam::DefaultKeyFormatter(key) << " ";
 
-  //   CHECK(newTheta.exists(key) || isam_.valueExists(key)) <<
-  //   DynosamKeyFormatter(key);
-  // }
-  // std::cout << std::endl;
+    CHECK(newTheta.exists(key) || isam_.valueExists(key))
+        << DynosamKeyFormatter(key);
+  }
+  std::cout << std::endl;
 
   // newTheta.print("New theta", DynosamKeyFormatter);
 
-  if (marginalizableKeys.size() > 0) {
-    constrainedKeys.emplace();
-    for (const auto& key : isam_.getLinearizationPoint().keys()) {
-      constrainedKeys->operator[](key) = 1;
-    }
-    for (auto key : marginalizableKeys) {
-      constrainedKeys->operator[](key) = 0;
-    }
-  }
+  // the problem is that this will include only include variables
+  // in theta
+  // if we're not careful removing all factors on a single variable
+  // without marginalizsing it will cause it to disappear from
+  // all internal value data-structures (ie theta_, delta_ etc)
+  // but NOT from the bayes tree
+  // if (marginalizableKeys.size() > 0) {
+  //   constrainedKeys.emplace();
+  //   for (const auto& key : isam_.getLinearizationPoint().keys()) {
+  //     constrainedKeys->operator[](key) = 1;
+  //   }
+  //   for (auto key : marginalizableKeys) {
+  //     constrainedKeys->operator[](key) = 0;
+  //   }
+  // }
 
   // Force iSAM2 to put the marginalizable variables at the beginning
-  // createOrderingConstraints(marginalizableKeys, constrainedKeys);
+  createOrderingConstraints(marginalizableKeys, constrainedKeys);
+
+  // if(constrainedKeys) {
+  //   for (const auto& [key, group] : *constrainedKeys) {
+  //     std::cout << gtsam::DefaultKeyFormatter(key) << " " << group << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
   std::unordered_set<gtsam::Key> additionalKeys =
       BayesTreeMarginalizationHelper<
@@ -861,6 +870,7 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
   //   std::cout << DynosamKeyFormatter(key) << " ";
   // }
   // std::cout << std::endl;
+  // newFactors.print("New factors ");
 
   gtsam::KeyList additionalMarkedKeys(additionalKeys.begin(),
                                       additionalKeys.end());
@@ -883,11 +893,11 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
   auto error_hooks = getDefaultILSErrorHandlingHooks();
   error_hooks.identifier = "hybrid_smoother_j" + std::to_string(object_id_);
 
-  std::cout << "Keys before: ";
-  for (const auto& key : isam_.getLinearizationPoint().keys()) {
-    std::cout << DynosamKeyFormatter(key) << " ";
-  }
-  std::cout << std::endl;
+  // std::cout << "Keys before: ";
+  // for (const auto& key : isam_.getLinearizationPoint().keys()) {
+  //   std::cout << DynosamKeyFormatter(key) << " ";
+  // }
+  // std::cout << std::endl;
 
   smoother_interface_.setMaxExtraIterations(0);
   result.solver_okay = smoother_interface_.optimize(
@@ -1434,163 +1444,55 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     // but this is just for testing to see how much of an issue this makes
     // TODO: only do if we actually have updates! (or maybe significant
     // updates!)
-    for (auto& [_, factors] : structured_factors_) {
-      for (auto& m_factor : factors) {
-        CHECK(m_factor);
-        const gtsam::Key H_key_k = m_factor->key1();
-        LOG(INFO) << DynosamKeyFormatter(H_key_k);
+    // for (auto& [_, factors] : structured_factors_) {
+    //   for (auto& m_factor : factors) {
+    //     CHECK(m_factor);
+    //     const gtsam::Key H_key_k = m_factor->key1();
+    //     LOG(INFO) << DynosamKeyFormatter(H_key_k);
 
-        ObjectId recovered_object_id;
-        FrameId recovered_frame_id;
-        CHECK(reconstructMotionInfo(H_key_k, recovered_object_id,
-                                    recovered_frame_id));
-        CHECK(optimized_camera_trajectory.exists(recovered_frame_id));
+    //     ObjectId recovered_object_id;
+    //     FrameId recovered_frame_id;
+    //     CHECK(reconstructMotionInfo(H_key_k, recovered_object_id,
+    //                                 recovered_frame_id));
+    //     CHECK(optimized_camera_trajectory.exists(recovered_frame_id));
 
-        // // assume that the factor will get re-lineairized but
-        m_factor->cameraPose(
-            optimized_camera_trajectory.at(recovered_frame_id));
+    //     // // assume that the factor will get re-lineairized but
+    //     m_factor->cameraPose(
+    //         optimized_camera_trajectory.at(recovered_frame_id));
 
-        // gtsam::FactorIndex slot;
-        // CHECK(smoother_interface_.safeGetFactorIndex(m_factor, slot));
-        // newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] =
-        // {H_key_k, m_factor->key2()};
-      }
-    }
-
-    for (auto& [_, factor] : batch_factor_map_) {
-      CHECK(factor);
-      gtsam::FactorIndex slot;
-      CHECK(smoother_interface_.safeGetFactorIndex(factor, slot));
-
-      // gtsam::KeySet affected_keys(factor->keys().begin(),
-      // factor->keys().end());
-      // newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] =
-      // affected_keys;
-
-      for (auto& m_factor : factor->factors_) {
-        const gtsam::Key H_key_k = m_factor.key1();
-        LOG(INFO) << DynosamKeyFormatter(H_key_k);
-
-        ObjectId recovered_object_id;
-        FrameId recovered_frame_id;
-        CHECK(reconstructMotionInfo(H_key_k, recovered_object_id,
-                                    recovered_frame_id));
-        CHECK(optimized_camera_trajectory.exists(recovered_frame_id));
-
-        // assume that the factor will get re-lineairized but
-        m_factor.cameraPose(optimized_camera_trajectory.at(recovered_frame_id));
-      }
-    }
-
-    // // Test that yes indeed the last frame was a keyframe
-    // auto range_l_okf_optimized = keyframe_range_.find(last_okf_optimized);
-    // CHECK_NOTNULL(range_l_okf_optimized);
-
-    // if (last_okf_optimized < keyFrameId()) {
-    //   // L_KF * L_okfopt^{-1} = H_W_okfopt_KF
-    //   gtsam::Pose3 H_W_lKF_opt_KF =
-    //       keyFramePose() * range_l_okf_optimized->data.inverse();
-    //   const gtsam::Pose3 L_lKF_opt_refined =
-    //       optimized_trajectory.at(last_okf_optimized).pose;
-
-    //   // using our best latest pose from the backend and the motion from the
-    //   // frontend propogate the
-    //   // TODO: I guess we want to do this all in W space?
-    //   L_KF_updated = H_W_lKF_opt_KF * L_lKF_opt_refined;
-    // } else {
-    //   // we have a optimized pose for this object that lies within the active
-    //   // optimisation so we can update the pose directly
-    //   CHECK_EQ(last_okf_optimized, keyFrameId());
+    //     // gtsam::FactorIndex slot;
+    //     // CHECK(smoother_interface_.safeGetFactorIndex(m_factor, slot));
+    //     // newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] =
+    //     // {H_key_k, m_factor->key2()};
+    //   }
     // }
 
-    // // check how many poses/motions overlap with current update
-    // FrameIds overlapping_frames;
-    // for (FrameId frame_id : frames_since_lKF_) {
-    //   if (optimized_trajectory.exists(frame_id)) {
-    //     overlapping_frames.push_back(frame_id);
+    // for (auto& [_, factor] : batch_factor_map_) {
+    //   CHECK(factor);
+    //   gtsam::FactorIndex slot;
+    //   CHECK(smoother_interface_.safeGetFactorIndex(factor, slot));
+
+    //   // gtsam::KeySet affected_keys(factor->keys().begin(),
+    //   // factor->keys().end());
+    //   // newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] =
+    //   // affected_keys;
+
+    //   for (auto& m_factor : factor->factors_) {
+    //     const gtsam::Key H_key_k = m_factor.key1();
+    //     LOG(INFO) << DynosamKeyFormatter(H_key_k);
+
+    //     ObjectId recovered_object_id;
+    //     FrameId recovered_frame_id;
+    //     CHECK(reconstructMotionInfo(H_key_k, recovered_object_id,
+    //                                 recovered_frame_id));
+    //     CHECK(optimized_camera_trajectory.exists(recovered_frame_id));
+
+    //     // assume that the factor will get re-lineairized but
+    //     m_factor.cameraPose(optimized_camera_trajectory.at(recovered_frame_id));
     //   }
     // }
   }
   const gtsam::NonlinearFactorGraph& factors_in_smoother = getFactors();
-
-  // if (!points_with_update.empty()) {
-  //   // the oldest frame outside the sliding window that is about
-  //   // to become marginalized
-  //   const double frame_to_be_marginalized_d = frame_as_double -
-  // smootherLag_;
-
-  //   auto is_key_about_to_be_marginalized = [&](gtsam::Key key) -> bool {
-  //     return frame_to_be_marginalized_d > 0 &&
-  //            key == ObjectMotionSymbol(
-  //                       object_id_,
-  // (static_cast<FrameId>(frame_to_be_marginalized_d)));
-  //   };
-
-  //   size_t existing_points_with_update = 0;
-  //   // TODO: not just if m_L_points exists becuase m_L_points is cleared
-  //   every
-  //   // keyframe This is just a sanity check to say points we have
-  //   measurements
-  //   // for so should also be if we have
-  //   for (const auto& [tracklet_id, m_L] : points_with_update) {
-  //     if (m_L_points_.exists(tracklet_id)) {
-  //       // TODO: for now just update the point so that
-  //       //  new factors use the point (but should update old factors
-  // too!!)
-  //       m_L_points_[tracklet_id] = m_L;
-  //       existing_points_with_update++;
-
-  //       // collect factors on this point that now need to be relinearized
-  //       CHECK(trackletid_to_frame_ids_.exists(tracklet_id));
-  //       const FrameIds& observing_frames =
-  //           trackletid_to_frame_ids_.at(tracklet_id);
-  //       for (const FrameId frame_id : observing_frames) {
-  //         const TrackletFramePair tracklet_frame_pair{tracklet_id,
-  // frame_id};
-  //         CHECK(mo_factor_map_.exists(tracklet_frame_pair));
-
-  //         auto [factor, slot] = mo_factor_map_.at(tracklet_frame_pair);
-
-  //         {
-  //           // sanity check that this slot is still in the graph
-  //           CHECK_LT(slot, factors_in_smoother.size());
-  //           auto factor_in_smoother = factors_in_smoother.at(slot);
-  //           CHECK(factor_in_smoother);
-  //           CHECK(factor->equals(*factor_in_smoother));
-  //         }
-
-  //         // pose and camera not updated?
-  //         factor->objectPoint(m_L);
-  //         // mark factor as needing relinearization
-  //         newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)] = {
-  //             factor->key1()};
-
-  //         // if factor involves a motion that is about to be marginalized
-  //         // we cannot mark it as a newly affected key
-  //         // if(!is_key_about_to_be_marginalized(factor->key1())) {
-  //         //   factor->objectPoint(m_L);
-  //         //   // mark factor as needing relinearization
-  //         //   newly_affected_keys[static_cast<gtsam::FactorIndex>(slot)]
-  // =
-  //         //   {factor->key1()};
-  //         // }
-  //       }
-  //     } else {
-  //       // must be seen before
-  //       // somtmetimes this fails... not sure why
-  //       // CHECK(all_object_points.exists(tracklet_id));
-  //       // directly update the smoother state with the new point value
-  //       // this will then be put into the global data-structure for all
-  //       object
-  //       // points.
-  //       smoother_state.insert(PointSymbol(tracklet_id), m_L);
-  //     }
-  //   }
-
-  //   LOG(INFO) << points_with_update.size()
-  //             << " with points to update at k=" << frameId() << ". "
-  //             << existing_points_with_update << " points found in state.";
-  // }
 
   gtsam::SharedNoiseModel stereo_noise_model =
       gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);
@@ -1605,6 +1507,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   size_t avg_feature_age = 0;
 
   size_t points_in_previous_kf = 0;
+  size_t num_new_points = 0;
   // object_motion_to_tracklets_.insert2(H_key_k, TrackletIds{});
 
   gtsam::FactorIndices factors_to_delete;
@@ -1612,7 +1515,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   gtsam::KeyVector additional_keys_to_marginalize;
 
   const bool close_to_keyframe = frameId() <= (keyFrameId() + 2);
-  LOG(INFO) << frameId() << " " << keyFrameId() << " " << close_to_keyframe;
 
   for (const TrackletId& tracklet_id : tracklets) {
     Feature::Ptr feature = frame->at(tracklet_id);
@@ -1641,23 +1543,9 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       // TODO: enforce real-time ;)
       //  if we do this we seem to loose many many points!
       // accept new keypoints only in or around a new keyframe
-      if (!close_to_keyframe) {
-        continue;
-      }
-      // this helps a lot with speed as we only add new landmarks at a new
-      // keyframe if(frameId() != keyFrameId()) { continue; } Landmark
-      // m_L_init;
-      // // // point was in a previous keyframe so use this initalization
-      // // if(all_object_points.exists(tracklet_id)) {
-      // //   m_L_init = all_object_points.at(tracklet_id);
-      // // }
-      // // else {
-      // //   // initalise new point from measurement
-      // //   const gtsam::Point3 m_X_k =
-      // frame->backProjectToCamera(tracklet_id);
-      // //   m_L_init = HybridObjectMotion::projectToObject3(
-      // //       X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
-      // // }
+      // if (!close_to_keyframe) {
+      //   continue;
+      // }
 
       const gtsam::Point3 m_X_k = frame->backProjectToCamera(tracklet_id);
       Landmark m_L_init = HybridObjectMotion::projectToObject3(
@@ -1671,6 +1559,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
           stereo_measurement, L_KF, X_W_k, stereo_noise_model,
           stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
       );
+      num_new_points++;
 
       structured_factors_.insert2(tracklet_id, {factor});
       new_factors += factor;
@@ -1685,22 +1574,22 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
         std::vector<StereoHybridMotionFactor2::shared_ptr>&
             measurement_factors = structured_factors_.at(tracklet_id);
 
+        // add the new factor for this measurement (so we capture the
+        // measurement at this frane) and ensure the variable is not unused
+        auto factor = boost::make_shared<StereoHybridMotionFactor2>(
+            stereo_measurement, L_KF, X_W_k, stereo_noise_model,
+            stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
+        );
+        // new_factors += factor;
+
+        measurement_factors.push_back(factor);
+
         // convert to batch factor
         // we have 2 observations so add the new one to the measurement
         // factors so for the smart factors we have 3 in total (this will be
         // added next) add the new factor so it is not unused and mark as
         // marginalized!
-        if (measurement_factors.size() >= 2) {
-          // add the new factor for this measurement (so we capture the
-          // measurement at this frane) and ensure the variable is not unused
-          auto factor = boost::make_shared<StereoHybridMotionFactor2>(
-              stereo_measurement, L_KF, X_W_k, stereo_noise_model,
-              stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
-          );
-          // new_factors += factor;
-
-          measurement_factors.push_back(factor);
-
+        if (measurement_factors.size() > 3) {
           // TBH these match factors probably not so good becuas we
           // re-linearize
           // every time!
@@ -1729,26 +1618,28 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
             // factors_to_delete.push_back(slot);
           }
           // new_factors += batch_factor;
-          // new_factors += smart_factor;
+          // doubling up some information here!
+          // NOTE: this was needed to stop some awful bug when using isam2!
+          new_factors += smart_factor;
           // batch_factor_map_.insert2(tracklet_id, batch_factor);
-          smart_factor_map_.insert2(tracklet_id, {smart_factor});
+          structureless_factors_.insert2(tracklet_id, {smart_factor});
 
           // keys_that_should_be_deleted.push_back(m_key);
           // just marginalize and dont add factor on old measurements
           // store factor just as current way to recover measurements for new
           // factors
           additional_keys_to_marginalize.push_back(m_key);
-          LOG(INFO) << "Marginalize " << DynosamKeyFormatter(m_key);
+          // LOG(INFO) << "Marginalize " << tracklet_id;
           point_state_.at(tracklet_id).first = PointState::Marginalized;
 
           structured_factors_.erase(tracklet_id);
         } else {
-          auto factor = boost::make_shared<StereoHybridMotionFactor2>(
-              stereo_measurement, L_KF, X_W_k, stereo_noise_model,
-              stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
-          );
+          // auto factor = boost::make_shared<StereoHybridMotionFactor2>(
+          //     stereo_measurement, L_KF, X_W_k, stereo_noise_model,
+          //     stereo_calibration_, H_key_k, m_key, false /*throw ceirality*/
+          // );
 
-          measurement_factors.push_back(factor);
+          // measurement_factors.push_back(factor);
           new_factors += factor;
         }
 
@@ -1757,17 +1648,17 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       else {
         CHECK(!isam_.valueExists(m_key));
         // CHECK(batch_factor_map_.exists(tracklet_id));
-        CHECK(smart_factor_map_.exists(tracklet_id));
+        CHECK(structureless_factors_.exists(tracklet_id));
         CHECK(!structured_factors_.exists(tracklet_id));
 
         auto last_smart_motion_factor =
-            smart_factor_map_.at(tracklet_id).back();
+            structureless_factors_.at(tracklet_id).back();
 
         auto last_camera_poses = last_smart_motion_factor->cameraPoses();
         auto last_measurement_factors =
             last_smart_motion_factor->measurementFactors();
 
-        CHECK_EQ(last_camera_poses.size(), 3);
+        // CHECK_EQ(last_camera_poses.size(), 3);
         auto smart_factor = boost::make_shared<StereoSmartFactor>(
             L_KF, m_L_point, stereo_non_robust_noise_model,
             stereo_calibration_);
@@ -1786,6 +1677,9 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
         auto H_key_i = ObjectMotionSymbol(object_id_, frame_id_i);
 
+        // take last three poses
+        CHECK_EQ(last_camera_poses.size(), 4);
+
         // smart_factor->add(z_i, H_key_i, X_W_i);
         smart_factor->add(last_measurement_factors.at(1).measured(),
                           last_smart_motion_factor->keys().at(1),
@@ -1793,9 +1687,12 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
         smart_factor->add(last_measurement_factors.at(2).measured(),
                           last_smart_motion_factor->keys().at(2),
                           last_camera_poses.at(2));
+        smart_factor->add(last_measurement_factors.at(3).measured(),
+                          last_smart_motion_factor->keys().at(3),
+                          last_camera_poses.at(3));
         smart_factor->add(stereo_measurement, H_key_k, X_W_k);
 
-        smart_factor_map_.at(tracklet_id).push_back(smart_factor);
+        structureless_factors_.at(tracklet_id).push_back(smart_factor);
         new_factors += smart_factor;
 
         // auto batch_factor = batch_factor_map_.at(tracklet_id);
@@ -1829,6 +1726,49 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   }
 
   avg_feature_age /= num_tracks_used;
+
+  LOG(INFO) << "Num tracks used: " << num_tracks_used << " num_new_points "
+            << num_new_points;
+  LOG(INFO) << "Num new factors: " << new_factors.size();
+
+  // we must also remove all tracks that are lost (if in state, remove all
+  // factors that touch these points) so that we dont include information
+  // arguably these factors should probably never have been added but oh well
+  auto points_in_state =
+      getObjectPointsFromState(smoother_interface_.getLinearizationPoint());
+  for (const auto& [key, _] : points_in_state) {
+    gtsam::Symbol sym(key);
+    TrackletId tracklet_id = static_cast<TrackletId>(sym.index());
+    if (!frame->exists(tracklet_id)) {
+      // std::stringstream ss;
+      // ss << "Tracklet dropped: " << tracklet_id << " seen at k= ";
+      // for(const auto& [frame_id, _] : stereo_measurements_.at(tracklet_id)) {
+      //   ss << frame_id << " ";
+      // }
+      // LOG(INFO) << ss.str();
+      // assume tracklet dropped and therefore remove factors
+      CHECK(point_state_.exists(tracklet_id));
+      CHECK_EQ(point_state_.at(tracklet_id).first, PointState::InState);
+      CHECK(structured_factors_.exists(tracklet_id));
+
+      // current implementation is such that the last measurement factor
+      // wont actually be in the graph? If we make it to marginalizing out the
+      // pont?
+      const std::vector<StereoHybridMotionFactor2::shared_ptr>&
+          measurement_factors = structured_factors_.at(tracklet_id);
+      for (StereoHybridMotionFactor2::shared_ptr m_factor :
+           measurement_factors) {
+        gtsam::FactorIndex slot;
+        CHECK(smoother_interface_.safeGetFactorIndex(m_factor, slot));
+        factors_to_delete.push_back(slot);
+      }
+      structured_factors_.erase(tracklet_id);
+      keys_that_should_be_deleted.push_back(key);
+      // assume we will never see this point again as tracklets are not
+      // reassociated and id's only increase
+      point_state_.erase(tracklet_id);
+    }
+  }
 
   if (frameId() == keyFrameId()) {
     gtsam::SharedNoiseModel identity_motion_model =
@@ -1868,6 +1808,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   update_params.newAffectedKeys = std::move(newly_affected_keys);
   update_params.removeFactorIndices = std::move(factors_to_delete);
 
+  LOG(INFO) << "Starting update";
   HybridObjectMotionSmoother::Result result =
       this->updateSmoother(new_factors, new_values, timestamps, update_params,
                            additional_keys_to_marginalize);
@@ -1888,11 +1829,11 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     CHECK(unused_keys.exists(key));
   }
 
-  std::stringstream ss;
-  for (auto key : isam_result.markedKeys) {
-    ss << DynosamKeyFormatter(key) << " ";
-  }
-  LOG(INFO) << "Marked keys: " << ss.str();
+  // std::stringstream ss;
+  // for (auto key : isam_result.markedKeys) {
+  //   ss << DynosamKeyFormatter(key) << " ";
+  // }
+  // LOG(INFO) << "Marked keys: " << ss.str();
   //  ss.clear();
 
   // //  std::stringstream ss;
@@ -1969,13 +1910,13 @@ gtsam::Pose3 HybridObjectMotionOnlySmoother::keyFrameMotionImpl(
 
 void HybridObjectMotionOnlySmoother::onNewKeyFrameMotion(
     const dyno::ISAM2& smoother_before_reset, const gtsam::Pose3 new_L_KF) {
-  mo_factor_map_.clear();
-  mo_factor_to_tracklet_id_.clear();
-  trackletid_to_frame_ids_.clear();
-  object_motion_to_tracklets_.clear();
+  // mo_factor_map_.clear();
+  // mo_factor_to_tracklet_id_.clear();
+  // trackletid_to_frame_ids_.clear();
+  // object_motion_to_tracklets_.clear();
 
-  batch_factor_map_.clear();
-  smart_factor_map_.clear();
+  // batch_factor_map_.clear();
+  structureless_factors_.clear();
 
   // awaiting_measurements_.clear();
   // m_L_points_.clear();

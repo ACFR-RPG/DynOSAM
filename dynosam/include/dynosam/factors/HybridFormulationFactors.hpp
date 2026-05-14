@@ -443,14 +443,21 @@ class SmartMotionFactor2 : public gtsam::NonlinearFactor {
   using This = SmartMotionFactor2<DIM, MOTION>;
   using shared_ptr = boost::shared_ptr<This>;
 
-  // Dimensions for Point (3), Motion (6), and Measurement (3)
+  // Dimensions for Stereo Point (3)
   static constexpr size_t ZDim = 3;
-  static constexpr size_t MDim = 6;
-  static constexpr size_t PDim = 3;  // Point3
+  static constexpr size_t HDim = 6;
+
+  //! G blocks (derivatives wrt motion, H)
+  using MatrixGD = Eigen::Matrix<double, ZDim, HDim>;
+  //! E blocks (derivatives wrt point, m)
+  using MatrixED = Eigen::Matrix<double, ZDim, ZDim>;
 
   // Typedefs for GTSAM compatibility
-  using GBlocks = std::vector<gtsam::Matrix>;  // Jacobians w.r.t Motion
-  using EBlocks = std::vector<gtsam::Matrix>;  // Jacobians w.r.t Point
+  using GBlocks = std::vector<
+      MatrixGD, Eigen::aligned_allocator<MatrixGD>>;  // Jacobians w.r.t Motion
+  using EBlocks =
+      std::vector<MatrixED,
+                  Eigen::aligned_allocator<MatrixED>>;  // Jacobians w.r.t Point
 
  private:
   gtsam::Pose3 L_e_;  // Embedded object frame
@@ -544,17 +551,17 @@ class SmartMotionFactor2 : public gtsam::NonlinearFactor {
 
     // 5. Build Augmented Hessian (Dimensions: [6, 6, ..., 6, 1])
     std::vector<gtsam::DenseIndex> dims;
-    for (size_t i = 0; i < m; ++i) dims.push_back(MDim);
+    for (size_t i = 0; i < m; ++i) dims.push_back(HDim);
     dims.push_back(1);
     gtsam::SymmetricBlockMatrix augmentedHessian(dims);
 
     utils::ChronoTimingStats update_timer("SmartMotionFactor2.schur", 2);
 
     for (size_t i = 0; i < m; ++i) {
-      const gtsam::Matrix& Gi = Gs[i];
-      const gtsam::Matrix& Ei = Es[i];
-      const gtsam::Matrix GiT = Gi.transpose();
-      const gtsam::Matrix EiP = Ei * P;  // (3x3) * (3x3)
+      const gtsam::Matrix36& Gi = Gs[i];
+      const gtsam::Matrix33& Ei = Es[i];
+      const gtsam::Matrix63 GiT = Gi.transpose();
+      const gtsam::Matrix33 EiP = Ei * P;  // (3x3) * (3x3)
 
       // A. Diagonal Block: G'G - G'E * P * E'G
       // Gi' * (Gi - Ei * P * Ei' * Gi)
@@ -562,7 +569,7 @@ class SmartMotionFactor2 : public gtsam::NonlinearFactor {
                                         GiT * (Gi - EiP * Ei.transpose() * Gi));
 
       // B. Information Vector (last column): G'b - G'E * P * (E'b)
-      gtsam::Vector bi = b.segment<ZDim>(i * ZDim);
+      gtsam::Vector3 bi = b.segment<ZDim>(i * ZDim);
       augmentedHessian.setOffDiagonalBlock(i, m, GiT * bi - GiT * (EiP * Etb));
 
       // C. Off-Diagonal Blocks (coupling motions i and j)
@@ -578,7 +585,7 @@ class SmartMotionFactor2 : public gtsam::NonlinearFactor {
     augmentedHessian.diagonalBlock(m)(0, 0) = reduced_sse;
 
     // 7. Return as a Hessian Factor
-    return boost::make_shared<gtsam::RegularHessianFactor<MDim>>(
+    return boost::make_shared<gtsam::RegularHessianFactor<HDim>>(
         keys_, augmentedHessian);
   }
 

@@ -580,6 +580,17 @@ class ISAMInterface : public IncrementalInterface<ISAMSmoother> {
     }
 
     auto retrieved_slot = factor_map_.at(factor);
+
+    {
+      // probably slow since inferace does not support const& yet
+      const auto factors_in_smoother = this->getFactors();
+      CHECK_LT(retrieved_slot, factors_in_smoother.size());
+
+      auto factor_in_smoother = factors_in_smoother.at(retrieved_slot);
+      CHECK_NOTNULL(factor_in_smoother);
+      CHECK_EQ(factor, factor_in_smoother);
+    }
+
     // check not null?
     slot = retrieved_slot;
     return true;

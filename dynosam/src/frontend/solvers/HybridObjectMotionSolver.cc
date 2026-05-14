@@ -438,6 +438,7 @@ bool HybridObjectMotionSolver::solveImpl(
     // requires_new_keyframe = true;
   } else if (object_retracked) {
     auto solver = threadSafeFilterAccess(object_id);
+    LOG(WARNING) << "Object retracked: " << info_string(frame_id_k, object_id);
 
     // HACK FOR NOW: to ensure we dont have tracklets across poor poses (ie
     // non-well tracked) just relabal all tracklets in km1 and k
@@ -489,14 +490,19 @@ bool HybridObjectMotionSolver::solveImpl(
   motion_estimate = H_W_km1_k;
 
   // now see if needs new keyframe
+  // important to not make new keyframe if object-retracked as we would have
+  // just made a new one!
   if (maybe_previous_tracking_state &&
-      maybe_previous_tracking_state.value() != ObjectTrackingStatus::New) {
+      maybe_previous_tracking_state.value() != ObjectTrackingStatus::New &&
+      !object_retracked) {
     auto smoother =
         std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
     if (smoother) {
       // for OMD
       if (smoother /*&& previous_tracking_state != ObjectTrackingStatus::New*/) {
         utils::ChronoTimingStats timer("object_motion_solver.is_keyframe");
+        // TODO: all logic around anchor keyframe/if reset/or juust new kf
+        // should be made here!
         requires_new_keyframe =
             smoother->shouldBeKeyframe(frame_k, &keyframe_debug_image_);
         // LOG(INFO) << "object j=" << object_id << " TRACKING Q " << quality;
@@ -544,46 +550,71 @@ bool HybridObjectMotionSolver::solveImpl(
               << "motion KF: " << info.H_W_KF_k.from()
               << " to: " << info.H_W_KF_k.to()
               << " with kf status: " << info.keyframe_status;
-    solver->setNewKeyframe(frame_k);
-  }
 
-  // logic is sperate to keyframe status which determines if a new keyframe
-  // should be made in the backend here we decide if a new keyframe is made in
-  // the frontend THe logic is split becuase for the frontend a newkeyframe pose
-  // needs to be made for new objects and re-tracked objects before the motion
-  // is sent to the backend!
-  if (requires_new_keyframe) {
-    gtsam::Pose3 new_KF_pose;
-    // now reset solver for next frame (ie. make KF at k)
-    if (pose_init_method == PoseInitalisationMethod::Centroid) {
-      new_KF_pose = constructObjectPose(object_id, frame_k, inlier_tracklets);
-
-    } else if (pose_init_method == PoseInitalisationMethod::Previous) {
-      new_KF_pose = solver->pose();
+    auto smoother =
+        std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
+    if (smoother) {
+      auto repr_error = smoother->reprojectionError(frame_k);
+      LOG(INFO) << info_string(frame_id_k, object_id)
+                << " repr error: " << repr_error;
+      if (repr_error > 10) {
+        CHECK_EQ(pose_init_method, PoseInitalisationMethod::Previous);
+        solver->resetWithNewKeyedMotion(solver->pose(), frame_k,
+                                        inlier_tracklets);
+      } else {
+        solver->setNewKeyframe(frame_k);
+      }
     } else {
-      throw DynosamException("Should not get here");
+      solver->setNewKeyframe(frame_k);
     }
 
-    // it actually does not make fully logical sense to keyframe for k+1 here
-    // for several reasons We have already added the same set of measurements
-    // for frame k during the update we should really want till thr next frame
-    // where we have new measurements (seen in k and k+1) as this will be
-    // different to the current set of inlier tracks.
-    // solver->resetWithNewKeyedMotion(new_KF_pose, frame_k, inlier_tracklets);
-
-    if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
-      // reset the solver every N
-      // increment number of KF's here to ensure that the solving is good
-      // and that the keyframe is actually created!!
-      // Only increment if a keyframe was sent to the backend!
-      // TODO: use internal keyframe count for smoother?
-      const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
-      // const int num_kf = num_kfs_per_object_.at(object_id);
-      // if(num_kf == 0 )
-
-      num_kfs_per_object_.at(object_id)++;
-    }
+    const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
+    num_kfs_per_object_.at(object_id)++;
   }
+
+  // // logic is sperate to keyframe status which determines if a new keyframe
+  // // should be made in the backend here we decide if a new keyframe is made
+  // in
+  // // the frontend THe logic is split becuase for the frontend a newkeyframe
+  // pose
+  // // needs to be made for new objects and re-tracked objects before the
+  // motion
+  // // is sent to the backend!
+  // if (requires_new_keyframe) {
+  //   gtsam::Pose3 new_KF_pose;
+  //   // now reset solver for next frame (ie. make KF at k)
+  //   if (pose_init_method == PoseInitalisationMethod::Centroid) {
+  //     new_KF_pose = constructObjectPose(object_id, frame_k,
+  //     inlier_tracklets);
+
+  //   } else if (pose_init_method == PoseInitalisationMethod::Previous) {
+  //     new_KF_pose = solver->pose();
+  //   } else {
+  //     throw DynosamException("Should not get here");
+  //   }
+
+  //   // it actually does not make fully logical sense to keyframe for k+1 here
+  //   // for several reasons We have already added the same set of measurements
+  //   // for frame k during the update we should really want till thr next
+  //   frame
+  //   // where we have new measurements (seen in k and k+1) as this will be
+  //   // different to the current set of inlier tracks.
+  //   // solver->resetWithNewKeyedMotion(new_KF_pose, frame_k,
+  //   inlier_tracklets);
+
+  //   if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
+  //     // reset the solver every N
+  //     // increment number of KF's here to ensure that the solving is good
+  //     // and that the keyframe is actually created!!
+  //     // Only increment if a keyframe was sent to the backend!
+  //     // TODO: use internal keyframe count for smoother?
+  //     const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
+  //     // const int num_kf = num_kfs_per_object_.at(object_id);
+  //     // if(num_kf == 0 )
+
+  //     num_kfs_per_object_.at(object_id)++;
+  //   }
+  // }
 
   return true;
 }
@@ -798,7 +829,7 @@ HybridObjectMotionSolver::createAndInsertFilter(ObjectId object_id,
                                                     frame, tracklets);
   } else if (FLAGS_hybrid_motion_solver == 4) {
     solver = HybridObjectMotionSmoother::CreateWithInitialMotion<
-        HybridObjectMotionOnlySmoother>(object_id, 6, keyframe_pose, frame,
+        HybridObjectMotionOnlySmoother>(object_id, 10, keyframe_pose, frame,
                                         tracklets);
   }
   CHECK_NOTNULL(solver);

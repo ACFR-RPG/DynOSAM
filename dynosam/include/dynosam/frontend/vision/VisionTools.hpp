@@ -31,6 +31,8 @@
 #pragma once
 
 #include <glog/logging.h>
+#include <gtsam/geometry/StereoCamera.h>
+#include <gtsam/geometry/triangulation.h>
 
 #include <opencv4/opencv2/opencv.hpp>
 
@@ -55,63 +57,14 @@ class FrontendParams;
 
 namespace vision_tools {
 
-// class KLTWrapper {
-
-// public:
-//     LKWrapper(const cv::Size& win_size = cv::Size(21,21),
-//               int max_level = 3,
-//               const cv::TermCriteria& criteria =
-//               cv::TermCriteria(cv::TermCriteria::COUNT +
-//               cv::TermCriteria::EPS, 30, 0.01), int flags = 0, double
-//               min_eig_threshold = 1e-4);
-
-//     template<typename ImgType>
-//     void calc(const ImgType& prev_img, const ImgType& next_img,
-//               const std::vector<cv::Point2f>& prev_pts,
-//               std::vector<cv::Point2f>& next_pts,
-//               std::vector<uchar>& status,
-//               std::vector<float>& err,
-//               bool return_gpu = false)
-//     {
-//         if constexpr (std::is_same_v<ImgType, cv::Mat>) {
-//             if()
-
-//         }
-//         else if constexpr (std::is_same_v<ImgType, cv::cuda::GpuMat>) {
-
-//         }
-//         else {
-//             static_assert(False, "Unsupported image type");
-//         }
-//     }
-
-// private:
-//     cv::Size win_size_;
-//     int max_level_;
-//     cv::TermCriteria criteria_;
-//     int flags_;
-//     double min_eig_threshold_;
-//     bool use_cuda_;
-//     bool first_run_;
-
-//     #ifdef DYNO_CUDA_OPENCV_ENABLED
-//     cv::Ptr<cv::cuda::OpticalFlowPyrLK> lk_cuda_;
-//     cv::cuda::GpuMat d_prev_, d_next_;
-//     cv::cuda::GpuMat d_next_pts_, d_status_, d_err_;
-//     #endif
-// };
-
-// void disparityToDepth(const FrontendParams& params, const cv::Mat& disparity,
-// cv::Mat& depth);
-
-// does not do any undistortion etc on the image pairs -> simply looks to see
-// which tracklet ids's are in both frames iteratoes over the current features
-// and checks to see if the feature is in the previous feature set previous
-// features can probably just be a FeatureCOntainer but i guess we want to check
-// that it is valid too, via the filter iterator?
-// void getCorrespondences(FeaturePairs& correspondences,
-//                         const FeatureFilterIterator& previous_features,
-//                         const FeatureFilterIterator& current_features);
+/// triangulateSafe: extensive checking of the outcome
+/// a modifed version that lets use use triangulateLOST
+/// while still on gtsam 4.2
+template <class CAMERA>
+gtsam::TriangulationResult triangulateSafe(
+    const gtsam::CameraSet<CAMERA>& cameras,
+    const typename CAMERA::MeasurementVector& measured,
+    const gtsam::TriangulationParameters& params, const bool useLOST = false);
 
 template <typename Predicate>
 void getCorrespondences(FeaturePairs& correspondences,

@@ -179,6 +179,7 @@ struct UpdateImpl {
     variableIndex->remove(updateParams_.removeFactorIndices.begin(),
                           updateParams_.removeFactorIndices.end(),
                           removedFactors);
+
     *keysWithRemovedFactors = removedFactors.keys();
   }
 

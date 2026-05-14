@@ -61,7 +61,7 @@ class HybridObjectMotionSolverImpl {
                                        Frame::Ptr frame,
                                        const TrackletIds& tracklets) = 0;
 
-  virtual bool setNewKeyframe(Frame::Ptr) {}
+  virtual bool setNewKeyframe(Frame::Ptr) { return false; }
 
   // points in L
   virtual gtsam::FastMap<TrackletId, gtsam::Point3> getObjectPoints() const = 0;

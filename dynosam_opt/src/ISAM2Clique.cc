@@ -67,13 +67,30 @@ bool ISAM2Clique::equals(const This& other, double tol) const {
 
 /* ************************************************************************* */
 void ISAM2Clique::print(const string& s, const KeyFormatter& formatter) const {
-  Base::print(s, formatter);
-  if (cachedFactor_)
-    cachedFactor_->print(s + "Cached: ", formatter);
-  else
-    cout << s << "Cached empty" << endl;
-  if (gradientContribution_.rows() != 0)
-    gtsam::print(gradientContribution_, "Gradient contribution: ");
+  cout << (s.empty() ? "" : s + " ") << "p(";
+  for (auto it = conditional_->beginFrontals();
+       it != conditional_->endFrontals(); ++it) {
+    cout << formatter(*it) << (conditional_->nrFrontals() > 1 ? " " : "");
+  }
+
+  if (conditional_->nrParents()) {
+    cout << " |";
+    for (auto it = conditional_->beginParents();
+         it != conditional_->endParents(); ++it) {
+      cout << " " << formatter(*it);
+    }
+  }
+  cout << ")" << endl;
+  // if (cachedFactor_)
+  //   cachedFactor_->print(s + "Cached: ", formatter);
+
+  // Base::print(s, formatter);
+  // if (cachedFactor_)
+  //   cachedFactor_->print(s + "Cached: ", formatter);
+  // else
+  //   cout << s << "Cached empty" << endl;
+  // if (gradientContribution_.rows() != 0)
+  //   gtsam::print(gradientContribution_, "Gradient contribution: ");
 }
 
 /* ************************************************************************* */

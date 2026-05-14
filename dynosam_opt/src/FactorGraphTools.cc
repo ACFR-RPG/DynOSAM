@@ -44,6 +44,11 @@ namespace dyno {
 
 namespace factor_graph_tools {
 
+std::string printFactorKeys(const gtsam::Factor& factor,
+                            const gtsam::KeyFormatter& formatter) {
+  return printKeys(factor.keys(), formatter);
+}
+
 gtsam::SharedNoiseModel robustifyHuber(double k,
                                        gtsam::SharedNoiseModel model) {
   return gtsam::noiseModel::Robust::Create(
