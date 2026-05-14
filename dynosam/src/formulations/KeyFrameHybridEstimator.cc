@@ -603,10 +603,10 @@ void HybridFormulationKeyFrame::updateObject(
       }
 
       // TODO: bring this back!
-      // if (frames_with_measurements.size() < 2) {
-      //   num_factors_not_enough_obs++;
-      //   continue;
-      // }
+      if (frames_with_measurements.size() < 2) {
+        num_factors_not_enough_obs++;
+        continue;
+      }
 
       // uuuh need to update these becuase something in the accessor
       //  needs them!

@@ -69,7 +69,7 @@ FrameId HybridObjectMotionSmoother::firstKeyframe() const {
 
 PoseWithMotionTrajectory HybridObjectMotionSmoother::trajectory() const {
   // only from KF -> k (assume continuous?)
-  PoseWithMotionTrajectory trajectory = trajectory_upto_lKF_;
+  PoseWithMotionTrajectory trajectory = frozen_trajectory_;
 
   const bool include_kf_in_local_traj = !trajectory.exists(keyFrameId());
   trajectory.insert(localTrajectoryImpl(include_kf_in_local_traj));
@@ -248,18 +248,41 @@ double coverageKeyframeSupportSIMD(const std::vector<Eigen::Vector2d>& pts_kf,
 void drawEllipse(cv::Mat& img,
                  const Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>& solver,
                  const Eigen::Vector2d& mean, const cv::Scalar& color) {
-  Eigen::Vector2d eigvals = solver.eigenvalues();
-  Eigen::Matrix2d eigvecs = solver.eigenvectors();
+  const Eigen::Vector2d eigvals = solver.eigenvalues();
+  const Eigen::Matrix2d eigvecs = solver.eigenvectors();
 
-  // Largest eigenvalue/vector
-  int idx = eigvals(0) > eigvals(1) ? 0 : 1;
+  // Validate eigenvalues
+  if (!eigvals.allFinite()) {
+    return;
+  }
+
+  // Clamp tiny negative values caused by numerics
+  const double lambda0 = std::max(0.0, eigvals(0));
+  const double lambda1 = std::max(0.0, eigvals(1));
+
+  // Semi-axis lengths
+  const double axis0 = std::sqrt(lambda0) * 2.0;
+  const double axis1 = std::sqrt(lambda1) * 2.0;
+
+  if (!std::isfinite(axis0) || !std::isfinite(axis1)) {
+    return;
+  }
+
+  // OpenCV requires non-negative integer axes
+  cv::Size axes(static_cast<int>(std::round(axis0)),
+                static_cast<int>(std::round(axis1)));
+
+  // Largest eigenvector determines orientation
+  int idx = lambda0 > lambda1 ? 0 : 1;
 
   double angle = std::atan2(eigvecs(1, idx), eigvecs(0, idx)) * 180.0 / M_PI;
 
-  cv::Size axes(static_cast<int>(std::sqrt(eigvals(0)) * 2.0),
-                static_cast<int>(std::sqrt(eigvals(1)) * 2.0));
+  if (!std::isfinite(angle)) {
+    return;
+  }
 
   const cv::Point p(utils::gtsamPointToCv<int>(mean));
+
   if (!utils::matContains(img, p)) {
     return;
   }
@@ -600,9 +623,9 @@ bool HybridObjectMotionSmoother::resetWithNewKeyedMotion(
     const gtsam::Pose3& L_KF, Frame::Ptr frame, const TrackletIds& tracklets) {
   if (VLOG_IS_ON(10)) {
     const std::string current_frame =
-        frames_since_lKF_.empty() ? "None" : std::to_string(frameId());
+        active_frame_ids_.empty() ? "None" : std::to_string(frameId());
     const std::string current_KF =
-        frames_since_lKF_.empty() ? "None" : std::to_string(keyFrameId());
+        active_frame_ids_.empty() ? "None" : std::to_string(keyFrameId());
     VLOG(10) << "Creating new KeyMotion "
              << info_string(frame->getFrameId(), object_id_)
              << " current k=" << current_frame << " KF=" << current_KF;
@@ -621,32 +644,25 @@ bool HybridObjectMotionSmoother::resetWithNewKeyedMotion(
   // relies on state_since_lKF_ to fill trajectory values
   // trajectory includes keyframe!
   PoseWithMotionTrajectory trajectory_till_lKF;
-  if (trajectory_upto_lKF_.empty()) {
+  if (frozen_trajectory_.empty()) {
     // if the trajectory is currently emppty, get the full trajectory
     // which will include the keyframe as the first frame of the trajectory.
     trajectory_till_lKF = std::move(localTrajectory());
   } else {
     // TODO: what if the trajectory is broken!!
     const bool include_kf_in_local_traj =
-        !trajectory_upto_lKF_.exists(keyFrameId());
+        !frozen_trajectory_.exists(keyFrameId());
     trajectory_till_lKF =
         std::move(localTrajectoryImpl(include_kf_in_local_traj));
-    // if(trajectory_upto_lKF_.exists(keyFrameId()))
-    // get trajectory without keyframe (ie the first frame of the local traj)
-    // since this frame will be the last frame of the current trajectory
-    // (trajectory_upto_lKF_)
-    // constexpr static bool kIncludeKFInTrajectory = false;
-    // trajectory_till_lKF =
-    //     std::move(localTrajectoryImpl(kIncludeKFInTrajectory));
   }
-  trajectory_upto_lKF_.insert(trajectory_till_lKF);
+  frozen_trajectory_.insert(trajectory_till_lKF);
 
   // do before we clear all the *_since_lKF so the virtual function can access
   // this stuff if necessary
   this->onNewKeyFrameMotion(isam_copy, L_KF);
 
-  frames_since_lKF_.clear();
-  timestamps_since_lKF_.clear();
+  active_frame_ids_.clear();
+  active_timestamps_.clear();
   state_since_lKF_.clear();
 
   smoother_state_.clear();
@@ -673,7 +689,7 @@ bool HybridObjectMotionSmoother::setNewKeyframe(Frame::Ptr frame) {
 bool HybridObjectMotionSmoother::update(const gtsam::Pose3& H_W_km1_k_predict,
                                         Frame::Ptr frame,
                                         const TrackletIds& tracklets) {
-  CHECK(!frames_since_lKF_.empty())
+  CHECK(!active_frame_ids_.empty())
       << "HybridObjectMotionSmoother::update "
       << " cannot be called without first creating a valid MotionFrame!";
 
@@ -690,9 +706,9 @@ bool HybridObjectMotionSmoother::update(const gtsam::Pose3& H_W_km1_k_predict,
 
 PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
     bool include_keyframe) const {
-  CHECK_EQ(frames_since_lKF_.size(), timestamps_since_lKF_.size());
+  CHECK_EQ(active_frame_ids_.size(), active_timestamps_.size());
 
-  if (frames_since_lKF_.empty()) {
+  if (active_frame_ids_.empty()) {
     return PoseWithMotionTrajectory{};
   }
 
@@ -703,9 +719,9 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
 
   // build trajectory from best state estimate since last KF
   PoseWithMotionTrajectory local_trajectory;
-  for (size_t i = 0; i < frames_since_lKF_.size(); i++) {
-    const FrameId frame_id = frames_since_lKF_.at(i);
-    const Timestamp timestamp = timestamps_since_lKF_.at(i);
+  for (size_t i = 0; i < active_frame_ids_.size(); i++) {
+    const FrameId frame_id = active_frame_ids_.at(i);
+    const Timestamp timestamp = active_timestamps_.at(i);
 
     // sanity check that all frames are part of the same KF range
     CHECK(kf_data->contains(frame_id));
@@ -740,7 +756,7 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
       FrameId frame_id_km1 = frame_id - 1u;
       // sanity check that the previous frame is frame id -1 (ie. we're
       // consecutive!)
-      CHECK_EQ(frame_id_km1, frames_since_lKF_.at(i - 1));
+      CHECK_EQ(frame_id_km1, active_frame_ids_.at(i - 1));
 
       const gtsam::Symbol H_key_km1 =
           ObjectMotionSymbol(object_id_, frame_id - 1u);
@@ -771,8 +787,8 @@ HybridObjectMotionSmoother::updateFromInitialMotion(
 
   // update temporal data-structure immediately so frameId() and keyFrameId()
   // functions work
-  frames_since_lKF_.push_back(frame_id);
-  timestamps_since_lKF_.push_back(timestamp);
+  active_frame_ids_.push_back(frame_id);
+  active_timestamps_.push_back(timestamp);
 
   camera_poses_.insert2(frame_id, frame->getPose());
 
@@ -1024,7 +1040,7 @@ bool HybridObjectMotionSmoother::takeBackendUpdate(
 //     // TODO: actually trajectory up to current kf
 //     // better name is "frozen" trajectory and maybe active trajectory (ie.
 //     // local)
-//     //  const auto& trajectory_upto_lKF = trajectory_upto_lKF_;
+//     //  const auto& trajectory_upto_lKF = frozen_trajectory_;
 
 //     // in the case that lkast_okf  < current keyframe
 //     // we dont have any optimized estimates that current overlap with the
@@ -1057,7 +1073,7 @@ bool HybridObjectMotionSmoother::takeBackendUpdate(
 
 //     // check how many poses/motions overlap with current update
 //     FrameIds overlapping_frames;
-//     for (FrameId frame_id : frames_since_lKF_) {
+//     for (FrameId frame_id : active_frame_ids_) {
 //       if (optimized_trajectory.exists(frame_id)) {
 //         overlapping_frames.push_back(frame_id);
 //       }
@@ -1425,7 +1441,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     // TODO: actually trajectory up to current kf
     // better name is "frozen" trajectory and maybe active trajectory (ie.
     // local)
-    //  const auto& trajectory_upto_lKF = trajectory_upto_lKF_;
+    //  const auto& trajectory_upto_lKF = frozen_trajectory_;
 
     // in the case that lkast_okf  < current keyframe
     // we dont have any optimized estimates that current overlap with the
@@ -1786,7 +1802,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
     // TODO: params
     gtsam::Vector6 sigmas;
-    sigmas << 0.8, 0.8, 0.8, 0.3, 0.3, 0.3;
+    sigmas << 0.2, 0.2, 0.2, 0.1, 0.1, 0.1;
     gtsam::SharedNoiseModel smoothing_motion_model =
         gtsam::noiseModel::Isotropic::Sigmas(sigmas);
 
@@ -1800,9 +1816,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       smoothing_factors_.insert2(frame_id, smoothing_factor);
     }
   }
-
-  // HybridObjectMotionSmoother::Result result = this->updateSmoother(
-  //     new_factors, new_values, timestamps, ISAM2UpdateParams{});
 
   dyno::ISAM2UpdateParams update_params;
   update_params.newAffectedKeys = std::move(newly_affected_keys);

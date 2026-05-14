@@ -299,7 +299,9 @@ bool HybridObjectMotionSolver::solveImpl(
     // still need to take the inverse as we get the inverse of G out
     // update G_W_inv
     G_W_inv = refinement_result.best_result.refined_pose.inverse();
-    // inliers should be a subset of the original refined inlier tracks
+    // TODO: with stereo we MUST stereo match again here otherwise depth will be
+    // wrong!?
+    //  inliers should be a subset of the original refined inlier tracks
     inlier_tracklets = refinement_result.inliers;
 
     // afrwards run ransac again
@@ -324,7 +326,7 @@ bool HybridObjectMotionSolver::solveImpl(
                                           50);
     geometric_result = pnp_ransac_solver_.solve3d2d(dynamic_correspondences);
 
-    TrackletIds inlier_tracklets = geometric_result.inliers;
+    inlier_tracklets = geometric_result.inliers;
     const TrackletIds& outlier_tracklets = geometric_result.outliers;
     frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
@@ -465,6 +467,9 @@ bool HybridObjectMotionSolver::solveImpl(
                 << " repr error: " << repr_error;
       if (repr_error > 10) {
         CHECK_EQ(pose_init_method, PoseInitalisationMethod::Previous);
+        // in this way I would probably also reset all keypoints to new
+        // trackletids to basically enforce a new submap ;) (although the
+        // backend will keep displaying the old one!)
         solver->resetWithNewKeyedMotion(solver->pose(), frame_k,
                                         inlier_tracklets);
       } else {

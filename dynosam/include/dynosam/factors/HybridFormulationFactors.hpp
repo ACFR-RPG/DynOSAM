@@ -608,19 +608,8 @@ class SmartMotionFactor2 : public gtsam::NonlinearFactor {
       gtsam::Vector3 err = measured_[i].evaluateError(
           poses_.at(i), motions.at(i), point_l, {}, G, E);
 
-      //   // h(x) = cam_T_w * (Motion_i * L_e * point_l)
-      //   auto project = [&](const Motion& mi, const gtsam::Point3& pl) ->
-      //   gtsam::Point3 {
-      //     return cam_T_w * (mi * (L_e_ * pl));
-      //   };
-
       if (Gs) (*Gs)[i] = G;
       if (Es) (*Es)[i] = E;
-
-      //   if (Gs) (*Gs)[i] = gtsam::numericalDerivative21<gtsam::Point3,
-      //   Motion, gtsam::Point3>(project, motions[i], point_l); if (Es)
-      //   (*Es)[i] = gtsam::numericalDerivative22<gtsam::Point3, Motion,
-      //   gtsam::Point3>(project, motions[i], point_l);
 
       b.segment<ZDim>(i * ZDim) = err;
     }

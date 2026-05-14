@@ -422,43 +422,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       CHECK(map_->isObjectKeyFrame(H_W_KF_k.to(), object_id));
       CHECK(map_->isObjectKeyFrame(H_W_KF_k.from(), object_id));
 
-      // // add dynamic measurements observed at the from frame
-      // const RelEgoPoseInfo& rel_egopose_lkf_j =
-      //     rel_egopose_infos_.at(frame_id_motion_from);
-      // CHECK_EQ(rel_egopose_lkf_j.j_id, frame_id_motion_from);
-
-      // // if object is already a keyframe at this frame then assume
-      // // measurements have already been added
-      // // jesse: is this correct? Since we never go back and add new features
-      // I
-      // // think this is fine
-      // if (!map_->isObjectKeyFrame(frame_id_motion_from, object_id)) {
-      //   // add measurements at from frame for object motion
-      //   CameraMeasurementStatusVector dynamic_measurements_kf;
-      //   size_t n = fillMeasurementsFromFeatureIterator(
-      //       &dynamic_measurements_kf,
-      //       rel_egopose_lkf_j.frame_j->usableDynamicIterator(object_id),
-      //       rel_egopose_lkf_j.j_id,
-      //       rel_egopose_lkf_j.frame_j->getTimestamp(), dynamic_pixel_sigmas_,
-      //       dynamic_point_sigma_);
-      //   // LOG(INFO) << "Adding n=" << n << " dyn object measurements to map
-      //   at
-      //   // k="
-      //   //           << frame_id_motion_from;
-
-      //   // update map after collecting all measurements for this frame
-      //   map_->updateObservations(dynamic_measurements_kf);
-
-      //   // mark object as keyframe for both the from and to (this frame)
-      //   frames
-      //   // this indicates that a motion variable exists at both frames
-      //   CHECK(map_->setObjectKeyFrame(frame_id_motion_from, object_id));
-      // }
-
-      // // mark object as keyframe in this frame
-      // //  the measurements for k have already been addded
-      // CHECK(map_->setObjectKeyFrame(frame_id_k, object_id));
-
       // record keyframe info for each object
       KeyframeInfo::MotionPair object_kf_info{object_id, H_W_KF_k.from(),
                                               H_W_KF_k.to()};

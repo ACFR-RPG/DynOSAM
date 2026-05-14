@@ -23,6 +23,18 @@
 
 namespace dyno {
 
+/* keyframe tracking metrics per object */
+struct OKFTrackingMetrics {
+  ObjectTrackingStatus tracking_status;
+  double scale_ratio;
+  double shape_score;
+  double coverage;
+  // Error with map
+  double repr_error;
+  bool is_keyframe{false};
+  bool is_reset{false};
+};
+
 // TODO: dont need the IMPL class
 class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
                                    public gtsam::FixedLagSmoother {
@@ -79,16 +91,16 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   PoseWithMotionTrajectory localTrajectory() const override;
 
   FrameId keyFrameId() const override {
-    CHECK(!frames_since_lKF_.empty());
-    return frames_since_lKF_.front();
+    CHECK(!active_frame_ids_.empty());
+    return active_frame_ids_.front();
   }
   FrameId frameId() const override {
-    CHECK(!frames_since_lKF_.empty());
-    return frames_since_lKF_.back();
+    CHECK(!active_frame_ids_.empty());
+    return active_frame_ids_.back();
   }
   Timestamp timestamp() const override {
-    CHECK(!timestamps_since_lKF_.empty());
-    return timestamps_since_lKF_.back();
+    CHECK(!active_timestamps_.empty());
+    return active_timestamps_.back();
   }
 
   /** Total number of keyframes */
@@ -230,7 +242,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   const gtsam::Values& getValuesSinceLastKF() const { return state_since_lKF_; }
 
   void setTrajectory(const PoseWithMotionTrajectory& past_trajectory) override {
-    trajectory_upto_lKF_ = past_trajectory;
+    frozen_trajectory_ = past_trajectory;
   }
 
  protected:
@@ -255,35 +267,18 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   //! Last (object) keyframe for this object
   Frame::Ptr lOKF_frame_;
 
-  // Trajectory since last KF?
-  // Updated when new KF made since past variables will not be updated
-  // same when marginalized
-  // vector of frames and timestamps related to variables since last KF?
-  // first frame is KF and last is k
-  FrameIds frames_since_lKF_;
-  std::vector<Timestamp> timestamps_since_lKF_;
+  //! Vector of frame ids that correspond to variables current in the smoother
+  //! Inlude KF...k
+  FrameIds active_frame_ids_;
+  //! Vector of timestampsthat correspond to variables current in the smoother
+  //! Inlude KF...k
+  std::vector<Timestamp> active_timestamps_;
 
-  // Trajectory up to and including the current KF
-  // Nont only will this trajectory be "frozen" (in the sense that)
-  // no motions will be in the current state
-  // but also all motions will be related to a different KeyMotion pose
-  // the trajectory from lkf to k is retrived with localTrajectory
-  // trajectory is upto and inclusive of lKF
-  // TODO: this is up to CURRENT keyframe! noy last
-  PoseWithMotionTrajectory trajectory_upto_lKF_;
+  //! Trajectory up to and including the current KF representing
+  //! a trajectory consturcted from variables no longer in the smoother
+  PoseWithMotionTrajectory frozen_trajectory_;
   FrameRangeData<gtsam::Pose3> keyframe_range_;
 
-  /** Create default parameters */
-  // static gtsam::ISAM2Params DefaultISAM2Params() {
-  //   gtsam::ISAM2Params params;
-  //   params.findUnusedFactorSlots = true;
-  //   params.keyFormatter = DynosamKeyFormatter;
-  //   params.relinearizeThreshold = 0.01;
-  //   // this value is very important for accuracy
-  //   params.relinearizeSkip = 1;
-  //   params.evaluateNonlinearError = true;
-  //   return params;
-  // }
   static dyno::ISAM2Params DefaultISAM2Params() {
     dyno::ISAM2GaussNewtonParams gn_params;
     // gn_params.wildfireThreshold = 0.00001;
@@ -326,15 +321,6 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   dyno::ISAM2Result isamResult_;
 
   std::vector<DebugResult> debug_results_;
-
-  // // motion only fractor tracking stuff
-  // FactorMap<BatchStereoHybridMotionFactor3::shared_ptr> mo_factor_map_;
-  // gtsam::FastMap<BatchStereoHybridMotionFactor3::shared_ptr, TrackletId>
-  //     mo_factor_to_tracklet_id_
-
-  // // Keyframe LM solve stuff
-  // gtsam::NonlinearFactorGraph KF_factors_;
-  // gtsam::Values KF_values_;
 
   /** Erase any keys associated with timestamps before the provided time */
   void eraseKeysBefore(double timestamp);
