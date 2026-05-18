@@ -71,7 +71,7 @@ struct TrackerParams {
   //! Good features to track params
   //! See https://docs.opencv.org/4.x/df/d21/classcv_1_1GFTTDetector.html
   struct GFFTParams {
-    double quality_level = 0.001;
+    double quality_level = 0.01;
     int block_size = 3;
     //! From my experience on the datasets we've tested on this should almost
     //! always be false...

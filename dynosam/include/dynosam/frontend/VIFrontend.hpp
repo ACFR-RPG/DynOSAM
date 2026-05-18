@@ -106,12 +106,25 @@ class VIFrontend : public Frontend {
                                        ObjectId object_id) {
     container[object_id].push_back(std::move(measurement));
   }
-  // NOTE: the ConstFeatureIterator is a little bit misleading as the features
-  // do actually get
-  //  modified in this function (since ConstFeatureIterator is const on the
-  //  iterator but the features are non-const pointers)
-  // MeasurementContainer should be either CameraMeasurementsByObject or
-  // CameraMeasurementStatusVector
+
+  /**
+   * @brief Fill measurements based on FeatureContainer iterator.
+   *
+   * Measurements must either be CameraMeasurementStatusVector or
+   * CameraMeasurementsByObject.
+   *
+   * @tparam MeasurementContainer
+   * @tparam FeatureContainer
+   * @tparam Predicate
+   * @param measurements
+   * @param it
+   * @param frame_id
+   * @param timestamp
+   * @param pixel_sigmas
+   * @param depth_sigma
+   * @param landmarks
+   * @return size_t
+   */
   template <typename MeasurementContainer, typename FeatureContainer,
             typename Predicate>
   size_t fillMeasurementsFromFeatureIterator(
@@ -121,6 +134,11 @@ class VIFrontend : public Frontend {
       double depth_sigma, StatusLandmarkVector* landmarks = nullptr) const {
     size_t num_added = 0;
     size_t count = 0;
+
+    // Isotropic depth sigmas
+    gtsam::Vector3 depth_sigmas;
+    depth_sigmas << depth_sigma, depth_sigma, depth_sigma;
+
     for (const Feature::Ptr& f : it) {
       CHECK_NOTNULL(f);
       const TrackletId tracklet_id = f->trackletId();
@@ -145,11 +163,9 @@ class VIFrontend : public Frontend {
         Landmark landmark;
         rgbd_camera_->backProject(kp, f->depth(), &landmark);
 
-        gtsam::Vector3 sigmas;
-        sigmas << depth_sigma, depth_sigma, depth_sigma;
-
         MeasurementWithCovariance<Landmark> landmark_measurement =
-            MeasurementWithCovariance<Landmark>::FromSigmas(landmark, sigmas);
+            MeasurementWithCovariance<Landmark>::FromSigmas(landmark,
+                                                            depth_sigmas);
         camera_measurement.landmark(landmark_measurement);
 
         if (landmarks) {

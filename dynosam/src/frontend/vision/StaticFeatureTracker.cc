@@ -179,7 +179,6 @@ Feature::Ptr ExternalFlowFeatureTracker::constructStaticFeature(
   const int x = functional_keypoint::u(kp);
   const int y = functional_keypoint::v(kp);
 
-  const cv::Mat& rgb = image_container.rgb();
   const cv::Mat& motion_mask = image_container.objectMotionMask();
   const cv::Mat& optical_flow = image_container.opticalFlow();
 
@@ -228,12 +227,12 @@ KltFeatureTracker::KltFeatureTracker(const TrackerParams& params,
 
   static const cv::Size klt_window_size(24, 24);  // Window size for KLT
   static const int klt_max_level = 4;             // Max pyramid levels for KLT
-  static const cv::TermCriteria klt_criteria = cv::TermCriteria(
-      cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 30, 0.03);
+  // static const cv::TermCriteria klt_criteria = cv::TermCriteria(
+  //     cv::TermCriteria::EPS | cv::TermCriteria::COUNT, 30, 0.03);
 
-  // used as flags argument for calcOpticalFlowPyrLK - initially starts as
-  // default (0) flag
-  int klt_flags = 0;
+  // // used as flags argument for calcOpticalFlowPyrLK - initially starts as
+  // // default (0) flag
+  // int klt_flags = 0;
 
   // lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
   //     klt_window_size, klt_max_level, klt_criteria.maxCount);
@@ -689,7 +688,8 @@ bool KltFeatureTracker::shouldResample(const FeatureContainer& tracked_features,
 }
 
 void KltFeatureTracker::pruneTracks(FeatureContainer& features) const {
-  if (features.size() <= params_.max_features_per_frame) return;
+  if (static_cast<int>(features.size()) <= params_.max_features_per_frame)
+    return;
 
   std::vector<Feature::Ptr> vec(features.begin(), features.end());
 
@@ -704,7 +704,8 @@ void KltFeatureTracker::pruneTracks(FeatureContainer& features) const {
   FeatureContainer pruned;
 
   for (const auto& f : vec) {
-    if (pruned.size() >= params_.max_features_per_frame) break;
+    if (static_cast<int>(pruned.size()) >= params_.max_features_per_frame)
+      break;
 
     bool too_close = false;
     for (const auto& kept : pruned) {
@@ -793,8 +794,9 @@ Feature::Ptr KltFeatureTracker::constructStaticFeatureFromPrevious(
   // if age is too large, or age is zero, retrieve new tracklet id
   if (age > params_.max_feature_track_age) {
     // TrackletIdManager& tracked_id_manager = TrackletIdManager::instance();
-    // tracklet_to_use = tracked_id_manager.getTrackletIdCount();
-    // tracked_id_manager.incrementTrackletIdCount();
+    // tracklet_to_use = tracked_id_manager.getAndIncrementTrackletId();
+    // // tracklet_to_use = tracked_id_manager.getTrackletIdCount();
+    // // tracked_id_manager.incrementTrackletIdCount();
     // age = 0u;
     return nullptr;
   }

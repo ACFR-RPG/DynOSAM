@@ -255,8 +255,11 @@ void logFromAccessor(
     Accessor::Ptr accessor, BackendLogger& logger,
     const std::optional<GroundTruthPacketMap>& ground_truth = {});
 
-// should be only getters for non map things (ie. accessor)
-// as well as non update related things
+/**
+ * @brief Base accessor that does not know about any map type. Contains basic
+ * logging functions, theta/graph access and access to the base Accessor.
+ *
+ */
 class Formulation {
  public:
   DYNO_POINTER_TYPEDEFS(Formulation)

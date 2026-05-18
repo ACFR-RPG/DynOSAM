@@ -1033,8 +1033,8 @@ bool FeatureTracker::DynamicTrackerImpl::trackRetroactively(
     indexed_retroactive_keypoints_out[i] = kp_prev;
   }
 
-  LOG(INFO) << "Retroactively made " << keypoints_out.size()
-            << " j=" << object_id;
+  VLOG(10) << "Retroactively made " << keypoints_out.size()
+           << " j=" << object_id;
 
   return true;
 }

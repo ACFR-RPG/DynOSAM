@@ -32,6 +32,9 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::boostrapSpin(
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
 
+  // stereo match to update depths
+  stereoMatch(frame_k);
+
   gtsam::Pose3 X_W_k_initial = gtsam::Pose3::Identity();
   dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, X_W_k_initial);
 
@@ -91,9 +94,8 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   // actually filled by a prediction from the IMU - otherwise it will ne
   // nullopt. This tells the function to use a constant motion model from the
   // previous frame ie. T_km1_k_ if tracking fails
-  const bool ego_motion_solve =
-      solveAndRefineEgoMotion(frame_k, frame_km1, nav_state_km1_, T_km1_k_,
-                              imu_propogated_nav_state_k, R_km1_k);
+  solveAndRefineEgoMotion(frame_k, frame_km1, nav_state_km1_, T_km1_k_,
+                          imu_propogated_nav_state_k, R_km1_k);
 
   if (stereo_matching_result) {
     // Need to match aagain after optical flow used to update the keypoints

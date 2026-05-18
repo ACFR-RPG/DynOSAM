@@ -175,10 +175,10 @@ def run_omd():
 
 def run_tartan_air():
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing03", "tas_rc3", tartan_air) #max_object_depth: 10.0
-    # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing04", "test_tartan", tartan_air, "--use_backend=false", "--use_object_motion_filtering=true")
+    run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing04", "test_tartan", tartan_air, "--use_backend=true")
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing05", "test_tartan", tartan_air, "--use_backend=true")
-    run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing06", "tas_rc6_FS", tartan_air,"--use_backend=true","--hybrid_motion_solver=2")
-    # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing07", "tas_rc7", tartan_air, "--starting_frame=5", "--ending_frame=65")
+    # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing06", "tas_rc6_FS", tartan_air,"--use_backend=true","--hybrid_motion_solver=2")
+    # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing07", "tas_rc7", tartan_air, "--starting_frame=5")
     # run_analysis("tas_rc7")
 
     # run_experiment_sequences("/root/data/TartanAir_shibuya/Standing01", "tas_s1", tartan_air)
@@ -378,6 +378,11 @@ def run_hybrid_solver_comparison_kitti():
                              "--use_backend=true",
                              "--hybrid_motion_solver=4")
 
+    #  run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti_test", kitti_dataset,
+    #                          "--use_backend=true",
+    #                          "--hybrid_motion_solver=4",
+    #                          "--init_object_pose_from_gt=false")
+
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--use_backend=true", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
@@ -421,11 +426,11 @@ if __name__ == '__main__':
     run_post_analysis = False
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    run_uts_tech_lab_solver_comparison_test()
+    # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    # run_viodes()
+    run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

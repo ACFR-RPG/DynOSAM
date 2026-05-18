@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /Backend1/Visual Odometry1/Status1
         - /Backend1/Visual Odometry1/Shape1
-        - /Frontend1
         - /Frontend1/Static Map1
         - /Frontend1/ObjectOdometryPath1
         - /Frontend1/ObjectOdometryPath1/Topic1
@@ -17,7 +16,6 @@ Panels:
         - /Ground Truth1/Visual Odometry1/Shape1
         - /Ground Truth1/Camera Path1/Topic1
         - /Ground Truth1/ObjectOdometryPath1
-        - /Ground Truth1/ObjectOdometryPath1/Status1
         - /Ground Truth1/ObjectOdometryPath1/Topic1
         - /Ground Truth1/Object Odometry1/Topic1
       Splitter Ratio: 0.49902912974357605
@@ -39,7 +37,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Dynamic Map
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -619,7 +617,7 @@ Visualization Manager:
         Value: /dynosam/object_bounding_boxes
       Value: false
     - Class: rviz_default_plugins/MarkerArray
-      Enabled: true
+      Enabled: false
       Name: MarkerArray
       Namespaces:
         {}
@@ -629,7 +627,7 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /dynosam/anchor_object_keyframes
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 186; 189; 182

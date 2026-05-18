@@ -392,6 +392,23 @@ void DynoPipelineManager::loadRegularOrParallelHybridModules(
     Frontend::Ptr& frontend_out, Backend::Ptr& backend_out,
     BackendModuleDisplay::Ptr& external_backend_display_out,
     std::shared_ptr<BackendOutputRegistra>& output_registra_out) {
+  // bit of a hack to handle inconsistent params in the PARALLEL_HYBRID method
+  if (params_.backend_type == BackendType::PARALLEL_HYBRID) {
+    // max tracking age must be less than the fixed lag (hardcoded as 25)
+    auto& tracker_params = params_.frontend_params_.tracker_params;
+    tracker_params.max_feature_track_age =
+        std::min(static_cast<int>(tracker_params.max_feature_track_age), 20);
+    tracker_params.max_dynamic_feature_age =
+        std::min(static_cast<int>(tracker_params.max_dynamic_feature_age), 20);
+
+    // there is a bug somewhere such that if min_features_per_frame !=
+    // max_features_per_frame we get some error thrown when doing
+    // marginalization of the BayesTree in the backend. This is yet to be sorted
+    // and only seems to occur with Parallel-Hybrid!
+    tracker_params.min_features_per_frame =
+        tracker_params.max_features_per_frame;
+  }
+
   auto regular_vi_frontend = std::make_shared<RegularVIFrontend>(
       params_, camera, &display_queue_,
       data_interface_->getSharedGroundTruth());
@@ -407,14 +424,11 @@ void DynoPipelineManager::loadRegularOrParallelHybridModules(
     Sensors sensors;
     sensors.camera = camera;
 
-    // TODO: display queue not used anymore!!!
-    // TODO: ground truth!
     ModuleParams module_params;
     module_params.backend_params = params_.backend_params_;
     module_params.sensors = sensors;
     module_params.shared_ground_truth = data_interface_->getSharedGroundTruth();
 
-    // // this should be Backend::Ptr not backend module
     BackendWrapper backend_wrapper = factory->createModule(module_params);
 
     using VisionIMUBackendModule = BackendModule<VisionImuPacket>;

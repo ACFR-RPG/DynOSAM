@@ -37,7 +37,7 @@ import typing
 import math
 
 # Nic Barbara
-def startup_plotting(font_size=14, line_width=1.5, output_dpi=600, tex_backend=True):
+def startup_plotting(font_size=14, line_width=1.5, output_dpi=600, tex_backend=True, text_size_scalar = 0.8):
     """Edited from https://github.com/nackjaylor/formatting_tips-tricks/
     """
     # plt.rcdefaults()
@@ -80,9 +80,9 @@ def startup_plotting(font_size=14, line_width=1.5, output_dpi=600, tex_backend=T
     plt.rc('font', size=font_size)
     plt.rc('axes', titlesize=font_size)
     plt.rc('axes', labelsize=font_size)
-    plt.rc('xtick', labelsize=0.8*font_size)
-    plt.rc('ytick', labelsize=0.8*font_size)
-    plt.rc('legend', fontsize=0.8*font_size)
+    plt.rc('xtick', labelsize=text_size_scalar*font_size)
+    plt.rc('ytick', labelsize=text_size_scalar*font_size)
+    plt.rc('legend', fontsize=text_size_scalar*font_size)
 
 
 def plot_metric(metric: PE, plot_title="", figsize=(8,8), fig = None, x_axis=None):

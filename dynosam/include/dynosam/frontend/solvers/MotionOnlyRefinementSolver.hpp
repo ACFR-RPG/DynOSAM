@@ -96,11 +96,6 @@ class MotionOnlyRefinementSolver {
       const gtsam::Point3 lmk_k_world =
           frame_k->backProjectToWorld(tracklet_id);
 
-      const gtsam::Point3 lmk_k_1_local =
-          frame_k_1->backProjectToCamera(tracklet_id);
-      const gtsam::Point3 lmk_k_local =
-          frame_k->backProjectToCamera(tracklet_id);
-
       const gtsam::Key lmk_k_1_key =
           DynamicLandmarkSymbol(frame_k_1->getFrameId(), tracklet_id);
       const gtsam::Key lmk_k_key =

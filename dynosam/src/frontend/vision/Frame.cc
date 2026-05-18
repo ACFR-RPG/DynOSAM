@@ -33,6 +33,7 @@
 #include <tbb/parallel_for.h>
 
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
@@ -301,9 +302,11 @@ Frame::landmarkWorldKeypointCorrespondance() const {
                   const Feature::Ptr& previous_feature,
                   const Feature::Ptr& current_feature) {
     if (!previous_feature->hasDepth()) {
-      throw std::runtime_error(
-          "Error in constructing Landmark (w) -> keypoint correspondences - "
-          "previous feature does not have depth!");
+      DYNO_THROW_MSG(DynosamException)
+          << "Frame::landmarkWorldKeypointCorrespondance error in constructing "
+             " (w) -> keypoint correspondences previous feature does not have "
+             "depth! (j= "
+          << previous_feature->objectId() << ")";
     }
 
     // eventuall map?
@@ -336,9 +339,12 @@ Frame::landmarkWorldProjectedBearingCorrespondance() const {
                   const Feature::Ptr& previous_feature,
                   const Feature::Ptr& current_feature) {
     if (!previous_feature->hasDepth()) {
-      throw std::runtime_error(
-          "Error in constructing Landmark (w) -> keypoint correspondences - "
-          "previous feature does not have depth!");
+      DYNO_THROW_MSG(DynosamException)
+          << "Frame::landmarkWorldProjectedBearingCorrespondance error in "
+             "constructing "
+             " (w) -> keypoint correspondences previous feature does not have "
+             "depth! (j= "
+          << previous_feature->objectId() << ")";
     }
 
     // eventuall map?
@@ -363,9 +369,12 @@ Frame::landmarkWorldPointCloudCorrespondance() const {
                   const Feature::Ptr& previous_feature,
                   const Feature::Ptr& current_feature) {
     if (!previous_feature->hasDepth()) {
-      throw std::runtime_error(
-          "Error in constructing Landmark (w) -> keypoint correspondences - "
-          "previous feature does not have depth!");
+      DYNO_THROW_MSG(DynosamException)
+          << "Frame::landmarkWorldPointCloudCorrespondance error in "
+             "constructing "
+             " (w) -> keypoint correspondences previous feature does not have "
+             "depth! (j= "
+          << previous_feature->objectId() << ")";
     }
 
     // eventuall map?

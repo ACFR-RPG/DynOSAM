@@ -433,6 +433,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     // gtsam::EliminateQR);
 
     // return boost::make_shared<gtsam::JacobianFactor>(*fg);
+    return nullptr;
   }
 
   boost::shared_ptr<gtsam::RegularHessianFactor<HDim>> createHessianFactor(

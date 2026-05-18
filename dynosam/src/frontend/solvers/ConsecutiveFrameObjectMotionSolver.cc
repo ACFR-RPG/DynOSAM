@@ -65,11 +65,6 @@ bool ConsecutiveFrameObjectMotionSolver::solveImpl(
       G_w = flow_opt_result.best_result.refined_pose.inverse();
       // inliers should be a subset of the original refined inlier tracks
       refined_inlier_tracklets = flow_opt_result.inliers;
-
-      VLOG(10) << "Refined object " << object_id
-               << "pose with optical flow - error before: "
-               << flow_opt_result.error_before.value_or(NaN)
-               << " error_after: " << flow_opt_result.error_after.value_or(NaN);
     }
     // still need to take the inverse as we get the inverse of G out
     const gtsam::Pose3 X_W_k = frame_k->getPose();

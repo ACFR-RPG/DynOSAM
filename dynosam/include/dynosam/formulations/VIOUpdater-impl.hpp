@@ -197,7 +197,8 @@ class GenericProjectionUpdater : public VIOUpdaterImpl<MAP> {
                    gtsam::Values&, gtsam::NonlinearFactorGraph&, gtsam::Key&,
                    UpdateObservationResult&,
                    std::optional<Landmark>&) override {
-    LOG(FATAL) << "Not implemented";
+    throw DynosamException(
+        "GenericProjectionUpdater::addLandmark not implemented!");
   }
 };
 
@@ -227,6 +228,8 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
                    gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                    gtsam::Key& point_key, UpdateObservationResult& result,
                    std::optional<Landmark>& initial) override {
+    (void)update_params;
+
     point_key = lmk->makeStaticKey();
     const FrameId frame_k = FrameId(frame->getId());
 
