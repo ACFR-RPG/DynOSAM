@@ -32,6 +32,7 @@
 
 #include <tbb/parallel_for.h>
 
+#include "dynosam/frontend/vision/FeatureTracker.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
@@ -83,6 +84,11 @@ std::optional<SingleDetectionResult> Frame::objectDetection(
     result.emplace(object_observations_.at(object_id));
   }
   return result;
+}
+
+bool Frame::objectResampled(ObjectId object_id) const {
+  return std::find(retracked_objects_.begin(), retracked_objects_.end(),
+                   object_id) != retracked_objects_.end();
 }
 
 bool Frame::exists(TrackletId tracklet_id) const {
@@ -229,17 +235,19 @@ PointCloudLabelRGB::Ptr Frame::projectToDenseCloud(
         const ObjectId object_id = motion_mask_ptr[j];
         const Depth depth = depth_ptr[j];
 
-        double depth_thresh;
+        // double depth_thresh;
         Color colour;
         if (object_id == background_label) {
-          depth_thresh = max_background_threshold_;
+          // depth_thresh = max_background_threshold_;
           colour = Color::black();
         } else {
-          depth_thresh = max_object_threshold_;
+          // depth_thresh = max_object_threshold_;
           colour = Color::uniqueId(object_id);
         }
 
-        if (depth > depth_thresh || depth <= 0 || !std::isfinite(depth)) return;
+        // if (depth > depth_thresh || depth <= 0 || !std::isfinite(depth))
+        // return;
+        if (depth <= 0 || !std::isfinite(depth)) return;
 
         // Back-projection
         const Keypoint kp(j, i);
@@ -260,30 +268,6 @@ PointCloudLabelRGB::Ptr Frame::projectToDenseCloud(
   cloud->height = 1;
   cloud->is_dense = false;
   return cloud;
-}
-
-bool Frame::updateDepths() {
-  if (!image_container_.hasDepth()) {
-    return false;
-  }
-
-  const ImageWrapper<ImageType::Depth>& depth = image_container_.depth();
-  updateDepthsFeatureContainer(static_features_, depth,
-                               max_background_threshold_);
-  updateDepthsFeatureContainer(dynamic_features_, depth, max_object_threshold_);
-  return true;
-}
-
-Frame& Frame::setMaxBackgroundDepth(double thresh) {
-  CHECK_GT(thresh, 0);
-  max_background_threshold_ = thresh;
-  return *this;
-}
-
-Frame& Frame::setMaxObjectDepth(double thresh) {
-  CHECK_GT(thresh, 0);
-  max_object_threshold_ = thresh;
-  return *this;
 }
 
 bool Frame::getCorrespondences(FeaturePairs& correspondences,
@@ -437,47 +421,6 @@ bool Frame::getDynamicCorrespondences(FeaturePairs& correspondences,
   return correspondences.size() > 0u;
 }
 
-void Frame::updateDepthsFeatureContainer(
-    FeatureContainer& container, const ImageWrapper<ImageType::Depth>& depth,
-    double max_depth) {
-  // auto iter = container.usableIterator();
-  // auto iter = container.begin();
-
-  int count = 0;
-  const cv::Mat depth_img = depth;
-
-  // iterate over all features
-  for (Feature::Ptr feature : container) {
-    // CHECK(feature->usable());
-    // const Feature::Ptr& feature = *iter;
-    const int x = functional_keypoint::u(feature->keypoint());
-    const int y = functional_keypoint::v(feature->keypoint());
-    const Depth d = depth_img.at<Depth>(y, x);
-    // const Depth d = functional_keypoint::at<Depth>(feature->keypoint(),
-    // depth);
-
-    if (d > max_depth || d <= 0) {
-      feature->markInvalid();
-      feature->depth(Feature::invalid_depth);
-      count++;
-    } else {
-      feature->depth(d);
-    }
-
-    //  //if now invalid or happens to be invalid from a previous frame, make
-    //  depth invalid too
-    // if(!feature->usable()) {
-    //     feature->depth_ = Feature::invalid_depth;
-    // }
-    // else {
-    //     feature->depth_ = d;
-    // }
-  }
-
-  VLOG(200) << count << " features marked invalud due to depth out of "
-            << container.size() << " with max depth " << max_depth;
-}
-
 void Frame::constructDynamicObservations() {
   object_observations_.clear();
   // assumes that the mask gets updated with the tracking label
@@ -586,13 +529,87 @@ Landmark Frame::getLandmarkFromCache(LandmarkMap& cache, Feature::Ptr feature,
   return lmk;
 }
 
-// Frame::FeatureFilterIterator Frame::dynamicUsableBegin() {
-//     return FeatureFilterIterator(dynamic_features_, [&](const Feature::Ptr&
-//     f) -> bool
-//         {
-//             return f->usable();
-//         }
-//     );
-// }
+DepthUpdater::DepthUpdater(FeatureTracker* tracker)
+    : tracker_(CHECK_NOTNULL(tracker)) {
+  const auto& params = tracker_->frontendParams();
+  max_background_threshold_ = params.max_background_depth;
+  max_object_threshold_ = params.max_object_depth;
+}
+
+bool DepthUpdater::update(Frame::Ptr frame,
+                          const std::optional<TrackletIds>& tracklets) const {
+  const ImageContainer& container = frame->imageContainer();
+
+  if (container.hasRightRgb()) {
+    return updateFromStereo(frame, tracklets);
+  } else if (container.hasDepth()) {
+    return updateFromDepth(frame, tracklets);
+  }
+  return false;
+}
+
+bool DepthUpdater::updateFromDepth(
+    Frame::Ptr frame, const std::optional<TrackletIds>& tracklets) const {
+  FeatureContainer features = collectFeatures(frame, tracklets);
+
+  const ImageContainer& container = frame->imageContainer();
+  const cv::Mat& depth = container.depth();
+
+  for (Feature::Ptr feature : features) {
+    const int x = functional_keypoint::u(feature->keypoint());
+    const int y = functional_keypoint::v(feature->keypoint());
+    const ObjectId j = feature->objectId();
+    const Depth d = depth.at<Depth>(y, x);
+
+    const Depth max_depth = (j == background_label) ? max_background_threshold_
+                                                    : max_object_threshold_;
+
+    if (d > max_depth || d <= 0) {
+      feature->markInvalid();
+      feature->depth(Feature::invalid_depth);
+    } else {
+      feature->depth(d);
+    }
+
+    // TOODO: should add stereo point from depth!
+  }
+
+  return true;
+}
+
+bool DepthUpdater::updateFromStereo(
+    Frame::Ptr frame, const std::optional<TrackletIds>& tracklets) const {
+  const ImageContainer& container = frame->imageContainer();
+
+  if (!container.hasRightRgb()) {
+    return false;
+  }
+
+  FeatureContainer features = collectFeatures(frame, tracklets);
+  return tracker_->stereoTrack(features, container);
+}
+
+FeatureContainer DepthUpdater::collectFeatures(
+    Frame::Ptr frame, const std::optional<TrackletIds>& tracklets) const {
+  FeatureContainer features;
+  if (tracklets) {
+    for (TrackletId tracklet_id : *tracklets) {
+      Feature::Ptr feature = frame->at(tracklet_id);
+      CHECK_NOTNULL(feature);
+
+      features.add(feature);
+    }
+  } else {
+    // collect all features
+    for (const auto& f : frame->static_features_.usableIterator()) {
+      features.add(f);
+    }
+
+    for (const auto& f : frame->dynamic_features_.usableIterator()) {
+      features.add(f);
+    }
+  }
+  return features;
+}
 
 }  // namespace dyno

@@ -4,11 +4,12 @@ namespace dyno {
 
 ConsecutiveFrameObjectMotionSolver::ConsecutiveFrameObjectMotionSolver(
     const ConsecutiveFrameObjectMotionSolverParams& params,
-    const CameraParams& camera_params,
+    const CameraParams& camera_params, const DepthUpdater& depth_updater,
     const SharedGroundTruth& shared_ground_truth)
     : params_(params),
       pnp_ransac_solver_(params.pnp_ransac_params, camera_params),
-      optical_flow_pose_solver_(params.optical_flow_solver_params),
+      optical_flow_pose_solver_(params.optical_flow_solver_params,
+                                depth_updater),
       motion_only_refinement_solver_(params.motion_only_refinement_params),
       shared_ground_truth_(shared_ground_truth) {}
 

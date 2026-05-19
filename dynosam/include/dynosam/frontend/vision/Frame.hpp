@@ -117,6 +117,10 @@ class Frame {
   std::optional<SingleDetectionResult> objectDetection(
       ObjectId object_id) const;
 
+  /* True if the object id appears in retracked_objects_ (is O(N) but N is
+   * usally < 10) */
+  bool objectResampled(ObjectId object_id) const;
+
   // note: this doesnt mean inliers/outliers in the current frame (as this
   // happens after tracking)
   inline const std::optional<FeatureTrackerInfo>& getTrackingInfo() const {
@@ -240,20 +244,6 @@ class Frame {
 
   PointCloudLabelRGB::Ptr projectToDenseCloud(
       const cv::Mat* detection_mask = nullptr) const;
-
-  /**
-   * @brief Update the depth values on all contained features.
-   * Clips the static and dynamic features (marking them invalid) accordingly.
-   *
-   * Returns false if the internal image container does not have a depth mat.
-   *
-   * @return true
-   * @return false
-   */
-  bool updateDepths();
-
-  Frame& setMaxBackgroundDepth(double thresh);
-  Frame& setMaxObjectDepth(double thresh);
 
   // // TODO: this really needs testing
   // void moveObjectToStatic(ObjectId instance_label);
@@ -420,10 +410,6 @@ class Frame {
                                  const Frame& previous_frame) const;
 
  private:
-  static void updateDepthsFeatureContainer(
-      FeatureContainer& container, const ImageWrapper<ImageType::Depth>& depth,
-      double max_depth);
-
   // based on the current set of dynamic features
   //  populates object_observations_
   void constructDynamicObservations();
@@ -438,6 +424,29 @@ class Frame {
   //! Based off the initial 2d observation and depth from the feature
   mutable LandmarkMap landmark_in_camera_cache_;
   mutable LandmarkMap landmark_in_world_cache_;
+};
+
+class FeatureTracker;
+
+class DepthUpdater {
+ public:
+  DepthUpdater(FeatureTracker* tracker);
+
+  bool update(Frame::Ptr frame,
+              const std::optional<TrackletIds>& tracklets = {}) const;
+
+ protected:
+  bool updateFromDepth(Frame::Ptr frame,
+                       const std::optional<TrackletIds>& tracklets) const;
+  bool updateFromStereo(Frame::Ptr frame,
+                        const std::optional<TrackletIds>& tracklets) const;
+
+ private:
+  FeatureContainer collectFeatures(
+      Frame::Ptr frame, const std::optional<TrackletIds>& tracklets) const;
+
+ private:
+  FeatureTracker* tracker_;
 
   //! Background points greater than this depth will be discarded
   double max_background_threshold_ = 40.0;

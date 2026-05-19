@@ -12,18 +12,16 @@ RegularVIFrontend::RegularVIFrontend(
   ConsecutiveFrameObjectMotionSolverParams motion_params;
   motion_params.refine_motion_with_3d = false;
 
+  SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
     LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
                  "will attempt to initalise object poses using provided ground "
                  "truth pose!";
-    object_motion_solver_ =
-        std::make_unique<ConsecutiveFrameObjectMotionSolver>(
-            motion_params, camera_->getParams(), shared_ground_truth);
-  } else {
-    object_motion_solver_ =
-        std::make_unique<ConsecutiveFrameObjectMotionSolver>(
-            motion_params, camera_->getParams());
+    ground_truth = shared_ground_truth_;
   }
+  object_motion_solver_ = std::make_unique<ConsecutiveFrameObjectMotionSolver>(
+      motion_params, camera_->getParams(), DepthUpdater(&tracker_),
+      ground_truth);
 }
 
 RegularVIFrontend::SpinReturn RegularVIFrontend::boostrapSpin(
@@ -83,12 +81,10 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   }
 
   Frame::Ptr frame_k = featureTrack(input, R_km1_k);
-  Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
+  Frame::Ptr frame_km1 = tracker_.getPreviousFrame();
   CHECK(frame_km1);
 
-  VLOG(5) << to_string(tracker_->getTrackerInfo());
-
-  bool stereo_matching_result = stereoMatch(frame_k);
+  VLOG(5) << to_string(tracker_.getTrackerInfo());
 
   // when providing the propogated imu state only provide if it was
   // actually filled by a prediction from the IMU - otherwise it will ne
@@ -96,12 +92,6 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   // previous frame ie. T_km1_k_ if tracking fails
   solveAndRefineEgoMotion(frame_k, frame_km1, nav_state_km1_, T_km1_k_,
                           imu_propogated_nav_state_k, R_km1_k);
-
-  if (stereo_matching_result) {
-    // Need to match aagain after optical flow used to update the keypoints
-    // This seems to make a pretty big difference!!
-    stereo_matching_result &= stereoMatch(frame_k);
-  }
 
   // we currently use the frame pose as the nav state - this value can come from
   // either the VO OR the IMU, depending on the result from the

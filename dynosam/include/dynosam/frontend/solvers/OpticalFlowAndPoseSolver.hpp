@@ -56,8 +56,9 @@ class OpticalFlowAndPoseSolver {
   using Calibration = CALIBRATION;
   using Pose3FlowProjectionFactorCalib = Pose3FlowProjectionFactor<Calibration>;
 
-  OpticalFlowAndPoseSolver(const OpticalFlowAndPoseSolverParams& params)
-      : params_(params) {
+  OpticalFlowAndPoseSolver(const OpticalFlowAndPoseSolverParams& params,
+                           const DepthUpdater& depth_updater)
+      : params_(params), depth_updater_(depth_updater) {
     flow_prior_noise_ =
         gtsam::noiseModel::Isotropic::Sigma(2u, params_.flow_prior_sigma);
     flow_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, params_.flow_sigma);
@@ -291,6 +292,7 @@ class OpticalFlowAndPoseSolver {
     // outliers from the result. We will update this vector with new outliers
     auto refined_outliers = result.outliers;
 
+    TrackletIds inlier_tracklet_ids;
     for (size_t i = 0; i < refined_inliers.size(); i++) {
       TrackletId tracklet_id = refined_inliers.at(i);
       gtsam::Point2 refined_flow = refined_flows.at(i);
@@ -325,6 +327,8 @@ class OpticalFlowAndPoseSolver {
       feature_k_1->measuredFlow(refined_flow);
       // update refined predicted keypoint
       feature_k_1->predictedKeypoint(refined_keypoint);
+
+      inlier_tracklet_ids.push_back(tracklet_id);
 
       // Logic is a bit convoluted and dependant on other things
       // if we have optical flow (from k to k+1 due to historical reaseons)
@@ -367,6 +371,10 @@ class OpticalFlowAndPoseSolver {
       feature_k->markOutlier();
       feature_k_1->markOutlier();
     }
+
+    // finally update the depths of each feature corresponding to the new
+    // keypoint location
+    depth_updater_.update(frame_k, inlier_tracklet_ids);
   }
 
  private:
@@ -440,6 +448,7 @@ class OpticalFlowAndPoseSolver {
 
  private:
   OpticalFlowAndPoseSolverParams params_;
+  DepthUpdater depth_updater_;
 
   //! Robust noise model for the flow
   gtsam::SharedNoiseModel flow_noise_;

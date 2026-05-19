@@ -141,6 +141,9 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
       safeCast<PoseChangeInput, BatchPoseChangeInput>(input);
   CHECK_NOTNULL(batch_input);
 
+  LOG(INFO) << "Starting backend update k_from=" << batch_input->startingFrame()
+            << " k_to=" << batch_input->endingFrame();
+
   utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
                                  ".update_incremental");
   SharedModuleStates* shared_module_states =

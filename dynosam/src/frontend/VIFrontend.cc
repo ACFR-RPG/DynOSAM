@@ -99,12 +99,10 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
       camera_(CHECK_NOTNULL(camera)),
       pnp_ransac_(params.frontend_params_.ego_motion_pnp_ransac_params,
                   camera->getParams()),
-      optical_flow_pose_solver_(OpticalFlowAndPoseSolverParams{}),
+      tracker_(params.frontend_params_, camera_, display_queue),
+      optical_flow_pose_solver_(OpticalFlowAndPoseSolverParams{},
+                                DepthUpdater(&tracker_)),
       imu_frontend_(params.frontend_params_.imu_params) {
-  const auto& frontend_params = dyno_params_.frontend_params_;
-  tracker_ =
-      std::make_unique<FeatureTracker>(frontend_params, camera_, display_queue);
-
   rgbd_camera_ = camera_->safeGetRGBDCamera();
   CHECK_NOTNULL(rgbd_camera_);
 
@@ -124,23 +122,8 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
 Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
                                     std::optional<gtsam::Rot3> R_km1_k) {
   ImageContainer::Ptr image_container = input->image_container_;
-  Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
-                                     *image_container, R_km1_k);
-
-  if (image_container->hasDepth()) CHECK(frame->updateDepths());
-
-  const bool has_retroactive_tracks = frame->retroactive_tracks.size() > 0;
-  Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
-  if (frame_km1 && has_retroactive_tracks) {
-    // TODO: and in depth mode!
-    // TODo: ah dont do this when we have depth! Check first for stereo (ie only
-    // do one!?)
-    if (frame_km1->imageContainer().hasDepth()) {
-      frame_km1->updateDepths();
-    } else {
-      stereoMatch(frame_km1, frame->retroactive_tracks);
-    }
-  }
+  Frame::Ptr frame = tracker_.track(input->getFrameId(), input->getTimestamp(),
+                                    *image_container, R_km1_k);
   return frame;
 }
 
@@ -174,7 +157,7 @@ bool VIFrontend::stereoMatch(Frame::Ptr frame) {
     features.add(f);
   }
 
-  return tracker_->stereoTrack(features, container);
+  return tracker_.stereoTrack(features, container);
 }
 
 bool VIFrontend::stereoMatch(Frame::Ptr frame,
@@ -194,13 +177,13 @@ bool VIFrontend::stereoMatch(Frame::Ptr frame,
     features.add(feature);
   }
 
-  return tracker_->stereoTrack(features, container);
+  return tracker_.stereoTrack(features, container);
 }
 
 void VIFrontend::fillDebugImagery(DebugImagery& debug_imagery,
                                   const Frame::Ptr& frame_k,
                                   const Frame::Ptr& frame_km1) const {
-  debug_imagery.tracking_image = tracker_->computeFeatureTracks(
+  debug_imagery.tracking_image = tracker_.computeFeatureTracks(
       *frame_km1, *frame_k,
       dyno_params_.frontend_params_.image_tracks_vis_params);
 

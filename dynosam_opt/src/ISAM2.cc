@@ -215,6 +215,8 @@ void ISAM2::recalculateBatch(const ISAM2UpdateParams& updateParams,
   // Removed unused keys:
   VariableIndex affectedFactorsVarIndex = variableIndex_;
 
+  utils::ChronoTimingStats timer2("isam2.batchRemove", 10);
+
   affectedFactorsVarIndex.removeUnusedVariables(result->unusedKeys.begin(),
                                                 result->unusedKeys.end());
 
@@ -222,8 +224,10 @@ void ISAM2::recalculateBatch(const ISAM2UpdateParams& updateParams,
     affectedKeysSet->erase(key);
   }
   gttoc(add_keys);
+  timer2.stop();
 
   gttic(ordering);
+  utils::ChronoTimingStats timer1("isam2.batchOrdering", 10);
   Ordering order;
   if (updateParams.constrainedKeys) {
     order = Ordering::ColamdConstrained(affectedFactorsVarIndex,
@@ -240,11 +244,14 @@ void ISAM2::recalculateBatch(const ISAM2UpdateParams& updateParams,
     }
   }
   gttoc(ordering);
+  timer1.stop();
 
   gttic(linearize);
   auto linearized = nonlinearFactors_.linearize(theta_);
   if (params_.cacheLinearizedFactors) linearFactors_ = *linearized;
   gttoc(linearize);
+
+  utils::ChronoTimingStats timer("isam2.batchEliminate", 10);
 
   gttic(eliminate);
   ISAM2BayesTree::shared_ptr bayesTree =
@@ -253,6 +260,7 @@ void ISAM2::recalculateBatch(const ISAM2UpdateParams& updateParams,
           .eliminate(params_.getEliminationFunction())
           .first;
   gttoc(eliminate);
+  timer.stop();
 
   gttic(insert);
   roots_.clear();
@@ -290,8 +298,11 @@ void ISAM2::recalculateIncremental(const ISAM2UpdateParams& updateParams,
                             result->observedKeys.begin(),
                             result->observedKeys.end());
 
+  utils::ChronoTimingStats timer1("isam2.incrementalRelinearize", 10);
+
   GaussianFactorGraph factors =
       relinearizeAffectedFactors(updateParams, affectedAndNewKeys, relinKeys);
+  timer1.stop();
 
   if (debug) {
     factors.print("Relinearized factors: ");
@@ -372,12 +383,16 @@ void ISAM2::recalculateIncremental(const ISAM2UpdateParams& updateParams,
       Ordering::ColamdConstrained(affectedFactorsVarIndex, constraintGroups);
   gttoc(Ordering);
 
+  utils::ChronoTimingStats timer("isam2.incrementalEliminate", 10);
+
   // Do elimination
   GaussianEliminationTree etree(factors, affectedFactorsVarIndex, ordering);
   auto bayesTree = ISAM2JunctionTree(etree)
                        .eliminate(params_.getEliminationFunction())
                        .first;
   gttoc(reorder_and_eliminate);
+
+  timer.stop();
 
   gttic(reassemble);
   roots_.insert(roots_.end(), bayesTree->roots().begin(),

@@ -27,7 +27,7 @@ class ConsecutiveFrameObjectMotionSolver : public ObjectMotionSolver {
   // initalised with centroid
   ConsecutiveFrameObjectMotionSolver(
       const ConsecutiveFrameObjectMotionSolverParams& params,
-      const CameraParams& camera_params,
+      const CameraParams& camera_params, const DepthUpdater& depth_updater,
       const SharedGroundTruth& shared_ground_truth = {});
 
  private:

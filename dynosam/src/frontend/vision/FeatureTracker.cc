@@ -48,12 +48,6 @@
 
 namespace dyno {
 
-// FeatureTracker(
-//     const FrontendParams& params,
-//     Camera::Ptr camera,
-//     StaticFeatureTracker::UniquePtr static_feature_tracker,
-//     ImageDisplayQueue* display_queue = nullptr);
-
 FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
                                ImageDisplayQueue* display_queue)
     : FeatureTrackerBase(params.tracker_params, camera, display_queue),
@@ -213,16 +207,22 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   new_frame->retracked_objects_ = objects_resampled;
   new_frame->retroactive_tracks = retroactive_tracks;
 
-  // update depth threshold information
-  new_frame->setMaxBackgroundDepth(frontend_params_.max_background_depth);
-  new_frame->setMaxObjectDepth(frontend_params_.max_object_depth);
-
   VLOG(1) << "Tracked on frame " << frame_id << " t= " << std::setprecision(15)
           << timestamp << ", object ids "
           << container_to_string(new_frame->getObjectIds());
-  previous_frame_ = new_frame;
   boarder_detection_mask_ = boundary_mask_result.boundary_mask;
 
+  // update depths before returning the frame so the frontend does not need to
+  // do it!
+  DepthUpdater depth_updater(this);
+  CHECK(depth_updater.update(new_frame));
+
+  // update the previous frame if we have any retroactive tracks
+  if (previous_frame_ && !retroactive_tracks.empty()) {
+    CHECK(depth_updater.update(previous_frame_, retroactive_tracks));
+  }
+
+  previous_frame_ = new_frame;
   return new_frame;
 }
 

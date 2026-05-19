@@ -24,7 +24,7 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
       tracking_viz_(params.frontend_params_.image_tracks_vis_params) {
   // TODo
   HybridObjectMotionSolverParams motion_params;
-  motion_params.optical_flow_solver_params.use_robust = false;
+  motion_params.optical_flow_solver_params.use_robust = true;
 
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
@@ -35,7 +35,8 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
   }
 
   object_motion_solver_ = std::make_unique<HybridObjectMotionSolver>(
-      motion_params, camera_->getParams(), ground_truth);
+      motion_params, camera_->getParams(), DepthUpdater(&tracker_),
+      ground_truth);
 }
 
 PoseChangeVIFrontend::~PoseChangeVIFrontend() { logBestEstimates(); }
@@ -213,12 +214,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   Frame::Ptr frame_k = featureTrack(input, R_km1_k);
-  Frame::Ptr frame_km1 = tracker_->getPreviousFrame();
+  Frame::Ptr frame_km1 = tracker_.getPreviousFrame();
   CHECK(frame_km1);
 
-  VLOG(1) << to_string(tracker_->getTrackerInfo());
-
-  bool stereo_matching_result = stereoMatch(frame_k);
+  VLOG(1) << to_string(tracker_.getTrackerInfo());
 
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
@@ -234,14 +233,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   const bool ego_motion_solve = solveAndRefineEgoMotion(
       frame_k, frame_km1, static_landmarks_used_vo, camera_tracking_quality,
       imu_propogated_nav_state_k, R_km1_k);
-
-  // TODO: amagamate this function and the frame->updateDepths for when we are
-  // stereo/rgbd
-  if (stereo_matching_result) {
-    // Need to match aagain after optical flow used to update the keypoints
-    // This seems to make a pretty big difference!!
-    stereo_matching_result &= stereoMatch(frame_k);
-  }
 
   // if(input->ground_truth_packet) {
   //   frame_k->T_world_camera_ = input->ground_truth_packet->X_world_;
@@ -568,6 +559,9 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     // update camera pose
     frame_k->T_world_camera_ = pnp_result.best_result;
 
+    tracking_quality =
+        use_map ? TrackingQuality::Good : TrackingQuality::Marginal;
+
     const auto& frontend_params = dyno_params_.frontend_params_;
     if (frontend_params.refine_camera_pose_with_joint_of) {
       VLOG(10) << "Refining camera pose with joint optical-flow";
@@ -581,16 +575,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
           optical_flow_pose_solver_.optimizeAndUpdate(
               frame_km1, frame_k, pnp_result.inliers, pnp_result.best_result);
 
-      // TODO: refresh depth or with stereo (NOT: we refresh depth with stereo
-      // outside this function)!!
-      //  refresh depth information for each frame
-      if (frame_k->imageContainer().hasDepth()) {
-        CHECK(frame_k->updateDepths());
-      }
-
       frame_k->T_world_camera_ = refinement_result.best_result.refined_pose;
-      tracking_quality =
-          use_map ? TrackingQuality::Good : TrackingQuality::Marginal;
 
       VLOG(15) << "Refined camera pose with optical flow - error before: "
                << refinement_result.error_before.value_or(NaN)

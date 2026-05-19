@@ -44,6 +44,7 @@
 #include <utility>
 #include <variant>
 
+#include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/ISAM2.hpp"
 #include "dynosam_opt/ISAM2Result.hpp"
 
@@ -458,7 +459,9 @@ struct UpdateImpl {
                            const gtsam::FactorIndices& newFactorsIndices,
                            gtsam::GaussianFactorGraph* linearFactors) const {
     gttic(linearizeNewFactors);
+    utils::ChronoTimingStats timer("isam2.linearizeNewFactors", 10);
     auto linearized = newFactors.linearize(theta);
+    timer.stop();
     if (params_.findUnusedFactorSlots) {
       linearFactors->resize(numNonlinearFactors);
       for (size_t i = 0; i < newFactors.size(); ++i)

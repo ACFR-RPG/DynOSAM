@@ -223,12 +223,12 @@ class VIFrontend : public Frontend {
 
   //! PnpRansac solver for ego-motion
   PnPRansacSolver pnp_ransac_;
+  FeatureTracker tracker_;
   //! OpticalFlowAndPoseSolver for ego-motion refinement
   OpticalFlowAndPoseSolver<Camera::CalibrationType> optical_flow_pose_solver_;
 
   ImuFrontend imu_frontend_;
   gtsam::imuBias::ConstantBias imu_bias_;
-  FeatureTracker::UniquePtr tracker_;
 
   //! Cached rgbd-camera
   std::shared_ptr<RGBDCamera> rgbd_camera_;

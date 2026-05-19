@@ -372,10 +372,11 @@ class MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
     // Identity!! this should hold in every case!
     const bool is_same = this->from() == this->to();
     if (is_same) {
-      checkAndThrow(
-          gtsam::traits<E>::Equals(this->estimate(),
-                                   gtsam::traits<E>::Identity(), 1e-4),
-          "MotionReferenceFrame from == to, but estimate is not Identity!");
+      checkAndThrow(gtsam::traits<E>::Equals(
+                        this->estimate(), gtsam::traits<E>::Identity(), 1e-4),
+                    "MotionReferenceFrame from == to (" +
+                        std::to_string(this->from()) +
+                        "), but estimate is not Identity!");
     }
 
     if (style() == Style::F2F) {

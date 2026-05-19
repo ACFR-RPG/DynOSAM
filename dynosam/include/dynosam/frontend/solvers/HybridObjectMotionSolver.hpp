@@ -25,6 +25,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
 
   HybridObjectMotionSolver(const HybridObjectMotionSolverParams& params,
                            const CameraParams& camera_params,
+                           const DepthUpdater& depth_updater,
                            const SharedGroundTruth& shared_ground_truth = {});
 
   ~HybridObjectMotionSolver();

@@ -5,6 +5,7 @@
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Timing.hpp"
+#include "dynosam_opt/Symbols.hpp"
 
 namespace dyno {
 
@@ -173,6 +174,13 @@ class NonlinearOptimizer : public SOLVER {
     NonlinearOptimizerOptions options;
     NonlinearOptimizerSummary summary;
     return solve(estimate, options, &summary);
+  }
+
+  void saveGraph(
+      const std::string& file_name,
+      const gtsam::KeyFormatter& keyFormatter = DynosamKeyFormatter) {
+    const auto& factors = this->graph();
+    factors.saveGraph(file_name, keyFormatter);
   }
 
  private:

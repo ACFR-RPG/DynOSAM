@@ -166,7 +166,7 @@ def run_viodes():
 
     # run_experiment_sequences("/root/data/VIODE/parking_lot/mid", "parking_lot_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
-    run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=false")
 
 
 def run_omd():
@@ -319,7 +319,7 @@ def run_dynoepts():
 
 
 def run_aria():
-    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=4", "--init_object_pose_from_gt=false")
 
 ##### SHOULD BE WITH --init_object_pose_from_gt=false
 def run_hybrid_solver_comparison_omd():
@@ -332,7 +332,7 @@ def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2", "--use_backend=true")
 
     run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_test", omd_dataset,
-        "--ending_frame=400", "--hybrid_motion_solver=4", "--use_backend=true",
+        "--ending_frame=400", "--hybrid_motion_solver=4", "--use_backend=false",
         "--pc_smoother_allow_backend_updates=false",
         "--pc_log_object_kf_structure=false",
         "--init_object_pose_from_gt=false")
@@ -426,11 +426,11 @@ if __name__ == '__main__':
     run_post_analysis = False
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    # run_uts_tech_lab_solver_comparison_test()
+    run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    run_viodes()
+    # run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

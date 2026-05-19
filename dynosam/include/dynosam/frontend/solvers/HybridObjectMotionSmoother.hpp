@@ -90,6 +90,8 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
    */
   PoseWithMotionTrajectory localTrajectory() const override;
 
+  // NOTE: this is not actually the current keyframe (this is the start of the
+  // active frames!)
   FrameId keyFrameId() const override {
     CHECK(!active_frame_ids_.empty());
     return active_frame_ids_.front();
@@ -265,7 +267,10 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   bool takeBackendUpdate(PoseChangeUpdateComplete& backend_update);
 
   //! Last (object) keyframe for this object
+  // Really this is the tracking keyframe and has nothing to do with the
+  // reference frame
   Frame::Ptr lOKF_frame_;
+  std::vector<Frame::Ptr> tracking_keyframes_;
 
   //! Vector of frame ids that correspond to variables current in the smoother
   //! Inlude KF...k
@@ -333,13 +338,13 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   // for now
   gtsam::Values all_states_;
+  //! Best estimate of all values since and including the last KF
+  //! May include more values that what is currently in the smoother window
+  gtsam::Values state_since_lKF_;
 
  private:
   //! Updated every update and includes only values in the smoother
   gtsam::Values smoother_state_;
-  //! Best estimate of all values since and including the last KF
-  //! May include more values that what is currently in the smoother window
-  gtsam::Values state_since_lKF_;
 
   gtsam::Values all_m_L_points_;
 

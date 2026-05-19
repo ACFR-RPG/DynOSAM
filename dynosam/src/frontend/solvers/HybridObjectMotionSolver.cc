@@ -126,11 +126,12 @@ class PnPOnlySolver : public HybridObjectMotionSolverImpl {
 
 HybridObjectMotionSolver::HybridObjectMotionSolver(
     const HybridObjectMotionSolverParams& params,
-    const CameraParams& camera_params,
+    const CameraParams& camera_params, const DepthUpdater& depth_updater,
     const SharedGroundTruth& shared_ground_truth)
     : params_(params),
       pnp_ransac_solver_(params.pnp_ransac_params, camera_params),
-      optical_flow_pose_solver_(params.optical_flow_solver_params),
+      optical_flow_pose_solver_(params.optical_flow_solver_params,
+                                depth_updater),
       shared_ground_truth_(shared_ground_truth) {
   VLOG(10) << "HybridObjectMotionSolver initalised with ground truth "
            << std::boolalpha << shared_ground_truth_.valid();
@@ -304,33 +305,33 @@ bool HybridObjectMotionSolver::solveImpl(
     //  inliers should be a subset of the original refined inlier tracks
     inlier_tracklets = refinement_result.inliers;
 
-    // afrwards run ransac again
-    // get the corresponding feature pairs
-    AbsolutePoseCorrespondences dynamic_correspondences;
-    bool corr_result = frame_k->getDynamicCorrespondences(
-        dynamic_correspondences, *frame_km1, object_id,
-        frame_k->landmarkWorldKeypointCorrespondance());
+    // // afrwards run ransac again
+    // // get the corresponding feature pairs
+    // AbsolutePoseCorrespondences dynamic_correspondences;
+    // bool corr_result = frame_k->getDynamicCorrespondences(
+    //     dynamic_correspondences, *frame_km1, object_id,
+    //     frame_k->landmarkWorldKeypointCorrespondance());
 
-    const size_t& n_matches = dynamic_correspondences.size();
+    // const size_t& n_matches = dynamic_correspondences.size();
 
-    TrackletIds all_tracklets;
-    std::transform(dynamic_correspondences.begin(),
-                   dynamic_correspondences.end(),
-                   std::back_inserter(all_tracklets),
-                   [](const AbsolutePoseCorrespondence& corres) {
-                     return corres.tracklet_id_;
-                   });
-    CHECK_EQ(all_tracklets.size(), n_matches);
+    // TrackletIds all_tracklets;
+    // std::transform(dynamic_correspondences.begin(),
+    //                dynamic_correspondences.end(),
+    //                std::back_inserter(all_tracklets),
+    //                [](const AbsolutePoseCorrespondence& corres) {
+    //                  return corres.tracklet_id_;
+    //                });
+    // CHECK_EQ(all_tracklets.size(), n_matches);
 
-    utils::ChronoTimingStats update_timer("hybrid_motion_solver.solve_impl",
-                                          50);
-    geometric_result = pnp_ransac_solver_.solve3d2d(dynamic_correspondences);
+    // utils::ChronoTimingStats update_timer("hybrid_motion_solver.solve_impl",
+    //                                       50);
+    // geometric_result = pnp_ransac_solver_.solve3d2d(dynamic_correspondences);
 
-    inlier_tracklets = geometric_result.inliers;
-    const TrackletIds& outlier_tracklets = geometric_result.outliers;
-    frame_k->dynamic_features_.markOutliers(outlier_tracklets);
+    // inlier_tracklets = geometric_result.inliers;
+    // const TrackletIds& outlier_tracklets = geometric_result.outliers;
+    // frame_k->dynamic_features_.markOutliers(outlier_tracklets);
 
-    G_W_inv = geometric_result.best_result.inverse();
+    // G_W_inv = geometric_result.best_result.inverse();
   }
 
   const gtsam::Pose3 H_W_km1_k_pnp = X_W_k * G_W_inv;
@@ -344,6 +345,7 @@ bool HybridObjectMotionSolver::solveImpl(
     createAndInsertFilter(object_id, frame_km1, inlier_tracklets);
     // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
     // requires_new_keyframe = true;
+    // TODO: retracked OR map error is really big!
   } else if (object_retracked) {
     auto solver = threadSafeFilterAccess(object_id);
     LOG(WARNING) << "Object retracked: " << info_string(frame_id_k, object_id);
@@ -377,6 +379,8 @@ bool HybridObjectMotionSolver::solveImpl(
 
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
     num_kfs_per_object_.at(object_id) = 0;
+
+    keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
   } else {
     // auto solver = threadSafeFilterAccess(object_id);
   }
@@ -442,7 +446,9 @@ bool HybridObjectMotionSolver::solveImpl(
   // LOG(INFO) << "j=" << object_id << " repr error: " << repr_error;
 
   // always add motion at k not k-1?
-  if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
+  // if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
+  if (requires_new_keyframe) {
+    CHECK(keyframe_status != ObjectKeyFrameStatus::NonKeyFrame);
     CHECK(pose_init_method != PoseInitalisationMethod::NonKeyFrame);
     /// mmmm if we keyframe at this frame
     // then the estimated motion is from km-1 to k
@@ -465,7 +471,8 @@ bool HybridObjectMotionSolver::solveImpl(
       auto repr_error = smoother->reprojectionError(frame_k);
       LOG(INFO) << info_string(frame_id_k, object_id)
                 << " repr error: " << repr_error;
-      if (repr_error > 10) {
+      // if (repr_error > 10) {
+      if (true) {
         CHECK_EQ(pose_init_method, PoseInitalisationMethod::Previous);
         // in this way I would probably also reset all keypoints to new
         // trackletids to basically enforce a new submap ;) (although the

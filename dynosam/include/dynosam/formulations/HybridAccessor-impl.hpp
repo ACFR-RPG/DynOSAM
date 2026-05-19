@@ -356,10 +356,19 @@ HybridAccessor<MAP>::getObjectMotionReferenceFrame(FrameId frame_id,
   const StateQueryStatus status = getObjectMotionReferenceFrameHelper(
       frame_id, object_id, motion_key, H_W_km1_k, from, to);
   if (status == StateQueryStatus::VALID) {
-    // in base accessor expect motion to be a genuine F2F motion
-    return Query(motion_key, Motion3ReferenceFrame(
-                                 H_W_km1_k, Motion3ReferenceFrame::Style::F2F,
-                                 ReferenceFrame::GLOBAL, from, to));
+    // in the native Hybrid version we ONLY provide F2F results so check that
+    // from == to-1 this handles the case we reobserve an object
+    if (from == to - 1) {
+      // in base accessor expect motion to be a genuine F2F motion
+      return Query(motion_key, Motion3ReferenceFrame(
+                                   H_W_km1_k, Motion3ReferenceFrame::Style::F2F,
+                                   ReferenceFrame::GLOBAL, from, to));
+    } else {
+      // we have a motion but is not a genuine F2F motion (ie we dont have
+      // consecutive motions)
+      Query(motion_key, StateQueryStatus::NOT_IN_MAP);
+    }
+
   } else {
     return Query(motion_key, status);
   }

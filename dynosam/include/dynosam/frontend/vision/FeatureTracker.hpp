@@ -94,6 +94,8 @@ class FeatureTracker : public FeatureTrackerBase {
     return boarder_detection_mask_;
   }
 
+  const FrontendParams& frontendParams() const { return frontend_params_; }
+
  protected:
   // dynamic_detection_mask is for tracking and detection? Which one do we need
   // for re-tracking!? detection mask is additional mask It must be a 8-bit
