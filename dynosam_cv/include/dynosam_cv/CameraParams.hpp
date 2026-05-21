@@ -138,6 +138,7 @@ class CameraParams {
   inline int ImageWidth() const { return image_size_.width; }
   inline int ImageHeight() const { return image_size_.height; }
   inline const std::string& referenceFrame() const { return reference_frame_; }
+  void referenceFrame(const std::string& frame) { reference_frame_ = frame; }
 
   inline const cv::Size& imageSize() const { return image_size_; }
 

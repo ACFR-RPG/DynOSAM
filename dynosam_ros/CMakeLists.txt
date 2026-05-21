@@ -56,6 +56,7 @@ set(SRC_FILES
   src/DataProviderRos.cc
   src/OnlineDataProviderRos.cc
   src/Diagnostics.cc
+  src/CameraSystem.cc
 
   src/displays/backend_displays/HybridBackendDisplay.cc
   src/displays/DisplaysCommon.cc
@@ -235,6 +236,7 @@ if(BUILD_TESTING)
     test/test_ros_utils.cc
     test/test_adaptors.cc
     test/test_online_dataprovider_ros.cc
+    test/test_camera_system.cc
 )
 
 target_include_directories(${PROJECT_NAME}_test

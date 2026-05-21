@@ -39,6 +39,7 @@
 #include "dynosam/pipeline/PipelineHooks.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_ros/BackendDisplayPolicyRos.hpp"
+#include "dynosam_ros/CameraSystem.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
@@ -201,60 +202,71 @@ void DynoNode::setupTFTree(const ReferenceFrameDefinitions& rf_definitions) {
 
 dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
     DynoParams& dyno_params) {
-  OnlineDataProviderRosParams online_params;
-  online_params.wait_for_camera_params =
-      ParameterConstructor(this, "wait_for_camera_params",
-                           online_params.wait_for_camera_params)
-          .description(
-              "If the online DataProvider should wait for the camera params "
-              "on a ROS topic!")
-          .finish()
-          .get<bool>();
-  online_params.camera_params_timeout =
-      ParameterConstructor(this, "camera_params_timeout",
-                           online_params.camera_params_timeout)
-          .description(
-              "When waiting for camera params, how long the online "
-              "DataProvider should wait before time out (ms)")
-          .finish()
-          .get<int>();
-  InputImageMode image_mode = static_cast<InputImageMode>(
-      ParameterConstructor(this, "input_image_mode",
-                           static_cast<int>(InputImageMode::ALL))
-          .description("Which input image mode to run the pipeline in (e.g "
-                       "ALL, RGBD, STEREO)...")
-          .finish()
-          .get<int>());
-
-  // TODO: make image input mode like OKVIS (ie. all+imu)
-  OnlineDataProviderRos::Ptr online_data_provider = nullptr;
-  switch (image_mode) {
-    case InputImageMode::ALL:
-      online_data_provider = std::make_shared<AllImagesOnlineProviderRos>(
-          this->create_sub_node("dataprovider"), online_params);
-      break;
-    case InputImageMode::RGBD:
-      online_data_provider = std::make_shared<RGBDOnlineProviderRos>(
-          this->create_sub_node("dataprovider"), online_params);
-      break;
-    case InputImageMode::RGBDM:
-      online_data_provider = std::make_shared<RGBDMOnlineProviderRos>(
-          this->create_sub_node("dataprovider"), online_params);
-      break;
-    case InputImageMode::STEREO:
-      online_data_provider = std::make_shared<StereoOnlineProviderRos>(
-          this->create_sub_node("dataprovider"), online_params);
-      break;
-    default:
-      LOG(FATAL) << "Unknown image_mode";
-      return nullptr;
+  std::vector<std::string> cameras_needed_for_depth;
+  std::vector<std::string> cameras_params;
+  std::vector<std::string> cameras;
+  SensorMode sensor_mode("rgb+depth+imu");
+  for (const auto& configs : sensor_mode.configs()) {
+    LOG(INFO) << configs;
   }
 
-  CHECK(online_data_provider);
-  // update any params in case they do not conflixt with the expected input
-  online_data_provider->updateAndCheckParams(dyno_params);
-  online_data_provider->setupSubscribers();
-  return online_data_provider;
+  // wait for all camera params as necessary
+
+  LOG(FATAL) << "BLAH!";
+  // OnlineDataProviderRosParams online_params;
+  // online_params.wait_for_camera_params =
+  //     ParameterConstructor(this, "wait_for_camera_params",
+  //                          online_params.wait_for_camera_params)
+  //         .description(
+  //             "If the online DataProvider should wait for the camera params "
+  //             "on a ROS topic!")
+  //         .finish()
+  //         .get<bool>();
+  // online_params.camera_params_timeout =
+  //     ParameterConstructor(this, "camera_params_timeout",
+  //                          online_params.camera_params_timeout)
+  //         .description(
+  //             "When waiting for camera params, how long the online "
+  //             "DataProvider should wait before time out (ms)")
+  //         .finish()
+  //         .get<int>();
+  // InputImageMode image_mode = static_cast<InputImageMode>(
+  //     ParameterConstructor(this, "input_image_mode",
+  //                          static_cast<int>(InputImageMode::ALL))
+  //         .description("Which input image mode to run the pipeline in (e.g "
+  //                      "ALL, RGBD, STEREO)...")
+  //         .finish()
+  //         .get<int>());
+
+  // // TODO: make image input mode like OKVIS (ie. all+imu)
+  // OnlineDataProviderRos::Ptr online_data_provider = nullptr;
+  // switch (image_mode) {
+  //   case InputImageMode::ALL:
+  //     online_data_provider = std::make_shared<AllImagesOnlineProviderRos>(
+  //         this->create_sub_node("dataprovider"), online_params);
+  //     break;
+  //   case InputImageMode::RGBD:
+  //     online_data_provider = std::make_shared<RGBDOnlineProviderRos>(
+  //         this->create_sub_node("dataprovider"), online_params);
+  //     break;
+  //   case InputImageMode::RGBDM:
+  //     online_data_provider = std::make_shared<RGBDMOnlineProviderRos>(
+  //         this->create_sub_node("dataprovider"), online_params);
+  //     break;
+  //   case InputImageMode::STEREO:
+  //     online_data_provider = std::make_shared<StereoOnlineProviderRos>(
+  //         this->create_sub_node("dataprovider"), online_params);
+  //     break;
+  //   default:
+  //     LOG(FATAL) << "Unknown image_mode";
+  //     return nullptr;
+  // }
+
+  // CHECK(online_data_provider);
+  // // update any params in case they do not conflixt with the expected input
+  // online_data_provider->updateAndCheckParams(dyno_params);
+  // online_data_provider->setupSubscribers();
+  // return online_data_provider;
 }
 
 dyno::DataProvider::Ptr DynoNode::createDatasetDataProvider(
