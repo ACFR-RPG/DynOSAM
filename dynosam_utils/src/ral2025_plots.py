@@ -13,7 +13,7 @@ from dynosam_utils.evaluation.core.plotting import startup_plotting
 startup_plotting(font_size=26, text_size_scalar=0.9)
 
 
-CATEGORY_TO_PLOT = "object"     # camera | object
+CATEGORY_TO_PLOT = "camera"     # camera | object
 PLOT_TYPE = "box"              # bar | box | normalized | line | mean
 
 # ---------------------------------------------------------
@@ -188,229 +188,178 @@ def get_dataset_positions(rows, category="camera"):
 # KITTI sequences
 # ------------------------
 
-kitti_seq = ["00","01","02","03","04","05","06","18","20"]
+# NOTE: all the NON-Baseline results are reported as relative to the Baseline
 
-add("camera","KITTI","ATE","DynaSLAM II",kitti_seq,
-[1.29,2.31,0.91,0.69,1.42,1.34,0.19,1.09,1.36])
-
-add("camera","KITTI","ATE","VDO-SLAM",kitti_seq,
-[3.37,6.74,2.47,2.12,4.53,3.8,0.45,9.94,7.82])
-
-add("camera","KITTI","ATE","WCPE",kitti_seq,
-[0.82,2.00,0.73,0.82,2.01,1.58,0.31,1.84,1.26])
-
-add("camera","KITTI","ATE","WCME",kitti_seq,
-[0.82,2.00,0.73,0.82,2.01,1.58,0.31,1.84,1.26])
+kitti_seq = ["00", "01", "02", "03", "04", "05", "06", "18", "20"]
+outdoor_seq = ["L1", "L2", "S1", "S2"]
+omd_seq = ["S4U"]
 
 
-add("camera","KITTI","RPE_r","DynaSLAM II",kitti_seq,
-[0.06,0.04,0.02,0.06,0.06,0.03,0.04,0.02,0.04])
+# --- OBJECT ERROR ---
 
-add("camera","KITTI","RPE_r","VDO-SLAM",kitti_seq,
-[0.08,0.05,0.03,0.03,0.06,0.03,0.10,0.03,0.04])
+# --- Metric: ME_r (Degrees) ---
+# KITTI
+add("object", "KITTI", "ME_r", "Baseline", kitti_seq, [1.11, 1.04, 0.97, 0.26, 1.24, 0.85, 0.39, 0.57, 0.52])
+add("object", "KITTI", "ME_r", "Hybrid", kitti_seq, [-0.23, -0.06, 0.1, 0.01, 0.15, 0.3, 0.19, 0.27, -0.3])
+add("object", "KITTI", "ME_r", "iHybrid", kitti_seq, [0.12, 0.08, -0.35, -0.03, 0.71, -0.10, 0.07, 0.24, None])
+add("object", "KITTI", "ME_r", "Parallel-Hybrid", kitti_seq, [-0.06, -0.41, -1.29, -0.12, -0.23, -0.27, -0.09, -0.34, -0.14])
 
-add("camera","KITTI","RPE_r","WCPE",kitti_seq,
-[0.05,0.03,0.02,0.05,0.06,0.06,0.05,0.04,0.04])
-
-add("camera","KITTI","RPE_r","WCME",kitti_seq,
-[0.04,0.03,0.02,0.05,0.06,0.05,0.05,0.04,0.04])
-
-
-add("camera","KITTI","RPE_t","DynaSLAM II",kitti_seq,
-[0.04,0.05,0.04,0.04,0.07,0.06,0.02,0.05,0.07])
-
-add("camera","KITTI","RPE_t","VDO-SLAM",kitti_seq,
-[0.09,0.15,0.05,0.09,0.14,0.11,0.04,0.09,0.30])
-
-add("camera","KITTI","RPE_t","WCPE",kitti_seq,
-[0.04,0.04,0.03,0.05,0.07,0.05,0.01,0.04,0.04])
-
-add("camera","KITTI","RPE_t","WCME",kitti_seq,
-[0.04,0.04,0.03,0.05,0.06,0.05,0.01,0.04,0.02])
-
-
-# ------------------------
 # Outdoor Cluster
-# ------------------------
+add("object", "Outdoor Cluster", "ME_r", "Baseline", outdoor_seq, [0.82, 0.70, 0.69, 2.36])
+add("object", "Outdoor Cluster", "ME_r", "Hybrid", outdoor_seq, [-0.34, 0.19, 0.16, 0.03])
+add("object", "Outdoor Cluster", "ME_r", "iHybrid", outdoor_seq, [-0.46, -0.4, 0.3, 0.71])
+add("object", "Outdoor Cluster", "ME_r", "Parallel-Hybrid", outdoor_seq, [-0.25, -0.18, -0.06, 0.3])
 
-cluster_seq = ["L1","L2","S1","S2"]
-
-add("camera","OutdoorCluster","ATE","WCPE",cluster_seq,[0.61,0.52,0.09,0.13])
-add("camera","OutdoorCluster","ATE","WCME",cluster_seq,[0.61,0.52,0.09,0.13])
-# only average provided
-add("camera","OutdoorCluster","ATE","ClusterSLAM",cluster_seq,[0.53,np.nan,np.nan,np.nan])
-
-add("camera","OutdoorCluster","RPE_r","WCPE",cluster_seq,[0.02,0.02,0.01,0.02])
-add("camera","OutdoorCluster","RPE_r","WCME",cluster_seq,[0.02,0.02,0.01,0.02])
-
-add("camera","OutdoorCluster","RPE_t","WCPE",cluster_seq,[0.04,0.02,0.01,0.02])
-add("camera","OutdoorCluster","RPE_t","WCME",cluster_seq,[0.04,0.01,0.01,0.02])
-
-# only average provided
-add("camera","OutdoorCluster","RPE_t","ClusterSLAM",cluster_seq,[1.10,np.nan,np.nan,np.nan])
-add("camera","OutdoorCluster","RPE_r","ClusterSLAM",cluster_seq,[1.15,np.nan,np.nan,np.nan])
-
-
-# ------------------------
 # OMD
-# ------------------------
-
-add("camera","OMD","ATE","DynaSLAM II",["S4U"],[0.21])
-add("camera","OMD","ATE","VDO-SLAM",["S4U"],[0.19])
-add("camera","OMD","ATE","MVO",["S4U"],[0.05])
-add("camera","OMD","ATE","WCPE",["S4U"],[0.11])
-add("camera","OMD","ATE","WCME",["S4U"],[0.11])
-
-viode_seq = ["CD-Mid","CD-High","CN-Mid","CN-High","PL-Mid","PL-High"]
-
-# -------------------------------------------------
-# ATE (meters)
-# -------------------------------------------------
-
-add("camera","VIODE","ATE","DynaVINS",viode_seq,
-[0.104,0.150,0.194,0.147,0.056,0.065])
-
-add("camera","VIODE","ATE","ORB-SLAM3",
-["CD-Mid","CN-Mid","CN-High"],
-[0.217,1.693,3.006])
-
-add("camera","VIODE","ATE","WCPE",viode_seq,
-[2.515,2.128,1.360,2.560,1.377,0.764])
-
-add("camera","VIODE","ATE","WCME",viode_seq,
-[2.515,2.128,1.360,2.560,1.377,0.764])
+add("object", "OMD", "ME_r", "Baseline", omd_seq, [0.67])
+add("object", "OMD", "ME_r", "Hybrid", omd_seq, [0.08])
+add("object", "OMD", "ME_r", "iHybrid", omd_seq, [None])
+add("object", "OMD", "ME_r", "Parallel-Hybrid", omd_seq, [0.07])
 
 
-# -------------------------------------------------
-# RPE_t (meters)
-# -------------------------------------------------
+# --- Metric: ME_t (Meters) ---
+# KITTI
+add("object", "KITTI", "ME_t", "Baseline", kitti_seq, [0.15, 0.32, 0.51, 0.11, 0.12, 0.27, 0.09, 0.11, 0.11])
+add("object", "KITTI", "ME_t", "Hybrid", kitti_seq, [-0.08, -0.05, 0.0, 0.0, 0.0, -0.16, -0.02, 0.03, 0.0])
+add("object", "KITTI", "ME_t", "iHybrid", kitti_seq, [-0.08, -0.08, 0.06, -0.01, -0.18, -0.16, -0.11, -0.01, None])
+add("object", "KITTI", "ME_t", "Parallel-Hybrid", kitti_seq, [0.01, -0.06, 0.0, 0.0, -0.04, -0.09, 0.01, -0.04, 0.0])
 
-add("camera","VIODE","RPE_t","DynaVINS",viode_seq,
-[0.024,0.027,0.019,0.023,0.019,0.015])
+# Outdoor Cluster
+add("object", "Outdoor Cluster", "ME_t", "Baseline", outdoor_seq, [0.08, 0.06, 0.04, 0.15])
+add("object", "Outdoor Cluster", "ME_t", "Hybrid", outdoor_seq, [-0.04, -0.04, 0.0, 0.11])
+add("object", "Outdoor Cluster", "ME_t", "iHybrid", outdoor_seq, [-0.04, -0.05, 0.0, 0.09])
+add("object", "Outdoor Cluster", "ME_t", "Parallel-Hybrid", outdoor_seq, [0.02, -0.01, -0.02, -0.04])
 
-add("camera","VIODE","RPE_t","WCPE",viode_seq,
-[0.008,0.014,0.015,0.020,0.006,0.005])
-
-add("camera","VIODE","RPE_t","WCME",viode_seq,
-[0.008,0.014,0.015,0.020,0.006,0.005])
-
-
-# -------------------------------------------------
-# RPE_r (degrees)
-# -------------------------------------------------
-
-add("camera","VIODE","RPE_r","DynaVINS",viode_seq,
-[0.087,0.09,0.102,0.096,0.126,0.111])
-
-add("camera","VIODE","RPE_r","WCPE",viode_seq,
-[0.049,0.105,0.070,0.190,0.036,0.040])
-
-add("camera","VIODE","RPE_r","WCME",viode_seq,
-[0.049,0.105,0.070,0.190,0.036,0.040])
+# OMD
+add("object", "OMD", "ME_t", "Baseline", omd_seq, [0.02])
+add("object", "OMD", "ME_t", "Hybrid", omd_seq, [0.0])
+add("object", "OMD", "ME_t", "iHybrid", omd_seq, [None])
+add("object", "OMD", "ME_t", "Parallel-Hybrid", omd_seq, [0.0])
 
 
-# ------------------------
-# TartanAir Shibuya
-# ------------------------
+# --- CAMERA ERROR ---
 
-tas_seq = ["I","II","III","IV","V","VI","VII"]
+# --- Metric: ATE (Meters) ---
+# KITTI
+add("camera", "KITTI", "ATE", "Static Baseline", kitti_seq, [1.57, 2.10, 0.72, 1.67, 1.30, 1.99, 0.70, 2.15, 2.33])
+add("camera", "KITTI", "ATE", "Baseline", kitti_seq, [1.54, 2.10, 0.74, 1.64, 1.28, 2.01, 0.41, 2.30, 2.30])
+add("camera", "KITTI", "ATE", "Hybrid", kitti_seq, [0.0, 0.0, 0.0, -0.02, -0.01, 0.0, 0.0, 0.0, 0.0])
+add("camera", "KITTI", "ATE", "iHybrid", kitti_seq, [-0.01, 0.0, 0.0, -0.19, -0.02, 0.01, -0.01, -0.06, None])
+add("camera", "KITTI", "ATE", "Parallel-Hybrid", kitti_seq, [-0.01, 0.0, 0.0, -0.03, -0.04, 0.01, -0.02, -0.1, -0.12])
 
-add("camera","TartanAir","ATE","AirDOS",tas_seq,
-[0.06,0.02,0.10,0.03,0.02,0.22,0.56])
+# Outdoor Cluster
+add("camera", "Outdoor Cluster", "ATE", "Static Baseline", outdoor_seq, [0.60, 0.52, 0.12, 1.15])
+add("camera", "Outdoor Cluster", "ATE", "Baseline", outdoor_seq, [0.62, 0.52, 0.09, 1.08])
+add("camera", "Outdoor Cluster", "ATE", "Hybrid", outdoor_seq, [0.0, 0.0, -0.06, 0.81])
+add("camera", "Outdoor Cluster", "ATE", "iHybrid", outdoor_seq, [-0.02, -0.03, -0.05, 0.46])
+add("camera", "Outdoor Cluster", "ATE", "Parallel-Hybrid", outdoor_seq, [0.16, -0.23, -0.02, -0.3])
 
-add("camera","TartanAir","ATE","VDO-SLAM",tas_seq,
-[0.10,0.61,0.38,0.39,0.22,0.24,0.66])
-
-add("camera","TartanAir","ATE","WCPE",tas_seq,
-[0.03,0.03,0.02,0.02,0.03,0.04,0.18])
-
-add("camera","TartanAir","ATE","WCME",tas_seq,
-[0.02,0.04,0.02,0.02,0.04,0.03,0.19])
-
-
-
-# =========================================================
-# OBJECT RESULTS
-# =========================================================
-
-add("object","KITTI","ME_r","VDO-SLAM",kitti_seq,
-[1.38,2.15,1.68,0.39,2.8,0.48,2.8,0.36,0.47])
-
-add("object","KITTI","ME_r","MVO",["00"],[3.36])
-
-add("object","KITTI","ME_r","WCPE",kitti_seq,
-[1.23,0.91,0.95,0.27,0.76,0.56,2.8,1.15,0.39])
-
-add("object","KITTI","ME_r","WCME",kitti_seq,
-[1.29,0.86,1.06,0.26,1.01,0.49,0.39,0.6,0.33])
+# OMD
+add("camera", "OMD", "ATE", "Static Baseline", omd_seq, [0.12])
+add("camera", "OMD", "ATE", "Baseline", omd_seq, [0.10])
+add("camera", "OMD", "ATE", "Hybrid", omd_seq, [0.0])
+add("camera", "OMD", "ATE", "iHybrid", omd_seq, [None])
+add("camera", "OMD", "ATE", "Parallel-Hybrid", omd_seq, [0.0])
 
 
-add("object","KITTI","ME_t","VDO-SLAM",kitti_seq,
-[0.11,0.35,0.43,0.15,0.38,0.19,0.11,0.16,0.57])
+# --- Metric: RPE_r (Degrees) ---
+# KITTI
+add("camera", "KITTI", "RPE_r", "Static Baseline", kitti_seq, [0.05, 0.03, 0.02, 0.04, 0.08, 0.04, 0.05, 0.02, 0.05])
+add("camera", "KITTI", "RPE_r", "Baseline", kitti_seq, [0.05, 0.03, 0.02, 0.07, 0.07, 0.07, 0.05, 0.04, 0.03])
+add("camera", "KITTI", "RPE_r", "Hybrid", kitti_seq, [-0.01, 0.0, 0.0, 0.1, 0.0, -0.01, 0.0, 0.0, 0.0])
+add("camera", "KITTI", "RPE_r", "iHybrid", kitti_seq, [0.0, -0.01, 0.0, 0.2, 0.0, -0.01, 0.0, 0.0, None])
+add("camera", "KITTI", "RPE_r", "Parallel-Hybrid", kitti_seq, [0.0, 0.0, 0.0, 0.01, 0.02, 0.0, 0.01, 0.0, 0.0])
 
-add("object","KITTI","ME_t","MVO",["00"],[0.27])
+# Outdoor Cluster
+add("camera", "Outdoor Cluster", "RPE_r", "Static Baseline", outdoor_seq, [0.02, 0.03, 0.02, 0.03])
+add("camera", "Outdoor Cluster", "RPE_r", "Baseline", outdoor_seq, [0.02, 0.02, 0.01, 0.02])
+add("camera", "Outdoor Cluster", "RPE_r", "Hybrid", outdoor_seq, [-0.01, -0.01, 0.0, 0.0])
+add("camera", "Outdoor Cluster", "RPE_r", "iHybrid", outdoor_seq, [0.0, 0.0, 0.0, 0.0])
+add("camera", "Outdoor Cluster", "RPE_r", "Parallel-Hybrid", outdoor_seq, [0.0, 0.01, 0.01, 0.0])
 
-add("object","KITTI","ME_t","WCPE",kitti_seq,
-[0.09,0.40,0.73,0.15,0.10,0.14,0.22,0.31,0.39])
-
-add("object","KITTI","ME_t","WCME",kitti_seq,
-[0.15,0.34,0.40,0.15,0.09,0.13,0.11,0.20,0.05])
-
-
-# ------------------------
-# OMD object (per-object)
-# ------------------------
-
-obj_ids = ["1","2","3","4"]
-
-add("object","OMD","ME_r","VDO-SLAM",obj_ids,
-[1.256,0.770,0.907,0.927])
-
-add("object","OMD","ME_r","MVO",obj_ids,
-[0.542,0.843,1.648,0.854])
-
-add("object","OMD","ME_r","WCME",obj_ids,
-[1.138,0.544,0.443,0.474])
-
-add("object","OMD","ME_t","VDO-SLAM",obj_ids,
-[0.0243,0.0234,0.0148,0.0293])
-
-add("object","OMD","ME_t","MVO",obj_ids,
-[0.0169,0.0269,0.0232,0.0309])
-
-add("object","OMD","ME_t","WCME",obj_ids,
-[0.0214,0.0233,0.0086,0.0291])
+# OMD
+add("camera", "OMD", "RPE_r", "Static Baseline", omd_seq, [0.71])
+add("camera", "OMD", "RPE_r", "Baseline", omd_seq, [0.66])
+add("camera", "OMD", "RPE_r", "Hybrid", omd_seq, [0.0])
+add("camera", "OMD", "RPE_r", "iHybrid", omd_seq, [None])
+add("camera", "OMD", "RPE_r", "Parallel-Hybrid", omd_seq, [0.0])
 
 
-cluster_obj_seq = ["L1","L2","S1","S2"]
+# --- Metric: RPE_t (Meters) ---
+# KITTI
+add("camera", "KITTI", "RPE_t", "Static Baseline", kitti_seq, [0.04, 0.06, 0.04, 0.1, 0.03, 0.01, 0.01, 0.05, 0.03])
+add("camera", "KITTI", "RPE_t", "Baseline", kitti_seq, [0.04, 0.06, 0.06, 0.07, 0.06, 0.08, 0.01, 0.05, 0.04])
+add("camera", "KITTI", "RPE_t", "Hybrid", kitti_seq, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+add("camera", "KITTI", "RPE_t", "iHybrid", kitti_seq, [0.00, 0.01, 0.01, -0.01, -0.01, -0.02, 0.00, 0.00, None])
+add("camera", "KITTI", "RPE_t", "Parallel-Hybrid", kitti_seq, [0.00, 0.00, 0.01, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00])
 
-add("object","OutdoorCluster","ME_r","VDO-SLAM",cluster_obj_seq,
-[1.41, 1.11, 0.29, 0.35])
+# Outdoor Cluster
+add("camera", "Outdoor Cluster", "RPE_t", "Static Baseline", outdoor_seq, [0.02, 0.02, 0.008, 0.05])
+add("camera", "Outdoor Cluster", "RPE_t", "Baseline", outdoor_seq, [0.02, 0.01, 0.01, 0.02])
+add("camera", "Outdoor Cluster", "RPE_t", "Hybrid", outdoor_seq, [0.0, 0.0, 0.0, 0.01])
+add("camera", "Outdoor Cluster", "RPE_t", "iHybrid", outdoor_seq, [0.00, 0.00, 0.00, 0.00])
+add("camera", "Outdoor Cluster", "RPE_t", "Parallel-Hybrid", outdoor_seq, [0.01, 0.00, 0.00, -0.01])
 
-add("object","OutdoorCluster","ME_r","WCPE",cluster_obj_seq,
-[0.93, 0.72, 0.18, 0.21])
-
-add("object","OutdoorCluster","ME_r","WCME",cluster_obj_seq,
-[0.88, 0.65, 0.17, 0.20])
-
-
-add("object","OutdoorCluster","ME_t","VDO-SLAM",cluster_obj_seq,
-[0.33, 0.28, 0.08, 0.09])
-
-add("object","OutdoorCluster","ME_t","WCPE",cluster_obj_seq,
-[0.21, 0.19, 0.06, 0.07])
-
-add("object","OutdoorCluster","ME_t","WCME",cluster_obj_seq,
-[0.18, 0.16, 0.05, 0.06])
+# OMD
+add("camera", "OMD", "RPE_t", "Static Baseline", omd_seq, [0.006])
+add("camera", "OMD", "RPE_t", "Baseline", omd_seq, [0.01])
+add("camera", "OMD", "RPE_t", "Hybrid", omd_seq, [0.0])
+add("camera", "OMD", "RPE_t", "iHybrid", omd_seq, [None])
+add("camera", "OMD", "RPE_t", "Parallel-Hybrid", omd_seq, [0.0])
 
 
+def convert_relative_to_absolute(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Converts relative error values of non-baseline methods back into absolute values
+    by adding them to their respective sequence's Baseline value.
 
+    Leaves 'Baseline' and 'Static Baseline' values unchanged.
+    """
+    # 1. Create a copy so we don't mutate the original data frame unexpectedly
+    df_absolute = df.copy()
+
+    # 2. Extract only the baseline rows to build a lookup mapping
+    # We group by the unique identifiers that define a specific experiment run
+    baseline_df = df_absolute[df_absolute['method'] == 'Baseline']
+
+    # Create a mapping dictionary: {(category, dataset, metric, sequence): baseline_value}
+    baseline_lookup = baseline_df.set_index(['category', 'dataset', 'metric', 'sequence'])['value'].to_dict()
+
+    # 3. Define an internal row-by-row mapping function
+    def calculate_absolute(row):
+        # We only alter rows that are relative variations (exclude original baselines)
+        if row['method'] in ['Baseline', 'Static Baseline']:
+            return row['value']
+
+        # If the value is missing due to a system failure (None / NaN), leave it as-is
+        if pd.isna(row['value']):
+            return row['value']
+
+        # Define the key matching this row's exact experiment criteria
+        lookup_key = (row['category'], row['dataset'], row['metric'], row['sequence'])
+
+        # Grab the baseline anchor value
+        baseline_val = baseline_lookup.get(lookup_key)
+
+        if baseline_val is not None and not pd.isna(baseline_val):
+            # Absolute = Baseline + Relative offset
+            # Rounding handles float precision noise (e.g., 0.15 + -0.08 resulting in 0.0700000000001)
+            # subtract result as -0.04 actually means 0.04 worse than the baseline so we should make the error higher
+            return round(baseline_val - row['value'], 4)
+
+        return row['value']
+
+    # 4. Apply the calculation down the dataframe axis
+    df_absolute['value'] = df_absolute.apply(calculate_absolute, axis=1)
+
+    return df_absolute
 
 # =========================================================
 # DATAFRAME
 # =========================================================
 
 df = pd.DataFrame(rows)
+df = convert_relative_to_absolute(df)
 
 def build_method_color_map(df):
     """
@@ -970,66 +919,6 @@ def aggregate(df):
     return pd.DataFrame(line_rows), pd.DataFrame(box_rows)
 
 
-# =========================================================
-# MAIN PLOT DRIVER
-# =========================================================
-
-# def plot_all(df):
-
-#     global_legend_handles = []
-#     global_added_legend = set()
-
-#     df = df[df["category"] == CATEGORY_TO_PLOT]
-
-#     if AGGREGATE_PER_DATASET:
-#         df_line, df_box = aggregate(df)
-#     else:
-#         df_line = df.copy()
-#         df_box = df.copy()
-
-#     metrics = df_line["metric"].unique()
-
-#     # fig, axes = plt.subplots(len(metrics), 1, figsize=(14, 4 * len(metrics)))
-#     fig, axes = plt.subplots(len(metrics), 1, figsize=(16, 3 * len(metrics)), constrained_layout=True)
-
-#     if CATEGORY_TO_PLOT == "camera":
-#         fig.suptitle("Camera Pose Error Comparisons Per Sequence")
-#     if CATEGORY_TO_PLOT == "object":
-#         fig.suptitle("Object Motion Error Comparisons Per Sequence")
-
-#     if len(metrics) == 1:
-#         axes = [axes]
-
-#     for ax, metric in zip(axes, metrics):
-#         print(f"Plotting metric: {metric}")
-
-#         if PLOT_TYPE == "box" or PLOT_TYPE == "mean":
-#             plot_box(ax, df_box, metric, global_legend_handles, global_added_legend)
-
-#         elif PLOT_TYPE == "line":
-#             plot_line(ax, df_line, metric)
-
-#         else:
-#             raise ValueError("Unknown PLOT_TYPE")
-
-#     fig.subplots_adjust(top=0.3)
-#     fig.legend(
-#         handles=global_legend_handles,
-#         loc="upper center",
-#         bbox_to_anchor=(0.5, 0.98),  # top of figure
-#         ncol=min(len(global_legend_handles), 6),
-#         frameon=True,
-#         borderaxespad=0.0
-#     )
-
-#     fig.suptitle(
-#         fig._suptitle.get_text() if fig._suptitle else "",
-#         y=3.0
-#     )
-
-
-    #The 0.82 reserves ~18% of the figure width for the external legend.
-    # fig.subplots_adjust(right=0.90)
 from matplotlib.gridspec import GridSpec
 
 def plot_all(df):
@@ -1132,10 +1021,10 @@ fig = plot_all(df)
 
 
 fig.tight_layout()
-# plt.show()
+plt.show()
 
-file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_TRO.jpg'
-fig.savefig(file_path)
+# file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_TRO.jpg'
+# fig.savefig(file_path)
 
 # plt.savefig(file_path)
 

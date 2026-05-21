@@ -38,6 +38,7 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/RGBDCamera.hpp"
 
 namespace dyno {
 
@@ -411,10 +412,6 @@ bool Frame::getStaticCorrespondences(FeaturePairs& correspondences,
 
 bool Frame::getDynamicCorrespondences(FeaturePairs& correspondences,
                                       const Frame& previous_frame) const {
-  // vision_tools::getCorrespondences(
-  //     correspondences, previous_frame.dynamic_features_.usableIterator(),
-  //     dynamic_features_.usableIterator());
-
   vision_tools::getCorrespondences(correspondences,
                                    previous_frame.dynamic_features_,
                                    dynamic_features_, UsableFeaturePredicate());
@@ -462,58 +459,6 @@ void Frame::constructDynamicObservations() {
   }
 }
 
-// void Frame::moveObjectToStatic(ObjectId instance_label) {
-//   auto it = object_observations_.find(instance_label);
-//   CHECK(it != object_observations_.end());
-
-//   SingleDetectionResult& observation = it->second;
-//   observation.marked_as_moving_ = false;
-//   CHECK(observation.instance_label_ == instance_label);
-//   // go through all features, move them to from dynamic structure and add
-//   them
-//   // to static
-//   for (TrackletId tracklet_id : observation.object_features_) {
-//     CHECK(dynamic_features_.exists(tracklet_id));
-//     Feature::Ptr dynamic_feature =
-//         dynamic_features_.getByTrackletId(tracklet_id);
-
-//     if (!dynamic_feature->usable()) {
-//       continue;
-//     }
-
-//     CHECK(!dynamic_feature->isStatic());
-//     CHECK_EQ(dynamic_feature->trackletId(), tracklet_id);
-//     CHECK_EQ(dynamic_feature->objectId(), instance_label);
-//     dynamic_feature->keypointType(KeyPointType::STATIC);
-//     dynamic_feature->objectId(background_label);
-//     // dynamic_feature->tracking_label_ = background_label;
-
-//     dynamic_features_.remove(tracklet_id);
-//     // Jesse: no, do not move points (these are dense) to static - instrad we
-//     // need to mark the AREA around the object as static and then retrack all
-//     // points in there!!
-//     //  static_features_.add(dynamic_feature);
-//   }
-
-//   object_observations_.erase(it);
-// }
-
-// void Frame::updateObjectTrackingLabel(
-//     const SingleDetectionResult& observation, ObjectId new_tracking_label)
-//     {
-//   auto it = object_observations_.find(observation.instance_label_);
-//   CHECK(it != object_observations_.end());
-
-//   auto& obs = it->second;
-//   obs.tracking_label_ = new_tracking_label;
-//   // update all features
-//   for (TrackletId tracklet_id : obs.object_features_) {
-//     Feature::Ptr feature = dynamic_features_.getByTrackletId(tracklet_id);
-//     CHECK(feature);
-//     feature->objectId(new_tracking_label);
-//   }
-// }
-
 Landmark Frame::getLandmarkFromCache(LandmarkMap& cache, Feature::Ptr feature,
                                      const gtsam::Pose3& X_world) const {
   // TODO: dont cache as we now update the optical flow and the depth in the
@@ -555,6 +500,10 @@ bool DepthUpdater::updateFromDepth(
   const ImageContainer& container = frame->imageContainer();
   const cv::Mat& depth = container.depth();
 
+  const auto& camera_ptr = CHECK_NOTNULL(frame->getCamera());
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_ptr->safeGetRGBDCamera();
+  CHECK_NOTNULL(rgbd_camera);
+
   for (Feature::Ptr feature : features) {
     const int x = functional_keypoint::u(feature->keypoint());
     const int y = functional_keypoint::v(feature->keypoint());
@@ -569,9 +518,12 @@ bool DepthUpdater::updateFromDepth(
       feature->depth(Feature::invalid_depth);
     } else {
       feature->depth(d);
+      // right projected right keypoint with virtual camera
+      //  if projection fails, set as outlier
+      if (!rgbd_camera->projectRight(feature)) {
+        feature->markOutlier();
+      }
     }
-
-    // TOODO: should add stereo point from depth!
   }
 
   return true;

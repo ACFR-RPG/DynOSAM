@@ -619,7 +619,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = false;
+  constexpr static bool kParallelSolve = true;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);
@@ -637,33 +637,10 @@ void PoseChangeVIFrontend::solveObjectMotions(
 
 bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
                                                  Frame::Ptr frame_km1) const {
-  // TODO: keyframes_ not used anymore?
-  // CHECK(keyframes_.exists(lCKF_frame_->getFrameId()));
-  // const KeyFrameData& lkf_data = keyframes_.at(lCKF_frame_->getFrameId());
-  // const Frame::Ptr lkf_frame = lkf_data.frame;
-
-  // return frame_k->getFrameId() % 10 == 0;
-
   if (frame_k->getFrameId() < 4) {
     // just starting, so yes, we need this as a new keyframe
     return true;
   }
-
-  // double tracking_quality;
-  // AbsolutePoseCorrespondences matches;
-  // std::vector<double> repr_errors;
-
-  // formulation_->matchToStaticMap(
-  //   lCKF_frame_,
-  //   matches,
-  //   repr_errors,
-  //   &tracking_quality
-  // );
-
-  // LOG(INFO) << "Tracking: k=" << frame_k->getFrameId() << ": matches=" <<
-  // matches.size()
-  //    << " tracking quality=" << tracking_quality << " against CKF=" <<
-  //    lCKF_frame_->getFrameId();
 
   const auto& cam_params = frame_k->getCamera()->getParams();
 
@@ -754,9 +731,6 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   if (overlap < overlap_thresh) {
     return true;
   }
-
-  const Timestamp lkf_time = lCKF_frame_->getTimestamp();
-  const Timestamp k_time = frame_k->getTimestamp();
 
   // more than 10 seconds since last keyframe?
   // since we've improved tracking less CKF's are made. Could also inforce this

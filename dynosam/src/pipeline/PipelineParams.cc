@@ -57,6 +57,7 @@ void declare_config(DynoParams::PipelineParams& config) {
         "prefer_data_provider_camera_params");
   field(config.prefer_data_provider_imu_params,
         "prefer_data_provider_imu_params");
+  field(config.enforce_realtime, "enforce_realtime");
 
   config.data_provider_type = FLAGS_data_provider_type;
 }

@@ -91,6 +91,7 @@ class DynoParams {
     bool prefer_data_provider_imu_params{true};
     //! Pipeline level params
     bool parallel_run{true};
+    bool enforce_realtime{false};
 
     // TODO: not used yet!!!!!
     RuntimeSensorFlags imu_runtime_options{DefaultRuntimeSensorOptions};
@@ -108,6 +109,7 @@ class DynoParams {
   }
 
   bool incrementalBackend() const;
+  bool enforceRealtime() const { return pipeline_params_.enforce_realtime; }
 
  public:
   PipelineParams pipeline_params_;

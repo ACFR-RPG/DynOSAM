@@ -428,6 +428,12 @@ class Frame {
 
 class FeatureTracker;
 
+/**
+ * @brief Wrapper class that updates the depth values for features in a frame
+ * based on either the provided depth map or stereo matching. Functions prefer
+ * stereo matching if available as this is generally more accurate.
+ *
+ */
 class DepthUpdater {
  public:
   DepthUpdater(FeatureTracker* tracker);

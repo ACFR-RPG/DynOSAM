@@ -1047,7 +1047,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   const gtsam::NonlinearFactorGraph& factors_in_smoother = getFactors();
 
   gtsam::SharedNoiseModel stereo_noise_model =
-      gtsam::noiseModel::Isotropic::Sigma(3u, 4.0);
+      gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);
   stereo_noise_model =
       factor_graph_tools::robustifyHuber(0.001, stereo_noise_model);
 
@@ -1216,12 +1216,12 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     if (local_graph.size() > 3 && tracklets.size() > 3) {
       CHECK(initial_values.exists(H_key_k)) << "Missing H at " << frame_id;
 
-      LOG(INFO) << "Addoing";
+      // LOG(INFO) << "Addoing";
 
       // right now only to account for that the H at this frame must always be
       // added
       if (!new_values.exists(H_key)) {
-        LOG(INFO) << "Adding key: " << DynosamKeyFormatter(H_key);
+        // LOG(INFO) << "Adding key: " << DynosamKeyFormatter(H_key);
         new_values.insert(H_key, initial_values.at<gtsam::Pose3>(H_key));
       }
       new_factors += local_graph;
@@ -1287,8 +1287,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   gtsam::LevenbergMarquardtParams opt_params;
   // for speed
   opt_params.setMaxIterations(3);
-
-  // new_values.print("Values ", DynosamKeyFormatter);
 
   dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
       new_factors, new_values, opt_params);
@@ -1363,73 +1361,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     // correct logic!
     if (smoother_state.exists(m_key))
       point_state_pair.second = smoother_state.at<gtsam::Point3>(m_key);
-
-    // if (point_state == PointState::InState) {
-    //   CHECK(smoother_state.exists(m_key));
-    //   // update variable
-    //   point_state_pair.second = smoother_state.at<gtsam::Point3>(m_key);
-    // } else {
-    //   // removed
-    //   CHECK(!smoother_state.exists(m_key));
-    //   const Landmark& m_L_point = point_state_pair.second;
-    //   smoother_state.insert(m_key, m_L_point);
-    // }
   }
-  // smoother_state = calculateEstimate();
-  // for (auto& [tracklet_id, point_state_pair] : point_state_) {
-  //   const gtsam::Symbol m_key(PointSymbol(tracklet_id));
-  //   const PointState& point_state = point_state_pair.first;
-
-  //   if (point_state == PointState::InState) {
-  //     CHECK(smoother_state.exists(m_key));
-  //     // update variable
-  //     point_state_pair.second = smoother_state.at<gtsam::Point3>(m_key);
-  //   } else {
-  //     // removed
-  //     CHECK(!smoother_state.exists(m_key));
-  //     const Landmark& m_L_point = point_state_pair.second;
-  //     smoother_state.insert(m_key, m_L_point);
-  //   }
-  // }
-
-  // only add points once they are marginalized?
-  // this means the backend will only get initial point estimates once
-  // they are refined
-  // and by using the m_l_init value in the backend we wait for these initial
-  // points even though the map is getting measurements filled make sure that
-  // the point is seen across enough keyframes otherwise it will enever end
-  // up
-  // int eh map
-  // smoother_state = calculateEstimate();
-  // gtsam::Values active_state = calculateEstimate();
-
-  // auto active_motion_estimates = active_state.extract<gtsam::Pose3>(
-  //     gtsam::Symbol::ChrTest(kObjectMotionSymbolChar));
-  // for (const auto& [key, value] : active_motion_estimates) {
-  //   smoother_state.insert(key, value);
-  // }
-
-  // // in this case we may NEVER add points if we keyframe often
-  // // ie more often than required to refine a point!
-  // for (auto& [tracklet_id, point_state_pair] : point_state_) {
-  //   const gtsam::Symbol m_key(PointSymbol(tracklet_id));
-  //   const PointState& point_state = point_state_pair.first;
-
-  //   if (point_state == PointState::InState) {
-  //     // CHECK(smoother_state.exists(m_key));
-  //     CHECK(active_state.exists(m_key));
-  //     // update variable
-  //     point_state_pair.second = active_state.at<gtsam::Point3>(m_key);
-  //   } else {
-  //     // removed
-  //     CHECK(!smoother_state.exists(m_key));
-  //     const Landmark& m_L_point = point_state_pair.second;
-  //     // add points once they are removed
-  //     smoother_state.insert(m_key, m_L_point);
-  //   }
-  // }
-
-  // TODO: debug
   return result;
 }
 
