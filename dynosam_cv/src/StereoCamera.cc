@@ -42,18 +42,41 @@
 namespace dyno {
 
 StereoCamera::StereoCamera(Camera::ConstPtr left_camera,
-                           Camera::ConstPtr right_camera)
+                           Camera::ConstPtr right_camera,
+                           const cv::Size& new_image_size)
     : original_left_camera_(CHECK_NOTNULL(left_camera)),
       original_right_camera_(CHECK_NOTNULL(right_camera)),
+      new_image_size_(new_image_size),
       undistorted_rectified_stereo_camera_impl_(),
       stereo_calibration_(nullptr),
       left_cam_undistort_rectifier_(nullptr),
       right_cam_undistort_rectifier_(nullptr),
       stereo_baseline_(0.0) {
+  // some minor smarts to ensure that new image size is actually a valid image
+  // size and not just 0,0 (default) this allows us to set the cannonical camera
+  // params correctly
+  if (new_image_size_.empty()) {
+    // same functionality as an empty image size when creating undistort/rectify
+    // maps
+    new_image_size_ = left_camera->getParams().imageSize();
+  }
+
   computeRectificationParameters(left_camera->getParams(),
-                                 right_camera->getParams(), R1_, R2_, P1_, P2_,
-                                 Q_, ROI1_, ROI2_);
+                                 right_camera->getParams(), new_image_size_,
+                                 R1_, R2_, P1_, P2_, Q_, ROI1_, ROI2_);
   calculateBaseLine(stereo_baseline_, Q_);
+
+  // Calc left camera pose after rectification
+  // NOTE: OpenCV pose convention is the opposite, therefore the inverse.
+  const gtsam::Rot3& camL_Rot_camLrect = utils::cvMatToGtsamRot3(R1_).inverse();
+  gtsam::Pose3 camL_Pose_camLrect(camL_Rot_camLrect, gtsam::Point3::Zero());
+  T_R_camL_rect_ =
+      left_camera->getParams().getExtrinsics().compose(camL_Pose_camLrect);
+
+  const gtsam::Rot3& camR_Rot_camRrect = utils::cvMatToGtsamRot3(R2_).inverse();
+  gtsam::Pose3 camR_Pose_camRrect(camR_Rot_camRrect, gtsam::Point3::Zero());
+  T_R_camR_rect_ =
+      left_camera->getParams().getExtrinsics().compose(camR_Pose_camRrect);
 
   //! Create stereo camera calibration after rectification and undistortion.
   const auto left_undist_rect_cam_mat = utils::Cvmat2Cal3_S2(P1_);
@@ -76,12 +99,29 @@ StereoCamera::StereoCamera(Camera::ConstPtr left_camera,
   //  which SHOULD still be local!!
   undistorted_rectified_stereo_camera_impl_ =
       gtsam::StereoCamera(gtsam::Pose3::Identity(), stereo_calibration_);
+
+  dyno::CameraParams::IntrinsicsCoeffs intrinsics{
+      left_undist_rect_cam_mat.fx(),
+      left_undist_rect_cam_mat.fy(),
+      left_undist_rect_cam_mat.px(),
+      left_undist_rect_cam_mat.py(),
+  };
+  dyno::CameraParams::DistortionCoeffs zero_distortion(4, 0);
+
+  // all extrinsics and reference frame values should be correct here
+  canonical_camera_params_ = CameraParams(
+      intrinsics, zero_distortion, new_image_size_, DistortionModel::RADTAN,
+      T_R_camL_rect_, left_camera->getParams().referenceFrame());
+
+  canonical_camera_params_.setDepthParams(stereo_baseline_);
 }
 
 StereoCamera::StereoCamera(const CameraParams& left_cam_params,
-                           const CameraParams& right_cam_params)
+                           const CameraParams& right_cam_params,
+                           const cv::Size& new_image_size)
     : StereoCamera(std::make_shared<Camera>(left_cam_params),
-                   std::make_shared<Camera>(right_cam_params)) {}
+                   std::make_shared<Camera>(right_cam_params), new_image_size) {
+}
 
 void StereoCamera::undistortRectifyImages(cv::Mat& rectify_left,
                                           cv::Mat& rectify_right,
@@ -93,8 +133,8 @@ void StereoCamera::undistortRectifyImages(cv::Mat& rectify_left,
 
 void StereoCamera::computeRectificationParameters(
     const CameraParams& left_cam_params, const CameraParams& right_cam_params,
-    cv::Mat& R1, cv::Mat& R2, cv::Mat& P1, cv::Mat& P2, cv::Mat& Q,
-    cv::Rect& ROI1, cv::Rect& ROI2) {
+    const cv::Size& new_image_size, cv::Mat& R1, cv::Mat& R2, cv::Mat& P1,
+    cv::Mat& P2, cv::Mat& Q, cv::Rect& ROI1, cv::Rect& ROI2) {
   // ! Extrinsics of the stereo (not rectified) relative pose between cameras
   gtsam::Pose3 camL_Pose_camR = (left_cam_params.getExtrinsics())
                                     .between(right_cam_params.getExtrinsics());
@@ -136,7 +176,7 @@ void StereoCamera::computeRectificationParameters(
           // Input
           left_k, left_d, right_k, right_d, size, camL_Rot_camR, camL_Tran_camR,
           // Output
-          R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, kAlpha, cv::Size(),
+          R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, kAlpha, new_image_size,
           &ROI1, &ROI2);
     } break;
     case DistortionModel::EQUIDISTANT: {
@@ -146,7 +186,7 @@ void StereoCamera::computeRectificationParameters(
           // Output
           R1, R2, P1, P2, Q,
           // TODO: Flag to maximise area???
-          cv::CALIB_ZERO_DISPARITY);
+          cv::CALIB_ZERO_DISPARITY, new_image_size);
     } break;
     default: {
       LOG(FATAL) << "Unknown DistortionModel: "

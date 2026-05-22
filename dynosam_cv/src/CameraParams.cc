@@ -283,9 +283,7 @@ const std::string CameraParams::toString() const {
       << "\n- height: " << ImageHeight() << "\n- K: " << K_ << '\n'
       << "- Distortion Model: " << to_string(distortion_model_) << '\n'
       << "- Reference frame:" << reference_frame_ << '\n'
-      << "- D: " << D_ << '\n'
-      << "- P: " << P_ << '\n';
-
+      << "- T_RC: " << T_robot_camera_ << '\n';
   if (depth_) {
     out << "Baseline " << depth_->virtual_baseline;
   } else {

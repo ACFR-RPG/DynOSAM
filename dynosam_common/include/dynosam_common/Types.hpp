@@ -162,6 +162,15 @@ class Flags {
   Storage bits_;
 };
 
+/* Seconds to nano-seconds */
+inline uint64_t toNSec(Timestamp seconds) {
+  return static_cast<uint64_t>(std::llround(seconds * 1e9));
+}
+/* Nanoseconds to seconds */
+inline Timestamp fromNSec(uint64_t nanoseconds) {
+  return static_cast<Timestamp>(nanoseconds) * 1e-9;
+}
+
 /**
  * @brief Get demangled class name
  *

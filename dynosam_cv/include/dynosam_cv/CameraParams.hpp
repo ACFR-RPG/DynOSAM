@@ -239,14 +239,12 @@ class CameraParams {
   IntrinsicsCoeffs intrinsics_;
   DistortionCoeffs distortion_coeff_;
   cv::Size image_size_;
-
+  //! Distortion parameters
+  DistortionModel distortion_model_;
   //! Transform of the camera frame to the robot frame
   gtsam::Pose3 T_robot_camera_;
   //! ROS style naming of the camera frame (ie. camera_optical_frame)
   std::string reference_frame_;
-
-  //! Distortion parameters
-  DistortionModel distortion_model_;
 
   //! OpenCV structures: needed to compute the undistortion map.
   //! 3x3 camera matrix K (last row is {0,0,1})

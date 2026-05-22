@@ -54,7 +54,7 @@ typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
   using CustomMsgType = typename Adaptor::custom_type;
 
   // it seems rclcpp::Adaptors do not work yet with wait for message
-  typename Adaptor::ros_message_type ros_msg;
+  RosMsgType ros_msg;
   if (rclcpp::wait_for_message<RosMsgType, Rep, Period>(ros_msg, node, topic,
                                                         time_to_wait)) {
     CustomMsgType custom_msg;

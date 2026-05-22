@@ -43,6 +43,7 @@
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros/Subscriber.hpp"
 #include "dynosam_ros/displays/DisplaysImpl.hpp"
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/parameter.hpp"
@@ -205,14 +206,33 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
   std::vector<std::string> cameras_needed_for_depth;
   std::vector<std::string> cameras_params;
   std::vector<std::string> cameras;
-  SensorMode sensor_mode("rgb+depth+imu");
+
+  auto mode =
+      ParameterConstructor(this, "input_image_mode", "rgb+aligned_depth")
+          .description(
+              "Which input image mode to run the pipeline in (e.g "
+              "ALL, RGBD, STEREO)...")
+          .finish()
+          .get<std::string>();
+
+  SensorMode sensor_mode(mode);
+  SensorSystem::Ptr sensor_system = std::make_shared<SensorSystem>(
+      this->create_sub_node("dataprovider"), sensor_mode.depthRigMode());
   for (const auto& configs : sensor_mode.configs()) {
     LOG(INFO) << configs;
+    sensor_system->addCamera(configs);
   }
+
+  sensor_system->finalise();
+
+  // do better with the subnodes
+  auto subscriber = std::make_shared<Subscriber>(
+      sensor_system, this->create_sub_node("images"));
+  return subscriber;
 
   // wait for all camera params as necessary
 
-  LOG(FATAL) << "BLAH!";
+  // LOG(FATAL) << "BLAH!";
   // OnlineDataProviderRosParams online_params;
   // online_params.wait_for_camera_params =
   //     ParameterConstructor(this, "wait_for_camera_params",

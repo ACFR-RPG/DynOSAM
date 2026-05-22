@@ -57,6 +57,7 @@ set(SRC_FILES
   src/OnlineDataProviderRos.cc
   src/Diagnostics.cc
   src/CameraSystem.cc
+  src/Subscriber.cc
 
   src/displays/backend_displays/HybridBackendDisplay.cc
   src/displays/DisplaysCommon.cc

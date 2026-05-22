@@ -46,25 +46,49 @@ def generate_launch_description():
         camera_name
     )
 
+    # dynosam_node = DynosamNode(
+    #     package="dynosam_ros",
+    #         executable="dynosam_node",
+    #         output="screen",
+    #         parameters=[
+    #             {"params_path": dynosam_params},
+    #             {"online": True},
+    #             {"input_image_mode": 2}, # Corresponds with InputImageMode::Stereo}
+    #             # {"baseline": 0.095},
+    #             {"base_frame": "camera_link"},
+    #             {"odom_frame": "odom"}
+    #         ],
+    #         remappings=[
+    #             ('cam0/image_raw', f'{camera_prefix}/infra1/image_rect_raw'),
+    #             ('cam1/image_raw', f'{camera_prefix}/infra2/image_rect_raw'),
+    #             ('dataprovider/cam0/camera_info', f'{camera_prefix}/infra1/camera_info'),
+    #             ('dataprovider/cam1/camera_info', f'{camera_prefix}/infra2/camera_info'),
+    #         ],
+    #     )
+
     dynosam_node = DynosamNode(
-        package="dynosam_ros",
-            executable="dynosam_node",
-            output="screen",
-            parameters=[
-                {"params_path": dynosam_params},
-                {"online": True},
-                {"input_image_mode": 2}, # Corresponds with InputImageMode::Stereo}
-                # {"baseline": 0.095},
-                {"base_frame": "camera_link"},
-                {"odom_frame": "odom"}
-            ],
-            remappings=[
-                ('cam0/image_raw', f'{camera_prefix}/infra1/image_rect_raw'),
-                ('cam1/image_raw', f'{camera_prefix}/infra2/image_rect_raw'),
-                ('dataprovider/cam0/camera_info', f'{camera_prefix}/infra1/camera_info'),
-                ('dataprovider/cam1/camera_info', f'{camera_prefix}/infra2/camera_info'),
-            ],
-        )
+    package="dynosam_ros",
+        executable="dynosam_node",
+        output="screen",
+        parameters=[
+            {"params_path": dynosam_params},
+            {"online": True},
+            {"input_image_mode": "stereo"},
+            # {"baseline": 0.095},
+            {"base_frame": "camera_link"},
+            {"odom_frame": "odom"},
+            {"image_0_optical_frame": "camera_infra1_optical_frame"},
+            {"image_1_optical_frame": "camera_infra2_optical_frame"}
+
+        ],
+        remappings=[
+            ('image_0/image_raw', f'{camera_prefix}/infra1/image_rect_raw'),
+            ('image_1/image_raw', f'{camera_prefix}/infra2/image_rect_raw'),
+            ('dataprovider/image_0/camera_info', f'{camera_prefix}/infra1/camera_info'),
+            ('dataprovider/image_1/camera_info', f'{camera_prefix}/infra2/camera_info'),
+        ],
+    )
+
 
     # wait a few seconds for the realsense to launch properly
     delay_node = TimerAction(

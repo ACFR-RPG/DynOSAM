@@ -47,10 +47,12 @@ class StereoCamera {
   DYNO_POINTER_TYPEDEFS(StereoCamera)
   DYNO_DELETE_COPY_CONSTRUCTORS(StereoCamera)
 
-  StereoCamera(Camera::ConstPtr left_camera, Camera::ConstPtr right_camera);
+  StereoCamera(Camera::ConstPtr left_camera, Camera::ConstPtr right_camera,
+               const cv::Size& new_image_size = cv::Size());
 
   StereoCamera(const CameraParams& left_cam_params,
-               const CameraParams& right_cam_params);
+               const CameraParams& right_cam_params,
+               const cv::Size& new_image_size = cv::Size());
 
   inline const Camera::ConstPtr& getOriginalLeftCamera() const {
     return original_left_camera_;
@@ -62,6 +64,10 @@ class StereoCamera {
 
   inline gtsam::StereoCamera getUndistortedRectifiedStereoCamera() const {
     return undistorted_rectified_stereo_camera_impl_;
+  }
+
+  inline CameraParams getUndistortedRectifiedCanonicalCameraParams() const {
+    return canonical_camera_params_;
   }
 
   inline const gtsam::Cal3_S2Stereo& getStereoCameraCalibration() const {
@@ -98,7 +104,7 @@ class StereoCamera {
    *
    * @param left_cam_params Left camera parameters
    * @param right_cam_params Right camera parameters
-   *
+   * @param new_image_size New size after rectification.
    * @param R1 Output 3x3 rectification transform (rotation matrix) for the
    * first camera.
    * @param R2 Output 3x3 rectification transform (rotation matrix) for the
@@ -114,14 +120,15 @@ class StereoCamera {
    */
   static void computeRectificationParameters(
       const CameraParams& left_cam_params, const CameraParams& right_cam_params,
-      cv::Mat& R1, cv::Mat& R2, cv::Mat& P1, cv::Mat& P2, cv::Mat& Q,
-      cv::Rect& ROI1, cv::Rect& ROI2);
+      const cv::Size& new_image_size, cv::Mat& R1, cv::Mat& R2, cv::Mat& P1,
+      cv::Mat& P2, cv::Mat& Q, cv::Rect& ROI1, cv::Rect& ROI2);
 
   static void calculateBaseLine(Baseline& base_line, const cv::Mat& Q);
 
  private:
   Camera::ConstPtr original_left_camera_;
   Camera::ConstPtr original_right_camera_;
+  cv::Size new_image_size_;
 
   //! Stereo camera implementation
   gtsam::StereoCamera undistorted_rectified_stereo_camera_impl_;
@@ -150,8 +157,14 @@ class StereoCamera {
   //! Regions of interest in the left/right image.
   cv::Rect ROI1_, ROI2_;
 
+  //! Pose of the left rectificed camera w.r.t to the robot pose
+  gtsam::Pose3 T_R_camL_rect_;
+  //! Pose of the right rectificed camera w.r.t to the robot pose
+  gtsam::Pose3 T_R_camR_rect_;
   //! Stereo baseline
   Baseline stereo_baseline_;
+
+  CameraParams canonical_camera_params_;
 };
 
 }  // namespace dyno

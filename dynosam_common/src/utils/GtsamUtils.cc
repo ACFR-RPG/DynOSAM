@@ -34,6 +34,7 @@
 
 #include <eigen3/Eigen/Dense>
 #include <opencv4/opencv2/core/eigen.hpp>
+#include <opencv4/opencv2/core/mat.hpp>
 
 namespace dyno {
 namespace utils {
@@ -74,6 +75,7 @@ gtsam::Rot3 cvMatToGtsamRot3(const cv::Mat& R) {
   CHECK_EQ(R.rows, 3);
   CHECK_EQ(R.cols, 3);
   gtsam::Matrix rot_mat = gtsam::Matrix::Identity(3, 3);
+  R.convertTo(R, CV_64F);
   cv::cv2eigen(R, rot_mat);
   return gtsam::Rot3(rot_mat);
 }
