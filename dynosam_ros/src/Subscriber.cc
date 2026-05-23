@@ -133,7 +133,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
     if (synced) {
       // probably bad to do image processing in here...?
       //  add
-      std::cout << "add images" << time << " " << images.size() << std::endl;
+      // std::cout << "add images" << time << " " << images.size() << std::endl;
       addImages(tcheck, images);
 
       // if (!viInterface_->addImages(tcheck, images)) {
@@ -197,8 +197,8 @@ bool Subscriber::addImages(Timestamp timestamp,
     throw DynosamException("Unknown DepthRigType!");
   }
 
-  LOG(INFO) << image_container->toString();
-  // image_container_callback_(image_container);
+  // LOG(INFO) << image_container->toString();
+  image_container_callback_(image_container);
   return true;
 }
 

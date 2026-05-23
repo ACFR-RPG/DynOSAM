@@ -14,6 +14,16 @@
 
 namespace dyno {
 
+bool hasStreamType(const std::vector<StreamConfig>& configs,
+                   StreamConfig::Types query_type) {
+  for (int i = 0; i < configs.size(); i++) {
+    if (configs.at(i).type == query_type) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // Helper function to split a valid string by '+' using string_views (no
 // allocations)
 std::vector<std::string> splitByPlus(const std::string& sensor_mode) {
@@ -49,6 +59,33 @@ const std::vector<StreamConfig>& SensorMode::configs() const {
 bool SensorMode::useImu() const { return use_imu_; }
 
 DepthRigType SensorMode::depthRigType() const { return depth_rig_type_; }
+
+bool SensorMode::reconfigure(DynoParams& dyno_params) const {
+  bool any_changed = false;
+  auto& tracker_params = dyno_params.frontend_params_.tracker_params;
+  if (tracker_params.prefer_provided_optical_flow &&
+      !hasStreamType(configs(), StreamConfig::Types::OpticalFlow)) {
+    LOG(WARNING) << "Sensor mode:" << raw_sensor_mode_
+                 << " does not include optical flow "
+                 << " but prefer_provided_optical_flow=true! DynoParams will "
+                    "be reconfigured";
+    tracker_params.prefer_provided_optical_flow = false;
+    any_changed = true;
+  }
+
+  if (tracker_params.prefer_provided_object_detection &&
+      !hasStreamType(configs(), StreamConfig::Types::Mask)) {
+    LOG(WARNING) << "Sensor mode:" << raw_sensor_mode_
+                 << " does not include object mask "
+                 << " but prefer_provided_object_detection=true! DynoParams "
+                    "will be reconfigured!\n"
+                 << " NOTE: ground truth object id's may now no longer match "
+                    "the tracked id's from Dynosam!!!";
+    tracker_params.prefer_provided_object_detection = false;
+    any_changed = true;
+  }
+  return any_changed;
+}
 
 void SensorMode::parse(const std::string& sensor_mode) {
   // split string by +
@@ -443,7 +480,7 @@ void SensorSystem::calibrateFromAlignedRGBD(
   const auto distortion = main_camera_params.getDistortionCoeffs();
 
   CalibrateData calib_data;
-  calib_data.depth_scale = rgbd_params.virtual_baseline;
+  calib_data.depth_scale = rgbd_params.depth_scale;
 
   static constexpr double kAlpha = 0.0;  // crop to valid region
   cv::Mat new_K = cv::getOptimalNewCameraMatrix(

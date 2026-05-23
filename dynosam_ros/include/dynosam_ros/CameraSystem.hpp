@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "dynosam/frontend/imu/ImuParams.hpp"
+#include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_cv/Camera.hpp"
 #include "dynosam_cv/SensorRig.hpp"
 #include "rclcpp/node.hpp"
@@ -30,6 +31,20 @@ struct StreamConfig {
   bool assume_aligned{false};
   Types type{Types::RGBMono};
 };
+
+/**
+ * @brief Checks if one of the configs matches the query type.
+ *
+ * Expects type to be unique per entry and does not checking for duplicate type
+ * values.
+ *
+ * @param configs const std::vector<StreamConfig>&
+ * @param query_type StreamConfig::Type
+ * @return bool
+ */
+bool hasStreamType(const std::vector<StreamConfig>& configs,
+                   StreamConfig::Types query_type);
+
 std::ostream& operator<<(std::ostream& os, const StreamConfig& config);
 
 class SensorMode {
@@ -40,6 +55,10 @@ class SensorMode {
 
   bool useImu() const;
   DepthRigType depthRigType() const;
+
+  /* Check dyno params match the sensor configuration and update the params if
+   * needed*/
+  bool reconfigure(DynoParams& dyno_params) const;
 
  private:
   void parse(const std::string& sensor_mode);

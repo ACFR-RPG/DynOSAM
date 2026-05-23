@@ -44,6 +44,8 @@ void DynoStatePublisher::publish(const DynoState& state) {
   const FrameId frame_id = state.frame_id;
   const Timestamp timestamp = state.timestamp;
 
+  auto camera_trajectory = state.camera_trajectory;
+
   const gtsam::Pose3 X_W_k = state.camera_trajectory.last().data;
   DisplayCommon::publishOdometry(vo_publisher_, X_W_k, timestamp,
                                  params_.odom_frame, params_.camera_frame);

@@ -97,6 +97,8 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
           .get<std::string>();
 
   SensorMode sensor_mode(mode);
+  sensor_mode.reconfigure(dyno_params);
+
   SensorSystem::Ptr sensor_system = std::make_shared<SensorSystem>(
       this->create_sub_node("dataprovider"), sensor_mode.depthRigType(),
       getParamsPath(), true);
