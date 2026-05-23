@@ -2,7 +2,6 @@
 #include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/backend/BackendModule.hpp"
 #include "dynosam/backend/BackendParams.hpp"
-#include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/displays/BackendDisplayRos.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
@@ -44,8 +43,7 @@ struct has_backend_module_display<
  */
 class BackendModulePolicyRos {
  public:
-  BackendModulePolicyRos(const ReferenceFrameDefinitions& params,
-                         rclcpp::Node* node)
+  BackendModulePolicyRos(const ReferenceFrames& params, rclcpp::Node* node)
       : params_(params), node_(node) {
     VLOG(10) << "Creating BackendModulePolicyRos";
   }
@@ -58,7 +56,7 @@ class BackendModulePolicyRos {
    * If the module has an associated display type (derived from
    * BackendModuleDisplayRos) it will be constructed. The display type
    * (DisplayT) must have a constructor in the form DisplayT(const
-   * ReferenceFrameDefinitions&, rclcpp::Node*, std::shared_ptr<T>).
+   * ReferenceFrames&, rclcpp::Node*, std::shared_ptr<T>).
    *
    *
    * @tparam T
@@ -80,13 +78,13 @@ class BackendModulePolicyRos {
   }
 
  private:
-  ReferenceFrameDefinitions params_;
+  ReferenceFrames params_;
   rclcpp::Node* node_;
 };
 
 // class BackendModuleFactoryRos : public BackendModuleFactory {
 // public:
-//     BackendModuleFactoryRos(const ReferenceFrameDefinitions& params,
+//     BackendModuleFactoryRos(const ReferenceFrames& params,
 //     rclcpp::Node::SharedPtr node)
 //         : params_(params), node_(node) {}
 
@@ -110,7 +108,7 @@ class BackendModulePolicyRos {
 //     }
 
 // private:
-//     ReferenceFrameDefinitions params_;
+//     ReferenceFrames params_;
 //     rclcpp::Node::SharedPtr node_;
 
 // };
@@ -118,9 +116,9 @@ class BackendModulePolicyRos {
 // class BackendModuleDisplayFactory {
 // public:
 //     using Creator = std::function<std::unique_ptr<BackendDisplayRos>(const
-//     ReferenceFrameDefinitions&, rclcpp::Node::SharedPtr)>;
+//     ReferenceFrames&, rclcpp::Node::SharedPtr)>;
 
-//     BackendModuleDisplayFactory(const ReferenceFrameDefinitions& params,
+//     BackendModuleDisplayFactory(const ReferenceFrames& params,
 //     rclcpp::Node::SharedPtr node)
 //         : params_(params), node_(node) {}
 
@@ -151,7 +149,7 @@ class BackendModulePolicyRos {
 //     }
 
 // private:
-//     ReferenceFrameDefinitions params_;
+//     ReferenceFrames params_;
 //     rclcpp::Node::SharedPtr node_;
 
 //     static std::unordered_map<std::type_index, Creator> type_creators_;
@@ -163,7 +161,7 @@ class BackendModulePolicyRos {
 //     BackendModuleDisplayRegistrar(const std::string& name) {
 //         BackendModuleDisplayFactory::template registerViz<Module>(
 //             name,
-//             std::bind([](const ReferenceFrameDefinitions& params,
+//             std::bind([](const ReferenceFrames& params,
 //             rclcpp::Node::SharedPtr node) {
 //                 return std::make_unique<DisplayT>(params, node);
 //             }, std::placeholders::_1, std::placeholders::_2)

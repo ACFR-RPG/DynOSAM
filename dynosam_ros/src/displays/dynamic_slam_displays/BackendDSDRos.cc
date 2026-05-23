@@ -39,7 +39,7 @@
 
 namespace dyno {
 
-BackendDSDRos::BackendDSDRos(const ReferenceFrameDefinitions& params,
+BackendDSDRos::BackendDSDRos(const ReferenceFrames& params,
                              rclcpp::Node::SharedPtr node)
     : BackendDisplay(),
       display_params_(params),

@@ -17,12 +17,10 @@ class DynopetsLoader : public DynoeptsProvider {
  public:
   DynopetsLoader(const fs::path& dataset_path);
 
-  CameraParams::Optional getCameraParams() const override {
-    return left_camera_params_;
-  }
+  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
 
  private:
-  CameraParams left_camera_params_;
+  BasicDynoSensorRig::Ptr sensor_rig_;
 };
 
 }  // namespace dyno

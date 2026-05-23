@@ -49,7 +49,7 @@ namespace dyno {
 
 class FrontendInbuiltDisplayRos : public FrontendDisplay, InbuiltDisplayCommon {
  public:
-  FrontendInbuiltDisplayRos(const ReferenceFrameDefinitions params,
+  FrontendInbuiltDisplayRos(const ReferenceFrames params,
                             rclcpp::Node::SharedPtr node);
   ~FrontendInbuiltDisplayRos();
 

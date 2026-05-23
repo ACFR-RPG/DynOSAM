@@ -33,7 +33,6 @@
 #include <dynosam/visualizer/VisualizerPipelines.hpp>
 
 #include "dynosam_common/GroundTruthPacket.hpp"
-#include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
 #include "image_transport/image_transport.hpp"
@@ -43,8 +42,7 @@ namespace dyno {
 
 class FrontendDSDRos : public FrontendDisplay {
  public:
-  FrontendDSDRos(const ReferenceFrameDefinitions& params,
-                 rclcpp::Node::SharedPtr node,
+  FrontendDSDRos(const ReferenceFrames& params, rclcpp::Node::SharedPtr node,
                  rclcpp::Node::SharedPtr ground_truth_node = nullptr);
   ~FrontendDSDRos() = default;
 
@@ -62,7 +60,7 @@ class FrontendDSDRos : public FrontendDisplay {
     //! Accumulated ground truth state
     DynoState ground_truth_state_;
 
-    GroundTruthPublishers(const ReferenceFrameDefinitions& params,
+    GroundTruthPublishers(const ReferenceFrames& params,
                           rclcpp::Node::SharedPtr ground_truth_node);
   };
   DynoStatePublisher dyno_state_publisher_;

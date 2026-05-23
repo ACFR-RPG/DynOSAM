@@ -54,7 +54,6 @@ set(SRC_FILES
   src/RosUtils.cc
   src/Utils.cc
   src/DataProviderRos.cc
-  src/OnlineDataProviderRos.cc
   src/Diagnostics.cc
   src/CameraSystem.cc
   src/Subscriber.cc

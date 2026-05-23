@@ -481,9 +481,7 @@ class KittiDataLoader
     this->setCallback(callback);
   }
 
-  CameraParams::Optional getCameraParams() const override {
-    return camera_params_;
-  }
+  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
 
   ImageContainer::Ptr imageContainerPreprocessor(
       ImageContainer::Ptr image_container) override {
@@ -530,18 +528,18 @@ class KittiDataLoader
     std::istringstream(end_folder) >> dataset_id;
 
     LOG(INFO) << "Loading KITTI camera params from dataset: " << dataset_id;
-
+    CameraParams camera_params;
     if (dataset_id <= 13) {
       CameraParams::IntrinsicsCoeffs intrinsics(
           {721.5377, 721.5377, 609.5593, 172.8540});
       CameraParams::DistortionCoeffs distortion({0, 0, 0, 0});
 
       cv::Size image_size(1242, 375);
-      camera_params_ =
+      camera_params =
           CameraParams(intrinsics, distortion, image_size, "radial_tangential");
       // IR projection of this dataset is 387.5744. IR = baseline * fx
       // (fx=721.5377)
-      camera_params_->setDepthParams(0.57);
+      camera_params.setDepthParams(0.57);
 
       params_.base_line = 387.5744;
     } else if (dataset_id >= 18 && dataset_id <= 20) {
@@ -551,13 +549,13 @@ class KittiDataLoader
 
       if (dataset_id == 18) {
         cv::Size image_size(1238, 374);
-        camera_params_ = CameraParams(intrinsics, distortion, image_size,
-                                      "radial_tangential");
+        camera_params = CameraParams(intrinsics, distortion, image_size,
+                                     "radial_tangential");
 
       } else if (dataset_id == 20) {
         cv::Size image_size(1241, 376);
-        camera_params_ = CameraParams(intrinsics, distortion, image_size,
-                                      "radial_tangential");
+        camera_params = CameraParams(intrinsics, distortion, image_size,
+                                     "radial_tangential");
       } else {
         LOG(WARNING) << "Unknown KITTI dataset when loading camera params. "
                         "Returning no camera params!";
@@ -566,16 +564,19 @@ class KittiDataLoader
       params_.base_line = 388.1822;
       // IR projection of this dataset is 388.1822. IR = baseline * fx
       // (fx=718.8560)
-      camera_params_->setDepthParams(0.5399);
+      camera_params.setDepthParams(0.5399);
 
     } else {
       LOG(WARNING) << "Unknown KITTI dataset when loading camera params. "
                       "Returning no camera params!";
     }
+
+    sensor_rig_ =
+        std::make_shared<BasicDynoSensorRig>(camera_params, DepthRigType::RGBD);
   }
 
   Params params_;
-  CameraParams::Optional camera_params_;
+  BasicDynoSensorRig::Ptr sensor_rig_;
 };
 
 }  // namespace dyno

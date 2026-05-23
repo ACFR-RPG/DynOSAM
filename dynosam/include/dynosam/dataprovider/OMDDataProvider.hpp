@@ -69,14 +69,10 @@ class OMDDataLoader : public OMDDatasetProvider {
    */
   OMDDataLoader(const fs::path& dataset_path);
 
-  // we can get the camera params from this dataset, so overload the function!
-  // returns camera params from camera1
-  CameraParams::Optional getCameraParams() const override {
-    return left_camera_params_;
-  }
+  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
 
  private:
-  CameraParams left_camera_params_;
+  BasicDynoSensorRig::Ptr sensor_rig_;
 };
 
 }  // namespace dyno

@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
   // fp.tracker_params.feature_detector_type =
   // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
 
-  auto camera = std::make_shared<Camera>(*loader.getCameraParams());
+  auto camera = std::make_shared<Camera>(loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);
 
   loader.registerImageContainerCallback(

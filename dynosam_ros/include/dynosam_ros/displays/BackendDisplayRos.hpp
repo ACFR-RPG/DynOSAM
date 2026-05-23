@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
-#include "dynosam_ros/Display-Definitions.hpp"
+#include "dynosam_cv/SensorRig.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 
@@ -11,13 +11,12 @@ class BackendModuleDisplayRos : public BackendModuleDisplay {
  public:
   DYNO_POINTER_TYPEDEFS(BackendModuleDisplayRos)
 
-  BackendModuleDisplayRos(const ReferenceFrameDefinitions& params,
-                          rclcpp::Node* node)
+  BackendModuleDisplayRos(const ReferenceFrames& params, rclcpp::Node* node)
       : params_(params), node_(CHECK_NOTNULL(node)) {}
   virtual ~BackendModuleDisplayRos() = default;
 
  protected:
-  ReferenceFrameDefinitions params_;
+  ReferenceFrames params_;
   rclcpp::Node* node_;
 };
 

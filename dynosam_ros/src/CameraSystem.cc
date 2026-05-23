@@ -7,7 +7,8 @@
 #include <unordered_set>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_ros/OnlineDataProviderRos.hpp"  //for now!
+#include "dynosam_cv/StereoCamera.hpp"
+#include "dynosam_ros/DataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 
@@ -33,21 +34,6 @@ std::ostream& operator<<(std::ostream& os, const StreamConfig& config) {
   os << "StreamConfig {" << config.name
      << ", needed for depth: " << std::boolalpha << config.needed_for_depth
      << ", assume aligned: " << config.assume_aligned << "}";
-  return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const DepthRigType& depth_rig_type) {
-  switch (depth_rig_type) {
-    case DepthRigType::RGBD:
-      os << "RGBD";
-      break;
-    case DepthRigType::Stereo:
-      os << "Stereo";
-      break;
-    default:
-      os << "Unknown DepthRigType";
-      break;
-  }
   return os;
 }
 
@@ -206,13 +192,15 @@ void SensorSystem::enableImu(bool flag) { enable_imu_ = flag; }
 
 size_t SensorSystem::numCameraStreams() const { return camera_params_.size(); }
 
-const ReferenceFrames& SensorSystem::referenceFrames() const {
-  return reference_frames_;
-}
-
 CameraParams SensorSystem::getCanonicalParams() const {
   return cannonical_camera_params_;
 }
+
+ReferenceFrames SensorSystem::getReferenceFrames() const {
+  return reference_frames_;
+}
+
+DepthRigType SensorSystem::depthRigType() const { return depth_rig_type_; }
 
 std::string SensorSystem::streamName(unsigned int stream_index) const {
   return configs_.at(stream_index).name;
@@ -221,8 +209,6 @@ std::string SensorSystem::streamName(unsigned int stream_index) const {
 StreamConfig::Types SensorSystem::streamType(unsigned int stream_index) const {
   return configs_.at(stream_index).type;
 }
-
-DepthRigType SensorSystem::depthRigType() const { return depth_rig_type_; }
 
 bool SensorSystem::isInitalised() const { return is_initalised_; }
 

@@ -36,7 +36,7 @@
 
 #include "dynosam_common/PointCloudProcess.hpp"  //for CloudPerObject
 #include "dynosam_common/Types.hpp"
-#include "dynosam_ros/Display-Definitions.hpp"
+#include "dynosam_cv/SensorRig.hpp"
 #include "image_transport/image_transport.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "nav_msgs/msg/path.hpp"

@@ -34,13 +34,8 @@
 #include "dynosam/pipeline/PipelineManager.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_ros/Diagnostics.hpp"
-#include "dynosam_ros/Display-Definitions.hpp"
-#include "geometry_msgs/msg/transform_stamped.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
-#include "tf2_ros/buffer.h"
-#include "tf2_ros/static_transform_broadcaster.h"
-#include "tf2_ros/transform_listener.h"
 
 namespace dyno {
 
@@ -61,10 +56,6 @@ class DynoNode : public rclcpp::Node {
 
   dyno::DataProvider::Ptr getDataProvider() const { return data_provider_; }
 
-  const ReferenceFrameDefinitions& getReferenceFrameDefinitions() const {
-    return rf_definitions_;
-  }
-
   bool isOnline() const { return is_online_; }
 
   inline std::string getParamsPath() {
@@ -80,11 +71,6 @@ class DynoNode : public rclcpp::Node {
  private:
   dyno::DataProvider::Ptr createDataProvider(DynoParams& dyno_params,
                                              bool is_online);
-  void loadReferenceFrameDefinitions(ReferenceFrameDefinitions& rf_definitions,
-                                     const DynoParams& dyno_params);
-  void updateSensorParams(DynoParams& dyno_params,
-                          const dyno::DataProvider::Ptr& data_provider);
-  void setupTFTree(const ReferenceFrameDefinitions& rf_definitions);
 
   dyno::DataProvider::Ptr createOnlineDataProvider(DynoParams& dyno_params);
   dyno::DataProvider::Ptr createDatasetDataProvider(
@@ -102,22 +88,12 @@ class DynoNode : public rclcpp::Node {
                                       const std::string& default_path,
                                       const std::string& description = "");
 
-  /* Helper function to get child frame pose wrt parent frame from the tf tree
-   */
-  tf2::Transform getLatestTransform(const std::string& target,
-                                    const std::string& source) const;
-
  private:
   std::unique_ptr<DynoParams> dyno_params_;
   dyno::DataProvider::Ptr data_provider_;
-  ReferenceFrameDefinitions rf_definitions_;
   //! Set by the param 'online' and indicates if the OnlineDataProviderRos
   //! should be used or not
   bool is_online_;
-
-  tf2_ros::StaticTransformBroadcaster broadcaster_;
-  tf2_ros::Buffer tf_buffer_;
-  tf2_ros::TransformListener tf_listener_;
 };
 
 class DynoPipelineManagerRos : public DynoNode {

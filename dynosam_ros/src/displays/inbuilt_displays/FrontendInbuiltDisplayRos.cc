@@ -51,7 +51,7 @@
 namespace dyno {
 
 FrontendInbuiltDisplayRos::FrontendInbuiltDisplayRos(
-    const ReferenceFrameDefinitions params, rclcpp::Node::SharedPtr node)
+    const ReferenceFrames params, rclcpp::Node::SharedPtr node)
     : InbuiltDisplayCommon(params, node) {
   const rclcpp::QoS& sensor_data_qos = rclcpp::SensorDataQoS();
   tracking_image_pub_ =

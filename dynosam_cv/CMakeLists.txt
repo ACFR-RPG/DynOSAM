@@ -28,6 +28,7 @@ add_library(${PROJECT_NAME} SHARED
     src/RGBDCamera.cc
     src/UndistortRectifier.cc
     src/Feature.cc
+    src/SensorRig.cc
 
 )
 

@@ -25,8 +25,7 @@ static HybridAccessorCommon::Ptr hybridAccessorCommonHelper(
 
 class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
  public:
-  HybridModuleDisplayCommon(const ReferenceFrameDefinitions& params,
-                            rclcpp::Node* node,
+  HybridModuleDisplayCommon(const ReferenceFrames& params, rclcpp::Node* node,
                             HybridAccessorCommon::Ptr hybrid_accessor);
 
   void publishObjectBoundingBoxes(const DynoState::ConstPtr& output);
@@ -42,7 +41,7 @@ class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
 class ParalleHybridModuleDisplay : public HybridModuleDisplayCommon {
  public:
   ParalleHybridModuleDisplay(
-      const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+      const ReferenceFrames& params, rclcpp::Node* node,
       std::shared_ptr<ParallelHybridBackendModule> module)
       : HybridModuleDisplayCommon(
             params, node, hybridAccessorCommonHelper(module->getAccessor())),
@@ -57,7 +56,7 @@ class ParalleHybridModuleDisplay : public HybridModuleDisplayCommon {
 class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
  public:
   RegularHybridFormulationDisplay(
-      const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+      const ReferenceFrames& params, rclcpp::Node* node,
       std::shared_ptr<RegularHybridFormulation> module)
       : HybridModuleDisplayCommon(
             params, node, module->derivedAccessor<HybridAccessorCommon>()),
@@ -74,7 +73,7 @@ class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
 class HybridKeyFrameFormulationDisplay : public HybridModuleDisplayCommon {
  public:
   HybridKeyFrameFormulationDisplay(
-      const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+      const ReferenceFrames& params, rclcpp::Node* node,
       std::shared_ptr<HybridFormulationKeyFrame> module);
 
   void spinOnce(const DynoState::ConstPtr& output) override;
@@ -87,7 +86,7 @@ class HybridKeyFrameFormulationDisplay : public HybridModuleDisplayCommon {
 class PoseChangeBakendModuleDisplay : public BackendModuleDisplayRos {
  public:
   PoseChangeBakendModuleDisplay(
-      const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+      const ReferenceFrames& params, rclcpp::Node* node,
       std::shared_ptr<PoseChangeVIBackendModule> module);
 
   void spinOnce(const DynoState::ConstPtr& output) override;

@@ -49,16 +49,12 @@ class ViodeLoader : public ViodeProvider {
  public:
   ViodeLoader(const fs::path& dataset_path);
 
-  // we can get the camera params from this dataset, so overload the function!
-  // returns camera params from camera1
-  CameraParams::Optional getCameraParams() const override {
-    return left_camera_params_;
-  }
+  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
 
   ImuParams::Optional getImuParams() const override { return imu_params_; }
 
  private:
-  CameraParams left_camera_params_;
+  BasicDynoSensorRig::Ptr sensor_rig_;
   ImuParams imu_params_;
 };
 

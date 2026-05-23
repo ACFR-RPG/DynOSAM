@@ -8,7 +8,7 @@
 namespace dyno {
 
 HybridModuleDisplayCommon::HybridModuleDisplayCommon(
-    const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+    const ReferenceFrames& params, rclcpp::Node* node,
     HybridAccessorCommon::Ptr hybrid_accessor)
     : BackendModuleDisplayRos(params, node),
       hybrid_accessor_(CHECK_NOTNULL(hybrid_accessor)) {
@@ -136,7 +136,7 @@ void RegularHybridFormulationDisplay::spinOnce(
 }
 
 HybridKeyFrameFormulationDisplay::HybridKeyFrameFormulationDisplay(
-    const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+    const ReferenceFrames& params, rclcpp::Node* node,
     std::shared_ptr<HybridFormulationKeyFrame> module)
     : HybridModuleDisplayCommon(
           params, node, module->derivedAccessor<HybridAccessorCommon>()),
@@ -245,7 +245,7 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
 }
 
 PoseChangeBakendModuleDisplay::PoseChangeBakendModuleDisplay(
-    const ReferenceFrameDefinitions& params, rclcpp::Node* node,
+    const ReferenceFrames& params, rclcpp::Node* node,
     std::shared_ptr<PoseChangeVIBackendModule> module)
     : BackendModuleDisplayRos(params, node),
       module_(module),

@@ -101,19 +101,11 @@ DynoPipelineManager::DynoPipelineManager(
   // push data from the data interface to the frontend module
   data_interface_->registerOutputQueue(&frontend_input_queue_);
 
-  CameraParams camera_params;
-  if (params_.preferDataProviderCameraParams() &&
-      data_loader_->getCameraParams().has_value()) {
-    LOG(INFO) << "Using camera params from DataProvider, not the config in the "
-                 "CameraParams.yaml!";
-    camera_params = *data_loader_->getCameraParams();
-  } else {
-    LOG(INFO) << "Using camera params specified in CameraParams.yaml!";
-    camera_params = params_.camera_params_;
-  }
+  CameraParams camera_params = data_loader_->getCameraParams();
   /// NOTE: no need to update the camera params like the imu params as we parse
   /// the camera params into the loadPipeline functions separately!
 
+  // TODO: fix!
   ImuParams imu_params;
   if (params_.preferDataProviderImuParams() &&
       data_loader_->getImuParams().has_value()) {

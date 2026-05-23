@@ -1015,8 +1015,11 @@ void VirtualKittiDataLoader::setCameraParams() {
   CameraParams::DistortionCoeffs distortion({0, 0, 0, 0});
 
   cv::Size image_size(1242, 375);
-  camera_params_ =
-      CameraParams(intrinsics, distortion, image_size, "radial-tangential");
+  CameraParams camera_params(intrinsics, distortion, image_size,
+                             "radial-tangential");
+
+  sensor_rig_ =
+      std::make_shared<BasicDynoSensorRig>(camera_params, DepthRigType::RGBD);
 }
 
 VirtualKittiDataLoader::Params VirtualKittiDataLoader::Params::fromYaml(

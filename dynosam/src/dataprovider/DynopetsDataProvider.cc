@@ -268,8 +268,9 @@ DynopetsLoader::DynopetsLoader(const fs::path& dataset_path)
   auto loader = std::make_shared<Loader>(dataset_path);
   auto timestamp_loader = std::make_shared<TimestampLoader>(loader);
 
-  left_camera_params_ = loader->getLeftCameraParams();
-  CHECK(getCameraParams());
+  auto left_camera_params = loader->getLeftCameraParams();
+  sensor_rig_ = std::make_shared<BasicDynoSensorRig>(left_camera_params,
+                                                     DepthRigType::RGBD);
 
   auto rgb_loader = std::make_shared<FunctionalDataFolder<cv::Mat>>(
       [loader](size_t idx) { return loader->getRGB(idx); });

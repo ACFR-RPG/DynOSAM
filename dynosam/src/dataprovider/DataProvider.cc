@@ -30,13 +30,13 @@
 
 #include "dynosam/dataprovider/DataProvider.hpp"
 
-#include <glog/logging.h>
-
-#include <functional>
-
 #include "dynosam/dataprovider/DataInterfacePipeline.hpp"
 
 namespace dyno {
+
+CameraParams DataProvider::getCameraParams() const {
+  return this->sensorRig()->getCanonicalParams();
+}
 
 DataProvider::~DataProvider() { shutdown(); }
 

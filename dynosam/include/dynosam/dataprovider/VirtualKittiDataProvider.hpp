@@ -65,9 +65,7 @@ class VirtualKittiDataLoader : public VirtualKittiDatasetProvider {
     static Params fromYaml(const std::string& params_folder);
   };
 
-  CameraParams::Optional getCameraParams() const override {
-    return camera_params_;
-  }
+  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
 
   // expect to be the top level where the folders undearneath are in the form
   // vkitti_2.0.3_depth... (or as in the download...)
@@ -90,7 +88,7 @@ class VirtualKittiDataLoader : public VirtualKittiDatasetProvider {
   const std::string v_rgb_folder = "vkitti_2.0.3_rgb";
   const std::string v_text_gt_folder = "vkitti_2.0.3_textgt";
 
-  CameraParams camera_params_;
+  BasicDynoSensorRig::Ptr sensor_rig_;
 };
 
 }  // namespace dyno

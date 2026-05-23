@@ -36,7 +36,7 @@
 
 namespace dyno {
 
-FrontendDSDRos::FrontendDSDRos(const ReferenceFrameDefinitions& params,
+FrontendDSDRos::FrontendDSDRos(const ReferenceFrames& params,
                                rclcpp::Node::SharedPtr node,
                                rclcpp::Node::SharedPtr ground_truth_node)
     : FrontendDisplay(), dyno_state_publisher_(params, node) {
@@ -57,8 +57,7 @@ FrontendDSDRos::FrontendDSDRos(const ReferenceFrameDefinitions& params,
 }
 
 FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(
-    const ReferenceFrameDefinitions& params,
-    rclcpp::Node::SharedPtr ground_truth_node)
+    const ReferenceFrames& params, rclcpp::Node::SharedPtr ground_truth_node)
     : dyno_state_publisher_(params, CHECK_NOTNULL(ground_truth_node)) {}
 
 void FrontendDSDRos::spinOnce(const RealtimeOutput::ConstPtr& frontend_output) {

@@ -43,6 +43,7 @@
 #include "dynosam/dataprovider/DatasetLoader.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/utils/Tuple.hpp"
 
 namespace dyno {
@@ -265,6 +266,34 @@ class DynoDataset : public _DynoDatasetConstructor<Timestamp, cv::Mat, cv::Mat,
 
   TimestampBaseLoader::Ptr timestamp_file_;
   bool are_loaders_set_{false};
+};
+
+/**
+ * @brief A very simple sensor rig used for all basic datasets.
+ * Only contains the cannonical camera params, default reference frame
+ * values and the extrinsics are set to cv -> robotic convention
+ *
+ */
+class BasicDynoSensorRig : public SensorRigBase {
+ public:
+  DYNO_POINTER_TYPEDEFS(BasicDynoSensorRig)
+
+  BasicDynoSensorRig(const CameraParams& canonical_params,
+                     const DepthRigType depth_rig_type,
+                     const ReferenceFrames& reference_frames = {});
+
+  inline CameraParams getCanonicalParams() const override {
+    return canonical_params_;
+  }
+  inline DepthRigType depthRigType() const override { return depth_rig_type_; }
+  inline ReferenceFrames getReferenceFrames() const override {
+    return reference_frames_;
+  }
+
+ private:
+  CameraParams canonical_params_;
+  DepthRigType depth_rig_type_;
+  ReferenceFrames reference_frames_;
 };
 
 template <typename... DataTypes>

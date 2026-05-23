@@ -6,12 +6,14 @@
 
 #include <functional>
 
-#include "dynosam/dataprovider/DataInterfacePipeline.hpp"
+#include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam/frontend/imu/ImuParams.hpp"
-#include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
+#include "dynosam_cv/SensorRig.hpp"
 
 namespace dyno {
 
@@ -103,16 +105,16 @@ class DataProvider {
 
   virtual void shutdown();
 
+  virtual SensorRigBase::Ptr sensorRig() const = 0;
+
   /**
    * @brief Provides functionality to get camera paramters for the main
-   * pipeline, as these may be available from the dataset.
+   * pipeline.
    *
-   * By default returns std::nullopt but the derived data-provider can overwrite
-   * this and return the loaded params.
+   * This is the canonical camera params as provided by the sensor rig
    *
-   * @return CameraParams::Optional
    */
-  virtual CameraParams::Optional getCameraParams() const { return {}; }
+  CameraParams getCameraParams() const;
 
   virtual ImuParams::Optional getImuParams() const { return {}; }
 

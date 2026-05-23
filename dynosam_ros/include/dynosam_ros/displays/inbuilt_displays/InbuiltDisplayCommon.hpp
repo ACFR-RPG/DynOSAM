@@ -51,7 +51,7 @@ namespace dyno {
 
 class InbuiltDisplayCommon {
  public:
-  InbuiltDisplayCommon(const ReferenceFrameDefinitions& params,
+  InbuiltDisplayCommon(const ReferenceFrames& params,
                        rclcpp::Node::SharedPtr node);
   virtual ~InbuiltDisplayCommon() = default;
 
@@ -128,7 +128,7 @@ class InbuiltDisplayCommon {
   }
 
  protected:
-  const ReferenceFrameDefinitions params_;
+  const ReferenceFrames params_;
   rclcpp::Node::SharedPtr node_;
 
   MarkerArrayPub::SharedPtr

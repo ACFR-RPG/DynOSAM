@@ -468,8 +468,9 @@ ViodeLoader::ViodeLoader(const fs::path& dataset_path)
   auto loader = std::make_shared<ViodeAllLoader>(dataset_path);
   auto timestamp_loader = std::make_shared<ViodeTimestampLoader>(loader);
 
-  left_camera_params_ = loader->getLeftCameraParams();
-  CHECK(getCameraParams());
+  auto left_camera_params = loader->getLeftCameraParams();
+  sensor_rig_ = std::make_shared<BasicDynoSensorRig>(left_camera_params,
+                                                     DepthRigType::Stereo);
 
   imu_params_ = loader->imu_params_;
   CHECK(getImuParams());

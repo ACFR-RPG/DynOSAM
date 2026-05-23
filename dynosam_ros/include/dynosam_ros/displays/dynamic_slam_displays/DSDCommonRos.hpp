@@ -36,7 +36,6 @@
 #include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Macros.hpp"
-#include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "geometry_msgs/msg/pose.hpp"
@@ -60,7 +59,7 @@ using ObjectOdometryMap = gtsam::FastMap<std::string, ObjectOdometry>;
 
 class DynoStatePublisher {
  public:
-  DynoStatePublisher(const ReferenceFrameDefinitions& params,
+  DynoStatePublisher(const ReferenceFrames& params,
                      rclcpp::Node::SharedPtr node);
 
   DYNO_POINTER_TYPEDEFS(DynoStatePublisher)
@@ -123,7 +122,7 @@ class DynoStatePublisher {
   }
 
  protected:
-  const ReferenceFrameDefinitions params_;
+  const ReferenceFrames params_;
   rclcpp::Node::SharedPtr node_;
   //! TF broadcaster for the odometry.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

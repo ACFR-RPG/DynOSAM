@@ -54,6 +54,26 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
         image_transport::ImageTransport::VoidPtr(), nullptr,
         subscriber_options);
   }
+
+  //  imu_callback_group_ =
+  //     node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+  // rclcpp::SubscriptionOptions imu_sub_options;
+  // imu_sub_options.callback_group = imu_callback_group_;
+
+  // imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+  //     "imu", rclcpp::SensorDataQoS(),
+  //     [&](const dyno::ImuMeasurement& imu) -> void {
+  //       if (!imu_single_input_callback_) {
+  //         RCLCPP_ERROR_THROTTLE(
+  //             node_->get_logger(), *node_->get_clock(), 1000,
+  //             "Imu callback triggered but "
+  //             "imu_single_input_callback_ is not registered!");
+  //         return;
+  //       }
+  //       imu_single_input_callback_(imu);
+  //     },
+  //     imu_sub_options);
 }
 
 bool Subscriber::spin() { return !shutdown_; }
@@ -66,9 +86,7 @@ void Subscriber::shutdown() {
   //   subImu_.reset();
 }
 
-CameraParams::Optional Subscriber::getCameraParams() const {
-  return sensor_system_->getCanonicalParams();
-}
+SensorRigBase::Ptr Subscriber::sensorRig() const { return sensor_system_; }
 
 void Subscriber::imageCallback(const ImageMsgPtr& msg,
                                unsigned int stream_index) {

@@ -42,8 +42,8 @@
 
 namespace dyno {
 
-InbuiltDisplayCommon::InbuiltDisplayCommon(
-    const ReferenceFrameDefinitions& params, rclcpp::Node::SharedPtr node)
+InbuiltDisplayCommon::InbuiltDisplayCommon(const ReferenceFrames& params,
+                                           rclcpp::Node::SharedPtr node)
     : params_(params), node_(node) {}
 
 CloudPerObject InbuiltDisplayCommon::publishPointCloud(

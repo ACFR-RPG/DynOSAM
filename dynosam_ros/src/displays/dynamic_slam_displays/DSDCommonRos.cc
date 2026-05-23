@@ -9,7 +9,7 @@
 
 namespace dyno {
 
-DynoStatePublisher::DynoStatePublisher(const ReferenceFrameDefinitions& params,
+DynoStatePublisher::DynoStatePublisher(const ReferenceFrames& params,
                                        rclcpp::Node::SharedPtr node)
     : params_(params), node_(node) {
   vo_publisher_ =

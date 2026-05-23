@@ -31,7 +31,6 @@
 
 #include <dynosam/visualizer/VisualizerPipelines.hpp>
 
-#include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
 #include "rclcpp/node.hpp"
@@ -40,8 +39,7 @@ namespace dyno {
 
 class BackendDSDRos : public BackendDisplay {
  public:
-  BackendDSDRos(const ReferenceFrameDefinitions& params,
-                rclcpp::Node::SharedPtr node);
+  BackendDSDRos(const ReferenceFrames& params, rclcpp::Node::SharedPtr node);
   ~BackendDSDRos() = default;
 
   void spinOnce(const DynoState::ConstPtr& backend_output) override;
@@ -55,7 +53,7 @@ class BackendDSDRos : public BackendDisplay {
       const DynoState::ConstPtr& latest_backend_output);
 
  private:
-  ReferenceFrameDefinitions display_params_;
+  ReferenceFrames display_params_;
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       temporal_dynamic_points_pub_;
 

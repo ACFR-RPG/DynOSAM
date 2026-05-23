@@ -35,11 +35,7 @@ class Subscriber : public DataProviderRos {
   /* Disconnects all subscriber */
   void shutdown() override;
 
-  // TODO: change to not being optional (the optional is only for realdata)
-  //  as all datasets shoudl load the camera params
-  //  now we handle the optional in the CameraRig!
-  /* Returns canonical params */
-  CameraParams::Optional getCameraParams() const override;
+  SensorRigBase::Ptr sensorRig() const override;
 
   void imageCallback(const ImageMsgPtr& msg, unsigned int stream_index);
 

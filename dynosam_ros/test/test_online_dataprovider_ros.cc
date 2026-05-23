@@ -36,7 +36,6 @@
 #include <dynosam/test/helpers.hpp>
 
 #include "dynosam_ros/MultiSync.hpp"
-#include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 
@@ -55,52 +54,6 @@ class Helper {
 
 using namespace dyno;
 using namespace std::chrono_literals;
-
-TEST(OnlineDataProviderRos, testwaitCameraInfoSubscribe) {
-  auto node = std::make_shared<rclcpp::Node>("test_wait_for_camera_info_sub");
-
-  auto publisher = node->create_publisher<sensor_msgs::msg::CameraInfo>(
-      "image/camera_info", 10);
-  auto camera_info_msg = sensor_msgs::msg::CameraInfo();
-  camera_info_msg.header.stamp = node->now();
-  camera_info_msg.header.frame_id = "camera_frame";
-  camera_info_msg.width = 640;
-  camera_info_msg.height = 480;
-  camera_info_msg.k = {500.0, 0.0, 320.0, 0.0, 500.0,
-                       240.0, 0.0, 0.0,   1.0};      // Intrinsic matrix
-  camera_info_msg.d = {0.1, -0.1, 0.01, 0.01, 0.0};  // Distortion coefficients
-  camera_info_msg.distortion_model = "plumb_bob";
-
-  auto received = false;
-  std::shared_ptr<RGBDTypeCalibrationHelper> odpr = nullptr;
-  std::shared_future<bool> wait = std::async(std::launch::async, [&]() {
-    OnlineDataProviderRosParams params;
-    params.wait_for_camera_params = true;
-    params.camera_params_timeout = -1;
-    odpr = std::make_shared<RGBDTypeCalibrationHelper>(node, params);
-    received = true;
-    return true;
-  });
-
-  for (auto i = 0u; i < 10 && received == false; ++i) {
-    publisher->publish(camera_info_msg);
-    std::this_thread::sleep_for(1s);
-  }
-
-  ASSERT_NO_THROW(wait.get());
-  ASSERT_TRUE(received);
-  EXPECT_TRUE(odpr->getCameraParams());
-}
-
-TEST(OnlineDataProviderRos, testNowaitCameraInfoSubscribe) {
-  auto node =
-      std::make_shared<rclcpp::Node>("test_no_wait_for_camera_info_sub");
-
-  OnlineDataProviderRosParams params;
-  params.wait_for_camera_params = false;
-  auto odpr = std::make_shared<RGBDTypeCalibrationHelper>(node, params);
-  EXPECT_FALSE(odpr->getCameraParams());
-}
 
 TEST(MultiSync, printVersionMessageFilters) {
   std::cout << "--- Detection Check ---" << std::endl;

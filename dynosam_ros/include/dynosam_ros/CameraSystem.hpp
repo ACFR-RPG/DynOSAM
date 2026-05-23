@@ -8,6 +8,7 @@
 
 #include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/SensorRig.hpp"
 #include "rclcpp/node.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2_ros/buffer.h"
@@ -31,9 +32,6 @@ struct StreamConfig {
 };
 std::ostream& operator<<(std::ostream& os, const StreamConfig& config);
 
-enum class DepthRigType { RGBD, Stereo };
-std::ostream& operator<<(std::ostream& os, const DepthRigType& depth_rig_type);
-
 class SensorMode {
  public:
   SensorMode(const std::string& sensor_mode);
@@ -54,18 +52,10 @@ class SensorMode {
   std::vector<StreamConfig> image_configs_;
 };
 
-struct ReferenceFrames {
-  std::string odom_frame = "odom";
-  std::string base_frame = "camera_link";
-  //! This is the one we actually publish in!
-  std::string camera_frame = "camera_optical_frame";
-  std::string imu_frame = "imu_frame";
-};
-
 // look up camera optical frame (only need 1 in RGBD, need 2 for stereo)
 // after processing we assume all images will have a CameraParams that match the
 // "target" params
-class SensorSystem {
+class SensorSystem : public SensorRigBase {
  public:
   DYNO_POINTER_TYPEDEFS(SensorSystem)
 
@@ -102,16 +92,14 @@ class SensorSystem {
   void calibrateDetphRig(const cv::Mat& img0_src, const cv::Mat& img1_src,
                          cv::Mat& img0_out, cv::Mat& img1_out);
 
-  const ReferenceFrames& referenceFrames() const;
-
   /* Returns canonical params representing a single virtual camera after
    * undistortion/rectification */
-  CameraParams getCanonicalParams() const;
+  CameraParams getCanonicalParams() const override;
+  ReferenceFrames getReferenceFrames() const override;
+  DepthRigType depthRigType() const override;
 
   std::string streamName(unsigned int stream_index) const;
   StreamConfig::Types streamType(unsigned int stream_index) const;
-
-  DepthRigType depthRigType() const;
 
  private:
   /**

@@ -53,17 +53,7 @@ class BackendExperimentsNode : public DynoNode {
     auto data_loader = this->createDataProvider();
     auto params = this->getDynoParams();
 
-    CameraParams camera_params;
-    if (params.preferDataProviderCameraParams() &&
-        data_loader->getCameraParams().has_value()) {
-      LOG(INFO) << "Using camera params from DataProvider, not the config in "
-                   "the CameraParams.yaml!";
-      camera_params = *data_loader->getCameraParams();
-    } else {
-      LOG(INFO) << "Using camera params specified in CameraParams.yaml!";
-      camera_params = params.camera_params_;
-    }
-
+    CameraParams camera_params = data_loader->getCameraParams();
     Camera::Ptr camera = std::make_shared<Camera>(camera_params);
 
     using BackendModuleTraits = RegularBackendModule::ModuleTraits;
