@@ -10,8 +10,11 @@ import matplotlib
 # =========================================================
 
 from dynosam_utils.evaluation.core.plotting import startup_plotting
-startup_plotting(font_size=26, text_size_scalar=0.9)
+plt.rcdefaults()
+startup_plotting(font_size=20, text_size_scalar=0.9, line_width=3.0)
 
+import seaborn as sns
+sns.set_style("whitegrid")
 
 CATEGORY_TO_PLOT = "camera"     # camera | object
 PLOT_TYPE = "box"              # bar | box | normalized | line | mean
@@ -941,12 +944,12 @@ def plot_all(df):
     # GRID SPEC LAYOUT
     # =========================================================
 
-    fig = plt.figure(figsize=(20, 3 * n_metrics))
+    fig = plt.figure(figsize=(15, 3 * n_metrics))
 
     gs = GridSpec(
         nrows=n_metrics + 2,   # +1 title row +1 legend row
         ncols=1,
-        height_ratios=[0.25, 0.1] + [1.0] * n_metrics,
+        height_ratios=[0.07, 0.05] + [1.0] * n_metrics,
         figure=fig
     )
 
@@ -989,6 +992,11 @@ def plot_all(df):
         else:
             raise ValueError("Unknown PLOT_TYPE")
 
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_linewidth(1.0)
+            spine.set_color("black")
+
     ax_leg = fig.add_subplot(gs[1])
     ax_leg.axis("off")
 
@@ -1004,7 +1012,26 @@ def plot_all(df):
     # FINAL SPACING CONTROL
     # =========================================================
     # fig.tight_layout(pad=1.5)
-    fig.tight_layout()
+    # fig.subplots_adjust(hspace=0.05)
+    # fig.tight_layout()
+    # fig.subplots_adjust(
+    #     hspace=0.05,  # optional, but now safe to use
+    #     wspace=0.01
+    # )
+    # for ax in axes:
+    #     ax.margins(x=0.01, y=0.05)
+    fig.subplots_adjust(
+        left=0.06,
+        right=0.995,
+        top=0.95,
+        bottom=0.08
+    )
+
+    # fig.subplots_adjust(
+    #     hspace=0.11,   # ONLY knob you now need
+    #     top=0.95,
+    #     bottom=0.05
+    # )
 
     return fig
 
@@ -1020,7 +1047,7 @@ if not AGGREGATE_PER_DATASET:
 fig = plot_all(df)
 
 
-fig.tight_layout()
+# fig.tight_layout()
 plt.show()
 
 # file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_TRO.jpg'

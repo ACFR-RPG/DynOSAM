@@ -81,9 +81,12 @@ typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
  * overwritten getCameraParams, allowing the PipelineManager to access the
  * correct camera paramters.
  *
+ * If waiting for more than 1 second the function will use ROS streaming
+ * to log how long the function has waited for.
+ *
  * @tparam Rep int64_t,
  * @tparam Period std::milli
- * @param topic const std::string&. Defaults to "image/camera_info"
+ * @param topic const std::string&.
  * @param time_to_wait_topic const std::chrono::duration<Rep, Period>&. Time to
  * wait for camera params to arrive.
  * @return const CameraParams&
@@ -98,7 +101,62 @@ CameraParams waitAndSetCameraParams(
 
   using Adaptor =
       rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo>;
-  return waitAndGetMessageViaAdaptor<Adaptor>(node, topic, time_to_wait_topic);
+
+  // Only create status thread if we may wait a while
+  const bool enable_wait_logging =
+      time_to_wait_topic.count() < 0 ||
+      std::chrono::duration_cast<std::chrono::seconds>(time_to_wait_topic) >=
+          std::chrono::seconds(1);
+
+  std::atomic_bool done = false;
+  std::thread wait_thread;
+
+  if (enable_wait_logging) {
+    wait_thread = std::thread([node, topic, &done]() {
+      rclcpp::Clock::SharedPtr clock = node->get_clock();
+
+      const auto start_time = clock->now();
+      rclcpp::Rate rate(1, clock);
+
+      while (rclcpp::ok() && !done.load()) {
+        const auto elapsed = (clock->now() - start_time).seconds();
+
+        RCLCPP_INFO_STREAM(node->get_logger(),
+                           "Still waiting for camera params on topic '"
+                               << topic << "' after " << std::fixed
+                               << std::setprecision(1) << elapsed
+                               << " seconds");
+
+        rate.sleep();
+      }
+    });
+  }
+
+  CameraParams params;
+
+  try {
+    params =
+        waitAndGetMessageViaAdaptor<Adaptor>(node, topic, time_to_wait_topic);
+  } catch (const DynosamException& e) {
+    done = true;
+
+    if (wait_thread.joinable()) {
+      wait_thread.join();
+    }
+
+    throw e;
+  }
+
+  done = true;
+
+  if (wait_thread.joinable()) {
+    wait_thread.join();
+  }
+
+  RCLCPP_INFO_STREAM(node->get_logger(),
+                     "Received camera params on topic: " << topic);
+
+  return params;
 }
 
 /**

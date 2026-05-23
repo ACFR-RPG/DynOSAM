@@ -80,7 +80,7 @@ def generate_launch_description():
             remappings=[
                 ('rgb/image_raw', f'{camera_prefix}/color/image_raw'),
                 ('depth/image_raw', f'{camera_prefix}/aligned_depth_to_color/image_raw'),
-                ('dataprovider/rgb/camera_info', f'{camera_prefix}/color/camera_info'),
+                ('rgb/camera_info', f'{camera_prefix}/color/camera_info'),
                 # ('dataprovider/imu', f'{camera_prefix}/imu')
             ],
         )

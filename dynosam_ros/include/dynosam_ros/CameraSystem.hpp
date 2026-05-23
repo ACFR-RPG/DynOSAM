@@ -6,6 +6,7 @@
 #include <variant>
 #include <vector>
 
+#include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam_cv/Camera.hpp"
 #include "rclcpp/node.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
@@ -28,10 +29,10 @@ struct StreamConfig {
   bool assume_aligned{false};
   Types type{Types::RGBMono};
 };
-
 std::ostream& operator<<(std::ostream& os, const StreamConfig& config);
 
 enum class DepthRigType { RGBD, Stereo };
+std::ostream& operator<<(std::ostream& os, const DepthRigType& depth_rig_type);
 
 class SensorMode {
  public:
@@ -40,7 +41,7 @@ class SensorMode {
   const std::vector<StreamConfig>& configs() const;
 
   bool useImu() const;
-  DepthRigType depthRigMode() const;
+  DepthRigType depthRigType() const;
 
  private:
   void parse(const std::string& sensor_mode);
@@ -75,11 +76,12 @@ class SensorSystem {
 
   // loading source expected to be empty (load from ROS) or path to parameter
   // folder
-  SensorSystem(std::shared_ptr<rclcpp::Node> node,
-               DepthRigType depth_camera_mode,
-               const std::string& loading_source = "");
+  SensorSystem(std::shared_ptr<rclcpp::Node> node, DepthRigType depth_rig_type,
+               const std::string& path_to_params,
+               const bool load_cameras_from_ros = true);
 
   void addCamera(const StreamConfig& config);
+  void enableImu(bool flag = true);
   void finalise();
 
   size_t numCameraStreams() const;
@@ -97,8 +99,8 @@ class SensorSystem {
    * @param img0_out
    * @param img1_out
    */
-  void calibrateStereoRig(const cv::Mat& img0_src, const cv::Mat& img1_src,
-                          cv::Mat& img0_out, cv::Mat& img1_out);
+  void calibrateDetphRig(const cv::Mat& img0_src, const cv::Mat& img1_src,
+                         cv::Mat& img0_out, cv::Mat& img1_out);
 
   const ReferenceFrames& referenceFrames() const;
 
@@ -109,11 +111,9 @@ class SensorSystem {
   std::string streamName(unsigned int stream_index) const;
   StreamConfig::Types streamType(unsigned int stream_index) const;
 
-  DepthRigType depthRigMode() const;
+  DepthRigType depthRigType() const;
 
  private:
-  bool loadingSourceROS() const;
-
   /**
    * @brief Loads a single param from either ros params or YAML config.
    * Will additionally set the reference frame value either from ros params (if
@@ -123,9 +123,10 @@ class SensorSystem {
    * @return CameraParams
    */
   CameraParams loadSingleParams(const StreamConfig& config) const;
-
   // NOTE: reference_frames_ must be set correctly before using
   CameraParams loadSingleParamsFromROS(const StreamConfig& config) const;
+
+  ImuParams loadImuParams(const gtsam::Pose3& T_CI) const;
 
   std::string getCameraOpticalFrame(
       const std::string& name, const std::string& default_optical_frame) const;
@@ -163,11 +164,14 @@ class SensorSystem {
  private:
   std::shared_ptr<rclcpp::Node> node_;
   DepthRigType depth_rig_type_;
-  //! If empty, try loading camera params from camera info message
-  std::string loading_source_;
-
+  //! Path to full params to load IMU params (if needed) and/or Camera Params
+  //! (which by default are loaded via ROS)
+  std::string path_to_params_;
+  bool load_cameras_from_ros_;
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
+  bool enable_imu_;
+  bool is_initalised_;
 
   std::vector<StreamConfig> configs_;
   std::vector<CameraParams> camera_params_;
@@ -178,8 +182,8 @@ class SensorSystem {
   CalibrateDepthRig calibrate_depth_rig_;
 
   ReferenceFrames reference_frames_;
-
-  bool is_initalised_{false};
+  //! Transform from the IMU frame to the Robot frame
+  gtsam::Pose3 T_RI_;
 };
 
 }  // namespace dyno

@@ -47,7 +47,7 @@ class Subscriber : public DataProviderRos {
   void imuCallback(const sensor_msgs::msg::Imu& msg);
 
  private:
-  void addImages(Timestamp timestamp,
+  bool addImages(Timestamp timestamp,
                  const std::map<size_t, ImageMsgPtr>& image_msgs);
 
  private:
@@ -68,6 +68,7 @@ class Subscriber : public DataProviderRos {
   /// @}
 
   typedef std::function<cv::Mat(ImageMsgPtr)> ReadImageFunc;
+  std::atomic<FrameId> driving_frame_id_{0};
 
   std::mutex images_received_mutex_;  ///< Lock when accessing buffer.
   std::vector<std::map<uint64_t, ImageMsgPtr>>

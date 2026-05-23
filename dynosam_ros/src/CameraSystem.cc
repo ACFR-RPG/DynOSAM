@@ -1,5 +1,8 @@
 #include "dynosam_ros/CameraSystem.hpp"
 
+#include <config_utilities/config_utilities.h>
+#include <config_utilities/parsing/yaml.h>
+
 #include <deque>
 #include <unordered_set>
 
@@ -33,6 +36,21 @@ std::ostream& operator<<(std::ostream& os, const StreamConfig& config) {
   return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const DepthRigType& depth_rig_type) {
+  switch (depth_rig_type) {
+    case DepthRigType::RGBD:
+      os << "RGBD";
+      break;
+    case DepthRigType::Stereo:
+      os << "Stereo";
+      break;
+    default:
+      os << "Unknown DepthRigType";
+      break;
+  }
+  return os;
+}
+
 SensorMode::SensorMode(const std::string& sensor_mode)
     : raw_sensor_mode_(sensor_mode) {
   parse(sensor_mode);
@@ -44,7 +62,7 @@ const std::vector<StreamConfig>& SensorMode::configs() const {
 
 bool SensorMode::useImu() const { return use_imu_; }
 
-DepthRigType SensorMode::depthRigMode() const { return depth_rig_type_; }
+DepthRigType SensorMode::depthRigType() const { return depth_rig_type_; }
 
 void SensorMode::parse(const std::string& sensor_mode) {
   // split string by +
@@ -163,14 +181,18 @@ void SensorMode::parse(const std::string& sensor_mode) {
 }
 
 SensorSystem::SensorSystem(std::shared_ptr<rclcpp::Node> node,
-                           DepthRigType depth_camera_mode,
-                           const std::string& loading_source)
+                           DepthRigType depth_rig_type,
+                           const std::string& path_to_params,
+                           const bool load_cameras_from_ros)
     : node_(node),
-      depth_rig_type_(depth_camera_mode),
-      loading_source_(loading_source),
+      depth_rig_type_(depth_rig_type),
+      path_to_params_(path_to_params),
+      load_cameras_from_ros_(load_cameras_from_ros),
       tf_buffer_(node->get_clock()),
-      tf_listener_(tf_buffer_) {
-  if (!loadingSourceROS()) {
+      tf_listener_(tf_buffer_),
+      enable_imu_(false),
+      is_initalised_{false} {
+  if (!load_cameras_from_ros_) {
     // assume loading source is path to dynosam paramter folder
     LOG(FATAL) << "Not implemented!";
   }
@@ -179,6 +201,8 @@ SensorSystem::SensorSystem(std::shared_ptr<rclcpp::Node> node,
 void SensorSystem::addCamera(const StreamConfig& config) {
   configs_.push_back(config);
 }
+
+void SensorSystem::enableImu(bool flag) { enable_imu_ = flag; }
 
 size_t SensorSystem::numCameraStreams() const { return camera_params_.size(); }
 
@@ -198,13 +222,13 @@ StreamConfig::Types SensorSystem::streamType(unsigned int stream_index) const {
   return configs_.at(stream_index).type;
 }
 
-DepthRigType SensorSystem::depthRigMode() const { return depth_rig_type_; }
+DepthRigType SensorSystem::depthRigType() const { return depth_rig_type_; }
 
 bool SensorSystem::isInitalised() const { return is_initalised_; }
 
-void SensorSystem::calibrateStereoRig(const cv::Mat& img0_src,
-                                      const cv::Mat& img1_src,
-                                      cv::Mat& img0_out, cv::Mat& img1_out) {
+void SensorSystem::calibrateDetphRig(const cv::Mat& img0_src,
+                                     const cv::Mat& img1_src, cv::Mat& img0_out,
+                                     cv::Mat& img1_out) {
   CHECK(calibrate_depth_rig_);
   calibrate_depth_rig_(img0_src, img1_src, img0_out, img1_out);
 }
@@ -243,11 +267,25 @@ void SensorSystem::finalise() {
   LOG(INFO) << "Using camera (estimation) frame: "
             << reference_frames_.camera_frame;
 
-  // reference_frames_.imu_frame =
-  //     ParameterConstructor(this, "imu_frame", rf_definitions.imu_frame)
-  //         .description("ROS frame id imu frame")
-  //         .finish()
-  //         .get<std::string>();
+  if (enable_imu_) {
+    reference_frames_.imu_frame =
+        ParameterConstructor(node_.get(), "imu_frame",
+                             reference_frames_.imu_frame)
+            .description("ROS frame id for the IMU frame")
+            .finish()
+            .get<std::string>();
+
+    const auto& robot_frame = reference_frames_.base_frame;
+    const auto& imu_frame = reference_frames_.imu_frame;
+    getLatestTransform(robot_frame, imu_frame, T_RI_);
+
+    // Estimation is all done in the camera (optical) frame
+    // so the transform we use for the IMU params (while usually IMU to robot)
+    // is actually going to be IMU to CAMERA
+    const auto& camera_frame = reference_frames_.camera_frame;
+    gtsam::Pose3 T_CI;
+    getLatestTransform(camera_frame, imu_frame, T_CI);
+  }
 
   camera_params_.push_back(main_camera_params);
   params_needed_for_depth.push_back(camera_params_.back());
@@ -308,10 +346,8 @@ void SensorSystem::finalise() {
   is_initalised_ = true;
 }
 
-bool SensorSystem::loadingSourceROS() const { return loading_source_.empty(); }
-
 CameraParams SensorSystem::loadSingleParams(const StreamConfig& config) const {
-  if (loadingSourceROS()) {
+  if (load_cameras_from_ros_) {
     return loadSingleParamsFromROS(config);
   } else {
     LOG(FATAL) << "Not implemented!";
@@ -320,10 +356,11 @@ CameraParams SensorSystem::loadSingleParams(const StreamConfig& config) const {
 
 CameraParams SensorSystem::loadSingleParamsFromROS(
     const StreamConfig& config) const {
-  VLOG(5) << "Getting camera params for " << config.name << " from ROS";
+  LOG(INFO) << "Getting camera params for " << config.name << " from ROS";
 
-  CameraParams params = waitAndSetCameraParams(
-      node_, config.name + "/camera_info", std::chrono::milliseconds(-1));
+  CameraParams params =
+      waitAndSetCameraParams(node_, "/dynosam/" + config.name + "/camera_info",
+                             std::chrono::milliseconds(-1));
 
   // Set the optical frame, either from parameters or from the loaded
   // CameraParams which has its referecenFrame set from the camera info msg
@@ -343,6 +380,10 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
   params.setExtrinsics(T_RC);
 
   return params;
+}
+
+ImuParams SensorSystem::loadImuParams(const gtsam::Pose3& T_CI) const {
+  return ImuParams{};
 }
 
 std::string SensorSystem::getCameraOpticalFrame(

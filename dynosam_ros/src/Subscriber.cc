@@ -5,6 +5,11 @@ namespace dyno {
 Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
                        std::shared_ptr<rclcpp::Node> node)
     : DataProviderRos(node), sensor_system_(sensor_system) {
+  if (!sensor_system->isInitalised()) {
+    throw DynosamException(
+        "dyno::Subscriber provided a SensorSystem that is not initalised!");
+  }
+
   image_subscribers_.resize(sensor_system->numCameraStreams());
   images_received_.resize(sensor_system->numCameraStreams());
 
@@ -24,17 +29,30 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
          return this->readMaskRosImage(msg);
        }}};
 
-  // TODO: make param
-  static constexpr size_t queue_size = 1000;
-  auto image_qos = rclcpp::SensorDataQoS().keep_last(queue_size).reliable();
+  int queue_size = ParameterConstructor(node_.get(), "image_queue_size", 1000)
+                       .description("Queue size for the image subscriber(s)")
+                       .finish()
+                       .get<int>();
 
+  auto image_qos = rclcpp::SensorDataQoS()
+                       .keep_last(static_cast<size_t>(queue_size))
+                       .reliable();
+
+  // Need to explicitly pass VoidPtr, transport options (nullptr) and subscriber
+  // options to subscribe to avoid ambiguous overloading specifically in the
+  // case when we specify a rmw_qos_profile (which we want to), rahter than just
+  // a queue size likely this is only a problem with ROS kilted
+  rclcpp::SubscriptionOptions subscriber_options;
   // set up callbacks
   for (size_t i = 0; i < sensor_system->numCameraStreams(); ++i) {
     const std::string stream_name = sensor_system->streamName(i);
     image_subscribers_[i] = img_transport_->subscribe(
-        "/dynosam/" + stream_name + "/image_raw", queue_size,
+        "/dynosam/" + stream_name + "/image_raw",
+        image_qos.get_rmw_qos_profile(),
         // 30 * sensor_system->numCameraStreams(),
-        std::bind(&Subscriber::imageCallback, this, std::placeholders::_1, i));
+        std::bind(&Subscriber::imageCallback, this, std::placeholders::_1, i),
+        image_transport::ImageTransport::VoidPtr(), nullptr,
+        subscriber_options);
   }
 }
 
@@ -124,8 +142,12 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
 
 void Subscriber::imuCallback(const sensor_msgs::msg::Imu& msg) {}
 
-void Subscriber::addImages(Timestamp timestamp,
+bool Subscriber::addImages(Timestamp timestamp,
                            const std::map<size_t, ImageMsgPtr>& image_msgs) {
+  if (!image_container_callback_) {
+    return false;
+  }
+
   std::map<size_t, cv::Mat> images;
   for (const auto& [i, msg] : image_msgs) {
     // read and process image based on config type
@@ -134,6 +156,32 @@ void Subscriber::addImages(Timestamp timestamp,
   }
 
   CHECK_GE(images.size(), 2);
+  const cv::Mat depth_rig0 = images.at(0);
+  const cv::Mat depth_rig1 = images.at(1);
+
+  cv::Mat depth_rig0_processed, depth_rig1_processed;
+  sensor_system_->calibrateDetphRig(depth_rig0, depth_rig1,
+                                    depth_rig0_processed, depth_rig1_processed);
+
+  auto image_container =
+      std::make_shared<ImageContainer>(driving_frame_id_, timestamp);
+  driving_frame_id_++;
+
+  // for now only support rgb+depth/stereo
+  // TODO: it would be MUCH better to map the image stream names to the names
+  // expected by the image container...
+  image_container->rgb(depth_rig0_processed);
+  if (sensor_system_->depthRigType() == DepthRigType::RGBD) {
+    image_container->depth(depth_rig1_processed);
+  } else if (sensor_system_->depthRigType() == DepthRigType::Stereo) {
+    image_container->rightRgb(depth_rig1_processed);
+  } else {
+    throw DynosamException("Unknown DepthRigType!");
+  }
+
+  LOG(INFO) << image_container->toString();
+  // image_container_callback_(image_container);
+  return true;
 }
 
 }  // namespace dyno

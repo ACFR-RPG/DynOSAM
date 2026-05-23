@@ -1100,6 +1100,11 @@ def plot_all(df):
         else:
             raise ValueError("Unknown PLOT_TYPE")
 
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_linewidth(1.0)
+            spine.set_color("black")
+
     ax_leg = fig.add_subplot(gs[1])
     ax_leg.axis("off")
 
@@ -1110,6 +1115,7 @@ def plot_all(df):
         ncol=min(len(global_legend_handles), 6),
         frameon=True
     )
+
 
     # =========================================================
     # FINAL SPACING CONTROL
@@ -1134,8 +1140,10 @@ fig = plot_all(df)
 fig.tight_layout()
 # plt.show()
 
-file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_TRO.jpg'
-fig.savefig(file_path)
+
+
+file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_TRO.pdf'
+fig.savefig(file_path, format="pdf")
 
 # plt.savefig(file_path)
 

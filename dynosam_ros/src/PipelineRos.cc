@@ -217,7 +217,8 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
 
   SensorMode sensor_mode(mode);
   SensorSystem::Ptr sensor_system = std::make_shared<SensorSystem>(
-      this->create_sub_node("dataprovider"), sensor_mode.depthRigMode());
+      this->create_sub_node("dataprovider"), sensor_mode.depthRigType(),
+      getParamsPath(), true);
   for (const auto& configs : sensor_mode.configs()) {
     LOG(INFO) << configs;
     sensor_system->addCamera(configs);
