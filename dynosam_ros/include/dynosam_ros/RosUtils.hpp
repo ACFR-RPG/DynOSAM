@@ -34,6 +34,8 @@
 
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_cv/CameraParams.hpp"
+
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/parameter.hpp"
@@ -41,6 +43,38 @@
 #include "rosidl_runtime_cpp/traits.hpp"
 
 namespace dyno {
+
+template <typename Adaptor, class Rep = int64_t, class Period = std::milli>
+inline typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
+    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
+    const std::chrono::duration<Rep, Period>& time_to_wait =
+        std::chrono::duration<Rep, Period>(-1));
+
+/**
+ * @brief Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on
+ * the specified topic. This function is blocking until a message is recieved
+ * (or until the time_to_wait) elapses.
+ *
+ * While this function returns a const ref to the CameraParams it also sets
+ * the internal camera_params_. The camera params are then returned by the
+ * overwritten getCameraParams, allowing the PipelineManager to access the
+ * correct camera paramters.
+ *
+ * If waiting for more than 1 second the function will use ROS streaming
+ * to log how long the function has waited for.
+ *
+ * @tparam Rep int64_t,
+ * @tparam Period std::milli
+ * @param topic const std::string&.
+ * @param time_to_wait_topic const std::chrono::duration<Rep, Period>&. Time to
+ * wait for camera params to arrive.
+ * @return const CameraParams&
+ */
+template <class Rep = int64_t, class Period = std::milli>
+inline CameraParams waitAndSetCameraParams(
+    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
+    const std::chrono::duration<Rep, Period>& time_to_wait_topic =
+        std::chrono::duration<Rep, Period>(-1));
 
 /**
  * @brief A generic type trait with the dyno namespace. Here we define compile
@@ -487,4 +521,4 @@ struct dyno::traits<std::string>
     : dyno::internal::RosParameterType<
           rcl_interfaces::msg::ParameterType::PARAMETER_STRING> {};
 
-#include "dynosam_ros/RosUtils-inl.hpp"
+#include "dynosam_ros/RosUtils-impl.hpp"

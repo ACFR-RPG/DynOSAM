@@ -46,7 +46,7 @@ class ImageSegmenterNode : public rclcpp::Node {
     // std::make_unique<YOLOv11>(model_config.onnxPath(), nv_logger_); Use
     // image_transport for efficiency (handles compressed images too)
     subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
-        "/camera/color/image_rect_color", 10,
+        "/camera/color/image_rect_color", 100,
         std::bind(&ImageSegmenterNode::imageCallback, this,
                   std::placeholders::_1));
 
@@ -86,7 +86,7 @@ class ImageSegmenterNode : public rclcpp::Node {
       //             resized.rows);
       // auto r = engine_->process(resized);
 
-      LOG(INFO) << result;
+      // LOG(INFO) << result;
 
       // // // // Optional: visualize (disable in headless mode)
       cv::imshow("View", result.colouredMask());
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
-  FLAGS_v = 5;
+  FLAGS_v = 10;
 
   // const std::string enginePath = dyno::getNNWeightsPath() /
   // "yolov8n-seg.engine";

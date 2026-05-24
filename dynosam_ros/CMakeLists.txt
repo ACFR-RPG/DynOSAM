@@ -53,7 +53,6 @@ set(SRC_FILES
   src/PipelineRos.cc
   src/RosUtils.cc
   src/Utils.cc
-  src/DataProviderRos.cc
   src/Diagnostics.cc
   src/CameraSystem.cc
   src/Subscriber.cc

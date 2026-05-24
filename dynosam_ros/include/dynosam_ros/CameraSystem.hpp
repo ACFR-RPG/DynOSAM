@@ -47,6 +47,12 @@ bool hasStreamType(const std::vector<StreamConfig>& configs,
 
 std::ostream& operator<<(std::ostream& os, const StreamConfig& config);
 
+
+class InvalidSensorSystem: public DynosamException {
+  public:
+    InvalidSensorSystem(const std::string& what) : DynosamException(what) {}
+};
+
 class SensorMode {
  public:
   SensorMode(const std::string& sensor_mode);
@@ -94,6 +100,7 @@ class SensorSystem : public SensorRigBase {
   void finalise();
 
   size_t numCameraStreams() const;
+  bool imuEnabled() const;
   bool isInitalised() const;
 
   // TODO: all extrinsics?

@@ -23,6 +23,12 @@ class SensorRigBase {
   virtual CameraParams getCanonicalParams() const = 0;
   virtual ReferenceFrames getReferenceFrames() const = 0;
   virtual DepthRigType depthRigType() const = 0;
+
+  /**
+   * Get the extrinsics transform between between the base (robot) frame
+   * and the cannonical camera frame. This frame should be ReferenceFrames::camera_frame
+   */
+  // virtual gtsam::Pose3 getCannonicalExtrinsics() const = 0;
 };
 
 }  // namespace dyno

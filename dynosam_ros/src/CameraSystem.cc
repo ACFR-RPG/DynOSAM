@@ -1,4 +1,6 @@
 #include "dynosam_ros/CameraSystem.hpp"
+#include "dynosam_ros/RosUtils.hpp"
+
 
 #include <config_utilities/config_utilities.h>
 #include <config_utilities/parsing/yaml.h>
@@ -6,10 +8,9 @@
 #include <deque>
 #include <unordered_set>
 
-#include "dynosam_common/Types.hpp"
-#include "dynosam_cv/StereoCamera.hpp"
-#include "dynosam_ros/DataProviderRos.hpp"
-#include "dynosam_ros/RosUtils.hpp"
+#include <dynosam_common/Types.hpp>
+#include <dynosam_cv/StereoCamera.hpp>
+
 #include "geometry_msgs/msg/transform_stamped.hpp"
 
 namespace dyno {
@@ -153,12 +154,12 @@ void SensorMode::parse(const std::string& sensor_mode) {
   }
 
   if (!any_depth_source) {
-    LOG(FATAL) << "no depth sources specified";
+    DYNO_THROW_MSG(InvalidSensorSystem) << "No valid depth rig setup found (RBGD or Stereo) in sensor mode:" << raw_sensor_mode_;
   }
 
   // if found stereo and found depth throw error?
   if (found_stereo && found_depth) {
-    LOG(FATAL) << "multiple depth sources found";
+    DYNO_THROW_MSG(InvalidSensorSystem) << "Multiple depth rig setup's found (RBGD and Stereo) in sensor mode:" << raw_sensor_mode_;
   }
 
   if (found_stereo) {
@@ -226,7 +227,7 @@ void SensorSystem::addCamera(const StreamConfig& config) {
 }
 
 void SensorSystem::enableImu(bool flag) { enable_imu_ = flag; }
-
+bool SensorSystem::imuEnabled() const { return enable_imu_; }
 size_t SensorSystem::numCameraStreams() const { return camera_params_.size(); }
 
 CameraParams SensorSystem::getCanonicalParams() const {

@@ -383,8 +383,6 @@ struct YoloV8ObjectDetector::Impl {
 
     timing_detections.stop();
 
-    // return false;
-
     utils::ChronoTimingStats timing_track("yolov8_detection.post_process.track",
                                           5);
     std::vector<SingleDetectionResult> tracking_result =

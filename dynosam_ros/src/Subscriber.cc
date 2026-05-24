@@ -1,10 +1,12 @@
 #include "dynosam_ros/Subscriber.hpp"
 
+#include "cv_bridge/cv_bridge.hpp"
+
 namespace dyno {
 
 Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
                        std::shared_ptr<rclcpp::Node> node)
-    : DataProviderRos(node), sensor_system_(sensor_system) {
+    : sensor_system_(sensor_system), node_(node) {
   if (!sensor_system->isInitalised()) {
     throw DynosamException(
         "dyno::Subscriber provided a SensorSystem that is not initalised!");
@@ -55,25 +57,28 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
         subscriber_options);
   }
 
-  //  imu_callback_group_ =
-  //     node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
-  // rclcpp::SubscriptionOptions imu_sub_options;
-  // imu_sub_options.callback_group = imu_callback_group_;
+  if(sensor_system_->imuEnabled()) {
+    imu_callback_group_ =
+      node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
-  // imu_sub_ = node_->create_subscription<ImuAdaptedType>(
-  //     "imu", rclcpp::SensorDataQoS(),
-  //     [&](const dyno::ImuMeasurement& imu) -> void {
-  //       if (!imu_single_input_callback_) {
-  //         RCLCPP_ERROR_THROTTLE(
-  //             node_->get_logger(), *node_->get_clock(), 1000,
-  //             "Imu callback triggered but "
-  //             "imu_single_input_callback_ is not registered!");
-  //         return;
-  //       }
-  //       imu_single_input_callback_(imu);
-  //     },
-  //     imu_sub_options);
+    rclcpp::SubscriptionOptions imu_sub_options;
+    imu_sub_options.callback_group = imu_callback_group_;
+
+    imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+        "/dynosam/imu", rclcpp::SensorDataQoS(),
+        [&](const dyno::ImuMeasurement& imu) -> void {
+          if (!imu_single_input_callback_) {
+            RCLCPP_ERROR_THROTTLE(
+                node_->get_logger(), *node_->get_clock(), 1000,
+                "Imu callback triggered but "
+                "imu_single_input_callback_ is not registered!");
+            return;
+          }
+          imu_single_input_callback_(imu);
+        },
+        imu_sub_options);
+  }
 }
 
 bool Subscriber::spin() { return !shutdown_; }
@@ -83,7 +88,8 @@ void Subscriber::shutdown() {
   for (size_t i = 0; i < sensor_system_->numCameraStreams(); ++i) {
     image_subscribers_[i].shutdown();
   }
-  //   subImu_.reset();
+
+  if(imu_sub_) { imu_sub_.reset(); }
 }
 
 SensorRigBase::Ptr Subscriber::sensorRig() const { return sensor_system_; }
@@ -91,9 +97,6 @@ SensorRigBase::Ptr Subscriber::sensorRig() const { return sensor_system_; }
 void Subscriber::imageCallback(const ImageMsgPtr& msg,
                                unsigned int stream_index) {
   static constexpr Timestamp kDynoThresholdSync = 0.01;
-
-  // //TODO: we will decripcate a lot of the readRosImage stuff likely in the
-  // base function... const cv::Mat image = this->readRosImage(msg)->image;
 
   const Timestamp timestamp = utils::fromRosTime(msg->header.stamp);
   images_received_.at(stream_index)[toNSec(timestamp)] = msg;
@@ -201,5 +204,82 @@ bool Subscriber::addImages(Timestamp timestamp,
   image_container_callback_(image_container);
   return true;
 }
+
+// specalise conversion function for depth image to handle the case we are given
+// float32 and 16UC1 bit images
+template <>
+inline const cv::Mat Subscriber::convertRosImage<ImageType::Depth>(
+    const ImageMsgPtr& img_msg) const {
+  const cv_bridge::CvImageConstPtr cvb_image = readRosImage(img_msg);
+  const cv::Mat img = cvb_image->image;
+
+  try {
+    image_traits<ImageType::Depth>::validate(img);
+    return img;
+
+  } catch (const InvalidImageTypeException& exception) {
+    // handle the case its a float32
+    if (img.type() == CV_32FC1) {
+      cv::Mat depth64;
+      img.convertTo(depth64, CV_64FC1);
+      image_traits<ImageType::Depth>::validate(depth64);
+      return depth64;
+    } else if (img.type() == CV_16UC1) {
+      cv::Mat depth64;
+      img.convertTo(depth64, CV_64FC1);
+      image_traits<ImageType::Depth>::validate(depth64);
+      return depth64;
+    }
+
+    RCLCPP_FATAL_STREAM(node_->get_logger(),
+                        image_traits<ImageType::Depth>::name()
+                            << " Image msg was of the wrong type (validate "
+                               "failed with exception "
+                            << exception.what() << "). "
+                            << "ROS encoding type used was "
+                            << cvb_image->encoding);
+
+    rclcpp::shutdown();
+    return cv::Mat();
+  }
+}
+
+
+const cv::Mat Subscriber::readRgbRosImage(
+    const ImageMsgPtr& img_msg) const {
+  return convertRosImage<ImageType::RGBMono>(img_msg);
+}
+
+const cv::Mat Subscriber::readDepthRosImage(
+    const ImageMsgPtr& img_msg) const {
+  return convertRosImage<ImageType::Depth>(img_msg);
+}
+
+const cv::Mat Subscriber::readFlowRosImage(
+    const ImageMsgPtr& img_msg) const {
+  return convertRosImage<ImageType::OpticalFlow>(img_msg);
+}
+
+const cv::Mat Subscriber::readMaskRosImage(
+    const ImageMsgPtr& img_msg) const {
+  return convertRosImage<ImageType::MotionMask>(img_msg);
+}
+
+const cv_bridge::CvImageConstPtr Subscriber::readRosImage(
+    const ImageMsgPtr& img_msg) const {
+  CHECK(img_msg);
+  cv_bridge::CvImageConstPtr cv_ptr;
+  try {
+    // important to copy to ensure that memory does not go out of scope (which
+    // it seems to !!!)
+    cv_ptr = cv_bridge::toCvCopy(img_msg);
+  } catch (cv_bridge::Exception& exception) {
+    RCLCPP_FATAL(node_->get_logger(), "cv_bridge exception: %s",
+                 exception.what());
+    rclcpp::shutdown();
+  }
+  return cv_ptr;
+}
+
 
 }  // namespace dyno

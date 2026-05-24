@@ -2,25 +2,34 @@
 
 #include <mutex>
 
-#include "dynosam_ros/CameraSystem.hpp"
-#include "dynosam_ros/DataProviderRos.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
+#include "dynosam_ros/CameraSystem.hpp"
+#include <dynosam/dataprovider/DataProvider.hpp>
+
 #include "image_transport/image_transport.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
+
+#include "sensor_msgs/image_encodings.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/imu.hpp"
+
+#include "cv_bridge/cv_bridge.hpp"
+
 
 namespace dyno {
 
 typedef sensor_msgs::msg::Image::ConstSharedPtr ImageMsgPtr;
+
+
+
 
 /**
  * @brief
  * Heavily inspiried by the OKVIS2 implementation:
  * https://github.com/ethz-mrl/okvis2/blob/main/okvis_ros2/include/okvis/ros2/Subscriber.hpp
  */
-class Subscriber : public DataProviderRos {
+class Subscriber : public DataProvider {
  public:
   DYNO_POINTER_TYPEDEFS(Subscriber)
 
@@ -46,8 +55,104 @@ class Subscriber : public DataProviderRos {
   bool addImages(Timestamp timestamp,
                  const std::map<size_t, ImageMsgPtr>& image_msgs);
 
+  private:
+    /**
+     * @brief Convers a sensor_msgs::msg::Image to a cv::Mat while testing that
+     * the input has the correct datatype for an RGB image (as defined by
+     * ImageType::RGBMono).
+     *
+     * @param img_msg const ImageMsgPtr&
+     * @return const cv::Mat
+     */
+    const cv::Mat readRgbRosImage(
+        const ImageMsgPtr& img_msg) const;
+
+    /**
+     * @brief Convers a sensor_msgs::msg::Image to a cv::Mat while testing that
+     * the input has the correct datatype for an Depth image (as defined by
+     * ImageType::Depth).
+     *
+     * @param img_msg const ImageMsgPtr&
+     * @return const cv::Mat
+     */
+    const cv::Mat readDepthRosImage(
+        const ImageMsgPtr& img_msg) const;
+
+    /**
+     * @brief Convers a sensor_msgs::msg::Image to a cv::Mat while testing that
+     * the input has the correct datatype for an Optical Flow image (as defined by
+     * ImageType::OpticalFlow).
+     *
+     * @param img_msg const ImageMsgPtr&
+     * @return const cv::Mat
+     */
+    const cv::Mat readFlowRosImage(
+        const ImageMsgPtr& img_msg) const;
+
+    /**
+     * @brief Convers a sensor_msgs::msg::Image to a cv::Mat while testing that
+     * the input has the correct datatype for an Motion Mask image (as defined by
+     * ImageType::MotionMask).
+     *
+     * @param img_msg const ImageMsgPtr&
+     * @return const cv::Mat
+     */
+    const cv::Mat readMaskRosImage(
+        const ImageMsgPtr& img_msg) const;
+
+    /**
+     * @brief Helper function to convert a ROS Image message to a CvImageConstPtr
+     * via the cv bridge.
+     *
+     * @param img_msg const ImageMsgPtr&
+     * @return const cv_bridge::CvImageConstPtr
+     */
+    const cv_bridge::CvImageConstPtr readRosImage(
+        const ImageMsgPtr& img_msg) const;
+
+
+    /**
+     * @brief Helper function to convert a
+     * sensor_msgs::msg::Image::ConstSharedPtr& to a cv::Mat with the right
+     * datatype.
+     *
+     * The datatype is specified from the template IMAGETYPE::OpenCVType and
+     * ensures the passed in image has the correct datatype for the desired
+     * IMAGETYPE.
+     *
+     * ROS will be shutdown if the incoming image has an incorrect type.
+     *
+     * @tparam IMAGETYPE
+     * @param img_msg  const ImageMsgPtr&
+     * @return const cv::Mat
+     */
+    template <typename IMAGETYPE>
+    const cv::Mat convertRosImage(
+        const ImageMsgPtr& img_msg) const
+    {
+        const cv_bridge::CvImageConstPtr cvb_image = readRosImage(img_msg);
+        try {
+            const cv::Mat img = cvb_image->image;
+            image_traits<IMAGETYPE>::validate(img);
+            return img;
+
+        } catch (const InvalidImageTypeException& exception) {
+            RCLCPP_FATAL_STREAM(node_->get_logger(),
+                                image_traits<IMAGETYPE>::name()
+                                    << " Image msg was of the wrong type (validate "
+                                        "failed with exception "
+                                    << exception.what() << "). "
+                                    << "ROS encoding type used was "
+                                    << cvb_image->encoding);
+            rclcpp::shutdown();
+            return cv::Mat();
+        }
+    }
+
+
  private:
   SensorSystem::Ptr sensor_system_;
+  std::shared_ptr<rclcpp::Node> node_;
 
   /// @}
   /// @name Node and subscriber related
@@ -76,3 +181,4 @@ class Subscriber : public DataProviderRos {
 };
 
 }  // namespace dyno
+

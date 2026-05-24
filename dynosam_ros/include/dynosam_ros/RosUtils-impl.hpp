@@ -30,11 +30,108 @@
 
 #pragma once
 
+#include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros/adaptors/CameraParamsAdaptor.hpp"
+
+#include "rclcpp/wait_for_message.hpp"
+
 #include <glog/logging.h>
 
-#include "dynosam_ros/RosUtils.hpp"
+
 
 namespace dyno {
+
+template <typename Adaptor, class Rep, class Period>
+inline typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
+    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
+    const std::chrono::duration<Rep, Period>& time_to_wait) {
+  using RosMsgType = typename Adaptor::ros_message_type;
+  using CustomMsgType = typename Adaptor::custom_type;
+
+  // it seems rclcpp::Adaptors do not work yet with wait for message
+  RosMsgType ros_msg;
+  if (rclcpp::wait_for_message<RosMsgType, Rep, Period>(ros_msg, node, topic,
+                                                        time_to_wait)) {
+    CustomMsgType custom_msg;
+    Adaptor::convert_to_custom(ros_msg, custom_msg);
+    return custom_msg;
+  } else {
+    const auto milliseconds =
+        std::chrono::duration_cast<std::chrono::milliseconds>(time_to_wait);
+    DYNO_THROW_MSG(DynosamException)
+        << "Failed to receive msg using adaptor " << type_name<Adaptor>()
+        << " on topic " << topic << " (waited with timeout "
+        << std::to_string(milliseconds.count()) << " ms).";
+    throw;
+  }
+}
+
+template <class Rep, class Period>
+inline CameraParams waitAndSetCameraParams(
+    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
+    const std::chrono::duration<Rep, Period>& time_to_wait_topic) {
+  RCLCPP_INFO_STREAM(node->get_logger(),
+                     "Waiting for camera params on topic: " << topic);
+
+  using Adaptor =
+      rclcpp::TypeAdapter<dyno::CameraParams, sensor_msgs::msg::CameraInfo>;
+
+  // Only create status thread if we may wait a while
+  const bool enable_wait_logging =
+      time_to_wait_topic.count() < 0 ||
+      std::chrono::duration_cast<std::chrono::seconds>(time_to_wait_topic) >=
+          std::chrono::seconds(1);
+
+  std::atomic_bool done = false;
+  std::thread wait_thread;
+
+  if (enable_wait_logging) {
+    wait_thread = std::thread([node, topic, &done]() {
+      rclcpp::Clock::SharedPtr clock = node->get_clock();
+
+      const auto start_time = clock->now();
+      rclcpp::Rate rate(1, clock);
+
+      while (rclcpp::ok() && !done.load()) {
+        const auto elapsed = (clock->now() - start_time).seconds();
+
+        RCLCPP_INFO_STREAM(node->get_logger(),
+                           "Still waiting for camera params on topic '"
+                               << topic << "' after " << std::fixed
+                               << std::setprecision(1) << elapsed
+                               << " seconds");
+
+        rate.sleep();
+      }
+    });
+  }
+
+  CameraParams params;
+
+  try {
+    params =
+        waitAndGetMessageViaAdaptor<Adaptor>(node, topic, time_to_wait_topic);
+  } catch (const DynosamException& e) {
+    done = true;
+
+    if (wait_thread.joinable()) {
+      wait_thread.join();
+    }
+
+    throw e;
+  }
+
+  done = true;
+
+  if (wait_thread.joinable()) {
+    wait_thread.join();
+  }
+
+  RCLCPP_INFO_STREAM(node->get_logger(),
+                     "Received camera params on topic: " << topic);
+
+  return params;
+}
 
 template <typename ValueTypeT>
 decltype(auto) ParameterDetails::get() const {

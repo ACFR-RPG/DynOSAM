@@ -96,7 +96,7 @@ void byte_track::STrack::update(const STrack& new_track,
   kalman_filter_.update(mean_, covariance_, new_track.getRect().getXyah());
 
   updateRect();
-  mask_ = new_track.getMask();
+  mask_ = new_track.getMask().clone();
   class_name_ = new_track.getClassName();
 
   state_ = STrackState::Tracked;

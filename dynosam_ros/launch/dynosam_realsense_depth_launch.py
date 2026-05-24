@@ -88,6 +88,6 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("output_path", default_value="/root/results/misc/"),
         DeclareLaunchArgument("v", default_value="5"),
-        rs_node,
+        # rs_node,
         dynosam_node
     ])

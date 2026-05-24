@@ -13,7 +13,7 @@
 namespace byte_track {
 class ByteTracker {
  public:
-  ByteTracker(const int &frame_rate = 30, const int &track_buffer = 30,
+  ByteTracker(const int &frame_rate = 15, const int &track_buffer = 30,
               const float &track_thresh = 0.5, const float &high_thresh = 0.6,
               const float &match_thresh = 0.8);
   ~ByteTracker();
