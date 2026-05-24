@@ -234,13 +234,12 @@ void DynoPipelineManagerRos::initalisePipeline() {
   auto data_loader = getDataProvider();
   auto params = getDynoParams();
 
-  const auto reference_frames = data_loader->sensorRig()->getReferenceFrames();
-  // TODO: shoudl take the sensor system to also get the xtrinsics...
+  const auto sensor_rig = data_loader->sensorRig();
   auto frontend_display = std::make_shared<dyno::FrontendDisplayRos>(
-      reference_frames, this->create_sub_node("frontend"),
+      sensor_rig, this->create_sub_node("frontend"),
       this->create_sub_node("ground_truth"));
   auto backend_display = std::make_shared<dyno::BackendDisplayRos>(
-      reference_frames, this->create_sub_node("backend"));
+      sensor_rig, this->create_sub_node("backend"));
 
   ExternalHooks::Ptr hooks = std::make_shared<ExternalHooks>();
   // if online then we are using OnlineDataProviderRos, which should collect the
@@ -276,9 +275,10 @@ void DynoPipelineManagerRos::initalisePipeline() {
   // Define a backend factory with a ROS specific policy
   // This allows custom displays to be loaded at runtime depending
   // on the formulation/module requested
+  // TODO: RF for now!
   using RosBackendFactory = BackendFactory<BackendModulePolicyRos>;
-  auto factory =
-      RosBackendFactory::Create(params.backend_type, reference_frames, this);
+  auto factory = RosBackendFactory::Create(
+      params.backend_type, sensor_rig->getReferenceFrames(), this);
 
   pipeline_ = std::make_unique<DynoPipelineManager>(
       params, data_loader, frontend_display, backend_display, factory, hooks);

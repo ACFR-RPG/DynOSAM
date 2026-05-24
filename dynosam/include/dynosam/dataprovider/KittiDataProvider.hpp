@@ -481,7 +481,7 @@ class KittiDataLoader
     this->setCallback(callback);
   }
 
-  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
+  CanonicalSensorRig::Ptr sensorRig() const override { return sensor_rig_; }
 
   ImageContainer::Ptr imageContainerPreprocessor(
       ImageContainer::Ptr image_container) override {

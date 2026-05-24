@@ -43,6 +43,18 @@
 
 namespace dyno {
 
+gtsam::Pose3 robotToOpenCVTransform() {
+  static gtsam::Matrix33 rot;
+  rot << 0, -1, 0, 0, 0, -1, 1, 0, 0;
+  static gtsam::Pose3 pose(gtsam::Rot3(rot), gtsam::Point3(0, 0, 0));
+  return pose;
+}
+
+gtsam::Pose3 openCVToRobotTransform() {
+  static gtsam::Pose3 transform(robotToOpenCVTransform().inverse());
+  return transform;
+}
+
 void toRightHandedTwist(gtsam::Vector3& right_handed_linear_velocity,
                         gtsam::Vector3& right_handed_angular_velocity,
                         const gtsam::Vector3& left_handed_linear_velocity,

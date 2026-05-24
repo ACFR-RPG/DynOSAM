@@ -51,7 +51,7 @@ class TartanAirShibuyaLoader : public TartanAirShibuyaProvider {
  public:
   TartanAirShibuyaLoader(const fs::path& dataset_path);
 
-  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
+  CanonicalSensorRig::Ptr sensorRig() const override { return sensor_rig_; }
 
  private:
   BasicDynoSensorRig::Ptr sensor_rig_;

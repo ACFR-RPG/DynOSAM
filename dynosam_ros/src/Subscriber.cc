@@ -57,10 +57,9 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
         subscriber_options);
   }
 
-
-  if(sensor_system_->imuEnabled()) {
+  if (sensor_system_->imuEnabled()) {
     imu_callback_group_ =
-      node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+        node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
     rclcpp::SubscriptionOptions imu_sub_options;
     imu_sub_options.callback_group = imu_callback_group_;
@@ -89,10 +88,12 @@ void Subscriber::shutdown() {
     image_subscribers_[i].shutdown();
   }
 
-  if(imu_sub_) { imu_sub_.reset(); }
+  if (imu_sub_) {
+    imu_sub_.reset();
+  }
 }
 
-SensorRigBase::Ptr Subscriber::sensorRig() const { return sensor_system_; }
+CanonicalSensorRig::Ptr Subscriber::sensorRig() const { return sensor_system_; }
 
 void Subscriber::imageCallback(const ImageMsgPtr& msg,
                                unsigned int stream_index) {
@@ -244,24 +245,19 @@ inline const cv::Mat Subscriber::convertRosImage<ImageType::Depth>(
   }
 }
 
-
-const cv::Mat Subscriber::readRgbRosImage(
-    const ImageMsgPtr& img_msg) const {
+const cv::Mat Subscriber::readRgbRosImage(const ImageMsgPtr& img_msg) const {
   return convertRosImage<ImageType::RGBMono>(img_msg);
 }
 
-const cv::Mat Subscriber::readDepthRosImage(
-    const ImageMsgPtr& img_msg) const {
+const cv::Mat Subscriber::readDepthRosImage(const ImageMsgPtr& img_msg) const {
   return convertRosImage<ImageType::Depth>(img_msg);
 }
 
-const cv::Mat Subscriber::readFlowRosImage(
-    const ImageMsgPtr& img_msg) const {
+const cv::Mat Subscriber::readFlowRosImage(const ImageMsgPtr& img_msg) const {
   return convertRosImage<ImageType::OpticalFlow>(img_msg);
 }
 
-const cv::Mat Subscriber::readMaskRosImage(
-    const ImageMsgPtr& img_msg) const {
+const cv::Mat Subscriber::readMaskRosImage(const ImageMsgPtr& img_msg) const {
   return convertRosImage<ImageType::MotionMask>(img_msg);
 }
 
@@ -280,6 +276,5 @@ const cv_bridge::CvImageConstPtr Subscriber::readRosImage(
   }
   return cv_ptr;
 }
-
 
 }  // namespace dyno

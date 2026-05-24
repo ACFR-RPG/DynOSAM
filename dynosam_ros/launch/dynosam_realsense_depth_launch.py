@@ -74,7 +74,7 @@ def generate_launch_description():
                 {"params_path": dynosam_params},
                 {"online": True},
                 {"input_image_mode": "rgb+aligned_depth+imu"},
-                {"base_frame": "camera_link"},
+                {"base_frame": "camera_color_frame"},
                 {"odom_frame": "odom"}
             ],
             remappings=[
@@ -88,6 +88,6 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("output_path", default_value="/root/results/misc/"),
         DeclareLaunchArgument("v", default_value="5"),
-        rs_node,
+        # rs_node,
         dynosam_node
     ])

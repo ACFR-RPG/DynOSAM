@@ -47,10 +47,9 @@ bool hasStreamType(const std::vector<StreamConfig>& configs,
 
 std::ostream& operator<<(std::ostream& os, const StreamConfig& config);
 
-
-class InvalidSensorSystem: public DynosamException {
-  public:
-    InvalidSensorSystem(const std::string& what) : DynosamException(what) {}
+class InvalidSensorSystem : public DynosamException {
+ public:
+  InvalidSensorSystem(const std::string& what) : DynosamException(what) {}
 };
 
 class SensorMode {
@@ -80,7 +79,7 @@ class SensorMode {
 // look up camera optical frame (only need 1 in RGBD, need 2 for stereo)
 // after processing we assume all images will have a CameraParams that match the
 // "target" params
-class SensorSystem : public SensorRigBase {
+class SensorSystem : public CanonicalSensorRig {
  public:
   DYNO_POINTER_TYPEDEFS(SensorSystem)
 

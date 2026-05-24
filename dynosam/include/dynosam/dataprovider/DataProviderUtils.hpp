@@ -41,6 +41,27 @@
 namespace dyno {
 
 /**
+ * @brief Transformation converting from
+ * ROS Frame    (x-forward, y-left, z-up) to
+ * OpenCV Frame (x-right, y-down, z-forward)
+ * ROS    ->  OpenCV
+ * x     ->     z
+ * y     ->    -x
+ * z     ->    -y
+ *
+ * @return gtsam::Pose3
+ */
+gtsam::Pose3 robotToOpenCVTransform();
+
+/**
+ * @brief Transform converting from OpenCV frame (z-forward) to ROS frame
+ * convention (z-up)
+ *
+ * @return gtsam::Pose3
+ */
+gtsam::Pose3 openCVToRobotTransform();
+
+/**
  * @brief Considers the conversion from the left-handed coordiante system (e.g.
  * unreal, VIODE, carla...) to the right-handed coordinate system (robotic).
  *

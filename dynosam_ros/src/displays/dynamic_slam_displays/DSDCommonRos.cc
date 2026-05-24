@@ -9,9 +9,10 @@
 
 namespace dyno {
 
-DynoStatePublisher::DynoStatePublisher(const ReferenceFrames& params,
-                                       rclcpp::Node::SharedPtr node)
-    : params_(params), node_(node) {
+DynoStatePublisher::DynoStatePublisher(
+    const CanonicalSensorRig::ConstPtr& sensor_rig,
+    rclcpp::Node::SharedPtr node)
+    : sensor_rig_(sensor_rig), node_(node) {
   vo_publisher_ =
       node_->create_publisher<nav_msgs::msg::Odometry>("odometry", 1);
   vo_path_publisher_ =
@@ -43,30 +44,41 @@ DynoStatePublisher& DynoStatePublisher::publishObjectOdomTF(bool flag) {
 void DynoStatePublisher::publish(const DynoState& state) {
   const FrameId frame_id = state.frame_id;
   const Timestamp timestamp = state.timestamp;
+  const auto reference_frames = sensor_rig_->getReferenceFrames();
+  const gtsam::Pose3 T_RC = sensor_rig_->getCanonicalExtrinsics();
 
-  auto camera_trajectory = state.camera_trajectory;
+  auto camera_to_base_frame = [&T_RC](gtsam::Pose3& X_WC) {
+    X_WC = T_RC.compose(X_WC);
+  };
 
-  const gtsam::Pose3 X_W_k = state.camera_trajectory.last().data;
+  std::vector<gtsam::Pose3> camera_trajectory =
+      state.camera_trajectory.toDataVector();
+  // transform camera from estimated (usually optical frame) to base frame
+  std::for_each(camera_trajectory.begin(), camera_trajectory.end(),
+                camera_to_base_frame);
+
+  const gtsam::Pose3 X_W_k = camera_trajectory.back();
   DisplayCommon::publishOdometry(vo_publisher_, X_W_k, timestamp,
-                                 params_.odom_frame, params_.camera_frame);
+                                 reference_frames.odom_frame,
+                                 reference_frames.base_frame);
   if (publish_vo_tf_) {
     std_msgs::msg::Header header;
     header.stamp = utils::toRosTime(timestamp);
-    header.frame_id = params_.odom_frame;
-    sendTransform(X_W_k, header, params_.camera_frame);
+    header.frame_id = reference_frames.odom_frame;
+    sendTransform(X_W_k, header, reference_frames.base_frame);
   }
 
   // publish trajectory
-  DisplayCommon::publishOdometryPath(vo_path_publisher_,
-                                     state.camera_trajectory.toDataVector(),
-                                     timestamp, params_.odom_frame);
+  DisplayCommon::publishOdometryPath(vo_path_publisher_, camera_trajectory,
+                                     timestamp, reference_frames.odom_frame);
 
   // publish local(?) static points
+  // TODO: now if in the original X_W (which at least some of them are!)
   DisplayCommon::publishPointCloud(static_points_pub_, state.local_static_map,
-                                   X_W_k, params_.odom_frame);
+                                   X_W_k, reference_frames.odom_frame);
 
   DisplayCommon::publishPointCloud(dynamic_points_pub_, state.dynamic_map,
-                                   X_W_k, params_.odom_frame);
+                                   X_W_k, reference_frames.odom_frame);
 
   publishObjects(frame_id, state.object_trajectories);
 }
@@ -92,7 +104,9 @@ void DynoStatePublisher::publishObjects(
   MultiObjectOdometryPath multi_object_odom_paths;
   multi_object_odom_paths.header.stamp =
       utils::toRosTime(object_trajectories_k.lastTimestamp());
-  multi_object_odom_paths.header.frame_id = params_.odom_frame;
+
+  const auto reference_frames = sensor_rig_->getReferenceFrames();
+  multi_object_odom_paths.header.frame_id = reference_frames.odom_frame;
 
   for (const auto& [object_id, object_trajectory] : object_trajectories_k) {
     // latest object odometry
@@ -165,7 +179,8 @@ ObjectOdometry DynoStatePublisher::constructObjectOdometry(
   // backend may not send F2F
   // CHECK_EQ(H_W_km1_k.style(), MotionRepresentationStyle::F2F);
 
-  const auto frame_link = params_.odom_frame;
+  const auto reference_frames = sensor_rig_->getReferenceFrames();
+  const auto frame_link = reference_frames.odom_frame;
   const auto child_link = "object_" + std::to_string(object_id) + "_link";
 
   ObjectOdometry object_odom;
@@ -191,7 +206,6 @@ ObjectOdometry DynoStatePublisher::constructObjectOdometry(
     dyno::convert(body_velocity, object_odom.odom.twist.twist);
   }
 
-  // TODO: body velocity
   object_odom.object_id = object_id;
   object_odom.sequence = frame_id_k;
 

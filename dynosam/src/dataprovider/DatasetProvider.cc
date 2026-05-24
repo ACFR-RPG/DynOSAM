@@ -32,6 +32,8 @@
 
 #include <glog/logging.h>
 
+#include "dynosam/dataprovider/DataProviderUtils.hpp"
+
 namespace dyno {
 
 BasicDynoSensorRig::BasicDynoSensorRig(const CameraParams& canonical_params,
@@ -39,6 +41,9 @@ BasicDynoSensorRig::BasicDynoSensorRig(const CameraParams& canonical_params,
                                        const ReferenceFrames& reference_frames)
     : canonical_params_(canonical_params),
       depth_rig_type_(depth_rig_type),
-      reference_frames_(reference_frames) {}
+      reference_frames_(reference_frames) {
+  // by default updata extrinsics to rotate optical frame to robotic frame
+  canonical_params_.setExtrinsics(openCVToRobotTransform());
+}
 
 }  // namespace dyno

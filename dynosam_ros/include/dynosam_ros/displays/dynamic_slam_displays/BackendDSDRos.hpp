@@ -39,7 +39,8 @@ namespace dyno {
 
 class BackendDSDRos : public BackendDisplay {
  public:
-  BackendDSDRos(const ReferenceFrames& params, rclcpp::Node::SharedPtr node);
+  BackendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
+                rclcpp::Node::SharedPtr node);
   ~BackendDSDRos() = default;
 
   void spinOnce(const DynoState::ConstPtr& backend_output) override;
@@ -53,7 +54,7 @@ class BackendDSDRos : public BackendDisplay {
       const DynoState::ConstPtr& latest_backend_output);
 
  private:
-  ReferenceFrames display_params_;
+  CanonicalSensorRig::ConstPtr sensor_rig_;
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       temporal_dynamic_points_pub_;
 

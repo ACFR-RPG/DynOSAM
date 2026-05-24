@@ -274,7 +274,7 @@ class DynoDataset : public _DynoDatasetConstructor<Timestamp, cv::Mat, cv::Mat,
  * values and the extrinsics are set to cv -> robotic convention
  *
  */
-class BasicDynoSensorRig : public SensorRigBase {
+class BasicDynoSensorRig : public CanonicalSensorRig {
  public:
   DYNO_POINTER_TYPEDEFS(BasicDynoSensorRig)
 

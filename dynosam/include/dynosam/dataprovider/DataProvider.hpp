@@ -105,7 +105,7 @@ class DataProvider {
 
   virtual void shutdown();
 
-  virtual SensorRigBase::Ptr sensorRig() const = 0;
+  virtual CanonicalSensorRig::Ptr sensorRig() const = 0;
 
   /**
    * @brief Provides functionality to get camera paramters for the main

@@ -65,7 +65,7 @@ class VirtualKittiDataLoader : public VirtualKittiDatasetProvider {
     static Params fromYaml(const std::string& params_folder);
   };
 
-  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
+  CanonicalSensorRig::Ptr sensorRig() const override { return sensor_rig_; }
 
   // expect to be the top level where the folders undearneath are in the form
   // vkitti_2.0.3_depth... (or as in the download...)

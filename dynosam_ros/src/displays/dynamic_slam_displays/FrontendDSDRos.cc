@@ -36,10 +36,10 @@
 
 namespace dyno {
 
-FrontendDSDRos::FrontendDSDRos(const ReferenceFrames& params,
+FrontendDSDRos::FrontendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
                                rclcpp::Node::SharedPtr node,
                                rclcpp::Node::SharedPtr ground_truth_node)
-    : FrontendDisplay(), dyno_state_publisher_(params, node) {
+    : FrontendDisplay(), dyno_state_publisher_(sensor_rig, node) {
   tracking_image_pub_ =
       image_transport::create_publisher(node.get(), "tracking_image");
 
@@ -50,15 +50,16 @@ FrontendDSDRos::FrontendDSDRos(const ReferenceFrames& params,
 
   if (ground_truth_node) {
     RCLCPP_INFO_STREAM(node->get_logger(), "Creating ground truth publishers");
-    ground_truth_publishers_.emplace(params, ground_truth_node);
+    ground_truth_publishers_.emplace(sensor_rig, ground_truth_node);
   }
 
   dyno_state_publisher_.publishVisualOdomTF(true);
 }
 
 FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(
-    const ReferenceFrames& params, rclcpp::Node::SharedPtr ground_truth_node)
-    : dyno_state_publisher_(params, CHECK_NOTNULL(ground_truth_node)) {}
+    const CanonicalSensorRig::ConstPtr& sensor_rig,
+    rclcpp::Node::SharedPtr ground_truth_node)
+    : dyno_state_publisher_(sensor_rig, CHECK_NOTNULL(ground_truth_node)) {}
 
 void FrontendDSDRos::spinOnce(const RealtimeOutput::ConstPtr& frontend_output) {
   VLOG(20) << "Spinning FrontendDSDRos k=" << frontend_output->state.frame_id;

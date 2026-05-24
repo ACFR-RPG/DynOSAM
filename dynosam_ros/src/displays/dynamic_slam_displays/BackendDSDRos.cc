@@ -39,11 +39,11 @@
 
 namespace dyno {
 
-BackendDSDRos::BackendDSDRos(const ReferenceFrames& params,
+BackendDSDRos::BackendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
                              rclcpp::Node::SharedPtr node)
     : BackendDisplay(),
-      display_params_(params),
-      dyno_state_publisher_(params, node) {
+      sensor_rig_(sensor_rig),
+      dyno_state_publisher_(sensor_rig, node) {
   temporal_dynamic_points_pub_ =
       node->create_publisher<sensor_msgs::msg::PointCloud2>(
           "temporal_dynamic_cloud", 1);
@@ -267,6 +267,8 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
   CloudPerObject clouds_per_obj =
       groupObjectCloud(dynamic_landmarks, latest_backend_output->cameraPose());
 
+  const auto odom_frame = sensor_rig_->getReferenceFrames().odom_frame;
+
   MarkerArray markers;
 
   for (const auto& [object_id, obj_cloud] : clouds_per_obj) {
@@ -287,7 +289,7 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
     convert(Color::uniqueId(object_id), colour_msg);
 
     visualization_msgs::msg::Marker marker;
-    marker.header.frame_id = display_params_.odom_frame;
+    marker.header.frame_id = odom_frame;
     marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
     marker.ns = "object_wireframe";
     marker.id = object_id;

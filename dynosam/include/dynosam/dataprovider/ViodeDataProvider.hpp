@@ -49,7 +49,7 @@ class ViodeLoader : public ViodeProvider {
  public:
   ViodeLoader(const fs::path& dataset_path);
 
-  SensorRigBase::Ptr sensorRig() const override { return sensor_rig_; }
+  CanonicalSensorRig::Ptr sensorRig() const override { return sensor_rig_; }
 
   ImuParams::Optional getImuParams() const override { return imu_params_; }
 
