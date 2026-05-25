@@ -40,7 +40,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
-#include "dynosam_cv/ImageContainer.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
 
 namespace dyno {
 

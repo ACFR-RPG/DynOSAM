@@ -254,4 +254,4 @@ typedef ImageWrapper<ImageType::MotionMask> WrappedMotionMask;
 
 }  // namespace dyno
 
-#include "dynosam_cv/ImageTypes-inl.hpp"
+#include "dynosam_sensors/ImageTypes-inl.hpp"

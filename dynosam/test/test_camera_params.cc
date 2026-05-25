@@ -36,7 +36,7 @@
 
 #include <thread>
 
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 #include "internal/helpers.hpp"
 
 DECLARE_string(test_data_path);

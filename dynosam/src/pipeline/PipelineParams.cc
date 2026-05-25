@@ -67,12 +67,10 @@ DynoParams::DynoParams(const std::string& params_path) {
 
   pipeline_params_ = config::fromYamlFile<PipelineParams>(
       params_folder_path / "PipelineParams.yaml");
-  camera_params_ = config::fromYamlFile<CameraParams>(params_folder_path /
-                                                      "CameraParams.yaml");
+  // camera_params_ = config::fromYamlFile<CameraParams>(params_folder_path /
+  //                                                     "CameraParams.yaml");
   frontend_params_ = config::fromYamlFile<FrontendParams>(
       params_folder_path / "FrontendParams.yaml");
-  imu_params_ =
-      config::fromYamlFile<ImuParams>(params_folder_path / "ImuParams.yaml");
 
   backend_type = static_cast<BackendType>(FLAGS_backend_updater_enum);
 }
@@ -80,8 +78,7 @@ DynoParams::DynoParams(const std::string& params_path) {
 void DynoParams::printAllParams(bool print_glog_params) const {
   LOG(INFO) << "Frontend Params: " << config::toString(frontend_params_);
   LOG(INFO) << "Pipeline Params: " << config::toString(pipeline_params_);
-  LOG(INFO) << "Camera Params: " << config::toString(camera_params_);
-  LOG(INFO) << "IMU Params: " << config::toString(imu_params_);
+  // LOG(INFO) << "IMU Params: " << config::toString(imu_params_);
 
   // TODO: currently cannot print camera params becuase we use intermediate
   // variables in the loading process!!

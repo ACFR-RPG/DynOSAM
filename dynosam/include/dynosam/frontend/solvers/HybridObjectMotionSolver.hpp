@@ -10,7 +10,7 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/MotionKeyFrame.hpp"
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 
 namespace dyno {
 

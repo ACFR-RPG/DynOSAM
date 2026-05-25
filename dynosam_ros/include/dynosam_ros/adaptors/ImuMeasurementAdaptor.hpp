@@ -32,7 +32,7 @@
 
 #include <glog/logging.h>
 
-#include <dynosam/frontend/imu/ImuMeasurements.hpp>
+#include <dynosam_sensors/ImuMeasurements.hpp>
 
 #include "dynosam_ros/RosUtils.hpp"
 #include "rclcpp/type_adapter.hpp"

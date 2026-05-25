@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
-#include "dynosam_cv/SensorRig.hpp"
+#include "dynosam_sensors/SensorRig.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 

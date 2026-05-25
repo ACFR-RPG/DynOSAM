@@ -7,7 +7,7 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/CsvParser.hpp"
-#include "dynosam_cv/RGBDCamera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

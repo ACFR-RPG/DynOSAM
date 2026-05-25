@@ -82,12 +82,16 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
   }
   const Timestamp& timestamp = packet->timestamp();
   ImuMeasurements::Optional imu_measurements;
+
+  // TEST FOR IMU ONLy
+  bool should_use = false;
   imu_measurements.emplace();
   FrameAction action =
       getTimeSyncedImuMeasurements(timestamp, &(*imu_measurements));
   switch (action) {
     case FrameAction::Use:
       CHECK(imu_measurements);
+      should_use = true;
       break;
     case FrameAction::Wait:
     case FrameAction::Drop:
@@ -95,8 +99,12 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
       break;
   }
 
-  return std::make_shared<VIFrontendInput>(packet, ground_truth_packet,
-                                           imu_measurements);
+  if (should_use) {
+    return std::make_shared<VIFrontendInput>(packet, ground_truth_packet,
+                                             imu_measurements);
+  } else {
+    return nullptr;
+  }
 }
 
 SharedGroundTruth DataInterfacePipeline::getSharedGroundTruth() const {
@@ -175,6 +183,8 @@ ImuInterfaceHandler::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
           imu_timestamp_last_frame, imu_timestamp_curr_frame,
           &imu_meas->timestamps_, &imu_meas->acc_gyr_);
   // logQueryResult(timestamp, query_result);
+
+  LOG(INFO) << "IMU QUERY RESULT: " << static_cast<int>(query_result);
 
   switch (query_result) {
     case ThreadsafeImuBuffer::QueryResult::kDataAvailable:

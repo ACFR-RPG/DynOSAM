@@ -6,10 +6,10 @@
 #include <variant>
 #include <vector>
 
-#include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam_cv/Camera.hpp"
-#include "dynosam_cv/SensorRig.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImuParams.hpp"
+#include "dynosam_sensors/SensorRig.hpp"
 #include "rclcpp/node.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2_ros/buffer.h"
@@ -122,6 +122,7 @@ class SensorSystem : public CanonicalSensorRig {
   CameraParams getCanonicalParams() const override;
   ReferenceFrames getReferenceFrames() const override;
   DepthRigType depthRigType() const override;
+  ImuCalibration getImuParams() const override;
 
   std::string streamName(unsigned int stream_index) const;
   StreamConfig::Types streamType(unsigned int stream_index) const;
@@ -139,7 +140,13 @@ class SensorSystem : public CanonicalSensorRig {
   // NOTE: reference_frames_ must be set correctly before using
   CameraParams loadSingleParamsFromROS(const StreamConfig& config) const;
 
-  ImuParams loadImuParams(const gtsam::Pose3& T_CI) const;
+  ImuCalibration loadImuCalibration(const gtsam::Pose3& T_CI,
+                                    const std::string& imu_ref_frame) const;
+
+  bool loadImuParamsFromRos(ImuParams& imu_params) const;
+  bool loadImuParamsFromConfig(ImuParams& imu_params) const;
+
+  std::string getImuFrame(const std::string& default_imu_frame) const;
 
   std::string getCameraOpticalFrame(
       const std::string& name, const std::string& default_optical_frame) const;
@@ -195,6 +202,8 @@ class SensorSystem : public CanonicalSensorRig {
   CalibrateDepthRig calibrate_depth_rig_;
 
   ReferenceFrames reference_frames_;
+
+  ImuCalibration imu_calibration_;
   //! Transform from the IMU frame to the Robot frame
   gtsam::Pose3 T_RI_;
 };

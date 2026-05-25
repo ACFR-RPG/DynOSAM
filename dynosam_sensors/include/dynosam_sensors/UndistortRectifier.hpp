@@ -52,7 +52,7 @@
 #include <optional>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 
 namespace dyno {
 

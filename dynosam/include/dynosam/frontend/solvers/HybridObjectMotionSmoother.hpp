@@ -13,13 +13,13 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/RGBDCamera.hpp"
 #include "dynosam_opt/ISAM2.hpp"  //FOR TESTING!!!
 #include "dynosam_opt/ISAM2Result.hpp"
 #include "dynosam_opt/ISAM2UpdateParams.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
 #include "dynosam_opt/Map.hpp"
 #include "dynosam_opt/Symbols.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

@@ -30,10 +30,22 @@
 
 #pragma once
 
-#include "dynosam/frontend/imu/Imu-Definitions.hpp"
+#include <glog/logging.h>
+#include <gtsam/base/Matrix.h>
+
+#include <Eigen/Dense>
+
 #include "dynosam_common/Types.hpp"  //for timestamp
 
 namespace dyno {
+
+// First 3 elements correspond to acceleration data [m/s^2]
+// while the 3 last correspond to angular velocities [rad/s].
+using ImuAccGyr = Eigen::Matrix<double, 6, 1>;
+using ImuAcc = Eigen::Matrix<double, 3, 1>;
+using ImuGyr = Eigen::Matrix<double, 3, 1>;
+
+using ImuAccGyrs = Eigen::Matrix<double, 6, Eigen::Dynamic>;
 
 struct ImuMeasurement {
   ImuMeasurement() = default;

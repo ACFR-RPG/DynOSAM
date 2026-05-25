@@ -1,4 +1,4 @@
-#include "dynosam_cv/SensorRig.hpp"
+#include "dynosam_sensors/SensorRig.hpp"
 
 namespace dyno {
 

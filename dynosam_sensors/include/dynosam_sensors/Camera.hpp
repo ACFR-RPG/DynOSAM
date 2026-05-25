@@ -34,7 +34,7 @@
 #include <gtsam/geometry/PinholeCamera.h>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 
 namespace dyno {
 

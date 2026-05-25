@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>dynosam_cv</name>
+  <name>dynosam_sensors</name>
   <version>0.0.1</version>
   <description>DynOSAM Vision Common package</description>
 

@@ -38,7 +38,7 @@
 #include "dynosam_common/RealtimeOutput.hpp"
 #include "dynosam_common/SensorModels.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 
 namespace dyno {
 

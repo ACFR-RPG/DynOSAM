@@ -206,6 +206,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   std::optional<gtsam::NavState> imu_propogated_nav_state_k =
       tryPropogateImu(input, nav_state_lkf_.state, pim);
 
+  imu_propogated_nav_state_k->print("NAV STATEE ");
+
   //! Rotation from k-1 to k in k-1
   std::optional<gtsam::Rot3> R_km1_k;
   if (imu_propogated_nav_state_k) {
@@ -238,6 +240,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // if(input->ground_truth_packet) {
   //   frame_k->T_world_camera_ = input->ground_truth_packet->X_world_;
   // }
+  frame_k->T_world_camera_ = imu_propogated_nav_state_k->pose();
 
   // we currently use the frame pose as the nav state - this value can come from
   // either the VO OR the IMU, depending on the result from the

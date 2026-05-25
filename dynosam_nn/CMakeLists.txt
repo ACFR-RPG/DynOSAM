@@ -14,7 +14,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(MPI REQUIRED)
 find_package(dynosam_common REQUIRED)
-find_package(dynosam_cv REQUIRED)
+find_package(dynosam_sensors REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(ament_index_cpp REQUIRED)
@@ -87,7 +87,7 @@ message("Final CMAKE_CUDA_ARCHITECTURES set to: ${CMAKE_CUDA_ARCHITECTURES}")
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
-  ${dynosam_cv_INCLUDE_DIRS}
+  ${dynosam_sensors_INCLUDE_DIRS}
   ${ament_index_cpp_INCLUDE_DIRS}
   ${Python3_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
@@ -123,7 +123,7 @@ PUBLIC
    ${Python3_LIBRARIES}
    ${ament_index_cpp_TARGETS}
   dynosam_common::dynosam_common
-  dynosam_cv::dynosam_cv
+  dynosam_sensors::dynosam_sensors
 PRIVATE
   TensorRT::TensorRT
   CUDA::cudart

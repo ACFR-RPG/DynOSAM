@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(dynosam_cv)
+project(dynosam_sensors)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 
@@ -29,6 +29,7 @@ add_library(${PROJECT_NAME} SHARED
     src/UndistortRectifier.cc
     src/Feature.cc
     src/SensorRig.cc
+    src/ImuParams.cc
 
 )
 

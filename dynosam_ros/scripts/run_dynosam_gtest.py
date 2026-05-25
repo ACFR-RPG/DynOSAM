@@ -89,7 +89,7 @@ def run_tests_for_package(package_name, unknown_args):
     for exec in executables:
         run_executable(exec, unknown_args)
 
-possible_packages = ["dynosam", "dynosam_ros", "dynosam_cv", "dynosam_common", "dynosam_opt"]
+possible_packages = ["dynosam", "dynosam_ros", "dynosam_sensors", "dynosam_common", "dynosam_opt"]
 
 
 if __name__ == "__main__":

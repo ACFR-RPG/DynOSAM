@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/ImageContainer.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
 
 #include <exception>
 #include <opencv4/opencv2/opencv.hpp>

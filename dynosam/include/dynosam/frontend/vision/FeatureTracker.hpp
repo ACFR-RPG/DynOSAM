@@ -37,8 +37,8 @@
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
-#include "dynosam_cv/Camera.hpp"
-#include "dynosam_cv/Feature.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/Feature.hpp"
 
 // #include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"

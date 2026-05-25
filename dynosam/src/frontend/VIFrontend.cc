@@ -102,7 +102,7 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
       tracker_(params.frontend_params_, camera_, display_queue),
       optical_flow_pose_solver_(OpticalFlowAndPoseSolverParams{},
                                 DepthUpdater(&tracker_)),
-      imu_frontend_(params.frontend_params_.imu_params) {
+      imu_frontend_(params.frontend_params_.imu_calib) {
   rgbd_camera_ = camera_->safeGetRGBDCamera();
   CHECK_NOTNULL(rgbd_camera_);
 

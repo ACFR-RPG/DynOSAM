@@ -4,7 +4,7 @@
 #include "dynosam_common/MotionKeyFrame.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/RGBDCamera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

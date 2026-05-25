@@ -27,7 +27,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(dynosam_common REQUIRED)
-find_package(dynosam_cv REQUIRED)
+find_package(dynosam_sensors REQUIRED)
 find_package(dynosam_opt REQUIRED)
 find_package(dynosam_nn REQUIRED)
 
@@ -44,7 +44,7 @@ endif()
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
-  ${dynosam_cv_INCLUDE_DIRS}
+  ${dynosam_sensors_INCLUDE_DIRS}
   ${dynosam_opt_INCLUDE_DIRS}
   ${dynosam_nn_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
@@ -72,7 +72,6 @@ add_library(${PROJECT_NAME} SHARED
 
   src/frontend/imu/ThreadSafeImuBuffer.cc
   src/frontend/imu/ImuFrontend.cc
-  src/frontend/imu/ImuParams.cc
 
   src/frontend/solvers/PnPRansac.cc
   src/frontend/solvers/HybridObjectMotionSRIF.cc
@@ -144,7 +143,7 @@ target_link_libraries(${PROJECT_NAME}
   ${std_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
   dynosam_common::dynosam_common
-  dynosam_cv::dynosam_cv
+  dynosam_sensors::dynosam_sensors
   dynosam_opt::dynosam_opt
   dynosam_nn::dynosam_nn
   # rclcpp::rclcpp
@@ -183,7 +182,7 @@ ament_export_libraries(${PROJECT_NAME}
   # TBB::tbb
   # TBB::tbbmalloc
   dynosam_common::dynosam_common
-  dynosam_cv::dynosam_cv
+  dynosam_sensors::dynosam_sensors
   dynosam_opt::dynosam_opt
   dynosam_nn::dynosam_nn
 )
@@ -202,7 +201,7 @@ set(DYNO_EXPORT_DEPS
   # eigen3_cmake_module
   # Eigen3
   dynosam_common
-  dynosam_cv
+  dynosam_sensors
   dynosam_opt
   dynosam_nn
 )

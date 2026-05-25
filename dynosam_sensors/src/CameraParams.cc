@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 
 #include <glog/logging.h>
 

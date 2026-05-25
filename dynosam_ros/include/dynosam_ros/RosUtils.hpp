@@ -34,8 +34,7 @@
 
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/CameraParams.hpp"
-
+#include "dynosam_sensors/CameraParams.hpp"
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/parameter.hpp"
@@ -44,10 +43,16 @@
 
 namespace dyno {
 
+template <typename Msg, class Rep = int64_t, class Period = std::milli>
+inline void waitAndGetMessage(
+    Msg &msg, std::shared_ptr<rclcpp::Node> node, const std::string &topic,
+    const std::chrono::duration<Rep, Period> &time_to_wait =
+        std::chrono::duration<Rep, Period>(-1));
+
 template <typename Adaptor, class Rep = int64_t, class Period = std::milli>
 inline typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
-    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
-    const std::chrono::duration<Rep, Period>& time_to_wait =
+    std::shared_ptr<rclcpp::Node> node, const std::string &topic,
+    const std::chrono::duration<Rep, Period> &time_to_wait =
         std::chrono::duration<Rep, Period>(-1));
 
 /**
@@ -72,8 +77,8 @@ inline typename Adaptor::custom_type waitAndGetMessageViaAdaptor(
  */
 template <class Rep = int64_t, class Period = std::milli>
 inline CameraParams waitAndSetCameraParams(
-    std::shared_ptr<rclcpp::Node> node, const std::string& topic,
-    const std::chrono::duration<Rep, Period>& time_to_wait_topic =
+    std::shared_ptr<rclcpp::Node> node, const std::string &topic,
+    const std::chrono::duration<Rep, Period> &time_to_wait_topic =
         std::chrono::duration<Rep, Period>(-1));
 
 /**

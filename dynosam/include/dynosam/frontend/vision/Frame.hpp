@@ -36,10 +36,10 @@
 #include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/Camera.hpp"
-#include "dynosam_cv/Feature.hpp"
-#include "dynosam_cv/ImageContainer.hpp"
-#include "dynosam_cv/UndistortRectifier.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/Feature.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
+#include "dynosam_sensors/UndistortRectifier.hpp"
 
 namespace dyno {
 

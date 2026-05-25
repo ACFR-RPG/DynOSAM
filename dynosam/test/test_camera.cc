@@ -34,7 +34,7 @@
 #include <gtsam/base/numericalDerivative.h>
 
 #include "dynosam_common/utils/Numerical.hpp"
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 #include "internal/helpers.hpp"
 
 using namespace dyno;

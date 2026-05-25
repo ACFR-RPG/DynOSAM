@@ -42,7 +42,7 @@
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/Tuple.hpp"
-#include "dynosam_cv/ImageTypes.hpp"
+#include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno {
 

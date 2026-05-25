@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/UndistortRectifier.hpp"
+#include "dynosam_sensors/UndistortRectifier.hpp"
 
 #include <eigen3/Eigen/Dense>
 #include <opencv4/opencv2/calib3d.hpp>

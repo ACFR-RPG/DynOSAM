@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/ImageTypes.hpp"
+#include "dynosam_sensors/ImageTypes.hpp"
 
 #include <opencv4/opencv2/opencv.hpp>
 

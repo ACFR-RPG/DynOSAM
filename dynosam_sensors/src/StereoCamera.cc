@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/StereoCamera.hpp"
+#include "dynosam_sensors/StereoCamera.hpp"
 
 #include <glog/logging.h>
 

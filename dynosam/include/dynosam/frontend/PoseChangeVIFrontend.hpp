@@ -5,7 +5,7 @@
 #include "dynosam/frontend/PoseChangeVIFrontendViz.hpp"
 #include "dynosam/frontend/VIFrontend.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSolver.hpp"
-#include "dynosam_cv/RGBDCamera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

@@ -11,7 +11,7 @@
 #include "dynosam_common/RealtimeOutput.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/utils/Variant.hpp"
-#include "dynosam_cv/RGBDCamera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

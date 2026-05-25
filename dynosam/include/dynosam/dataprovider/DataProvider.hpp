@@ -6,14 +6,14 @@
 
 #include <functional>
 
-#include "dynosam/frontend/imu/ImuMeasurements.hpp"
-#include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/CameraParams.hpp"
-#include "dynosam_cv/ImageContainer.hpp"
-#include "dynosam_cv/SensorRig.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
+#include "dynosam_sensors/ImuParams.hpp"
+#include "dynosam_sensors/SensorRig.hpp"
 
 namespace dyno {
 
@@ -115,8 +115,14 @@ class DataProvider {
    *
    */
   CameraParams getCameraParams() const;
-
-  virtual ImuParams::Optional getImuParams() const { return {}; }
+  /**
+   * @brief Get the ImuCalibration as provided by the sensor rig.
+   *
+   * Will be default of IMU is not enabled.
+   *
+   * @return ImuCalibration
+   */
+  ImuCalibration getImuParams() const;
 
  protected:
   // This class does not know when the data finishes finishes (indeed this is

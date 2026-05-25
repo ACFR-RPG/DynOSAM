@@ -38,7 +38,7 @@
 #include "dynosam/frontend/vision/ORBextractor.hpp"
 #include "dynosam/frontend/vision/OccupancyGrid2D.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 
 namespace dyno {
 

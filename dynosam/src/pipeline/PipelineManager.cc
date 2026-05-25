@@ -105,20 +105,9 @@ DynoPipelineManager::DynoPipelineManager(
   /// NOTE: no need to update the camera params like the imu params as we parse
   /// the camera params into the loadPipeline functions separately!
 
-  // TODO: fix!
-  ImuParams imu_params;
-  if (params_.preferDataProviderImuParams() &&
-      data_loader_->getImuParams().has_value()) {
-    LOG(INFO) << "Using imu params from DataProvider, not the config in the "
-                 "ImuParams.yaml!";
-    imu_params = *data_loader_->getImuParams();
-  } else {
-    LOG(INFO) << "Using imu params specified in ImuParams.yaml!";
-    imu_params = params_.imu_params_;
-  }
-
+  ImuCalibration imu_calib = data_loader_->getImuParams();
   // update the imu params that will actually get sent to the frontend
-  params_.frontend_params_.imu_params = imu_params;
+  params_.frontend_params_.imu_calib = imu_calib;
 
   loadPipelines(camera_params, external_hooks, frontend_display,
                 backend_display, factory);

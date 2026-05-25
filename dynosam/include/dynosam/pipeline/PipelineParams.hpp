@@ -43,7 +43,7 @@
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Macros.hpp"
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 
 namespace dyno {
 
@@ -115,11 +115,8 @@ class DynoParams {
   PipelineParams pipeline_params_;
   FrontendParams frontend_params_;
   BackendParams backend_params_;
-
   // TODO: remove
-  CameraParams camera_params_;
-  // TODO: remove
-  ImuParams imu_params_;
+  // ImuCalibration imu_params_;
 
   // TODO: remove
   FrontendType frontend_type_ = FrontendType::kRGBD;

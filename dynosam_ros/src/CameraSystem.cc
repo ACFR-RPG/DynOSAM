@@ -5,11 +5,13 @@
 
 #include <deque>
 #include <dynosam_common/Types.hpp>
-#include <dynosam_cv/StereoCamera.hpp>
+#include <dynosam_common/utils/FileSystem.hpp>
+#include <dynosam_sensors/StereoCamera.hpp>
 #include <unordered_set>
 
 #include "dynosam_ros/RosUtils.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 
 namespace dyno {
 
@@ -242,6 +244,8 @@ ReferenceFrames SensorSystem::getReferenceFrames() const {
 
 DepthRigType SensorSystem::depthRigType() const { return depth_rig_type_; }
 
+ImuCalibration SensorSystem::getImuParams() const { return imu_calibration_; }
+
 std::string SensorSystem::streamName(unsigned int stream_index) const {
   return configs_.at(stream_index).name;
 }
@@ -294,12 +298,8 @@ void SensorSystem::finalise() {
             << reference_frames_.camera_frame;
 
   if (enable_imu_) {
-    reference_frames_.imu_frame =
-        ParameterConstructor(node_.get(), "imu_frame",
-                             reference_frames_.imu_frame)
-            .description("ROS frame id for the IMU frame")
-            .finish()
-            .get<std::string>();
+    reference_frames_.imu_frame = getImuFrame(reference_frames_.imu_frame);
+    LOG(INFO) << "Using imu frame: " << reference_frames_.imu_frame;
 
     const auto& robot_frame = reference_frames_.base_frame;
     const auto& imu_frame = reference_frames_.imu_frame;
@@ -311,6 +311,10 @@ void SensorSystem::finalise() {
     const auto& camera_frame = reference_frames_.camera_frame;
     gtsam::Pose3 T_CI;
     getLatestTransform(camera_frame, imu_frame, T_CI);
+
+    LOG(INFO) << "T_CI " << T_CI;
+
+    imu_calibration_ = loadImuCalibration(T_CI, reference_frames_.imu_frame);
   }
 
   camera_params_.push_back(main_camera_params);
@@ -408,9 +412,52 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
   return params;
 }
 
-ImuParams SensorSystem::loadImuParams(const gtsam::Pose3& T_CI) const {
-  return ImuParams{};
+ImuCalibration SensorSystem::loadImuCalibration(
+    const gtsam::Pose3& T_CI, const std::string& imu_ref_frame) const {
+  ImuCalibration imu_calibration;
+  // if(load_cameras_from_ros_) {
+  //   loadImuParamsFromRos(static_cast<ImuParams&>(imu_calibration));
+  // }
+  // else {
+  //   LOG(FATAL) << "Loading imu calibration from file not implemented";
+  // }
+  loadImuParamsFromConfig(static_cast<ImuParams&>(imu_calibration));
+
+  imu_calibration.T_CI = T_CI;
+  imu_calibration.reference_frame = imu_ref_frame;
+  return imu_calibration;
 }
+
+bool SensorSystem::loadImuParamsFromRos(ImuParams& imu_params) const {}
+
+bool SensorSystem::loadImuParamsFromConfig(ImuParams& imu_params) const {
+  const std::filesystem::path params_folder_path(path_to_params_);
+  const auto imu_file_path = params_folder_path / "ImuParams.yaml";
+  utils::throwExceptionIfPathInvalid(imu_file_path);
+
+  imu_params = config::fromYamlFile<ImuParams>(imu_file_path);
+  return true;
+}
+
+std::string SensorSystem::getImuFrame(
+    const std::string& default_imu_frame) const {
+  std::string imu_frame =
+      ParameterConstructor(node_.get(), "imu_frame", "")
+          .description(
+              "ROS frame id for the IMU frame. If empty or not provided, "
+              "imu frame will be set using the imu topic header")
+          .finish()
+          .get<std::string>();
+
+  if (imu_frame.empty()) {
+    LOG(INFO) << "No imu frame provided by ROS params. Using imu topic header.";
+    sensor_msgs::msg::Imu imu_msg;
+    waitAndGetMessage(imu_msg, node_, "/dynosam/imu");
+    imu_frame = imu_msg.header.frame_id;
+  }
+
+  return imu_frame;
+};
 
 std::string SensorSystem::getCameraOpticalFrame(
     const std::string& name, const std::string& default_optical_frame) const {

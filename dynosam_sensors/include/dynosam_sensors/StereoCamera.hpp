@@ -36,9 +36,9 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam_cv/Camera.hpp"
-#include "dynosam_cv/CameraParams.hpp"
-#include "dynosam_cv/UndistortRectifier.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
+#include "dynosam_sensors/UndistortRectifier.hpp"
 
 namespace dyno {
 

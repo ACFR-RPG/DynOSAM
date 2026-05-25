@@ -26,7 +26,8 @@ void printRefcount(const cv::cuda::GpuMat& gpu_mat,
 //   struct Internal {
 //     Internal(Buffer* b) : buffer(b) {}
 //     ~Internal() {
-//       LOG(INFO) << "Destricting internal with ref count " << buffer->refCount();
+//       LOG(INFO) << "Destricting internal with ref count " <<
+//       buffer->refCount();
 //     }
 
 //     Buffer* buffer;
@@ -36,10 +37,11 @@ void printRefcount(const cv::cuda::GpuMat& gpu_mat,
 //   Internal internal_;
 //   cv::cuda::GpuMat gpu_mat;
 
-//   Buffer(GpuContext* context) : context_(context), internal_(this), gpu_mat() {}
-//   Buffer(GpuContext* context, int rows, int cols, int type)
+//   Buffer(GpuContext* context) : context_(context), internal_(this), gpu_mat()
+//   {} Buffer(GpuContext* context, int rows, int cols, int type)
 //       : context_(context), internal_(this), gpu_mat(rows, cols, type) {}
-//   ~Buffer() { LOG(INFO) << "Destricting buffer with ref coutn " << refCount(); }
+//   ~Buffer() { LOG(INFO) << "Destricting buffer with ref coutn " <<
+//   refCount(); }
 
 //   int refCount() const {
 //     if (gpu_mat.refcount == nullptr)

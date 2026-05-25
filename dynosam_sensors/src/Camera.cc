@@ -28,11 +28,11 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 
 #include <glog/logging.h>
 
-#include "dynosam_cv/RGBDCamera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

@@ -44,9 +44,9 @@
 #include "dynosam/pipeline/PipelineManager.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_common/viz/Colour.hpp"
-#include "dynosam_cv/Camera.hpp"
-#include "dynosam_cv/ImageContainer.hpp"
 #include "dynosam_nn/PyObjectDetector.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
 
 DEFINE_string(path_to_kitti, "/root/data/kitti", "Path to KITTI dataset");
 // TODO: (jesse) many better ways to do this with ros - just for now

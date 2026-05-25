@@ -9,7 +9,7 @@
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 
 namespace dyno {
 

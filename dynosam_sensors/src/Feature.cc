@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_cv/Feature.hpp"
+#include "dynosam_sensors/Feature.hpp"
 
 #include <glog/logging.h>
 

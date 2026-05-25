@@ -1,7 +1,8 @@
 #pragma once
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
+#include "dynosam_sensors/ImuParams.hpp"
 
 namespace dyno {
 
@@ -26,6 +27,17 @@ class CanonicalSensorRig {
   virtual CameraParams getCanonicalParams() const = 0;
   virtual ReferenceFrames getReferenceFrames() const = 0;
   virtual DepthRigType depthRigType() const = 0;
+
+  /**
+   * @brief Get the ImuCalibration.
+   * Extrinsics should represent the transform from the imu frame
+   * to the canonical camera frame (ie. T_CI) since we do all estimate in camera
+   * (optical) frame. If no IMU available we still return params.
+   *
+   *
+   * @return ImuCalibration
+   */
+  virtual ImuCalibration getImuParams() const { return ImuCalibration{}; }
 
   /**
    * @brief Get the extrinsics transform between between the base (robot) frame

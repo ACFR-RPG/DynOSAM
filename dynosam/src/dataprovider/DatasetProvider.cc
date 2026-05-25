@@ -38,12 +38,20 @@ namespace dyno {
 
 BasicDynoSensorRig::BasicDynoSensorRig(const CameraParams& canonical_params,
                                        const DepthRigType depth_rig_type,
+                                       const ImuCalibration& imu_calibration,
                                        const ReferenceFrames& reference_frames)
     : canonical_params_(canonical_params),
       depth_rig_type_(depth_rig_type),
+      imu_calibration_(imu_calibration),
       reference_frames_(reference_frames) {
   // by default updata extrinsics to rotate optical frame to robotic frame
   canonical_params_.setExtrinsics(openCVToRobotTransform());
+
+  // should not have to apply any rotation to the IMU calibration
+  // becuase the canonical params extrinsics are ONLY used for visualisation
+  // output and we assume the the IMU calibration has extrinscis that will
+  // transform the IMU data into the canonical params frame prior to extrinsics
+  // application
 }
 
 }  // namespace dyno

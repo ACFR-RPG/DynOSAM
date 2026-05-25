@@ -39,7 +39,7 @@
 
 #include "dynosam/frontend/vision/VisionTools.hpp"  //for getObjectLabels
 #include "dynosam_common/utils/OpenCVUtils.hpp"
-#include "dynosam_cv/ImageTypes.hpp"
+#include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno {
 

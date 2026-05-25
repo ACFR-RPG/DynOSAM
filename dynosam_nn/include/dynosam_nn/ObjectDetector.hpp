@@ -4,7 +4,7 @@
 
 #include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/utils/Macros.hpp"
-#include "dynosam_cv/ImageTypes.hpp"
+#include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno {
 

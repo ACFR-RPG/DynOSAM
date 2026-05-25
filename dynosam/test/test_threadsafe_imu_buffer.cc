@@ -68,9 +68,8 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
-#include "dynosam/frontend/imu/Imu-Definitions.hpp"
-#include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
 
 namespace dyno {
 

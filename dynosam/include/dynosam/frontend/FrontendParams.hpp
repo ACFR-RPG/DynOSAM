@@ -33,11 +33,11 @@
 #include <cmath>
 #include <string>
 
-#include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam/frontend/solvers/ConsecutiveFrameObjectMotionSolver.hpp"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"  //for ImageTracksParams
 #include "dynosam/frontend/vision/TrackerParams.hpp"
+#include "dynosam_sensors/ImuParams.hpp"
 
 namespace dyno {
 
@@ -72,7 +72,7 @@ struct FrontendParams {
 
   TrackerParams tracker_params = TrackerParams();
   ImageTracksParams image_tracks_vis_params = ImageTracksParams();
-  ImuParams imu_params = ImuParams();
+  ImuCalibration imu_calib = ImuCalibration();
 };
 
 void declare_config(FrontendParams& config);

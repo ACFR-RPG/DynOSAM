@@ -33,9 +33,9 @@
 #include <gtsam/navigation/ImuBias.h>
 #include <gtsam/navigation/ImuFactor.h>
 
-#include "dynosam/frontend/imu/ImuMeasurements.hpp"
-#include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
+#include "dynosam_sensors/ImuParams.hpp"
 
 // TODO: eventually replace with Kimera or otherwise
 namespace dyno {
@@ -47,7 +47,7 @@ class ImuFrontend {
 
   DYNO_POINTER_TYPEDEFS(ImuFrontend)
 
-  ImuFrontend(const ImuParams& imu_params);
+  ImuFrontend(const ImuCalibration& imu_calib);
   ImuFrontend& operator=(const ImuFrontend&) = delete;
   ImuFrontend(ImuFrontend&&) noexcept = default;
   ImuFrontend& operator=(ImuFrontend&&) noexcept = default;
@@ -68,7 +68,7 @@ class ImuFrontend {
   PimUniquePtr copyPimUnique() const;
 
  private:
-  ImuParams params_;
+  ImuCalibration params_;
   PimUniquePtr pim_ = nullptr;
 };
 

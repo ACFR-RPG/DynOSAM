@@ -69,10 +69,9 @@
 #include <mutex>
 #include <utility>
 
-#include "dynosam/frontend/imu/Imu-Definitions.hpp"
-#include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
 
 namespace dyno {
 

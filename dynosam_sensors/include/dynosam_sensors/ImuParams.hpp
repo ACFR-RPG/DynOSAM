@@ -28,17 +28,42 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/frontend/imu/ImuParams.hpp"
+#pragma once
 
 #include <config_utilities/config_utilities.h>
-#include <config_utilities/parsing/yaml.h>
+#include <gtsam/base/Vector.h>
+
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 
-void declare_config(ImuParams& config) {
-  using namespace config;
+/** Separate IMU params struct to hold values that may be loaded separate to the
+ * sensors calibration  */
+struct ImuParams {
+  DYNO_POINTER_TYPEDEFS(ImuParams)
 
-  name("ImuParams");
-}
+  double init_bias_sigma = 0.0;
+  //! sigma for gyro covariance [rad/s/sqrt(Hz)] (gyro "white noise")
+  double gyro_noise_density = 0.0;
+  //! sigma for gyro bias covariance [rad/s^2/sqrt(Hz)] (gyro bias diffusion)
+  double gyro_random_walk = 0.0;
+  //! sigma for accel covariance [m/s^2/sqrt(Hz)] (accel "white noise")
+  double acc_noise_density = 0.0;
+  //! sigma for accel bias covariance [m/s^3/sqrt(Hz)] (accel bias diffusion)
+  double acc_random_walk = 0.0;
+
+  double imu_integration_sigma = 0.0;
+
+  gtsam::Vector3 n_gravity = gtsam::Vector3::Zero();
+};
+
+struct ImuCalibration : public ImuParams {
+  // In our case this is actually going to be the transform into the camera
+  // frame (which we consider as the body frame!!!)
+  gtsam::Pose3 T_CI;
+  std::string reference_frame;
+};
+
+void declare_config(ImuParams& config);
 
 }  // namespace dyno

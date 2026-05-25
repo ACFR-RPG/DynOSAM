@@ -159,14 +159,14 @@ def run_viodes():
 
 #     run_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    # run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--init_object_pose_from_gt=false")
+    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--init_object_pose_from_gt=false")
 # # zero_elements_ratio
 #     run_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
 
     # run_experiment_sequences("/root/data/VIODE/parking_lot/mid", "parking_lot_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
-    run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=false")
 
 
 def run_omd():
@@ -424,13 +424,13 @@ def run_uts_tech_lab_solver_comparison_test():
 
 if __name__ == '__main__':
     run_post_analysis = False
-    run_hybrid_solver_comparison_omd()
+    # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    # run_viodes()
+    run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

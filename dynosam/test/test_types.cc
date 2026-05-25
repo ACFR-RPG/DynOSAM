@@ -40,7 +40,7 @@
 #include "dynosam_common/utils/Statistics.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/utils/Variant.hpp"
-#include "dynosam_cv/Feature.hpp"
+#include "dynosam_sensors/Feature.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
 

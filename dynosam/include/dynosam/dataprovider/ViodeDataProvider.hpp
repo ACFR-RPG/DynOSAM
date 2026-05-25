@@ -30,10 +30,10 @@
 
 #include "dynosam/dataprovider/DatasetProvider.hpp"
 #include "dynosam/frontend/VIFrontendInput.hpp"
-#include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
 
 namespace dyno {
 
@@ -51,11 +51,8 @@ class ViodeLoader : public ViodeProvider {
 
   CanonicalSensorRig::Ptr sensorRig() const override { return sensor_rig_; }
 
-  ImuParams::Optional getImuParams() const override { return imu_params_; }
-
  private:
   BasicDynoSensorRig::Ptr sensor_rig_;
-  ImuParams imu_params_;
 };
 
 }  // namespace dyno

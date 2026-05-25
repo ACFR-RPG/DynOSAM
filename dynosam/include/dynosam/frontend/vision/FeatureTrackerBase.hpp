@@ -36,7 +36,7 @@
 #include "dynosam/frontend/vision/TrackerParams.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 
 namespace dyno {
 

@@ -38,6 +38,10 @@ CameraParams DataProvider::getCameraParams() const {
   return this->sensorRig()->getCanonicalParams();
 }
 
+ImuCalibration DataProvider::getImuParams() const {
+  return this->sensorRig()->getImuParams();
+}
+
 DataProvider::~DataProvider() { shutdown(); }
 
 void DataProvider::shutdown() {

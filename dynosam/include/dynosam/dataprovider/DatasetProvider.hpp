@@ -280,6 +280,7 @@ class BasicDynoSensorRig : public CanonicalSensorRig {
 
   BasicDynoSensorRig(const CameraParams& canonical_params,
                      const DepthRigType depth_rig_type,
+                     const ImuCalibration& imu_calibration = {},
                      const ReferenceFrames& reference_frames = {});
 
   inline CameraParams getCanonicalParams() const override {
@@ -290,9 +291,14 @@ class BasicDynoSensorRig : public CanonicalSensorRig {
     return reference_frames_;
   }
 
+  inline ImuCalibration getImuParams() const override {
+    return imu_calibration_;
+  }
+
  private:
   CameraParams canonical_params_;
   DepthRigType depth_rig_type_;
+  ImuCalibration imu_calibration_;
   ReferenceFrames reference_frames_;
 };
 

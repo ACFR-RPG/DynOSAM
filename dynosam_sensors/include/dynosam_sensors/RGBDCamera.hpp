@@ -35,8 +35,8 @@
 #include <gtsam/geometry/StereoCamera.h>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_cv/Camera.hpp"
-#include "dynosam_cv/Feature.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/Feature.hpp"
 
 namespace dyno {
 

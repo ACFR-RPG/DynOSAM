@@ -37,7 +37,7 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
-#include "dynosam_cv/Camera.hpp"
+#include "dynosam_sensors/Camera.hpp"
 
 namespace dyno {
 

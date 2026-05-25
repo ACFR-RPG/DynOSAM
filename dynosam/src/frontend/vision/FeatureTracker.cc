@@ -43,8 +43,8 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_cv/RGBDCamera.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 

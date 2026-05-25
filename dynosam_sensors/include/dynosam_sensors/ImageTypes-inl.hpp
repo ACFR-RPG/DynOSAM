@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "dynosam_cv/ImageTypes.hpp"
+#include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno {
 

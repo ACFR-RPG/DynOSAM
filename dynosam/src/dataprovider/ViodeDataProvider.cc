@@ -31,7 +31,6 @@
 #include "dynosam/dataprovider/ViodeDataProvider.hpp"
 
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/frontend/imu/Imu-Definitions.hpp"
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 #include "dynosam/frontend/vision/StereoMatcher.hpp"
 #include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
@@ -39,7 +38,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
-#include "dynosam_cv/CameraParams.hpp"
+#include "dynosam_sensors/CameraParams.hpp"
 
 namespace dyno {
 
@@ -414,11 +413,12 @@ class ViodeAllLoader {
 
     static const gtsam::Rot3 R_body_camera(
         (gtsam::Matrix3() << 0, 0, 1, 1, 0, 0, 0, 1, 0).finished());
-    imu_params_.body_P_sensor =
+    imu_params_.T_CI =
         gtsam::Pose3(R_body_camera.inverse(), gtsam::Point3(0, 0, 0));
 
     imu_params_.imu_integration_sigma = 1e-3;
     imu_params_.n_gravity = gtsam::Point3(0, 9.8, 0);
+    imu_params_.reference_frame = "imu_frame";
   }
 
  public:
@@ -442,7 +442,7 @@ class ViodeAllLoader {
   // left camera params
   CameraParams camera_params_;
 
-  ImuParams imu_params_;
+  ImuCalibration imu_params_;
 
   StereoCamera::Ptr stereo_camera_;
   StereoMatcher::Ptr stereo_matcher_;
@@ -469,12 +469,17 @@ ViodeLoader::ViodeLoader(const fs::path& dataset_path)
   auto timestamp_loader = std::make_shared<ViodeTimestampLoader>(loader);
 
   auto left_camera_params = loader->getLeftCameraParams();
-  sensor_rig_ = std::make_shared<BasicDynoSensorRig>(left_camera_params,
-                                                     DepthRigType::Stereo);
 
-  imu_params_ = loader->imu_params_;
-  CHECK(getImuParams());
+  // the IMU calibration should have extrinsics that rotate the IMU frame ->
+  // canonical frame
+  auto imu_calibration = loader->imu_params_;
 
+  ReferenceFrames reference_frames;
+  reference_frames.imu_frame = imu_calibration.reference_frame;
+
+  sensor_rig_ = std::make_shared<BasicDynoSensorRig>(
+      left_camera_params, DepthRigType::Stereo, imu_calibration,
+      reference_frames);
   auto rgb_loader = std::make_shared<FunctionalDataFolder<cv::Mat>>(
       [loader](size_t idx) { return loader->getRGB(idx); });
 

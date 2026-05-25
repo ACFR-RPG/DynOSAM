@@ -31,6 +31,32 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
          return this->readMaskRosImage(msg);
        }}};
 
+  // as a potentially temporary solution start the imu subscriber before the
+  // images so we at least have imu measurements before the first image should
+  // habdle this better in the data-provider
+  if (sensor_system_->imuEnabled()) {
+    RCLCPP_INFO_STREAM(node_->get_logger(), "Imu enabled. Subscribing...");
+    imu_callback_group_ =
+        node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+    rclcpp::SubscriptionOptions imu_sub_options;
+    // imu_sub_options.callback_group = imu_callback_group_;
+
+    imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+        "/dynosam/imu", rclcpp::SensorDataQoS(),
+        [&](const dyno::ImuMeasurement& imu) -> void {
+          if (!imu_single_input_callback_) {
+            RCLCPP_ERROR_THROTTLE(
+                node_->get_logger(), *node_->get_clock(), 1000,
+                "Imu callback triggered but "
+                "imu_single_input_callback_ is not registered!");
+            return;
+          }
+          imu_single_input_callback_(imu);
+        },
+        imu_sub_options);
+  }
+
   int queue_size = ParameterConstructor(node_.get(), "image_queue_size", 1000)
                        .description("Queue size for the image subscriber(s)")
                        .finish()
@@ -55,28 +81,6 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
         std::bind(&Subscriber::imageCallback, this, std::placeholders::_1, i),
         image_transport::ImageTransport::VoidPtr(), nullptr,
         subscriber_options);
-  }
-
-  if (sensor_system_->imuEnabled()) {
-    imu_callback_group_ =
-        node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-
-    rclcpp::SubscriptionOptions imu_sub_options;
-    imu_sub_options.callback_group = imu_callback_group_;
-
-    imu_sub_ = node_->create_subscription<ImuAdaptedType>(
-        "/dynosam/imu", rclcpp::SensorDataQoS(),
-        [&](const dyno::ImuMeasurement& imu) -> void {
-          if (!imu_single_input_callback_) {
-            RCLCPP_ERROR_THROTTLE(
-                node_->get_logger(), *node_->get_clock(), 1000,
-                "Imu callback triggered but "
-                "imu_single_input_callback_ is not registered!");
-            return;
-          }
-          imu_single_input_callback_(imu);
-        },
-        imu_sub_options);
   }
 }
 
