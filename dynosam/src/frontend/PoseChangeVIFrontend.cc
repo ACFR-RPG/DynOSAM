@@ -146,10 +146,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   rel_egopose_infos_.insert2(frame_id_k, rel_egopose);
 
   CameraMeasurementStatusVector static_measurements;
+  // for the first frame the global map aligns with the local map
+  StatusLandmarkVector* local_landmarks = &realtime_output->state.static_map;
   fillMeasurementsFromFeatureIterator(
       static_measurements, frame_k->usableStaticIterator(), frame_id_k,
-      timestamp_k, static_pixel_sigmas_, static_point_sigma_,
-      &realtime_output->state.local_static_map);
+      timestamp_k, static_pixel_sigmas_, static_point_sigma_, local_landmarks);
 
   // first frame is always KF
   map_->updateObservations(static_measurements);
@@ -228,7 +229,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // nullopt. This tells the function to use a constant motion model from the
   // previous frame ie. T_km1_k_ if tracking fails
   StatusLandmarkVector& static_landmarks_used_vo =
-      realtime_output->state.local_static_map;
+      realtime_output->state.static_map;
   TrackingQuality camera_tracking_quality;
   const bool ego_motion_solve = solveAndRefineEgoMotion(
       frame_k, frame_km1, static_landmarks_used_vo, camera_tracking_quality,

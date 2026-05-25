@@ -3,6 +3,7 @@
 #include <glog/logging.h>
 
 #include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
@@ -47,25 +48,29 @@ void DynoStatePublisher::publish(const DynoState& state) {
   const auto reference_frames = sensor_rig_->getReferenceFrames();
   const gtsam::Pose3 T_RC = sensor_rig_->getCanonicalExtrinsics();
 
+  // camera (optical) frame to robot (base) frame
   auto camera_to_base_frame = [&T_RC](gtsam::Pose3& X_WC) {
-    X_WC = T_RC.compose(X_WC);
+    X_WC = changeBasis(T_RC, X_WC);
   };
 
   std::vector<gtsam::Pose3> camera_trajectory =
       state.camera_trajectory.toDataVector();
+  // pose of the sensor (usually optical frame) in the world frame
+  const gtsam::Pose3 X_WS = camera_trajectory.back();
   // transform camera from estimated (usually optical frame) to base frame
   std::for_each(camera_trajectory.begin(), camera_trajectory.end(),
                 camera_to_base_frame);
 
-  const gtsam::Pose3 X_W_k = camera_trajectory.back();
-  DisplayCommon::publishOdometry(vo_publisher_, X_W_k, timestamp,
+  // pose of the robot (base link)
+  const gtsam::Pose3 X_WR = camera_trajectory.back();
+  DisplayCommon::publishOdometry(vo_publisher_, X_WR, timestamp,
                                  reference_frames.odom_frame,
                                  reference_frames.base_frame);
   if (publish_vo_tf_) {
     std_msgs::msg::Header header;
     header.stamp = utils::toRosTime(timestamp);
     header.frame_id = reference_frames.odom_frame;
-    sendTransform(X_W_k, header, reference_frames.base_frame);
+    sendTransform(X_WR, header, reference_frames.base_frame);
   }
 
   // publish trajectory
@@ -73,12 +78,11 @@ void DynoStatePublisher::publish(const DynoState& state) {
                                      timestamp, reference_frames.odom_frame);
 
   // publish local(?) static points
-  // TODO: now if in the original X_W (which at least some of them are!)
-  DisplayCommon::publishPointCloud(static_points_pub_, state.local_static_map,
-                                   X_W_k, reference_frames.odom_frame);
+  DisplayCommon::publishPointCloud(static_points_pub_, state.static_map,
+                                   reference_frames.odom_frame, T_RC);
 
   DisplayCommon::publishPointCloud(dynamic_points_pub_, state.dynamic_map,
-                                   X_W_k, reference_frames.odom_frame);
+                                   reference_frames.odom_frame, T_RC);
 
   publishObjects(frame_id, state.object_trajectories);
 }
@@ -99,19 +103,39 @@ void DynoStatePublisher::publishObjects(
     return;
   }
 
+  const auto reference_frames = sensor_rig_->getReferenceFrames();
+  const gtsam::Pose3 T_RC = sensor_rig_->getCanonicalExtrinsics();
+
+  // camera (optical) frame to robot (base) frame
+  auto camera_to_base_frame_object = [&T_RC](PoseWithMotionEntry& entry_WS) {
+    // change basis for both pose and motion to go from sensor-world to
+    // robot-world
+    entry_WS.data.pose = changeBasis(T_RC, entry_WS.data.pose);
+
+    // loose notation here to indicate that motion is in W as defined by sensor
+    // (S)
+    gtsam::Pose3 H_WS = entry_WS.data.motion;
+    gtsam::Pose3 H_WR = changeBasis(T_RC, H_WS);
+    entry_WS.data.motion.estimate() = H_WR;
+  };
+
   ObjectOdometryMap object_odometries;
 
   MultiObjectOdometryPath multi_object_odom_paths;
   multi_object_odom_paths.header.stamp =
       utils::toRosTime(object_trajectories_k.lastTimestamp());
 
-  const auto reference_frames = sensor_rig_->getReferenceFrames();
   multi_object_odom_paths.header.frame_id = reference_frames.odom_frame;
 
-  for (const auto& [object_id, object_trajectory] : object_trajectories_k) {
+  for (const auto& [object_id, object_trajectory_S] : object_trajectories_k) {
+    // object trajectory in the world frame as defined by the robot frame
+    PoseWithMotionTrajectory object_trajectory_R = object_trajectory_S;
+    std::for_each(object_trajectory_R.begin(), object_trajectory_R.end(),
+                  camera_to_base_frame_object);
+
     // latest object odometry
     ObjectOdometry object_odometry = constructObjectOdometry(
-        object_id, object_trajectory.maxFrame(), object_trajectory);
+        object_id, object_trajectory_R.maxFrame(), object_trajectory_R);
     object_odom_publisher_->publish(object_odometry);
 
     if (publish_oo_tf_) {
@@ -131,9 +155,9 @@ void DynoStatePublisher::publishObjects(
     path_per_segment.object_id = object_id;
     path_per_segment.path_segment = 0;
     path_per_segment.header = multi_object_odom_paths.header;
-    for (FrameId frame_i : object_trajectory.toFrameIds()) {
+    for (FrameId frame_i : object_trajectory_R.toFrameIds()) {
       path_per_segment.object_odometries.push_back(
-          constructObjectOdometry(object_id, frame_i, object_trajectory));
+          constructObjectOdometry(object_id, frame_i, object_trajectory_R));
     }
 
     multi_object_odom_paths.paths.push_back(path_per_segment);

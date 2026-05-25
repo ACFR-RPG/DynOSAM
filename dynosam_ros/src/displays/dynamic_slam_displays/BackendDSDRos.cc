@@ -264,8 +264,7 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
     const DynoState::ConstPtr& latest_backend_output) {
   const auto& dynamic_landmarks = latest_backend_output->dynamic_map;
 
-  CloudPerObject clouds_per_obj =
-      groupObjectCloud(dynamic_landmarks, latest_backend_output->cameraPose());
+  CloudPerObject clouds_per_obj = groupObjectCloud(dynamic_landmarks);
 
   const auto odom_frame = sensor_rig_->getReferenceFrames().odom_frame;
 

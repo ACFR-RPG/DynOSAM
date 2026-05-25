@@ -17,12 +17,12 @@ bool Accessor::hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
 
 std::tuple<gtsam::Point3, bool> Accessor::computeObjectCentroid(
     FrameId frame_id, ObjectId object_id) const {
+  // landmarks in W
   const StatusLandmarkVector& dynamic_lmks =
       this->getDynamicLandmarkEstimates(frame_id, object_id);
 
   // convert to point cloud - should be a map with only one map in it
-  CloudPerObject object_clouds =
-      groupObjectCloud(dynamic_lmks, this->getSensorPose(frame_id).get());
+  CloudPerObject object_clouds = groupObjectCloud(dynamic_lmks);
   if (object_clouds.size() == 0) {
     VLOG(20) << "Cannot collect object clouds from dynamic landmarks of "
              << object_id << " and frame " << frame_id << "!! "

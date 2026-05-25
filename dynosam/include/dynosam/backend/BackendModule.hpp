@@ -124,7 +124,7 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
     state->object_trajectories = accessor->getMultiObjectTrajectories();
 
     // TODO: should be global!?
-    state->local_static_map = accessor->getFullStaticMap();
+    state->static_map = accessor->getFullStaticMap();
 
     // TODO: this wrong for hybrid KF as there may be not motions at this CKF
     // TODO: hack for dynamic objects in KF but may also be okay general

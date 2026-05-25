@@ -279,17 +279,14 @@ gtsam::Pose3 HybridFormulationV1::calculateObjectCentroid(
     CHECK(lmk_node->seenAtFrame(frame_id));
     CHECK_EQ(lmk_node->objectId(), object_id);
 
-    const gtsam::Point3 landmark_measurement_local =
-        MeasurementTraits::point(measurement);
-    // const gtsam::Point3 landmark_measurement_world = X_world *
-    // landmark_measurement_local;
+    const gtsam::Point3 zC = MeasurementTraits::point(measurement);
 
-    dynamic_landmarks.push_back(LandmarkStatus::DynamicInGlobal(
-        Point3Measurement(landmark_measurement_local), frame_id, timestamp,
-        lmk_node->trackletId(), object_id));
+    dynamic_landmarks.push_back(LandmarkStatus::DynamicInLocal(
+        Point3Measurement(zC), frame_id, timestamp, lmk_node->trackletId(),
+        object_id));
   }
 
-  CloudPerObject object_clouds = groupObjectCloud(dynamic_landmarks, X_world);
+  CloudPerObject object_clouds = groupObjectCloud(dynamic_landmarks);
   CHECK_EQ(object_clouds.size(), 1u);
 
   CHECK(object_clouds.exists(object_id));

@@ -120,7 +120,7 @@ ObjectBBX findAABBFromCloud(
 }
 
 CloudPerObject groupObjectCloud(
-    const StatusLandmarkVector& landmarks, const gtsam::Pose3& T_world_camera,
+    const StatusLandmarkVector& landmarks,
     std::function<Color(ObjectId)> colour_generator,
     std::function<void(const pcl::PointXYZRGB&, ObjectId)> point_cb) {
   CHECK(colour_generator);
@@ -129,12 +129,6 @@ CloudPerObject groupObjectCloud(
   for (const auto& status_estimate : landmarks) {
     Landmark lmk_world = status_estimate.value();
     const ObjectId object_id = status_estimate.objectId();
-    if (status_estimate.referenceFrame() == ReferenceFrame::LOCAL) {
-      lmk_world = T_world_camera * status_estimate.value();
-    } else if (status_estimate.referenceFrame() == ReferenceFrame::OBJECT) {
-      throw DynosamException(
-          "Cannot display object point in the object reference frame");
-    }
 
     // TODO: use convert in header!!
     pcl::PointXYZRGB pt;
@@ -142,6 +136,7 @@ CloudPerObject groupObjectCloud(
       // publish static lmk's as white
       pt = pcl::PointXYZRGB(lmk_world(0), lmk_world(1), lmk_world(2), 0, 0, 0);
     } else {
+      // NOTE(jesse): colour generator not ysed?
       const cv::Scalar colour = Color::uniqueId(object_id);
       pt = pcl::PointXYZRGB(lmk_world(0), lmk_world(1), lmk_world(2), colour(0),
                             colour(1), colour(2));

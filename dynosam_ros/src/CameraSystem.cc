@@ -1,23 +1,21 @@
 #include "dynosam_ros/CameraSystem.hpp"
-#include "dynosam_ros/RosUtils.hpp"
-
 
 #include <config_utilities/config_utilities.h>
 #include <config_utilities/parsing/yaml.h>
 
 #include <deque>
-#include <unordered_set>
-
 #include <dynosam_common/Types.hpp>
 #include <dynosam_cv/StereoCamera.hpp>
+#include <unordered_set>
 
+#include "dynosam_ros/RosUtils.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 
 namespace dyno {
 
 bool hasStreamType(const std::vector<StreamConfig>& configs,
                    StreamConfig::Types query_type) {
-  for (int i = 0; i < configs.size(); i++) {
+  for (size_t i = 0; i < configs.size(); i++) {
     if (configs.at(i).type == query_type) {
       return true;
     }
@@ -154,12 +152,16 @@ void SensorMode::parse(const std::string& sensor_mode) {
   }
 
   if (!any_depth_source) {
-    DYNO_THROW_MSG(InvalidSensorSystem) << "No valid depth rig setup found (RBGD or Stereo) in sensor mode:" << raw_sensor_mode_;
+    DYNO_THROW_MSG(InvalidSensorSystem)
+        << "No valid depth rig setup found (RBGD or Stereo) in sensor mode:"
+        << raw_sensor_mode_;
   }
 
   // if found stereo and found depth throw error?
   if (found_stereo && found_depth) {
-    DYNO_THROW_MSG(InvalidSensorSystem) << "Multiple depth rig setup's found (RBGD and Stereo) in sensor mode:" << raw_sensor_mode_;
+    DYNO_THROW_MSG(InvalidSensorSystem)
+        << "Multiple depth rig setup's found (RBGD and Stereo) in sensor mode:"
+        << raw_sensor_mode_;
   }
 
   if (found_stereo) {

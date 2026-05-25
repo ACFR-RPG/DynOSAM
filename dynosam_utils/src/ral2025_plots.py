@@ -11,12 +11,16 @@ import matplotlib
 
 from dynosam_utils.evaluation.core.plotting import startup_plotting
 plt.rcdefaults()
-startup_plotting(font_size=20, text_size_scalar=0.9, line_width=3.0)
+startup_plotting(font_size=26, text_size_scalar=0.9, line_width=3.0)
 
 import seaborn as sns
 sns.set_style("whitegrid")
 
-CATEGORY_TO_PLOT = "camera"     # camera | object
+plt.rcParams.update({
+    "font.family": "serif"
+})
+
+CATEGORY_TO_PLOT = "object"     # camera | object
 PLOT_TYPE = "box"              # bar | box | normalized | line | mean
 
 # ---------------------------------------------------------
@@ -30,8 +34,6 @@ AGGREGATION_FN = "mean"
 # Show std region
 SHOW_STD = True
 STD_ALPHA = 0.20
-
-sns.set_style("whitegrid")
 
 # plt.rcParams.update({
 #     "font.size": 14,
@@ -503,9 +505,11 @@ def remap_dataset_to_title(dataset):
             return "KITTI Tracking"
         if dataset == "TartanAir":
             return "TartanAir (Shibuya)"
+        if dataset == "OMD":
+            return "Oxford Multimotion Dataset"
     return dataset
 
-def plot_box(ax, df, metric, global_legend_handles, global_added_legend):
+def plot_box(ax, df, metric, global_legend_handles, global_added_legend, add_x_labels):
 
     sub = df[df["metric"] == metric]
 
@@ -699,13 +703,17 @@ def plot_box(ax, df, metric, global_legend_handles, global_added_legend):
     # =====================================================
     # Axis formatting
     # =====================================================
-    ax.set_xticks(dataset_centers)
+    # ax.set_xticks(dataset_centers)
 
-    remapped_labels = [remap_dataset_to_title(label) for label in labels]
-    ax.set_xticklabels(remapped_labels)
+    if add_x_labels:
+        ax.set_xticks(dataset_centers)
+        remapped_labels = [remap_dataset_to_title(label) for label in labels]
+        ax.set_xticklabels(remapped_labels)
 
-    for tick in ax.get_xticklabels():
-        tick.set_horizontalalignment('center')
+        for tick in ax.get_xticklabels():
+            tick.set_horizontalalignment('center')
+    else:
+        ax.get_xaxis().set_visible(False)
 
     ax.set_ylabel(remap_metric_to_title(metric))
     # ax.set_title(metric)
@@ -944,12 +952,12 @@ def plot_all(df):
     # GRID SPEC LAYOUT
     # =========================================================
 
-    fig = plt.figure(figsize=(15, 3 * n_metrics))
+    fig = plt.figure(figsize=(16, 3 * n_metrics))
 
     gs = GridSpec(
         nrows=n_metrics + 2,   # +1 title row +1 legend row
         ncols=1,
-        height_ratios=[0.07, 0.05] + [1.0] * n_metrics,
+        height_ratios=[0.15, 0.08] + [1.0] * n_metrics,
         figure=fig
     )
 
@@ -986,7 +994,8 @@ def plot_all(df):
         print(f"Plotting metric: {metric}")
 
         if PLOT_TYPE == "box" or PLOT_TYPE == "mean":
-            plot_box(ax, df_box, metric, global_legend_handles, global_added_legend)
+            plot_x_labels = True if i == len(metrics) - 1 else False
+            plot_box(ax, df_box, metric, global_legend_handles, global_added_legend, plot_x_labels)
         elif PLOT_TYPE == "line":
             plot_line(ax, df_line, metric)
         else:
@@ -1021,7 +1030,7 @@ def plot_all(df):
     # for ax in axes:
     #     ax.margins(x=0.01, y=0.05)
     fig.subplots_adjust(
-        left=0.06,
+        left=0.08,
         right=0.995,
         top=0.95,
         bottom=0.08
@@ -1050,8 +1059,9 @@ fig = plot_all(df)
 # fig.tight_layout()
 plt.show()
 
-# file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_TRO.jpg'
-# fig.savefig(file_path)
+file_path = f'/root/results/{CATEGORY_TO_PLOT}_errors_RAL.pdf'
+fig.savefig(file_path, format="pdf")
+
 
 # plt.savefig(file_path)
 

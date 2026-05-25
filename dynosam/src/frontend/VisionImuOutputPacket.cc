@@ -88,14 +88,14 @@ const CameraMeasurementStatusVector& VisionImuPacket::staticMeasurements()
   return camera_tracks_.measurements;
 }
 
-StatusLandmarkVector VisionImuPacket::staticLandmarkMeasurements() const {
+StatusLandmarkVector VisionImuPacket::staticLandmarks() const {
   StatusLandmarkVector static_landmarks;
-  fillLandmarkMeasurements(static_landmarks, staticMeasurements());
+  fillLandmarks(static_landmarks, staticMeasurements());
   return static_landmarks;
 }
-StatusLandmarkVector VisionImuPacket::dynamicLandmarkMeasurements() const {
+StatusLandmarkVector VisionImuPacket::dynamicLandmarks() const {
   StatusLandmarkVector dynamic_landmarks;
-  fillLandmarkMeasurements(dynamic_landmarks, objectMeasurements());
+  fillLandmarks(dynamic_landmarks, objectMeasurements());
   return dynamic_landmarks;
 }
 
@@ -179,17 +179,19 @@ void VisionImuPacket::updateObjectTrackCaches() {
   }
 }
 
-void VisionImuPacket::fillLandmarkMeasurements(
+void VisionImuPacket::fillLandmarks(
     StatusLandmarkVector& landmarks,
-    const CameraMeasurementStatusVector& camera_measurements) {
+    const CameraMeasurementStatusVector& camera_measurements) const {
+  const gtsam::Pose3& X_WS = cameraPose();
   landmarks.reserve(camera_measurements.size());
   // implicit cast during iteration
   for (const CameraMeasurementStatus& cms : camera_measurements) {
     const CameraMeasurement& measurement = cms.value();
     if (measurement.hasLandmark()) {
-      landmarks.push_back(LandmarkStatus(measurement.landmark(), cms.frameId(),
-                                         cms.timestamp(), cms.trackletId(),
-                                         cms.objectId(), cms.referenceFrame()));
+      gtsam::Point3 mW = X_WS * measurement.landmark();
+      landmarks.push_back(LandmarkStatus(mW, cms.frameId(), cms.timestamp(),
+                                         cms.trackletId(), cms.objectId(),
+                                         ReferenceFrame::GLOBAL));
     }
   }
 }

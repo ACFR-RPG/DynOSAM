@@ -2,6 +2,7 @@
 
 #include <pcl/common/centroid.h>
 #include <pcl/common/common.h>
+#include <pcl/common/transforms.h>
 #include <pcl/memory.h>
 
 #include "dynosam_common/PointCloudProcess.hpp"
@@ -12,13 +13,12 @@ namespace dyno {
 
 CloudPerObject DisplayCommon::publishPointCloud(
     PointCloud2Pub::SharedPtr pub, const StatusLandmarkVector& landmarks,
-    const gtsam::Pose3& T_world_camera, const std::string& frame_id) {
+    const std::string& frame_id, const gtsam::Pose3& T) {
   pcl::PointCloud<pcl::PointXYZRGB> cloud;
-  CloudPerObject clouds_per_obj =
-      groupObjectCloud(landmarks, T_world_camera,
-                       [&cloud](const pcl::PointXYZRGB& point, ObjectId) {
-                         cloud.points.push_back(point);
-                       });
+  CloudPerObject clouds_per_obj = groupObjectCloud(
+      landmarks, [&cloud](const pcl::PointXYZRGB& point, ObjectId) {
+        cloud.points.push_back(point);
+      });
 
   pcl::PointCloud<pcl::PointXYZRGB> filtered_and_merged_cloud;
   for (auto& [_, obj_cloud] : clouds_per_obj) {
@@ -35,6 +35,11 @@ CloudPerObject DisplayCommon::publishPointCloud(
     obj_cloud = *cloud_filtered;
     filtered_and_merged_cloud += (*cloud_filtered);
   }
+
+  // apply final transform to cloud if needed
+  Eigen::Matrix<float, 4, 4> transform = T.matrix().cast<float>();
+  pcl::transformPointCloud(filtered_and_merged_cloud, filtered_and_merged_cloud,
+                           transform);
 
   sensor_msgs::msg::PointCloud2 pc2_msg;
   pcl::toROSMsg(filtered_and_merged_cloud, pc2_msg);

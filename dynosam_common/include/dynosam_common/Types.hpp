@@ -285,6 +285,7 @@ struct ReferenceFrameValue {
 
   const ReferenceFrame& frame() const { return frame_; }
   const Estimate& estimate() const { return estimate_; }
+  Estimate& estimate() { return estimate_; }
 
   friend std::ostream& operator<<(std::ostream& os, const This& t) {
     os << type_name<Estimate>() << ": " << t.estimate() << "\n";

@@ -61,10 +61,11 @@ using MarkerArrayPub = rclcpp::Publisher<MarkerArray>;
  *
  */
 struct DisplayCommon {
-  static CloudPerObject publishPointCloud(PointCloud2Pub::SharedPtr pub,
-                                          const StatusLandmarkVector& landmarks,
-                                          const gtsam::Pose3& T_world_camera,
-                                          const std::string& frame_id);
+  static CloudPerObject publishPointCloud(
+      PointCloud2Pub::SharedPtr pub, const StatusLandmarkVector& landmarks,
+      const std::string& frame_id,
+      const gtsam::Pose3& T = gtsam::Pose3::Identity());
+
   static void publishOdometry(OdometryPub::SharedPtr pub,
                               const gtsam::Pose3& T_world_camera,
                               Timestamp timestamp, const std::string& frame_id,

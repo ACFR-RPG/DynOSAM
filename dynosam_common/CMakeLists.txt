@@ -87,6 +87,7 @@ add_library(${PROJECT_NAME} SHARED
     src/Trajectories.cc
     src/DynoState.cc
     src/MotionKeyFrame.cc
+    src/Transforms.cc
 
     src/utils/OpenCVUtils.cc
     src/utils/GtsamUtils.cc

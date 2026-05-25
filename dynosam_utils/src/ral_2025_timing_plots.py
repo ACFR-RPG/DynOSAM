@@ -9,7 +9,7 @@ import numpy as np
 
 from dynosam_utils.evaluation.core.plotting import startup_plotting
 plt.rcdefaults()
-startup_plotting(font_size=20, text_size_scalar=0.9, line_width=3.0)
+startup_plotting(font_size=24, text_size_scalar=0.9, line_width=3.0)
 
 import seaborn as sns
 sns.set_style("whitegrid")
@@ -301,8 +301,8 @@ for spine in ax.spines.values():
     spine.set_color("black")
 
 plt.tight_layout()
-# plt.show()
+plt.show()
 
 
-file_path = f'/root/results/ral2025_timing.pdf'
-fig.savefig(file_path, format="pdf")
+# file_path = f'/root/results/ral2025_timing.pdf'
+# fig.savefig(file_path, format="pdf")

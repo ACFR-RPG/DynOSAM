@@ -20,8 +20,7 @@ HybridModuleDisplayCommon::HybridModuleDisplayCommon(
 
 void HybridModuleDisplayCommon::publishObjectBoundingBoxes(
     const DynoState::ConstPtr& output) {
-  CloudPerObject clouds_per_obj =
-      groupObjectCloud(output->dynamic_map, output->cameraPose());
+  CloudPerObject clouds_per_obj = groupObjectCloud(output->dynamic_map);
 
   visualization_msgs::msg::MarkerArray array;
 

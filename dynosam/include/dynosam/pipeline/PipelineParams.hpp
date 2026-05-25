@@ -115,9 +115,13 @@ class DynoParams {
   PipelineParams pipeline_params_;
   FrontendParams frontend_params_;
   BackendParams backend_params_;
+
+  // TODO: remove
   CameraParams camera_params_;
+  // TODO: remove
   ImuParams imu_params_;
 
+  // TODO: remove
   FrontendType frontend_type_ = FrontendType::kRGBD;
   BackendType backend_type = BackendType::PARALLEL_HYBRID;
 

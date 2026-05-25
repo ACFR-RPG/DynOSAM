@@ -20,9 +20,9 @@ struct DynoState : public DynoStateTrajectories {
   gtsam::Pose3 cameraPose() const;
   MotionEstimateMap objectMotions() const;
 
-  // maps
-  StatusLandmarkVector local_static_map;
-  StatusLandmarkVector global_static_map;
+  //! Expect both to be in the world frame as defined by the camera pose
+  //! at k
+  StatusLandmarkVector static_map;
   StatusLandmarkVector dynamic_map;
 };
 

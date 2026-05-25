@@ -126,10 +126,10 @@ class VisionImuPacket {
   const CameraMeasurementStatusVector& objectMeasurements() const;
   const CameraMeasurementStatusVector& staticMeasurements() const;
 
-  // Gets static landmark measurements (if any)
-  StatusLandmarkVector staticLandmarkMeasurements() const;
-  // Gets dynamic landmark measurements (if any)
-  StatusLandmarkVector dynamicLandmarkMeasurements() const;
+  // Gets static landmark's in the world frame (if any)
+  StatusLandmarkVector staticLandmarks() const;
+  // Gets dynamic landmark's in the world frame(if any)
+  StatusLandmarkVector dynamicLandmarks() const;
 
   VisionImuPacket& timestamp(Timestamp ts);
   VisionImuPacket& frameId(FrameId id);
@@ -187,9 +187,9 @@ class VisionImuPacket {
   CameraMeasurementStatusVector cached_object_measurements_;
 
  private:
-  static void fillLandmarkMeasurements(
+  void fillLandmarks(
       StatusLandmarkVector& landmarks,
-      const CameraMeasurementStatusVector& camera_measurements);
+      const CameraMeasurementStatusVector& camera_measurements) const;
 };
 
 }  // namespace dyno

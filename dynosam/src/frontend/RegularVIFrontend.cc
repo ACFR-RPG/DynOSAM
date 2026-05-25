@@ -134,10 +134,8 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   realtime_output->state.timestamp = timestamp_k;
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   realtime_output->state.object_trajectories = dyno_state_.object_trajectories;
-  realtime_output->state.local_static_map =
-      vision_imu_packet->staticLandmarkMeasurements();
-  realtime_output->state.dynamic_map =
-      vision_imu_packet->dynamicLandmarkMeasurements();
+  realtime_output->state.static_map = vision_imu_packet->staticLandmarks();
+  realtime_output->state.dynamic_map = vision_imu_packet->dynamicLandmarks();
   realtime_output->ground_truth = input->ground_truth_packet;
 
   fillDebugImagery(realtime_output->debug_imagery, frame_k, frame_km1);

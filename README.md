@@ -311,6 +311,8 @@ All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds
 
 > NOTE: the publishing of object states is meant primilarily for __visualisation__ purposes and not for recording data used for evaluation. This is done using csv files in a different submodule: see [Evaluation](#4-evaluation).
 
+## 4.4 Coordinate Systems
+
 ## 4.5 Tests
 We use [gtest](https://github.com/google/googletest) for unit testing. This is installed automagically. When building with ROS, all tests will go into the install folder.
 

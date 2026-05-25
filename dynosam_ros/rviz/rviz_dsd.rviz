@@ -6,11 +6,10 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Backend1/Visual Odometry1/Status1
         - /Backend1/Visual Odometry1/Shape1
-        - /Frontend1/Static Map1
-        - /Frontend1/ObjectOdometryPath1
+        - /Frontend1
         - /Frontend1/ObjectOdometryPath1/Topic1
+        - /Frontend1/Visual Odometry1
         - /Frontend1/Visual Odometry1/Shape1
         - /Ground Truth1/Visual Odometry1/Topic1
         - /Ground Truth1/Visual Odometry1/Shape1
@@ -37,7 +36,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Static Map
 Visualization Manager:
   Class: ""
   Displays:
@@ -45,7 +44,7 @@ Visualization Manager:
       Cell Size: 1
       Class: rviz_default_plugins/Grid
       Color: 160; 160; 164
-      Enabled: false
+      Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
@@ -58,7 +57,7 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
-      Value: false
+      Value: true
     - Class: rviz_common/Group
       Displays:
         - Alpha: 1
@@ -245,7 +244,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dynosam/backend/odometry_path
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Backend
     - Class: rviz_common/Group
       Displays:
@@ -366,7 +365,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dynosam/frontend/object_odometry_path
           Value: true
-        - Angle Tolerance: 0.009999999776482582
+        - Angle Tolerance: 0.0010000000474974513
           Class: rviz_default_plugins/Odometry
           Covariance:
             Orientation:
@@ -386,7 +385,7 @@ Visualization Manager:
           Enabled: true
           Keep: 1
           Name: Visual Odometry
-          Position Tolerance: 0.009999999776482582
+          Position Tolerance: 0.0010000000474974513
           Shape:
             Alpha: 1
             Axes Length: 0.5
@@ -674,25 +673,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 25.624908447265625
+      Distance: 10
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.6340106129646301
-        Y: -1.119903326034546
-        Z: 6.487734794616699
+        X: 0
+        Y: 0
+        Z: 0
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: -0.41979727149009705
+      Pitch: 0.6303983330726624
       Target Frame: camera
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.68539571762085
+      Yaw: 3.3554019927978516
     Saved: ~
 Window Geometry:
   Displays:
