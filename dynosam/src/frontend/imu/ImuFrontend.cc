@@ -86,8 +86,6 @@ ImuFrontend::ImuFrontend(const ImuCalibration& imu_calib) : params_(imu_calib) {
       std::pow(params_.imu_integration_sigma, 2.0) *
       Eigen::Matrix3d::Identity();
 
-  pim_params->print("PIM PARAMS");
-
   pim_ = std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
       pim_params, gtsam::imuBias::ConstantBias{});
 }

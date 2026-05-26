@@ -1,8 +1,8 @@
 
 # inertial sensor parameters
-gyro_noise_density: 0.187  # [rad/s/sqrt(Hz)] (gyro "white noise")
+gyro_noise_density: 0.008  # [rad/s/sqrt(Hz)] (gyro "white noise")
 gyro_random_walk: 0.0266  # [rad/s^2/sqrt(Hz)] (gyro bias diffusion)
-acc_noise_density: 0.186  # [m/s^2/sqrt(Hz)] (accel "white noise")
+acc_noise_density: 0.02  # [m/s^2/sqrt(Hz)] (accel "white noise")
 acc_random_walk: 0.0433  # [m/s^3/sqrt(Hz)] (accel bias diffusion)
 imu_integration_sigma: 1e-3
 

@@ -39,12 +39,9 @@ class Subscriber : public DataProvider {
 
   CanonicalSensorRig::Ptr sensorRig() const override;
 
+ private:
   void imageCallback(const ImageMsgPtr& msg, unsigned int stream_index);
 
-  /// @brief The IMU callback.
-  void imuCallback(const sensor_msgs::msg::Imu& msg);
-
- private:
   bool addImages(Timestamp timestamp,
                  const std::map<size_t, ImageMsgPtr>& image_msgs);
 

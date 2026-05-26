@@ -271,12 +271,16 @@ class DynoDataset : public _DynoDatasetConstructor<Timestamp, cv::Mat, cv::Mat,
 /**
  * @brief A very simple sensor rig used for all basic datasets.
  * Only contains the cannonical camera params, default reference frame
- * values and the extrinsics are set to cv -> robotic convention
+ * values and the extrinsics are set to cv -> robotic convention.
+ * By default IMU is disabled.
  *
  */
 class BasicDynoSensorRig : public CanonicalSensorRig {
  public:
   DYNO_POINTER_TYPEDEFS(BasicDynoSensorRig)
+
+  //! For ease of use for dataprovider classes, make public
+  bool imu_enabled{false};
 
   BasicDynoSensorRig(const CameraParams& canonical_params,
                      const DepthRigType depth_rig_type,
@@ -294,6 +298,7 @@ class BasicDynoSensorRig : public CanonicalSensorRig {
   inline ImuCalibration getImuParams() const override {
     return imu_calibration_;
   }
+  inline bool imuEnabled() const { return imu_enabled; }
 
  private:
   CameraParams canonical_params_;

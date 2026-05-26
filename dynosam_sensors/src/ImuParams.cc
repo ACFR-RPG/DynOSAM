@@ -35,6 +35,19 @@
 
 namespace dyno {
 
+std::ostream& operator<<(std::ostream& os, const ImuCalibration& calibration) {
+  os << "init_bias_sigma: " << calibration.init_bias_sigma << "\n";
+  os << "gyro_noise_density: " << calibration.gyro_noise_density << "\n";
+  os << "gyro_random_walk: " << calibration.gyro_random_walk << "\n";
+  os << "acc_noise_density: " << calibration.acc_noise_density << "\n";
+  os << "acc_random_walk: " << calibration.acc_random_walk << "\n";
+  os << "imu_integration_sigma: " << calibration.imu_integration_sigma << "\n";
+  os << "n_gravity: " << calibration.n_gravity << "\n";
+  os << "T_CI: " << calibration.T_CI << "\n";
+  os << "reference_frame: " << calibration.reference_frame << "\n";
+  return os;
+}
+
 void declare_config(ImuParams& config) {
   using namespace config;
 

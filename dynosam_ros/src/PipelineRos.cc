@@ -84,15 +84,11 @@ dyno::DataProvider::Ptr DynoNode::createDataProvider(DynoParams& dyno_params,
 
 dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
     DynoParams& dyno_params) {
-  std::vector<std::string> cameras_needed_for_depth;
-  std::vector<std::string> cameras_params;
-  std::vector<std::string> cameras;
-
   auto mode =
       ParameterConstructor(this, "input_image_mode", "rgb+aligned_depth")
           .description(
-              "Which input image mode to run the pipeline in (e.g "
-              "ALL, RGBD, STEREO)...")
+              "Specify sensor and camera stream modes (ie. rgb+aligned_depth, "
+              "+stereo, +imu etc.)")
           .finish()
           .get<std::string>();
 
@@ -103,7 +99,6 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
       this->create_sub_node("dataprovider"), sensor_mode.depthRigType(),
       getParamsPath(), true);
   for (const auto& configs : sensor_mode.configs()) {
-    LOG(INFO) << configs;
     sensor_system->addCamera(configs);
   }
 

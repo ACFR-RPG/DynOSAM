@@ -480,6 +480,8 @@ ViodeLoader::ViodeLoader(const fs::path& dataset_path)
   sensor_rig_ = std::make_shared<BasicDynoSensorRig>(
       left_camera_params, DepthRigType::Stereo, imu_calibration,
       reference_frames);
+  sensor_rig_->imu_enabled = true;
+
   auto rgb_loader = std::make_shared<FunctionalDataFolder<cv::Mat>>(
       [loader](size_t idx) { return loader->getRGB(idx); });
 

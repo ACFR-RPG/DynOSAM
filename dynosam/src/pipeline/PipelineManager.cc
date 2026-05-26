@@ -45,22 +45,27 @@ DEFINE_bool(use_opencv_display, true,
 namespace dyno {
 
 DynoPipelineManager::DynoPipelineManager(
-    const DynoParams& params, DataProvider::Ptr data_loader,
+    const DynoParams& params, DataProvider::Ptr data_provider,
     FrontendDisplay::Ptr frontend_display, BackendDisplay::Ptr backend_display,
     BackendModuleFactory::Ptr factory, const ExternalHooks::Ptr external_hooks)
     : params_(params),
-      data_loader_(std::move(data_loader)),
+      data_provider_(std::move(data_provider)),
       displayer_(&display_queue_, params.parallelRun())
 
 {
   LOG(INFO) << "Starting DynoPipelineManager";
 
-  CHECK(data_loader_);
+  CHECK(data_provider_);
   CHECK(frontend_display);
 
-  data_interface_ =
-      std::make_unique<DataInterfacePipeline>(params_.parallelRun());
-  data_loader_->registerImageContainerCallback(
+  auto sensor_rig = data_provider_->sensorRig();
+  CHECK_NOTNULL(sensor_rig);
+
+  VLOG(10) << "Sensor Rig: " << *sensor_rig;
+
+  data_interface_ = std::make_unique<DataInterfacePipeline>(
+      sensor_rig, params_.parallelRun());
+  data_provider_->registerImageContainerCallback(
       std::bind(&dyno::DataInterfacePipeline::fillImageContainerQueue,
                 data_interface_.get(), std::placeholders::_1));
 
@@ -78,17 +83,17 @@ DynoPipelineManager::DynoPipelineManager(
   }
 
   // ground truth
-  data_loader_->registerGroundTruthPacketCallback(
+  data_provider_->registerGroundTruthPacketCallback(
       std::bind(&dyno::DataInterfacePipeline::addGroundTruthPacket,
                 data_interface_.get(), std::placeholders::_1));
 
   // register single and multi IMU callbacks to the data loader
-  data_loader_->registerImuSingleCallback(std::bind(
+  data_provider_->registerImuSingleCallback(std::bind(
       static_cast<void (DataInterfacePipeline::*)(const ImuMeasurement&)>(
           &dyno::DataInterfacePipeline::fillImuQueue),
       data_interface_.get(), std::placeholders::_1));
 
-  data_loader_->registerImuMultiCallback(std::bind(
+  data_provider_->registerImuMultiCallback(std::bind(
       static_cast<void (DataInterfacePipeline::*)(const ImuMeasurements&)>(
           &dyno::DataInterfacePipeline::fillImuQueue),
       data_interface_.get(), std::placeholders::_1));
@@ -96,16 +101,16 @@ DynoPipelineManager::DynoPipelineManager(
   // preprocessing
   data_interface_->registerImageContainerPreprocessor(
       std::bind(&dyno::DataProvider::imageContainerPreprocessor,
-                data_loader_.get(), std::placeholders::_1));
+                data_provider_.get(), std::placeholders::_1));
 
   // push data from the data interface to the frontend module
   data_interface_->registerOutputQueue(&frontend_input_queue_);
 
-  CameraParams camera_params = data_loader_->getCameraParams();
+  CameraParams camera_params = data_provider_->getCameraParams();
   /// NOTE: no need to update the camera params like the imu params as we parse
   /// the camera params into the loadPipeline functions separately!
 
-  ImuCalibration imu_calib = data_loader_->getImuParams();
+  ImuCalibration imu_calib = data_provider_->getImuParams();
   // update the imu params that will actually get sent to the frontend
   params_.frontend_params_.imu_calib = imu_calib;
 
@@ -156,7 +161,7 @@ void DynoPipelineManager::shutdownPipelines() {
 bool DynoPipelineManager::spin() {
   utils::ChronoTimingStats timer("pipeline_spin");
 
-  if (data_loader_->spin() || frontend_pipeline_->isWorking() ||
+  if (data_provider_->spin() || frontend_pipeline_->isWorking() ||
       (backend_pipeline_ && backend_pipeline_->isWorking())) {
     if (!params_.parallelRun()) {
       frontend_pipeline_->spinOnce();
@@ -401,7 +406,7 @@ void DynoPipelineManager::loadRegularOrParallelHybridModules(
   if (FLAGS_use_backend) {
     LOG(INFO) << "Construcing Backend";
 
-    params_.backend_params_.full_batch_frame = data_loader_->datasetSize();
+    params_.backend_params_.full_batch_frame = data_provider_->datasetSize();
     Sensors sensors;
     sensors.camera = camera;
 

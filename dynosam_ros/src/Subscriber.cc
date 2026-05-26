@@ -139,14 +139,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
       }
     }
     if (synced) {
-      // probably bad to do image processing in here...?
-      //  add
-      // std::cout << "add images" << time << " " << images.size() << std::endl;
       addImages(tcheck, images);
-
-      // if (!viInterface_->addImages(tcheck, images)) {
-      //     LOG(WARNING) << "Frame not added at t="<< tcheck;
-      // }
       // remove all the older stuff from buffer
       for (int i = 0; i < num_streams; ++i) {
         const int size0 = images_received_.at(i).size();
@@ -165,8 +158,6 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
     }
   }
 }
-
-void Subscriber::imuCallback(const sensor_msgs::msg::Imu& msg) {}
 
 bool Subscriber::addImages(Timestamp timestamp,
                            const std::map<size_t, ImageMsgPtr>& image_msgs) {

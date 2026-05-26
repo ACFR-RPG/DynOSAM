@@ -12,6 +12,7 @@ struct ReferenceFrames {
   std::string camera_frame = "camera_optical_frame";
   std::string imu_frame = "imu_frame";
 };
+std::ostream& operator<<(std::ostream& os, const ReferenceFrames& frames);
 
 enum class DepthRigType { RGBD, Stereo };
 std::ostream& operator<<(std::ostream& os, const DepthRigType& depth_rig_type);
@@ -24,9 +25,14 @@ class CanonicalSensorRig {
  public:
   DYNO_POINTER_TYPEDEFS(CanonicalSensorRig)
 
+  virtual ~CanonicalSensorRig() = default;
+
   virtual CameraParams getCanonicalParams() const = 0;
   virtual ReferenceFrames getReferenceFrames() const = 0;
   virtual DepthRigType depthRigType() const = 0;
+  virtual bool imuEnabled() const = 0;
+
+  virtual std::string toString() const;
 
   /**
    * @brief Get the ImuCalibration.
@@ -37,7 +43,7 @@ class CanonicalSensorRig {
    *
    * @return ImuCalibration
    */
-  virtual ImuCalibration getImuParams() const { return ImuCalibration{}; }
+  virtual ImuCalibration getImuParams() const;
 
   /**
    * @brief Get the extrinsics transform between between the base (robot) frame
@@ -49,9 +55,10 @@ class CanonicalSensorRig {
    *
    * @return gtsam::Pose3
    */
-  virtual gtsam::Pose3 getCanonicalExtrinsics() const {
-    return getCanonicalParams().getExtrinsics();
-  }
+  virtual gtsam::Pose3 getCanonicalExtrinsics() const;
 };
+
+std::ostream& operator<<(std::ostream& os,
+                         const CanonicalSensorRig& sensor_rig);
 
 }  // namespace dyno

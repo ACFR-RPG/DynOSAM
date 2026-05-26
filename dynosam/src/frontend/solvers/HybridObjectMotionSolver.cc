@@ -305,6 +305,24 @@ bool HybridObjectMotionSolver::solveImpl(
     //  inliers should be a subset of the original refined inlier tracks
     inlier_tracklets = refinement_result.inliers;
 
+    // after flow optimisation we update the depth of each feature at which
+    // point the feature may become an outlier
+    TrackletIds inlier_tracklets_after_depth_update;
+    for (auto i : inlier_tracklets) {
+      if (frame_k->at(i)->usable()) {
+        inlier_tracklets_after_depth_update.push_back(i);
+      }
+    }
+
+    if (inlier_tracklets_after_depth_update.size() < 10) {
+      LOG(WARNING) << "Not enough inlier tracks for j=" << object_id
+                   << " after depth update";
+      object_statuses_.setStatus(object_id, frame_id_k,
+                                 ObjectTrackingStatus::PoorlyTracked);
+      return false;
+    }
+    inlier_tracklets = inlier_tracklets_after_depth_update;
+
     // // afrwards run ransac again
     // // get the corresponding feature pairs
     // AbsolutePoseCorrespondences dynamic_correspondences;

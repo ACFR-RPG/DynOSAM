@@ -99,10 +99,15 @@ class SensorSystem : public CanonicalSensorRig {
   void finalise();
 
   size_t numCameraStreams() const;
-  bool imuEnabled() const;
   bool isInitalised() const;
 
-  // TODO: all extrinsics?
+  /* Returns canonical params representing a single virtual camera after
+   * undistortion/rectification */
+  CameraParams getCanonicalParams() const override;
+  ReferenceFrames getReferenceFrames() const override;
+  DepthRigType depthRigType() const override;
+  ImuCalibration getImuParams() const override;
+  bool imuEnabled() const override;
 
   /**
    * @brief Run the calibration rountine (undistory/rectify etc) as necessary
@@ -116,13 +121,6 @@ class SensorSystem : public CanonicalSensorRig {
    */
   void calibrateDetphRig(const cv::Mat& img0_src, const cv::Mat& img1_src,
                          cv::Mat& img0_out, cv::Mat& img1_out);
-
-  /* Returns canonical params representing a single virtual camera after
-   * undistortion/rectification */
-  CameraParams getCanonicalParams() const override;
-  ReferenceFrames getReferenceFrames() const override;
-  DepthRigType depthRigType() const override;
-  ImuCalibration getImuParams() const override;
 
   std::string streamName(unsigned int stream_index) const;
   StreamConfig::Types streamType(unsigned int stream_index) const;

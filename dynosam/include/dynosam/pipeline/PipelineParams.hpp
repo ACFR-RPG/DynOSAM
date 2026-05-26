@@ -115,8 +115,6 @@ class DynoParams {
   PipelineParams pipeline_params_;
   FrontendParams frontend_params_;
   BackendParams backend_params_;
-  // TODO: remove
-  // ImuCalibration imu_params_;
 
   // TODO: remove
   FrontendType frontend_type_ = FrontendType::kRGBD;

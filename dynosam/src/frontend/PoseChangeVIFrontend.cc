@@ -8,6 +8,9 @@ DEFINE_bool(pc_smoother_allow_backend_updates, false,
 DEFINE_bool(pc_log_object_kf_structure, false,
             "If the object point cloud should be logged at keyframes");
 
+DEFINE_bool(pc_send_objects_to_backend, true,
+            "If true, objects will be included in the backend optimisation");
+
 namespace dyno {
 
 PoseChangeVIFrontend::PoseChangeVIFrontend(
@@ -206,7 +209,19 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   std::optional<gtsam::NavState> imu_propogated_nav_state_k =
       tryPropogateImu(input, nav_state_lkf_.state, pim);
 
-  imu_propogated_nav_state_k->print("NAV STATEE ");
+  // if(pim) {
+  //   std::stringstream ss;
+  //   ss << std::setprecision(30) << " last kf time " <<
+  //   nav_state_lkf_.timestamp << "\n"; ss << "last frame t=: " <<
+  //   nav_state_km1_.timestamp << "\n"; auto imu_measurements =
+  //   input->imu_measurements.value(); auto timestamps =
+  //   imu_measurements.timestamps_; size_t num_samples = timestamps.cols(); for
+  //   (size_t idx = 0u; idx < num_samples; ++idx) {
+  //     ss << "IMU (" << idx << ") t=" << timestamps(idx) << "\n";
+  //   }
+  //   ss << "Current t=" << timestamp_k;
+  //   LOG(INFO) << ss.str();
+  // }
 
   //! Rotation from k-1 to k in k-1
   std::optional<gtsam::Rot3> R_km1_k;
@@ -240,7 +255,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // if(input->ground_truth_packet) {
   //   frame_k->T_world_camera_ = input->ground_truth_packet->X_world_;
   // }
-  frame_k->T_world_camera_ = imu_propogated_nav_state_k->pose();
 
   // we currently use the frame pose as the nav state - this value can come from
   // either the VO OR the IMU, depending on the result from the
@@ -307,10 +321,19 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   //     /*&realtime_output->state.dynamic_map*/);
 
   // fill output dynamic map with current structure
+  // only display the currently viewed objects and their last segment
+  MultiObjectTrajectories trajectories_to_visualise;
   for (const auto& object_id : objects_with_new_motions) {
     // assume that getObjectStructureinW does not clear the vector
     object_motion_solver_->getObjectStructureinW(
         object_id, realtime_output->state.dynamic_map);
+
+    const auto trajectory_j = dyno_state_.object_trajectories.at(object_id);
+    const auto last_segment_j = trajectory_j.segments().back();
+
+    if (last_segment_j.trajectory.size() > 2) {
+      trajectories_to_visualise[object_id] = last_segment_j.trajectory;
+    }
   }
 
   const size_t num_object_keyframes = kf_pose_change_infos.size();
@@ -326,7 +349,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   const bool ego_motion_keyframe = shouldFrameBeKeyFrame(frame_k, frame_km1);
-  const bool any_object_keyframes = num_object_keyframes > 0;
+  const bool any_object_keyframes =
+      num_object_keyframes > 0 && FLAGS_pc_send_objects_to_backend;
   const bool is_any_keyframe = ego_motion_keyframe || any_object_keyframes;
 
   if (is_any_keyframe) {
@@ -457,7 +481,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
                           realtime_output->debug_imagery.tracking_image);
 
   cv::Mat okf_debug_metrics = object_motion_solver_->keyframeDebugImage();
-  pushImageToDisplayQueue("OKF Keyframe Metrics", okf_debug_metrics);
+  if (!okf_debug_metrics.empty())
+    pushImageToDisplayQueue("OKF Keyframe Metrics", okf_debug_metrics);
 
   // if (stereo_matching_result) {
   //   cv::Mat stereo_track;
@@ -466,6 +491,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // }
 
   logRealTimeOutput(realtime_output);
+
+  // after logging update the multi object trajectories to visualise
+  realtime_output->state.object_trajectories = trajectories_to_visualise;
 
   return {State::Nominal, realtime_output};
 }
@@ -623,7 +651,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = true;
+  constexpr static bool kParallelSolve = false;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);

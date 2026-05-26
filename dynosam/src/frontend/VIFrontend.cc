@@ -131,7 +131,7 @@ std::optional<gtsam::NavState> VIFrontend::tryPropogateImu(
     const VIFrontendInput::ConstPtr input,
     const gtsam::NavState& nav_state_lIMU, ImuFrontend::PimPtr& pim_out) {
   if (!input->imu_measurements.has_value()) {
-    return {};
+    return std::nullopt;
   }
 
   auto imu_measurements = input->imu_measurements.value();

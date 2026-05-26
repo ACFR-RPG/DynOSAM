@@ -64,6 +64,8 @@ struct ImuCalibration : public ImuParams {
   std::string reference_frame;
 };
 
+std::ostream& operator<<(std::ostream& os, const ImuCalibration& calibration);
+
 void declare_config(ImuParams& config);
 
 }  // namespace dyno

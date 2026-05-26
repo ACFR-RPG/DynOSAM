@@ -37,10 +37,72 @@
 
 namespace dyno {
 
-DataInterfacePipeline::DataInterfacePipeline(bool parallel_run)
-    : MIMO("data-interface"), parallel_run_(parallel_run) {
+DataInterfacePipeline::DataInterfacePipeline(
+    CanonicalSensorRig::ConstPtr sensor_rig, bool parallel_run)
+    : MIMO("data-interface"),
+      sensor_rig_(CHECK_NOTNULL(sensor_rig)),
+      parallel_run_(parallel_run),
+      imu_buffer_(-1),
+      timestamp_last_frame_(InvalidTimestamp),
+      is_ready_{false} {
   shared_ground_truth_ = ground_truth_publisher_.handle();
   CHECK(shared_ground_truth_.valid());
+}
+
+void DataInterfacePipeline::fillImuQueue(
+    const ImuMeasurements& imu_measurements) {
+  static bool warnOnce = true;
+  if (!sensor_rig_->imuEnabled()) {
+    if (warnOnce) {
+      LOG(WARNING) << "imu measurement added, but IMU disabled";
+      warnOnce = false;
+    }
+    return;
+  }
+  imu_buffer_.addMeasurements(imu_measurements.timestamps_,
+                              imu_measurements.acc_gyr_);
+}
+
+void DataInterfacePipeline::fillImuQueue(
+    const ImuMeasurement& imu_measurement) {
+  static bool warnOnce = true;
+  if (!sensor_rig_->imuEnabled()) {
+    if (warnOnce) {
+      LOG(WARNING) << "imu measurement added, but IMU disabled";
+      warnOnce = false;
+    }
+    return;
+  }
+  imu_buffer_.addMeasurement(imu_measurement.timestamp_,
+                             imu_measurement.acc_gyr_);
+}
+
+void DataInterfacePipeline::fillImageContainerQueue(
+    ImageContainer::Ptr image_container) {
+  ImageContainer::Ptr processed_container = image_container;
+  if (image_container_preprocessor_) {
+    processed_container = image_container_preprocessor_(processed_container);
+  }
+  CHECK_NOTNULL(processed_container);
+
+  if (pre_queue_container_calback_)
+    pre_queue_container_calback_(processed_container);
+  packet_queue_.push(processed_container);
+}
+
+void DataInterfacePipeline::addGroundTruthPacket(
+    const GroundTruthInputPacket& gt_packet) {
+  ground_truth_publisher_.insert(gt_packet.frame_id_, gt_packet);
+}
+
+void DataInterfacePipeline::registerImageContainerPreprocessor(
+    const ImageContainerPreprocesser& func) {
+  image_container_preprocessor_ = func;
+}
+
+void DataInterfacePipeline::registerPreQueueContainerCallback(
+    const PreQueueContainerCallback& func) {
+  pre_queue_container_calback_ = func;
 }
 
 void DataInterfacePipeline::shutdownQueues() {
@@ -81,30 +143,56 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
     ground_truth_packet = ground_truth->at(packet->frameId());
   }
   const Timestamp& timestamp = packet->timestamp();
-  ImuMeasurements::Optional imu_measurements;
 
-  // TEST FOR IMU ONLy
-  bool should_use = false;
-  imu_measurements.emplace();
-  FrameAction action =
-      getTimeSyncedImuMeasurements(timestamp, &(*imu_measurements));
-  switch (action) {
-    case FrameAction::Use:
-      CHECK(imu_measurements);
-      should_use = true;
-      break;
-    case FrameAction::Wait:
-    case FrameAction::Drop:
-      imu_measurements.reset();
-      break;
+  if (!is_ready_) {
+    // if IMU we need to wait till ready
+    if (sensor_rig_->imuEnabled()) {
+      VLOG(5) << "IMU enabled: waiting for synchronized measurements to start";
+      ImuMeasurements imu_measurements;
+      FrameAction action =
+          getTimeSyncedImuMeasurements(timestamp, &imu_measurements);
+      if (action == FrameAction::Use) {
+        is_ready_ = true;
+        // handle IMU measurements (ie delete)
+        removeOldImuMeasurements(imu_measurements);
+        VLOG(5) << "Recieved initial synchronized IMU measurements. Beginning "
+                   "processing...";
+        // drop the first set of good IMU measurements
+        return nullptr;
+      }
+    } else {
+      // no IMU just images
+      is_ready_ = true;
+    }
   }
 
-  if (should_use) {
-    return std::make_shared<VIFrontendInput>(packet, ground_truth_packet,
-                                             imu_measurements);
-  } else {
+  if (!is_ready_) {
+    VLOG(10) << "Data is not ready at timestamp: " << timestamp;
     return nullptr;
   }
+
+  ImuMeasurements::Optional imu_measurements{std::nullopt};
+  if (sensor_rig_->imuEnabled()) {
+    imu_measurements.emplace();
+    FrameAction action =
+        getTimeSyncedImuMeasurements(timestamp, &(*imu_measurements));
+    switch (action) {
+      case FrameAction::Use:
+        CHECK(imu_measurements);
+        removeOldImuMeasurements(imu_measurements.value());
+        break;
+      case FrameAction::Wait:
+      case FrameAction::Drop:
+        imu_measurements.reset();
+        // currently cannot handle the case we have IMU, we are ready but we
+        // have not synchornized this frame
+        LOG(FATAL) << "Cannot handle...";
+        break;
+    }
+  }
+
+  return std::make_shared<VIFrontendInput>(packet, ground_truth_packet,
+                                           imu_measurements);
 }
 
 SharedGroundTruth DataInterfacePipeline::getSharedGroundTruth() const {
@@ -115,12 +203,9 @@ bool DataInterfacePipeline::hasWork() const {
   return !packet_queue_.empty() && !packet_queue_.isShutdown();
 }
 
-ImuInterfaceHandler::ImuInterfaceHandler()
-    : imu_buffer_(-1), timestamp_last_frame_(InvalidTimestamp) {}
-
-ImuInterfaceHandler::FrameAction
-ImuInterfaceHandler::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
-                                                  ImuMeasurements* imu_meas) {
+DataInterfacePipeline::FrameAction
+DataInterfacePipeline::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
+                                                    ImuMeasurements* imu_meas) {
   if (imu_buffer_.isShutdown() || imu_buffer_.size() == 0u) {
     return FrameAction::Drop;
   }
@@ -221,6 +306,11 @@ ImuInterfaceHandler::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
             << "ACCGYR IMU: \n"
             << imu_meas->acc_gyr_;
   return FrameAction::Use;
+}
+
+void DataInterfacePipeline::removeOldImuMeasurements(
+    const ImuMeasurements& imu_meas) {
+  imu_buffer_.removeMeasurements(imu_meas.timestamps_);
 }
 
 }  // namespace dyno

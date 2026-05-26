@@ -122,7 +122,7 @@ class DynoPipelineManager {
 
   // Data-provider pointers
   DataInterfacePipeline::UniquePtr data_interface_;
-  DataProvider::Ptr data_loader_;
+  DataProvider::Ptr data_provider_;
 
   // Display and Viz
   BackendModuleDisplay::Ptr external_backend_display_;

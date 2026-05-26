@@ -521,6 +521,7 @@ bool DepthUpdater::updateFromDepth(
       // right projected right keypoint with virtual camera
       //  if projection fails, set as outlier
       if (!rgbd_camera->projectRight(feature)) {
+        feature->depth(Feature::invalid_depth);
         feature->markOutlier();
       }
     }

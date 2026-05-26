@@ -118,6 +118,8 @@ class ThreadsafeImuBuffer {
   inline void addMeasurements(const Timestamps& timestamps_nanoseconds,
                               const ImuAccGyrs& imu_measurements);
 
+  void removeMeasurements(const Timestamps& imu_timestamps);
+
   // Get IMU data strictly between Timestamps.
   // Example: content: 2 3 4 5
   //      getImuDataStrictlyBtwTiemstamps(2, 5, ...) returns elements at 3, 4.

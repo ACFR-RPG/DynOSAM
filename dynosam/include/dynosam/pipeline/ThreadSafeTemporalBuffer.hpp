@@ -27,33 +27,6 @@ class ThreadsafeTemporalBuffer {
   using This = ThreadsafeTemporalBuffer<ValueType, AllocatorType>;
   using Type = ValueType;
 
-  // private:
-  //   template<typename Iterator>
-  //   class InternalIterator {
-  //     public:
-  //       using iterator = Iterator;
-  //       //! naming conventions to match those required by iterator traits
-  //       using value_type = typename std::iterator_traits<typename
-  //       Iter::pointer>::value_type; using reference_type = typename
-  //       std::iterator_traits<typename Iter::pointer>::reference; using
-  //       pointer = typename std::iterator_traits<typename
-  //       Iter::pointer>::pointer; using difference_type = typename
-  //       std::iterator_traits<typename Iter::pointer>::difference_type; using
-  //       iterator_category = std::forward_iterator_tag; //i guess? only
-  //       forward is defined (++iter) right now
-
-  //       InternalIterator(BufferType& buffer, Iterator it,
-  //       std::recursive_mutex* r_mutex)
-  //         : buffer_(buffer), it_(it), mutex(CHECK_NOTNULL(r_mutex)) {}
-
-  //     private:
-  //       BufferType& buffer_; //! reference to container
-  //       mutable Iterator it_;
-  //       mutable std::recursive_mutex* mutex
-  //   };
-
-  // public:
-
   // Create buffer of infinite length (buffer_length_seconds = -1)
   ThreadsafeTemporalBuffer();
 

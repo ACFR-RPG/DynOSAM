@@ -46,26 +46,6 @@ def generate_launch_description():
         camera_name
     )
 
-    # dynosam_node = DynosamNode(
-    #     package="dynosam_ros",
-    #         executable="dynosam_node",
-    #         output="screen",
-    #         parameters=[
-    #             {"params_path": dynosam_params},
-    #             {"online": True},
-    #             {"input_image_mode": 1}, # Corresponds with InputImageMode::RGBD}
-    #             {"baseline": 0.095},
-    #             {"base_frame": "camera_link"},
-    #             {"odom_frame": "odom"}
-    #         ],
-    #         remappings=[
-    #             ('image/rgb', f'{camera_prefix}/color/image_raw'),
-    #             ('image/depth', f'{camera_prefix}/aligned_depth_to_color/image_raw'),
-    #             ('dataprovider/camera/camera_info', f'{camera_prefix}/color/camera_info'),
-    #             # ('dataprovider/imu', f'{camera_prefix}/imu')
-    #         ],
-    #     )
-
     dynosam_node = DynosamNode(
         package="dynosam_ros",
             executable="dynosam_node",
@@ -73,7 +53,7 @@ def generate_launch_description():
             parameters=[
                 {"params_path": dynosam_params},
                 {"online": True},
-                {"input_image_mode": "rgb+aligned_depth+imu"},
+                {"input_image_mode": "rgb+aligned_depth"},
                 {"base_frame": "camera_link"},
                 {"odom_frame": "odom"}
             ],
@@ -87,7 +67,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument("output_path", default_value="/root/results/misc/"),
-        DeclareLaunchArgument("v", default_value="5"),
+        DeclareLaunchArgument("v", default_value="10"),
         rs_node,
         dynosam_node
     ])
