@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
   fp.tracker_params.prefer_provided_object_detection = false;
 
   const CameraParams original_camera_params =
-      waitAndSetCameraParams(node, "camera_info");
+      dyno::ros::waitAndSetCameraParams(node, "camera_info");
 
   const auto original_size = original_camera_params.imageSize();
   cv::Size rescale_size = original_size;
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
         // type
         rgb_undistort.convertTo(rgb_undistort, rgb.type());
 
-        const Timestamp timestamp = utils::fromRosTime(msg->header.stamp);
+        const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
 
         ImageContainer image_container(frame_id, timestamp);
         image_container.rgb(rgb);

@@ -109,7 +109,9 @@ class PoseChangeVIFrontend : public VIFrontend {
   /** Check if we have an update from the backend and consume the update */
   bool checkAndConsumeUpdate(FrameId frame_id_k);
 
-  PoseTrajectory refinePerFrameCameraPGO() const;
+  /* Refine the full camera trajectory */
+  PoseTrajectory refinePerFrameCameraPGO(
+      const PoseTrajectory& camera_trajectory) const;
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
@@ -138,6 +140,9 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   // Mapping of intermediate relative motions. Stored by to frame.
   gtsam::FastMap<FrameId, RelEgoPoseInfo> rel_egopose_infos_;
+
+  //! Records all up to date keyframe infos for each frame
+  KeyFrameInfoMap keyframe_infos_;
 
   //! Mark as having an update from the backend
   std::atomic_bool has_backend_update_{false};

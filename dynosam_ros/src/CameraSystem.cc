@@ -276,15 +276,15 @@ void SensorSystem::finalise() {
   // function as the loadSingleParamsFromROS variant needs these values to set
   // the paramter extrinsics
   reference_frames_.base_frame =
-      ParameterConstructor(node_.get(), "base_frame",
-                           reference_frames_.base_frame)
+      ros::Parameter::Builder(node_.get(), "base_frame",
+                              reference_frames_.base_frame)
           .description("ROS frame id for base link of the robot")
           .finish()
           .get<std::string>();
 
   reference_frames_.odom_frame =
-      ParameterConstructor(node_.get(), "odom_frame",
-                           reference_frames_.odom_frame)
+      ros::Parameter::Builder(node_.get(), "odom_frame",
+                              reference_frames_.odom_frame)
           .description("ROS frame id for the static workd frame (ie. odometry)")
           .finish()
           .get<std::string>();
@@ -292,14 +292,9 @@ void SensorSystem::finalise() {
   // should either be rgb or image_0
   const CameraParams main_camera_params = loadSingleParams(configs_.at(0));
   reference_frames_.camera_frame = main_camera_params.referenceFrame();
-  LOG(INFO) << "Using robot frame: " << reference_frames_.base_frame;
-  LOG(INFO) << "Using odom frame: " << reference_frames_.odom_frame;
-  LOG(INFO) << "Using camera (estimation) frame: "
-            << reference_frames_.camera_frame;
 
   if (enable_imu_) {
     reference_frames_.imu_frame = getImuFrame(reference_frames_.imu_frame);
-    LOG(INFO) << "Using imu frame: " << reference_frames_.imu_frame;
 
     const auto& robot_frame = reference_frames_.base_frame;
     const auto& imu_frame = reference_frames_.imu_frame;
@@ -311,8 +306,6 @@ void SensorSystem::finalise() {
     const auto& camera_frame = reference_frames_.camera_frame;
     gtsam::Pose3 T_CI;
     getLatestTransform(camera_frame, imu_frame, T_CI);
-
-    LOG(INFO) << "T_CI " << T_CI;
 
     imu_calibration_ = loadImuCalibration(T_CI, reference_frames_.imu_frame);
   }
@@ -369,8 +362,6 @@ void SensorSystem::finalise() {
     LOG(FATAL) << "Other calibration routuines not implemented yet...";
   }
   // set is_initalised
-  LOG(INFO) << "Cannonical camera params: "
-            << cannonical_camera_params.toString();
   cannonical_camera_params_ = cannonical_camera_params;
   calibrate_depth_rig_ = calibrate_depth_rig;
   is_initalised_ = true;
@@ -388,9 +379,9 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
     const StreamConfig& config) const {
   LOG(INFO) << "Getting camera params for " << config.name << " from ROS";
 
-  CameraParams params =
-      waitAndSetCameraParams(node_, "/dynosam/" + config.name + "/camera_info",
-                             std::chrono::milliseconds(-1));
+  CameraParams params = ros::waitAndSetCameraParams(
+      node_, "/dynosam/" + config.name + "/camera_info",
+      std::chrono::milliseconds(-1));
 
   // Set the optical frame, either from parameters or from the loaded
   // CameraParams which has its referecenFrame set from the camera info msg
@@ -442,7 +433,7 @@ bool SensorSystem::loadImuParamsFromConfig(ImuParams& imu_params) const {
 std::string SensorSystem::getImuFrame(
     const std::string& default_imu_frame) const {
   std::string imu_frame =
-      ParameterConstructor(node_.get(), "imu_frame", "")
+      ros::Parameter::Builder(node_.get(), "imu_frame", "")
           .description(
               "ROS frame id for the IMU frame. If empty or not provided, "
               "imu frame will be set using the imu topic header")
@@ -452,7 +443,7 @@ std::string SensorSystem::getImuFrame(
   if (imu_frame.empty()) {
     LOG(INFO) << "No imu frame provided by ROS params. Using imu topic header.";
     sensor_msgs::msg::Imu imu_msg;
-    waitAndGetMessage(imu_msg, node_, "/dynosam/imu");
+    ros::waitAndGetMessage(imu_msg, node_, "/dynosam/imu");
     imu_frame = imu_msg.header.frame_id;
   }
 
@@ -463,7 +454,7 @@ std::string SensorSystem::getCameraOpticalFrame(
     const std::string& name, const std::string& default_optical_frame) const {
   // todo: descriptive naming
   const std::string key = name + "_optical_frame";
-  auto detail = ParameterConstructor(node_.get(), key, default_optical_frame)
+  auto detail = ros::Parameter::Builder(node_.get(), key, default_optical_frame)
                     .description("Camera optical frame id")
                     .finish();
   auto result = detail.get<std::string>();
@@ -591,7 +582,7 @@ void SensorSystem::calibrateFromStereo(const CameraParams& left_params,
 void SensorSystem::loadRGBDSpecificParams(
     SensorSystem::RGBDParams& params) const {
   params.depth_scale =
-      ParameterConstructor(node_.get(), "depth_scale", 0.001)
+      ros::Parameter::Builder(node_.get(), "depth_scale", 0.001)
           .description(
               "Value to scale the depth image from a disparity map "
               "to metric depth")
@@ -599,7 +590,7 @@ void SensorSystem::loadRGBDSpecificParams(
           .get<double>();
 
   params.virtual_baseline =
-      ParameterConstructor(node_.get(), "baseline", 0.1)
+      ros::Parameter::Builder(node_.get(), "baseline", 0.1)
           .description(
               "Stereo camera baseline needed for virtual-stereo system")
           .finish()
@@ -609,7 +600,8 @@ void SensorSystem::loadGeneralParams(
     const cv::Size& main_image_size,
     SensorSystem::GeneralParams& params) const {
   double rescale_width =
-      ParameterConstructor(node_.get(), "rescale_width", main_image_size.width)
+      ros::Parameter::Builder(node_.get(), "rescale_width",
+                              main_image_size.width)
           .description(
               "Image width to rescale to. If not provided or -1 "
               "image will be inchanged")
@@ -620,8 +612,8 @@ void SensorSystem::loadGeneralParams(
   }
 
   double rescale_height =
-      ParameterConstructor(node_.get(), "rescale_height",
-                           main_image_size.height)
+      ros::Parameter::Builder(node_.get(), "rescale_height",
+                              main_image_size.height)
           .description(
               "Image height to rescale to. If not provided or -1 "
               "image will be inchanged")

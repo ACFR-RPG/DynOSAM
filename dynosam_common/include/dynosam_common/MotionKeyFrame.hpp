@@ -1,7 +1,6 @@
 #pragma once
 
 #include "dynosam_common/DynamicObjects.hpp"
-#include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/Types.hpp"
 
 /**

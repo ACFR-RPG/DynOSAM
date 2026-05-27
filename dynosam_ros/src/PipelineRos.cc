@@ -60,7 +60,7 @@ DynoNode::DynoNode(const std::string& node_name,
 
   auto dyno_params = std::make_unique<DynoParams>(params_path);
 
-  is_online_ = ParameterConstructor(this, "online", false)
+  is_online_ = ros::Parameter::Builder(this, "online", false)
                    .description("If the online DataProvider should be used")
                    .finish()
                    .get<bool>();
@@ -85,7 +85,7 @@ dyno::DataProvider::Ptr DynoNode::createDataProvider(DynoParams& dyno_params,
 dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
     DynoParams& dyno_params) {
   auto mode =
-      ParameterConstructor(this, "input_image_mode", "rgb+aligned_depth")
+      ros::Parameter::Builder(this, "input_image_mode", "rgb+aligned_depth")
           .description(
               "Specify sensor and camera stream modes (ie. rgb+aligned_depth, "
               "+stereo, +imu etc.)")
@@ -131,9 +131,9 @@ std::string DynoNode::searchForPathWithParams(
     const std::string& param_name, const std::string& /*default_path*/,
     const std::string& description) {
   // check if we've alrady declared this param
-  // use non-default version so that ParameterConstructor throws exception if no
+  // use non-default version so that Builder throws exception if no
   // parameter is provided on the param server
-  const std::string path = ParameterConstructor(this, param_name)
+  const std::string path = ros::Parameter::Builder(this, param_name)
                                .description(description)
                                .finish()
                                .get<std::string>();
@@ -145,7 +145,7 @@ DynoPipelineManagerRos::DynoPipelineManagerRos(
     const rclcpp::NodeOptions& options)
     : DynoNode("dynosam", options), diagnostics_updater_(nullptr) {
   bool publish_diagnostics =
-      ParameterConstructor(this, "publish_diagnostics", true)
+      ros::Parameter::Builder(this, "publish_diagnostics", true)
           .description(
               "If the diagnostics publisher should run, reporting stats for all"
               " pipelines and modules.")
@@ -193,7 +193,7 @@ void DynoPipelineManagerRos::initalisePipeline() {
         this->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
     hooks->update_time = [clock_pub](Timestamp timestamp) -> void {
       auto msg = rosgraph_msgs::msg::Clock();
-      msg.clock = utils::toRosTime(timestamp);
+      msg.clock = ros::toRosTime(timestamp);
       CHECK_NOTNULL(clock_pub)->publish(msg);
     };
   }

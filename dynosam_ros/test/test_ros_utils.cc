@@ -35,6 +35,7 @@
 #include "dynosam_ros/RosUtils.hpp"
 
 using namespace dyno;
+using namespace dyno::ros;
 
 #include "geometry_msgs/msg/point.hpp"
 #include "nav_msgs/msg/odometry.hpp"
@@ -50,14 +51,14 @@ TEST(TestConcepts, SubNodeNamespacing) {
 }
 
 TEST(RosUtils, HasMsgHeader) {
-  EXPECT_FALSE(internal::HasMsgHeader<geometry_msgs::msg::Point>::value);
-  EXPECT_TRUE(internal::HasMsgHeader<nav_msgs::msg::Odometry>::value);
+  EXPECT_FALSE(ros::internal::HasMsgHeader<geometry_msgs::msg::Point>::value);
+  EXPECT_TRUE(ros::internal::HasMsgHeader<nav_msgs::msg::Odometry>::value);
 }
 
 TEST(RosTraits, testParamTypes) {
   EXPECT_TRUE(
       (std::is_same_v<
-          dyno::ros_param_traits<
+          dyno::ros::param_traits<
               rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE>::cpp_type,
           double>));
   EXPECT_EQ(dyno::traits<double>::ros_parameter_type,
@@ -65,104 +66,104 @@ TEST(RosTraits, testParamTypes) {
 
   EXPECT_TRUE(
       (std::is_same_v<
-          dyno::ros_param_traits<
+          dyno::ros::param_traits<
               rcl_interfaces::msg::ParameterType::PARAMETER_STRING>::cpp_type,
           const char *>));
   EXPECT_EQ(dyno::traits<const char *>::ros_parameter_type,
             rcl_interfaces::msg::ParameterType::PARAMETER_STRING);
 
   EXPECT_TRUE((std::is_same_v<
-               dyno::ros_param_traits<rcl_interfaces::msg::ParameterType::
-                                          PARAMETER_DOUBLE_ARRAY>::cpp_type,
+               dyno::ros::param_traits<rcl_interfaces::msg::ParameterType::
+                                           PARAMETER_DOUBLE_ARRAY>::cpp_type,
                std::vector<double>>));
   EXPECT_EQ(dyno::traits<std::vector<double>>::ros_parameter_type,
             rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE_ARRAY);
 }
 
-TEST(ParameterConstructor, defaultConstructionShared) {
+TEST(ParameterBuilder, defaultConstructionShared) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterConstructor pc(node, "test_param");
+  ros::Parameter::Builder pc(node, "test_param");
   const rclcpp::ParameterValue &pc_as_value = pc;
   EXPECT_EQ(pc_as_value.get_type(), rclcpp::PARAMETER_NOT_SET);
   EXPECT_EQ(pc.name(), "test_param");
 }
 
-TEST(ParameterConstructor, defaultConstructionRawP) {
+TEST(ParameterBuilder, defaultConstructionRawP) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterConstructor pc(node.get(), "test_param");
+  ros::Parameter::Builder pc(node.get(), "test_param");
   const rclcpp::ParameterValue &pc_as_value = pc;
   EXPECT_EQ(pc_as_value.get_type(), rclcpp::PARAMETER_NOT_SET);
   EXPECT_EQ(pc.name(), "test_param");
 }
 
-TEST(ParameterConstructor, valueConstruction) {
+TEST(ParameterBuilder, valueConstruction) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterConstructor pc(node, "test_param", 10);
+  ros::Parameter::Builder pc(node, "test_param", 10);
   const rclcpp::ParameterValue &pc_as_value = pc;
   EXPECT_EQ(pc_as_value.get_type(), rclcpp::PARAMETER_INTEGER);
   EXPECT_EQ(pc_as_value.get<int>(), 10);
   EXPECT_EQ(pc.name(), "test_param");
 }
 
-TEST(ParameterConstructor, testOptionUpdates) {
+TEST(ParameterBuilder, testOptionUpdates) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterConstructor pc = ParameterConstructor(node, "test_param", 10)
-                                .description("a test")
-                                .read_only(true);
+  ros::Parameter::Builder pc = ros::Parameter::Builder(node, "test_param", 10)
+                                   .description("a test")
+                                   .read_only(true);
   const rcl_interfaces::msg::ParameterDescriptor &p_as_descriptor = pc;
   EXPECT_EQ(p_as_descriptor.description, "a test");
   EXPECT_EQ(p_as_descriptor.read_only, true);
 }
 
-TEST(ParameterConstructor, testFinishWithDefault) {
+TEST(ParameterBuilder, testFinishWithDefault) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterDetails detail = ParameterConstructor(node, "test_param", 10)
-                                .description("a test")
-                                .read_only(true)
-                                .finish();
+  Parameter detail = ros::Parameter::Builder(node, "test_param", 10)
+                         .description("a test")
+                         .read_only(true)
+                         .finish();
   const rclcpp::ParameterValue &detail_as_value = detail;
   EXPECT_EQ(detail_as_value.get_type(), rclcpp::PARAMETER_INTEGER);
   EXPECT_EQ(detail_as_value.get<int>(), 10);
 }
 
-TEST(ParameterConstructor, testFinishWithoutDefault) {
+TEST(ParameterBuilder, testFinishWithoutDefault) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterDetails detail_shared = ParameterConstructor(node, "test_param")
-                                       .description("a test")
-                                       .read_only(true)
-                                       .finish();
+  Parameter detail_shared = ros::Parameter::Builder(node, "test_param")
+                                .description("a test")
+                                .read_only(true)
+                                .finish();
   EXPECT_THROW({ detail_shared.get(); }, InvalidDefaultParameter);
 
-  ParameterDetails detail_raw = ParameterConstructor(node.get(), "test_param")
-                                    .description("a test")
-                                    .read_only(true)
-                                    .finish();
+  Parameter detail_raw = ros::Parameter::Builder(node.get(), "test_param")
+                             .description("a test")
+                             .read_only(true)
+                             .finish();
   EXPECT_THROW({ detail_raw.get(); }, InvalidDefaultParameter);
 }
 
-TEST(ParameterConstructor, testFinishWithoutDefaultButOverwrite) {
+TEST(ParameterBuilder, testFinishWithoutDefaultButOverwrite) {
   rclcpp::NodeOptions no;
   no.parameter_overrides({
       {"test_param", 10},
   });
 
   auto node = std::make_shared<rclcpp::Node>("test_node", no);
-  ParameterDetails detail = ParameterConstructor(node, "test_param")
-                                .description("a test")
-                                .read_only(true)
-                                .finish();
+  Parameter detail = ros::Parameter::Builder(node, "test_param")
+                         .description("a test")
+                         .read_only(true)
+                         .finish();
   const rclcpp::ParameterValue &detail_as_value = detail;
   EXPECT_EQ(detail_as_value.get_type(), rclcpp::PARAMETER_INTEGER);
   EXPECT_EQ(detail_as_value.get<int>(), 10);
   EXPECT_EQ(detail.get<int>(), 10);
 }
 
-TEST(ParameterDetails, testDeclareWithDefault) {
+TEST(Parameter, testDeclareWithDefault) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterConstructor pc(node, "test", "some_value");
+  ros::Parameter::Builder pc(node, "test", "some_value");
   EXPECT_FALSE(node->has_parameter("test"));
 
-  ParameterDetails detail = pc.finish();
+  Parameter detail = pc.finish();
 
   EXPECT_TRUE(node->has_parameter("test"));
   EXPECT_EQ(rclcpp::PARAMETER_STRING,
@@ -175,7 +176,7 @@ TEST(ParameterDetails, testDeclareWithDefault) {
 
   // check we can use another detail to get the same value even if no default
   // has been set
-  ParameterDetails detail1 = pc.finish();
+  Parameter detail1 = pc.finish();
   value = detail1.get<std::string>(detail1);
   EXPECT_EQ(value, "some_value");
 
@@ -185,7 +186,7 @@ TEST(ParameterDetails, testDeclareWithDefault) {
   EXPECT_EQ(value, "a_new_value");
 }
 
-TEST(ParameterDetails, testGetParamWithOverrides) {
+TEST(Parameter, testGetParamWithOverrides) {
   rclcpp::NodeOptions no;
   no.parameter_overrides({
       {"parameter_no_default", 42},
@@ -198,18 +199,18 @@ TEST(ParameterDetails, testGetParamWithOverrides) {
   // this will not be the case if we set allow_uncleared_overrides on the
   // NodeOptions
   EXPECT_FALSE(node->has_parameter("parameter_no_default"));
-  ParameterDetails detail =
-      ParameterConstructor(node, "parameter_no_default").finish();
+  Parameter detail =
+      ros::Parameter::Builder(node, "parameter_no_default").finish();
   EXPECT_TRUE(node->has_parameter("parameter_no_default"));
   EXPECT_EQ(node->get_parameter("parameter_no_default").get_value<int>(), 42);
 
   // this has a different type than is in the override
   EXPECT_THROW(
-      { ParameterConstructor(node, "parameter_wrong_type", 10).finish(); },
+      { ros::Parameter::Builder(node, "parameter_wrong_type", 10).finish(); },
       rclcpp::exceptions::InvalidParameterTypeException);
 }
 
-TEST(ParameterDetails, testGetParamWithMutableString) {
+TEST(Parameter, testGetParamWithMutableString) {
   rclcpp::NodeOptions no;
   no.parameter_overrides({
       {"param", "value"},
@@ -224,17 +225,17 @@ TEST(ParameterDetails, testGetParamWithMutableString) {
   Params params;
   // this tests the case where the ValueT type is not a const& and we can still
   // use it!!
-  params.value = ParameterConstructor(node, "param", params.value)
+  params.value = ros::Parameter::Builder(node, "param", params.value)
                      .finish()
                      .get<std::string>();
   // test the value is in the override not the default one
   EXPECT_EQ(params.value, "value");
 }
 
-TEST(ParameterDetails, testGetWithNoOverridesWithDefault) {
+TEST(Parameter, testGetWithNoOverridesWithDefault) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterDetails detail =
-      ParameterConstructor(node, "parameter_no_default").finish();
+  Parameter detail =
+      ros::Parameter::Builder(node, "parameter_no_default").finish();
 
   // attempt to get a param that has been declared but not set without providing
   // a default value
@@ -247,11 +248,11 @@ TEST(ParameterDetails, testGetWithNoOverridesWithDefault) {
                 .get_type());
 }
 
-TEST(ParameterDetails, testGetWithOverridesWithDefault) {
+TEST(Parameter, testGetWithOverridesWithDefault) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
 
-  ParameterDetails detail =
-      ParameterConstructor(node, "parameter_default", 10).finish();
+  Parameter detail =
+      ros::Parameter::Builder(node, "parameter_default", 10).finish();
   // attempt to get a param that has been declared and set
   int value = detail.get(5);
   EXPECT_EQ(value, 10);
@@ -261,11 +262,11 @@ TEST(ParameterDetails, testGetWithOverridesWithDefault) {
       10);
 }
 
-TEST(ParameterDetails, testGetWithOverridesWithString) {
+TEST(Parameter, testGetWithOverridesWithString) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
 
-  ParameterDetails detail =
-      ParameterConstructor(node, "string_param", "a string").finish();
+  Parameter detail =
+      ros::Parameter::Builder(node, "string_param", "a string").finish();
   // attempt to get a param that has been declared but not set without providing
   // a default value
   std::string value = detail.get<std::string>();
@@ -276,9 +277,9 @@ TEST(ParameterDetails, testGetWithOverridesWithString) {
       node->get_parameter("string_param").get_parameter_value().get_type());
 }
 
-TEST(ParameterDetails, testGetWithDefaultString) {
+TEST(Parameter, testGetWithDefaultString) {
   auto node = std::make_shared<rclcpp::Node>("test_node");
-  ParameterDetails detail = ParameterConstructor(node, "string_param").finish();
+  Parameter detail = ros::Parameter::Builder(node, "string_param").finish();
 
   // attempt to get a param that has been declared but not set without providing
   // a default value
@@ -290,7 +291,7 @@ TEST(ParameterDetails, testGetWithDefaultString) {
       node->get_parameter("string_param").get_parameter_value().get_type());
 }
 
-// TEST(ParameterDetails, testUpdateOnParamChange) {
+// TEST(Parameter, testUpdateOnParamChange) {
 
 //   auto node = std::make_shared<rclcpp::Node>("test_node");
 
@@ -312,7 +313,7 @@ TEST(ParameterDetails, testGetWithDefaultString) {
 //   param_event->node = node->get_fully_qualified_name();
 //   param_event->changed_parameters.push_back(p);
 
-//   ParameterDetails detail = ParameterConstructor(node, "parameter_default",
+//   Parameter detail = ros::Parameter::Builder(node, "parameter_default",
 //   10).finish(); const int original_value = detail.get<int>();
 //   EXPECT_EQ(original_value, 10);
 
@@ -325,7 +326,7 @@ TEST(ParameterDetails, testGetWithDefaultString) {
 
 // }
 
-// TEST(ParameterDetails, testUpdateOnParamChangeCallback) {
+// TEST(Parameter, testUpdateOnParamChangeCallback) {
 
 //   auto node = std::make_shared<rclcpp::Node>("test_node");
 
@@ -347,7 +348,7 @@ TEST(ParameterDetails, testGetWithDefaultString) {
 //   param_event->node = node->get_fully_qualified_name();
 //   param_event->changed_parameters.push_back(p);
 
-//   ParameterDetails detail = ParameterConstructor(node, "parameter_default",
+//   Parameter detail = ros::Parameter::Builder(node, "parameter_default",
 //   10).finish();
 
 //   int updated_value = -1;

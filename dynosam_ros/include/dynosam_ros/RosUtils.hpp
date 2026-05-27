@@ -38,10 +38,62 @@
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/parameter.hpp"
+#include "rclcpp/qos.hpp"
 #include "rclcpp/time.hpp"
 #include "rosidl_runtime_cpp/traits.hpp"
 
 namespace dyno {
+
+/**
+ * @brief A generic type trait with the dyno namespace. Here we define compile
+ * time conversions between c++ types and their corresponding
+ * rcl_interfaces::msg::ParameterType. The following properies are defined:
+ *
+ * ::traits<double>::ros_parameter_type, where T=double is any primitive type
+ * that has a parameter type versions, and,
+ * ::traits<rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE>::cpp_type
+ *
+ *
+ * @tparam T
+ */
+template <typename T>
+struct traits;
+
+namespace ros {
+
+/**
+ * @brief Initalises ROS, gflags and glog
+ *
+ * Returns a vector of non-ROS arguments
+ *
+ * @param argc
+ * @param argv
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> initRosAndLogging(int argc, char *argv[]);
+
+/**
+ * @brief More sophisticated checks than just get_subscription_count.
+ *
+ * Code taken verbatum:
+ * https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_visual_slam/blob/main/isaac_ros_visual_slam/include/isaac_ros_visual_slam/impl/has_subscribers.hpp
+ *
+ * @tparam T
+ * @param publisher
+ * @return true
+ * @return false
+ */
+template <class T>
+inline bool hasSubscribers(
+    const std::shared_ptr<rclcpp::Publisher<T>> &publisher);
+
+rclcpp::QoS addQosParameter(rclcpp::Node &node,
+                            std::string default_qos = "SYSTEM_DEFAULT",
+                            std::string parameter_name = "qos",
+                            const int default_depth = 0,
+                            const bool use_node_namespace = true);
+
+rclcpp::QoS parseQosString(const std::string &str, const int depth = 0);
 
 template <typename Msg, class Rep = int64_t, class Period = std::milli>
 inline void waitAndGetMessage(
@@ -82,31 +134,16 @@ inline CameraParams waitAndSetCameraParams(
         std::chrono::duration<Rep, Period>(-1));
 
 /**
- * @brief A generic type trait with the dyno namespace. Here we define compile
- * time conversions between c++ types and their corresponding
- * rcl_interfaces::msg::ParameterType. The following properies are defined:
- *
- * ::traits<double>::ros_parameter_type, where T=double is any primitive type
- * that has a parameter type versions, and,
- * ::traits<rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE>::cpp_type
- *
- *
- * @tparam T
- */
-template <typename T>
-struct traits;
-
-/**
  * @brief Type trait to retrieve a c++ type from the corresponding
  * rcl_interfaces::msg::ParameterType.
- * ros_param_traits<rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE>::cpp_type
+ * dyno::ros::param_traits<rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE>::cpp_type
  * == decltype(double)
  *
  *
  * @tparam Type rcl_interfaces::msg::ParameterType
  */
 template <uint8_t Type>
-struct ros_param_traits;
+struct param_traits;
 
 namespace internal {
 
@@ -181,9 +218,115 @@ class InvalidDefaultParameter : public DynosamException {
   const std::string custom_message_;
 };
 
-class ParameterDetails {
+class Parameter {
  public:
-  friend class ParameterConstructor;
+  friend class Builder;
+
+  /**
+   * @brief Wrapper class to define paramter details. Using these details a
+   * Parameter object can be created which declares the paramter with its
+   * associated node automatically and can be used to directly access the latest
+   * value.
+   *
+   */
+  class Builder {
+   public:
+    /**
+     * @brief Constructor with a node and param name. Default value is set to
+     * type rclcpp::PARAMETER_NOT_SET and the resulting Parameter will throw an
+     * 'InvalidDefaultParameter' exception upon construction unless the user
+     * provides a default argument in the parameter overwrites.
+     *
+     * @param node
+     * @param name
+     */
+    Builder(rclcpp::Node::SharedPtr node, const std::string &name);
+    Builder(rclcpp::Node *node, const std::string &name);
+
+    /**
+     * @brief Construct with a node, param name and default type. The he value
+     * type is determined by traits<ValueTypeT>::ros_parameter_type; and will be
+     * used as the default value if a parameter overwrite is not provided
+     *
+     * @tparam ValueTypeT
+     * @param node
+     * @param name
+     * @param value
+     */
+    template <typename ValueTypeT>
+    Builder(rclcpp::Node::SharedPtr node, const std::string &name,
+            ValueTypeT value);
+    template <typename ValueTypeT>
+    Builder(rclcpp::Node *node, const std::string &name, ValueTypeT value);
+
+    /**
+     * @brief Constructs a Parameter object from the details in this.
+     *
+     * As per the Parameter comments, upon constructio the parameter is
+     * declared in the associated node (from this) and is kept in the
+     * Parameter as a shared pointer.
+     *
+     * @return Parameter
+     */
+    Parameter finish() const;
+
+    /**
+     * @brief Updates the paramters description and a returns a reference to
+     * this.
+     *
+     * Internally, updates parameter_descriptor_.
+     *
+     * @param description const std::string
+     * @return Builder&
+     */
+    Builder &description(const std::string &description);
+
+    /**
+     * @brief Updates the read only flag and a returns a reference to this.
+     *
+     * Internally, updates parameter_descriptor_.
+     *
+     * @param read_only bool
+     * @return Builder&
+     */
+    Builder &read_only(bool read_only);
+
+    /**
+     * @brief Updates the full internal paramter description and returns a
+     * reference to this.
+     *
+     * @param parameter_description const
+     * rcl_interfaces::msg::ParameterDescriptor
+     * &
+     * @return Builder&
+     */
+    Builder &parameter_description(
+        const rcl_interfaces::msg::ParameterDescriptor &parameter_description);
+
+    /**
+     * @brief Name of the paramter
+     *
+     * @return const std::string&
+     */
+    inline const std::string &name() const { return parameter_.get_name(); }
+    /**
+     * @brief Casting operator and the internal storage for the parameter value
+     *
+     * @return rclcpp::ParameterValue
+     */
+    operator rclcpp::ParameterValue() const {
+      return parameter_.get_parameter_value();
+    }
+
+    operator rcl_interfaces::msg::ParameterDescriptor() const {
+      return parameter_descriptor_;
+    }
+
+   private:
+    rclcpp::Node *node_;
+    rclcpp::Parameter parameter_;
+    rcl_interfaces::msg::ParameterDescriptor parameter_descriptor_;
+  };
 
   /**
    * @brief Name of the paramter
@@ -238,7 +381,7 @@ class ParameterDetails {
    * NOT be updated.
    *
    * This default value will only be used if there is NO value in the node, i.e
-   * setting a default value from the ParameterConstructor or using paramter
+   * setting a default value from the Builder or using paramter
    * overwrites using NodeOptions or the launchfile will set value in the node
    * and the default_value argument will not be used.
    *
@@ -298,8 +441,8 @@ class ParameterDetails {
   operator std::string() const;
 
  private:
-  ParameterDetails(rclcpp::Node *node, const rclcpp::Parameter &parameter,
-                   const rcl_interfaces::msg::ParameterDescriptor &description);
+  Parameter(rclcpp::Node *node, const rclcpp::Parameter &parameter,
+            const rcl_interfaces::msg::ParameterDescriptor &description);
 
   rclcpp::Parameter get_param(const rclcpp::Parameter &default_param) const;
 
@@ -312,7 +455,7 @@ class ParameterDetails {
   mutable rclcpp::Node *node_;
   const rclcpp::Parameter
       default_parameter_;  //! the original parameter, prior to declaration with
-                           //! the node, as provided by ParameterConstructor
+                           //! the node, as provided by Builder
   const rcl_interfaces::msg::ParameterDescriptor description_;
 
   //   mutable std::shared_ptr<rclcpp::ParameterEventHandler> param_subscriber_;
@@ -323,113 +466,6 @@ class ParameterDetails {
   //   mutable PropertyHandler property_handler_; //! Handler for param specific
   //   callbacks
 };
-
-/**
- * @brief Wrapper class to define paramter details. Using these details a
- * ParameterDetails object can be created which declares the paramter with its
- * associated node automatically and can be used to directly access the latest
- * value.
- *
- */
-class ParameterConstructor {
- public:
-  /**
-   * @brief Constructor with a node and param name. Default value is set to type
-   * rclcpp::PARAMETER_NOT_SET and the resulting ParameterDetails will throw an
-   * 'InvalidDefaultParameter' exception upon construction unless the user
-   * provides a default argument in the parameter overwrites.
-   *
-   * @param node
-   * @param name
-   */
-  ParameterConstructor(rclcpp::Node::SharedPtr node, const std::string &name);
-  ParameterConstructor(rclcpp::Node *node, const std::string &name);
-
-  /**
-   * @brief Construct with a node, param name and default type. The he value
-   * type is determined by traits<ValueTypeT>::ros_parameter_type; and will be
-   * used as the default value if a parameter overwrite is not provided
-   *
-   * @tparam ValueTypeT
-   * @param node
-   * @param name
-   * @param value
-   */
-  template <typename ValueTypeT>
-  ParameterConstructor(rclcpp::Node::SharedPtr node, const std::string &name,
-                       ValueTypeT value);
-  template <typename ValueTypeT>
-  ParameterConstructor(rclcpp::Node *node, const std::string &name,
-                       ValueTypeT value);
-
-  /**
-   * @brief Constructs a ParameterDetails object from the details in this.
-   *
-   * As per the ParameterDetails comments, upon constructio the parameter is
-   * declared in the associated node (from this) and is kept in the
-   * ParameterDetails as a shared pointer.
-   *
-   * @return ParameterDetails
-   */
-  ParameterDetails finish() const;
-
-  /**
-   * @brief Updates the paramters description and a returns a reference to this.
-   *
-   * Internally, updates parameter_descriptor_.
-   *
-   * @param description const std::string
-   * @return ParameterConstructor&
-   */
-  ParameterConstructor &description(const std::string &description);
-
-  /**
-   * @brief Updates the read only flag and a returns a reference to this.
-   *
-   * Internally, updates parameter_descriptor_.
-   *
-   * @param read_only bool
-   * @return ParameterConstructor&
-   */
-  ParameterConstructor &read_only(bool read_only);
-
-  /**
-   * @brief Updates the full internal paramter description and returns a
-   * reference to this.
-   *
-   * @param parameter_description const rcl_interfaces::msg::ParameterDescriptor
-   * &
-   * @return ParameterConstructor&
-   */
-  ParameterConstructor &parameter_description(
-      const rcl_interfaces::msg::ParameterDescriptor &parameter_description);
-
-  /**
-   * @brief Name of the paramter
-   *
-   * @return const std::string&
-   */
-  inline const std::string &name() const { return parameter_.get_name(); }
-  /**
-   * @brief Casting operator and the internal storage for the parameter value
-   *
-   * @return rclcpp::ParameterValue
-   */
-  operator rclcpp::ParameterValue() const {
-    return parameter_.get_parameter_value();
-  }
-
-  operator rcl_interfaces::msg::ParameterDescriptor() const {
-    return parameter_descriptor_;
-  }
-
- private:
-  rclcpp::Node *node_;
-  rclcpp::Parameter parameter_;
-  rcl_interfaces::msg::ParameterDescriptor parameter_descriptor_;
-};
-
-namespace utils {
 
 /**
  * @brief Convert ROS time to timestamp
@@ -481,16 +517,16 @@ bool convertWithHeader(
   return true;
 }
 
-}  // namespace utils
+}  // namespace ros
 }  // namespace dyno
 
 #define DECLARE_ROS_PARAM_TYPE_CONVERSIONS(CPP_TYPE, PARAMETER_TYPE) \
   template <>                                                        \
   struct dyno::traits<CPP_TYPE>                                      \
-      : dyno::internal::RosParameterType<PARAMETER_TYPE> {};         \
+      : dyno::ros::internal::RosParameterType<PARAMETER_TYPE> {};    \
   template <>                                                        \
-  struct dyno::ros_param_traits<PARAMETER_TYPE>                      \
-      : dyno::internal::CppParameterType<CPP_TYPE> {};
+  struct dyno::ros::param_traits<PARAMETER_TYPE>                     \
+      : dyno::ros::internal::CppParameterType<CPP_TYPE> {};
 
 DECLARE_ROS_PARAM_TYPE_CONVERSIONS(
     bool, rcl_interfaces::msg::ParameterType::PARAMETER_BOOL)
@@ -518,12 +554,12 @@ DECLARE_ROS_PARAM_TYPE_CONVERSIONS(
 // to a type since it does not know which type it is!
 template <>
 struct dyno::traits<rclcpp::ParameterValue>
-    : dyno::internal::RosParameterType<
+    : dyno::ros::internal::RosParameterType<
           rcl_interfaces::msg::ParameterType::PARAMETER_NOT_SET> {};
 
 template <>
 struct dyno::traits<std::string>
-    : dyno::internal::RosParameterType<
+    : dyno::ros::internal::RosParameterType<
           rcl_interfaces::msg::ParameterType::PARAMETER_STRING> {};
 
 #include "dynosam_ros/RosUtils-impl.hpp"

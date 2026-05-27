@@ -5,6 +5,8 @@
 #include <pcl/common/transforms.h>
 #include <pcl/memory.h>
 
+#include <dynosam_common/Transforms.hpp>
+
 #include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_ros/RosUtils.hpp"
@@ -55,8 +57,8 @@ void DisplayCommon::publishOdometry(OdometryPub::SharedPtr pub,
                                     const std::string& frame_id,
                                     const std::string& child_frame_id) {
   nav_msgs::msg::Odometry odom_msg;
-  utils::convertWithHeader(T_world_camera, odom_msg, timestamp, frame_id,
-                           child_frame_id);
+  ros::convertWithHeader(T_world_camera, odom_msg, timestamp, frame_id,
+                         child_frame_id);
   pub->publish(odom_msg);
 }
 
@@ -67,11 +69,11 @@ void DisplayCommon::publishOdometryPath(PathPub::SharedPtr pub,
   nav_msgs::msg::Path path;
   for (const gtsam::Pose3& odom : poses) {
     geometry_msgs::msg::PoseStamped pose_stamped;
-    utils::convertWithHeader(odom, pose_stamped, latest_timestamp, frame_id);
+    ros::convertWithHeader(odom, pose_stamped, latest_timestamp, frame_id);
     path.poses.push_back(pose_stamped);
   }
 
-  path.header.stamp = utils::toRosTime(latest_timestamp);
+  path.header.stamp = ros::toRosTime(latest_timestamp);
   path.header.frame_id = frame_id;
   pub->publish(path);
 }
@@ -83,7 +85,7 @@ std::vector<Marker> DisplayCommon::objectBBXToRvizMarker(
 
   Marker marker;
   marker.header.frame_id = frame_id;
-  marker.header.stamp = utils::toRosTime(latest_timestamp);
+  marker.header.stamp = ros::toRosTime(latest_timestamp);
   marker.ns = "object_bbx";
   marker.id = object_id * 2;  // even ids for boxes
   marker.type = visualization_msgs::msg::Marker::CUBE;
@@ -172,6 +174,75 @@ std::vector<Marker> DisplayCommon::objectBBXToRvizMarker(
   markers.push_back(edges);
 
   return markers;
+}
+
+Marker DisplayCommon::poseToCameraFrustrum(
+    const gtsam::Pose3& T_WR, const Timestamp timestamp,
+    const std::string& frame_id, const Color& colour, const int id,
+    const double scale, const double line_width, const std::string& ns) {
+  Marker marker;
+  marker.header.frame_id = frame_id;
+  marker.header.stamp = ros::toRosTime(timestamp);
+
+  marker.ns = ns;
+  marker.id = id;
+
+  marker.type = Marker::LINE_LIST;
+  marker.action = Marker::ADD;
+
+  marker.pose.orientation.w = 1.0;
+
+  marker.scale.x = line_width;
+
+  std_msgs::msg::ColorRGBA colour_msg;
+  convert(colour, colour_msg);
+  marker.color = colour_msg;
+  marker.color.a = 1.0f;
+
+  marker.lifetime = rclcpp::Duration::from_seconds(0.0);
+
+  const double w = scale;
+  const double h = w * 0.75;
+  const double z = w * 0.6;
+
+  // Frustum corners in camera optical frame
+  const gtsam::Point3 O(0.0, 0.0, 0.0);
+
+  const gtsam::Point3 P1(w, h, z);
+  const gtsam::Point3 P2(w, -h, z);
+  const gtsam::Point3 P3(-w, -h, z);
+  const gtsam::Point3 P4(-w, h, z);
+
+  auto transformPoint = [&](const gtsam::Point3& p_cam) {
+    static const auto T_robot_opencv = openCVToRobotTransform();
+    auto p_cam_robot = T_robot_opencv * p_cam;
+    return T_WR.transformFrom(p_cam_robot);
+  };
+
+  auto toRosPoint = [](const gtsam::Point3& p) {
+    geometry_msgs::msg::Point msg;
+    dyno::convert(p, msg);
+    return msg;
+  };
+
+  auto addLine = [&](const gtsam::Point3& a, const gtsam::Point3& b) {
+    marker.points.push_back(toRosPoint(transformPoint(a)));
+    marker.points.push_back(toRosPoint(transformPoint(b)));
+  };
+
+  // Pyramid edges
+  addLine(O, P1);
+  addLine(O, P2);
+  addLine(O, P3);
+  addLine(O, P4);
+
+  // Front rectangle
+  addLine(P1, P2);
+  addLine(P4, P3);
+  addLine(P4, P1);
+  addLine(P3, P2);
+
+  return marker;
 }
 
 }  // namespace dyno

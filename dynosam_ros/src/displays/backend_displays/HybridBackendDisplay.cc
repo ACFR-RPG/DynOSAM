@@ -42,7 +42,7 @@ void HybridModuleDisplayCommon::publishObjectKeyFrames(
   // current frame
   const MotionEstimateMap motions =
       hybrid_accessor_->getObjectMotions(frame_id);
-  auto ros_time = utils::toRosTime(timestamp);
+  auto ros_time = ros::toRosTime(timestamp);
 
   visualization_msgs::msg::MarkerArray array;
   for (const auto& [object_id, _] : motions) {
@@ -150,7 +150,7 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
     const DynoState::ConstPtr& output) {
   VLOG(30) << "In HybridKeyFrameFormulationDisplay::spin";
 
-  auto ros_time = utils::toRosTime(output->timestamp);
+  auto ros_time = ros::toRosTime(output->timestamp);
 
   visualization_msgs::msg::MarkerArray array;
 

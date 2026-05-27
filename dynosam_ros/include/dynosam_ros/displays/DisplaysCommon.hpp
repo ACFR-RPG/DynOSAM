@@ -78,6 +78,14 @@ struct DisplayCommon {
   static std::vector<Marker> objectBBXToRvizMarker(
       const ObjectBBX& bounding_box, const ObjectId object_id,
       const Timestamp latest_timestamp, const std::string& frame_id);
+
+  static Marker poseToCameraFrustrum(const gtsam::Pose3& T_WR,
+                                     const Timestamp timestamp,
+                                     const std::string& frame_id,
+                                     const Color& colour, const int id,
+                                     const double scale = 0.15,
+                                     const double line_width = 0.1,
+                                     const std::string& ns = "camera_frustum");
 };
 
 }  // namespace dyno

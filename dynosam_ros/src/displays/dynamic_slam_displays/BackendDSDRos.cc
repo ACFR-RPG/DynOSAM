@@ -289,7 +289,7 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
 
     visualization_msgs::msg::Marker marker;
     marker.header.frame_id = odom_frame;
-    marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
+    marker.header.stamp = ros::toRosTime(latest_backend_output->timestamp);
     marker.ns = "object_wireframe";
     marker.id = object_id;
     marker.type = visualization_msgs::msg::Marker::LINE_LIST;
@@ -357,7 +357,7 @@ void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
     //   // Build LINE_LIST marker
     // visualization_msgs::msg::Marker marker;
     // marker.header.frame_id = display_params_.odom_frame;
-    // marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
+    // marker.header.stamp = ros::toRosTime(latest_backend_output->timestamp);
     // marker.ns = "object_wireframe";
     // marker.id = object_id;
     // marker.type = visualization_msgs::msg::Marker::LINE_LIST;

@@ -34,9 +34,29 @@
 
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/adaptors/CameraParamsAdaptor.hpp"
+#include "rclcpp/publisher.hpp"
 #include "rclcpp/wait_for_message.hpp"
 
-namespace dyno {
+namespace dyno::ros {
+
+template <class T>
+inline bool hasSubscribers(
+    const std::shared_ptr<rclcpp::Publisher<T>>& publisher) {
+  if (!publisher) {
+    return false;
+  }
+  try {
+    size_t subscribers = 0;
+    subscribers = publisher->get_subscription_count() +
+                  publisher->get_intra_process_subscription_count();
+    return subscribers != 0;
+  } catch (...) {
+    rcutils_reset_error();
+    RCLCPP_DEBUG(rclcpp::get_logger("HasSubscribers"),
+                 "HasSubscribers(): Exception while counting subscribers");
+  }
+  return false;
+}
 
 template <typename Msg, class Rep, class Period>
 inline void waitAndGetMessage(
@@ -129,18 +149,18 @@ inline CameraParams waitAndSetCameraParams(
 }
 
 template <typename ValueTypeT>
-decltype(auto) ParameterDetails::get() const {
+decltype(auto) Parameter::get() const {
   return this->get_param<ValueTypeT>(this->default_parameter_);
 }
 
 template <typename ValueTypeT>
-ValueTypeT ParameterDetails::get(ValueTypeT default_value) const {
+ValueTypeT Parameter::get(ValueTypeT default_value) const {
   return this->get_param<ValueTypeT>(
       rclcpp::Parameter(this->name(), default_value));
 }
 
 // template <typename ValueTypeT>
-// void ParameterDetails::registerParamCallback(const
+// void Parameter::registerParamCallback(const
 // std::function<void(ValueTypeT)>& callback) {
 //   PropertyHandler::OnChangeFunction<rclcpp::Parameter> wrapper =
 //   [=](rclcpp::Parameter, rclcpp::Parameter new_parameter) -> void {
@@ -172,26 +192,24 @@ ValueTypeT ParameterDetails::get(ValueTypeT default_value) const {
 // }
 
 template <typename ValueTypeT>
-decltype(auto) ParameterDetails::get_param(
+decltype(auto) Parameter::get_param(
     const rclcpp::Parameter& default_param) const {
   const rclcpp::Parameter param = get_param(default_param);
   return param.get_value<ValueTypeT>();
 }
 
 template <typename ValueTypeT>
-ParameterConstructor::ParameterConstructor(rclcpp::Node::SharedPtr node,
-                                           const std::string& name,
-                                           ValueTypeT value)
-    : ParameterConstructor(node.get(), name, value) {}
+Parameter::Builder::Builder(rclcpp::Node::SharedPtr node,
+                            const std::string& name, ValueTypeT value)
+    : Builder(node.get(), name, value) {}
 
 template <typename ValueTypeT>
-ParameterConstructor::ParameterConstructor(rclcpp::Node* node,
-                                           const std::string& name,
-                                           ValueTypeT value)
+Parameter::Builder::Builder(rclcpp::Node* node, const std::string& name,
+                            ValueTypeT value)
     : node_(node), parameter_(name, value) {
   CHECK_NOTNULL(node_);
   parameter_descriptor_.name = name;
   parameter_descriptor_.type = traits<ValueTypeT>::ros_parameter_type;
 }
 
-}  // namespace dyno
+}  // namespace dyno::ros

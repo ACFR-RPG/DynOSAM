@@ -29,209 +29,113 @@
  */
 #include "dynosam_ros/RosUtils.hpp"
 
+#include <glog/logging.h>
 #include <gtsam/geometry/Pose3.h>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_common/viz/Colour.hpp"
-#include "geometry_msgs/msg/pose.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
-#include "geometry_msgs/msg/transform.hpp"
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/time.hpp"
-#include "std_msgs/msg/color_rgba.hpp"
 
-template <>
-bool dyno::convert(const dyno::Timestamp& time_seconds, rclcpp::Time& time) {
-  uint64_t nanoseconds = static_cast<uint64_t>(time_seconds * 1e9);
-  time = rclcpp::Time(nanoseconds);
-  return true;
+/**
+ * @brief Constructs a c-style pointer array from a vector of strings.
+ *
+ * Must be freed
+ *
+ * @param args
+ * @return char**
+ */
+char** constructArgvC(const std::vector<std::string>& args) {
+  char** argv = new char*[args.size()];
+
+  for (size_t i = 0; i < args.size(); i++) {
+    const std::string& arg = args.at(i);
+    argv[i] = new char[arg.size() + 1];
+    strcpy(argv[i], arg.c_str());
+  }
+
+  return argv;
 }
 
-template <>
-bool dyno::convert(const rclcpp::Time& time, dyno::Timestamp& time_seconds) {
-  uint64_t nanoseconds = time.nanoseconds();
-  time_seconds = static_cast<double>(nanoseconds) / 1e9;
-  return true;
+namespace dyno::ros {
+
+std::vector<std::string> initRosAndLogging(int argc, char* argv[]) {
+  // google::ParseCommandLineFlags(&argc, &argv, true);
+  auto non_ros_args = rclcpp::init_and_remove_ros_arguments(argc, argv);
+
+  google::InitGoogleLogging(argv[0]);
+  FLAGS_logtostderr = 1;
+  FLAGS_colorlogtostderr = 1;
+  FLAGS_log_prefix = 1;
+
+  int non_ros_argc = non_ros_args.size();
+  char** non_ros_argv_c = constructArgvC(non_ros_args);
+  // non_ros_argv_c is heap allocated but attempting to free it after usage in
+  // the ParseCommandLineFlags function results in a "double free or corruption"
+  // error. I think this is because ParseCommandLineFlags modifies it in place
+  // and then free it itself somehow unsure, and may result in a minor memory
+  // leak
+  google::ParseCommandLineFlags(&non_ros_argc, &non_ros_argv_c, true);
+
+  return non_ros_args;
 }
 
-template <>
-bool dyno::convert(const dyno::Timestamp& time_seconds,
-                   builtin_interfaces::msg::Time& time) {
-  rclcpp::Time ros_time;
-  convert(time_seconds, ros_time);
-  time = ros_time;
-  return true;
+rclcpp::QoS addQosParameter(rclcpp::Node& node, std::string default_qos,
+                            std::string parameter_name, const int default_depth,
+                            const bool use_node_namespace) {
+  std::string name = parameter_name;
+  if (use_node_namespace) {
+    name = node.get_effective_namespace() + "_" + parameter_name;
+  }
+
+  std::string qos_str =
+      Parameter::Builder(&node, name, default_qos)
+          .description("QoS profile specifier for param " + name +
+                       " (default: " + default_qos + ")")
+          .finish()
+          .get<std::string>();
+
+  const std::string depth_param = name + "_depth";
+  const int depth =
+      Parameter::Builder(&node, depth_param, default_depth)
+          .description("QoS depth (keep N) specifier for param " + name +
+                       " (default: " + std::to_string(default_depth) + ")")
+          .finish()
+          .get<int>();
+
+  return parseQosString(qos_str, depth);
 }
 
-template <>
-bool dyno::convert(const builtin_interfaces::msg::Time& time,
-                   dyno::Timestamp& time_seconds) {
-  rclcpp::Time ros_time = time;
-  convert(ros_time, time_seconds);
-  return true;
+rclcpp::QoS parseQosString(const std::string& str, const int depth) {
+  std::string profile = str;
+  // Convert to upper case.
+  std::transform(profile.begin(), profile.end(), profile.begin(), ::toupper);
+
+  rmw_qos_profile_t rmw_qos = rmw_qos_profile_default;
+
+  if (profile == "SYSTEM_DEFAULT") {
+    rmw_qos = rmw_qos_profile_system_default;
+  } else if (profile == "DEFAULT") {
+    rmw_qos = rmw_qos_profile_default;
+  } else if (profile == "PARAMETER_EVENTS") {
+    rmw_qos = rmw_qos_profile_parameter_events;
+  } else if (profile == "SERVICES_DEFAULT") {
+    rmw_qos = rmw_qos_profile_services_default;
+  } else if (profile == "PARAMETERS") {
+    rmw_qos = rmw_qos_profile_parameters;
+  } else if (profile == "SENSOR_DATA") {
+    rmw_qos = rmw_qos_profile_sensor_data;
+  } else {
+    RCLCPP_WARN_STREAM(
+        rclcpp::get_logger("parseQoSString"),
+        "Unknown QoS profile: " << profile << ". Returning profile: DEFAULT");
+  }
+  auto qos_init =
+      depth == 0 ? rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default)
+                 : rclcpp::KeepLast(depth);
+  return rclcpp::QoS(qos_init, rmw_qos);
 }
 
-template <>
-bool dyno::convert(const RGBA<float>& colour, std_msgs::msg::ColorRGBA& msg) {
-  msg.r = colour.r;
-  msg.g = colour.g;
-  msg.b = colour.b;
-  msg.a = colour.a;
-  return true;
-}
-
-template <>
-bool dyno::convert(const Color& colour, std_msgs::msg::ColorRGBA& msg) {
-  return convert(RGBA<float>(colour), msg);
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::Vector3& vec3,
-                   gtsam::Point3& point) {
-  point = gtsam::Point3(vec3.x, vec3.y, vec3.z);
-  return true;
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::Point& vec3,
-                   gtsam::Point3& point) {
-  point = gtsam::Point3(vec3.x, vec3.y, vec3.z);
-  return true;
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::Quaternion& orientation,
-                   gtsam::Rot3& rot) {
-  rot = gtsam::Rot3(orientation.w, orientation.x, orientation.y, orientation.z);
-  return true;
-}
-
-template <>
-bool dyno::convert(const gtsam::Pose3& pose, geometry_msgs::msg::Pose& msg) {
-  const gtsam::Rot3& rotation = pose.rotation();
-  const gtsam::Quaternion& quaternion = rotation.toQuaternion();
-
-  // Position
-  msg.position.x = pose.x();
-  msg.position.y = pose.y();
-  msg.position.z = pose.z();
-
-  // Orientation
-  msg.orientation.w = quaternion.w();
-  msg.orientation.x = quaternion.x();
-  msg.orientation.y = quaternion.y();
-  msg.orientation.z = quaternion.z();
-  return true;
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::Pose& msg, gtsam::Pose3& pose) {
-  // gtsam::Point3 translation(msg.position.x, msg.position.y, msg.position.z);
-
-  // gtsam::Rot3 rotation(msg.orientation.w, msg.orientation.x,
-  // msg.orientation.y,
-  //                      msg.orientation.z);
-
-  gtsam::Point3 translation;
-  convert(msg.position, translation);
-
-  gtsam::Rot3 rotation;
-  convert(msg.orientation, rotation);
-
-  pose = gtsam::Pose3(rotation, translation);
-  return true;
-}
-
-template <>
-bool dyno::convert(const gtsam::Pose3& pose,
-                   geometry_msgs::msg::PoseStamped& msg) {
-  return convert<gtsam::Pose3, geometry_msgs::msg::Pose>(pose, msg.pose);
-}
-
-// will not do time or tf links or covariance....
-template <>
-bool dyno::convert(const gtsam::Pose3& pose, nav_msgs::msg::Odometry& odom) {
-  return convert<gtsam::Pose3, geometry_msgs::msg::Pose>(pose, odom.pose.pose);
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::Pose& pose,
-                   geometry_msgs::msg::Transform& transform) {
-  transform.translation.x = pose.position.x;
-  transform.translation.y = pose.position.y;
-  transform.translation.z = pose.position.z;
-
-  transform.rotation.x = pose.orientation.x;
-  transform.rotation.y = pose.orientation.y;
-  transform.rotation.z = pose.orientation.z;
-  transform.rotation.w = pose.orientation.w;
-  return true;
-}
-
-template <>
-bool dyno::convert(const gtsam::Vector6& vel,
-                   geometry_msgs::msg::Twist& twist) {
-  // linear velocity components
-  twist.linear.x = vel(3);
-  twist.linear.y = vel(4);
-  twist.linear.z = vel(5);
-
-  // angular velocity components
-  twist.angular.x = vel(0);
-  twist.angular.y = vel(1);
-  twist.angular.z = vel(2);
-
-  return true;
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::Transform& transform,
-                   gtsam::Pose3& pose) {
-  gtsam::Point3 translation;
-  convert(transform.translation, translation);
-
-  gtsam::Rot3 rotation;
-  convert(transform.rotation, rotation);
-
-  pose = gtsam::Pose3(rotation, translation);
-  return true;
-}
-
-template <>
-bool dyno::convert(const gtsam::Pose3& pose,
-                   geometry_msgs::msg::Transform& transform) {
-  transform.translation.x = pose.x();
-  transform.translation.y = pose.y();
-  transform.translation.z = pose.z();
-
-  const gtsam::Rot3& rotation = pose.rotation();
-  const gtsam::Quaternion& quaternion = rotation.toQuaternion();
-  transform.rotation.x = quaternion.x();
-  transform.rotation.y = quaternion.y();
-  transform.rotation.z = quaternion.z();
-  transform.rotation.w = quaternion.w();
-  return true;
-}
-
-template <>
-bool dyno::convert(const gtsam::Pose3& pose,
-                   geometry_msgs::msg::TransformStamped& transform) {
-  return convert<gtsam::Pose3, geometry_msgs::msg::Transform>(
-      pose, transform.transform);
-}
-
-template <>
-bool dyno::convert(const geometry_msgs::msg::TransformStamped& transform,
-                   gtsam::Pose3& pose) {
-  return convert<geometry_msgs::msg::Transform, gtsam::Pose3>(
-      transform.transform, pose);
-}
-
-namespace dyno {
-
-std::ostream& operator<<(std::ostream& stream, const ParameterDetails& param) {
+std::ostream& operator<<(std::ostream& stream, const Parameter& param) {
   stream << (std::string)param;
   return stream;
 }
@@ -242,27 +146,27 @@ std::ostream& operator<<(std::ostream& stream, const rclcpp::Parameter& param) {
   return stream;
 }
 
-const std::string& ParameterDetails::name() const {
+const std::string& Parameter::name() const {
   return default_parameter_.get_name();
 }
 
-std::string ParameterDetails::node_name() const { return node_->get_name(); }
+std::string Parameter::node_name() const { return node_->get_name(); }
 
-rclcpp::Parameter ParameterDetails::get() const {
+rclcpp::Parameter Parameter::get() const {
   return this->get_param(this->default_parameter_);
 }
 
-std::string ParameterDetails::get(const char* default_value) const {
+std::string Parameter::get(const char* default_value) const {
   return this->get_param<std::string>(
       rclcpp::Parameter(this->name(), std::string(default_value)));
 }
 
-std::string ParameterDetails::get(const std::string& default_value) const {
+std::string Parameter::get(const std::string& default_value) const {
   return this->get_param<std::string>(
       rclcpp::Parameter(this->name(), default_value));
 }
 
-ParameterDetails::operator std::string() const {
+Parameter::operator std::string() const {
   std::stringstream ss;
   ss << "[ name: " << this->name();
   ss << " value: " << this->get().value_to_string();
@@ -270,14 +174,14 @@ ParameterDetails::operator std::string() const {
   return ss.str();
 }
 
-ParameterDetails::ParameterDetails(
+Parameter::Parameter(
     rclcpp::Node* node, const rclcpp::Parameter& parameter,
     const rcl_interfaces::msg::ParameterDescriptor& description)
     : node_(node), default_parameter_(parameter), description_(description) {
   declare();
 }
 
-rclcpp::Parameter ParameterDetails::get_param(
+rclcpp::Parameter Parameter::get_param(
     const rclcpp::Parameter& default_param) const {
   const bool is_set = isSet();
   bool has_default = default_param.get_type() != rclcpp::PARAMETER_NOT_SET;
@@ -294,7 +198,7 @@ rclcpp::Parameter ParameterDetails::get_param(
   return node_->get_parameter(this->name());
 }
 
-void ParameterDetails::declare() {
+void Parameter::declare() {
   // only declare if needed
   if (!node_->has_parameter(this->name())) {
     const rclcpp::ParameterValue default_value =
@@ -322,40 +226,37 @@ void ParameterDetails::declare() {
   // }
 }
 
-ParameterConstructor::ParameterConstructor(rclcpp::Node::SharedPtr node,
-                                           const std::string& name)
-    : ParameterConstructor(node.get(), name) {}
+Parameter::Builder::Builder(rclcpp::Node::SharedPtr node,
+                            const std::string& name)
+    : Builder(node.get(), name) {}
 
-ParameterConstructor::ParameterConstructor(rclcpp::Node* node,
-                                           const std::string& name)
+Parameter::Builder::Builder(rclcpp::Node* node, const std::string& name)
     : node_(node), parameter_(name) {
   CHECK_NOTNULL(node_);
   parameter_descriptor_.name = name;
   parameter_descriptor_.dynamic_typing = true;
 }
 
-ParameterDetails ParameterConstructor::finish() const {
-  return ParameterDetails(node_, parameter_, parameter_descriptor_);
+Parameter Parameter::Builder::finish() const {
+  return Parameter(node_, parameter_, parameter_descriptor_);
 }
 
-ParameterConstructor& ParameterConstructor::description(
+Parameter::Builder& Parameter::Builder::description(
     const std::string& description) {
   parameter_descriptor_.description = description;
   return *this;
 }
 
-ParameterConstructor& ParameterConstructor::read_only(bool read_only) {
+Parameter::Builder& Parameter::Builder::read_only(bool read_only) {
   parameter_descriptor_.read_only = read_only;
   return *this;
 }
 
-ParameterConstructor& ParameterConstructor::parameter_description(
+Parameter::Builder& Parameter::Builder::parameter_description(
     const rcl_interfaces::msg::ParameterDescriptor& parameter_description) {
   parameter_descriptor_ = parameter_description;
   return *this;
 }
-
-namespace utils {
 
 Timestamp fromRosTime(const rclcpp::Time& time) {
   Timestamp timestamp;
@@ -369,5 +270,4 @@ rclcpp::Time toRosTime(Timestamp timestamp) {
   return time;
 }
 
-}  // namespace utils
-}  // namespace dyno
+}  // namespace dyno::ros

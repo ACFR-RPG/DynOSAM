@@ -57,10 +57,11 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
         imu_sub_options);
   }
 
-  int queue_size = ParameterConstructor(node_.get(), "image_queue_size", 1000)
-                       .description("Queue size for the image subscriber(s)")
-                       .finish()
-                       .get<int>();
+  int queue_size =
+      ros::Parameter::Builder(node_.get(), "image_queue_size", 1000)
+          .description("Queue size for the image subscriber(s)")
+          .finish()
+          .get<int>();
 
   auto image_qos = rclcpp::SensorDataQoS()
                        .keep_last(static_cast<size_t>(queue_size))
@@ -103,7 +104,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
                                unsigned int stream_index) {
   static constexpr Timestamp kDynoThresholdSync = 0.01;
 
-  const Timestamp timestamp = utils::fromRosTime(msg->header.stamp);
+  const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
   images_received_.at(stream_index)[toNSec(timestamp)] = msg;
 
   // try sync

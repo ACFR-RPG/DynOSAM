@@ -269,8 +269,6 @@ DataInterfacePipeline::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
           &imu_meas->timestamps_, &imu_meas->acc_gyr_);
   // logQueryResult(timestamp, query_result);
 
-  LOG(INFO) << "IMU QUERY RESULT: " << static_cast<int>(query_result);
-
   switch (query_result) {
     case ThreadsafeImuBuffer::QueryResult::kDataAvailable:
       break;  // handle this below

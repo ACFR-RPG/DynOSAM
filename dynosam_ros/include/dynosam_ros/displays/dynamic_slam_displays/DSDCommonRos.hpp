@@ -69,6 +69,7 @@ class DynoStatePublisher {
 
   DynoStatePublisher& publishVisualOdomTF(bool flag);
   DynoStatePublisher& publishObjectOdomTF(bool flag);
+  DynoStatePublisher& publishWireframeCameras(bool flag);
 
  private:
   void publishObjects(FrameId frame_id,
@@ -116,7 +117,7 @@ class DynoStatePublisher {
                      const std::string& frame_link,
                      const std::string& child_frame_link) {
     std_msgs::msg::Header header;
-    header.stamp = utils::toRosTime(timestamp);
+    header.stamp = ros::toRosTime(timestamp);
     header.frame_id = frame_link;
 
     sendTransform(pose, header, child_frame_link);
@@ -137,12 +138,16 @@ class DynoStatePublisher {
   PointCloud2Pub::SharedPtr static_points_pub_;
   PointCloud2Pub::SharedPtr dynamic_points_pub_;
 
+  MarkerArrayPub::SharedPtr camera_wireframe_pub_;
+
   //! Settings
 
   //! Publish TF for visual odom
   bool publish_vo_tf_{false};
   //! Publish TF for object odometry
   bool publish_oo_tf_{false};
+  //! Publish camera pose as additional wireframe orb-slam style
+  bool publish_wireframe_cameras_{false};
 };
 
 }  // namespace dyno

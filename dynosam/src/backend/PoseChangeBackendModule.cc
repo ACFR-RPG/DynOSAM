@@ -184,7 +184,9 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
       batch_input->latestKeyframes());
   shared_module_states->is_backend_optimizing = false;
 
+  LOG(INFO) << "Making output";
   DynoState::Ptr state = makeOutput();
+  LOG(INFO) << "Done output";
 
   // alert frontend
   if (update_callback_) {

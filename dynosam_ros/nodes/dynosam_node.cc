@@ -32,7 +32,7 @@
 #include <glog/logging.h>
 
 #include "dynosam_ros/PipelineRos.hpp"
-#include "dynosam_ros/Utils.hpp"
+#include "dynosam_ros/RosUtils.hpp"
 #include "rclcpp/executor.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -40,7 +40,7 @@ DEFINE_bool(show_dyno_args, false,
             "Show all loaded DynoSAM args (YAML and gflag) and exit");
 
 int main(int argc, char* argv[]) {
-  auto non_ros_args = dyno::initRosAndLogging(argc, argv);
+  auto non_ros_args = dyno::ros::initRosAndLogging(argc, argv);
 
   rclcpp::NodeOptions options;
   options.arguments(non_ros_args);

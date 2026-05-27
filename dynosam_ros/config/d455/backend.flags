@@ -27,8 +27,8 @@
 #--odometry_rotation_sigma=0.05
 #--odometry_translation_sigma=0.01
 
---odometry_rotation_sigma=2.0
---odometry_translation_sigma=0.4
+--odometry_rotation_sigma=3.0
+--odometry_translation_sigma=0.8
 
 
 --static_point_noise_sigma=0.01

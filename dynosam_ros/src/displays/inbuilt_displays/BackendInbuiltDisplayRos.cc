@@ -88,8 +88,8 @@ void BackendInbuiltDisplayRos::spinOnce(
 
   {
     nav_msgs::msg::Odometry odom_msg;
-    utils::convertWithHeader(backend_output->pose(), odom_msg,
-                             backend_output->getTimestamp(), "world", "camera");
+    ros::convertWithHeader(backend_output->pose(), odom_msg,
+                           backend_output->getTimestamp(), "world", "camera");
     odometry_pub_->publish(odom_msg);
   }
 
@@ -100,11 +100,11 @@ void BackendInbuiltDisplayRos::spinOnce(
          backend_output->optimized_camera_poses) {
       // optimized camera traj
       geometry_msgs::msg::PoseStamped pose_stamped;
-      utils::convertWithHeader(T_world_camera, pose_stamped,
-                               backend_output->getTimestamp(), "world");
+      ros::convertWithHeader(T_world_camera, pose_stamped,
+                             backend_output->getTimestamp(), "world");
 
       static std_msgs::msg::Header header;
-      header.stamp = utils::toRosTime(backend_output->getTimestamp());
+      header.stamp = ros::toRosTime(backend_output->getTimestamp());
       header.frame_id = "world";
       odom_path_msg.header = header;
       odom_path_msg.poses.push_back(pose_stamped);

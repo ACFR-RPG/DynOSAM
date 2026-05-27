@@ -64,7 +64,8 @@ namespace dyno {
 template <typename MapIterator, typename MappedType>
 struct vector_iterator_base {
   using iterator_type = MapIterator;
-  using iterator_category = std::forward_iterator_tag;
+  // using iterator_category = std::forward_iterator_tag;
+  using iterator_category = typename MapIterator::iterator_category;
   using value_type = MappedType;
   using reference = value_type&;
   using const_reference = const value_type&;
@@ -94,6 +95,13 @@ struct vector_iterator_base {
 
   vector_iterator_base& operator++() {
     ++it_;
+    return *this;
+  }
+
+  // this only works assumng it is a bidirectionaral iterator
+  // however map types should be
+  vector_iterator_base& operator--() {
+    --it_;
     return *this;
   }
 };

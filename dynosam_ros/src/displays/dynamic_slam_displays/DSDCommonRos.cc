@@ -26,10 +26,20 @@ DynoStatePublisher::DynoStatePublisher(
       node->create_publisher<MultiObjectOdometryPath>("object_odometry_path",
                                                       1);
 
-  static_points_pub_ =
-      node->create_publisher<sensor_msgs::msg::PointCloud2>("static_cloud", 1);
-  dynamic_points_pub_ =
-      node->create_publisher<sensor_msgs::msg::PointCloud2>("dynamic_cloud", 1);
+  auto pc_qos =
+      ros::addQosParameter(*node, "SYSTEM_DEFAULT", "point_cloud_qos");
+  static_points_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
+      "static_cloud", pc_qos);
+  dynamic_points_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
+      "dynamic_cloud", pc_qos);
+
+  auto markers_qos =
+      ros::addQosParameter(*node, "SYSTEM_DEFAULT", "markers_qos");
+  // really should only create if setting is necessary
+  // because then we create namespaces for many unncessary topics that we dont
+  // publish too!
+  camera_wireframe_pub_ =
+      node->create_publisher<MarkerArray>("camera_frustrum", markers_qos);
 }
 
 DynoStatePublisher& DynoStatePublisher::publishVisualOdomTF(bool flag) {
@@ -42,6 +52,11 @@ DynoStatePublisher& DynoStatePublisher::publishObjectOdomTF(bool flag) {
   return *this;
 }
 
+DynoStatePublisher& DynoStatePublisher::publishWireframeCameras(bool flag) {
+  publish_wireframe_cameras_ = flag;
+  return *this;
+}
+
 void DynoStatePublisher::publish(const DynoState& state) {
   const FrameId frame_id = state.frame_id;
   const Timestamp timestamp = state.timestamp;
@@ -49,32 +64,72 @@ void DynoStatePublisher::publish(const DynoState& state) {
   const gtsam::Pose3 T_RC = sensor_rig_->getCanonicalExtrinsics();
 
   // camera (optical) frame to robot (base) frame
-  auto camera_to_base_frame = [&T_RC](gtsam::Pose3& X_WC) {
-    X_WC = changeBasis(T_RC, X_WC);
+  auto camera_to_base_frame = [&T_RC](PoseTrajectoryEntry& X_WC_entry) {
+    X_WC_entry.data = changeBasis(T_RC, X_WC_entry.data);
   };
 
-  std::vector<gtsam::Pose3> camera_trajectory =
-      state.camera_trajectory.toDataVector();
-  // pose of the sensor (usually optical frame) in the world frame
-  const gtsam::Pose3 X_WS = camera_trajectory.back();
+  PoseTrajectory camera_trajectory = state.camera_trajectory;
   // transform camera from estimated (usually optical frame) to base frame
   std::for_each(camera_trajectory.begin(), camera_trajectory.end(),
                 camera_to_base_frame);
 
   // pose of the robot (base link)
-  const gtsam::Pose3 X_WR = camera_trajectory.back();
+  const gtsam::Pose3 X_WR = camera_trajectory.last().data;
   DisplayCommon::publishOdometry(vo_publisher_, X_WR, timestamp,
                                  reference_frames.odom_frame,
                                  reference_frames.base_frame);
   if (publish_vo_tf_) {
     std_msgs::msg::Header header;
-    header.stamp = utils::toRosTime(timestamp);
+    header.stamp = ros::toRosTime(timestamp);
     header.frame_id = reference_frames.odom_frame;
     sendTransform(X_WR, header, reference_frames.base_frame);
   }
 
+  if (publish_wireframe_cameras_) {
+    MarkerArray marker_array;
+
+    static constexpr double kLineWidth = 0.02;
+    static constexpr double kFrustrumScale = 0.2;
+    static constexpr int kShowLastN = 50;
+
+    visualization_msgs::msg::Marker delete_marker;
+    delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;
+
+    marker_array.markers.push_back(delete_marker);
+
+    marker_array.markers.push_back(DisplayCommon::poseToCameraFrustrum(
+        X_WR, timestamp, reference_frames.odom_frame, NiceColors::bluishgreen(),
+        static_cast<int>(frame_id), 2.0 * kFrustrumScale, kLineWidth));
+
+    if (camera_trajectory.size() >= 2) {
+      const auto start_it = camera_trajectory.size() > kShowLastN
+                                ? std::prev(camera_trajectory.end(), kShowLastN)
+                                : camera_trajectory.begin();
+
+      // display keyframes if we have any, up to the last camera which we have
+      // already displayed
+      for (auto i = start_it; i != std::prev(camera_trajectory.end()); ++i) {
+        const auto frame_id_i = i->frame_id;
+
+        if (state.keyframe_infos.exists(frame_id_i) &&
+            state.keyframe_infos.at(frame_id_i).camera_keyframe) {
+          const auto T_WR_i = i->data;
+          const auto timestamp_i = i->timestamp;
+
+          marker_array.markers.push_back(DisplayCommon::poseToCameraFrustrum(
+              T_WR_i, timestamp_i, reference_frames.odom_frame,
+              NiceColors::vermillion(), static_cast<int>(frame_id_i),
+              kFrustrumScale, kLineWidth));
+        }
+      }
+    }
+
+    camera_wireframe_pub_->publish(marker_array);
+  }
+
   // publish trajectory
-  DisplayCommon::publishOdometryPath(vo_path_publisher_, camera_trajectory,
+  DisplayCommon::publishOdometryPath(vo_path_publisher_,
+                                     camera_trajectory.toDataVector(),
                                      timestamp, reference_frames.odom_frame);
 
   // publish local(?) static points
@@ -123,7 +178,7 @@ void DynoStatePublisher::publishObjects(
 
   MultiObjectOdometryPath multi_object_odom_paths;
   multi_object_odom_paths.header.stamp =
-      utils::toRosTime(object_trajectories_k.lastTimestamp());
+      ros::toRosTime(object_trajectories_k.lastTimestamp());
 
   multi_object_odom_paths.header.frame_id = reference_frames.odom_frame;
 
@@ -208,8 +263,8 @@ ObjectOdometry DynoStatePublisher::constructObjectOdometry(
   const auto child_link = "object_" + std::to_string(object_id) + "_link";
 
   ObjectOdometry object_odom;
-  utils::convertWithHeader(L_W_k, object_odom.odom, timestamp_k, frame_link,
-                           child_link);
+  ros::convertWithHeader(L_W_k, object_odom.odom, timestamp_k, frame_link,
+                         child_link);
 
   dyno::convert(H_W_km1_k.estimate(), object_odom.h_w_km1_k.pose);
 

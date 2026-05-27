@@ -54,6 +54,7 @@ FrontendDSDRos::FrontendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
   }
 
   dyno_state_publisher_.publishVisualOdomTF(true);
+  dyno_state_publisher_.publishWireframeCameras(true);
 }
 
 FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(

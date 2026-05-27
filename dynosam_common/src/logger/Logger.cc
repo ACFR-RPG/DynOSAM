@@ -123,15 +123,26 @@ void OfstreamWrapper::openLogFile(bool open_file_in_append_mode) {
   CHECK(!filename_.empty());
   CHECK(!output_path_.empty());
   LOG(INFO) << "Opening output file: " << filename_.c_str();
-  OpenFile((std::string)getFilePath(), &ofstream_, open_file_in_append_mode);
+
+  try {
+    const std::string full_file_path = this->getFilePath();
+    OpenFile(full_file_path, &ofstream_, open_file_in_append_mode);
+  } catch (const DynosamException& e) {
+    // log or fail silently
+    if (VLOG_IS_ON(10)) {
+      LOG(ERROR) << e.what();
+    }
+  }
 }
 
 fs::path OfstreamWrapper::getFilePath() const {
   fs::path fs_out_path(output_path_);
-  if (!fs::exists(fs_out_path))
-    throw std::runtime_error("OfstreamWrapper - Output path does not exist: " +
-                             output_path_);
-
+  if (!fs::exists(fs_out_path)) {
+    DYNO_THROW_MSG(DynosamException)
+        << "Cannot log to file " << filename_ << " as output file path "
+        << fs_out_path << " does not exist!";
+    throw;
+  }
   return fs_out_path / fs::path(filename_);
 }
 

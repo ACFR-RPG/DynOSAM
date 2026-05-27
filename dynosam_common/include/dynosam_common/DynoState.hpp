@@ -1,4 +1,5 @@
 #pragma once
+#include "dynosam_common/MotionKeyFrame.hpp"
 #include "dynosam_common/Trajectories.hpp"
 
 namespace dyno {
@@ -24,6 +25,10 @@ struct DynoState : public DynoStateTrajectories {
   //! at k
   StatusLandmarkVector static_map;
   StatusLandmarkVector dynamic_map;
+
+  //! Integration of keyframe based system (For older formulations this will
+  //! always be empty). Used for visualisation
+  KeyFrameInfoMap keyframe_infos;
 };
 
 }  // namespace dyno
