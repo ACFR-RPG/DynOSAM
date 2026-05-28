@@ -33,19 +33,19 @@
 #include <dynosam/visualizer/VisualizerPipelines.hpp>
 
 #include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_ros/displays/DSDCommonRos.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
-#include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
 #include "image_transport/image_transport.hpp"
 #include "rclcpp/node.hpp"
 
 namespace dyno {
 
-class FrontendDSDRos : public FrontendDisplay {
+class FrontendDisplayRos : public FrontendDisplay {
  public:
-  FrontendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
-                 rclcpp::Node::SharedPtr node,
-                 rclcpp::Node::SharedPtr ground_truth_node = nullptr);
-  ~FrontendDSDRos() = default;
+  FrontendDisplayRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
+                     rclcpp::Node::SharedPtr node,
+                     rclcpp::Node::SharedPtr ground_truth_node = nullptr);
+  ~FrontendDisplayRos() = default;
 
   void spinOnce(const RealtimeOutput::ConstPtr& frontend_output) override;
 

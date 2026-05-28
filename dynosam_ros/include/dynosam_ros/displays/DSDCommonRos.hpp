@@ -58,18 +58,25 @@ using MultiObjectOdometryPathPub = rclcpp::Publisher<MultiObjectOdometryPath>;
 //! frame, no frame ids)
 using ObjectOdometryMap = gtsam::FastMap<std::string, ObjectOdometry>;
 
+struct DynoStatePublisherOptions {
+  //! Publish TF for visual odom
+  bool publish_vo_tf{false};
+  //! Publish TF for object odometry
+  bool publish_oo_tf{false};
+  //! Publish camera pose as additional wireframe orb-slam style
+  bool publish_wireframe_cameras{false};
+};
+
 class DynoStatePublisher {
  public:
-  DynoStatePublisher(const CanonicalSensorRig::ConstPtr& sensor_rig,
-                     rclcpp::Node::SharedPtr node);
+  DynoStatePublisher(
+      const CanonicalSensorRig::ConstPtr& sensor_rig,
+      rclcpp::Node::SharedPtr node,
+      const DynoStatePublisherOptions& options = DynoStatePublisherOptions());
 
   DYNO_POINTER_TYPEDEFS(DynoStatePublisher)
 
   void publish(const DynoState& state);
-
-  DynoStatePublisher& publishVisualOdomTF(bool flag);
-  DynoStatePublisher& publishObjectOdomTF(bool flag);
-  DynoStatePublisher& publishWireframeCameras(bool flag);
 
  private:
   void publishObjects(FrameId frame_id,
@@ -126,6 +133,7 @@ class DynoStatePublisher {
  protected:
   CanonicalSensorRig::ConstPtr sensor_rig_;
   rclcpp::Node::SharedPtr node_;
+  DynoStatePublisherOptions options_;
   //! TF broadcaster for the odometry.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
@@ -141,13 +149,6 @@ class DynoStatePublisher {
   MarkerArrayPub::SharedPtr camera_wireframe_pub_;
 
   //! Settings
-
-  //! Publish TF for visual odom
-  bool publish_vo_tf_{false};
-  //! Publish TF for object odometry
-  bool publish_oo_tf_{false};
-  //! Publish camera pose as additional wireframe orb-slam style
-  bool publish_wireframe_cameras_{false};
 };
 
 }  // namespace dyno

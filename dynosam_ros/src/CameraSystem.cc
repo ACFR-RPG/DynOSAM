@@ -389,8 +389,6 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
       getCameraOpticalFrame(config.name, params.referenceFrame());
   params.referenceFrame(optical_frame);
 
-  VLOG(5) << "Image " << config.name
-          << " using reference frame: " << optical_frame;
   // assume reference values are set correctly
   const auto& robot_frame = reference_frames_.base_frame;
 

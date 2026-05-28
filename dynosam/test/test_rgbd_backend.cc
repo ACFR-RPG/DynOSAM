@@ -776,7 +776,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //     // auto options =
   //     //
   //     dyno::factor_graph_tools::DrawBlockJacobiansOptions::makeDynoSamOptions();
-  //     // options.desired_size = cv::Size(1200, 700);FrontendDSDRos
+  //     // options.desired_size = cv::Size(1200, 700);FrontendDisplayRos
   //     //   cv::Mat block_jacobians =
   //     //       nlfgm.drawBlockJacobian(gtsam::Ordering::OrderingType::COLAMD,
   //     //       options);

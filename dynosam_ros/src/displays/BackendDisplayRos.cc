@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_ros/displays/dynamic_slam_displays/BackendDSDRos.hpp"
+#include "dynosam_ros/displays/BackendDisplayRos.hpp"
 
 #include <pcl/conversions.h>
 #include <pcl/point_cloud.h>
@@ -39,8 +39,9 @@
 
 namespace dyno {
 
-BackendDSDRos::BackendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
-                             rclcpp::Node::SharedPtr node)
+BackendDisplayRos::BackendDisplayRos(
+    const CanonicalSensorRig::ConstPtr& sensor_rig,
+    rclcpp::Node::SharedPtr node)
     : BackendDisplay(),
       sensor_rig_(sensor_rig),
       dyno_state_publisher_(sensor_rig, node) {
@@ -51,8 +52,8 @@ BackendDSDRos::BackendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
       node->create_publisher<MarkerArray>("temporal_object_wireframes", 1);
 }
 
-void BackendDSDRos::spinOnce(const DynoState::ConstPtr& backend_output) {
-  VLOG(20) << "Spinning BackendDSDRos k=" << backend_output->frame_id;
+void BackendDisplayRos::spinOnce(const DynoState::ConstPtr& backend_output) {
+  VLOG(20) << "Spinning BackendDisplayRos k=" << backend_output->frame_id;
   dyno_state_publisher_.publish(*backend_output);
   publishTemporalDynamicMapsAsWireFrames(backend_output);
   // // publish vo and path
@@ -136,7 +137,7 @@ void BackendDSDRos::spinOnce(const DynoState::ConstPtr& backend_output) {
   //            .count();
 }
 
-void BackendDSDRos::publishTemporalDynamicMaps(
+void BackendDisplayRos::publishTemporalDynamicMaps(
     const DynoState::ConstPtr& latest_backend_output) {
   // const auto& dynamic_landmarks = latest_backend_output->dynamic_landmarks;
   // const auto& current_frame_id = latest_backend_output->getFrameId();
@@ -260,7 +261,7 @@ void BackendDSDRos::publishTemporalDynamicMaps(
   // temporal_dynamic_points_pub_->publish(pc2_msg);
 }
 
-void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
+void BackendDisplayRos::publishTemporalDynamicMapsAsWireFrames(
     const DynoState::ConstPtr& latest_backend_output) {
   const auto& dynamic_landmarks = latest_backend_output->dynamic_map;
 

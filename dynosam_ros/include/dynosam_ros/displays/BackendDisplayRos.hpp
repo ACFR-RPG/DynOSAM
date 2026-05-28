@@ -1,23 +1,68 @@
 #pragma once
+/*
+ *   Copyright (c) 2025 ACFR-RPG, University of Sydney, Jesse Morris
+ (jesse.morris@sydney.edu.au)
+ *   All rights reserved.
 
-#include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
-#include "dynosam_sensors/SensorRig.hpp"
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *   copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+
+ *   The above copyright notice and this permission notice shall be included in
+ all
+ *   copies or substantial portions of the Software.
+
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
+ *   SOFTWARE.
+ */
+
+#include <dynosam/visualizer/VisualizerPipelines.hpp>
+
+#include "dynosam_ros/displays/DSDCommonRos.hpp"
+#include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "rclcpp/node.hpp"
-#include "rclcpp/node_options.hpp"
 
 namespace dyno {
 
-class BackendModuleDisplayRos : public BackendModuleDisplay {
+class BackendDisplayRos : public BackendDisplay {
  public:
-  DYNO_POINTER_TYPEDEFS(BackendModuleDisplayRos)
+  BackendDisplayRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
+                    rclcpp::Node::SharedPtr node);
+  ~BackendDisplayRos() = default;
 
-  BackendModuleDisplayRos(const ReferenceFrames& params, rclcpp::Node* node)
-      : params_(params), node_(CHECK_NOTNULL(node)) {}
-  virtual ~BackendModuleDisplayRos() = default;
+  void spinOnce(const DynoState::ConstPtr& backend_output) override;
 
- protected:
-  ReferenceFrames params_;
-  rclcpp::Node* node_;
+ private:
+  void publishTemporalDynamicMaps(
+      const DynoState::ConstPtr& latest_backend_output);
+
+  // TODO: should be in HybridDisplay!!!!
+  void publishTemporalDynamicMapsAsWireFrames(
+      const DynoState::ConstPtr& latest_backend_output);
+
+ private:
+  CanonicalSensorRig::ConstPtr sensor_rig_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
+      temporal_dynamic_points_pub_;
+
+  MarkerArrayPub::SharedPtr object_wire_frame_pub_;
+
+  gtsam::FastMap<ObjectId, std::deque<pcl::PointCloud<pcl::PointXYZRGB>>>
+      temporal_clouds_;
+  DynoStatePublisher dyno_state_publisher_;
 };
 
 }  // namespace dyno

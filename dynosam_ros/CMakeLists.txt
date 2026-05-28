@@ -12,8 +12,6 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 
 
-option(ENABLE_DYNAMIC_SLAM_INTERFACES "Use dynamic_slam_interfaces" ON)
-
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
 find_package(ament_cmake REQUIRED)
@@ -36,6 +34,7 @@ find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(diagnostic_updater REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(dynamic_slam_interfaces REQUIRED)
 
 
 # setup targets
@@ -57,8 +56,12 @@ set(SRC_FILES
   src/CameraSystem.cc
   src/Subscriber.cc
 
-  src/displays/backend_displays/HybridBackendDisplay.cc
   src/displays/DisplaysCommon.cc
+  src/displays/DSDCommonRos.cc
+  src/displays/FrontendDisplayRos.cc
+  src/displays/BackendDisplayRos.cc
+  src/displays/HybridBackendDisplay.cc
+
 
 )
 
@@ -109,30 +112,9 @@ set(TARGET_EXPORT_DEPS
   dynosam
   nav_msgs
   message_filters
+  dynamic_slam_interfaces
 )
 
-if(ENABLE_DYNAMIC_SLAM_INTERFACES)
-  message(WARNING "dynamic_slam_interfaces will be used")
-  add_definitions(-DUSE_DYNAMIC_SLAM_INTERFACES)
-
-  find_package(dynamic_slam_interfaces REQUIRED)
-  list(APPEND LINK_LIBS   ${dynamic_slam_interfaces_TARGETS})
-  list(APPEND TARGET_EXPORT_DEPS dynamic_slam_interfaces)
-
-  list(APPEND SRC_FILES
-    src/displays/dynamic_slam_displays/DSDCommonRos.cc
-    src/displays/dynamic_slam_displays/FrontendDSDRos.cc
-    src/displays/dynamic_slam_displays/BackendDSDRos.cc)
-
-else()
-  message(WARNING "dynamic_slam_interfaces will be not used")
-  list(APPEND SRC_FILES
-    src/displays/inbuilt_displays/BackendInbuiltDisplayRos.cc
-    src/displays/inbuilt_displays/InbuiltDisplayCommon.cc
-    src/displays/inbuilt_displays/FrontendInbuiltDisplayRos.cc)
-
-
-endif()
 
 # build library
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})

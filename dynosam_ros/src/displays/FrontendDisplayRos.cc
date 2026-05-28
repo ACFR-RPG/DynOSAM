@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_ros/displays/dynamic_slam_displays/FrontendDSDRos.hpp"
+#include "dynosam_ros/displays/FrontendDisplayRos.hpp"
 
 #include "cv_bridge/cv_bridge.hpp"
 #include "dynosam_ros/RosUtils.hpp"
@@ -36,10 +36,13 @@
 
 namespace dyno {
 
-FrontendDSDRos::FrontendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
-                               rclcpp::Node::SharedPtr node,
-                               rclcpp::Node::SharedPtr ground_truth_node)
-    : FrontendDisplay(), dyno_state_publisher_(sensor_rig, node) {
+FrontendDisplayRos::FrontendDisplayRos(
+    const CanonicalSensorRig::ConstPtr& sensor_rig,
+    rclcpp::Node::SharedPtr node, rclcpp::Node::SharedPtr ground_truth_node)
+    : FrontendDisplay(),
+      dyno_state_publisher_(sensor_rig, node,
+                            // pulish vo, oo transforms and wireframe cameras
+                            {true, true, true}) {
   tracking_image_pub_ =
       image_transport::create_publisher(node.get(), "tracking_image");
 
@@ -52,18 +55,17 @@ FrontendDSDRos::FrontendDSDRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
     RCLCPP_INFO_STREAM(node->get_logger(), "Creating ground truth publishers");
     ground_truth_publishers_.emplace(sensor_rig, ground_truth_node);
   }
-
-  dyno_state_publisher_.publishVisualOdomTF(true);
-  dyno_state_publisher_.publishWireframeCameras(true);
 }
 
-FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(
+FrontendDisplayRos::GroundTruthPublishers::GroundTruthPublishers(
     const CanonicalSensorRig::ConstPtr& sensor_rig,
     rclcpp::Node::SharedPtr ground_truth_node)
     : dyno_state_publisher_(sensor_rig, CHECK_NOTNULL(ground_truth_node)) {}
 
-void FrontendDSDRos::spinOnce(const RealtimeOutput::ConstPtr& frontend_output) {
-  VLOG(20) << "Spinning FrontendDSDRos k=" << frontend_output->state.frame_id;
+void FrontendDisplayRos::spinOnce(
+    const RealtimeOutput::ConstPtr& frontend_output) {
+  VLOG(20) << "Spinning FrontendDisplayRos k="
+           << frontend_output->state.frame_id;
   dyno_state_publisher_.publish(frontend_output->state);
 
   // publish debug imagery
@@ -73,7 +75,7 @@ void FrontendDSDRos::spinOnce(const RealtimeOutput::ConstPtr& frontend_output) {
   tryPublishGroundTruth(frontend_output);
 }
 
-void FrontendDSDRos::tryPublishDebugImagery(
+void FrontendDisplayRos::tryPublishDebugImagery(
     const RealtimeOutput::ConstPtr& frontend_output) {
   const DebugImagery& debug_imagery = frontend_output->debug_imagery;
   if (debug_imagery.tracking_image.empty()) return;
@@ -85,7 +87,7 @@ void FrontendDSDRos::tryPublishDebugImagery(
   tracking_image_pub_.publish(msg);
 }
 
-void FrontendDSDRos::tryPublishGroundTruth(
+void FrontendDisplayRos::tryPublishGroundTruth(
     const RealtimeOutput::ConstPtr& frontend_output) {
   // for historical and structural reasons we expect the ground truth packet
   // to be provided in the frontend output for cisualisation

@@ -8,16 +8,16 @@ Panels:
         - /Status1
         - /Backend1/Visual Odometry1/Shape1
         - /Frontend1
+        - /Frontend1/Static Map1/Topic1
         - /Frontend1/ObjectOdometryPath1/Topic1
-        - /Frontend1/Visual Odometry1
         - /Frontend1/Visual Odometry1/Shape1
-        - /Frontend1/Camera Path1
         - /Ground Truth1/Visual Odometry1/Topic1
         - /Ground Truth1/Visual Odometry1/Shape1
         - /Ground Truth1/Camera Path1/Topic1
         - /Ground Truth1/ObjectOdometryPath1
         - /Ground Truth1/ObjectOdometryPath1/Topic1
         - /Ground Truth1/Object Odometry1/Topic1
+        - /MarkerArray3
       Splitter Ratio: 0.49902912974357605
     Tree Height: 649
   - Class: rviz_common/Selection
@@ -37,7 +37,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Static Map
 Visualization Manager:
   Class: ""
   Displays:
@@ -245,7 +245,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dynosam/backend/odometry_path
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Backend
     - Class: rviz_common/Group
       Displays:
@@ -309,7 +309,7 @@ Visualization Manager:
           Topic:
             Depth: 5
             Durability Policy: Volatile
-            History Policy: Keep Last
+            History Policy: System Default
             Reliability Policy: Reliable
             Value: /dynosam/frontend/static_cloud
           Use Fixed Frame: true
@@ -383,7 +383,7 @@ Visualization Manager:
               Scale: 1
               Value: true
             Value: true
-          Enabled: true
+          Enabled: false
           Keep: 1
           Name: Visual Odometry
           Position Tolerance: 0.0010000000474974513
@@ -404,7 +404,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /dynosam/frontend/odometry
-          Value: true
+          Value: false
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
@@ -628,6 +628,18 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /dynosam/anchor_object_keyframes
       Value: false
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        camera_frustum: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /dynosam/frontend/camera_frustrum
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 186; 189; 182
@@ -674,25 +686,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 10
+      Distance: 7.8860273361206055
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.608012318611145
+        Y: -0.38151058554649353
+        Z: 4.78008508682251
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6303983330726624
+      Pitch: 0.7103983163833618
       Target Frame: camera
       Value: Orbit (rviz_default_plugins)
-      Yaw: 3.3554019927978516
+      Yaw: 3.645399808883667
     Saved: ~
 Window Geometry:
   Displays:

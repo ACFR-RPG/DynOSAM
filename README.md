@@ -304,12 +304,10 @@ See the [dynosam_nn README.md](./dynosam_nn//README.md) for more detail on the m
 We additionally support IMU integration using the `PreintegrationFactor` from GTSAM in the backend. However, this has only been tested on VIODE.
 
 ## 4.4 ROS Visualisation
-All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds are vizualised using standard ROS messages. Visualising the objects is more complex and we provide two different ways to do this which can be controlled at compile time using the cmake flag `-DENABLE_DYNAMIC_SLAM_INTERFACES=ON/OFF`
+All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds are vizualised using standard ROS messages. Visualising the objects is done via the [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces) interfance and displayed via the custom RVIZ plugin [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins).
 
-1. (`ON`, now default) Usage of the custom `dynamic_slam_interfaces::msg::ObjectOdometry` (in [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces)) to publish to current state of the each object per frame. Our custom RVIZ plugin [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) can be used to visualize this message type. The object id, current pose, velocity, path etc... will be shown for each object. See this [README.md](./dynosam_ros/include/dynosam_ros/displays/dynamic_slam_displays/README.md) for more detail.
-2. (`OFF`) Instead of using the custom messages, standard ROS visualisation messages are used instead to display the state of each object (object id, current pose...). This setup is therefore more complex, and results in many more advertised topics to achieve a similar (and less flexible) display than using the custom plugin/interface combination. As a result, this method of display is not preferred. See this [README.md](./dynosam_ros/include/dynosam_ros/displays/inbuilt_displays/README.md) for more detail.
 
-> NOTE: the publishing of object states is meant primilarily for __visualisation__ purposes and not for recording data used for evaluation. This is done using csv files in a different submodule: see [Evaluation](#4-evaluation).
+> NOTE: the publishing of object states is meant primilarily for __visualisation__ purposes and downstream tasks and not for recording data used for evaluation. This is done using csv files in a different submodule: see [Evaluation](#4-evaluation).
 
 ## 4.4 Coordinate Systems
 

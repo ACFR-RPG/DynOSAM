@@ -9,7 +9,7 @@
 - [Glog](http://rpg.ifi.uzh.ch/docs/glog.html), [Gflags](https://gflags.github.io/gflags/)
 - [Gtest](https://github.com/google/googletest/blob/master/googletest/docs/primer.md) (installed automagically)
 - [config_utilities](https://github.com/MIT-SPARK/config_utilities)
-- [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces) (Required by default. Can be optionally made not a requirement. See Insallation instructions below)
+- [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces)
 
 External dependancies (for visualization) not required for compilation.
 - [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) (Plugin to display custom `dynamic_slam_interfaces` messages which are advertised by default.)
@@ -129,13 +129,6 @@ when compiling OpenCV.
 
 ## Additional Installation Notes
 
-`dynamic_slam_interfaces` is a require dependacy by default. This package is used to include custom messages that represet the state of each dynamic object per frame and is used by the ROS publishers.
-
-To disable this dependancy compile the code as
-```
-colcon build --cmake-args -DENABLE_DYNAMIC_SLAM_INTERFACES=OFF
-```
-By default `ENABLE_DYNAMIC_SLAM_INTERFACES=ON` in the [CMakeLists.txt](./dynosam_ros/CMakeLists.txt). This CMake option will additionally change the _visualisation_ (and the output topics) used by DynoSAM. See the [ROS Visualisation](#ros-visualisation) section below.
 
 
 Due to DynoSAM being build within ROS:

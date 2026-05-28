@@ -1,4 +1,4 @@
-#include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
+#include "dynosam_ros/displays/DSDCommonRos.hpp"
 
 #include <glog/logging.h>
 
@@ -12,19 +12,21 @@ namespace dyno {
 
 DynoStatePublisher::DynoStatePublisher(
     const CanonicalSensorRig::ConstPtr& sensor_rig,
-    rclcpp::Node::SharedPtr node)
-    : sensor_rig_(sensor_rig), node_(node) {
+    rclcpp::Node::SharedPtr node, const DynoStatePublisherOptions& options)
+    : sensor_rig_(sensor_rig), node_(node), options_(options) {
+  auto odom_qos = ros::addQosParameter(*node, "SYSTEM_DEFAULT", "odometry_qos");
   vo_publisher_ =
-      node_->create_publisher<nav_msgs::msg::Odometry>("odometry", 1);
+      node_->create_publisher<nav_msgs::msg::Odometry>("odometry", odom_qos);
   vo_path_publisher_ =
-      node_->create_publisher<nav_msgs::msg::Path>("odometry_path", 1);
+      node_->create_publisher<nav_msgs::msg::Path>("odometry_path", odom_qos);
+
   tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*node_);
 
   object_odom_publisher_ =
-      node->create_publisher<ObjectOdometry>("object_odometry", 1);
+      node->create_publisher<ObjectOdometry>("object_odometry", odom_qos);
   multi_object_odom_path_publisher_ =
       node->create_publisher<MultiObjectOdometryPath>("object_odometry_path",
-                                                      1);
+                                                      odom_qos);
 
   auto pc_qos =
       ros::addQosParameter(*node, "SYSTEM_DEFAULT", "point_cloud_qos");
@@ -35,26 +37,11 @@ DynoStatePublisher::DynoStatePublisher(
 
   auto markers_qos =
       ros::addQosParameter(*node, "SYSTEM_DEFAULT", "markers_qos");
-  // really should only create if setting is necessary
-  // because then we create namespaces for many unncessary topics that we dont
-  // publish too!
-  camera_wireframe_pub_ =
-      node->create_publisher<MarkerArray>("camera_frustrum", markers_qos);
-}
 
-DynoStatePublisher& DynoStatePublisher::publishVisualOdomTF(bool flag) {
-  publish_vo_tf_ = flag;
-  return *this;
-}
-
-DynoStatePublisher& DynoStatePublisher::publishObjectOdomTF(bool flag) {
-  publish_oo_tf_ = flag;
-  return *this;
-}
-
-DynoStatePublisher& DynoStatePublisher::publishWireframeCameras(bool flag) {
-  publish_wireframe_cameras_ = flag;
-  return *this;
+  if (options_.publish_wireframe_cameras) {
+    camera_wireframe_pub_ =
+        node->create_publisher<MarkerArray>("camera_frustrum", markers_qos);
+  }
 }
 
 void DynoStatePublisher::publish(const DynoState& state) {
@@ -78,19 +65,19 @@ void DynoStatePublisher::publish(const DynoState& state) {
   DisplayCommon::publishOdometry(vo_publisher_, X_WR, timestamp,
                                  reference_frames.odom_frame,
                                  reference_frames.base_frame);
-  if (publish_vo_tf_) {
+  if (options_.publish_vo_tf) {
     std_msgs::msg::Header header;
     header.stamp = ros::toRosTime(timestamp);
     header.frame_id = reference_frames.odom_frame;
     sendTransform(X_WR, header, reference_frames.base_frame);
   }
 
-  if (publish_wireframe_cameras_) {
+  if (options_.publish_wireframe_cameras) {
     MarkerArray marker_array;
 
     static constexpr double kLineWidth = 0.02;
     static constexpr double kFrustrumScale = 0.2;
-    static constexpr int kShowLastN = 50;
+    static constexpr int kShowLastNKeyframes = 10;
 
     visualization_msgs::msg::Marker delete_marker;
     delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;
@@ -99,28 +86,34 @@ void DynoStatePublisher::publish(const DynoState& state) {
 
     marker_array.markers.push_back(DisplayCommon::poseToCameraFrustrum(
         X_WR, timestamp, reference_frames.odom_frame, NiceColors::bluishgreen(),
-        static_cast<int>(frame_id), 2.0 * kFrustrumScale, kLineWidth));
+        static_cast<int>(frame_id), 2.0 * kFrustrumScale, 2.0 * kLineWidth));
 
     if (camera_trajectory.size() >= 2) {
-      const auto start_it = camera_trajectory.size() > kShowLastN
-                                ? std::prev(camera_trajectory.end(), kShowLastN)
-                                : camera_trajectory.begin();
-
-      // display keyframes if we have any, up to the last camera which we have
-      // already displayed
-      for (auto i = start_it; i != std::prev(camera_trajectory.end()); ++i) {
-        const auto frame_id_i = i->frame_id;
-
-        if (state.keyframe_infos.exists(frame_id_i) &&
-            state.keyframe_infos.at(frame_id_i).camera_keyframe) {
-          const auto T_WR_i = i->data;
-          const auto timestamp_i = i->timestamp;
-
-          marker_array.markers.push_back(DisplayCommon::poseToCameraFrustrum(
-              T_WR_i, timestamp_i, reference_frames.odom_frame,
-              NiceColors::vermillion(), static_cast<int>(frame_id_i),
-              kFrustrumScale, kLineWidth));
+      // find last N keyframes
+      std::set<FrameId> ckf_ids;
+      for (const auto& [frame_id, kf_info] : state.keyframe_infos) {
+        if (kf_info.camera_keyframe) {
+          ckf_ids.insert(frame_id);
         }
+      }
+      // erase current frame (if exists) as we have already displayed
+      ckf_ids.erase(frame_id);
+
+      const auto start_it = ckf_ids.size() > kShowLastNKeyframes
+                                ? std::prev(ckf_ids.end(), kShowLastNKeyframes)
+                                : ckf_ids.begin();
+
+      for (auto i = start_it; i != ckf_ids.end(); ++i) {
+        const auto frame_id_i = *i;
+
+        CHECK(camera_trajectory.exists(frame_id_i));
+        const auto entry_i = camera_trajectory.get(frame_id_i);
+        const auto T_WR_i = entry_i.data;
+        const auto timestamp_i = entry_i.timestamp;
+        marker_array.markers.push_back(DisplayCommon::poseToCameraFrustrum(
+            T_WR_i, timestamp_i, reference_frames.odom_frame,
+            NiceColors::vermillion(), static_cast<int>(frame_id_i),
+            kFrustrumScale, kLineWidth));
       }
     }
 
@@ -193,7 +186,7 @@ void DynoStatePublisher::publishObjects(
         object_id, object_trajectory_R.maxFrame(), object_trajectory_R);
     object_odom_publisher_->publish(object_odometry);
 
-    if (publish_oo_tf_) {
+    if (options_.publish_oo_tf) {
       sendObjectOdometryTransform(object_odometry);
     }
 

@@ -66,7 +66,7 @@ class IncorrectBackendModuleConstruction : public DynosamException {
  *
  * We also template the BackendFactory on a Policy class which must implement
  * createDisplay<T>(std::shared_ptr<T> module) ->
- * std::shared_ptr<BackendModuleDisplayRos> where T is a Formulation (except in
+ * std::shared_ptr<BackendModuleDisplay> where T is a Formulation (except in
  * the Parallel-Hybrid case where it is the BackendModule itself) but can be
  * anything loaded by the BackendFactory. This allows module/formulation
  * specific displays to be written independantly from the class and injected

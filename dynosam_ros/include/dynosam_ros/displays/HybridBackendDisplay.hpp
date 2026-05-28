@@ -3,7 +3,7 @@
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/PoseChangeBackendModule.hpp"
 #include "dynosam/formulations/HybridEstimator.hpp"
-#include "dynosam_ros/displays/BackendDisplayRos.hpp"
+#include "dynosam_ros/displays/BackendModuleDisplayRos.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 
 namespace dyno {

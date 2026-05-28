@@ -42,7 +42,8 @@
 #include "dynosam_ros/CameraSystem.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/Subscriber.hpp"
-#include "dynosam_ros/displays/DisplaysImpl.hpp"
+#include "dynosam_ros/displays/BackendDisplayRos.hpp"
+#include "dynosam_ros/displays/FrontendDisplayRos.hpp"
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/parameter.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
@@ -103,7 +104,6 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider(
   }
 
   sensor_system->enableImu(sensor_mode.useImu());
-
   sensor_system->finalise();
 
   // do better with the subnodes

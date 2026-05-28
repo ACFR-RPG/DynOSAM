@@ -9,7 +9,7 @@
 // TODO: for now a simple solution for testing
 //  puts BackendModuleDisplayTraits into one file explicitly for SFINAE
 //  definitions!
-#include "dynosam_ros/displays/backend_displays/HybridBackendDisplay.hpp"
+#include "dynosam_ros/displays/HybridBackendDisplay.hpp"
 
 namespace dyno {
 
