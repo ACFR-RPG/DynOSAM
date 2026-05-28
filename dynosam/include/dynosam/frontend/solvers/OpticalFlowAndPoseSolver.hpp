@@ -90,6 +90,8 @@ class OpticalFlowAndPoseSolver {
    * This is agnostic to if the problem is solving for a motion or a pose so the
    * user must make sure the initial pose is in the right form.
    *
+   * TODO: update comments (solving_frame)
+   *
    * @param frame_k_1
    * @param frame_k
    * @param tracklets
@@ -98,13 +100,17 @@ class OpticalFlowAndPoseSolver {
    */
   OpticalFlowAndPoseSolverResult optimize(
       const Frame::Ptr frame_k_1, const Frame::Ptr frame_k,
-      const TrackletIds& tracklets, const gtsam::Pose3& initial_pose) const {
+      const TrackletIds& tracklets, const gtsam::Pose3& initial_pose,
+      const ReferenceFrame& solving_frame) const {
     utils::ChronoTimingStats timer("of_pose_solver.optimize");
 
     gtsam::NonlinearFactorGraph graph;
     gtsam::Values values;
 
-    const gtsam::Pose3 T_world_k_1 = frame_k_1->getPose();
+    gtsam::Pose3 T = gtsam::Pose3::Identity();
+    if (solving_frame == ReferenceFrame::GLOBAL) {
+      T = frame_k_1->getPose();
+    }
     const gtsam::Symbol pose_key('X', 0);
 
     gtsam::Ordering ordering;
@@ -146,8 +152,8 @@ class OpticalFlowAndPoseSolver {
 
       gtsam::Symbol flow_symbol(flowSymbol(tracklet_id));
       auto flow_factor = boost::make_shared<Pose3FlowProjectionFactorCalib>(
-          flow_symbol, pose_key, kp_k_1, depth_k_1, T_world_k_1,
-          *gtsam_calibration, flow_noise_);
+          flow_symbol, pose_key, kp_k_1, depth_k_1, T, *gtsam_calibration,
+          flow_noise_);
       graph.add(flow_factor);
 
       // add prior factor on each flow
@@ -263,6 +269,8 @@ class OpticalFlowAndPoseSolver {
    * It will NOT update the frame with the result pose as this could be any
    * pose.
    *
+   * TODO: update comments (solving_frame)
+   *
    * @param frame_k_1
    * @param frame_k
    * @param tracklets
@@ -271,8 +279,10 @@ class OpticalFlowAndPoseSolver {
    */
   OpticalFlowAndPoseSolverResult optimizeAndUpdate(
       Frame::Ptr frame_k_1, Frame::Ptr frame_k, const TrackletIds& tracklets,
-      const gtsam::Pose3& initial_pose) const {
-    auto result = optimize(frame_k_1, frame_k, tracklets, initial_pose);
+      const gtsam::Pose3& initial_pose,
+      const ReferenceFrame& solving_frame = ReferenceFrame::GLOBAL) const {
+    auto result =
+        optimize(frame_k_1, frame_k, tracklets, initial_pose, solving_frame);
     updateFrameOutliersWithResult(result, frame_k_1, frame_k);
     return result;
   }

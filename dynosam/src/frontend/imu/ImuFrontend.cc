@@ -97,12 +97,10 @@ ImuFrontend::ImuFrontend(const ImuFrontend& other)
   }
 }
 
-ImuFrontend::PimPtr ImuFrontend::preintegrateImuMeasurements(
-    const ImuMeasurements& imu_measurements) {
+void ImuFrontend::preintegrateImuMeasurements(
+    gtsam::PreintegrationType& pim, const ImuMeasurements& imu_measurements) {
   const Timestamps& stamps = imu_measurements.timestamps_;
   const ImuAccGyrs& accgyr = imu_measurements.acc_gyr_;
-
-  CHECK(pim_) << "Pim not initialized.";
   CHECK(stamps.cols() >= 2) << "No Imu data found.";
   CHECK(accgyr.cols() >= 2) << "No Imu data found.";
 
@@ -114,8 +112,13 @@ ImuFrontend::PimPtr ImuFrontend::preintegrateImuMeasurements(
     CHECK_GT(delta_t, 0.0) << "Imu delta is 0!";
     // TODO Shouldn't we use pim_->integrateMeasurements(); for less code
     // and efficiency??
-    pim_->integrateMeasurement(measured_acc, measured_omega, delta_t);
+    pim.integrateMeasurement(measured_acc, measured_omega, delta_t);
   }
+}
+
+ImuFrontend::PimPtr ImuFrontend::preintegrateImuMeasurements(
+    const ImuMeasurements& imu_measurements) {
+  preintegrateImuMeasurements(*pim_, imu_measurements);
 
   return std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
       safeCastToPreintegratedCombinedImuMeasurements(*pim_));

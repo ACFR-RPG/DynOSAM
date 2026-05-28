@@ -332,6 +332,19 @@ class Frame {
 
   /**
    * @brief Helper function that creates a ConstructCorrespondanceFunc which
+   * operates to return a TrackletCorrespondance where the ref type is a
+   * Landmark in the local (camera) frame of the previous frame and the cur type
+   * is a Keypoint in the current frame.
+   *
+   * This is useful for 3D-2D correspondence types.
+   *
+   * @return ConstructCorrespondanceFunc<Landmark, Keypoint>
+   */
+  ConstructCorrespondanceFunc<Landmark, Keypoint>
+  landmarkLocalKeypointCorrespondance() const;
+
+  /**
+   * @brief Helper function that creates a ConstructCorrespondanceFunc which
    * operates to return a TrackletCorrespondance where both types are keypoints
    * (in the ref and cur frame respectively).
    *

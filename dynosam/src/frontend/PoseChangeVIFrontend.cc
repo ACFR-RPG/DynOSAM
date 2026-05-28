@@ -148,6 +148,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
       input->imu_measurements.value_or(ImuMeasurements{});
   rel_egopose_infos_.insert2(frame_id_k, rel_egopose);
 
+  const TemporalNavState nav_state_k{frame_id_k, timestamp_k, initial_state};
+  nav_state_km1_ = nav_state_k;
+  nav_state_lkf_ = nav_state_k;
+
   CameraMeasurementStatusVector static_measurements;
   // for the first frame the global map aligns with the local map
   StatusLandmarkVector* local_landmarks = &realtime_output->state.static_map;
@@ -253,9 +257,11 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   StatusLandmarkVector& static_landmarks_used_vo =
       realtime_output->state.static_map;
   TrackingQuality camera_tracking_quality;
+  // visual odometry which is explicitly solved for
+  gtsam::Pose3 T_ij;
   const bool ego_motion_solve = solveAndRefineEgoMotion(
       frame_k, frame_km1, static_landmarks_used_vo, camera_tracking_quality,
-      imu_propogated_nav_state_k, R_km1_k);
+      T_ij, imu_propogated_nav_state_k, R_km1_k);
 
   // if(input->ground_truth_packet) {
   //   frame_k->T_world_camera_ = input->ground_truth_packet->X_world_;
@@ -279,10 +285,19 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   rel_egopose.j_id = frame_id_k;
   rel_egopose.frame_j = frame_k;
   rel_egopose.frontend_nav_state_j = nav_state_k.state;
-  rel_egopose.T_i_j =
-      nav_state_km1_.state.pose().inverse() * nav_state_k.state.pose();
-  rel_egopose.T_lkf_j =
-      nav_state_lkf_.state.pose().inverse() * nav_state_k.state.pose();
+  // rel_egopose.T_i_j =
+  //     nav_state_km1_.state.pose().inverse() * nav_state_k.state.pose();
+  // rel_egopose.T_lkf_j =
+  //     nav_state_lkf_.state.pose().inverse() * nav_state_k.state.pose();
+  // rel_egopose.T_i_j = getVOTransform(nav_state_km1_.frame_id, nav_state_k);
+  // rel_egopose.T_lkf_j = getVOTransform(nav_state_lkf_.frame_id, nav_state_k);
+
+  CHECK(rel_egopose_infos_.exists(nav_state_km1_.frame_id));
+
+  rel_egopose.T_i_j = T_ij;
+  T_lkf_j_ = T_lkf_j_ * T_ij;
+  // TODO: should use propogator!!
+  rel_egopose.T_lkf_j = T_lkf_j_;
   rel_egopose.pim_lk_j = (pim) ? ImuFrontend::copyPim(pim) : nullptr;
   rel_egopose.imu_measurements =
       input->imu_measurements.value_or(ImuMeasurements{});
@@ -512,13 +527,13 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
     StatusLandmarkVector& points_W_used, TrackingQuality& tracking_quality,
-    std::optional<gtsam::NavState> propogated_nav_state_k,
+    gtsam::Pose3& T_ij, std::optional<gtsam::NavState> propogated_nav_state_k,
     std::optional<gtsam::Rot3> R_km1_k) {
-  AbsolutePoseCorrespondences m_matches;
-
+  // get matches points in the local frame of k-1
+  LandmarkKeypointCorrespondences m_matches;
   double tracking_quality_cost;
-  bool success = formulation_->matchToStaticMap(frame_k, m_matches,
-                                                &tracking_quality_cost);
+  bool success = formulation_->matchToStaticMap(
+      frame_k, m_matches, frame_km1->getPose(), &tracking_quality_cost);
 
   bool use_map = false;
   if (success) {
@@ -534,7 +549,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
   }
 
   Pose3SolverResult pnp_result;
-  AbsolutePoseCorrespondences correspondences_used;
+  LandmarkKeypointCorrespondences correspondences_used;
   if (use_map) {
     VLOG(5) << "Tracking against Map: k=" << frame_k->getFrameId()
             << ": matches=" << m_matches.size()
@@ -544,10 +559,10 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     correspondences_used = std::move(m_matches);
   } else {
     VLOG(5) << "Tracking aginast Previous frame";
-    AbsolutePoseCorrespondences correspondences;
+    LandmarkKeypointCorrespondences correspondences;
     frame_k->getCorrespondences(correspondences, *frame_km1,
                                 KeyPointType::STATIC,
-                                frame_k->landmarkWorldKeypointCorrespondance());
+                                frame_k->landmarkLocalKeypointCorrespondance());
 
     // solve PnP
     pnp_result = pnp_ransac_.solve3d2d(correspondences, R_km1_k);
@@ -563,13 +578,13 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
   const FrameId frame_id_k = frame_k->getFrameId();
   const Timestamp timestamp_k = frame_k->getTimestamp();
 
-  // collect points that were used for VO tracking
-  // used for frontend display
-  points_W_used.reserve(correspondences_used.size());
-  for (const auto& corr : correspondences_used) {
-    points_W_used.push_back(LandmarkStatus::StaticInGlobal(
-        corr.ref_, frame_id_k, timestamp_k, corr.tracklet_id_));
-  }
+  // // collect points that were used for VO tracking
+  // // used for frontend display
+  // points_W_used.reserve(correspondences_used.size());
+  // for (const auto& corr : correspondences_used) {
+  //   points_W_used.push_back(LandmarkStatus::StaticInGlobal(
+  //       corr.ref_, frame_id_k, timestamp_k, corr.tracklet_id_));
+  // }
 
   frame_k->static_features_.markOutliers(pnp_result.outliers);
 
@@ -600,8 +615,10 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     return false;
   } else {
     // update camera pose
-    frame_k->T_world_camera_ = pnp_result.best_result;
+    T_ij = pnp_result.best_result;
+    gtsam::Pose3 X_Wj = frame_km1->getPose() * T_ij;
 
+    frame_k->T_world_camera_ = X_Wj;
     tracking_quality =
         use_map ? TrackingQuality::Good : TrackingQuality::Marginal;
 
@@ -616,15 +633,26 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
       // VO smooth so would be nice to refine the flow w.r.t the map
       const auto refinement_result =
           optical_flow_pose_solver_.optimizeAndUpdate(
-              frame_km1, frame_k, pnp_result.inliers, pnp_result.best_result);
+              frame_km1, frame_k, pnp_result.inliers, pnp_result.best_result,
+              ReferenceFrame::LOCAL);
 
-      frame_k->T_world_camera_ = refinement_result.best_result.refined_pose;
+      T_ij = refinement_result.best_result.refined_pose;
+      X_Wj = frame_km1->getPose() * T_ij;
+      frame_k->T_world_camera_ = X_Wj;
 
       VLOG(15) << "Refined camera pose with optical flow - error before: "
                << refinement_result.error_before.value_or(NaN)
                << " error_after: "
                << refinement_result.error_after.value_or(NaN);
     }
+
+    points_W_used.reserve(correspondences_used.size());
+    for (const auto& corr : correspondences_used) {
+      gtsam::Point3 mW = frame_k->T_world_camera_ * corr.ref_;
+      points_W_used.push_back(LandmarkStatus::StaticInGlobal(
+          mW, frame_id_k, timestamp_k, corr.tracklet_id_));
+    }
+
     return true;
   }
 }
@@ -841,6 +869,7 @@ void PoseChangeVIFrontend::handleCameraKeyframe(
   const gtsam::NavState& nav_state_k = rel_lkf_k.frontend_nav_state_j;
   nav_state_lkf_ = TemporalNavState{frame_id_k, timestamp_k, nav_state_k};
   lCKF_frame_ = frame_k;
+  T_lkf_j_ = gtsam::Pose3::Identity();
 }
 
 void PoseChangeVIFrontend::logBestEstimates() const {
@@ -918,40 +947,11 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
     LOG(INFO) << "Recieved backend update at k=" << frame_id_k
               << ". Largest CKF: " << camera_trajectory.maxFrame();
 
-    // const auto maybe_latest_camera_frame =
-    //     this->map_->getSharedModuleStates()->getLatestOptimizedFrame();
-    // CHECK(maybe_latest_camera_frame);
-    // CHECK_EQ(maybe_latest_camera_frame.value(),
-    // camera_trajectory.maxFrame());
-
-    // // prepare update
-    // gtsam::FastMap<FrameId, gtsam::Pose3> refined_poses;
-    // for (const auto& [frame_id, rel_ego_info] : rel_egopose_infos_) {
-    //   // skip for values > what have been optimized
-    //   if (frame_id > maybe_latest_camera_frame.value()) {
-    //     continue;
-    //   }
-
-    //   // is keyframe
-    //   if (camera_trajectory.exists(frame_id)) {
-    //     gtsam::Pose3 X_W_k_updated = camera_trajectory.at(frame_id);
-    //     refined_poses[frame_id] = X_W_k_updated;
-    //   } else {
-    //     CHECK(camera_trajectory.exists(rel_ego_info.lkf_id))
-    //         << rel_ego_info.lkf_id;
-    //     gtsam::Pose3 X_W_KF_updated =
-    //     camera_trajectory.at(rel_ego_info.lkf_id); gtsam::Pose3 X_W_k_updated
-    //     = X_W_KF_updated * rel_ego_info.T_lkf_j; refined_poses[frame_id] =
-    //     X_W_k_updated;
-    //   }
-
-    //   // dyno_state_.camera_trajectory.update(frame_id,
-    //   // refined_poses[frame_id]);
-    // }
-
     // absolutely haneious we do a PGO every frame (JUST FOR NOW)
-    dyno_state_.camera_trajectory =
-        this->refinePerFrameCameraPGO(dyno_state_.camera_trajectory);
+    dyno::FastSet<FrameId> frames_in_pgo;
+    dyno::FastSet<FrameId> frames_propogated;
+    dyno_state_.camera_trajectory = this->refinePerFrameCameraPGO(
+        dyno_state_.camera_trajectory, frames_in_pgo, frames_propogated);
 
     for (const auto& entry : dyno_state_.camera_trajectory) {
       FrameId frame_id = entry.frame_id;
@@ -959,49 +959,6 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
         rel_egopose_infos_.at(frame_id).frame_j->T_world_camera_ = entry.data;
       }
     }
-
-    // update stored relative ego motion data directly
-    // TODo: actually I think we should not update the relative pose information
-    // and insted store the measurements (ie T_i_j and T_lkf_j) somehow
-    // separatrely
-    // gtsam::FastMap<FrameId, RelEgoPoseInfo> rel_egopose_info =
-    //     rel_egopose_infos_;
-    // for (auto& [frame_id, info] : rel_egopose_info) {
-    //   // check if we have an update from the backend for the actual pose at
-    //   this
-    //   // frame
-    //   FrameId frame_j = info.j_id;
-    //   if (refined_poses.exists(frame_j)) {
-    //     info.frame_j->T_world_camera_ = refined_poses.at(frame_j);
-    //   }
-
-    //   // NEVER upodate the relative pose....
-    //   // this is used for relative motion information when smmothing and
-    //   seems
-    //   // to break things... check if we have an update for the keyframe and
-    //   // update relative pose info FrameId frame_lkf = info.lkf_id;
-    //   // if(refined_poses.exists(frame_lkf)) {
-    //   //   const gtsam::Pose3& X_W_KF = refined_poses.at(frame_lkf);
-    //   //   info.T_lkf_j = X_W_KF.inverse() * info.frame_j->T_world_camera_;
-    //   // }
-
-    //   // FrameId frame_i = info.i_id;
-    //   // if(refined_poses.exists(frame_i)) {
-    //   //   const gtsam::Pose3& X_W_i = refined_poses.at(frame_i);
-    //   //   info.T_i_j = X_W_i.inverse() * info.frame_j->T_world_camera_;
-    //   // }
-    // }
-    // for(const auto& [frame_id, X_W_j] : refined_poses) {
-    //   // update pose of frame
-    //   RelEgoPoseInfo& info = rel_egopose_info.at(frame_id);
-    //   info.frame_j->T_world_camera_ = X_W_j;
-
-    //   // update relative motions
-    //   const gtsam::Pose3& X_W_i = refined_poses.at(info.i_id);
-    //   const gtsam::Pose3& X_W_KF = refined_poses.at(info.lkf_id);
-    //   info.T_i_j = X_W_i.inverse() * X_W_j;
-    //   info.T_lkf_j = X_W_KF.inverse() * X_W_j;
-    // }
 
     // TODO: not updating velocity or bias!
     // TODO: by proxy of updating the frames this should also update the
@@ -1012,49 +969,21 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
       nav_state_km1_.state = maybe_nav_state_km1.get();
     }
 
-    // this breaks everything...?
-    // auto maybe_nav_state_lkf =
-    // accessor_->getNavState(nav_state_lkf_.frame_id); if(maybe_nav_state_lkf)
-    // {
-    //   nav_state_lkf_.state = maybe_nav_state_lkf.get();
-    // }
+    auto maybe_nav_state_lkf = accessor_->getNavState(nav_state_lkf_.frame_id);
+    if (maybe_nav_state_lkf) {
+      nav_state_lkf_.state = maybe_nav_state_lkf.get();
+    }
 
-    // consume update
-    // gtsam::NavState nav_state_LCKF = DYNO_GET_QUERY_DEBUG(
-    //     accessor_->getNavState(lCKF_frame_->getFrameId()));
-    // nav_state_lkf_ = nav_state_LCKF;
-    // lCKF_frame_->T_world_camera_ = nav_state_LCKF.pose();
-    // LOG(INFO) << frame_id_k;
+    if (formulation_->isImuInitalized()) {
+      // try and get the latest IMU bias
+      const FrameId frame_with_best_bias = frames_in_pgo.back();
+      auto maybe_imu_bias = accessor_->getImuBias(frame_with_best_bias);
+      if (maybe_imu_bias) {
+        VLOG(10) << "Updating imu bias at k=" << frame_with_best_bias;
+        // imu_bias_ = maybe_imu_bias.get();
+      }
+    }
 
-    // // update nav_state_km1_ with the best we can (ideally imu if we have)
-    // // TODO: not updating all values in RelEgoPoseInfo ie T_i_j after
-    // updating
-    // // new X at j
-    // RelEgoPoseInfo& rel_egopose_lkf_km1 =
-    //     rel_egopose_infos_.at(frame_id_k - 1);
-    // CHECK_EQ(rel_egopose_lkf_km1.lkf_id, lCKF_frame_->getFrameId());
-    // gtsam::Pose3 X_W_km1_updated = nav_state_LCKF.pose() *
-    // rel_egopose_lkf_km1.T_lkf_j;
-    // // initalise with old velocity
-    // gtsam::Velocity3 V_W_km1_updated = nav_state_km1_.velocity();
-    // // if we have better velocity from imu, use that
-    // if(formulation_->isImuInitalized()) {
-    //   CHECK(rel_egopose_lkf_km1.pim_lk_j);
-    //   // we should also have an imu bias estimate
-    //   // update the internal state of the frontend
-    //   imu_bias_ =
-    //   DYNO_GET_QUERY_DEBUG(accessor_->getImuBias(lCKF_frame_->getFrameId()));
-    //   gtsam::NavState nav_state_km1_predict =
-    //   rel_egopose_lkf_km1.pim_lk_j->predict(nav_state_LCKF, imu_bias_);
-
-    //   V_W_km1_updated = nav_state_km1_predict.velocity();
-    // }
-
-    // // update various internal properties
-    // nav_state_km1_ = gtsam::NavState(X_W_km1_updated, V_W_km1_updated);
-    // // update frame. This should also update the pose of the current frame
-    // mantained in the tracker rel_egopose_lkf_km1.frame_j->T_world_camera_ =
-    // X_W_km1_updated;
     return true;
   }
 
@@ -1063,7 +992,9 @@ bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
 }
 
 PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
-    const PoseTrajectory& camera_trajectory) const {
+    const PoseTrajectory& camera_trajectory,
+    dyno::FastSet<FrameId>& frames_in_pgo,
+    dyno::FastSet<FrameId>& frames_propogated) const {
   // opimized camera trajectory only containing keyframes
   const PoseTrajectory& camera_trajectory_kf = accessor_->getCameraTrajectory();
   auto noise_models = formulation_->noiseModels();
@@ -1071,7 +1002,14 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
   gtsam::Values values;
   gtsam::NonlinearFactorGraph graph;
 
-  for (const auto& entry : camera_trajectory) {
+  FrameId max_frame = camera_trajectory_kf.maxFrame();
+
+  gtsam::SharedNoiseModel relative_noise_model =
+      gtsam::noiseModel::Isotropic::Sigma(6u, 0.8);
+
+  PoseTrajectory optimized_camera_trajectory =
+      camera_trajectory.range({}, max_frame);
+  for (const auto& entry : optimized_camera_trajectory) {
     const FrameId frame_id = entry.frame_id;
     const gtsam::Pose3 X_Wk = entry.data;
 
@@ -1095,8 +1033,10 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
     //     relative_ego_motion.T_lkf_j, noise_models.odometry_noise));
     // TODO: use pim
     graph.push_back(boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
-        key_i, key_j, relative_ego_motion.T_i_j, noise_models.odometry_noise));
+        key_i, key_j, relative_ego_motion.T_i_j, relative_noise_model));
   }
+
+  // graph.print("Camera PGO ", DynosamKeyFormatter);
 
   using LMOptimizer =
       dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer>;
@@ -1114,19 +1054,53 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
             << summary.cumulative_time_in_seconds
             << " #iterations= " << summary.numIterations();
 
-  PoseTrajectory optimized_camera_trajectory;
-  for (const auto& entry : camera_trajectory) {
+  for (const auto& entry : optimized_camera_trajectory) {
     const FrameId frame_id = entry.frame_id;
     const Timestamp timestamp = entry.timestamp;
     gtsam::Key key = CameraPoseSymbol(frame_id);
     gtsam::Pose3 X_W_k_refined = optimised_values.at<gtsam::Pose3>(key);
 
-    optimized_camera_trajectory.insert(frame_id, timestamp, X_W_k_refined);
+    optimized_camera_trajectory.update(frame_id, X_W_k_refined);
+    frames_in_pgo.insert(frame_id);
+  }
+
+  // for the unoptimised camera poses (ie. max optimised frame -> current frame)
+  // propogate from last optimised frame using visual odometry
+  gtsam::Pose3 X_W = optimized_camera_trajectory.at(max_frame);
+  auto it = camera_trajectory.upperBound(max_frame);
+
+  LOG(INFO) << "Max frame: " << max_frame;
+  FrameId from_frame = max_frame;
+  for (; it != camera_trajectory.end(); ++it) {
+    const auto frame_id = it->frame_id;
+    const auto timestamp = it->timestamp;
+    LOG(INFO) << " Doing VO propogation to " << it->frame_id;
+
+    CHECK(rel_egopose_infos_.exists(frame_id));
+    const auto& relative_ego_motion = rel_egopose_infos_.at(frame_id);
+    // sanity check that our frame bookkeeping is correct
+    CHECK_EQ(from_frame, relative_ego_motion.i_id);
+
+    // propogate with visual odometry
+    X_W = X_W * relative_ego_motion.T_i_j;
+    optimized_camera_trajectory.insert(frame_id, timestamp, X_W);
+
+    from_frame = relative_ego_motion.j_id;
+    frames_propogated.insert(frame_id);
   }
 
   CHECK_EQ(optimized_camera_trajectory.size(), camera_trajectory.size());
 
   return optimized_camera_trajectory;
+}
+
+gtsam::Pose3 PoseChangeVIFrontend::getVOTransform(
+    FrameId from, const TemporalNavState& to_state) const {
+  CHECK(rel_egopose_infos_.exists(from));
+  const gtsam::Pose3& X_W_i =
+      rel_egopose_infos_.at(from).frontend_nav_state_j.pose();
+  const gtsam::Pose3& X_W_j = to_state.state.pose();
+  return X_W_i.inverse() * X_W_j;
 }
 
 }  // namespace dyno

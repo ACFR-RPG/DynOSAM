@@ -54,6 +54,8 @@ class ImuFrontend {
 
   ImuFrontend(const ImuFrontend& other);
 
+  static void preintegrateImuMeasurements(
+      gtsam::PreintegrationType& pim, const ImuMeasurements& imu_measurements);
   PimPtr preintegrateImuMeasurements(const ImuMeasurements& imu_measurements);
 
   inline void resetIntegration() { pim_->resetIntegration(); }

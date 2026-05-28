@@ -18,7 +18,7 @@ bool ConsecutiveFrameObjectMotionSolver::solveImpl(
     Motion3ReferenceFrame& motion_estimate) {
   utils::ChronoTimingStats timer("consecutive_motion_solver.solve_impl");
 
-  AbsolutePoseCorrespondences dynamic_correspondences;
+  LandmarkKeypointCorrespondences dynamic_correspondences;
   frame_k->getDynamicCorrespondences(
       dynamic_correspondences, *frame_km1, object_id,
       frame_k->landmarkWorldKeypointCorrespondance());
@@ -28,7 +28,7 @@ bool ConsecutiveFrameObjectMotionSolver::solveImpl(
   TrackletIds all_tracklets;
   std::transform(dynamic_correspondences.begin(), dynamic_correspondences.end(),
                  std::back_inserter(all_tracklets),
-                 [](const AbsolutePoseCorrespondence& corres) {
+                 [](const LandmarkKeypointCorrespondence& corres) {
                    return corres.tracklet_id_;
                  });
 

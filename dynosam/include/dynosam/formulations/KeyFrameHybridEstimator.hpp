@@ -247,7 +247,13 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
   MultiObjectTrajectories refinePerFrameMotionsPGO(
       const MultiObjectTrajectories& full_trajectories) const;
 
-  bool matchToStaticMap(Frame::Ptr frame, AbsolutePoseCorrespondences& matches,
+  // TODO: comments
+  // X_W defines some target reference frame for the points to be transformed
+  // into
+  //  ie matches.ref = X_W.inverse() * mW
+  bool matchToStaticMap(Frame::Ptr frame,
+                        LandmarkKeypointCorrespondences& matches,
+                        const gtsam::Pose3& X_W,
                         double* tracking_quality = nullptr) const;
 
  private:

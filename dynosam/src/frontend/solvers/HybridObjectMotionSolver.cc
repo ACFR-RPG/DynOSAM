@@ -227,7 +227,7 @@ bool HybridObjectMotionSolver::solveImpl(
       object_statuses_.getStatus(object_id);
 
   // get the corresponding feature pairs
-  AbsolutePoseCorrespondences dynamic_correspondences;
+  LandmarkKeypointCorrespondences dynamic_correspondences;
   bool corr_result = frame_k->getDynamicCorrespondences(
       dynamic_correspondences, *frame_km1, object_id,
       frame_k->landmarkWorldKeypointCorrespondance());
@@ -237,7 +237,7 @@ bool HybridObjectMotionSolver::solveImpl(
   TrackletIds all_tracklets;
   std::transform(dynamic_correspondences.begin(), dynamic_correspondences.end(),
                  std::back_inserter(all_tracklets),
-                 [](const AbsolutePoseCorrespondence& corres) {
+                 [](const LandmarkKeypointCorrespondence& corres) {
                    return corres.tracklet_id_;
                  });
   CHECK_EQ(all_tracklets.size(), n_matches);
@@ -325,7 +325,7 @@ bool HybridObjectMotionSolver::solveImpl(
 
     // // afrwards run ransac again
     // // get the corresponding feature pairs
-    // AbsolutePoseCorrespondences dynamic_correspondences;
+    // LandmarkKeypointCorrespondences dynamic_correspondences;
     // bool corr_result = frame_k->getDynamicCorrespondences(
     //     dynamic_correspondences, *frame_km1, object_id,
     //     frame_k->landmarkWorldKeypointCorrespondance());
@@ -336,7 +336,7 @@ bool HybridObjectMotionSolver::solveImpl(
     // std::transform(dynamic_correspondences.begin(),
     //                dynamic_correspondences.end(),
     //                std::back_inserter(all_tracklets),
-    //                [](const AbsolutePoseCorrespondence& corres) {
+    //                [](const LandmarkKeypointCorrespondence& corres) {
     //                  return corres.tracklet_id_;
     //                });
     // CHECK_EQ(all_tracklets.size(), n_matches);

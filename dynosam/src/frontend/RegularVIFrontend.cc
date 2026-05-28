@@ -177,7 +177,7 @@ bool RegularVIFrontend::solveAndRefineEgoMotion(
                     "PnP implemented";
   }
 
-  AbsolutePoseCorrespondences correspondences;
+  LandmarkKeypointCorrespondences correspondences;
   frame_k->getCorrespondences(correspondences, *frame_km1, KeyPointType::STATIC,
                               frame_k->landmarkWorldKeypointCorrespondance());
 

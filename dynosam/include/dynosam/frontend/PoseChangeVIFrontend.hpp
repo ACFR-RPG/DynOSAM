@@ -77,6 +77,7 @@ class PoseChangeVIFrontend : public VIFrontend {
     //! Frame ptr at current frame (ie. to)
     Frame::Ptr frame_j;
     //! Nav state at current frame (ie. to)
+    //! This is untouched by the refined state
     gtsam::NavState frontend_nav_state_j;
     ImuFrontend::PimPtr pim_lk_j;
     //! Should exist only if PIM is non null
@@ -87,6 +88,12 @@ class PoseChangeVIFrontend : public VIFrontend {
     gtsam::Pose3 T_lkf_j;
 
     inline Timestamp timestamp() const { return frame_j->getTimestamp(); }
+  };
+
+  struct TemporalNavState {
+    FrameId frame_id;
+    Timestamp timestamp;
+    gtsam::NavState state;
   };
 
   void handleCameraKeyframe(const RelEgoPoseInfo& rel_lkf_k,
@@ -101,6 +108,7 @@ class PoseChangeVIFrontend : public VIFrontend {
   bool solveAndRefineEgoMotion(
       Frame::Ptr frame_k, const Frame::Ptr& frame_km1,
       StatusLandmarkVector& points_W_used, TrackingQuality& tracking_quality,
+      gtsam::Pose3& T_ij,
       std::optional<gtsam::NavState> propogated_nav_state_k = std::nullopt,
       std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
 
@@ -111,7 +119,25 @@ class PoseChangeVIFrontend : public VIFrontend {
 
   /* Refine the full camera trajectory */
   PoseTrajectory refinePerFrameCameraPGO(
-      const PoseTrajectory& camera_trajectory) const;
+      const PoseTrajectory& camera_trajectory,
+      dyno::FastSet<FrameId>& frames_in_pgo,
+      dyno::FastSet<FrameId>& frames_propogated) const;
+
+  /**
+   * @brief Get the Visual Odometry (ie T_ij) between the requested from
+   * frame to the current state.
+   *
+   * We use the RelEgoPoseInfo::frontend_nav_state_j as the reference pose as
+   * we expect this to be untouched by the backend refinement and is constructed
+   * directly from the nav_state_k which we expect to represent the consistent
+   * visual odometry pose
+   *
+   * @param from
+   * @param to_state
+   * @return gtsam::Pose3
+   */
+  gtsam::Pose3 getVOTransform(FrameId from,
+                              const TemporalNavState& to_state) const;
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
@@ -119,14 +145,16 @@ class PoseChangeVIFrontend : public VIFrontend {
   KeyFrameMap::Ptr map_;
   HybridObjectMotionSolver::UniquePtr object_motion_solver_;
 
-  struct TemporalNavState {
-    FrameId frame_id;
-    Timestamp timestamp;
-    gtsam::NavState state;
-  };
-
+  //! Record of the previous nav state which may be updated via refinement from
+  //! the backend
   TemporalNavState nav_state_km1_;
+  //! Record of the current keyframe nav state which may be updated via
+  //! refinement from the backend
   TemporalNavState nav_state_lkf_;
+
+  // TODO: for now until maybe use propogator
+  //  accumulated visual odometry (from direct VO not updated states)
+  gtsam::Pose3 T_lkf_j_;
 
   //! Last camera keyframe
   Frame::Ptr lCKF_frame_;

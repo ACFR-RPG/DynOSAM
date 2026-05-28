@@ -305,6 +305,29 @@ Frame::landmarkWorldKeypointCorrespondance() const {
                    std::placeholders::_3);
 }
 
+Frame::ConstructCorrespondanceFunc<Landmark, Keypoint>
+Frame::landmarkLocalKeypointCorrespondance() const {
+  auto func = [&](const Frame& previous_frame,
+                  const Feature::Ptr& previous_feature,
+                  const Feature::Ptr& current_feature) {
+    if (!previous_feature->hasDepth()) {
+      DYNO_THROW_MSG(DynosamException)
+          << "Frame::landmarkWorldKeypointCorrespondance error in constructing "
+             " (w) -> keypoint correspondences previous feature does not have "
+             "depth! (j= "
+          << previous_feature->objectId() << ")";
+    }
+
+    Landmark lmk_c =
+        previous_frame.backProjectToCamera(previous_feature->trackletId());
+    return TrackletCorrespondance(previous_feature->trackletId(), lmk_c,
+                                  current_feature->keypoint());
+  };
+
+  return std::bind(func, std::placeholders::_1, std::placeholders::_2,
+                   std::placeholders::_3);
+}
+
 Frame::ConstructCorrespondanceFunc<Keypoint, Keypoint>
 Frame::imageKeypointCorrespondance() const {
   auto func = [&](const Frame&, const Feature::Ptr& previous_feature,

@@ -347,21 +347,23 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
 }
 
 bool HybridFormulationKeyFrame::matchToStaticMap(
-    Frame::Ptr frame, AbsolutePoseCorrespondences& matches,
-    double* tracking_quality) const {
+    Frame::Ptr frame, LandmarkKeypointCorrespondences& matches,
+    const gtsam::Pose3& X_W, double* tracking_quality) const {
   HybridFormulationKeyFrameAccessor::Ptr accessor =
       this->derivedAccessor<HybridFormulationKeyFrameAccessor>();
 
   FrameId frame_id_k = frame->getFrameId();
+  const gtsam::Pose3 target_frame = X_W.inverse();
 
   auto static_feature_itr = frame->usableStaticIterator();
   for (const auto& feature : static_feature_itr) {
     const TrackletId tracklet_id = feature->trackletId();
 
     if (this->staticLandmarkExists(tracklet_id)) {
-      Landmark lmk_W_map = this->staticLandmarkEstimate(tracklet_id);
+      const Landmark lmk_W_map = this->staticLandmarkEstimate(tracklet_id);
+      const Landmark lmk_target_map = target_frame * lmk_W_map;
       const Keypoint& kp = feature->keypoint();
-      matches.emplace_back(tracklet_id, lmk_W_map, kp);
+      matches.emplace_back(tracklet_id, lmk_target_map, kp);
     }
   }
 

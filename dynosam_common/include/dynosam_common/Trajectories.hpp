@@ -295,6 +295,20 @@ class TrajectoryBase {
   EntryIterator begin() { return EntryIterator(trajectory_.begin()); }
   EntryIterator end() { return EntryIterator(trajectory_.end()); }
 
+  EntryIterator find(FrameId frame_id) {
+    return EntryIterator(trajectory_.find(frame_id));
+  }
+  ConstEntryIterator find(FrameId frame_id) const {
+    return ConstEntryIterator(trajectory_.find(frame_id));
+  }
+
+  EntryIterator upperBound(FrameId frame_id) {
+    return EntryIterator(trajectory_.upper_bound(frame_id));
+  }
+  ConstEntryIterator upperBound(FrameId frame_id) const {
+    return ConstEntryIterator(trajectory_.upper_bound(frame_id));
+  }
+
   ConstEntryIterator begin() const {
     return ConstEntryIterator(trajectory_.begin());
   }

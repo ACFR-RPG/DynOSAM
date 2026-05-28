@@ -41,7 +41,7 @@ PnPRansacSolver::PnPRansacSolver(const PnPRansacSolverParams& pnp_ransac_params,
 }
 
 Pose3SolverResult PnPRansacSolver::solve2d2d(
-    const RelativePoseCorrespondences& correspondences,
+    const KeypointKeypointCorrespondences& correspondences,
     std::optional<gtsam::Rot3> R_curr_ref) {
   utils::ChronoTimingStats timer("pnp_ransac.solve2d2d");
   Pose3SolverResult result;
@@ -128,7 +128,7 @@ Pose3SolverResult PnPRansacSolver::solve2d2d(
 }
 
 Pose3SolverResult PnPRansacSolver::solve3d2d(
-    const AbsolutePoseCorrespondences& correspondences,
+    const LandmarkKeypointCorrespondences& correspondences,
     std::optional<gtsam::Rot3> R_curr_ref) {
   utils::ChronoTimingStats timer("pnp_ransac.solve3d2d");
 
@@ -151,7 +151,7 @@ Pose3SolverResult PnPRansacSolver::solve3d2d(
   Landmarks points;
   points.reserve(n_matches);
   for (size_t i = 0u; i < n_matches; i++) {
-    const AbsolutePoseCorrespondence& corres = correspondences.at(i);
+    const LandmarkKeypointCorrespondence& corres = correspondences.at(i);
     const Keypoint& kp = corres.cur_;
     // make Bearing vector
     gtsam::Vector3 versor = (K_inv_ * gtsam::Vector3(kp(0), kp(1), 1.0));

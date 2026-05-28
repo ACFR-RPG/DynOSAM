@@ -5,8 +5,6 @@
 --use_frontend_logger=true
 
 --pc_send_objects_to_backend=false
-
---send_objects_to_backend=false
 #we turn off for cluster as there is some problem with the OF I think?
 --use_propogate_mask=false
 

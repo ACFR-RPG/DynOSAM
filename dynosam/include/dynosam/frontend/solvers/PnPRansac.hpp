@@ -122,11 +122,11 @@ class PnPRansacSolver {
                   const CameraParams& camera_params);
 
   Pose3SolverResult solve2d2d(
-      const RelativePoseCorrespondences& correspondences,
+      const KeypointKeypointCorrespondences& correspondences,
       std::optional<gtsam::Rot3> R_curr_ref = {});
 
   Pose3SolverResult solve3d2d(
-      const AbsolutePoseCorrespondences& correspondences,
+      const LandmarkKeypointCorrespondences& correspondences,
       std::optional<gtsam::Rot3> R_curr_ref = {});
 
  protected:

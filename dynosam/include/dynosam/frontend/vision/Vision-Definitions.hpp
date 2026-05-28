@@ -53,14 +53,18 @@ using GenericCorrespondences =
     std::vector<TrackletCorrespondance<RefType, CurType>>;
 
 //! Correspondes format for a 3D->2D PnP solver. In the form of 3D Landmark in
-//! the world frame, and 2D observation in the current camera frame
-using AbsolutePoseCorrespondence = TrackletCorrespondance<Landmark, Keypoint>;
-using AbsolutePoseCorrespondences = std::vector<AbsolutePoseCorrespondence>;
+//! and 2D observation in the current camera frame
+using LandmarkKeypointCorrespondence =
+    TrackletCorrespondance<Landmark, Keypoint>;
+using LandmarkKeypointCorrespondences =
+    std::vector<LandmarkKeypointCorrespondence>;
 
 //! Correspondes format for a 2D->2D PnP solver. In the form of 2D observation
 //! in the ref camera frame, and 2D observation in the current camera frame
-using RelativePoseCorrespondence = TrackletCorrespondance<Keypoint, Keypoint>;
-using RelativePoseCorrespondences = std::vector<RelativePoseCorrespondence>;
+using KeypointKeypointCorrespondence =
+    TrackletCorrespondance<Keypoint, Keypoint>;
+using KeypointKeypointCorrespondences =
+    std::vector<KeypointKeypointCorrespondence>;
 
 struct PerObjectStatus {
   ObjectId object_id;
