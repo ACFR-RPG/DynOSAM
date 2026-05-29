@@ -26,8 +26,13 @@ struct StreamConfig {
   enum class Types { RGBMono, Depth, OpticalFlow, Mask };
 
   std::string name;
-  //! Proxy for indicating it is a physical camera
+  //! Indicating that camera stream is involved in the depth-rig setup
+  //! ie. either rgb, depth or part of an overlapping stereo pair
   bool needed_for_depth{false};
+  //! If the image is pre-aligned with with the (canonical) camera
+  //! and therefore shares the same calibration parameters, without need for
+  //! rectification. The most common use-case is for aligned depth images coming
+  //! from a rgbd/stereo camera (ie. realsense)
   bool assume_aligned{false};
   Types type{Types::RGBMono};
 };
@@ -52,6 +57,13 @@ class InvalidSensorSystem : public DynosamException {
   InvalidSensorSystem(const std::string& what) : DynosamException(what) {}
 };
 
+/**
+ * @brief Sets up the user defined StreamConfigs and sensor types desired
+ * by the user. This includes number of (image) streams, stream type (e.g rgb,
+ * mask), depth rig type (rgbd or stereo), if streams are aligned with the main
+ * camera and if the IMU (or eventually other sensors) should be used.
+ *
+ */
 class SensorMode {
  public:
   SensorMode(const std::string& sensor_mode);

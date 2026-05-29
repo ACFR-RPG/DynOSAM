@@ -1094,13 +1094,4 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
   return optimized_camera_trajectory;
 }
 
-gtsam::Pose3 PoseChangeVIFrontend::getVOTransform(
-    FrameId from, const TemporalNavState& to_state) const {
-  CHECK(rel_egopose_infos_.exists(from));
-  const gtsam::Pose3& X_W_i =
-      rel_egopose_infos_.at(from).frontend_nav_state_j.pose();
-  const gtsam::Pose3& X_W_j = to_state.state.pose();
-  return X_W_i.inverse() * X_W_j;
-}
-
 }  // namespace dyno

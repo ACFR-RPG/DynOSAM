@@ -35,6 +35,7 @@ find_package(message_filters REQUIRED)
 find_package(diagnostic_updater REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(dynamic_slam_interfaces REQUIRED)
+find_package(rclcpp_components REQUIRED)
 
 
 # setup targets
@@ -123,6 +124,8 @@ target_link_libraries(${PROJECT_NAME}
   ${LINK_LIBS}
   glog
   gflags
+  rclcpp_components::component
+  rclcpp_components::component_manager
 )
 
 ament_export_libraries(${PROJECT_NAME}
@@ -143,16 +146,25 @@ target_include_directories(${PROJECT_NAME}
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 
+
 install(
   DIRECTORY include/
   DESTINATION include
 )
 install(
   TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+
+rclcpp_components_register_nodes(
+    ${PROJECT_NAME}
+    PLUGIN "dyno::DynosamComposableNode"
+)
+
 
 install(DIRECTORY
   launch
@@ -180,7 +192,6 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME})
 
 
-
 add_executable(dynosam_tracking_demo_node nodes/dynosam_tracking_demo_node.cc)
 target_link_libraries(dynosam_tracking_demo_node
   ${PROJECT_NAME}
@@ -190,6 +201,8 @@ target_link_libraries(dynosam_tracking_demo_node
 install(TARGETS
   dynosam_tracking_demo_node
   DESTINATION lib/${PROJECT_NAME})
+
+
 
 
 

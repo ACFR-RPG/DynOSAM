@@ -49,6 +49,7 @@
 int main(int argc, char* argv[]) {
   using namespace dyno;
   auto non_ros_args = dyno::initRosAndLogging(argc, argv);
+  return 0;
 
   rclcpp::NodeOptions options;
   options.arguments(non_ros_args);

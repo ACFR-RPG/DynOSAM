@@ -33,6 +33,7 @@
 #include <gtsam/geometry/Pose3.h>
 
 #include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/time.hpp"
 
@@ -61,7 +62,6 @@ namespace dyno::ros {
 std::vector<std::string> initRosAndLogging(int argc, char* argv[]) {
   // google::ParseCommandLineFlags(&argc, &argv, true);
   auto non_ros_args = rclcpp::init_and_remove_ros_arguments(argc, argv);
-
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
@@ -77,6 +77,46 @@ std::vector<std::string> initRosAndLogging(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&non_ros_argc, &non_ros_argv_c, true);
 
   return non_ros_args;
+}
+
+void initGlog(const std::string& params_folder,
+              const std::string& executable_name) {
+  static bool is_init = false;
+  if (!is_init) {
+    google::InitGoogleLogging(executable_name.c_str());
+    FLAGS_logtostderr = 1;
+    FLAGS_colorlogtostderr = 1;
+    FLAGS_log_prefix = 1;
+
+    auto formatFilePath = [](const std::string& file_path) -> std::string {
+      return "--flagfile=" + file_path;
+    };
+
+    std::vector<std::filesystem::path> files =
+        utils::getAllFilesInDir(params_folder);
+    // discover .flags
+    std::vector<std::string> non_ros_args;
+    // NOTE: while not confirmed via the documentation it seems
+    // ParseCommandLineFlags expects the first value to be the executable name
+    // (like for regular argv) and therefore we should prepend the args with
+    // some value
+    non_ros_args.push_back(executable_name);
+    for (const auto& file_path : files) {
+      if (static_cast<std::string>(file_path.extension()) == ".flags") {
+        non_ros_args.push_back(formatFilePath(file_path));
+      }
+    }
+
+    int non_ros_argc = non_ros_args.size();
+    char** non_ros_argv_c = constructArgvC(non_ros_args);
+    // non_ros_argv_c is heap allocated but attempting to free it after usage in
+    // the ParseCommandLineFlags function results in a "double free or
+    // corruption" error. I think this is because ParseCommandLineFlags modifies
+    // it in place and then free it itself somehow unsure, and may result in a
+    // minor memory leak.
+    google::ParseCommandLineFlags(&non_ros_argc, &non_ros_argv_c, true);
+    // is_init = true;
+  }
 }
 
 rclcpp::QoS addQosParameter(rclcpp::Node& node, std::string default_qos,

@@ -78,6 +78,7 @@ class PoseChangeVIFrontend : public VIFrontend {
     Frame::Ptr frame_j;
     //! Nav state at current frame (ie. to)
     //! This is untouched by the refined state
+    // TODO: Not needed anymore I think
     gtsam::NavState frontend_nav_state_j;
     ImuFrontend::PimPtr pim_lk_j;
     //! Should exist only if PIM is non null
@@ -122,22 +123,6 @@ class PoseChangeVIFrontend : public VIFrontend {
       const PoseTrajectory& camera_trajectory,
       dyno::FastSet<FrameId>& frames_in_pgo,
       dyno::FastSet<FrameId>& frames_propogated) const;
-
-  /**
-   * @brief Get the Visual Odometry (ie T_ij) between the requested from
-   * frame to the current state.
-   *
-   * We use the RelEgoPoseInfo::frontend_nav_state_j as the reference pose as
-   * we expect this to be untouched by the backend refinement and is constructed
-   * directly from the nav_state_k which we expect to represent the consistent
-   * visual odometry pose
-   *
-   * @param from
-   * @param to_state
-   * @return gtsam::Pose3
-   */
-  gtsam::Pose3 getVOTransform(FrameId from,
-                              const TemporalNavState& to_state) const;
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;

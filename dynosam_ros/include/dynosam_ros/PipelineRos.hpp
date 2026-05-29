@@ -30,90 +30,33 @@
 
 #pragma once
 
-#include "dynosam/dataprovider/DataProvider.hpp"
-#include "dynosam/pipeline/PipelineManager.hpp"
-#include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam_ros/Diagnostics.hpp"
+#include <memory>
+
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 
 namespace dyno {
 
-class DynoNode : public rclcpp::Node {
+struct DynosamNodeImpl;
+
+class DynosamNode : public rclcpp::Node {
  public:
-  explicit DynoNode(const std::string& node_name,
-                    const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-  virtual ~DynoNode() = default;
-
-  virtual bool spinOnce() { return true; }
-
-  std::string getStats() const { return utils::Statistics::Print(); }
-
-  const DynoParams& getDynoParams() {
-    CHECK_NOTNULL(dyno_params_);
-    return *dyno_params_;
-  }
-
-  dyno::DataProvider::Ptr getDataProvider() const { return data_provider_; }
-
-  bool isOnline() const { return is_online_; }
-
-  inline std::string getParamsPath() {
-    return searchForPathWithParams("params_path", "dynosam/params/",
-                                   "Path to the folder containing the yaml "
-                                   "files with the DynoVIO parameters.");
-  }
-  inline std::string getDatasetPath() {
-    return searchForPathWithParams("dataset_path", "dataset",
-                                   "Path to the dataset.");
-  }
+  explicit DynosamNode(
+      const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
+  ~DynosamNode();
 
  private:
-  dyno::DataProvider::Ptr createDataProvider(DynoParams& dyno_params,
-                                             bool is_online);
-
-  dyno::DataProvider::Ptr createOnlineDataProvider(DynoParams& dyno_params);
-  dyno::DataProvider::Ptr createDatasetDataProvider(
-      const DynoParams& dyno_params);
-  /**
-   * @brief Retrieves a std::string param (under param_name) which is expected
-   * to be a file path
-   *
-   * @param param_name
-   * @param default_path
-   * @param description
-   * @return std::string
-   */
-  std::string searchForPathWithParams(const std::string& param_name,
-                                      const std::string& default_path,
-                                      const std::string& description = "");
-
- private:
-  std::unique_ptr<DynoParams> dyno_params_;
-  dyno::DataProvider::Ptr data_provider_;
-  //! Set by the param 'online' and indicates if the OnlineDataProviderRos
-  //! should be used or not
-  bool is_online_;
+  std::unique_ptr<DynosamNodeImpl> impl_;
 };
 
-class DynoPipelineManagerRos : public DynoNode {
+class DynosamComposableNode : public rclcpp::Node {
  public:
-  explicit DynoPipelineManagerRos(
+  explicit DynosamComposableNode(
       const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-  ~DynoPipelineManagerRos();
-
-  void initalisePipeline();
-
-  bool spinOnce() override {
-    RCLCPP_INFO_STREAM_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
-                                getStats());
-
-    return CHECK_NOTNULL(pipeline_)->spin();
-  }
+  ~DynosamComposableNode();
 
  private:
-  DynoDiagnosticsTaskManager::UniquePtr diagnostics_updater_;
-  DynoPipelineManager::UniquePtr pipeline_;
+  std::unique_ptr<DynosamNodeImpl> impl_;
 };
 
 }  // namespace dyno

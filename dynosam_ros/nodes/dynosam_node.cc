@@ -47,25 +47,16 @@ int main(int argc, char* argv[]) {
   options.use_intra_process_comms(true);
 
   rclcpp::executors::MultiThreadedExecutor exec;
-  auto ros_pipeline = std::make_shared<dyno::DynoPipelineManagerRos>();
+  auto ros_pipeline = std::make_shared<dyno::DynosamNode>();
 
   if (FLAGS_show_dyno_args) {
-    const dyno::DynoParams& params = ros_pipeline->getDynoParams();
-    params.printAllParams(true);
-    rclcpp::shutdown();
-    return 0;
-  } else {
-    ros_pipeline->initalisePipeline();
+    // const dyno::DynoParams& params = ros_pipeline->getDynoParams();
+    // params.printAllParams(true);
+    // rclcpp::shutdown();
+    // return 0;
   }
 
   exec.add_node(ros_pipeline);
-  while (rclcpp::ok()) {
-    if (!ros_pipeline->spinOnce()) {
-      break;
-    }
-    exec.spin_some();
-  }
-
-  ros_pipeline.reset();
+  exec.spin();
   return 0;
 }

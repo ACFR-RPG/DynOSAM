@@ -73,6 +73,16 @@ namespace ros {
 std::vector<std::string> initRosAndLogging(int argc, char *argv[]);
 
 /**
+ * @brief Initalises glog logging and auto discovers --flagfiles in the provided
+ * params folder which will be added to the glog context.
+ *
+ * @param params_folder
+ * @param executable_name
+ */
+void initGlog(const std::string &params_folder,
+              const std::string &executable_name = "dynosam");
+
+/**
  * @brief More sophisticated checks than just get_subscription_count.
  *
  * Code taken verbatum:

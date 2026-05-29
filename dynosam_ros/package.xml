@@ -30,6 +30,8 @@
   <depend>tf2_msgs</depend>
   <depend>rclpy</depend>
 
+  <depend>rclcpp_components</depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
