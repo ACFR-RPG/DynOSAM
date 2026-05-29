@@ -30,4 +30,4 @@ gyro_fps: 200
 enable_accel: true
 accel_fps: 200
 unite_imu_method: 2
-enable_motion: true
+# enable_motion: true

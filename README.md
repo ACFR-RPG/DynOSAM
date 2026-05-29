@@ -238,6 +238,10 @@ where `--dataset_path` points to the location of the dataset and `--data_provide
 
 > NOTE: when using ground truth for evaluation it is important to ensure that `prefer_provided_object_detection: false` so that the pre-processing object masks are used. This ensures that tracking label $j$ used within the pipeline aligns with the ground truth label.
 ## 3.3 Online Data
+
+TODO: UPDATE!!
+
+
 DynoSAM can also run from data provided by ROS.
 
 
@@ -262,7 +266,9 @@ By default this node subscribes to five topics:
 In `RGBD` mode, only camera intrinsics, rgb and depth images are required and all other image processing (including object detection) is done as part of the pipeline.
 
 
-### 3.2.1 Running using RBG-D camera
+### 3.3.1 Running using RBG-D camera
+
+TODO: UPDATE!!
 
 To run from data provided by an RGB-D camera use
 ```
@@ -270,6 +276,10 @@ ros2 launch dynosam_ros dyno_sam_online_rgbd_launch.py
 ```
 and remap the topics accordingly.
 
+
+### 3.3.2 Composable Node
+
+TODO:!!!!
 
 # 4. 🕹️ System Configuration
 
@@ -310,6 +320,10 @@ All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds
 > NOTE: the publishing of object states is meant primilarily for __visualisation__ purposes and downstream tasks and not for recording data used for evaluation. This is done using csv files in a different submodule: see [Evaluation](#4-evaluation).
 
 ## 4.4 Coordinate Systems
+
+TODO: UPDATE!!
+
+
 
 ## 4.5 Tests
 We use [gtest](https://github.com/google/googletest) for unit testing. This is installed automagically. When building with ROS, all tests will go into the install folder.

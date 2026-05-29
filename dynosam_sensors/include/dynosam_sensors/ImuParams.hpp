@@ -54,6 +54,9 @@ struct ImuParams {
 
   double imu_integration_sigma = 0.0;
 
+  gtsam::Vector3 init_accel_bias = gtsam::Vector3::Zero();
+  gtsam::Vector3 init_gyro_bias = gtsam::Vector3::Zero();
+
   gtsam::Vector3 n_gravity = gtsam::Vector3::Zero();
 };
 

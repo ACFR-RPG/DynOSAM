@@ -421,19 +421,6 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   if (any_object_keyframes) {
-    // // collect all dynamic measurements at k
-    // CameraMeasurementStatusVector dynamic_measurements_kf_k;
-    // for (const auto& dm : dynamic_measurements) {
-    //   const auto& object_id = dm.objectId();
-    //   if (kf_pose_change_infos.exists(object_id)) {
-    //     dynamic_measurements_kf_k.push_back(dm);
-    //   }
-    // }
-    // // TODO: this will fail when we start adding OKF's for LOST objects
-
-    // update map after collecting all measurements for this frame
-    // map_->updateObservations(dynamic_measurements_kf_k);
-
     for (const auto& [object_id, info] : kf_pose_change_infos) {
       CHECK(info.isKeyFrame());
       const auto& H_W_KF_k = info.H_W_KF_k;
@@ -940,14 +927,6 @@ void PoseChangeVIFrontend::logRealTimeObjectClouds(const ObjectIds& objects,
 bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
   if (has_backend_update_.exchange(false)) {
     // intermediate way of updating all poses
-    const PoseTrajectory& camera_trajectory = accessor_->getCameraTrajectory();
-
-    LOG(INFO) << "ALL CKS: "
-              << container_to_string(map_->getCameraKeyFrames().collectKeys());
-    LOG(INFO) << "Recieved backend update at k=" << frame_id_k
-              << ". Largest CKF: " << camera_trajectory.maxFrame();
-
-    // absolutely haneious we do a PGO every frame (JUST FOR NOW)
     dyno::FastSet<FrameId> frames_in_pgo;
     dyno::FastSet<FrameId> frames_propogated;
     dyno_state_.camera_trajectory = this->refinePerFrameCameraPGO(

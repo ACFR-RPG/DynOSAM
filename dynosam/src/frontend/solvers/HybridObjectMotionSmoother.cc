@@ -1139,6 +1139,9 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       return nullptr;
     }
 
+    // TODO: getCameraPose should keep track of the frame::ptr
+    //  in this way the frontend will update the pose
+    //  and we always get the latest camera pose estimate
     const auto X_W = this->getCameraPose(frame_id);
     const gtsam::Symbol H_key = ObjectMotionSymbol(object_id_, frame_id);
 

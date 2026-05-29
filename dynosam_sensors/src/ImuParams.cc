@@ -67,6 +67,24 @@ void declare_config(ImuParams& config) {
   config.n_gravity(0) = gravity_v.at(0);
   config.n_gravity(1) = gravity_v.at(1);
   config.n_gravity(2) = gravity_v.at(2);
+
+  std::vector<double> init_accel_bias_v;
+  field(init_accel_bias_v, "init_accel_bias");
+  checkCondition(init_accel_bias_v.size() == 3,
+                 "param 'init_accel_bias' must be a 3 length vector.");
+
+  config.init_accel_bias(0) = init_accel_bias_v.at(0);
+  config.init_accel_bias(1) = init_accel_bias_v.at(1);
+  config.init_accel_bias(2) = init_accel_bias_v.at(2);
+
+  std::vector<double> init_gyro_bias_v;
+  field(init_gyro_bias_v, "init_gyro_bias");
+  checkCondition(init_gyro_bias_v.size() == 3,
+                 "param 'init_gyro_bias' must be a 3 length vector.");
+
+  config.init_gyro_bias(0) = init_gyro_bias_v.at(0);
+  config.init_gyro_bias(1) = init_gyro_bias_v.at(1);
+  config.init_gyro_bias(2) = init_gyro_bias_v.at(2);
 }
 
 }  // namespace dyno
