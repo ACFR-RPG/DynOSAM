@@ -402,8 +402,10 @@ class OpticalFlowAndPoseSolver {
       opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
     }
 
-    dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
-        graph, values, opt_params);
+    using BaseSolver = gtsam::LevenbergMarquardtOptimizer;
+    using DenseSolver = DenseNonlinearSolver<BaseSolver>;
+
+    dyno::NonlinearOptimizer<DenseSolver> solver(graph, values, opt_params);
 
     NonlinearOptimizerSummary summary;
     NonlinearOptimizerOptions options;
@@ -436,9 +438,10 @@ class OpticalFlowAndPoseSolver {
       opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
     }
 
-    dyno::NonlinearOptimizer<gtsam::GaussNewtonOptimizer> solver(graph, values,
-                                                                 opt_params);
+    using BaseSolver = gtsam::GaussNewtonOptimizer;
+    using DenseSolver = DenseNonlinearSolver<BaseSolver>;
 
+    dyno::NonlinearOptimizer<DenseSolver> solver(graph, values, opt_params);
     NonlinearOptimizerSummary summary;
     NonlinearOptimizerOptions options;
 

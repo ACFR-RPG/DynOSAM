@@ -301,4 +301,33 @@ class NonlinearOptimizer : public SOLVER {
   }
 };
 
+/**
+ * @brief Provides an interface for gtsam's NonlinearOptimizer classes where
+ * the linear system (Ax=b, as represented by a gtsam::GaussianFactorGraph)
+ * is solved using dense decomposition rather than sparse Cholesky/QR.
+ *
+ * @tparam SOLVER Derived Nonlinear solver, must inherit from
+ * gtsam::NonlinearOptimizer.
+ */
+template <typename SOLVER>
+class DenseNonlinearSolver : public SOLVER {
+ public:
+  static_assert(std::is_base_of<gtsam::NonlinearOptimizer, SOLVER>::value,
+                "SOLVER must inherit from gtsam::NonlinearOptimizer");
+
+  using Solver = SOLVER;
+
+  template <typename... Args>
+  DenseNonlinearSolver(Args&&... args) : SOLVER(std::forward<Args>(args)...) {}
+
+  /** Overwrite the linear solve Ax=b via dense composition (rather than the
+   * sparse solve as used by default)*/
+  gtsam::VectorValues solve(
+      const gtsam::GaussianFactorGraph& gfg,
+      const gtsam::NonlinearOptimizerParams&) const override {
+    // internal linear solve using Eigen's dense LLT solve
+    return gfg.optimizeDensely();
+  }
+};
+
 }  // namespace dyno

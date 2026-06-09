@@ -169,29 +169,37 @@ struct YoloV8ObjectDetector::Impl {
     // set input image size
     originalSize(rgb);
     // preprocess image according to YOLO training pre-procesing
-    cv::Mat letterbox_image;
-    // assume not dynamic
-    letterBox(rgb, letterbox_image, requiredInputSize(),
-              cv::Scalar(114, 114, 114),
-              /*auto_=*/false,
-              /*scaleFill=*/false, /*scaleUp=*/true, /*stride=*/32);
-    letterbox_image.convertTo(letterbox_image, CV_32FC3, 1.0f / 255.0f);
+    // cv::Mat letterbox_image;
+    // // assume not dynamic
+    // letterBox(rgb, letterbox_image, requiredInputSize(),
+    //           cv::Scalar(114, 114, 114),
+    //           /*auto_=*/false,
+    //           /*scaleFill=*/false, /*scaleUp=*/true, /*stride=*/32);
+    // letterbox_image.convertTo(letterbox_image, CV_32FC3, 1.0f / 255.0f);
 
-    size_t letter_box_size = static_cast<size_t>(letterbox_image.rows) *
-                             static_cast<size_t>(letterbox_image.cols) * 3;
-    CHECK_EQ(letter_box_size, input_info.size());
+    // size_t letter_box_size = static_cast<size_t>(letterbox_image.rows) *
+    //                          static_cast<size_t>(letterbox_image.cols) * 3;
+    // CHECK_EQ(letter_box_size, input_info.size());
+
+    cv::Size actual_size;
+    std::vector<float> blob;
+    letterBoxToBlob(rgb, blob, 3, requiredInputSize(), actual_size);
+
+    CHECK_EQ(blob.size(), input_info.size());
+
     // float* blobPtr = new float[letter_box_size];
     input_vector.allocate(input_info);
-
     float* input_data = input_vector.get();
 
-    std::vector<cv::Mat> channels(3);
-    for (int c = 0; c < 3; ++c) {
-      channels[c] = cv::Mat(
-          letterbox_image.rows, letterbox_image.cols, CV_32FC1,
-          input_data + c * (letterbox_image.rows * letterbox_image.cols));
-    }
-    cv::split(letterbox_image, channels);
+    std::copy(blob.begin(), blob.end(), input_data);
+
+    // std::vector<cv::Mat> channels(3);
+    // for (int c = 0; c < 3; ++c) {
+    //   channels[c] = cv::Mat(
+    //       letterbox_image.rows, letterbox_image.cols, CV_32FC1,
+    //       input_data + c * (letterbox_image.rows * letterbox_image.cols));
+    // }
+    // cv::split(letterbox_image, channels);
     // std::vector<float> input_vector(blobPtr, blobPtr + letter_box_size);
 
     // delete[] blobPtr;
@@ -495,6 +503,96 @@ struct YoloV8ObjectDetector::Impl {
     int right = dw - left;
     cv::copyMakeBorder(resized, outImage, top, bottom, left, right,
                        cv::BORDER_CONSTANT, color);
+  }
+
+  /// @brief Fast letterbox with buffer reuse
+  /// @param image Input BGR image
+  /// @param buffer Pre-allocated inference buffer
+  /// @param targetChannels Target channels for inference
+  /// @param targetSize Target size for inference
+  /// @param[out] actualSize Actual output size
+  /// @param dynamicShape Whether to use dynamic shape
+  inline void letterBoxToBlob(const cv::Mat& image, std::vector<float>& blob,
+                              int targetChannels, const cv::Size& targetSize,
+                              cv::Size& actualSize, bool dynamicShape = false) {
+    const int srcH = image.rows;
+    const int srcW = image.cols;
+    int dstH = targetSize.height;
+    int dstW = targetSize.width;
+
+    // Calculate scale (match Ultralytics exactly)
+    const float scale = std::min(static_cast<float>(dstH) / srcH,
+                                 static_cast<float>(dstW) / srcW);
+
+    // Ultralytics uses round() for new dimensions
+    int newH = static_cast<int>(std::round(srcH * scale));
+    int newW = static_cast<int>(std::round(srcW * scale));
+
+    // For dynamic shape, adjust to stride-aligned minimum size
+    if (dynamicShape) {
+      constexpr int stride = 32;
+      dstH = ((newH + stride - 1) / stride) * stride;
+      dstW = ((newW + stride - 1) / stride) * stride;
+    }
+
+    actualSize = cv::Size(dstW, dstH);
+    // buffer.ensureCapacity(dstH, dstW, targetChannels);
+    size_t required = static_cast<size_t>(dstH * dstW * targetChannels);
+    blob.resize(required);
+
+    // Ultralytics uses asymmetric padding with -0.1/+0.1 adjustment
+    const float dh = (dstH - newH) / 2.0f;
+    const float dw = (dstW - newW) / 2.0f;
+    const int padTop = static_cast<int>(std::round(dh - 0.1f));
+    const int padLeft = static_cast<int>(std::round(dw - 0.1f));
+
+    // Fill with padding (normalized 114/255)
+    constexpr float padNorm = 114.0f / 255.0f;
+    std::fill(blob.begin(), blob.begin() + dstH * dstW * targetChannels,
+              padNorm);
+
+    // Resize if needed
+    cv::Mat resized;
+    if (newW != srcW || newH != srcH) {
+      cv::resize(image, resized, cv::Size(newW, newH), 0, 0, cv::INTER_LINEAR);
+    } else {
+      resized = image;  // Reference, no copy
+    }
+
+    constexpr float scale255 = 1.0f / 255.0f;
+    if (targetChannels == 3) {
+      // Direct BGR->RGB + normalize to CHW blob
+      float* rChannel = blob.data();
+      float* gChannel = blob.data() + dstH * dstW;
+      float* bChannel = blob.data() + 2 * dstH * dstW;
+
+      for (int y = 0; y < newH; ++y) {
+        const int dstY = y + padTop;
+        const uchar* row = resized.ptr<uchar>(y);
+        const int rowOffset = dstY * dstW + padLeft;
+
+        for (int x = 0; x < newW; ++x) {
+          const int dstIdx = rowOffset + x;
+          const int srcIdx = x * 3;
+
+          bChannel[dstIdx] = row[srcIdx + 0] * scale255;
+          gChannel[dstIdx] = row[srcIdx + 1] * scale255;
+          rChannel[dstIdx] = row[srcIdx + 2] * scale255;
+        }
+      }
+    } else {
+      // normalize directly into blob (single channel)
+      float* blobPtr = blob.data();
+      for (int y = 0; y < newH; ++y) {
+        const int dstY = y + padTop;
+        const uchar* row = resized.ptr<uchar>(y);
+        const int rowOffset = dstY * dstW + padLeft;
+
+        for (int x = 0; x < newW; ++x) {
+          blobPtr[rowOffset + x] = static_cast<float>(row[x]) * scale255;
+        }
+      }
+    }
   }
 
   bool safeGetClassLabel(int class_id, std::string& label) {
