@@ -77,6 +77,22 @@ YoloDetectionGpuMatDevice::YoloDetectionGpuMatDevice(
 
 using namespace internal;
 
+inline void getScalePad(const cv::Size& originalSize,
+                        const cv::Size& letterboxSize, float& scale,
+                        float& padX, float& padY) {
+  scale =
+      std::min(static_cast<float>(letterboxSize.height) / originalSize.height,
+               static_cast<float>(letterboxSize.width) / originalSize.width);
+
+  // Use round() for new dimensions (matches Ultralytics)
+  int newW = static_cast<int>(std::round(originalSize.width * scale));
+  int newH = static_cast<int>(std::round(originalSize.height * scale));
+
+  // For descaling, use UNROUNDED padding values (matches Ultralytics behavior)
+  padX = (letterboxSize.width - newW) / 2.0f;
+  padY = (letterboxSize.height - newH) / 2.0f;
+}
+
 struct YoloV8ObjectDetector::Impl {
   const YoloConfig yolo_config_;
   // Information about the tensor to be provided as input directly to the model
@@ -99,9 +115,14 @@ struct YoloV8ObjectDetector::Impl {
   int* d_indir_counter_;
   int* h_indir_counter_;
 
+  // Stores the input image on the GPU prior to pre-processing kernel
+  // Avoids constant reallocation
+  DeviceMemory<uchar> input_image_device_;
+
   //! Size of the input image prior to preprocessing (ie. size of the camera
   //! image)
   cv::Size original_size_;
+  cv::Size letter_box_size_;
 
   CudaStreamPool stream_pool_;
   //! Mapping of class ids (as provided by the detection) to class labels (i.e 0
@@ -124,7 +145,8 @@ struct YoloV8ObjectDetector::Impl {
     // be included, making it easy to check which class ids we want to track
     setIncludedClassMapping(file_names_resouce, yolo_config);
 
-    const size_t det_size = MaxDetections * sizeof(AlignedYoloDetection);
+    const size_t det_size = YoloV8ModelInfo::Constants::MaxDetections *
+                            sizeof(AlignedYoloDetection);
     const size_t count_size = sizeof(int);
 
     // cudaMalloc(&d_buffer_, det_size);
@@ -168,42 +190,36 @@ struct YoloV8ObjectDetector::Impl {
                   HostMemory<float>& input_vector) {
     // set input image size
     originalSize(rgb);
-    // preprocess image according to YOLO training pre-procesing
-    // cv::Mat letterbox_image;
-    // // assume not dynamic
-    // letterBox(rgb, letterbox_image, requiredInputSize(),
-    //           cv::Scalar(114, 114, 114),
-    //           /*auto_=*/false,
-    //           /*scaleFill=*/false, /*scaleUp=*/true, /*stride=*/32);
-    // letterbox_image.convertTo(letterbox_image, CV_32FC3, 1.0f / 255.0f);
-
-    // size_t letter_box_size = static_cast<size_t>(letterbox_image.rows) *
-    //                          static_cast<size_t>(letterbox_image.cols) * 3;
-    // CHECK_EQ(letter_box_size, input_info.size());
 
     cv::Size actual_size;
+    // Assuming target size logic is pre-determined or based on a dry run if
+    // dynamic
+    cv::Size target_size = requiredInputSize();
+    // input_vector.allocate(input_info);
+    // float* input_data = input_vector.get(); // Pre-allocated memory pointer
+    // (Unified/Device memory)
+
+    // Pass a CUDA stream if your framework provides one to prevent CPU blocking
+    // cudaStream_t stream = 0;
+
+    // Run entirely on GPU
+    // letterBoxToBlobGPU(rgb, input_data, 3, target_size, actual_size, false,
+    // stream);
+
+    // letter_box_size_ = actual_size;
     std::vector<float> blob;
     letterBoxToBlob(rgb, blob, 3, requiredInputSize(), actual_size);
+    letter_box_size_ = actual_size;
 
-    CHECK_EQ(blob.size(), input_info.size());
+    // CHECK_EQ(blob.size(), input_info.size());
 
-    // float* blobPtr = new float[letter_box_size];
+    // // float* blobPtr = new float[letter_box_size];
     input_vector.allocate(input_info);
     float* input_data = input_vector.get();
 
+    // //copy data to GPU
     std::copy(blob.begin(), blob.end(), input_data);
 
-    // std::vector<cv::Mat> channels(3);
-    // for (int c = 0; c < 3; ++c) {
-    //   channels[c] = cv::Mat(
-    //       letterbox_image.rows, letterbox_image.cols, CV_32FC1,
-    //       input_data + c * (letterbox_image.rows * letterbox_image.cols));
-    // }
-    // cv::split(letterbox_image, channels);
-    // std::vector<float> input_vector(blobPtr, blobPtr + letter_box_size);
-
-    // delete[] blobPtr;
-    // processed_vector = input_vector;
     is_first = false;
     return true;
   }
@@ -219,7 +235,6 @@ struct YoloV8ObjectDetector::Impl {
       throw std::runtime_error(
           "Unexpected output1 shape. Expected [1, 32, mask_h, mask_w].");
 
-    const cv::Size& required_size = requiredInputSize();
     const cv::Size& original_size = originalSize(rgb);
 
     utils::ChronoTimingStats timing_setup("yolov8_detection.post_process.setup",
@@ -233,53 +248,44 @@ struct YoloV8ObjectDetector::Impl {
     // const float* output0_data = output0;
     // const float* output1_data = output1;
 
-    const size_t num_features =
+    const size_t numChannels =
         output0_dims.d[1];  // e.g 80 class + 4 bbox parms + 32 seg masks = 116
-    const size_t num_detections = output0_dims.d[2];
+    // const size_t numAnchors = output0_dims.d[2];
 
-    const int num_boxes = static_cast<int>(num_detections);
-    const int mask_h = static_cast<int>(output1_dims.d[2]);
-    const int mask_w = static_cast<int>(output1_dims.d[3]);
+    // const int num_boxes = static_cast<int>(num_detections);
+    const int SEG_H = static_cast<int>(output1_dims.d[2]);
+    const int SEG_W = static_cast<int>(output1_dims.d[3]);
 
-    const int num_classes =
-        static_cast<int>(num_features - 4 - 32);  // Corrected number of classes
+    const int numClasses =
+        static_cast<int>(numChannels - 32 - 4);  // Corrected number of classes
 
-    // Constants from model architecture
-    constexpr int BoxOffset = YoloV8ModelInfo::Constants::BoxOffset;
-    constexpr int ClassConfOffset = YoloV8ModelInfo::Constants::ClassConfOffset;
     const int MaskCoeffOffset =
-        YoloV8ModelInfo::Constants::MaskCoeffOffset(num_classes);
+        YoloV8ModelInfo::Constants::MaskCoeffOffset(numClasses);
+
+    const float* d_output1_void = d_output1;
+    std::vector<cv::Mat> prototypeMasks;
+    prototypeMasks.reserve(32);
+
+    for (int m = 0; m < 32; ++m) {
+      cv::cuda::GpuMat proto_d(
+          SEG_H, SEG_W, CV_32F,
+          const_cast<float*>(d_output1_void + m * SEG_H * SEG_W));
+
+      cv::Mat proto_h;
+      proto_d.download(proto_h);
+      prototypeMasks.emplace_back(proto_h.clone());
+    }
 
     timing_setup.stop();
 
-    // 1. Process prototype masks
-    // Store all prototype masks in a vector for easy access
-    utils::ChronoTimingStats timing_proto("yolov8_detection.post_process.proto",
-                                          5);
-    // mat does not take const pointer!!
-    const void* d_output1_void = d_output1;
-
-    cv::cuda::GpuMat d_prototype_masks(
-        YoloV8ModelInfo::Constants::NumMasks *
-            mask_h,  // rows = stacked vertically
-        mask_w,      // cols
-        CV_32F, const_cast<void*>(d_output1_void), mask_w * sizeof(float));
-
-    timing_proto.stop();
-
-    CHECK_EQ(num_boxes, MaxDetections);
-    CHECK_EQ(num_classes, 80);
-
     YoloKernelConfig config;
-    config.num_boxes = MaxDetections;
-    config.num_classes = num_classes;
-    config.conf_threshold = yolo_config_.conf_threshold;
-    config.box_offset = BoxOffset;
-    config.class_conf_offset = ClassConfOffset;
+    config.num_classes = numClasses;
     config.mask_coeff_offset = MaskCoeffOffset;
+    config.conf_threshold = yolo_config_.conf_threshold;
 
-    utils::ChronoTimingStats timing_boxes("yolov8_detection.post_process.boxes",
-                                          5);
+    utils::ChronoTimingStats timing_detection(
+        "yolov8_detection.post_process.compute_detections", 5);
+
     int count = internal::YoloOutputToDetections(
         d_output0,  // The raw GPU pointer from TensorRT/ONNX
         config,
@@ -288,118 +294,140 @@ struct YoloV8ObjectDetector::Impl {
         d_indir_counter_,  // Temp counter on GPU,
         h_indir_counter_, stream_pool_.getCudaStream());
 
-    timing_boxes.stop();
+    timing_detection.stop();
 
-    std::vector<cv::Rect> boxes;
-    boxes.reserve(num_boxes);
-    std::vector<float> confidences;
-    confidences.reserve(num_boxes);
+    std::vector<int> labels;
+    std::vector<float> scores;
+    std::vector<cv::Rect> bboxes;
+    std::vector<cv::Mat> maskConfs;
+    std::vector<int> indices;
 
     for (int i = 0; i < count; ++i) {
       // 1. Get a reference to the detection data in the contiguous array
       const AlignedYoloDetection& det = h_indir_buffer_[i];
 
-      // 2. Convert and Store Box/Confidence/Class ID
+      float score = det.confidence;
 
-      // Use the struct helper to calculate the cv::Rect efficiently
-      boxes.push_back(det.toCvRect());
+      if (score < yolo_config_.conf_threshold) {
+        continue;
+      }
 
-      // Confidence is a straight copy
-      confidences.push_back(det.confidence);
+      // class id which maps to the class name
+      const int label = static_cast<int>(det.class_id);
+
+      float* mask = const_cast<float*>(det.mask);
+      cv::Mat maskConf = cv::Mat(1, 32, CV_32F, mask);
+
+      bboxes.push_back(det.toCvRect());
+      labels.push_back(label);
+      scores.push_back(score);
+      maskConfs.push_back(maskConf);
     }
-    // Early exit if no boxes after confidence threshold
-    if (boxes.empty()) {
+
+    // // Early exit if no boxes after confidence threshold
+    if (bboxes.empty()) {
       return false;
     }
 
-    // 3. Apply NMS
-    utils::ChronoTimingStats timing_nms("yolov8_detection.post_process.nms", 5);
-    std::vector<int> nms_indices;
-    cv::dnn::NMSBoxes(boxes, confidences, yolo_config_.conf_threshold,
-                      yolo_config_.nms_threshold, nms_indices);
-    timing_nms.stop();
-    if (nms_indices.empty()) {
-      return false;
-    }
+    cv::dnn::NMSBoxesBatched(bboxes, scores, labels,
+                             yolo_config_.conf_threshold,
+                             yolo_config_.nms_threshold, indices);
 
-    utils::ChronoTimingStats timing_gain("yolov8_detection.post_process.gain",
-                                         5);
-    // Calculate letterbox parameters
-    const float gain = std::min(
-        static_cast<float>(required_size.height) / original_size.height,
-        static_cast<float>(required_size.width) / original_size.width);
-    const int scaled_w = static_cast<int>(original_size.width * gain);
-    const int scaled_h = static_cast<int>(original_size.height * gain);
-    const float pad_w = (required_size.width - scaled_w) / 2.0f;
-    const float pad_h = (required_size.height - scaled_h) / 2.0f;
+    float gain, padW, padH;
+    getScalePad(original_size, letter_box_size_, gain, padW, padH);
+    const float invGain = 1.0f / gain;
 
-    // Precompute mask scaling factors
-    const float mask_scale_x = static_cast<float>(mask_w) / required_size.width;
-    const float mask_scale_y =
-        static_cast<float>(mask_h) / required_size.height;
+    const float maskScaleX = static_cast<float>(SEG_W) / letter_box_size_.width;
+    const float maskScaleY =
+        static_cast<float>(SEG_H) / letter_box_size_.height;
 
-    // --- Crop Coordinates (Calculated once) ---
-    int x1_crop = static_cast<int>(std::round((pad_w - 0.1f) * mask_scale_x));
-    int y1_crop = static_cast<int>(std::round((pad_h - 0.1f) * mask_scale_y));
-    int x2_crop = static_cast<int>(
-        std::round((required_size.width - pad_w + 0.1f) * mask_scale_x));
-    int y2_crop = static_cast<int>(
-        std::round((required_size.height - pad_h + 0.1f) * mask_scale_y));
-    // Clamping is done inside the kernel for safety, but can be done here too
-    // x1_crop = std::max(0, std::min(x1_crop, mask_w - 1)); // etc.
-
-    const cv::Rect prototype_crop_rect(x1_crop, y1_crop, x2_crop - x1_crop,
-                                       y2_crop - y1_crop);
-
-    timing_gain.stop();
-
-    // --- Output Buffer ---
-    // Allocate a single GpuMat to hold ALL final, full-resolution masks.
-    // Size: NMS_COUNT * Original_H * Original_W
-    // cv::cuda::GpuMat d_final_masks_buffer(
-    //   wrappers.boxes.rows,
-    //   original_size.height * original_size.width, // Flat storage for HxW
-    //   mask CV_8UC1
-    // );
-
-    utils::ChronoTimingStats timing_detections(
-        "yolov8_detection.post_process.detections", 5);
     std::vector<ObjectDetection> detections;
-    detections.reserve(nms_indices.size());
-    for (const int idx : nms_indices) {
-      AlignedYoloDetection* d_det = d_indir_buffer_ + idx;
-      const AlignedYoloDetection* h_det = h_indir_buffer_ + idx;
-
-      const int class_id = static_cast<int>(h_det->class_id);
+    detections.reserve(indices.size());
+    for (int idx : indices) {
+      // NOW descale box coordinates from letterbox to original
+      const cv::Rect2f& lbBox = bboxes[idx];
+      const int class_id = labels[idx];
+      const float confidence = scores[idx];
 
       std::string class_label;
       if (!safeGetClassLabel(class_id, class_label)) {
         continue;
       }
 
-      cv::cuda::Stream stream = stream_pool_.getCvStream();
+      const float left = (lbBox.x - padW) * invGain;
+      const float top = (lbBox.y - padH) * invGain;
+      const float scaledW = lbBox.width * invGain;
+      const float scaledH = lbBox.height * invGain;
+      // cv::Rect_<float> box;
+      cv::Rect box;
+      box.x = dyno::clamp(static_cast<int>(left), 0, original_size.width - 1);
+      box.y = dyno::clamp(static_cast<int>(top), 0, original_size.height - 1);
+      box.width = dyno::clamp(static_cast<int>(scaledW), 1,
+                              original_size.width - box.x);
+      box.height = dyno::clamp(static_cast<int>(scaledH), 1,
+                               original_size.height - box.y);
 
+      // Compute mask from prototype masks and coefficients
+      cv::Mat finalMask = cv::Mat::zeros(SEG_H, SEG_W, CV_32F);
+      float* mask_ptr = maskConfs[idx].ptr<float>();
+      for (int m = 0; m < 32; ++m) {
+        float conf = *(mask_ptr + m);
+        finalMask += conf * prototypeMasks[m];
+      }
+
+      // Apply sigmoid activation
+      cv::exp(-finalMask, finalMask);
+      finalMask = 1.0 / (1.0 + finalMask);
+
+      // Crop to letterbox area
+      int x1 = static_cast<int>(std::round((padW - 0.1f) * maskScaleX));
+      int y1 = static_cast<int>(std::round((padH - 0.1f) * maskScaleY));
+      int x2 = static_cast<int>(
+          std::round((letter_box_size_.width - padW + 0.1f) * maskScaleX));
+      int y2 = static_cast<int>(
+          std::round((letter_box_size_.height - padH + 0.1f) * maskScaleY));
+
+      x1 = std::max(0, std::min(x1, SEG_W - 1));
+      y1 = std::max(0, std::min(y1, SEG_H - 1));
+      x2 = std::max(x1, std::min(x2, SEG_W));
+      y2 = std::max(y1, std::min(y2, SEG_H));
+
+      if (x2 <= x1 || y2 <= y1) continue;
+
+      cv::Mat croppedMask =
+          finalMask(cv::Rect(x1, y1, x2 - x1, y2 - y1)).clone();
+
+      // Resize to original image size
+      cv::Mat resizedMask;
+      cv::resize(croppedMask, resizedMask, original_size, 0, 0,
+                 cv::INTER_LINEAR);
+
+      // Threshold and convert to binary
+      cv::Mat binaryMask;
+      cv::threshold(resizedMask, binaryMask, 0.5f, 255.0, cv::THRESH_BINARY);
+      binaryMask.convertTo(binaryMask, CV_8U);
+
+      // Crop to bounding box
+      cv::Mat finalBinaryMask = cv::Mat::zeros(original_size, CV_8U);
+      cv::Rect roi(box.x, box.y, box.width, box.height);
+      roi &= cv::Rect(0, 0, binaryMask.cols, binaryMask.rows);
+      if (roi.area() > 0) {
+        binaryMask(roi).copyTo(finalBinaryMask(roi));
+      }
+
+      // viz.setTo(cv::Scalar(0, 255, 0), finalBinaryMask);
       ObjectDetection detection;
-      utils::ChronoTimingStats timing_detections_gpu(
-          "yolov8_detection.post_process.detections_gpu", 5);
-      internal::YoloDetectionsToObjects(
-          YoloDetectionGpuMatDevice(d_det), d_prototype_masks,
-          prototype_crop_rect, h_det, required_size, original_size, class_label,
-          mask_h, mask_w, stream, detection);
+      detection.mask = finalBinaryMask;
+      detection.bounding_box = box;
+      detection.class_name = class_label;
+      detection.confidence = confidence;
+
       detections.push_back(detection);
     }
 
-    timing_detections.stop();
-
-    utils::ChronoTimingStats timing_track("yolov8_detection.post_process.track",
-                                          5);
     std::vector<SingleDetectionResult> tracking_result =
         tracker_->track(detections);
-    timing_track.stop();
 
-    // //construct label mask from tracked result
-    utils::ChronoTimingStats timing_finalise(
-        "yolov8_detection.post_process.finalise", 5);
     for (const SingleDetectionResult& single_result : tracking_result) {
       // this may happen if the object was not well tracked
       if (!single_result.isValid()) {
@@ -418,91 +446,6 @@ struct YoloV8ObjectDetector::Impl {
     result.detections = tracking_result;
 
     return true;
-  }
-
-  inline cv::Mat sigmoid(const cv::Mat& src) {
-    cv::Mat dst;
-    cv::exp(-src, dst);
-    dst = 1.0 / (1.0 + dst);
-    return dst;
-  }
-
-  // template <typename T>
-  // T clamp(const T& val, const T& low, const T& high) {
-  //   return std::max(low, std::min(val, high));
-  // }
-
-  // inline cv::Rect scaleCoords(const cv::Size& required_shape,
-  //                             const cv::Rect& coords,
-  //                             const cv::Size& originalShape,
-  //                             bool p_Clip = true) {
-  //   float gain =
-  //       std::min((float)required_shape.height / (float)originalShape.height,
-  //                (float)required_shape.width / (float)originalShape.width);
-
-  //   int pad_w = static_cast<int>(std::round(
-  //       ((float)required_shape.width - (float)originalShape.width * gain) /
-  //       2.f));
-  //   int pad_h = static_cast<int>(std::round(
-  //       ((float)required_shape.height - (float)originalShape.height * gain) /
-  //       2.f));
-
-  //   cv::Rect ret;
-  //   ret.x =
-  //       static_cast<int>(std::round(((float)coords.x - (float)pad_w) /
-  //       gain));
-  //   ret.y =
-  //       static_cast<int>(std::round(((float)coords.y - (float)pad_h) /
-  //       gain));
-  //   ret.width = static_cast<int>(std::round((float)coords.width / gain));
-  //   ret.height = static_cast<int>(std::round((float)coords.height / gain));
-
-  //   if (p_Clip) {
-  //     ret.x = clamp(ret.x, 0, originalShape.width);
-  //     ret.y = clamp(ret.y, 0, originalShape.height);
-  //     ret.width = clamp(ret.width, 0, originalShape.width - ret.x);
-  //     ret.height = clamp(ret.height, 0, originalShape.height - ret.y);
-  //   }
-
-  //   return ret;
-  // }
-
-  void letterBox(const cv::Mat& image, cv::Mat& outImage,
-                 const cv::Size& newShape,
-                 const cv::Scalar& color = cv::Scalar(114, 114, 114),
-                 bool auto_ = true, bool scaleFill = false, bool scaleUp = true,
-                 int stride = 32) {
-    float r = std::min((float)newShape.height / (float)image.rows,
-                       (float)newShape.width / (float)image.cols);
-    if (!scaleUp) {
-      r = std::min(r, 1.0f);
-    }
-
-    int newW = static_cast<int>(std::round(image.cols * r));
-    int newH = static_cast<int>(std::round(image.rows * r));
-
-    int dw = newShape.width - newW;
-    int dh = newShape.height - newH;
-
-    if (auto_) {
-      dw = dw % stride;
-      dh = dh % stride;
-    } else if (scaleFill) {
-      newW = newShape.width;
-      newH = newShape.height;
-      dw = 0;
-      dh = 0;
-    }
-
-    cv::Mat resized;
-    cv::resize(image, resized, cv::Size(newW, newH), 0, 0, cv::INTER_LINEAR);
-
-    int top = dh / 2;
-    int bottom = dh - top;
-    int left = dw / 2;
-    int right = dw - left;
-    cv::copyMakeBorder(resized, outImage, top, bottom, left, right,
-                       cv::BORDER_CONSTANT, color);
   }
 
   /// @brief Fast letterbox with buffer reuse

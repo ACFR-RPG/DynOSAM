@@ -43,6 +43,14 @@
 
 namespace dyno {
 
+/* Partial specalisation of dyno::to_string for all types cv::Rect_ */
+template <typename V>
+std::string to_string(const cv::Rect_<V>& t) {
+  return "[x=" + std::to_string(t.x) + " y=" + std::to_string(t.y) +
+         " h=" + std::to_string(t.height) + " w=" + std::to_string(t.width) +
+         "]";
+}
+
 class CameraParams;
 
 template <typename T>

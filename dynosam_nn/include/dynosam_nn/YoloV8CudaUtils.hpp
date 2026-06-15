@@ -30,12 +30,8 @@ struct alignas(float) AlignedYoloDetection {
 // Note: Assuming you have access to OpenCV headers here.
 // If not, remove this helper and do the math at the usage site.
 #ifdef __cplusplus
-  inline cv::Rect toCvRect() const {
-    return cv::Rect(static_cast<int>(std::round(x - w / 2.0f)),  // top-left x
-                    static_cast<int>(std::round(y - h / 2.0f)),  // top-left y
-                    static_cast<int>(std::round(w)),             // width
-                    static_cast<int>(std::round(h))              // height);
-    );
+  inline cv::Rect_<float> toCvRect() const {
+    return cv::Rect_<float>(x - w / 2.0f, y - h / 2.0f, w, h);
   }
 #endif
 };
@@ -62,12 +58,9 @@ struct YoloDetectionGpuMatDevice {
 };
 
 struct YoloKernelConfig {
-  int num_boxes;    // e.g., 8400
-  int num_classes;  // e.g., 80
-  float conf_threshold;
-  int box_offset;         // Index offset for Box data
-  int class_conf_offset;  // Index offset for Class data
+  int num_classes;        // e.g., 80
   int mask_coeff_offset;  // Index offset for Mask data
+  float conf_threshold;
 };
 
 /**
@@ -98,6 +91,11 @@ void YoloDetectionsToObjects(
     const cv::Size& original_size, const std::string& label, const int mask_h,
     const int mask_w, cv::cuda::Stream stream,
     dyno::ObjectDetection& detection);
+
+void letterBoxToBlobGPU(const cv::Mat& image, float* d_input_data,
+                        int targetChannels, const cv::Size& targetSize,
+                        cv::Size& actualSize, bool dynamicShape = false,
+                        cudaStream_t stream = 0);
 
 }  // namespace internal
 }  // namespace dyno

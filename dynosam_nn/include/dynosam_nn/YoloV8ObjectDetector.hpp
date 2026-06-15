@@ -8,6 +8,18 @@
 
 namespace dyno {
 
+template <typename T>
+inline typename std::enable_if<std::is_arithmetic<T>::value, T>::type clamp(
+    const T& value, const T& low, const T& high) {
+  // Ensure range is valid; swap if necessary
+  T validLow = low < high ? low : high;
+  T validHigh = low < high ? high : low;
+
+  if (value < validLow) return validLow;
+  if (value > validHigh) return validHigh;
+  return value;
+}
+
 struct YoloConfig {
   //! Minimum confidence needed to consider a bounding box and compared against
   //! the detection confidence Used in both considering a bounding box, nms and
@@ -42,6 +54,7 @@ class YoloV8ModelInfo {
     constexpr static int BoxOffset = 0;
     constexpr static int ClassConfOffset = 4;
     constexpr static int NumMasks = 32;
+    static constexpr int MaxDetections = 8400;
 
     static int MaskCoeffOffset(int num_classes) {
       return num_classes + ClassConfOffset;
@@ -71,8 +84,6 @@ class YoloV8ModelInfo {
 };
 
 std::ostream& operator<<(std::ostream& out, const YoloV8ModelInfo& info);
-
-static constexpr int MaxDetections = 8400;
 
 /**
  * @brief TensorRT accelerated inference for object detection using YOLOv8.

@@ -1,4 +1,5 @@
 #include "dynosam_nn/YoloV8CudaUtils.hpp"
+#include "dynosam_nn/YoloV8ObjectDetector.hpp"
 #include "dynosam_nn/CudaUtils.hpp"
 #include "dynosam_common/DynamicObjects.hpp"
 
@@ -16,6 +17,91 @@
 
 #include <glog/logging.h>
 
+__global__ void letterBoxToBlobKernel(const uchar* __restrict__ srcData,
+                                      int srcH, int srcW, int srcStep, int srcChannels,
+                                      float* __restrict__ dstBlob,
+                                      int dstH, int dstW,
+                                      int newH, int newW,
+                                      int padTop, int padLeft,
+                                      float scaleX, float scaleY) {
+    // 2D grid mapping to the destination blob coordinates
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (x >= dstW || y >= dstH) return;
+
+    int planeSize = dstH * dstW;
+    constexpr float padNorm = 114.0f / 255.0f;
+    constexpr float scale255 = 1.0f / 255.0f;
+
+    // Check if current thread falls inside the padded image area
+    if (y >= padTop && y < (padTop + newH) && x >= padLeft && x < (padLeft + newW)) {
+        // Map destination coordinates back to source image coordinates (Bilinear interpolation)
+        int srcY_resized = y - padTop;
+        int srcX_resized = x - padLeft;
+
+        // Bilinear interpolation coordinates
+        float src_fX = srcX_resized * scaleX;
+        float src_fY = srcY_resized * scaleY;
+
+        int x1 = __float2int_rd(src_fX);
+        int y1 = __float2int_rd(src_fY);
+        int x2 = min(x1 + 1, srcW - 1);
+        int y2 = min(y1 + 1, srcH - 1);
+
+        float fx2 = src_fX - x1;
+        float fx1 = 1.0f - fx2;
+        float fy2 = src_fY - y1;
+        float fy1 = 1.0f - fy2;
+
+        int dstIdx = y * dstW + x;
+
+        if (srcChannels == 3) {
+            // Pointers to the source rows
+            const uchar* row1 = srcData + y1 * srcStep;
+            const uchar* row2 = srcData + y2 * srcStep;
+
+            // Fetch the 4 neighboring pixels for B, G, R
+            float b11 = row1[x1 * 3 + 0], b12 = row1[x2 * 3 + 0];
+            float b21 = row2[x1 * 3 + 0], b22 = row2[x2 * 3 + 0];
+
+            float g11 = row1[x1 * 3 + 1], g12 = row1[x2 * 3 + 1];
+            float g21 = row2[x1 * 3 + 1], g22 = row2[x2 * 3 + 1];
+
+            float r11 = row1[x1 * 3 + 2], r12 = row1[x2 * 3 + 2];
+            float r21 = row2[x1 * 3 + 2], r22 = row2[x2 * 3 + 2];
+
+            // Interpolate
+            float b = (b11 * fx1 + b12 * fx2) * fy1 + (b21 * fx1 + b22 * fx2) * fy2;
+            float g = (g11 * fx1 + g12 * fx2) * fy1 + (g21 * fx1 + g22 * fx2) * fy2;
+            float r = (r11 * fx1 + r12 * fx2) * fy1 + (r21 * fx1 + r22 * fx2) * fy2;
+
+            // Write out to Planar CHW format (BGR -> RGB conversion)
+            dstBlob[dstIdx]               = r * scale255; // Red channel plane
+            dstBlob[dstIdx + planeSize]     = g * scale255; // Green channel plane
+            dstBlob[dstIdx + 2 * planeSize] = b * scale255; // Blue channel plane
+        } else {
+            // Single channel grayscale path
+            const uchar* row1 = srcData + y1 * srcStep;
+            const uchar* row2 = srcData + y2 * srcStep;
+
+            float val11 = row1[x1], val12 = row1[x2];
+            float val21 = row2[x1], val22 = row2[x2];
+
+            float val = (val11 * fx1 + val12 * fx2) * fy1 + (val21 * fx1 + val22 * fx2) * fy2;
+            dstBlob[dstIdx] = val * scale255;
+        }
+    } else {
+        // We are in the padding area
+        int dstIdx = y * dstW + x;
+        dstBlob[dstIdx] = padNorm;
+        if (srcChannels == 3) {
+            dstBlob[dstIdx + planeSize]     = padNorm;
+            dstBlob[dstIdx + 2 * planeSize] = padNorm;
+        }
+    }
+}
+
 
 // --- Device Kernel ---
 //TODO: I think N, C, ClassConfOffset and MaskCoeffOffset should also be constexpr
@@ -24,10 +110,14 @@ __global__ void YOLO_PostProcess_Kernel(
     const float* __restrict__ d_input,
     float* __restrict__ d_detections, // Treated as flat float array
     int* __restrict__ d_count,
-    int N, int C, float CONF_THRESHOLD,
-    int BoxOffset, int ClassConfOffset, int MaskCoeffOffset)
+    int C, float CONF_THRESHOLD,
+    int MaskCoeffOffset)
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+    static constexpr int N =  dyno::YoloV8ModelInfo::Constants::MaxDetections;
+    static constexpr int BoxOffset =  dyno::YoloV8ModelInfo::Constants::BoxOffset;
+    static constexpr int ClassConfOffset =  dyno::YoloV8ModelInfo::Constants::ClassConfOffset;
 
     if (i >= N) return;
 
@@ -165,6 +255,72 @@ inline cv::Rect scaleCoords(const cv::Size& required_shape,
 namespace dyno {
 namespace internal {
 
+// Wrapper implementation to setup grid/block sizes
+void launchLetterBoxKernel(const uchar* d_src, int srcH, int srcW, int srcStep, int srcChannels,
+                           float* d_blob, int dstH, int dstW, int newH, int newW,
+                           int padTop, int padLeft, float scaleX, float scaleY, cudaStream_t stream) {
+    dim3 block(16, 16);
+    dim3 grid((dstW + block.x - 1) / block.x, (dstH + block.y - 1) / block.y);
+
+    letterBoxToBlobKernel<<<grid, block, 0, stream>>>(
+        d_src, srcH, srcW, srcStep, srcChannels,
+        d_blob, dstH, dstW, newH, newW,
+        padTop, padLeft, scaleX, scaleY
+    );
+}
+
+// void letterBoxToBlobGPU(const cv::Mat& image, DeviceMemory<uchar>& d_image_cache, float* d_processed,
+//                                  int targetChannels, const cv::Size& targetSize,
+//                                  cv::Size& actualSize, bool dynamicShape,
+//                                  cudaStream_t stream) {
+//     const int srcH = image.rows;
+//     const int srcW = image.cols;
+//     int dstH = targetSize.height;
+//     int dstW = targetSize.width;
+
+//     // 1. Calculate scale (match Ultralytics exactly)
+//     const float scale = std::min(static_cast<float>(dstH) / srcH,
+//                                  static_cast<float>(dstW) / srcW);
+
+//     // Ultralytics uses round() for new dimensions
+//     int newH = static_cast<int>(std::round(srcH * scale));
+//     int newW = static_cast<int>(std::round(srcW * scale));
+
+//     // For dynamic shape, adjust to stride-aligned minimum size
+//     if (dynamicShape) {
+//         constexpr int stride = 32;
+//         dstH = ((newH + stride - 1) / stride) * stride;
+//         dstW = ((newW + stride - 1) / stride) * stride;
+//     }
+
+//     actualSize = cv::Size(dstW, dstH);
+
+//     // 2. Ultralytics asymmetric padding with -0.1/+0.1 adjustment
+//     const float dh = (dstH - newH) / 2.0f;
+//     const float dw = (dstW - newW) / 2.0f;
+//     const int padTop = static_cast<int>(std::round(dh - 0.1f));
+//     const int padLeft = static_cast<int>(std::round(dw - 0.1f));
+
+//     // Inverse scales for mapping target back to source pixels inside the kernel
+//     float scaleX = static_cast<float>(srcW) / newW;
+//     float scaleY = static_cast<float>(srcH) / newH;
+
+//     // // 3. Allocate and copy the raw source image data to GPU
+//     size_t srcBytes = image.step * srcH;
+//     d_image_cache.
+//     // uchar* d_srcData = nullptr;
+//     // cudaMallocAsync(&d_srcData, srcBytes, stream);
+//     // cudaMemcpyAsync(d_srcData, image.data, srcBytes, cudaMemcpyHostToDevice, stream);
+
+//     // 4. Launch the integrated Resize + Pad + Format conversion Kernel
+//     launchLetterBoxKernel(d_srcData, srcH, srcW, image.step, targetChannels,
+//                           d_processed, dstH, dstW, newH, newW,
+//                           padTop, padLeft, scaleX, scaleY, stream);
+
+//     // Free the temporary source image memory on the device
+//     cudaFreeAsync(d_srcData, stream);
+// }
+
 // --- Host Wrapper Function ---
 int YoloOutputToDetections(
     const float* d_model_output,
@@ -183,17 +339,15 @@ int YoloOutputToDetections(
 
     // 2. Launch Kernel
     static constexpr int threads = 256;
-    const int blocks = (config.num_boxes + threads - 1) / threads;
+    static constexpr auto num_boxes = dyno::YoloV8ModelInfo::Constants::MaxDetections;
+    const int blocks = (num_boxes + threads - 1) / threads;
 
     YOLO_PostProcess_Kernel<<<blocks, threads, 0, stream>>>(
         d_model_output,
         reinterpret_cast<float*>(d_output_buffer),
         d_count_buffer,
-        config.num_boxes,
         config.num_classes,
         config.conf_threshold,
-        config.box_offset,
-        config.class_conf_offset,
         config.mask_coeff_offset
     );
 

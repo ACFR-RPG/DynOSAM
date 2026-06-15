@@ -53,13 +53,6 @@ std::string to_string<cv::Size>(const cv::Size& t) {
          "]";
 }
 
-template <>
-std::string to_string<cv::Rect>(const cv::Rect& t) {
-  return "[x=" + std::to_string(t.x) + " y=" + std::to_string(t.y) +
-         " h=" + std::to_string(t.height) + " w=" + std::to_string(t.width) +
-         "]";
-}
-
 namespace utils {
 
 bool opencvCudaAvailable(std::string* message) {
