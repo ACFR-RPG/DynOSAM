@@ -197,6 +197,17 @@ bool Subscriber::addImages(Timestamp timestamp,
     throw DynosamException("Unknown DepthRigType!");
   }
 
+  // process other streams
+  images.erase(0);
+  images.erase(1);
+  for (const auto& [i, image] : images) {
+    // TODO: Which kind of mask!? need name associated with it!! For now just do
+    // motion mask
+    if (sensor_system_->streamType(i) == StreamConfig::Types::Mask) {
+      image_container->objectMotionMask(image);
+    }
+  }
+
   // LOG(INFO) << image_container->toString();
   image_container_callback_(image_container);
   return true;

@@ -158,8 +158,9 @@ void DynosamNodeImpl::init() {
   // the processing speed is not an issue) in either case we expect the limit of
   // processing to be about 15-20Hz (which is realtime anyway) so we attempt to
   // spin at this rate regardless
-  spin_timer_group =
-      node_ptr->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  // NOTE: MUST be MutuallyExclusive to prevent execution in parallel to itself
+  spin_timer_group = node_ptr->create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive);
   spin_timer = node_ptr->create_wall_timer(std::chrono::milliseconds(50),
                                            spinOnce, spin_timer_group);
 }
@@ -197,9 +198,14 @@ dyno::DataProvider::Ptr DynosamNodeImpl::createOnlineDataProvider(
   SensorMode sensor_mode(mode);
   sensor_mode.reconfigure(dyno_params);
 
+  LoadingSourceParams loading_sources;
+  loading_sources.params_folder = getParamsPath();
+  loading_sources.cameras_from_ros = true;
+
   SensorSystem::Ptr sensor_system = std::make_shared<SensorSystem>(
       dynosam_node.create_sub_node("dataprovider"), sensor_mode.depthRigType(),
-      getParamsPath(), true);
+      loading_sources);
+
   for (const auto& configs : sensor_mode.configs()) {
     sensor_system->addCamera(configs);
   }

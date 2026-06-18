@@ -372,8 +372,8 @@ class DynoDatasetProvider : public DynoDataset<DataTypes...>,
 
     utils::ChronoTimingStats dataset_spin_timer("dataset_spin");
     if (!BaseDynoDataset::processSingle(active_frame_id_)) {
-      LOG(ERROR) << "Processing single frame failed at frame id "
-                 << active_frame_id_;
+      LOG(INFO) << "Processing single frame failed at frame id "
+                << active_frame_id_;
       return false;
     }
 

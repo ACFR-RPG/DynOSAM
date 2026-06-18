@@ -279,7 +279,7 @@ class CsvWriter {
   DYNO_POINTER_TYPEDEFS(CsvWriter)
 
   CsvWriter(const CsvHeader& header, const std::string& seperator = ",");
-  ~CsvWriter();
+  virtual ~CsvWriter();
 
   CsvWriter& add(const char* str);
   CsvWriter& add(char* str);
@@ -319,6 +319,7 @@ class CsvWriter {
   }
 
   CsvWriter& newRow();
+  const CsvHeader& header() { return header_; }
 
   bool write(const std::string& filename) const;
   bool write(const std::string& filename, bool append) const;

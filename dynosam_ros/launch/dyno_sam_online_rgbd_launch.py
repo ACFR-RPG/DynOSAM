@@ -4,19 +4,39 @@ from launch.actions import DeclareLaunchArgument
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from dynosam_ros.launch_utils import get_default_dynosam_params_path
+from ament_index_python.packages import get_package_share_directory
+import xacro
+
+import os
 
 
 def generate_launch_description():
+    pkg_dir = get_package_share_directory('realsense2_description')
+    xacro_file = os.path.join(pkg_dir, 'urdf', '_d435.urdf.xacro')
+
+    # Process xacro to string
+    robot_description_raw = xacro.process_file(xacro_file).toxml()
+
+    # 2. Configure robot_state_publisher
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': robot_description_raw}]
+    )
+
+
     return LaunchDescription([
         DeclareLaunchArgument("params_path", default_value=get_default_dynosam_params_path()),
-        DeclareLaunchArgument("v", default_value="30"),
+        DeclareLaunchArgument("v", default_value="50"),
         DeclareLaunchArgument("output_path", default_value="/root/results/DynoSAM/"),
         DeclareLaunchArgument("camera_info_topic", default_value="/camera/color/camera_info"),
         DeclareLaunchArgument("rgb_cam_topic", default_value="/camera/color/image_rect_color"),
         DeclareLaunchArgument("depth_cam_topic", default_value="/camera/aligned_depth_to_color/image_raw"),
         DeclareLaunchArgument("rescale_width", default_value="640", description="Image width to rescale to"),
         DeclareLaunchArgument("rescale_height", default_value="480", description="Image height to rescale to"),
-
+        robot_state_publisher_node,
         DynosamNode(
                 package="dynosam_ros",
                 executable="dynosam_node",
@@ -26,17 +46,16 @@ def generate_launch_description():
                     {"rescale_width": LaunchConfiguration("rescale_width")},
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},
-                    {"input_image_mode": 1} # Corresponds with InputImageMode::RGBD}
+                    {"input_image_mode": "rgb+aligned_depth"},
+                    {"base_frame": "camera_link"},
+                    {"odom_frame": "odom"},
+                    {"depth_scale": 0.001},
+                    {"v": LaunchConfiguration("v")}
                 ],
                 remappings=[
-                    ("dataprovider/camera/camera_info",  LaunchConfiguration("camera_info_topic")),
-                    ("image/rgb",  LaunchConfiguration("rgb_cam_topic")),
-                    ("image/depth",  LaunchConfiguration("depth_cam_topic")),
+                    ("rgb/camera_info", LaunchConfiguration("camera_info_topic")),
+                    ("rgb/image_raw",   LaunchConfiguration("rgb_cam_topic")),
+                    ("depth/image_raw", LaunchConfiguration("depth_cam_topic")),
                 ]
             ),
-            # Node(
-            #     package='tf2_ros',
-            #     executable='static_transform_publisher',
-            #     arguments=["0.0", "0.0", "0.0", "1.57", "-1.57", "0.0", "world", "robot"]
-            # )
         ])

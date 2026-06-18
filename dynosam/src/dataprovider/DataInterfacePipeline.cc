@@ -143,6 +143,8 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
     ground_truth_packet = ground_truth->at(packet->frameId());
   }
   const Timestamp& timestamp = packet->timestamp();
+  LOG(INFO) << "VI Frontend t=" << std::setprecision(20) << timestamp
+            << " k=" << packet->frameId();
 
   if (!is_ready_) {
     // if IMU we need to wait till ready
@@ -157,9 +159,11 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
         removeOldImuMeasurements(imu_measurements);
         VLOG(5) << "Recieved initial synchronized IMU measurements. Beginning "
                    "processing...";
-        // drop the first set of good IMU measurements
-        return nullptr;
       }
+      // drop the first set of good IMU measurements regardless
+      // as either at next iteration we will be ready or we will continue to
+      // wait on the IMU
+      return nullptr;
     } else {
       // no IMU just images
       is_ready_ = true;
@@ -167,7 +171,8 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
   }
 
   if (!is_ready_) {
-    VLOG(10) << "Data is not ready at timestamp: " << timestamp;
+    VLOG(10) << "Data is not ready at timestamp: " << std::setprecision(20)
+             << timestamp;
     return nullptr;
   }
 
@@ -210,8 +215,12 @@ DataInterfacePipeline::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
     return FrameAction::Drop;
   }
 
+  LOG(INFO) << "Last imu timestamp " << std::setprecision(20)
+            << timestamp_last_frame_;
+
   CHECK_NOTNULL(imu_meas);
   CHECK_LT(timestamp_last_frame_, timestamp)
+      << std::setprecision(20)
       << "Image timestamps out of order: " << timestamp_last_frame_
       << "[s] (last) >= " << timestamp << "[s] (curr)";
 

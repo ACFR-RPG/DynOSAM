@@ -106,6 +106,8 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
   rgbd_camera_ = camera_->safeGetRGBDCamera();
   CHECK_NOTNULL(rgbd_camera_);
 
+  optical_flow_pose_solver_.enforceRealtime(params.enforceRealtime());
+
   // measurement sigmas
   static_point_sigma_ = dyno_params_.backend_params_.static_point_noise_sigma;
   dynamic_point_sigma_ = dyno_params_.backend_params_.dynamic_point_noise_sigma;

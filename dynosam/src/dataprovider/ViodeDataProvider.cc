@@ -253,7 +253,14 @@ class ViodeAllLoader {
       //  to compare with the odom
       // file
       try {
-        timestamp_sec = std::stod(image_name) / 1e9;
+        // timestamp_sec = std::stod(image_name) / 1e9;
+        // 1. Parse the string into a 64-bit unsigned integer
+        unsigned long long nanoseconds = std::stoull(image_name);
+
+        // 2. Convert to double by dividing by 1e9 (1,000,000,000)
+        // hitting limits of double accuracy here which is very problematic for
+        // timestamps!
+        timestamp_sec = static_cast<double>(nanoseconds) / 1e9;
 
       } catch (const std::runtime_error& e) {
         LOG(FATAL) << "Failed to extract timestamp from image name "
@@ -549,9 +556,10 @@ ViodeLoader::ViodeLoader(const fs::path& dataset_path)
     if (right_rgb) image_container.rightRgb(right_rgb.value());
 
     CHECK(image_container_callback_);
-    if (image_container_callback_)
+    if (image_container_callback_) {
       image_container_callback_(
           std::make_shared<ImageContainer>(image_container));
+    }
     return true;
   };
 

@@ -20,7 +20,7 @@ struct OpticalFlowAndPoseSolverParams {
   double flow_sigma{10.0};
   double flow_prior_sigma{3.33};
   double k_huber{0.001};
-  bool outlier_reject{true};
+  bool outlier_reject{false};
   bool use_robust{true};
   // When true, this indicates that the optical flow images go from k to k+1
   // (rather than k-1 to k, when false) this left over from some original
@@ -68,9 +68,9 @@ class OpticalFlowAndPoseSolver {
           gtsam::noiseModel::mEstimator::Huber::Create(params_.k_huber),
           flow_noise_);
     }
-
-    // TODO: if realtime
   }
+
+  void enforceRealtime(bool flag = true) { try_enforce_realtime_ = flag; }
 
   /**
    * @brief Builds the factor-graph problem using the set of specificed
@@ -173,7 +173,10 @@ class OpticalFlowAndPoseSolver {
     OpticalFlowAndPoseSolverResult result;
     result.best_result.object_id = *object_id.begin();
 
-    const double error_before = graph.error(values);
+    if (!try_enforce_realtime_) {
+      result.error_before = graph.error(values);
+    }
+
     std::unordered_set<gtsam::Key> outlier_flows;
     // graph we will mutate by removing outlier factors
     gtsam::NonlinearFactorGraph mutable_graph = graph;
@@ -182,7 +185,8 @@ class OpticalFlowAndPoseSolver {
 
     gtsam::FactorIndices outlier_factors;
     // if we have outliers, enter iteration loop
-    if (params_.outlier_reject) {
+    // this can also be slow to only do if we are not enforcing realtime
+    if (!try_enforce_realtime_ && params_.outlier_reject) {
       utils::ChronoTimingStats timer("of_pose_solver.outlier_reject", 10);
 
       outlier_factors = factor_graph_tools::determineFactorOutliers<
@@ -228,22 +232,19 @@ class OpticalFlowAndPoseSolver {
       }
     }
 
-    // size_t initial_size = graph.size();
-    // size_t inlier_size = mutable_graph.size();
-    const double error_after = mutable_graph.error(optimised_values);
-
+    if (!try_enforce_realtime_) {
+      result.error_after = mutable_graph.error(optimised_values);
+    }
     // recover values
     result.best_result.refined_pose =
         optimised_values.at<gtsam::Pose3>(pose_key);
-    result.error_before = error_before;
-    result.error_after = error_after;
-
     // for each outlier edge, update the set of inliers
     for (TrackletId tracklet_id : tracklets) {
       const gtsam::Symbol flow_sym = flowSymbol(tracklet_id);
       const gtsam::Key flow_key = flow_sym.key();
 
-      if (outlier_flows.find(flow_key) != outlier_flows.end()) {
+      if (!outlier_flows.empty() &&
+          outlier_flows.find(flow_key) != outlier_flows.end()) {
         // still need to update the result as this is used to actually update
         // the outlier tracklets in the updateFrameOutliersWithResult
         result.outliers.push_back(tracklet_id);
@@ -428,8 +429,9 @@ class OpticalFlowAndPoseSolver {
                         const gtsam::NonlinearFactorGraph& graph,
                         const gtsam::Ordering& ordering) const {
     gtsam::GaussNewtonParams opt_params;
-    // for speed
-    opt_params.setMaxIterations(3);
+
+    int max_iterations = try_enforce_realtime_ ? 2 : 6;
+    opt_params.setMaxIterations(max_iterations);
     // this is basically a set of prior looking factors on a pose so we know we
     // need to eliminate the pose last to avoid fill in therefore we use our own
     // custom ordering that has the pose last
@@ -438,23 +440,52 @@ class OpticalFlowAndPoseSolver {
       opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
     }
 
-    using BaseSolver = gtsam::GaussNewtonOptimizer;
-    using DenseSolver = DenseNonlinearSolver<BaseSolver>;
+    static CsvWriterToFile timing_logger(
+        getOutputFilePath("of_flow_timing_compare.csv"),
+        CsvHeader("type", "num_values", "num_factors", "timing[ms]"));
 
-    dyno::NonlinearOptimizer<DenseSolver> solver(graph, values, opt_params);
-    NonlinearOptimizerSummary summary;
-    NonlinearOptimizerOptions options;
+    auto solveDense =
+        [&opt_params](
+            const gtsam::Values& values,
+            const gtsam::NonlinearFactorGraph& graph) -> gtsam::Values {
+      using BaseSolver = gtsam::GaussNewtonOptimizer;
+      using DenseSolver = DenseNonlinearSolver<BaseSolver>;
 
-    gtsam::Values optimised_values = values;
-    {
+      dyno::NonlinearOptimizer<DenseSolver> solver(graph, values, opt_params);
+      NonlinearOptimizerSummary summary;
+      NonlinearOptimizerOptions options;
+
+      gtsam::Values optimised_values = values;
       utils::ChronoTimingStats timer("of_pose_solver.GN_solve", 7);
       CHECK(solver.solve(optimised_values, options, &summary));
-    }
 
-    VLOG(10) << "Initial error: " << summary.initial_error << " final error "
-             << summary.final_error << " time[s] "
-             << summary.cumulative_time_in_seconds
-             << " #iterations= " << summary.numIterations();
+      auto timing_ms = timer.stop();
+
+      timing_logger << "dense" << values.size() << graph.size() << timing_ms;
+      return optimised_values;
+    };
+
+    auto solveSparse =
+        [&opt_params](
+            const gtsam::Values& values,
+            const gtsam::NonlinearFactorGraph& graph) -> gtsam::Values {
+      using BaseSolver = gtsam::GaussNewtonOptimizer;
+
+      dyno::NonlinearOptimizer<BaseSolver> solver(graph, values, opt_params);
+      NonlinearOptimizerSummary summary;
+      NonlinearOptimizerOptions options;
+
+      gtsam::Values optimised_values = values;
+      utils::ChronoTimingStats timer("of_pose_solver.GN_solve", 7);
+      CHECK(solver.solve(optimised_values, options, &summary));
+
+      auto timing_ms = timer.stop();
+
+      timing_logger << "sparse" << values.size() << graph.size() << timing_ms;
+      return optimised_values;
+    };
+
+    auto optimised_values = solveSparse(values, graph);
 
     return optimised_values;
   }
@@ -467,6 +498,8 @@ class OpticalFlowAndPoseSolver {
   gtsam::SharedNoiseModel flow_noise_;
   //! Prior noise model for the flow
   gtsam::SharedNoiseModel flow_prior_noise_;
+
+  bool try_enforce_realtime_{false};
 
   //! Optimization params and configuration
   TimeBudgetOptimizationCallback::UniquePtr opt_callback_{nullptr};

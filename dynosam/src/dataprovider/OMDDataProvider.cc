@@ -1446,9 +1446,10 @@ OMDDataLoader::OMDDataLoader(const fs::path& dataset_path)
         .objectMotionMask(instance_mask);
 
     CHECK(image_container_callback_);
-    if (image_container_callback_)
+    if (image_container_callback_) {
       image_container_callback_(
           std::make_shared<ImageContainer>(image_container));
+    }
     return true;
   };
 

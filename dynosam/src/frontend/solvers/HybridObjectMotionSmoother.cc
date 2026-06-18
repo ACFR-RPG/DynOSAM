@@ -1,6 +1,7 @@
 #include "dynosam/frontend/solvers/HybridObjectMotionSmoother.hpp"
 
 #include <gtsam/linear/NoiseModel.h>
+#include <gtsam/nonlinear/GaussNewtonOptimizer.h>
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
@@ -1012,6 +1013,7 @@ HybridObjectMotionOnlySmoother::Result
 HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     gtsam::Values& smoother_state, const gtsam::Pose3& H_W_KF_k_initial,
     Frame::Ptr frame, const TrackletIds& tracklets) {
+  utils::ChronoTimingStats t("hm_smoother.update", 10);
   const auto frame_id = frameId();
   const auto timestamp = this->timestamp();
 
@@ -1073,6 +1075,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   //  ie the frame of L_KF which may not be lOKF_frame_
   const bool close_to_keyframe = frameId() <= (tracking_kf + 2);
 
+  utils::ChronoTimingStats update_timer("hm_smoother.update.tracklets", 10);
   for (const TrackletId& tracklet_id : tracklets) {
     Feature::Ptr feature = frame->at(tracklet_id);
     CHECK(feature);
@@ -1120,6 +1123,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     num_tracks_used++;
     avg_feature_age += feature->age();
   }
+  update_timer.stop();
 
   if (num_tracks_used == 0) {
     HybridObjectMotionSmoother::Result result;
@@ -1184,6 +1188,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   frame_ids_to_try.insert(frame_id - 1u);
   frame_ids_to_try.insert(frame_id);
 
+  utils::ChronoTimingStats timer1("hm_smoother.update.points", 10);
   for (const auto& [tracklet_id, point_w_state] : point_state_) {
     gtsam::FastMap<FrameId, gtsam::NonlinearFactor::shared_ptr> observations;
     for (FrameId frame_id : frame_ids_to_try) {
@@ -1201,14 +1206,16 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
     // seen at at least three requested frames
     // make sure our graph is well-connected and represents motion well!
-    if (observations.size() > 2) {
+    if (observations.size() > 3) {
       for (const auto& [frame_id, factor] : observations) {
         local_graphs[frame_id] += factor;
         landmarks_to_add[frame_id].push_back(tracklet_id);
       }
     }
   }
+  timer1.stop();
 
+  utils::ChronoTimingStats timer2("hm_smoother.update.build_graph", 10);
   for (const auto& [frame_id, local_graph] : local_graphs) {
     const TrackletIds& tracklets = landmarks_to_add.at(frame_id);
     const gtsam::Symbol H_key = ObjectMotionSymbol(object_id_, frame_id);
@@ -1250,15 +1257,6 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     }
   }
 
-  // if (frameId() == keyFrameId()) {
-  //   gtsam::SharedNoiseModel identity_motion_model =
-  //       gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001);
-
-  //   new_factors.addPrior<gtsam::Pose3>(H_key_k, gtsam::Pose3::Identity(),
-  //                                      identity_motion_model);
-  //   LOG(INFO) << "Added prior factor";
-  // }
-
   if (frame_id > 2) {
     const gtsam::Symbol H_key_km1 =
         ObjectMotionSymbol(object_id_, frame_id - 1u);
@@ -1285,28 +1283,79 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       smoothing_factors_.insert2(frame_id, smoothing_factor);
     }
   }
+  timer2.stop();
 
   LOG(INFO) << "Starting OPt";
   gtsam::LevenbergMarquardtParams opt_params;
   // for speed
-  opt_params.setMaxIterations(3);
+  opt_params.setMaxIterations(4);
 
-  dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
-      new_factors, new_values, opt_params);
+  // dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
+  //     new_factors, new_values, opt_params);
 
-  NonlinearOptimizerSummary summary;
-  NonlinearOptimizerOptions options;
+  // NonlinearOptimizerSummary summary;
+  // NonlinearOptimizerOptions options;
 
-  gtsam::Values optimised_values = new_values;
-  {
-    utils::ChronoTimingStats update_timer(logger_prefix_ + ".LM_solve", 2);
+  // gtsam::Values optimised_values = new_values;
+  // {
+  //   utils::ChronoTimingStats update_timer(logger_prefix_ + ".LM_solve", 2);
+  //   CHECK(solver.solve(optimised_values, options, &summary));
+  // }
+
+  // VLOG(10) << "Initial error: " << summary.initial_error << " final error "
+  //          << summary.final_error << " time[s] "
+  //          << summary.cumulative_time_in_seconds
+  //          << " #iterations= " << summary.numIterations();
+
+  static CsvWriterToFile timing_logger(
+      getOutputFilePath("motion_solve_LM_timing_compare.csv"),
+      CsvHeader("type", "num_values", "num_factors", "timing[ms]"));
+
+  auto logger_prefix = logger_prefix_;
+  auto solveDense =
+      [&opt_params, &logger_prefix](
+          const gtsam::Values& values,
+          const gtsam::NonlinearFactorGraph& graph) -> gtsam::Values {
+    using BaseSolver = gtsam::LevenbergMarquardtOptimizer;
+    using DenseSolver = DenseNonlinearSolver<BaseSolver>;
+
+    dyno::NonlinearOptimizer<DenseSolver> solver(graph, values, opt_params);
+    NonlinearOptimizerSummary summary;
+    NonlinearOptimizerOptions options;
+
+    gtsam::Values optimised_values = values;
+    utils::ChronoTimingStats update_timer(logger_prefix + ".LM_solve_dense", 2);
     CHECK(solver.solve(optimised_values, options, &summary));
-  }
 
-  VLOG(10) << "Initial error: " << summary.initial_error << " final error "
-           << summary.final_error << " time[s] "
-           << summary.cumulative_time_in_seconds
-           << " #iterations= " << summary.numIterations();
+    auto timing_ms = update_timer.stop();
+
+    timing_logger << "dense" << values.size() << graph.size() << timing_ms;
+    return optimised_values;
+  };
+
+  auto solveSparse =
+      [&opt_params, &logger_prefix](
+          const gtsam::Values& values,
+          const gtsam::NonlinearFactorGraph& graph) -> gtsam::Values {
+    // solving with GN defs faster ;)
+    using BaseSolver = gtsam::LevenbergMarquardtOptimizer;
+
+    dyno::NonlinearOptimizer<BaseSolver> solver(graph, values, opt_params);
+    NonlinearOptimizerSummary summary;
+    NonlinearOptimizerOptions options;
+
+    gtsam::Values optimised_values = values;
+    utils::ChronoTimingStats update_timer(logger_prefix + ".LM_solve_sparse",
+                                          2);
+    CHECK(solver.solve(optimised_values, options, &summary));
+
+    auto timing_ms = update_timer.stop();
+
+    timing_logger << "sparse" << values.size() << graph.size() << timing_ms;
+    return optimised_values;
+  };
+
+  auto optimised_values = solveSparse(new_values, new_factors);
 
   HybridObjectMotionSmoother::Result result;
   result.solver_okay = true;
@@ -1356,6 +1405,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   // }
   // smoother_state = new_values;
 
+  utils::ChronoTimingStats timer3("hm_smoother.update.recover", 10);
   smoother_state = optimised_values;
   for (auto& [tracklet_id, point_state_pair] : point_state_) {
     const gtsam::Symbol m_key(PointSymbol(tracklet_id));
@@ -1365,6 +1415,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     if (smoother_state.exists(m_key))
       point_state_pair.second = smoother_state.at<gtsam::Point3>(m_key);
   }
+  timer3.stop();
   return result;
 }
 

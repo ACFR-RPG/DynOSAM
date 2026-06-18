@@ -40,6 +40,7 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
   object_motion_solver_ = std::make_unique<HybridObjectMotionSolver>(
       motion_params, camera_->getParams(), DepthUpdater(&tracker_),
       ground_truth);
+  object_motion_solver_->enforceRealtime(params.enforceRealtime());
 }
 
 PoseChangeVIFrontend::~PoseChangeVIFrontend() { logBestEstimates(); }
@@ -677,7 +678,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
   MotionEstimateMap estimated_motions;
 
-  constexpr static bool kParallelSolve = false;
+  constexpr static bool kParallelSolve = true;
   // solved trajectories will have frame-to-frame motion
   object_motion_solver_->solve(frame_k, frame_km1, trajectories,
                                estimated_motions, kParallelSolve);

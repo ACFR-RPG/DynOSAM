@@ -88,6 +88,16 @@ bool ThreadsafeTemporalBuffer<ValueType, AllocatorType>::deleteValueAtTime(
 }
 
 template <typename ValueType, typename AllocatorType>
+void ThreadsafeTemporalBuffer<ValueType, AllocatorType>::deleteValueAtTime(
+    Timestamps timestamps_ns) {
+  std::lock_guard<std::recursive_mutex> lock(mutex_);
+  size_t num_samples = timestamps_ns.cols();
+  for (size_t idx = 0u; idx < num_samples; ++idx) {
+    values_.erase(timestamps_ns(idx));
+  }
+}
+
+template <typename ValueType, typename AllocatorType>
 bool ThreadsafeTemporalBuffer<ValueType, AllocatorType>::getOldestValue(
     ValueType* value, Timestamp* timestamp_of_value) const {
   CHECK_NOTNULL(value);

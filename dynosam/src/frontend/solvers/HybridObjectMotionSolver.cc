@@ -295,6 +295,8 @@ bool HybridObjectMotionSolver::solveImpl(
   gtsam::Pose3 G_W_inv = G_W.inverse();
 
   if (true) {
+    utils::ChronoTimingStats update_timer(
+        "hybrid_motion_solver.solve_impl.flow", 50);
     auto refinement_result = optical_flow_pose_solver_.optimizeAndUpdate(
         frame_km1, frame_k, inlier_tracklets, G_W);
     // still need to take the inverse as we get the inverse of G out
@@ -322,34 +324,6 @@ bool HybridObjectMotionSolver::solveImpl(
       return false;
     }
     inlier_tracklets = inlier_tracklets_after_depth_update;
-
-    // // afrwards run ransac again
-    // // get the corresponding feature pairs
-    // LandmarkKeypointCorrespondences dynamic_correspondences;
-    // bool corr_result = frame_k->getDynamicCorrespondences(
-    //     dynamic_correspondences, *frame_km1, object_id,
-    //     frame_k->landmarkWorldKeypointCorrespondance());
-
-    // const size_t& n_matches = dynamic_correspondences.size();
-
-    // TrackletIds all_tracklets;
-    // std::transform(dynamic_correspondences.begin(),
-    //                dynamic_correspondences.end(),
-    //                std::back_inserter(all_tracklets),
-    //                [](const LandmarkKeypointCorrespondence& corres) {
-    //                  return corres.tracklet_id_;
-    //                });
-    // CHECK_EQ(all_tracklets.size(), n_matches);
-
-    // utils::ChronoTimingStats update_timer("hybrid_motion_solver.solve_impl",
-    //                                       50);
-    // geometric_result = pnp_ransac_solver_.solve3d2d(dynamic_correspondences);
-
-    // inlier_tracklets = geometric_result.inliers;
-    // const TrackletIds& outlier_tracklets = geometric_result.outliers;
-    // frame_k->dynamic_features_.markOutliers(outlier_tracklets);
-
-    // G_W_inv = geometric_result.best_result.inverse();
   }
 
   const gtsam::Pose3 H_W_km1_k_pnp = X_W_k * G_W_inv;
@@ -404,10 +378,14 @@ bool HybridObjectMotionSolver::solveImpl(
   }
 
   auto solver = threadSafeFilterAccess(object_id);
-  CHECK_NOTNULL(solver);
+  // TODO: WOW casting to derived class is SOOOOO much faster!!
+  auto smoother = std::dynamic_pointer_cast<HybridObjectMotionSmoother>(solver);
+  CHECK_NOTNULL(smoother);
+  utils::ChronoTimingStats update_timer1(
+      "hybrid_motion_solver.solve_impl.update", 50);
   const bool solver_okay =
-      solver->update(H_W_km1_k_pnp, frame_k, inlier_tracklets);
-  auto update_time_ms = update_timer.stop();
+      smoother->update(H_W_km1_k_pnp, frame_k, inlier_tracklets);
+  update_timer1.stop();
 
   if (!solver_okay) {
     LOG(WARNING) << "Solver failed " << info_string(frame_id_k, object_id);
@@ -416,7 +394,7 @@ bool HybridObjectMotionSolver::solveImpl(
     return false;
   }
 
-  const auto H_W_km1_k = solver->frameToFrameMotionReference();
+  const auto H_W_km1_k = smoother->frameToFrameMotionReference();
   motion_estimate = H_W_km1_k;
 
   // now see if needs new keyframe
@@ -444,8 +422,8 @@ bool HybridObjectMotionSolver::solveImpl(
     }
 
     if (requires_new_keyframe) {
-      CHECK_EQ(solver->frameId(), frame_id_k)
-          << "j=" << object_id << " k=" << solver->frameId();
+      CHECK_EQ(smoother->frameId(), frame_id_k)
+          << "j=" << object_id << " k=" << smoother->frameId();
       keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
 
       const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
@@ -495,13 +473,13 @@ bool HybridObjectMotionSolver::solveImpl(
         // in this way I would probably also reset all keypoints to new
         // trackletids to basically enforce a new submap ;) (although the
         // backend will keep displaying the old one!)
-        solver->resetWithNewKeyedMotion(solver->pose(), frame_k,
-                                        inlier_tracklets);
+        smoother->resetWithNewKeyedMotion(solver->pose(), frame_k,
+                                          inlier_tracklets);
       } else {
-        solver->setNewKeyframe(frame_k);
+        smoother->setNewKeyframe(frame_k);
       }
     } else {
-      solver->setNewKeyframe(frame_k);
+      smoother->setNewKeyframe(frame_k);
     }
 
     const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);

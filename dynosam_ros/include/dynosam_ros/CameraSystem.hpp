@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <functional>
 #include <ostream>
 #include <string>
@@ -25,6 +26,7 @@ struct StreamConfig {
   //! Echos the possible ImageType struct
   enum class Types { RGBMono, Depth, OpticalFlow, Mask };
 
+  //! Name identifier for ROS interface
   std::string name;
   //! Indicating that camera stream is involved in the depth-rig setup
   //! ie. either rgb, depth or part of an overlapping stereo pair
@@ -88,6 +90,15 @@ class SensorMode {
   std::vector<StreamConfig> image_configs_;
 };
 
+/* Details on where to load paramters from */
+struct LoadingSourceParams {
+  //! Full path to dynosam params
+  std::string params_folder{};
+  //! If false, we load all camera params from CameraParams.yaml as found in
+  //! params_folder Else use camera info topics
+  bool cameras_from_ros{true};
+};
+
 // look up camera optical frame (only need 1 in RGBD, need 2 for stereo)
 // after processing we assume all images will have a CameraParams that match the
 // "target" params
@@ -103,8 +114,7 @@ class SensorSystem : public CanonicalSensorRig {
   // loading source expected to be empty (load from ROS) or path to parameter
   // folder
   SensorSystem(std::shared_ptr<rclcpp::Node> node, DepthRigType depth_rig_type,
-               const std::string& path_to_params,
-               const bool load_cameras_from_ros = true);
+               const LoadingSourceParams& loading_source = {});
 
   void addCamera(const StreamConfig& config);
   void enableImu(bool flag = true);
@@ -146,9 +156,15 @@ class SensorSystem : public CanonicalSensorRig {
    * @param config const StreamConfig&
    * @return CameraParams
    */
-  CameraParams loadSingleParams(const StreamConfig& config) const;
+  CameraParams loadSingleParams(const StreamConfig& config,
+                                const ReferenceFrames& reference_frames) const;
   // NOTE: reference_frames_ must be set correctly before using
-  CameraParams loadSingleParamsFromROS(const StreamConfig& config) const;
+  CameraParams loadSingleParamsFromROS(
+      const StreamConfig& config,
+      const ReferenceFrames& reference_frames) const;
+  CameraParams loadSingleParamsFromConfig(
+      const StreamConfig& config,
+      const ReferenceFrames& reference_frames) const;
 
   ImuCalibration loadImuCalibration(const gtsam::Pose3& T_CI,
                                     const std::string& imu_ref_frame) const;
@@ -191,13 +207,13 @@ class SensorSystem : public CanonicalSensorRig {
                                   CameraParams& cannonical_camera,
                                   CalibrateDepthRig& calibrate_depth_rig);
 
+  std::filesystem::path paramFilePath(const std::string& file,
+                                      bool check_exists = true) const;
+
  private:
   std::shared_ptr<rclcpp::Node> node_;
   DepthRigType depth_rig_type_;
-  //! Path to full params to load IMU params (if needed) and/or Camera Params
-  //! (which by default are loaded via ROS)
-  std::string path_to_params_;
-  bool load_cameras_from_ros_;
+  LoadingSourceParams loading_source_;
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
   bool enable_imu_;

@@ -100,6 +100,7 @@ class DynoParams {
 
   // Quick access functions
   bool parallelRun() const { return pipeline_params_.parallel_run; }
+  bool enforceRealtime() const { return pipeline_params_.enforce_realtime; }
   int dataProviderType() const { return pipeline_params_.data_provider_type; }
   bool preferDataProviderCameraParams() const {
     return pipeline_params_.prefer_data_provider_camera_params;
@@ -109,7 +110,6 @@ class DynoParams {
   }
 
   bool incrementalBackend() const;
-  bool enforceRealtime() const { return pipeline_params_.enforce_realtime; }
 
  public:
   PipelineParams pipeline_params_;

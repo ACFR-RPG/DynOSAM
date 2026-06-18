@@ -146,6 +146,15 @@ fs::path OfstreamWrapper::getFilePath() const {
   return fs_out_path / fs::path(filename_);
 }
 
+CsvWriterToFile::CsvWriterToFile(const std::string& file,
+                                 const CsvHeader& header,
+                                 const std::string& seperator)
+    : CsvWriter(header, seperator), file_(file) {}
+
+CsvWriterToFile::~CsvWriterToFile() {
+  OfstreamWrapper::WriteOutCsvWriter(*this, file_);
+}
+
 EstimationModuleLogger::EstimationModuleLogger(const std::string& module_name)
     : module_name_(module_name),
       object_pose_file_name_(module_name_ + "_object_pose_log.csv"),

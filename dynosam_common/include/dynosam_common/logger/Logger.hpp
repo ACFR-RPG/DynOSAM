@@ -153,6 +153,17 @@ class OfstreamWrapper {
   void openLogFile(bool open_file_in_append_mode = false);
 };
 
+/** A CsvWriter that writes to file upon destruction */
+class CsvWriterToFile : public CsvWriter {
+ public:
+  CsvWriterToFile(const std::string& file, const CsvHeader& header,
+                  const std::string& seperator = ",");
+  ~CsvWriterToFile();
+
+ private:
+  std::string file_;
+};
+
 // wrapper to write a type t that is json seralizable to an open ofstream
 // with a set width
 template <typename T>

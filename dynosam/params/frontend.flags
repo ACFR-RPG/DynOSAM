@@ -5,6 +5,8 @@
 
 #we turn off for cluster as there is some problem with the OF I think?
 --use_propogate_mask=false
+--pc_send_objects_to_backend=true
+
 
 
 --hybrid_motion_solver=4

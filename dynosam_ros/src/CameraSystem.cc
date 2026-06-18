@@ -210,21 +210,14 @@ void SensorMode::parse(const std::string& sensor_mode) {
 
 SensorSystem::SensorSystem(std::shared_ptr<rclcpp::Node> node,
                            DepthRigType depth_rig_type,
-                           const std::string& path_to_params,
-                           const bool load_cameras_from_ros)
+                           const LoadingSourceParams& loading_source)
     : node_(node),
       depth_rig_type_(depth_rig_type),
-      path_to_params_(path_to_params),
-      load_cameras_from_ros_(load_cameras_from_ros),
+      loading_source_(loading_source),
       tf_buffer_(node->get_clock()),
       tf_listener_(tf_buffer_),
       enable_imu_(false),
-      is_initalised_{false} {
-  if (!load_cameras_from_ros_) {
-    // assume loading source is path to dynosam paramter folder
-    LOG(FATAL) << "Not implemented!";
-  }
-}
+      is_initalised_{false} {}
 
 void SensorSystem::addCamera(const StreamConfig& config) {
   configs_.push_back(config);
@@ -290,7 +283,8 @@ void SensorSystem::finalise() {
           .get<std::string>();
 
   // should either be rgb or image_0
-  const CameraParams main_camera_params = loadSingleParams(configs_.at(0));
+  const CameraParams main_camera_params =
+      loadSingleParams(configs_.at(0), reference_frames_);
   reference_frames_.camera_frame = main_camera_params.referenceFrame();
 
   if (enable_imu_) {
@@ -319,7 +313,7 @@ void SensorSystem::finalise() {
     const bool needs_params = !image_config.assume_aligned;
     CameraParams camera_params;
     if (needs_params) {
-      camera_params = loadSingleParams(image_config);
+      camera_params = loadSingleParams(image_config, reference_frames_);
     } else {
       camera_params = main_camera_params;
     }
@@ -367,16 +361,17 @@ void SensorSystem::finalise() {
   is_initalised_ = true;
 }
 
-CameraParams SensorSystem::loadSingleParams(const StreamConfig& config) const {
-  if (load_cameras_from_ros_) {
-    return loadSingleParamsFromROS(config);
+CameraParams SensorSystem::loadSingleParams(
+    const StreamConfig& config, const ReferenceFrames& reference_frames) const {
+  if (loading_source_.cameras_from_ros) {
+    return loadSingleParamsFromROS(config, reference_frames);
   } else {
     LOG(FATAL) << "Not implemented!";
   }
 }
 
 CameraParams SensorSystem::loadSingleParamsFromROS(
-    const StreamConfig& config) const {
+    const StreamConfig& config, const ReferenceFrames& reference_frames) const {
   LOG(INFO) << "Getting camera params for " << config.name << " from ROS";
 
   CameraParams params = ros::waitAndSetCameraParams(
@@ -390,7 +385,18 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
   params.referenceFrame(optical_frame);
 
   // assume reference values are set correctly
-  const auto& robot_frame = reference_frames_.base_frame;
+  const auto& robot_frame = reference_frames.base_frame;
+
+  // std::string allow_unknown_camera_transforms =
+  //   ros::Parameter::Builder(node_.get(), "allow_unknown_camera_transforms",
+  //   false)
+  //       .description(
+  //           "If we accept unknown camera transforms (e.g between optical
+  //           frame and robot frame) " "i.e they do not exist in the /tf tree.
+  //           If yes, we assume the transform represents " "zero translation
+  //           and a opencv->robotic convention in rotation")
+  //       .finish()
+  //       .get<std::string>();
 
   // transform from camera -> robot
   // ie Z_r = T_RC * z_c where z_c is a measurement taken in the camera frame
@@ -399,6 +405,11 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
   params.setExtrinsics(T_RC);
 
   return params;
+}
+
+CameraParams SensorSystem::loadSingleParamsFromConfig(
+    const StreamConfig& config, const ReferenceFrames& reference_frames) const {
+  const auto camera_params_file_path = paramFilePath("CameraParams.yaml");
 }
 
 ImuCalibration SensorSystem::loadImuCalibration(
@@ -420,11 +431,7 @@ ImuCalibration SensorSystem::loadImuCalibration(
 bool SensorSystem::loadImuParamsFromRos(ImuParams& imu_params) const {}
 
 bool SensorSystem::loadImuParamsFromConfig(ImuParams& imu_params) const {
-  const std::filesystem::path params_folder_path(path_to_params_);
-  const auto imu_file_path = params_folder_path / "ImuParams.yaml";
-  utils::throwExceptionIfPathInvalid(imu_file_path);
-
-  imu_params = config::fromYamlFile<ImuParams>(imu_file_path);
+  imu_params = config::fromYamlFile<ImuParams>(paramFilePath("ImuParams.yaml"));
   return true;
 }
 
@@ -623,6 +630,18 @@ void SensorSystem::loadGeneralParams(
 
   params.new_image_size.height = rescale_height;
   params.new_image_size.width = rescale_width;
+}
+
+std::filesystem::path SensorSystem::paramFilePath(const std::string& file,
+                                                  bool check_exists) const {
+  const std::filesystem::path params_folder_path(loading_source_.params_folder);
+  const auto file_path = params_folder_path / file;
+
+  if (check_exists) {
+    utils::throwExceptionIfPathInvalid(file_path);
+  }
+
+  return file_path;
 }
 
 }  // namespace dyno

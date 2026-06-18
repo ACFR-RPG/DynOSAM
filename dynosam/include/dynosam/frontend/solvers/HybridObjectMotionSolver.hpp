@@ -35,6 +35,10 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
              MotionEstimateMap& motion_estimate_out,
              bool parallel_solve = true) override;
 
+  void enforceRealtime(bool flag = true) {
+    optical_flow_pose_solver_.enforceRealtime(flag);
+  }
+
   bool getObjectStructureinL(ObjectId object_id,
                              StatusLandmarkVector& object_points) const;
   bool getObjectStructureinW(ObjectId object_id,

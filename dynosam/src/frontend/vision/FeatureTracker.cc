@@ -134,10 +134,15 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // be done by the frontend
   TrackletIds retroactive_tracks;
 
+  // cast to derived tracker to reduce speed overhead
+  KltFeatureTracker* derived_tracker =
+      dynamic_cast<KltFeatureTracker*>(static_feature_tracker_.get());
+  CHECK(derived_tracker);
+
   auto static_track = [&](FeatureContainer& static_features) {
     VLOG(60) << "Starting static track";
     utils::ChronoTimingStats static_track_timer("static_feature_track");
-    static_features = static_feature_tracker_->trackStatic(
+    static_features = derived_tracker->trackStatic(
         previous_frame_, input_images, info_,
         boundary_mask_result.boundary_mask, R_km1_k);
   };

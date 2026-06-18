@@ -105,10 +105,7 @@ inline void ThreadsafeImuBuffer::addMeasurements(
 
 inline void ThreadsafeImuBuffer::removeMeasurements(
     const Timestamps& imu_timestamps) {
-  size_t num_samples = imu_timestamps.cols();
-  for (size_t idx = 0u; idx < num_samples; ++idx) {
-    buffer_.deleteValueAtTime(imu_timestamps(idx));
-  }
+  buffer_.deleteValueAtTime(imu_timestamps);
 }
 
 inline void ThreadsafeImuBuffer::clear() { buffer_.clear(); }

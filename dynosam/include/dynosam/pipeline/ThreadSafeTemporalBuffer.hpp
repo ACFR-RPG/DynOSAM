@@ -67,7 +67,11 @@ class ThreadsafeTemporalBuffer {
   // Returns false if no value at a given timestamp present.
   bool getValueAtTime(Timestamp timestamp_ns, ValueType* value) const;
 
+  /* Removes a single value at a given timestamp.*/
   bool deleteValueAtTime(Timestamp timestamp_ns);
+  /* Removes multiple values given a batch of timestamps. Thread safe for the
+   * entire batch. */
+  void deleteValueAtTime(Timestamps timestamps_ns);
 
   bool getNearestValueToTime(Timestamp timestamp_ns, ValueType* value) const;
   bool getNearestValueToTime(Timestamp timestamp_ns, Timestamp maximum_delta_s,
