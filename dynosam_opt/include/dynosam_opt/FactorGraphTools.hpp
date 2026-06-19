@@ -89,11 +89,22 @@ std::string printFactorKeys(
  * @brief Wrapper on the creation of a robust Huber noise model from a Shared
  * noise model
  *
- * @param k double k paramter for the Huber lss function
+ * @param k double k paramter for the Huber loss function
  * @param model  gtsam::SharedNoiseModel model to make robust
  * @return gtsam::SharedNoiseModel
  */
 gtsam::SharedNoiseModel robustifyHuber(double k, gtsam::SharedNoiseModel model);
+
+/**
+ * @brief Wrapper on the creation of a robust Huber noise model from a Shared
+ * noise model
+ *
+ * @param k double k paramter for the Cauchy loss function
+ * @param model  gtsam::SharedNoiseModel model to make robust
+ * @return gtsam::SharedNoiseModel
+ */
+gtsam::SharedNoiseModel robustifyCauchy(double k,
+                                        gtsam::SharedNoiseModel model);
 
 // k scales the sigmas (ie. k=2 means double the sigmas, ie higher uncertainty)
 //  keeps models as they are (ie. robust)

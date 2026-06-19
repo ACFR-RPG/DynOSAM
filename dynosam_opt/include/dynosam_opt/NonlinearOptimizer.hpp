@@ -89,6 +89,7 @@ inline std::string to_string(const TerminationType& termination_type) {
 
 class IterationCallback {
  public:
+  DYNO_POINTER_TYPEDEFS(IterationCallback)
   virtual ~IterationCallback() = default;
   virtual CallbackReturnType operator()(const IterationSummary& summary) = 0;
 };
@@ -96,7 +97,7 @@ class IterationCallback {
 struct NonlinearOptimizerOptions {
   bool throw_exception_if_failure = false;
 
-  std::vector<IterationCallback*> callbacks;
+  std::vector<IterationCallback::UniquePtr> callbacks;
 };
 
 struct NonlinearOptimizerSummary {
@@ -130,6 +131,7 @@ struct NonlinearOptimizerException : public DynosamException {
 
 template <typename SOLVER>
 class NonlinearOptimizer : public SOLVER {
+ private:
  public:
   static_assert(std::is_base_of<gtsam::NonlinearOptimizer, SOLVER>::value,
                 "SOLVER must inherit from gtsam::NonlinearOptimizer");

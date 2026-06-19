@@ -159,14 +159,14 @@ def run_viodes():
 
 #     run_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--init_object_pose_from_gt=false")
+    # run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--init_object_pose_from_gt=false")
 # # zero_elements_ratio
 #     run_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
 
     # run_experiment_sequences("/root/data/VIODE/parking_lot/mid", "parking_lot_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
-    # run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=false", "--pc_send_objects_to_backend=false")
+    run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=false", "--pc_send_objects_to_backend=false")
 
 
 def run_omd():
@@ -374,15 +374,15 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti_test", kitti_dataset,
-    #                          "--use_backend=true",
-    #                          "--hybrid_motion_solver=4",
-    #                          "--pc_send_objects_to_backend=true")
-
-     run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti_test", kitti_dataset,
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti_test", kitti_dataset,
                              "--use_backend=true",
                              "--hybrid_motion_solver=4",
-                             "--init_object_pose_from_gt=false")
+                             "--pc_send_objects_to_backend=true")
+
+    #  run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti_test", kitti_dataset,
+    #                          "--use_backend=true",
+    #                          "--hybrid_motion_solver=4",
+    #                          "--init_object_pose_from_gt=false")
 
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--use_backend=true", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
@@ -427,11 +427,11 @@ if __name__ == '__main__':
     run_post_analysis = False
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    # run_uts_tech_lab_solver_comparison_test()
+    run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
     # run_kitti()
-    run_viodes()
+    # run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

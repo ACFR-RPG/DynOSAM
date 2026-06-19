@@ -9,8 +9,8 @@ void roundedRectangle(cv::Mat& img, const cv::Point& topLeft,
                       const cv::Point& bottomRight, const cv::Scalar& color,
                       int thickness = 2, int cornerRadius = 20);
 
-ViTrackingViz::ViTrackingViz(const ImageTracksParams& viz_params)
-    : viz_params_(viz_params) {}
+ViTrackingViz::ViTrackingViz(const ImageTracksParams& viz_params, bool show_fps)
+    : viz_params_(viz_params), show_fps_(show_fps) {}
 
 cv::Mat ViTrackingViz::vizTracking(const Frame& frame_km1, const Frame& frame_k,
                                    const Data& data) {
@@ -83,6 +83,18 @@ void ViTrackingViz::drawStaticTracks(cv::Mat& img, std::string& info,
 
   std::stringstream ss;
   ss << "Frame: " << frame_k.getFrameId() << " ";
+
+  // if(show_fps_) {
+  //   double dt = data.time_delta;
+  //   if(is_zero(dt)) {
+  //     ss << "FPS: ~inf ";
+  //   }
+  //   else {
+  //     double fps = 1.0/data.time_delta;
+  //     ss << "FPS: " << std::fixed << std::setprecision(2) << fps << " ";
+  //   }
+  // }
+
   ss << "[VO tracks: " << num_points_tracked << " ";
   ss << "Cam KFs: " << CKF_count << " ";
   ss << "quailty: " << to_string(data.camera_tracking_quality) << "]";

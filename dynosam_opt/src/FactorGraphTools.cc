@@ -55,6 +55,12 @@ gtsam::SharedNoiseModel robustifyHuber(double k,
       gtsam::noiseModel::mEstimator::Huber::Create(k), model);
 }
 
+gtsam::SharedNoiseModel robustifyCauchy(double k,
+                                        gtsam::SharedNoiseModel model) {
+  return gtsam::noiseModel::Robust::Create(
+      gtsam::noiseModel::mEstimator::Cauchy::Create(k), model);
+}
+
 gtsam::SharedNoiseModel inflateNoise(const gtsam::SharedNoiseModel& model,
                                      double k) {
   using namespace gtsam;

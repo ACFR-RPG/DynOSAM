@@ -143,8 +143,6 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
     ground_truth_packet = ground_truth->at(packet->frameId());
   }
   const Timestamp& timestamp = packet->timestamp();
-  LOG(INFO) << "VI Frontend t=" << std::setprecision(20) << timestamp
-            << " k=" << packet->frameId();
 
   if (!is_ready_) {
     // if IMU we need to wait till ready
@@ -214,9 +212,6 @@ DataInterfacePipeline::getTimeSyncedImuMeasurements(const Timestamp& timestamp,
   if (imu_buffer_.isShutdown() || imu_buffer_.size() == 0u) {
     return FrameAction::Drop;
   }
-
-  LOG(INFO) << "Last imu timestamp " << std::setprecision(20)
-            << timestamp_last_frame_;
 
   CHECK_NOTNULL(imu_meas);
   CHECK_LT(timestamp_last_frame_, timestamp)

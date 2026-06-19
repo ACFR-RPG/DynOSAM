@@ -798,7 +798,8 @@ HybridObjectMotionSmoother::updateFromInitialMotion(
   active_frame_ids_.push_back(frame_id);
   active_timestamps_.push_back(timestamp);
 
-  camera_poses_.insert2(frame_id, frame->getPose());
+  frames_[frame->getFrameId()] = frame;
+  // camera_poses_.insert2(frame_id, frame->getPose());
 
   gtsam::Values smoother_state;
   auto result = this->updateFromInitialMotionImpl(
@@ -1050,8 +1051,10 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
   gtsam::SharedNoiseModel stereo_noise_model =
       gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);
+  // stereo_noise_model =
+  //     factor_graph_tools::robustifyHuber(0.001, stereo_noise_model);
   stereo_noise_model =
-      factor_graph_tools::robustifyHuber(0.001, stereo_noise_model);
+      factor_graph_tools::robustifyCauchy(1.0, stereo_noise_model);
 
   auto stereo_non_robust_noise_model =
       gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);
@@ -1285,8 +1288,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   }
   timer2.stop();
 
-  LOG(INFO) << "Starting OPt";
-  gtsam::LevenbergMarquardtParams opt_params;
+  gtsam::GaussNewtonParams opt_params;
   // for speed
   opt_params.setMaxIterations(4);
 
@@ -1316,7 +1318,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       [&opt_params, &logger_prefix](
           const gtsam::Values& values,
           const gtsam::NonlinearFactorGraph& graph) -> gtsam::Values {
-    using BaseSolver = gtsam::LevenbergMarquardtOptimizer;
+    using BaseSolver = gtsam::GaussNewtonOptimizer;
     using DenseSolver = DenseNonlinearSolver<BaseSolver>;
 
     dyno::NonlinearOptimizer<DenseSolver> solver(graph, values, opt_params);
@@ -1338,7 +1340,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
           const gtsam::Values& values,
           const gtsam::NonlinearFactorGraph& graph) -> gtsam::Values {
     // solving with GN defs faster ;)
-    using BaseSolver = gtsam::LevenbergMarquardtOptimizer;
+    using BaseSolver = gtsam::GaussNewtonOptimizer;
 
     dyno::NonlinearOptimizer<BaseSolver> solver(graph, values, opt_params);
     NonlinearOptimizerSummary summary;

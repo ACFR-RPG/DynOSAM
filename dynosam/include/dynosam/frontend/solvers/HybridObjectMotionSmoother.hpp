@@ -236,7 +236,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
       bool include_keyframe = false) const;
 
   const gtsam::Pose3& getCameraPose(FrameId frame_id) const {
-    return camera_poses_.at(frame_id);
+    return frames_.at(frame_id)->getPose();
   }
 
   gtsam::Pose3 getObjectPose(FrameId frame_id) const;
@@ -271,6 +271,10 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   // reference frame
   Frame::Ptr lOKF_frame_;
   std::vector<Frame::Ptr> tracking_keyframes_;
+  //! Just for O(1) lookup (not cleared)
+  //! Use to look up camera pose. THe frontend will update the camera pose
+  //! asynchronously!
+  gtsam::FastMap<FrameId, Frame::Ptr> frames_;
 
   //! Vector of frame ids that correspond to variables current in the smoother
   //! Inlude KF...k
@@ -348,7 +352,7 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   gtsam::Values all_m_L_points_;
 
-  gtsam::FastMap<FrameId, gtsam::Pose3> camera_poses_;
+  // gtsam::FastMap<FrameId, gtsam::Pose3> camera_poses_;
 
   mutable CsvWriter kf_decision_logger_;
 

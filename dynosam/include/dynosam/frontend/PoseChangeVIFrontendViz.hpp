@@ -19,13 +19,17 @@ class ViTrackingViz {
  public:
   DYNO_POINTER_TYPEDEFS(ViTrackingViz)
 
-  ViTrackingViz(const ImageTracksParams& viz_params);
+  ViTrackingViz(const ImageTracksParams& viz_params, bool show_fps = false);
 
   struct Data {
     ObjectTrackingStatusMap object_tracking_statuses;
     TrackingQuality camera_tracking_quality;
     StatusLandmarkVector camera_tracking_points;
     KeyframeInfo keyframe_info;
+    //! Compute time in seconds. Used to calculate and display FPS when needed.
+    double time_delta;
+
+    Data() = default;
   };
 
   cv::Mat vizTracking(const Frame& frame_km1, const Frame& frame_k,
@@ -57,6 +61,7 @@ class ViTrackingViz {
   void writeFrameInfo(cv::Mat& img, const std::string& info_string) const;
 
   ImageTracksParams viz_params_;
+  bool show_fps_{false};
   //! How long (in seconds) for 'lock on'
   float appear_duration_sec_ = 0.6f;
   //! higher = snappier

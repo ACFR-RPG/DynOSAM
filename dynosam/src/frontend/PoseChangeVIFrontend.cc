@@ -24,7 +24,8 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
       accessor_(CHECK_NOTNULL(
           formulation->derivedAccessor<HybridFormulationKeyFrameAccessor>())),
       map_(CHECK_NOTNULL(formulation->map())),
-      tracking_viz_(params.frontend_params_.image_tracks_vis_params) {
+      tracking_viz_(params.frontend_params_.image_tracks_vis_params,
+                    params.enforceRealtime()) {
   // TODo
   HybridObjectMotionSolverParams motion_params;
   motion_params.optical_flow_solver_params.use_robust = true;
@@ -207,6 +208,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
 PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     VIFrontendInput::ConstPtr input) {
+  const auto t1 = utils::Timer::tic();
+
   ImageContainer::Ptr image_container = input->image_container_;
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
@@ -482,6 +485,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     pose_change_backend_sink_(pc_input);
   }
 
+  const auto t2 = utils::Timer::toc(t1);
+  const auto compute_time = utils::Timer::toSeconds(t2);
+
   // fillDebugImagery(realtime_output->debug_imagery, frame_k, frame_km1);
   // set only the debug tracking imagery to avoid also calling the (somewhat
   // depricated) computeTracks function from the tracker
@@ -489,6 +495,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   viz_data.camera_tracking_quality = camera_tracking_quality;
   viz_data.keyframe_info = pc_input->keyframe_info;
   viz_data.object_tracking_statuses = std::move(object_tracking_status);
+  viz_data.time_delta = compute_time;
   realtime_output->debug_imagery.tracking_image =
       tracking_viz_.vizTracking(*frame_km1, *frame_k, viz_data);
 
@@ -628,10 +635,10 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
       X_Wj = frame_km1->getPose() * T_ij;
       frame_k->T_world_camera_ = X_Wj;
 
-      VLOG(15) << "Refined camera pose with optical flow - error before: "
-               << refinement_result.error_before.value_or(NaN)
-               << " error_after: "
-               << refinement_result.error_after.value_or(NaN);
+      // VLOG(15) << "Refined camera pose with optical flow - error before: "
+      //          << refinement_result.error_before.value_or(NaN)
+      //          << " error_after: "
+      //          << refinement_result.error_after.value_or(NaN);
     }
 
     points_W_used.reserve(correspondences_used.size());
@@ -1018,9 +1025,8 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
 
   // graph.print("Camera PGO ", DynosamKeyFormatter);
 
-  using LMOptimizer =
-      dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer>;
-  LMOptimizer solver(graph, values);
+  using GNOptimizer = dyno::NonlinearOptimizer<gtsam::GaussNewtonOptimizer>;
+  GNOptimizer solver(graph, values);
 
   NonlinearOptimizerSummary summary;
   NonlinearOptimizerOptions options;
@@ -1049,7 +1055,6 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
   gtsam::Pose3 X_W = optimized_camera_trajectory.at(max_frame);
   auto it = camera_trajectory.upperBound(max_frame);
 
-  LOG(INFO) << "Max frame: " << max_frame;
   FrameId from_frame = max_frame;
   for (; it != camera_trajectory.end(); ++it) {
     const auto frame_id = it->frame_id;
