@@ -208,6 +208,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 
 PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     VIFrontendInput::ConstPtr input) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".spin");
   const auto t1 = utils::Timer::tic();
 
   ImageContainer::Ptr image_container = input->image_container_;
@@ -524,6 +525,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
     StatusLandmarkVector& points_W_used, TrackingQuality& tracking_quality,
     gtsam::Pose3& T_ij, std::optional<gtsam::NavState> propogated_nav_state_k,
     std::optional<gtsam::Rot3> R_km1_k) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".camera_motion");
   // get matches points in the local frame of k-1
   LandmarkKeypointCorrespondences m_matches;
   double tracking_quality_cost;
@@ -683,6 +685,8 @@ void PoseChangeVIFrontend::solveObjectMotions(
     MultiObjectTrajectories& trajectories, ObjectIds& object_with_new_motions,
     ObjectTrackingStatusMap& object_tracking_status,
     ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k, Frame::Ptr frame_km1) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".object_motions");
+
   MotionEstimateMap estimated_motions;
 
   constexpr static bool kParallelSolve = true;
@@ -934,6 +938,7 @@ void PoseChangeVIFrontend::logRealTimeObjectClouds(const ObjectIds& objects,
 
 bool PoseChangeVIFrontend::checkAndConsumeUpdate(FrameId frame_id_k) {
   if (has_backend_update_.exchange(false)) {
+    utils::ChronoTimingStats timer(this->moduleName() + ".consume_update");
     // intermediate way of updating all poses
     dyno::FastSet<FrameId> frames_in_pgo;
     dyno::FastSet<FrameId> frames_propogated;

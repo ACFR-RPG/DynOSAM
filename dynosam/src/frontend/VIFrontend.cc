@@ -123,6 +123,7 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
 
 Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
                                     std::optional<gtsam::Rot3> R_km1_k) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".feature_track");
   ImageContainer::Ptr image_container = input->image_container_;
   Frame::Ptr frame = tracker_.track(input->getFrameId(), input->getTimestamp(),
                                     *image_container, R_km1_k);
