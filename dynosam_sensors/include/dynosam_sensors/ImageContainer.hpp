@@ -301,14 +301,19 @@ class ImageContainer {
   }
   inline size_t size() const { return images_.size(); }
 
-  /* Raw access to the cv mat*/
-  cv::Mat at(const std::string& key) const {
+  /* Immutable access to the underlying image base. Should access by reference
+   * to ensure polymorphism */
+  const ImageBase& at(const std::string& key) const {
     if (!exists(key)) {
       throw ImageKeyDoesNotExist(key);
     }
-
-    // ptr will cast to a cv::Mat
     return *images_.at(key).ptr;
+  }
+
+  /* Raw access to the cv mat*/
+  cv::Mat atMat(const std::string& key) const {
+    const cv::Mat img = this->at(key);
+    return img;
   }
 
   // Specific getters for known/expected image types

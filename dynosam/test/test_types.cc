@@ -260,13 +260,13 @@ TEST(ImageContainerV2, CopySharesCvMatData) {
   auto& mat2 = container2.rgb();
 
   // cv::Mat::data returns the underlying pixel data pointer
-  EXPECT_EQ(mat1.image.data, mat2.image.data);
+  EXPECT_EQ(mat1.image().data, mat2.image().data);
   EXPECT_EQ(container1.frameId(), container2.frameId());
   EXPECT_EQ(container1.timestamp(), container2.timestamp());
 
   // Modifying one should affect the other (since shared)
-  mat1.image.at<uint8_t>(0, 0) = 42;
-  EXPECT_EQ(mat2.image.at<uint8_t>(0, 0), 42);
+  mat1.image().at<uint8_t>(0, 0) = 42;
+  EXPECT_EQ(mat2.image().at<uint8_t>(0, 0), 42);
 }
 
 TEST(ImageContainerV2, ExplicitDeepCopyCreatesNewData) {
@@ -283,11 +283,11 @@ TEST(ImageContainerV2, ExplicitDeepCopyCreatesNewData) {
   auto& mat1 = container1.rgb();
   auto& mat2 = container2.rgb();
 
-  EXPECT_NE(mat1.image.data, mat2.image.data);
+  EXPECT_NE(mat1.image().data, mat2.image().data);
 
   // Changing one does NOT affect the other
-  mat1.image.at<uint8_t>(0, 0) = 42;
-  EXPECT_NE(mat2.image.at<uint8_t>(0, 0), 42);
+  mat1.image().at<uint8_t>(0, 0) = 42;
+  EXPECT_NE(mat2.image().at<uint8_t>(0, 0), 42);
 }
 
 TEST(ImageContainerV2, MoveConstructorTransfersOwnership) {

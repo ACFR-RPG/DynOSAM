@@ -171,12 +171,14 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   // start tracking threads since we can do this independantly
   FeatureContainer static_features, dynamic_features;
-  std::thread static_track_thread(static_track, std::ref(static_features));
-  std::thread dynamic_track_thread(dynamic_track, std::ref(dynamic_features),
-                                   std::ref(dynamic_detection_mask_));
+  // std::thread static_track_thread(static_track, std::ref(static_features));
+  // std::thread dynamic_track_thread(dynamic_track, std::ref(dynamic_features),
+  //                                  std::ref(dynamic_detection_mask_));
 
-  static_track_thread.join();
-  dynamic_track_thread.join();
+  // static_track_thread.join();
+  // dynamic_track_thread.join();
+  static_track(static_features);
+  dynamic_track(dynamic_features, dynamic_detection_mask_);
 
   previous_tracked_frame_ = previous_frame_;  // Update previous frame (previous
                                               // to the newly created frame)

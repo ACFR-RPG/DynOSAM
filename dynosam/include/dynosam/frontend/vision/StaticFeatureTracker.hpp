@@ -155,16 +155,6 @@ class KltFeatureTracker : public StaticFeatureTracker {
 
  private:
   /**
-   * @brief Outputs a CLAHE equalized greyscale image from the input RGB, which
-   * will be used to detect and track features
-   *
-   * @param image_container
-   * @param equialized_greyscale
-   */
-  void equalizeImage(const ImageContainer& image_container,
-                     cv::Mat& equialized_greyscale) const;
-
-  /**
    * @brief Detects features on the input image using the feature detector.
    *
    * The features are then spaced out using adaptive non-maxima-supression and
@@ -174,18 +164,17 @@ class KltFeatureTracker : public StaticFeatureTracker {
    * currently have; this is used to calculate how many more features we need to
    * reach the minimum number features per frame.
    *
-   * @param processed_img
+   * @param mono
    * @param number_tracked
    * @param mask
    * @return std::vector<cv::Point2f>
    */
-  std::vector<cv::Point2f> detectRawFeatures(const cv::Mat& processed_img,
+  std::vector<cv::Point2f> detectRawFeatures(const cv::Mat& mono,
                                              int number_tracked,
                                              const cv::Mat& mask = cv::Mat());
 
   // image container associated with the processed image
-  bool detectFeatures(const cv::Mat& processed_img,
-                      const ImageContainer& image_container,
+  bool detectFeatures(const ImageContainer& image_container,
                       const FeatureContainer& current_features,
                       FeatureContainer& new_features,
                       const cv::Mat& detection_mask);
@@ -205,8 +194,7 @@ class KltFeatureTracker : public StaticFeatureTracker {
    * outlier_previous_features; this vector corresponds to features in
    * previous_features.
    *
-   * @param current_processed_img
-   * @param previous_processed_img
+   * @param previous_image_container
    * @param image_container
    * @param previous_features
    * @param tracked_features
@@ -217,9 +205,7 @@ class KltFeatureTracker : public StaticFeatureTracker {
    * @return true
    * @return false
    */
-  bool trackPoints(const cv::Mat& current_processed_img,
-                   const cv::Mat& previous_processed_img,
-                   const ImageContainer& previous_image_container,
+  bool trackPoints(const ImageContainer& previous_image_container,
                    const ImageContainer& image_container,
                    const FeatureContainer& previous_features,
                    FeatureContainer& tracked_features,

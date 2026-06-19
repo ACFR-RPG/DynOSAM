@@ -94,31 +94,35 @@ bool PyramidBuilder::build(const ImageContainer& container,
         << " does not exist in the container!";
   }
 
-  bool needs_building = false;
-  // Ensure correct size (no reallocation if already correct)
-  if (static_cast<int>(pyr.levels.size()) != max_level_ + 1) {
-    pyr.levels.resize(max_level_ + 1);
-    needs_building = true;
-  }
+  const auto& wrapper = container.at(img_key);
+  pyr.levels = wrapper.computeImagePyramid(win_size_, max_level_).levels;
 
-  const std::string name = std::to_string(frame_id) + "+" + img_key;
+  // bool needs_building = false;
+  // // Ensure correct size (no reallocation if already correct)
+  // if (static_cast<int>(pyr.levels.size()) != max_level_ + 1) {
+  //   pyr.levels.resize(max_level_ + 1);
+  //   needs_building = true;
+  // }
 
-  if (name != pyr.name) {
-    needs_building = true;
-  }
+  // const std::string name = std::to_string(frame_id) + "+" + img_key;
 
-  if (needs_building) {
-    // parse the image as an RGB image regardless of what it is!
-    cv::Mat image = ImageType::RGBMono::toMono(container.at(img_key));
+  // if (name != pyr.name) {
+  //   needs_building = true;
+  // }
 
-    cv::buildOpticalFlowPyramid(image, pyr.levels, win_size_, max_level_, false,
-                                cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT,
-                                true  // critical for reuse
-    );
-    pyr.name = name;
-  }
+  // if (needs_building) {
+  //   // parse the image as an RGB image regardless of what it is!
+  //   cv::Mat image = ImageType::RGBMono::toMono(container.at(img_key));
 
-  return needs_building;
+  //   cv::buildOpticalFlowPyramid(image, pyr.levels, win_size_, max_level_,
+  //   false,
+  //                               cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT,
+  //                               true  // critical for reuse
+  //   );
+  //   pyr.name = name;
+  // }
+
+  return false;
 }
 
 SparseLKTracker::SparseLKTracker(const cv::Size& win_size, int max_level,

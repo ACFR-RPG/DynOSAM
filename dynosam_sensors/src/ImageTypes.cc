@@ -36,9 +36,73 @@
 
 namespace dyno {
 
-ImageBase::ImageBase(const cv::Mat& img) : image(img) {}
+void ImagePyramid::reserve(int max_level) {
+  { levels.resize(max_level + 1); }
+}
 
-bool ImageBase::exists() const { return !image.empty(); }
+void ImagePyramid::clear() {
+  for (auto& lvl : levels) {
+    lvl.release();  // keeps capacity, frees data if needed
+  }
+  mono.release();
+}
+
+ImagePyramid ImagePyramid::clone() const {
+  ImagePyramid pyramid;
+  for (auto& lvl : levels) {
+    pyramid.levels.push_back(lvl.clone());
+  }
+  pyramid.mono = mono.clone();
+  return pyramid;
+}
+
+ImageBase::Data ImageBase::Data::clone() const {
+  ImageBase::Data new_data;
+  new_data.image = this->image.clone();
+  new_data.pyramid = this->pyramid.clone();
+  return new_data;
+}
+
+ImageBase::ImageBase(const cv::Mat& img) : data(img) {}
+ImageBase::ImageBase(const Data& _data) : data(_data) {}
+
+bool ImageBase::exists() const { return !data.image.empty(); }
+
+const ImagePyramid& ImageBase::computeImagePyramid(const cv::Size& win_size,
+                                                   int max_level,
+                                                   bool force_recompute) const {
+  bool needs_building = false;
+  // Ensure correct size (no reallocation if already correct)
+  // NOTE: we dont checx window size just the number of levels
+  if (static_cast<int>(this->data.pyramid.levels.size()) != max_level + 1) {
+    this->data.pyramid.levels.resize(max_level + 1);
+    needs_building = true;
+  }
+
+  if (force_recompute) {
+    needs_building = true;
+  }
+
+  if (needs_building) {
+    // TODO: is not thread safe!
+    //  parse the image as an RGB image regardless of what it is!
+    cv::Mat mono = ImageType::RGBMono::toMono(this->image());
+    cv::buildOpticalFlowPyramid(mono, this->data.pyramid.levels, win_size,
+                                max_level, false, cv::BORDER_REFLECT_101,
+                                cv::BORDER_CONSTANT,
+                                true  // critical for reuse
+    );
+    // cache the image used
+    this->data.pyramid.mono = mono;
+    this->data.recomputes_++;
+  }
+  this->data.hits_++;
+
+  // LOG(INFO) << this->toString() << " pyramids - hits: " << this->data.hits_
+  // << " recomputes: " << this->data.recomputes_;
+
+  return this->data.pyramid;
+}
 
 void validateMask(const cv::Mat& input, const std::string& name) {
   // we guanrantee with a static assert that the SemanticMask and MotionMask

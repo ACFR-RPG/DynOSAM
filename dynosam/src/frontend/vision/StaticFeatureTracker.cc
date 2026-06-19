@@ -250,25 +250,16 @@ FeatureContainer KltFeatureTracker::trackStatic(
   // tracked features and new features
   FeatureContainer new_tracks_and_detections;
 
-  cv::Mat current_equialized_greyscale;
-  equalizeImage(image_container, current_equialized_greyscale);
-
   if (!previous_frame) {
     FeatureContainer previous_inliers;
-    detectFeatures(current_equialized_greyscale, image_container,
-                   previous_inliers, new_tracks_and_detections, detection_mask);
+    detectFeatures(image_container, previous_inliers, new_tracks_and_detections,
+                   detection_mask);
 
     tracker_info.static_track_detections = new_tracks_and_detections.size();
 
     return new_tracks_and_detections;
   } else {
     // we have previous tracks
-    // we should have already calculated the processed rgb image from the
-    // previous frame
-    cv::Mat previous_equialized_greyscale;
-    equalizeImage(previous_frame->image_container_,
-                  previous_equialized_greyscale);
-
     FeatureContainer previous_inliers(
         previous_frame->static_features_.usableIterator());
     // if we dont actually have any previous tracks
@@ -276,9 +267,8 @@ FeatureContainer KltFeatureTracker::trackStatic(
     // but no feature tracks from the previous frame!
     if (previous_inliers.empty()) {
       FeatureContainer previous_inliers;
-      detectFeatures(current_equialized_greyscale, image_container,
-                     previous_inliers, new_tracks_and_detections,
-                     detection_mask);
+      detectFeatures(image_container, previous_inliers,
+                     new_tracks_and_detections, detection_mask);
       tracker_info.static_track_detections = new_tracks_and_detections.size();
       return new_tracks_and_detections;
     }
@@ -288,11 +278,10 @@ FeatureContainer KltFeatureTracker::trackStatic(
     TrackletIds previous_outliers;
 
     // track features from the previous frame and detect new ones if necessary
-    CHECK(
-        trackPoints(current_equialized_greyscale, previous_equialized_greyscale,
-                    previous_frame->imageContainer(), image_container,
-                    previous_inliers, new_tracks_and_detections,
-                    previous_outliers, tracker_info, detection_mask, R_km1_k));
+    CHECK(trackPoints(previous_frame->imageContainer(), image_container,
+                      previous_inliers, new_tracks_and_detections,
+                      previous_outliers, tracker_info, detection_mask,
+                      R_km1_k));
 
     // after tracking, mark features in the older frame as outliers
     // TODO: (jesse) actually not sure we HAVE to do this, but better to keep
@@ -303,31 +292,17 @@ FeatureContainer KltFeatureTracker::trackStatic(
   }
 }
 
-void KltFeatureTracker::equalizeImage(const ImageContainer& image_container,
-                                      cv::Mat& equialized_greyscale) const {
-  const ImageWrapper<ImageType::RGBMono>& rgb_wrapper = image_container.rgb();
-  const cv::Mat& rgb = rgb_wrapper.toRGB();
-  cv::Mat mono = ImageType::RGBMono::toMono(rgb_wrapper);
-  CHECK(!mono.empty());
-
-  mono.copyTo(equialized_greyscale);
-
-  // cv::GaussianBlur(equialized_greyscale, equialized_greyscale, cv::Size(3,3),
-  // 0);
-}
-
 std::vector<cv::Point2f> KltFeatureTracker::detectRawFeatures(
-    const cv::Mat& processed_img, int number_tracked, const cv::Mat& mask) {
+    const cv::Mat& mono, int number_tracked, const cv::Mat& mask) {
   KeypointsCV keypoints;
-  detector_->detect(processed_img, keypoints, number_tracked, mask);
+  detector_->detect(mono, keypoints, number_tracked, mask);
 
   std::vector<cv::Point2f> points;
   cv::KeyPoint::convert(keypoints, points);
   return points;
 }
 
-bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
-                                       const ImageContainer& image_container,
+bool KltFeatureTracker::detectFeatures(const ImageContainer& image_container,
                                        const FeatureContainer& current_features,
                                        FeatureContainer& new_features,
                                        const cv::Mat& detection_mask) {
@@ -393,11 +368,16 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
     //            radius, cv::Scalar(0), cv::FILLED);
   }
 
+  // assume this is the same image that will be used for the image pyramid calcs
+  // later
+  cv::Mat tracking_mono_image =
+      ImageType::RGBMono::toMono(image_container.rgb());
+
   std::vector<cv::Point2f> detected_points;
   {
     utils::ChronoTimingStats timer("static_feature_track.detect_raw");
-    detected_points = detectRawFeatures(processed_img, current_features.size(),
-                                        detection_mask_impl);
+    detected_points = detectRawFeatures(
+        tracking_mono_image, current_features.size(), detection_mask_impl);
   }
 
   for (const cv::Point2f& detected_point : detected_points) {
@@ -426,14 +406,15 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
 }
 
 bool KltFeatureTracker::trackPoints(
-    const cv::Mat& current_processed_img, const cv::Mat& previous_processed_img,
     const ImageContainer& previous_image_container,
     const ImageContainer& image_container,
     const FeatureContainer& previous_features,
     FeatureContainer& tracked_features, TrackletIds& outlier_previous_features,
     FeatureTrackerInfo& tracker_info, const cv::Mat& detection_mask,
     const std::optional<gtsam::Rot3>& R_km1_k) {
-  if (current_processed_img.empty() || previous_processed_img.empty() ||
+  const cv::Mat current_img = image_container.rgb();
+  const cv::Mat previous_img = previous_image_container.rgb();
+  if (current_img.empty() || previous_img.empty() ||
       previous_features.empty()) {
     return false;
   }
@@ -498,17 +479,23 @@ bool KltFeatureTracker::trackPoints(
   // d_points2.download(current_points);
   // d_status.download(status);
 
-  ImageContainer previous_processed_container(
-      previous_image_container.frameId(), previous_image_container.timestamp());
-  previous_processed_container.rgb(previous_processed_img);
+  // TODO: just use the rgb image directly as we currenly dont do any actual
+  //  preprocessing on the image. This saves us heaps of compute as we can cache
+  //  the
+  // rgb image appropiately - if we want to do any preprocessing of the image
+  //  we should do it before ANY tracking
+  //  ImageContainer previous_processed_container(
+  //      previous_image_container.frameId(),
+  //      previous_image_container.timestamp());
+  //  previous_processed_container.rgb(previous_processed_img);
 
-  ImageContainer curr_processed_container(image_container.frameId(),
-                                          image_container.timestamp());
-  curr_processed_container.rgb(current_processed_img);
+  // ImageContainer curr_processed_container(image_container.frameId(),
+  //                                         image_container.timestamp());
+  // curr_processed_container.rgb(current_processed_img);
 
   // predicted_current_points_ptr will not non null if we have predicted points
   const LKWorkspace& lk_result =
-      lk_tracker_->track(previous_processed_container, curr_processed_container,
+      lk_tracker_->track(previous_image_container, image_container,
                          previous_pts, predicted_current_points_ptr);
 
   //   cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
@@ -648,8 +635,8 @@ bool KltFeatureTracker::trackPoints(
   if (shouldResample(tracked_features, survival_ratio)) {
     utils::ChronoTimingStats timer("static_feature_track.detect");
     // if we do not have enough features, detect more on the current image
-    detectFeatures(current_processed_img, image_container, tracked_features,
-                   tracked_features, detection_mask);
+    detectFeatures(image_container, tracked_features, tracked_features,
+                   detection_mask);
     tracker_info.new_static_detections = true;
 
     const auto n_detected = tracked_features.size() - n_tracked;

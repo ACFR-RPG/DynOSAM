@@ -71,15 +71,46 @@ struct image_traits_impl {
 template <typename T>
 struct ImageWrapper;
 
+struct ImagePyramid {
+  std::vector<cv::Mat> levels;
+  //! The actual image levles are computed from
+  cv::Mat mono;
+
+  void reserve(int max_level);
+  void clear();
+  ImagePyramid clone() const;
+};
+
 struct ImageBase {
-  cv::Mat image;  //! Underlying image
+  /* All internal data storage*/
+  struct Data {
+    //! Underlying image
+    cv::Mat image;
+    //! A cached pyramid of the underlying image.
+    //! Data is stored here but relevant update functions are in the dervived
+    //! ImageWrapper class.
+    mutable ImagePyramid pyramid;
+
+    mutable int hits_ = 0;
+    mutable int recomputes_ = 0;
+
+    Data() {}
+    Data(const cv::Mat& img) : image(img) {}
+    Data clone() const;
+  };
+  Data data;
 
   ImageBase() = default;
-  ImageBase(const cv::Mat& img);
+  ImageBase(const Data& data);
+  explicit ImageBase(const cv::Mat& img);
+
   virtual ~ImageBase() {}
 
-  operator cv::Mat&() { return image; }
-  operator const cv::Mat&() const { return image; }
+  inline const cv::Mat& image() const { return data.image; }
+  inline cv::Mat& image() { return data.image; }
+
+  operator cv::Mat&() { return this->image(); }
+  operator const cv::Mat&() const { return this->image(); }
 
   template <typename IMAGETYPE>
   const ImageWrapper<IMAGETYPE>& cast() const;
@@ -89,17 +120,32 @@ struct ImageBase {
 
   bool exists() const;
 
+  /**
+   * @brief Compute and cache an image pyramid.
+   *
+   * If a pyramid already exists the with same max level then we return the
+   * cached pyramid for reuse. NOTE: technically the window size could differ.
+   *
+   * @param win_size
+   * @param max_level
+   * @param force_recompute false
+   * @return const ImagePyramid&
+   */
+  const ImagePyramid& computeImagePyramid(const cv::Size& win_size,
+                                          int max_level,
+                                          bool force_recompute = false) const;
+
   virtual std::unique_ptr<ImageBase> shallowCopy() const {
-    return std::make_unique<ImageBase>(image);
+    return std::make_unique<ImageBase>(data);
   }
 
   virtual std::unique_ptr<ImageBase> deepCopy() const {
-    return std::make_unique<ImageBase>(image.clone());
+    return std::make_unique<ImageBase>(data.clone());
   }
 
   virtual std::string toString() const {
     std::stringstream ss;
-    ss << (exists() ? to_string(image.size()) : "Empty");
+    ss << (exists() ? to_string(data.image.size()) : "Empty");
     return ss.str();
   }
 };
@@ -120,6 +166,7 @@ struct ImageBase {
  */
 template <typename IMAGETYPE>
 struct ImageWrapper : public ImageBase {
+ public:
   using Type = IMAGETYPE;
   using This = ImageWrapper<Type>;
   using Base = ImageBase;
@@ -129,11 +176,11 @@ struct ImageWrapper : public ImageBase {
   ImageWrapper(const ImageBase& image_base);
 
   virtual std::unique_ptr<ImageBase> shallowCopy() const override {
-    return std::make_unique<ImageWrapper<IMAGETYPE>>(image);
+    return std::make_unique<ImageWrapper<IMAGETYPE>>(data);
   }
 
   virtual std::unique_ptr<ImageBase> deepCopy() const override {
-    return std::make_unique<ImageWrapper<IMAGETYPE>>(image.clone());
+    return std::make_unique<ImageWrapper<IMAGETYPE>>(data.clone());
   }
 
   ImageWrapper<Type> clone() const { return *(this->deepCopy()); }
