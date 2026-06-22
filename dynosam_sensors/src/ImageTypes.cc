@@ -36,9 +36,49 @@
 
 namespace dyno {
 
-void ImagePyramid::reserve(int max_level) {
-  { levels.resize(max_level + 1); }
+ImagePyramid::ImagePyramid(const ImagePyramid& other) {
+  std::lock_guard<std::mutex> lock(other.mtx);
+  levels = other.levels;
+  mono = other.mono;
+  hits = other.hits.load();
+  recomputes = other.recomputes.load();
 }
+
+// 3. Copy Assignment Operator
+ImagePyramid& ImagePyramid::operator=(const ImagePyramid& other) {
+  if (this == &other) return *this;
+
+  // To avoid deadlocks, use std::scoped_lock if locking multiple mutexes
+  std::scoped_lock lock(mtx, other.mtx);
+  levels = other.levels;
+  mono = other.mono;
+  hits = other.hits.load();
+  recomputes = other.recomputes.load();
+  return *this;
+}
+
+// 4. Move Constructor
+ImagePyramid::ImagePyramid(ImagePyramid&& other) noexcept {
+  std::lock_guard<std::mutex> lock(other.mtx);
+  levels = std::move(other.levels);
+  mono = std::move(other.mono);
+  hits = other.hits.load();
+  recomputes = other.recomputes.load();
+}
+
+// 5. Move Assignment Operator
+ImagePyramid& ImagePyramid::operator=(ImagePyramid&& other) noexcept {
+  if (this == &other) return *this;
+
+  std::scoped_lock lock(mtx, other.mtx);
+  levels = std::move(other.levels);
+  mono = std::move(other.mono);
+  hits = other.hits.load();
+  recomputes = other.recomputes.load();
+  return *this;
+}
+
+void ImagePyramid::reserve(int max_level) { levels.resize(max_level + 1); }
 
 void ImagePyramid::clear() {
   for (auto& lvl : levels) {
@@ -53,6 +93,8 @@ ImagePyramid ImagePyramid::clone() const {
     pyramid.levels.push_back(lvl.clone());
   }
   pyramid.mono = mono.clone();
+  pyramid.hits = this->hits.load();
+  pyramid.recomputes = this->recomputes.load();
   return pyramid;
 }
 
@@ -74,6 +116,7 @@ const ImagePyramid& ImageBase::computeImagePyramid(const cv::Size& win_size,
   bool needs_building = false;
   // Ensure correct size (no reallocation if already correct)
   // NOTE: we dont checx window size just the number of levels
+  std::lock_guard<std::mutex> lk(this->data.pyramid.mtx);
   if (static_cast<int>(this->data.pyramid.levels.size()) != max_level + 1) {
     this->data.pyramid.levels.resize(max_level + 1);
     needs_building = true;
@@ -84,7 +127,6 @@ const ImagePyramid& ImageBase::computeImagePyramid(const cv::Size& win_size,
   }
 
   if (needs_building) {
-    // TODO: is not thread safe!
     //  parse the image as an RGB image regardless of what it is!
     cv::Mat mono = ImageType::RGBMono::toMono(this->image());
     cv::buildOpticalFlowPyramid(mono, this->data.pyramid.levels, win_size,
@@ -94,9 +136,9 @@ const ImagePyramid& ImageBase::computeImagePyramid(const cv::Size& win_size,
     );
     // cache the image used
     this->data.pyramid.mono = mono;
-    this->data.recomputes_++;
+    this->data.pyramid.recomputes++;
   }
-  this->data.hits_++;
+  this->data.pyramid.hits++;
 
   // LOG(INFO) << this->toString() << " pyramids - hits: " << this->data.hits_
   // << " recomputes: " << this->data.recomputes_;

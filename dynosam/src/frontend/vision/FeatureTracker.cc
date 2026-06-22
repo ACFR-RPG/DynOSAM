@@ -33,6 +33,7 @@
 #include <glog/logging.h>
 #include <tbb/concurrent_hash_map.h>
 #include <tbb/parallel_for_each.h>
+#include <tbb/task_group.h>
 
 #include <mutex>
 #include <opencv4/opencv2/opencv.hpp>
@@ -84,7 +85,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // take "copy" of tracking_images which is then given to the frame
   // this will mean that the tracking images (input) are not necessarily the
   // same as the ones inside the returned frame
-  utils::ChronoTimingStats tracking_timer("tracking_timer");
+  utils::ChronoTimingStats tracking_timer("feature_track");
   ImageContainer input_images = image_container;
 
   info_ = FeatureTrackerInfo();  // clear the info
@@ -141,7 +142,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   auto static_track = [&](FeatureContainer& static_features) {
     VLOG(60) << "Starting static track";
-    utils::ChronoTimingStats static_track_timer("static_feature_track");
+    utils::ChronoTimingStats static_track_timer("feature_track.static");
     static_features = derived_tracker->trackStatic(
         previous_frame_, input_images, info_,
         boundary_mask_result.boundary_mask, R_km1_k);
@@ -162,7 +163,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
                         "is missing! Falling back to KLT";
       }
       VLOG(60) << "Starting KLT object feature tracking";
-      utils::ChronoTimingStats dynamic_track_timer("dynamic_feature_track_klt");
+      utils::ChronoTimingStats dynamic_track_timer("feature_track.dynamic");
       trackDynamicKLT(frame_id, input_images, dynamic_features,
                       objects_resampled, retroactive_tracks,
                       dynamic_detection_mask, boundary_mask_result);
@@ -171,14 +172,19 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   // start tracking threads since we can do this independantly
   FeatureContainer static_features, dynamic_features;
+  // Concurrent control for feature tracking using tbb for interal thread pool
+  tbb::task_group tg;
+  tg.run([&]() { static_track(static_features); });
+  tg.run([&]() { dynamic_track(dynamic_features, dynamic_detection_mask_); });
   // std::thread static_track_thread(static_track, std::ref(static_features));
   // std::thread dynamic_track_thread(dynamic_track, std::ref(dynamic_features),
   //                                  std::ref(dynamic_detection_mask_));
 
+  tg.wait();
   // static_track_thread.join();
   // dynamic_track_thread.join();
-  static_track(static_features);
-  dynamic_track(dynamic_features, dynamic_detection_mask_);
+  // static_track(static_features);
+  // dynamic_track(dynamic_features, dynamic_detection_mask_);
 
   previous_tracked_frame_ = previous_frame_;  // Update previous frame (previous
                                               // to the newly created frame)
@@ -1174,594 +1180,6 @@ void FeatureTracker::trackDynamicKLT(
       dynamic_detection_mask, retroactive_trackslet_ids);
 }
 
-// void FeatureTracker::trackDynamicKLT(
-//     FrameId frame_id, const ImageContainer& image_container,
-//     FeatureContainer& dynamic_features, ObjectIds& object_keyframes,
-//     TrackletIds& retroactive_trackslet_ids, cv::Mat& dynamic_detection_mask,
-//     const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result) {
-//   const cv::Mat& rgb = image_container.rgb();
-//   cv::Mat mono = ImageType::RGBMono::toMono(image_container.rgb());
-//   const cv::Mat& motion_mask = image_container.objectMotionMask();
-
-//   TrackletIdManager& tracked_id_manager = TrackletIdManager::instance();
-
-//   // gtsam::FastMap<ObjectId, FeatureContainer> tracks_per_object;
-//   // const cv::Mat& detection_mask = boundary_mask_result.boundary_mask;
-//   // // internal detection mask that is appended with new invalid pixels
-//   // // this builds the static detection mask over the existing input mask
-//   // cv::Mat detection_mask_impl;
-//   // // If we are provided with an external detection/feature mask, initalise
-//   the
-//   // // detection mask with this and add more invalid sections to it
-//   // if (!detection_mask.empty()) {
-//   //   CHECK_EQ(motion_mask.rows, detection_mask.rows);
-//   //   CHECK_EQ(motion_mask.cols, detection_mask.cols);
-//   //   detection_mask_impl = detection_mask.clone();
-//   // } else {
-//   //   detection_mask_impl = cv::Mat(motion_mask.size(), CV_8U,
-//   cv::Scalar(255));
-//   // }
-//   // CHECK_EQ(detection_mask_impl.type(), CV_8U);
-
-//   // // creating tracking mask, pixel level indicator (1....N) of dynamic
-//   feature
-//   // // location this is different to the detection_mask_impl which is a
-//   binary
-//   // // mask (0/255) and indicates the location of all features (static and
-//   // // dynamic) and is used to avoid detecting features near existing ones
-//   // cv::Mat dynamic_tracking_mask =
-//   //     cv::Mat(detection_mask_impl.size(), CV_8U, cv::Scalar(0));
-
-//   gtsam::FastMap<ObjectId, FeatureContainer> tracks_per_object;
-//   const cv::Mat& detection_mask = boundary_mask_result.boundary_mask;
-
-//   //
-//   // set dynamic detection mask with new invalid pixels.
-//   // this builds the static detection mask over the existing input mask
-//   // If we are provided with an external detection/feature mask, initalise
-//   the
-//   // detection mask with this and add more invalid sections to it
-//   if (!detection_mask.empty()) {
-//     CHECK_EQ(motion_mask.rows, detection_mask.rows);
-//     CHECK_EQ(motion_mask.cols, detection_mask.cols);
-//     dynamic_detection_mask = detection_mask.clone();
-//   } else {
-//     dynamic_detection_mask = cv::Mat(motion_mask.size(), CV_8U,
-//     cv::Scalar(255));
-//   }
-//   CHECK_EQ(dynamic_detection_mask.type(), CV_8U);
-
-//   // creating tracking mask, pixel level indicator (1....N) of dynamic
-//   feature
-//   // location this is different to the detection_mask_impl which is a binary
-//   // mask (0/255) and indicates the location of all features (static and
-//   // dynamic) and is used to avoid detecting features near existing ones
-//   cv::Mat dynamic_tracking_mask =
-//       cv::Mat(dynamic_detection_mask.size(), CV_8U, cv::Scalar(0));
-
-//   auto constructNewDynamicFeature =
-//       [&](const Keypoint& kp_current, const ObjectId object_id,
-//           const FrameId frame_id) -> Feature::Ptr {
-//     static const auto kAge = 0u;
-
-//     if (!isWithinShrunkenImage(kp_current)) {
-//       return nullptr;
-//     }
-
-//     TrackletId tracklet_to_use =
-//     tracked_id_manager.getAndIncrementTrackletId();
-
-//     Feature::Ptr feature = std::make_shared<Feature>();
-//     (*feature)
-//         .objectId(object_id)
-//         .frameId(frame_id)
-//         .keypointType(KeyPointType::DYNAMIC)
-//         .age(kAge)
-//         .markInlier()
-//         .trackletId(tracklet_to_use)
-//         .keypoint(kp_current);
-
-//     CHECK(feature->usable());
-
-//     return feature;
-//   };
-
-//   auto constructDynamicFeatureFromPrevious =
-//       [&](const Keypoint& kp_current, Feature::Ptr previous_feature,
-//           const TrackletId tracklet_id, const ObjectId object_id,
-//           const FrameId frame_id) -> Feature::Ptr {
-//     if (!isWithinShrunkenImage(kp_current)) {
-//       return nullptr;
-//     }
-
-//     CHECK(previous_feature);
-//     CHECK_EQ(previous_feature->trackletId(), tracklet_id);
-//     CHECK_EQ(previous_feature->objectId(), object_id);
-
-//     size_t age = previous_feature->age();
-//     age++;
-
-//     TrackletId tracklet_to_use = tracklet_id;
-//     // if age is too large, or age is zero, retrieve new tracklet id
-//     if (age > params_.max_dynamic_feature_age) {
-//       return nullptr;
-//     }
-
-//     // update previous keypoint
-//     previous_feature->measuredFlow(kp_current -
-//     previous_feature->keypoint());
-//     // This is so awful, but happens becuase the way the code was originally
-//     // written, we expect flow from k to k+1 (grrrr)
-//     previous_feature->predictedKeypoint(kp_current);
-
-//     Feature::Ptr feature = std::make_shared<Feature>();
-//     (*feature)
-//         .objectId(object_id)
-//         .frameId(frame_id)
-//         .keypointType(KeyPointType::DYNAMIC)
-//         .age(age)
-//         .markInlier()
-//         .trackletId(tracklet_to_use)
-//         .keypoint(kp_current);
-
-//     CHECK(feature->usable());
-
-//     return feature;
-//   };
-
-//   FeatureContainer previous_inliers;
-//   if (previous_frame_) {
-//     // dynamic_lkt_tracker_impl_.trackFromPreviousFrame(
-//     //   previous_frame_, image_container, dynamic_features,
-//     dynamic_detection_mask, dynamic_tracking_mask
-//     // );
-//     FeatureContainer previous_inliers(
-//         previous_frame_->dynamic_features_.usableIterator());
-
-//     // All tracklet ids from the set of previous features to track
-//     TrackletIds tracklet_ids;
-//     std::vector<cv::Point2f> previous_pts =
-//         previous_inliers.toOpenCV(&tracklet_ids);
-//     CHECK_EQ(previous_pts.size(), previous_inliers.size());
-//     CHECK_EQ(previous_pts.size(), tracklet_ids.size());
-
-//     CHECK_EQ(previous_pts.size(), previous_inliers.size());
-//     CHECK_EQ(previous_pts.size(), tracklet_ids.size());
-
-//     if (tracklet_ids.size() > 0) {
-//       utils::ChronoTimingStats
-//       tracking_t("dynamic_feature_track_klt.tracking");
-
-//       // track from previous to current on the dynamic feature points
-//       const LKWorkspace& lk_result = lk_tracker_dynamic_->track(
-//           previous_frame_->imageContainer(), image_container, previous_pts);
-
-//       const auto& klt_status = lk_result.status;
-//       const auto& klt_err = lk_result.error;
-//       const auto& current_points = lk_result.pts;
-
-//       CHECK_EQ(previous_pts.size(), current_points.size());
-//       CHECK_EQ(klt_status.size(), current_points.size());
-
-//       struct Tracklet2DVectors {
-//         std::vector<cv::Point2f> current;
-//         std::vector<cv::Point2f> previous;
-//         TrackletIds tracklets;
-//       };
-//       gtsam::FastMap<ObjectId, Tracklet2DVectors> good_tracks_per_object;
-//       // collect points per object for outlier rejection with homography
-//       // can also look at the err?
-//       for (size_t i = 0; i < klt_status.size(); i++) {
-//         if (!klt_status[i]) {
-//           continue;
-//         }
-
-//         TrackletId tracklet_id = tracklet_ids.at(i);
-//         const Feature::Ptr previous_feature =
-//             previous_inliers.getByTrackletId(tracklet_id);
-
-//         const ObjectId object_id = previous_feature->objectId();
-//         if (!good_tracks_per_object.exists(object_id)) {
-//           good_tracks_per_object.insert2(object_id, Tracklet2DVectors{});
-//         }
-
-//         Tracklet2DVectors& tracklet_vectors =
-//             good_tracks_per_object.at(object_id);
-//         tracklet_vectors.current.push_back(current_points.at(i));
-//         tracklet_vectors.previous.push_back(previous_pts.at(i));
-//         tracklet_vectors.tracklets.push_back(tracklet_id);
-//       }
-
-//       // geometrically verified feature tracks and tracklets for all objects
-//       std::vector<cv::Point2f> verified_current;
-//       TrackletIds verified_tracklets;
-//       // perform outlier rejection per object
-//       for (const auto& [object_id, tracklet_vectors] :
-//       good_tracks_per_object) {
-//         std::vector<cv::Point2f> verified_current_j, verified_previous_j;
-//         TrackletIds verified_tracklets_j;
-
-//         vision_tools::outlierRejectHomography(
-//             tracklet_vectors.previous, tracklet_vectors.current,
-//             tracklet_vectors.tracklets, verified_previous_j,
-//             verified_current_j, verified_tracklets_j);
-
-//         verified_current.insert(verified_current.begin(),
-//                                 verified_current_j.begin(),
-//                                 verified_current_j.end());
-//         verified_tracklets.insert(verified_tracklets.begin(),
-//                                   verified_tracklets_j.begin(),
-//                                   verified_tracklets_j.end());
-//       }
-
-//       CHECK_EQ(verified_tracklets.size(), verified_current.size());
-
-//       for (size_t i = 0; i < verified_tracklets.size(); i++) {
-//         TrackletId tracklet_id = verified_tracklets.at(i);
-
-//         const Feature::Ptr previous_feature =
-//             previous_inliers.getByTrackletId(tracklet_id);
-//         CHECK(previous_feature->usable());
-
-//         const Keypoint kp = utils::cvPointToGtsam(verified_current.at(i));
-//         if (!isWithinShrunkenImage(kp)) {
-//           continue;
-//         }
-
-//         const int x = functional_keypoint::u(kp);
-//         const int y = functional_keypoint::v(kp);
-//         const ObjectId predicted_label =
-//             functional_keypoint::at<ObjectId>(kp, motion_mask);
-
-//         if (!dynamic_detection_mask.empty()) {
-//           const unsigned char valid_detection =
-//               dynamic_detection_mask.at<unsigned char>(y, x);
-//           if (valid_detection == 0) {
-//             continue;
-//           }
-//         }
-
-//         ObjectId previous_label = previous_feature->objectId();
-//         CHECK_NE(previous_label, background_label);
-//         CHECK_GT(previous_label, 0);
-
-//         PerObjectStatus& object_tracking_info =
-//             info_.getObjectStatus(predicted_label);
-//         object_tracking_info.num_previous_track++;
-
-//         // true if predicted label not on the background
-//         const bool is_predicted_object_label =
-//             predicted_label != background_label;
-//         // true if predicted label the same as the previous label of the
-//         tracked
-//         // point
-//         const bool is_precited_same_as_previous =
-//             predicted_label == previous_label;
-
-//         // update stats
-//         if (!is_predicted_object_label)
-//           object_tracking_info.num_tracked_with_background_label++;
-//         if (!is_precited_same_as_previous)
-//           object_tracking_info.num_tracked_with_different_label++;
-
-//         if (camera_->isKeypointContained(kp) && is_predicted_object_label &&
-//             is_precited_same_as_previous) {
-//           if (!isWithinShrunkenImage(kp)) {
-//             object_tracking_info.num_outside_shrunken_image++;
-//             continue;
-//           }
-
-//           // Feature::Ptr feature =
-//           dynamic_lkt_tracker_impl_.featureFromPrevious(
-//           //     kp, previous_feature, tracklet_id, predicted_label,
-//           frame_id); Feature::Ptr feature =
-//           constructDynamicFeatureFromPrevious(
-//               kp, previous_feature, tracklet_id, predicted_label, frame_id);
-
-//           if (feature) {
-//             if (!tracks_per_object.exists(feature->objectId())) {
-//               tracks_per_object.insert2(feature->objectId(),
-//                                         FeatureContainer{});
-//             }
-//             tracks_per_object.at(feature->objectId()).add(feature);
-//             object_tracking_info.num_track++;
-
-//             // add zero fill to detection mask to indicate the existance of a
-//             // tracked point at this feature location
-//             cv::circle(
-//                 dynamic_detection_mask, cv::Point2f(x, y),
-//                 params_.min_distance_btw_tracked_and_detected_dynamic_features,
-//                 cv::Scalar(0), cv::FILLED);
-
-//             // fill tracking mask with tracked points, labelled with the
-//             object
-//             // label (j) to indicate places on object with keypoints
-//             cv::circle(
-//                 dynamic_tracking_mask, cv::Point2f(x, y),
-//                 params_.min_distance_btw_tracked_and_detected_dynamic_features,
-//                 cv::Scalar(predicted_label), cv::FILLED);
-//           }
-//         }
-//       }
-//     }
-
-//     for (const auto& [object_id, features_j] : tracks_per_object) {
-//       dynamic_features += features_j;
-//     }
-//   }
-
-//   {
-//     utils::ChronoTimingStats ts_t(
-//         "dynamic_feature_track_klt.requires_sampling");
-//     requiresSampling(object_keyframes, info_, image_container,
-//                      dynamic_features, boundary_mask_result,
-//                      dynamic_tracking_mask);
-//   }
-
-//   double qualityLevel = 0.01;
-
-//   static constexpr float tolerance = 0.01;
-//   Eigen::MatrixXd binning_mask;
-
-//   const int& max_features_to_track = params_.max_dynamic_features_per_frame;
-//   const int& min_feature_distance =
-//       params_.min_distance_btw_tracked_and_detected_dynamic_features;
-
-//   std::mutex mutex;
-//   auto& tracking_info = info_;
-//   // thread safe function to calculate number of corners needed for each
-//   object auto getNumberCornersNeeded =
-//       [&tracking_info, &mutex,
-//        &max_features_to_track](ObjectId object_id) -> int {
-//     std::unique_lock<std::mutex> lock(mutex);
-//     const PerObjectStatus& object_tracking_info =
-//         tracking_info.getObjectStatus(object_id);
-//     const int& number_tracked = object_tracking_info.num_track;
-//     int nr_corners_needed = std::max(max_features_to_track - number_tracked,
-//     0); return nr_corners_needed;
-//   };
-
-//   // new detections + retroactive tracks if provided
-//   struct DetectionsWithTrack {
-//     std::vector<KeypointCV> detections_current;
-//     std::vector<KeypointCV> retroactive_tracks;
-//     bool retroactively_tracked = false;
-//   };
-
-//   tbb::concurrent_unordered_map<ObjectId, DetectionsWithTrack>
-//       keypoints_per_object;
-
-//   cv::Mat previous_mono;
-//   cv::Mat previous_motion_mask;
-
-//   if (previous_frame_) {
-//     previous_mono =
-//         ImageType::RGBMono::toMono(previous_frame_->image_container_.rgb());
-//     previous_motion_mask =
-//     previous_frame_->image_container_.objectMotionMask();
-//   }
-
-//   utils::ChronoTimingStats
-//   detection_t("dynamic_feature_track_klt.detection");
-//   // tbb::parallel_for_each(
-//   //     object_keyframes.begin(), object_keyframes.end(), [&](auto&
-//   object_id)
-//   //     {
-//   for (ObjectId object_id : object_keyframes) {
-//     cv::Mat obj_mask = (motion_mask == object_id);
-//     // ignore additonal features from the tracking mask
-//     cv::Mat combined_mask;
-//     cv::bitwise_and(obj_mask, dynamic_detection_mask, combined_mask);
-
-//     std::vector<cv::Point2f> detected_points;
-//     cv::goodFeaturesToTrack(mono, detected_points, max_features_to_track,
-//                             qualityLevel, min_feature_distance,
-//                             combined_mask);
-
-//     // the actual set of keypoints to use for ANMS
-//     // if we have previous frame and therefore previous tracks
-//     // this will only be the set of keypoints with flow
-//     std::vector<KeypointCV> keypoints;
-//     std::vector<KeypointCV> indexed_retroactive_keypoints;
-//     // do track back so new features already have two observations
-//     // so we can immediately begin tracking!
-//     const bool object_exists_in_previous =
-//         previous_frame_
-//             ? previous_frame_->getObjectObservations().exists(object_id)
-//             : false;
-
-//     bool retroactively_tracked = !previous_mono.empty() &&
-//                                  object_exists_in_previous &&
-//                                  !detected_points.empty();
-//     if (retroactively_tracked) {
-//       // specific tracker to track from current to previous
-//       // TODO: ideally reuse the pyramids... between objects...
-//       SparseLKTracker klt_tracker(klt_window_size_, klt_max_level_,
-//                                   detected_points.size(),
-//                                   ImageContainer::kRGB,
-//                                   ImageContainer::kRGB);
-
-//       // track from newly detected points to points on the previous frame
-//       const LKWorkspace& lk_result = klt_tracker.track(
-//           image_container, previous_frame_->imageContainer(),
-//           detected_points);
-
-//       const auto& klt_status = lk_result.status;
-//       const auto& previous_points = lk_result.pts;
-//       const auto& current_points = detected_points;
-
-//       std::vector<cv::Point2f> good_current_j, good_previous_j;
-//       for (size_t i = 0; i < klt_status.size(); i++) {
-//         if (!klt_status[i]) {
-//           continue;
-//         }
-
-//         const cv::Point2f& kp_previous = previous_points.at(i);
-//         const cv::Point2f& kp_current = current_points.at(i);
-
-//         // check image region
-//         if (!isWithinShrunkenImage(kp_previous)) {
-//           continue;
-//         }
-
-//         if (!isWithinShrunkenImage(kp_current)) {
-//           continue;
-//         }
-
-//         // check same object in both images
-//         const ObjectId previous_label =
-//             previous_motion_mask.at<ObjectId>(kp_previous);
-//         if (previous_label != object_id) {
-//           continue;
-//         }
-
-//         // check a a valid image patch on the previous image
-//         bool valid_detection = true;
-//         // check detection mask on the previous frame
-//         if (!dynamic_detection_mask_.empty()) {
-//           // 0 is invalid and therefore will cast to false
-//           valid_detection = static_cast<bool>(
-//               dynamic_detection_mask_.at<unsigned char>(kp_previous));
-//         }
-
-//         if (!valid_detection) {
-//           continue;
-//         }
-
-//         good_current_j.push_back(kp_current);
-//         good_previous_j.push_back(kp_previous);
-//       }
-
-//       std::vector<cv::Point2f> verified_current_j, verified_previous_j;
-//       vision_tools::outlierRejectHomography(good_previous_j, good_current_j,
-//                                             verified_previous_j,
-//                                             verified_current_j);
-
-//       // fill keypoints with only good tracks
-//       keypoints.reserve(verified_previous_j.size());
-//       indexed_retroactive_keypoints.resize(verified_previous_j.size());
-//       for (size_t i = 0; i < verified_previous_j.size(); i++) {
-//         // use the index is as correspondance so we can recover the
-//         // correct previous flow after ANMS
-//         KeypointCV kp_curr;
-//         kp_curr.pt = verified_current_j.at(i);
-//         kp_curr.class_id = static_cast<int>(i);
-//         keypoints.push_back(kp_curr);
-
-//         KeypointCV kp_prev;
-//         kp_prev.pt = verified_previous_j.at(i);
-//         kp_prev.class_id = static_cast<int>(i);
-//         indexed_retroactive_keypoints[i] = kp_prev;
-//       }
-//     } else {
-//       // no previous tracks so just use the keypoints as is
-//       cv::KeyPoint::convert(detected_points, keypoints);
-//     }
-
-//     // keypoints are either direct detections or detections+retroactive
-//     // tracking
-//     std::vector<KeypointCV>& max_keypoints = keypoints;
-//     const size_t detected_size = max_keypoints.size();
-
-//     const int nr_corners_needed = getNumberCornersNeeded(object_id);
-
-//     AdaptiveNonMaximumSuppression non_maximum_supression(
-//         AnmsAlgorithmType::RangeTree);
-//     max_keypoints = non_maximum_supression.suppressNonMax(
-//         keypoints, nr_corners_needed, tolerance, img_size_.width,
-//         img_size_.height, 5, 5, binning_mask);
-
-//     VLOG(10) << "Kps: " << max_keypoints.size() << " for j=" << object_id
-//              << " after ANMS (originally " << detected_size << ", requested "
-//              << nr_corners_needed << ")";
-
-//     std::vector<KeypointCV> max_previous_keypoints;
-//     if (retroactively_tracked) {
-//       max_previous_keypoints.reserve(max_keypoints.size());
-//       CHECK_EQ(indexed_retroactive_keypoints.size(), detected_size);
-//       // go through and re associate tracks on previous image
-//       // using the class id as the cache index
-//       for (const auto& kp_cv : max_keypoints) {
-//         KeypointCV previous_kp =
-//         indexed_retroactive_keypoints[kp_cv.class_id];
-//         max_previous_keypoints.push_back(previous_kp);
-//       }
-//     }
-
-//     keypoints_per_object.insert(
-//         {object_id, DetectionsWithTrack{max_keypoints,
-//         max_previous_keypoints,
-//                                         retroactively_tracked}});
-//     // });
-//   }
-
-//   for (const auto& [object_id, detections_with_track] : keypoints_per_object)
-//   {
-//     const auto& new_keypoints = detections_with_track.detections_current;
-//     const auto& retroactive_tracks =
-//     detections_with_track.retroactive_tracks;
-
-//     info_.getObjectStatus(object_id).num_sampled = new_keypoints.size();
-
-//     if (detections_with_track.retroactively_tracked) {
-//       CHECK_EQ(new_keypoints.size(), retroactive_tracks.size());
-//     }
-
-//     for (size_t i = 0; i < new_keypoints.size(); i++) {
-//       const auto& cv_keypoint = new_keypoints.at(i);
-//       const Keypoint keypoint = utils::cvKeypointToGtsam(cv_keypoint);
-
-//       if (!isWithinShrunkenImage(keypoint)) {
-//         continue;
-//       }
-
-//       const ObjectId predicted_label =
-//           functional_keypoint::at<ObjectId>(keypoint, motion_mask);
-//       CHECK_EQ(predicted_label, object_id);
-
-//       // if we have a previous track create two new features
-//       Feature::Ptr feature_current = nullptr;
-//       if (detections_with_track.retroactively_tracked) {
-//         const auto& cv_keypoint_previous = retroactive_tracks.at(i);
-//         // check we got the right associations
-//         CHECK_EQ(cv_keypoint_previous.class_id, cv_keypoint.class_id);
-//         Keypoint keypoint_previous =
-//             utils::cvKeypointToGtsam(cv_keypoint_previous);
-
-//         auto feature_previous = constructNewDynamicFeature(
-//             keypoint_previous, object_id, previous_frame_->getFrameId());
-
-//         if (!feature_previous) {
-//           continue;
-//         }
-//         const TrackletId tracklet_id = feature_previous->trackletId();
-
-//         feature_current = constructDynamicFeatureFromPrevious(
-//             keypoint, feature_previous, tracklet_id, object_id, frame_id);
-
-//         if (feature_current && feature_previous) {
-//           previous_frame_->dynamic_features_.add(feature_previous);
-//           retroactive_trackslet_ids.push_back(tracklet_id);
-//         }
-//       } else {
-//         // assume we only have new detections no track
-//         feature_current =
-//             constructNewDynamicFeature(keypoint, object_id, frame_id);
-//       }
-
-//       if (feature_current) {
-//         // only fill detection mask not tracking mask
-//         cv::circle(
-//             dynamic_detection_mask, utils::gtsamPointToCv(keypoint),
-//             params_.min_distance_btw_tracked_and_detected_dynamic_features,
-//             cv::Scalar(0), cv::FILLED);
-//         dynamic_features.add(feature_current);
-//       }
-//     }
-//   }
-
-// }
-
 void FeatureTracker::sampleDynamic(FrameId frame_id,
                                    const ImageContainer& image_container,
                                    const ObjectIds& objects_to_sample,
@@ -2046,6 +1464,7 @@ void FeatureTracker::requiresSampling(
 bool FeatureTracker::objectDetection(
     vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
     ImageContainer& image_container) {
+  utils::ChronoTimingStats timer("feature_track.object_detect");
   // from some experimental testing 10 pixles is a good boarder to add around
   // objects when the image is 640x480 assuming we have some scaling factor r,
   // width/height * r = 10 and for 640/480, r = (approx) 7.51 for images not
@@ -2085,13 +1504,14 @@ bool FeatureTracker::objectDetection(
              << image_container.frameId();
     ObjectDetectionResult detection_result;
     {
-      utils::ChronoTimingStats timing("tracking_timer.detection_inference");
+      utils::ChronoTimingStats timing("feature_track.object_detect.infer");
       detection_result = object_detection_->process(image_container.rgb());
     }
     cv::Mat object_mask = detection_result.labelled_mask;
 
     {
-      utils::ChronoTimingStats timing("tracking_timer.compute_boundary_mask");
+      utils::ChronoTimingStats timing(
+          "feature_track.object_detect.compute_boundary");
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, detection_result, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);

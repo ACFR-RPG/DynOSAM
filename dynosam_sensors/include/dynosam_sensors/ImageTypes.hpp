@@ -33,6 +33,7 @@
 #include <glog/logging.h>
 
 #include <exception>
+#include <mutex>
 #include <opencv4/opencv2/opencv.hpp>
 #include <type_traits>
 
@@ -72,9 +73,23 @@ template <typename T>
 struct ImageWrapper;
 
 struct ImagePyramid {
+  //! Computed image pyramid's
   std::vector<cv::Mat> levels;
-  //! The actual image levles are computed from
+  //! The actual image levels are computed from
   cv::Mat mono;
+
+  //! Meta-data on pyramid computations
+  std::atomic_int hits = 0;
+  std::atomic_int recomputes = 0;
+
+  mutable std::mutex mtx;
+
+  ImagePyramid() = default;
+  ImagePyramid(const ImagePyramid& other);
+  ImagePyramid& operator=(const ImagePyramid& other);
+  ImagePyramid(ImagePyramid&& other) noexcept;
+  ImagePyramid& operator=(ImagePyramid&& other) noexcept;
+  ~ImagePyramid() = default;
 
   void reserve(int max_level);
   void clear();
@@ -90,9 +105,6 @@ struct ImageBase {
     //! Data is stored here but relevant update functions are in the dervived
     //! ImageWrapper class.
     mutable ImagePyramid pyramid;
-
-    mutable int hits_ = 0;
-    mutable int recomputes_ = 0;
 
     Data() {}
     Data(const cv::Mat& img) : image(img) {}

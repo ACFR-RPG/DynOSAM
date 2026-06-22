@@ -131,6 +131,7 @@ add_library(${PROJECT_NAME} SHARED
   src/visualizer/VisualizerPipelines.cc
 )
 
+
 # target_compile_definitions(${PROJECT_NAME}
 #   PRIVATE "MINIMAL_COMPOSITION_DLL")
 

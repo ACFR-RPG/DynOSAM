@@ -78,7 +78,6 @@ else()
 
 endif()
 
-set(nvcc_options --device-w --ftz=true --prec-div=false --prec-sqrt=false --fmad=true --default-stream per-thread -O3)
 
 # --- 2. Final Output ---
 message("Final CMAKE_CUDA_ARCHITECTURES set to: ${CMAKE_CUDA_ARCHITECTURES}")
@@ -114,6 +113,14 @@ add_library(${PROJECT_NAME} SHARED
 
   src/bindings/PyBoostWrapper.cc
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+    CUDA_RESOLVE_DEVICE_SYMBOLS ON
+)
+
+set(nvcc_options --ftz=true --prec-div=false --prec-sqrt=false --fmad=true --default-stream per-thread -O3)
+target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:${nvcc_options}>)
 
 target_link_libraries(${PROJECT_NAME}
 PUBLIC

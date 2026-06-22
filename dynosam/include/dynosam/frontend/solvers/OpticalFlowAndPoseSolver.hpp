@@ -123,17 +123,19 @@ class OpticalFlowAndPoseSolver {
         frame_k_1->getFrameCamera().calibration());
 
     // sanity check to ensure all tracklets are on the same object
-    std::unordered_set<ObjectId> object_id;
+    CHECK(!tracklets.empty());
+    const ObjectId expected_object_id =
+        frame_k_1->at(tracklets.front())->objectId();
 
     for (TrackletId tracklet_id : tracklets) {
       Feature::Ptr feature_k_1 = frame_k_1->at(tracklet_id);
       Feature::Ptr feature_k = frame_k->at(tracklet_id);
 
-      object_id.insert(feature_k_1->objectId());
-      object_id.insert(feature_k->objectId());
-
       CHECK_NOTNULL(feature_k_1);
       CHECK_NOTNULL(feature_k);
+
+      CHECK_EQ(feature_k_1->objectId(), expected_object_id);
+      CHECK_EQ(feature_k->objectId(), expected_object_id);
 
       CHECK(feature_k_1->hasDepth());
       CHECK(feature_k->hasDepth())
@@ -168,10 +170,8 @@ class OpticalFlowAndPoseSolver {
     values.insert(pose_key, initial_pose);
     ordering += pose_key;
 
-    // check we only have one label
-    CHECK_EQ(object_id.size(), 1u);
     OpticalFlowAndPoseSolverResult result;
-    result.best_result.object_id = *object_id.begin();
+    result.best_result.object_id = expected_object_id;
 
     if (!try_enforce_realtime_) {
       result.error_before = graph.error(values);
@@ -372,7 +372,7 @@ class OpticalFlowAndPoseSolver {
     }
 
     // update tracks
-    for (const auto& outlier_tracklet : refined_outliers) {
+    for (const auto outlier_tracklet : refined_outliers) {
       Feature::Ptr feature_k_1 = frame_k_1->at(outlier_tracklet);
       Feature::Ptr feature_k = frame_k->at(outlier_tracklet);
 
