@@ -11,6 +11,15 @@ DEFINE_int32(hybrid_motion_solver, 0,
 
 namespace dyno {
 
+void declare_config(HybridObjectMotionSolverParams& config) {
+  using namespace config;
+
+  name("HybridObjectMotionSolverParams");
+  field(config.pnp_ransac_params, "pnp_ransac");
+  field(config.optical_flow_solver_params, "optical_flow_solver");
+  field(config.refine_with_flow, "refine_with_flow");
+}
+
 bool isWellTracked(
     const std::optional<ObjectTrackingStatus>& maybe_tracking_Status) {
   if (!maybe_tracking_Status) {
@@ -294,7 +303,7 @@ bool HybridObjectMotionSolver::solveImpl(
 
   gtsam::Pose3 G_W_inv = G_W.inverse();
 
-  if (true) {
+  if (params_.refine_with_flow) {
     utils::ChronoTimingStats update_timer(
         "hybrid_motion_solver.solve_impl.flow", 50);
     auto refinement_result = optical_flow_pose_solver_.optimizeAndUpdate(

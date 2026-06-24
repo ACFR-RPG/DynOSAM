@@ -55,6 +55,9 @@ namespace dyno {
 DynosamNodeImpl::DynosamNodeImpl(rclcpp::Node& node) : dynosam_node(node) {}
 
 void DynosamNodeImpl::init() {
+  // Eigen::initParallel();
+  // Eigen::setNbThreads(10);
+
   rclcpp::Node* node_ptr = &dynosam_node;
 
   RCLCPP_INFO_STREAM(node_ptr->get_logger(), "Starting DynoNode");

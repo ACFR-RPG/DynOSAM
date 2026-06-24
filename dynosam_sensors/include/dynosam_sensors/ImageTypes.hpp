@@ -82,6 +82,7 @@ struct ImagePyramid {
   std::atomic_int hits = 0;
   std::atomic_int recomputes = 0;
 
+  //! Allows thread-safe computation of image pyramid
   mutable std::mutex mtx;
 
   ImagePyramid() = default;

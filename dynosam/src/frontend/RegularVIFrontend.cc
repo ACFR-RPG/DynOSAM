@@ -8,10 +8,6 @@ RegularVIFrontend::RegularVIFrontend(
     const SharedGroundTruth& shared_ground_truth)
     : VIFrontend("regular-frontend", params, camera, display_queue,
                  shared_ground_truth) {
-  // TODO: params from config!!!
-  ConsecutiveFrameObjectMotionSolverParams motion_params;
-  motion_params.refine_motion_with_3d = false;
-
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
     LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
@@ -19,9 +15,12 @@ RegularVIFrontend::RegularVIFrontend(
                  "truth pose!";
     ground_truth = shared_ground_truth_;
   }
-  object_motion_solver_ = std::make_unique<ConsecutiveFrameObjectMotionSolver>(
-      motion_params, camera_->getParams(), DepthUpdater(&tracker_),
-      ground_truth);
+
+  auto object_motion_solver_params =
+      params.frontend_params_.regular_object_motion_solver_params;
+  object_motion_solver_ = std::make_unique<RegularObjectMotionSolver>(
+      object_motion_solver_params, camera_->getParams(),
+      DepthUpdater(&tracker_), ground_truth);
 }
 
 RegularVIFrontend::SpinReturn RegularVIFrontend::boostrapSpin(
@@ -172,11 +171,6 @@ bool RegularVIFrontend::solveAndRefineEgoMotion(
   utils::ChronoTimingStats timer(this->moduleName() + ".camera_motion");
   const auto& frontend_params = dyno_params_.frontend_params_;
 
-  if (!frontend_params.use_ego_motion_pnp) {
-    LOG(WARNING) << "Frontend param use_ego_motion_pnp set to false but only "
-                    "PnP implemented";
-  }
-
   LandmarkKeypointCorrespondences correspondences;
   frame_k->getCorrespondences(correspondences, *frame_km1, KeyPointType::STATIC,
                               frame_k->landmarkWorldKeypointCorrespondance());
@@ -222,7 +216,7 @@ bool RegularVIFrontend::solveAndRefineEgoMotion(
     // update camera pose
     frame_k->T_world_camera_ = pnp_result.best_result;
 
-    if (frontend_params.refine_camera_pose_with_joint_of) {
+    if (frontend_params.camera_pose_solver_params.refine_with_flow) {
       VLOG(10) << "Refining camera pose with joint optical-flow";
 
       utils::ChronoTimingStats timer(this->moduleName() +

@@ -33,13 +33,20 @@
 #include <cmath>
 #include <string>
 
-#include "dynosam/frontend/solvers/ConsecutiveFrameObjectMotionSolver.hpp"
+#include "dynosam/frontend/solvers/HybridObjectMotionSolver.hpp"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
+#include "dynosam/frontend/solvers/RegularObjectMotionSolver.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"  //for ImageTracksParams
 #include "dynosam/frontend/vision/TrackerParams.hpp"
 #include "dynosam_sensors/ImuParams.hpp"
 
 namespace dyno {
+
+struct CameraPoseSolver {
+  PnPRansacSolverParams pnp_ransac_params;
+  OpticalFlowAndPoseSolverParams optical_flow_solver_params;
+  bool refine_with_flow{true};
+};
 
 struct FrontendParams {
   // scene flow thresholds
@@ -50,31 +57,16 @@ struct FrontendParams {
   double max_background_depth = 40.0;
   double max_object_depth = 25.0;
 
-  // TODO: add depth cov
-  // TODO: add projection cov (should this be for back and frontend?)
-
-  //! When using RGBD pipeline, ego-motion will be sovled using pnp (3d2d
-  //! correspondences). Else, stereo
-  bool use_ego_motion_pnp = true;
-
-  //! When using RGBD pipeline, object motion will be sovled using pnp (3d2d
-  //! correspondences). Else, stereo
-  bool use_object_motion_pnp = true;
-
-  // Refine the camera pose with oint optical flow optimisation
-  bool refine_camera_pose_with_joint_of = true;
-
-  // TODO: load camera ransac and joint of
-  // TODO: load object ransac and joint of and 3d motion
-  // TODO: load special motion solver params separately? MAYBE?
-  ConsecutiveFrameObjectMotionSolverParams cf_object_motion_solver_params;
-  PnPRansacSolverParams ego_motion_pnp_ransac_params;
+  RegularObjectMotionSolverParams regular_object_motion_solver_params;
+  HybridObjectMotionSolverParams hybrid_object_motion_solver_params;
+  CameraPoseSolver camera_pose_solver_params;
 
   TrackerParams tracker_params = TrackerParams();
   ImageTracksParams image_tracks_vis_params = ImageTracksParams();
   ImuCalibration imu_calib = ImuCalibration();
 };
 
+void declare_config(CameraPoseSolver& config);
 void declare_config(FrontendParams& config);
 
 }  // namespace dyno

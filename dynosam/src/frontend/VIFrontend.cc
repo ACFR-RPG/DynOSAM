@@ -97,11 +97,14 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
                        const SharedGroundTruth& shared_ground_truth)
     : Frontend(name, params, display_queue, shared_ground_truth),
       camera_(CHECK_NOTNULL(camera)),
-      pnp_ransac_(params.frontend_params_.ego_motion_pnp_ransac_params,
-                  camera->getParams()),
+      pnp_ransac_(
+          params.frontend_params_.camera_pose_solver_params.pnp_ransac_params,
+          camera->getParams()),
       tracker_(params.frontend_params_, camera_, display_queue),
-      optical_flow_pose_solver_(OpticalFlowAndPoseSolverParams{},
-                                DepthUpdater(&tracker_)),
+      optical_flow_pose_solver_(
+          params.frontend_params_.camera_pose_solver_params
+              .optical_flow_solver_params,
+          DepthUpdater(&tracker_)),
       imu_frontend_(params.frontend_params_.imu_calib) {
   rgbd_camera_ = camera_->safeGetRGBDCamera();
   CHECK_NOTNULL(rgbd_camera_);

@@ -76,9 +76,11 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/solvers/PnPRansac.cc
   src/frontend/solvers/HybridObjectMotionSRIF.cc
   src/frontend/solvers/ObjectMotionSolver.cc
-  src/frontend/solvers/ConsecutiveFrameObjectMotionSolver.cc
+  src/frontend/solvers/RegularObjectMotionSolver.cc
   src/frontend/solvers/HybridObjectMotionSolver.cc
   src/frontend/solvers/HybridObjectMotionSmoother.cc
+  src/frontend/solvers/OpticalFlowAndPoseSolver.cc
+  src/frontend/solvers/MotionOnlyRefinementSolver.cc
 
   src/frontend/vision/Frame.cc
   src/frontend/FrontendParams.cc

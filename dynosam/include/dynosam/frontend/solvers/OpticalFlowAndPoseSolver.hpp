@@ -1,5 +1,6 @@
 #pragma once
 
+#include <config_utilities/config_utilities.h>
 #include <gtsam/linear/NoiseModel.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
@@ -28,6 +29,8 @@ struct OpticalFlowAndPoseSolverParams {
   // optimization
   bool flow_is_future{true};
 };
+
+void declare_config(OpticalFlowAndPoseSolverParams& config);
 
 struct OpticalFlowAndPoseResult {
   gtsam::Pose3 refined_pose;

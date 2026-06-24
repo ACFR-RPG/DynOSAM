@@ -26,6 +26,17 @@ using RelativePoseProblemGivenRot =
     opengv::sac_problems::relative_pose::TranslationOnlySacProblem;
 using RelativePoseAdaptor = opengv::relative_pose::CentralRelativeAdapter;
 
+void declare_config(PnPRansacSolverParams& config) {
+  using namespace config;
+
+  name("PnPRansacSolverParams");
+  field(config.ransac_threshold_pnp, "ransac_threshold_pnp");
+  field(config.optimize_3d2d_pose_from_inliers,
+        "optimize_3d2d_pose_from_inliers");
+  field(config.ransac_probability, "ransac_probability");
+  field(config.ransac_iterations, "ransac_iterations");
+}
+
 PnPRansacSolver::PnPRansacSolver(const PnPRansacSolverParams& pnp_ransac_params,
                                  const CameraParams& camera_params)
     : pnp_ransac_params_(pnp_ransac_params),

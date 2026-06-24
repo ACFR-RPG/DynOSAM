@@ -1,5 +1,7 @@
 #pragma once
 
+#include <config_utilities/config_utilities.h>
+
 #include <Eigen/Core>
 #include <opengv/sac/Ransac.hpp>
 
@@ -115,6 +117,8 @@ struct PnPRansacSolverParams {
   double ransac_iterations = 500;
   double ransac_probability = 0.995;
 };
+
+void declare_config(PnPRansacSolverParams& config);
 
 class PnPRansacSolver {
  public:

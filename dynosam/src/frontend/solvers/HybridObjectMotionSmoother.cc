@@ -1054,7 +1054,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   // stereo_noise_model =
   //     factor_graph_tools::robustifyHuber(0.001, stereo_noise_model);
   stereo_noise_model =
-      factor_graph_tools::robustifyCauchy(1.0, stereo_noise_model);
+      factor_graph_tools::robustifyCauchy(0.01, stereo_noise_model);
 
   auto stereo_non_robust_noise_model =
       gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);

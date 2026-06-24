@@ -2,7 +2,7 @@
 
 #include "dynosam/frontend/VIFrontend.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
-#include "dynosam/frontend/solvers/ConsecutiveFrameObjectMotionSolver.hpp"
+#include "dynosam/frontend/solvers/RegularObjectMotionSolver.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
@@ -60,7 +60,7 @@ class RegularVIFrontend : public VIFrontend {
       const MultiObjectTrajectories& object_trajectories) const;
 
  private:
-  ConsecutiveFrameObjectMotionSolver::UniquePtr object_motion_solver_;
+  RegularObjectMotionSolver::UniquePtr object_motion_solver_;
 
   gtsam::NavState nav_state_km1_;
   //! The relative camera pose (T_k_1_k) from the previous frame

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <config_utilities/config_utilities.h>
+
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSRIF.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSmoother.hpp"
@@ -17,7 +19,10 @@ namespace dyno {
 struct HybridObjectMotionSolverParams {
   PnPRansacSolverParams pnp_ransac_params;
   OpticalFlowAndPoseSolverParams optical_flow_solver_params;
+  bool refine_with_flow{true};
 };
+
+void declare_config(HybridObjectMotionSolverParams& config);
 
 class HybridObjectMotionSolver : public ObjectMotionSolver {
  public:
@@ -180,4 +185,4 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
 // void declare_config(MotionOnlyRefinementOptimizer::Params& config);
 
 // void declare_config(EgoMotionSolver::Params& config);
-// void declare_config(ConsecutiveFrameObjectMotionSolver::Params& config);
+// void declare_config(RegularObjectMotionSolver::Params& config);

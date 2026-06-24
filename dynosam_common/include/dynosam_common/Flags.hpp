@@ -42,7 +42,6 @@ DECLARE_bool(init_object_pose_from_gt);
 DECLARE_bool(save_frontend_json);
 DECLARE_bool(frontend_from_file);
 DECLARE_bool(use_byte_tracker);
-DECLARE_bool(refine_with_optical_flow);
 
 // for now?
 DECLARE_bool(use_vo_factor);

@@ -36,13 +36,16 @@
 
 #include "dynosam_common/Flags.hpp"
 
-DEFINE_bool(refine_motion_estimate, true,
-            "If true, 3D motion refinement will be used");
-// TODO: clear up flags - this is defined in Flags.h
-DEFINE_bool(refine_with_optical_flow, true,
-            "If true, then joint refinement with optical flow will be used");
-
 namespace dyno {
+
+void declare_config(CameraPoseSolver& config) {
+  using namespace config;
+
+  name("CameraPoseSolver");
+  field(config.pnp_ransac_params, "pnp_ransac");
+  field(config.optical_flow_solver_params, "optical_flow_solver");
+  field(config.refine_with_flow, "refine_with_flow");
+}
 
 void declare_config(FrontendParams& config) {
   using namespace config;
@@ -54,28 +57,14 @@ void declare_config(FrontendParams& config) {
   field(config.max_background_depth, "max_background_depth");
   field(config.max_object_depth, "max_object_depth");
 
-  field(config.use_ego_motion_pnp, "use_ego_motion_pnp");
-  field(config.use_object_motion_pnp, "use_object_motion_pnp");
-  field(config.refine_camera_pose_with_joint_of,
-        "refine_camera_pose_with_joint_of");
-
-  // TODO: bring back config!!
-  //   field(config.object_motion_solver_params, "object_motion_solver");
-  //   field(config.ego_motion_solver_params, "camera_motion_solver");
+  field(config.regular_object_motion_solver_params,
+        "regular_object_motion_solver");
+  field(config.hybrid_object_motion_solver_params,
+        "hybrid_object_motion_solver");
+  field(config.camera_pose_solver_params, "camera_pose_solver");
   field(config.tracker_params, "tracker_params");
 
   field(config.image_tracks_vis_params, "image_tracks_vis_params");
-
-  //   // update with flags
-  //   config.object_motion_solver_params.refine_motion_with_joint_of =
-  //       FLAGS_refine_with_optical_flow;
-  //   config.object_motion_solver_params.refine_motion_with_3d =
-  //       FLAGS_refine_motion_estimate;
-
-  //   LOG(INFO) <<
-  //   "config.object_motion_solver_params.refine_motion_with_joint_of "
-  //             <<
-  //             config.object_motion_solver_params.refine_motion_with_joint_of;
 }
 
 }  // namespace dyno

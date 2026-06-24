@@ -1,9 +1,21 @@
-#include "dynosam/frontend/solvers/ConsecutiveFrameObjectMotionSolver.hpp"
+#include "dynosam/frontend/solvers/RegularObjectMotionSolver.hpp"
 
 namespace dyno {
 
-ConsecutiveFrameObjectMotionSolver::ConsecutiveFrameObjectMotionSolver(
-    const ConsecutiveFrameObjectMotionSolverParams& params,
+void declare_config(RegularObjectMotionSolverParams& config) {
+  using namespace config;
+
+  name("RegularObjectMotionSolverParams");
+  field(config.pnp_ransac_params, "pnp_ransac");
+  field(config.optical_flow_solver_params, "optical_flow_solver");
+  field(config.motion_only_refinement_params, "motion_only_refinement");
+
+  field(config.refine_with_flow, "refine_with_flow");
+  field(config.refine_with_3d, "refine_with_3d");
+}
+
+RegularObjectMotionSolver::RegularObjectMotionSolver(
+    const RegularObjectMotionSolverParams& params,
     const CameraParams& camera_params, const DepthUpdater& depth_updater,
     const SharedGroundTruth& shared_ground_truth)
     : params_(params),
@@ -13,7 +25,7 @@ ConsecutiveFrameObjectMotionSolver::ConsecutiveFrameObjectMotionSolver(
       motion_only_refinement_solver_(params.motion_only_refinement_params),
       shared_ground_truth_(shared_ground_truth) {}
 
-bool ConsecutiveFrameObjectMotionSolver::solveImpl(
+bool RegularObjectMotionSolver::solveImpl(
     Frame::Ptr frame_k, Frame::Ptr frame_km1, ObjectId object_id,
     Motion3ReferenceFrame& motion_estimate) {
   utils::ChronoTimingStats timer("consecutive_motion_solver.solve_impl");
@@ -51,7 +63,7 @@ bool ConsecutiveFrameObjectMotionSolver::solveImpl(
     CHECK_EQ(all_tracklets.size(), extracted_all_tracklets.size());
 
     gtsam::Pose3 G_w = geometric_result.best_result.inverse();
-    if (params_.refine_motion_with_joint_of) {
+    if (params_.refine_with_flow) {
       // Use the original result as the input to the refine joint optical flow
       // function the result.best_result variable is actually equivalent to
       // ^wG^{-1} and we want to solve something in the form e(T, flow) =
@@ -71,7 +83,7 @@ bool ConsecutiveFrameObjectMotionSolver::solveImpl(
     const gtsam::Pose3 X_W_k = frame_k->getPose();
     gtsam::Pose3 H_W_km1_k = X_W_k * G_w;
 
-    if (params_.refine_motion_with_3d) {
+    if (params_.refine_with_3d) {
       VLOG(10) << "Refining object motion pose with 3D refinement";
       auto motion_refinement_result =
           motion_only_refinement_solver_.optimizeAndUpdate(
@@ -106,7 +118,7 @@ bool ConsecutiveFrameObjectMotionSolver::solveImpl(
   return false;
 }
 
-void ConsecutiveFrameObjectMotionSolver::updateTrajectories(
+void RegularObjectMotionSolver::updateTrajectories(
     MultiObjectTrajectories& object_trajectories,
     const MotionEstimateMap& motion_estimates, Frame::Ptr frame_k,
     Frame::Ptr frame_km1) {

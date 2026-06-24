@@ -26,10 +26,6 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
       map_(CHECK_NOTNULL(formulation->map())),
       tracking_viz_(params.frontend_params_.image_tracks_vis_params,
                     params.enforceRealtime()) {
-  // TODo
-  HybridObjectMotionSolverParams motion_params;
-  motion_params.optical_flow_solver_params.use_robust = true;
-
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
     LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
@@ -38,9 +34,11 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
     ground_truth = shared_ground_truth_;
   }
 
+  auto object_motion_solver_params =
+      params.frontend_params_.hybrid_object_motion_solver_params;
   object_motion_solver_ = std::make_unique<HybridObjectMotionSolver>(
-      motion_params, camera_->getParams(), DepthUpdater(&tracker_),
-      ground_truth);
+      object_motion_solver_params, camera_->getParams(),
+      DepthUpdater(&tracker_), ground_truth);
   object_motion_solver_->enforceRealtime(params.enforceRealtime());
 }
 
@@ -620,7 +618,7 @@ bool PoseChangeVIFrontend::solveAndRefineEgoMotion(
         use_map ? TrackingQuality::Good : TrackingQuality::Marginal;
 
     const auto& frontend_params = dyno_params_.frontend_params_;
-    if (frontend_params.refine_camera_pose_with_joint_of) {
+    if (frontend_params.camera_pose_solver_params.refine_with_flow) {
       VLOG(10) << "Refining camera pose with joint optical-flow";
 
       utils::ChronoTimingStats timer(this->moduleName() +

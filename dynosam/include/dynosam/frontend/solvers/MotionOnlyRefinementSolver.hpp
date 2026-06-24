@@ -1,5 +1,6 @@
 #pragma once
 
+#include <config_utilities/config_utilities.h>
 #include <gtsam/linear/NoiseModel.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 #include <gtsam/slam/ProjectionFactor.h>
@@ -225,5 +226,7 @@ class MotionOnlyRefinementSolver {
   //! Cached noise model for pose
   gtsam::SharedNoiseModel pose_prior_noise_;
 };
+
+void declare_config(MotionOnlyRefinementSolverParams& config);
 
 }  // namespace dyno
