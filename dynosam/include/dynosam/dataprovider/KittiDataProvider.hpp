@@ -447,7 +447,6 @@ class KittiDataLoader
       CHECK(camera_pose_gt.equals(gt_object_pose_gt.X_world_));
       CHECK(timestamp == gt_object_pose_gt.timestamp_);
 
-      CHECK(ground_truth_packet_callback_);
       if (ground_truth_packet_callback_)
         ground_truth_packet_callback_(gt_object_pose_gt);
 

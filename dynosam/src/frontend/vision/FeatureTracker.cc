@@ -776,10 +776,9 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
   //     objects_resampled.begin(), objects_resampled.end(), [&](auto&
   //     object_id)
   //     {
+  utils::ChronoTimingStats detection_loop_t(
+      "dynamic_feature_track_klt.detection.loop");
   for (size_t i = 0; i < need_new_detections.size(); i++) {
-    utils::ChronoTimingStats detection_loop_t(
-        "dynamic_feature_track_klt.detection.loop");
-
     const ObjectId object_id = need_new_detections.at(i);
     cv::Mat obj_mask = (current_motion_mask == object_id);
     // ignore additonal features from the tracking mask
@@ -883,6 +882,7 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
                             retroactive_tracking_success};
     // });
   }
+  detection_loop_t.stop();
 
   // now check and fill new features
   utils::ChronoTimingStats fill_t("dynamic_feature_track_klt.detection.fill");

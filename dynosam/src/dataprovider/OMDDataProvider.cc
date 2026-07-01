@@ -1355,6 +1355,7 @@ class OMDOldAllLoader {
 
     rgbd_camera_params_ =
         CameraParams(intrinsics, distortion, image_size, model);
+    rgbd_camera_params_.setDepthParams(base_line_);
 
     LOG(INFO) << "Camera params " << rgbd_camera_params_.toString();
   }
@@ -1425,7 +1426,7 @@ OMDDataLoader::OMDDataLoader(const fs::path& dataset_path)
                       GroundTruthInputPacket gt_object_pose_gt) -> bool {
     CHECK_EQ(timestamp, gt_object_pose_gt.timestamp_);
 
-    CHECK(ground_truth_packet_callback_);
+    // CHECK(ground_truth_packet_callback_);
     if (ground_truth_packet_callback_)
       ground_truth_packet_callback_(gt_object_pose_gt);
 

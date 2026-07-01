@@ -119,7 +119,7 @@ bool cvSizeEqual(const cv::Size& a, const cv::Size& b);
 bool cvSizeEqual(const cv::Mat& a, const cv::Mat& b);
 
 template <typename T>
-float distance(const cv::Point_<T>& pt1, const cv::Point_<T>& pt2) {
+inline float distance(const cv::Point_<T>& pt1, const cv::Point_<T>& pt2) {
   const float dx = static_cast<float>(pt1.x) - static_cast<float>(pt2.x);
   const float dy = static_cast<float>(pt1.y) - static_cast<float>(pt2.y);
   return std::sqrt(dx * dx + dy * dy);
