@@ -106,6 +106,10 @@ std::vector<std::vector<cv::Point2f>> goodFeaturesToTrackBatched(
   CV_Assert(src.type() == CV_8UC1 || src.type() == CV_32FC1);
   CV_Assert(masks.size() == maxCorners.size());
 
+  if (masks.empty()) {
+    return {};
+  }
+
   // --- STEP 1: Compute the Eigenvalue Map ONCE for the whole frame ---
   cv::Mat eig;
   // cornerMinEigenVal handles the Sobel derivatives internally in a highly
@@ -570,12 +574,13 @@ int main(int argc, char* argv[]) {
       auto previous_mono =
           ImageType::RGBMono::toMono(previous_frame->imageContainer().rgb());
 
-      utils::ChronoTimingStats detection_t("batched.track");
+      utils::ChronoTimingStats track_t("batched.track");
       auto tracked_features = trackFeaturesUnified(
           previous_mono, current_mono, previousBatchFeatures, object_masks);
-      detection_t.stop();
+      track_t.stop();
 
       // masks will be updated to include currently tracked points
+      utils::ChronoTimingStats masks_t("batched.detection.masks");
       gtsam::FastMap<ObjectId, cv::Mat> mask_map;
       for (auto object_id : object_ids) {
         cv::Mat obj_mask = (object_masks == object_id);
@@ -636,41 +641,57 @@ int main(int argc, char* argv[]) {
           masks.push_back(masks_j);
           objects_ids_for_detection.push_back(j);
 
-          // TODO: recompute maxCorners
-          if (j > 0) {
-            maxCorners.push_back(300);
-            minDistances.push_back(8);
-          } else {
-            maxCorners.push_back(1000);
-            minDistances.push_back(15);
+          const int current_tracks = is_new ? 0 : tracked_features.at(j).size();
+          const int desired_tracks = j > 0 ? 300 : 1000;
+          const int tracked_needed =
+              std::max(desired_tracks - current_tracks, 0);
+          const int distance = j > 0 ? 8 : 15;
+
+          maxCorners.push_back(tracked_needed);
+          minDistances.push_back(distance);
+
+          // // TODO: recompute maxCorners
+          // if (j > 0) {
+          //   maxCorners.push_back(300);
+          //   minDistances.push_back(8);
+          // } else {
+          //   maxCorners.push_back(1000);
+          //   minDistances.push_back(15);
+          // }
+        }
+      }
+      masks_t.stop();
+
+      utils::ChronoTimingStats detection_t("batched.detection");
+
+      if (!masks.empty()) {
+        auto detected_features = goodFeaturesToTrackBatched(
+            current_mono, masks, maxCorners, minDistances, 0.01);
+
+        gtsam::FastMap<ObjectId, std::vector<cv::Point2f>> detected_feature_map;
+        for (size_t i = 0; i < detected_features.size(); i++) {
+          if (detected_features[i].size() > 0) {
+            detected_feature_map[objects_ids_for_detection[i]] =
+                detected_features[i];
+
+            TrackingDetails details;
+            details.object_id = objects_ids_for_detection[i];
+            details.num_last_detected_features = detected_features[i].size();
+            tracking_details[details.object_id] = details;
           }
         }
-      }
 
-      auto detected_features = goodFeaturesToTrackBatched(
-          current_mono, masks, maxCorners, minDistances, 0.01);
-
-      gtsam::FastMap<ObjectId, std::vector<cv::Point2f>> detected_feature_map;
-      for (size_t i = 0; i < detected_features.size(); i++) {
-        if (detected_features[i].size() > 0) {
-          detected_feature_map[objects_ids_for_detection[i]] =
-              detected_features[i];
-
-          TrackingDetails details;
-          details.object_id = objects_ids_for_detection[i];
-          details.num_last_detected_features = detected_features[i].size();
-          tracking_details[details.object_id] = details;
+        // for now just replace featues
+        for (const auto& [j, per_object_tracks] : detected_feature_map) {
+          // tracked_features[j] = per_object_tracks;
+          // add tracks to existing tracks!
+          tracked_features[j].insert(tracked_features[j].begin(),
+                                     per_object_tracks.begin(),
+                                     per_object_tracks.end());
         }
       }
 
-      // for now just replace featues
-      for (const auto& [j, per_object_tracks] : detected_feature_map) {
-        // tracked_features[j] = per_object_tracks;
-        // add tracks to existing tracks!
-        tracked_features[j].insert(tracked_features[j].begin(),
-                                   per_object_tracks.begin(),
-                                   per_object_tracks.end());
-      }
+      detection_t.stop();
 
       cv::Mat tracked_viz =
           drawBatchedFeatures(container->rgb(), tracked_features);
