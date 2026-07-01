@@ -1,5 +1,5 @@
 parallel_run: True
-enforce_realtime: True
+enforce_realtime: False
 
 # Use the camera params provided by the dataprovider (if available),
 # instead of the camera params specified by the CameraParams.yaml.

@@ -1,11 +1,11 @@
 #!/bin/bash
 
---init_object_pose_from_gt=true
+--init_object_pose_from_gt=false
 --use_frontend_logger=true
 
 #we turn off for cluster as there is some problem with the OF I think?
 --use_propogate_mask=false
---pc_send_objects_to_backend=true
+--pc_send_objects_to_backend=false
 
 
 

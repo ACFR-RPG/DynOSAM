@@ -17,7 +17,7 @@ camera_pose_solver:
     ransac_probability:  0.995
   optical_flow_solver:
     use_robust: True
-  refine_with_flow: False
+  refine_with_flow: True
 
 regular_object_motion_solver:
   pnp_ransac:
@@ -39,8 +39,8 @@ hybrid_object_motion_solver:
   optical_flow_solver:
     use_robust: True
     outlier_reject: False
-    k_huber: 0.1
-  refine_with_flow: False
+    k_huber: 0.01
+  refine_with_flow: True
 
 tracker_params:
   feature_detector_type: "GFFT_CUDA"
@@ -81,10 +81,10 @@ tracker_params:
 
   # dynamic keyframing criteria
   dynamic_feature_age_buffer: 3
-  min_dynamic_tracks: 20
+  min_dynamic_tracks: 10
   # causes retracking if current mask IOU with new mask < min_dynamic_mask_iou
   # ie. smaller causes less triggering
-  min_dynamic_mask_iou: 0.3
+  min_dynamic_mask_iou: 0.5
 
 image_tracks_vis_params:
   is_debug: true

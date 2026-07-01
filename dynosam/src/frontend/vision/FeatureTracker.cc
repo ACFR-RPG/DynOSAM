@@ -777,6 +777,9 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
   //     object_id)
   //     {
   for (size_t i = 0; i < need_new_detections.size(); i++) {
+    utils::ChronoTimingStats detection_loop_t(
+        "dynamic_feature_track_klt.detection.loop");
+
     const ObjectId object_id = need_new_detections.at(i);
     cv::Mat obj_mask = (current_motion_mask == object_id);
     // ignore additonal features from the tracking mask
@@ -784,9 +787,20 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
     cv::bitwise_and(obj_mask, detection_mask, combined_mask);
 
     std::vector<cv::Point2f> detected_points;
-    cv::goodFeaturesToTrack(current_mono, detected_points,
-                            max_features_to_track, kGfftQualityLevel,
-                            min_feature_distance, combined_mask);
+    // cv::goodFeaturesToTrack(current_mono, detected_points,
+    //                         max_features_to_track, kGfftQualityLevel,
+    //                         min_feature_distance, combined_mask);
+
+    {
+      utils::ChronoTimingStats detection_gfft_t(
+          "dynamic_feature_track_klt.detection.gfft");
+      // TODO: max features or nr corners? nr_corners makes maybe more sense but
+      // we have some nice logic
+      //  to prune with NMS? If we extract more is the compute time worth it?
+      cv::goodFeaturesToTrack(current_mono, detected_points,
+                              nr_corners_needed[object_id], kGfftQualityLevel,
+                              min_feature_distance, combined_mask);
+    }
 
     // the actual set of keypoints to use for ANMS
     // if we have previous frame and therefore previous tracks
@@ -871,6 +885,7 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
   }
 
   // now check and fill new features
+  utils::ChronoTimingStats fill_t("dynamic_feature_track_klt.detection.fill");
   for (const DetectionsWithTrack& dwt : detections_with_tracks) {
     const ObjectId object_id = dwt.object_id;
     const auto& new_keypoints = dwt.detections_current;
@@ -948,6 +963,7 @@ bool FeatureTracker::DynamicTrackerImpl::trackRetroactively(
     const cv::Mat& detection_mask_previous,
     std::vector<KeypointCV>& keypoints_out,
     std::vector<KeypointCV>& indexed_retroactive_keypoints_out) {
+  utils::ChronoTimingStats t("dynamic_feature_track_klt.track_retroactive");
   // this is mostly to ensure that when we have stereo we dont exctract
   // a tiny number of features whos depth cannot be verified and therefore we
   // are left with features without depth this also prevents doing the

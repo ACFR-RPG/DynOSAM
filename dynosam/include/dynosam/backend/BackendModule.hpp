@@ -111,16 +111,16 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
     Accessor::Ptr accessor = this->getAccessor();
 
     DynoState::Ptr state = std::make_shared<DynoState>();
-
     // shoudl really only go up to last propogated frame...
     const auto camera_trajectory = accessor->getCameraTrajectory();
-
     // expect frame and timestamp to be from the last entry
     const auto last_camera_entry = camera_trajectory.last();
+
     state->frame_id = last_camera_entry.frame_id;
     state->timestamp = last_camera_entry.timestamp;
 
     state->camera_trajectory = camera_trajectory;
+
     state->object_trajectories = accessor->getMultiObjectTrajectories();
 
     // TODO: should be global!?
@@ -136,6 +136,7 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
       state->dynamic_map += accessor->getDynamicLandmarkEstimates(
           trajectory_j.maxFrame(), object_id);
     }
+
     // state->dynamic_map =
     // accessor->getDynamicLandmarkEstimates(state->frame_id);
 
