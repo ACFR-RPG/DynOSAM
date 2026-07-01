@@ -94,47 +94,71 @@ void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
   }
 }
 
-ObjectIds getObjectLabels(const cv::Mat& image) {
-  // from testing in test_code_concepts.cc (CodeConcepts.uniqueLabelSpeed)
-  // this implementation is up to 28x faster than a simple a std::set approach!!
-  const int numThreads =
-      std::min(std::thread::hardware_concurrency(), (unsigned int)image.rows);
-  const int rowsPerThread = image.rows / numThreads;
+// hella vibe-coded!
+// experimentally we see up to a 10ms improvement over the previous
+// implementation!
+ObjectIds getObjectLabelsParallelDynamic(const cv::Mat& image) {
+  CV_Assert(image.type() == CV_32SC1);
 
-  std::vector<std::future<std::unordered_set<int>>> futures;
+  const int numThreads = cv::getNumThreads();
 
-  // Launch threads to process row chunks
+  // Each worker thread gets its own isolated bucket vector to store discovered
+  // IDs
+  std::vector<std::vector<int>> thread_buckets(numThreads);
   for (int t = 0; t < numThreads; ++t) {
-    int startRow = t * rowsPerThread;
-    int endRow = (t == numThreads - 1) ? image.rows : (t + 1) * rowsPerThread;
-
-    futures.push_back(
-        std::async(std::launch::async, [&image, startRow, endRow]() {
-          std::unordered_set<int> localUnique;
-          for (int row = startRow; row < endRow; ++row) {
-            const int* rowPtr = image.ptr<int>(row);
-            for (int col = 0; col < image.cols; ++col) {
-              localUnique.insert(rowPtr[col]);
-            }
-          }
-          return localUnique;
-        }));
+    thread_buckets[t].reserve(
+        256);  // Allocate small initial workspace per thread
   }
 
-  // Merge results
-  std::unordered_set<int> globalUnique;
-  for (auto& future : futures) {
-    auto localSet = future.get();
-    globalUnique.insert(localSet.begin(), localSet.end());
-  }
-  // dont include background label!!
-  globalUnique.erase(background_label);
+  // Run parallel slice loop over image rows
+  cv::parallel_for_(cv::Range(0, image.rows), [&](const cv::Range& range) {
+    const int threadId = cv::getThreadNum();
+    std::vector<int>& local_bucket = thread_buckets[threadId];
 
-  // Convert to vector (NOTE: not sorted!!)
-  std::vector<int> result(globalUnique.begin(), globalUnique.end());
-  // std::sort(result.begin(), result.end());
+    // Thread-local cache variable to avoid logging identical consecutive pixels
+    int last_id = -1;
+
+    for (int row = range.start; row < range.end; ++row) {
+      const int* rowPtr = image.ptr<int>(row);
+      for (int col = 0; col < image.cols; ++col) {
+        const int current_id = rowPtr[col];
+
+        // Fast internal filter: avoid processing if it matches the pixel we
+        // *just* checked
+        if (current_id == last_id) continue;
+        last_id = current_id;
+
+        if (current_id != background_label) {
+          local_bucket.push_back(current_id);
+        }
+      }
+    }
+  });
+
+  // --- MERGE & DE-DUPLICATE PHASE ---
+  // Flatten all thread-local collections into a single target result vector
+  size_t total_elements = 0;
+  for (int t = 0; t < numThreads; ++t) {
+    total_elements += thread_buckets[t].size();
+  }
+
+  ObjectIds result;
+  result.reserve(total_elements);
+  for (int t = 0; t < numThreads; ++t) {
+    result.insert(result.end(), thread_buckets[t].begin(),
+                  thread_buckets[t].end());
+  }
+
+  // In-place sort and deduplicate using standard library algorithms
+  std::sort(result.begin(), result.end());
+  auto last = std::unique(result.begin(), result.end());
+  result.erase(last, result.end());
 
   return result;
+}
+
+ObjectIds getObjectLabels(const cv::Mat& image) {
+  return getObjectLabelsParallelDynamic(image);
 }
 
 // std::vector<std::vector<int>> trackDynamic(const FrontendParams& params,
