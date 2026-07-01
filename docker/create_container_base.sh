@@ -70,7 +70,7 @@ fi
 for so in $NVIDIA_SOS; do DOCKER_NVIDIA_SO_VOLUMES+="--volume $so:$so "; done
 
 
-USE_NVIDIA=true
+# USE_NVIDIA=true
 
 if "$USE_NVIDIA"; then
     # If executing this script from an unmanned shell (like from seawolf ShellCmd)
