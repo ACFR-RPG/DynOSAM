@@ -456,7 +456,7 @@ int main(int argc, char* argv[]) {
 
   FrontendParams fp;
   // fp.tracker_params.feature_detector_type =
-  // TrackerParams::FeatureDetectorType::GFFT_CUDA;
+  //   TrackerParams::FeatureDetectorType::GFFT_CUDA;
   fp.tracker_params.max_nr_keypoints_before_anms = 1000;
   fp.tracker_params.max_dynamic_features_per_frame = 300;
   fp.tracker_params.prefer_provided_optical_flow = false;
@@ -560,12 +560,12 @@ int main(int argc, char* argv[]) {
     // LOG(INFO) << to_string(tracker->getTrackerInfo());
 
     if (previous_frame) {
-      // ImageTracksParams track_viz_params(true);
-      // track_viz_params.show_intermediate_tracking = true;
-      // cv::Mat tracking = tracker->computeFeatureTracks(
-      //     *previous_frame, *frame, track_viz_params);
+      ImageTracksParams track_viz_params(true);
+      track_viz_params.show_intermediate_tracking = true;
+      cv::Mat tracking = tracker->computeFeatureTracks(*previous_frame, *frame,
+                                                       track_viz_params);
 
-      // cv::imshow("Tracks", tracking);
+      cv::imshow("Tracks", tracking);
 
       auto previous_mono =
           ImageType::RGBMono::toMono(previous_frame->imageContainer().rgb());

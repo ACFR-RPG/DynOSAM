@@ -1506,6 +1506,7 @@ bool FeatureTracker::objectDetection(
       // frame so we dont need to recalculate!
       VLOG(50) << "Using provided object detection mask k="
                << image_container.frameId();
+      utils::ChronoTimingStats timer("feature_track.object_detect.boundaries");
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, object_mask, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
@@ -1526,8 +1527,6 @@ bool FeatureTracker::objectDetection(
     cv::Mat object_mask = detection_result.labelled_mask;
 
     {
-      utils::ChronoTimingStats timing(
-          "feature_track.object_detect.compute_boundary");
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, detection_result, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
