@@ -298,8 +298,10 @@ bool findObjectBoundingBox(
   cv::Mat dilated_obj_mask;
   // dilate to fill any small holes in the mask to get a more complete set of
   // contours
+  // cv::Mat dilate_element = cv::getStructuringElement(
+  //     cv::MORPH_RECT, cv::Size(1, 11));  // a rectangle of 1*5
   cv::Mat dilate_element = cv::getStructuringElement(
-      cv::MORPH_RECT, cv::Size(1, 11));  // a rectangle of 1*5
+      cv::MORPH_RECT, cv::Size(1, 5));  // a rectangle of 1*5
   cv::dilate(obj_mask, dilated_obj_mask, dilate_element, cv::Point(-1, -1));
 
   std::vector<std::vector<cv::Point>> contours;
@@ -407,7 +409,7 @@ void computeObjectMaskBoundaryMaskHelper(
   cv::Mat dilated_mask;
   cv::dilate(thicc_boarder, dilated_mask,
              cv::getStructuringElement(
-                 cv::MORPH_ELLIPSE,
+                 cv::MORPH_RECT,
                  cv::Size(2 * outer_thickness + 1, 2 * outer_thickness + 1)));
   // Compute the outer border mask
   cv::Mat thicc_outer_boarder_mask = dilated_mask - thicc_boarder;
@@ -420,7 +422,7 @@ void computeObjectMaskBoundaryMaskHelper(
   cv::Mat eroded_mask;
   cv::erode(thicc_boarder, eroded_mask,
             cv::getStructuringElement(
-                cv::MORPH_ELLIPSE,
+                cv::MORPH_RECT,
                 cv::Size(2 * inner_thickness + 1, 2 * inner_thickness + 1)));
   cv::Mat thicc_inner_boarder_mask = thicc_boarder - eroded_mask;
 
