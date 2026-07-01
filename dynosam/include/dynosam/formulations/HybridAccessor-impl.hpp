@@ -295,6 +295,7 @@ StateQueryStatus HybridAccessor<MAP>::getObjectMotionReferenceFrameHelper(
   }
 
   motion_key = frame_node_k->makeObjectMotionKey(object_id);
+
   StateQuery<gtsam::Pose3> H_W_KF_k =
       this->template query<gtsam::Pose3>(motion_key);
   if (!H_W_KF_k) {
@@ -311,6 +312,7 @@ StateQueryStatus HybridAccessor<MAP>::getObjectMotionReferenceFrameHelper(
   // check if and which frame the object was observed before frame id
   if (!object_node->previouslySeenFrame(frame_id, &last_seen)) {
     const auto range = CHECK_NOTNULL(key_frame_data->find(object_id, frame_id));
+
     const auto [kf_id, L0] = range->dataPair();
     // check that the first frame of the object motion is actually this frame
     // this motion should actually be identity
@@ -339,6 +341,7 @@ StateQueryStatus HybridAccessor<MAP>::getObjectMotionReferenceFrameHelper(
       return StateQueryStatus::NOT_IN_MAP;
     }
   }
+
   LOG(WARNING) << "Could not construct object motion frame id=" << frame_id
                << " object id=" << object_id;
   return StateQueryStatus::INVALID_MAP;
@@ -366,7 +369,7 @@ HybridAccessor<MAP>::getObjectMotionReferenceFrame(FrameId frame_id,
     } else {
       // we have a motion but is not a genuine F2F motion (ie we dont have
       // consecutive motions)
-      Query(motion_key, StateQueryStatus::NOT_IN_MAP);
+      return Query(motion_key, StateQueryStatus::NOT_IN_MAP);
     }
 
   } else {
