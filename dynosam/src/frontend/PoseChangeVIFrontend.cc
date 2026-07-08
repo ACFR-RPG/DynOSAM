@@ -502,8 +502,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
                           realtime_output->debug_imagery.tracking_image);
 
   cv::Mat okf_debug_metrics = object_motion_solver_->keyframeDebugImage();
-  if (!okf_debug_metrics.empty())
-    pushImageToDisplayQueue("OKF Keyframe Metrics", okf_debug_metrics);
+  // if (!okf_debug_metrics.empty())
+  //   pushImageToDisplayQueue("OKF Keyframe Metrics", okf_debug_metrics);
 
   // if (stereo_matching_result) {
   //   cv::Mat stereo_track;

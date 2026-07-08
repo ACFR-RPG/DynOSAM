@@ -166,7 +166,7 @@ def run_viodes():
 
     # run_experiment_sequences("/root/data/VIODE/parking_lot/mid", "parking_lot_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
-    run_experiment_sequences("/root/data/VIODE/parking_lot/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=false", "--pc_send_objects_to_backend=false")
+    run_experiment_sequences("/root/data/viode_city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--pc_smoother_allow_backend_updates=true", "--pc_send_objects_to_backend=false")
 
 
 def run_omd():
@@ -210,7 +210,7 @@ def run_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0006/", "kitti_0006_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "kitti_0018_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "test_kitti", kitti_dataset,"--v=10", "--shrink_row=25", "--shrink_col=50",  "--use_backend=true")
-    run_experiment_sequences("/root/data/kitti-0002/", "test_kitti", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true", "--v=30")
+    run_experiment_sequences("/root/data/kitti-0004/", "test_kitti", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true", "--v=30")
 
 
 ##### SHOULD BE WITH --init_object_pose_from_gt=true
@@ -319,7 +319,7 @@ def run_dynoepts():
 
 
 def run_aria():
-    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=4", "--init_object_pose_from_gt=false")
+    run_experiment_sequences("/root/data/acfr_1_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=4", "--init_object_pose_from_gt=false")
 
 ##### SHOULD BE WITH --init_object_pose_from_gt=false
 def run_hybrid_solver_comparison_omd():
@@ -430,8 +430,8 @@ if __name__ == '__main__':
     # run_uts_tech_lab_solver_comparison_test()
     # run_dynoepts()
     # # run_tartan_air()
-    run_kitti()
-    # run_viodes()
+    # run_kitti()
+    run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()
