@@ -141,6 +141,8 @@ VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
     VLOG(50) << "Gotten ground truth packet for frame id " << packet->frameId()
              << ", timestamp=" << packet->timestamp();
     ground_truth_packet = ground_truth->at(packet->frameId());
+  } else {
+    VLOG(50) << "No ground truth for frame id " << packet->frameId();
   }
   const Timestamp& timestamp = packet->timestamp();
 

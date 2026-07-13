@@ -67,6 +67,32 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
                        .keep_last(static_cast<size_t>(queue_size))
                        .reliable();
 
+  const bool listen_to_ground_truth =
+      ros::Parameter::Builder(node_.get(), "enable_groundtruth_sub", false)
+          .description(
+              "If the subscriber should additionally listen to ground truth "
+              "data")
+          .finish()
+          .get<bool>();
+
+  if (listen_to_ground_truth) {
+    RCLCPP_INFO_STREAM(node_->get_logger(),
+                       "Ground truth enabled. Subscribing...");
+    ground_truth_sub_ = node_->create_subscription<GroundTruthAdaptedType>(
+        "/dynosam/ground_truth", image_qos,
+        [&](const GroundTruthInputPacket& msg) -> void {
+          if (!ground_truth_packet_callback_) {
+            RCLCPP_ERROR_THROTTLE(
+                node_->get_logger(), *node_->get_clock(), 1000,
+                "Ground truth callback triggered but "
+                "ground_truth_packet_callback_ is not registered!");
+            return;
+          }
+          LOG(INFO) << "Gotten gt for sequence: " << msg.frame_id_;
+          ground_truth_packet_callback_(msg);
+        });
+  }
+
   // Need to explicitly pass VoidPtr, transport options (nullptr) and subscriber
   // options to subscribe to avoid ambiguous overloading specifically in the
   // case when we specify a rmw_qos_profile (which we want to), rahter than just
@@ -75,9 +101,12 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
   // set up callbacks
   for (size_t i = 0; i < sensor_system->numCameraStreams(); ++i) {
     const std::string stream_name = sensor_system->streamName(i);
+    const std::string topic = "/dynosam/" + stream_name + "/image_raw";
+    RCLCPP_INFO_STREAM(node_->get_logger(),
+                       "Subscribing to image topic " << topic);
+
     image_subscribers_[i] = img_transport_->subscribe(
-        "/dynosam/" + stream_name + "/image_raw",
-        image_qos.get_rmw_qos_profile(),
+        topic, image_qos.get_rmw_qos_profile(),
         // 30 * sensor_system->numCameraStreams(),
         std::bind(&Subscriber::imageCallback, this, std::placeholders::_1, i),
         image_transport::ImageTransport::VoidPtr(), nullptr,
@@ -95,6 +124,10 @@ void Subscriber::shutdown() {
 
   if (imu_sub_) {
     imu_sub_.reset();
+  }
+
+  if (ground_truth_sub_) {
+    ground_truth_sub_.reset();
   }
 }
 

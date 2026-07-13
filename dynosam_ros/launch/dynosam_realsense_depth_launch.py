@@ -55,19 +55,22 @@ def generate_launch_description():
                 {"online": True},
                 {"input_image_mode": "rgb+aligned_depth"},
                 {"base_frame": "camera_link"},
-                {"odom_frame": "odom"}
+                {"odom_frame": "odom"},
+                {"enable_groundtruth_sub": False},
+
             ],
             remappings=[
                 ('rgb/image_raw', f'{camera_prefix}/color/image_raw'),
                 ('depth/image_raw', f'{camera_prefix}/aligned_depth_to_color/image_raw'),
                 ('rgb/camera_info', f'{camera_prefix}/color/camera_info'),
-                ("imu", f'{camera_prefix}/imu')
+                ("imu", f'{camera_prefix}/imu'),
+                # ("ground_truth", "/mrl_vicon/ground_truth")
             ],
         )
 
     return LaunchDescription([
         DeclareLaunchArgument("output_path", default_value="/root/results/misc/"),
-        DeclareLaunchArgument("v", default_value="30"),
-        # rs_node,
-        dynosam_node
+        DeclareLaunchArgument("v", default_value="50"),
+        rs_node,
+        # dynosam_node
     ])

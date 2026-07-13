@@ -4,7 +4,9 @@
 #include <mutex>
 
 #include "cv_bridge/cv_bridge.hpp"
+#include "dynamic_slam_interfaces/msg/groundtruth_packet.hpp"
 #include "dynosam_ros/CameraSystem.hpp"
+#include "dynosam_ros/adaptors/GroundtuthPacketAdaptor.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
 #include "image_transport/image_transport.hpp"
 #include "rclcpp/node.hpp"
@@ -17,6 +19,8 @@ namespace dyno {
 
 typedef sensor_msgs::msg::Image::ConstSharedPtr ImageMsgPtr;
 
+typedef dynamic_slam_interfaces::msg::GroundtruthPacket GroundtruthMsg;
+
 /**
  * @brief
  * Heavily inspiried by the OKVIS2 implementation:
@@ -26,6 +30,7 @@ class Subscriber : public DataProvider {
  public:
   DYNO_POINTER_TYPEDEFS(Subscriber)
 
+  // NOTE: ground truth subscription handled via ros param gotten through node
   Subscriber(SensorSystem::Ptr sensor_system,
              std::shared_ptr<rclcpp::Node> node);
   ~Subscriber() = default;
@@ -147,6 +152,10 @@ class Subscriber : public DataProvider {
       rclcpp::adapt_type<dyno::ImuMeasurement>::as<sensor_msgs::msg::Imu>;
   rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_;
   std::mutex time_mutex_;  ///< Lock when accessing time
+
+  using GroundTruthAdaptedType =
+      rclcpp::adapt_type<dyno::GroundTruthInputPacket>::as<GroundtruthMsg>;
+  rclcpp::Subscription<GroundTruthAdaptedType>::SharedPtr ground_truth_sub_;
 
   /// @}
 

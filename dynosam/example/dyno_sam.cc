@@ -97,6 +97,14 @@ struct CornerCandidate {
   }
 };
 
+struct GFFTBatchInput {
+  cv::Mat mask;
+  // num total corners to extract
+  int max_corners;
+  int corners_after_anms;
+  float min_distance;
+};
+
 std::vector<std::vector<cv::Point2f>> goodFeaturesToTrackBatched(
     const cv::Mat& src, const std::vector<cv::Mat>& masks,
     const std::vector<int>& maxCorners, const std::vector<float>& minDistances,
@@ -205,14 +213,14 @@ std::vector<std::vector<cv::Point2f>> goodFeaturesToTrackBatched(
             }
 
             // Calculate current grid cell coordinates using fast multiplication
-            int x_cell = static_cast<int>(candidate.pt.x * inv_cell_size);
-            int y_cell = static_cast<int>(candidate.pt.y * inv_cell_size);
+            const int x_cell = static_cast<int>(candidate.pt.x * inv_cell_size);
+            const int y_cell = static_cast<int>(candidate.pt.y * inv_cell_size);
 
             // Enforce 3x3 search bounds around the center cell
-            int x1 = std::max(0, x_cell - 1);
-            int y1 = std::max(0, y_cell - 1);
-            int x2 = std::min(grid_width - 1, x_cell + 1);
-            int y2 = std::min(grid_height - 1, y_cell + 1);
+            const int x1 = std::max(0, x_cell - 1);
+            const int y1 = std::max(0, y_cell - 1);
+            const int x2 = std::min(grid_width - 1, x_cell + 1);
+            const int y2 = std::min(grid_height - 1, y_cell + 1);
 
             bool good = true;
 
@@ -685,6 +693,7 @@ int main(int argc, char* argv[]) {
         for (const auto& [j, per_object_tracks] : detected_feature_map) {
           // tracked_features[j] = per_object_tracks;
           // add tracks to existing tracks!
+
           tracked_features[j].insert(tracked_features[j].begin(),
                                      per_object_tracks.begin(),
                                      per_object_tracks.end());

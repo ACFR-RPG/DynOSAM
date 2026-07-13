@@ -57,8 +57,10 @@ void DynoStatePublisher::publish(const DynoState& state) {
 
   PoseTrajectory camera_trajectory = state.camera_trajectory;
   // transform camera from estimated (usually optical frame) to base frame
-  std::for_each(camera_trajectory.begin(), camera_trajectory.end(),
-                camera_to_base_frame);
+  if (options_.convert_to_optical) {
+    std::for_each(camera_trajectory.begin(), camera_trajectory.end(),
+                  camera_to_base_frame);
+  }
 
   // pose of the robot (base link)
   const gtsam::Pose3 X_WR = camera_trajectory.last().data;
@@ -178,8 +180,11 @@ void DynoStatePublisher::publishObjects(
   for (const auto& [object_id, object_trajectory_S] : object_trajectories_k) {
     // object trajectory in the world frame as defined by the robot frame
     PoseWithMotionTrajectory object_trajectory_R = object_trajectory_S;
-    std::for_each(object_trajectory_R.begin(), object_trajectory_R.end(),
-                  camera_to_base_frame_object);
+
+    if (options_.convert_to_optical) {
+      std::for_each(object_trajectory_R.begin(), object_trajectory_R.end(),
+                    camera_to_base_frame_object);
+    }
 
     // latest object odometry
     ObjectOdometry object_odometry = constructObjectOdometry(

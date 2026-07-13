@@ -62,7 +62,8 @@ class FrontendDisplayRos : public FrontendDisplay {
     DynoState ground_truth_state_;
 
     GroundTruthPublishers(const CanonicalSensorRig::ConstPtr& sensor_rig,
-                          rclcpp::Node::SharedPtr ground_truth_node);
+                          rclcpp::Node::SharedPtr ground_truth_node,
+                          const DynoStatePublisherOptions& options = {});
   };
   DynoStatePublisher dyno_state_publisher_;
   //! Image Transport for tracking image

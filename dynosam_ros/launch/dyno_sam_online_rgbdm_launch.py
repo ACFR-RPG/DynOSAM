@@ -61,6 +61,7 @@ def generate_launch_description():
                     {"base_frame":  LaunchConfiguration("base_frame")},
                     {"odom_frame":  LaunchConfiguration("odom_frame")},
                     {"rgb_optical_frame": "camera_color_optical_frame"},
+                    {"enable_groundtruth_sub": False},
                     # {"depth_scale": LaunchConfiguration("depth_scale")},
                     # {"baseline": 0.05},
                     {"v": LaunchConfiguration("v")}
@@ -70,6 +71,7 @@ def generate_launch_description():
                     ("rgb/image_raw",   LaunchConfiguration("rgb_cam_topic")),
                     ("depth/image_raw", LaunchConfiguration("depth_cam_topic")),
                     ("mask/image_raw",  LaunchConfiguration("mask_cam_topic")),
+                    ("ground_truth", "/mrl_vicon/ground_truth")
                 ]
             ),
         ])

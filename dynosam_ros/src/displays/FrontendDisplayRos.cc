@@ -42,7 +42,8 @@ FrontendDisplayRos::FrontendDisplayRos(
     : FrontendDisplay(),
       dyno_state_publisher_(sensor_rig, node,
                             // pulish vo, oo transforms and wireframe cameras
-                            {true, true, true}) {
+                            // and convert to optical
+                            {true, true, true, true}) {
   tracking_image_pub_ =
       image_transport::create_publisher(node.get(), "tracking_image");
 
@@ -53,14 +54,21 @@ FrontendDisplayRos::FrontendDisplayRos(
 
   if (ground_truth_node) {
     RCLCPP_INFO_STREAM(node->get_logger(), "Creating ground truth publishers");
-    ground_truth_publishers_.emplace(sensor_rig, ground_truth_node);
+    // dont convert to optical for now (hack as we precompute gt poses in robot
+    // frame) this is just for visualisation during testing of dataset
+
+    ground_truth_publishers_.emplace(
+        sensor_rig, ground_truth_node,
+        DynoStatePublisherOptions{true, true, true, false});
   }
 }
 
 FrontendDisplayRos::GroundTruthPublishers::GroundTruthPublishers(
     const CanonicalSensorRig::ConstPtr& sensor_rig,
-    rclcpp::Node::SharedPtr ground_truth_node)
-    : dyno_state_publisher_(sensor_rig, CHECK_NOTNULL(ground_truth_node)) {}
+    rclcpp::Node::SharedPtr ground_truth_node,
+    const DynoStatePublisherOptions& options)
+    : dyno_state_publisher_(sensor_rig, CHECK_NOTNULL(ground_truth_node),
+                            options) {}
 
 void FrontendDisplayRos::spinOnce(
     const RealtimeOutput::ConstPtr& frontend_output) {
@@ -123,6 +131,7 @@ void FrontendDisplayRos::tryPublishGroundTruth(
         *object_pose_gt.prev_H_current_world_, MotionRepresentationStyle::F2F,
         ReferenceFrame::GLOBAL, frame_id - 1u, frame_id);
 
+    LOG(INFO) << "Here " << object_id << " k= " << frame_id;
     ground_truth_dyno_state.object_trajectories.insert(
         object_id, frame_id, timestamp, {L_W_k_gt, H_W_km1_k_gt});
   }

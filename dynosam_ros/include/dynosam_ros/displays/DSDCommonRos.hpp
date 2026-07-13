@@ -65,6 +65,8 @@ struct DynoStatePublisherOptions {
   bool publish_oo_tf{false};
   //! Publish camera pose as additional wireframe orb-slam style
   bool publish_wireframe_cameras{false};
+
+  bool convert_to_optical{true};
 };
 
 class DynoStatePublisher {
