@@ -114,6 +114,138 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
   }
 }
 
+Subscriber::Subscriber(SensorSystem::Ptr sensor_system_l,
+                       SensorSystem::Ptr sensor_system_f,
+                       std::shared_ptr<rclcpp::Node> node)
+    : sensor_system_(sensor_system_l), sensor_system_f_(sensor_system_f), node_(node) {
+  if (!sensor_system_l->isInitalised() || !sensor_system_f->isInitalised()) {
+    throw DynosamException(
+        "dyno::Subscriber provided a SensorSystem that is not initalised!");
+  }
+  if (sensor_system_l->numCameraStreams() != sensor_system_f->numCameraStreams()) {
+    throw DynosamException(
+        "dyno::Subscriber received two sensor systems with different num of cam streams");
+  }
+
+  image_subscribers_.resize(sensor_system_l->numCameraStreams() + sensor_system_f->numCameraStreams());
+  images_received_.resize(sensor_system_l->numCameraStreams() + sensor_system_f->numCameraStreams());
+
+  // set up image reception
+  img_transport_.reset(new image_transport::ImageTransport(node));
+
+  read_image_functions_ = {
+      {StreamConfig::Types::RGBMono,
+       [&](ImageMsgPtr msg) -> cv::Mat { return this->readRgbRosImage(msg); }},
+      {StreamConfig::Types::Depth,
+       [&](ImageMsgPtr msg) -> cv::Mat {
+         return this->readDepthRosImage(msg);
+       }},
+      {StreamConfig::Types::OpticalFlow,
+       [&](ImageMsgPtr msg) -> cv::Mat { return this->readFlowRosImage(msg); }},
+      {StreamConfig::Types::Mask, [&](ImageMsgPtr msg) -> cv::Mat {
+         return this->readMaskRosImage(msg);
+       }}};
+
+  // as a potentially temporary solution start the imu subscriber before the
+  // images so we at least have imu measurements before the first image should
+  // habdle this better in the data-provider
+  if (sensor_system_->imuEnabled() || sensor_system_f_->imuEnabled()) {
+    RCLCPP_INFO_STREAM(node_->get_logger(), "Imu enabled. Subscribing...");
+    imu_callback_group_ =
+        node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+    rclcpp::SubscriptionOptions imu_sub_options;
+    // imu_sub_options.callback_group = imu_callback_group_;
+
+    imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+        "/dynosam/imu", rclcpp::SensorDataQoS(),
+        [&](const dyno::ImuMeasurement& imu) -> void {
+          if (!imu_single_input_callback_) {
+            RCLCPP_ERROR_THROTTLE(
+                node_->get_logger(), *node_->get_clock(), 1000,
+                "Imu callback triggered but "
+                "imu_single_input_callback_ is not registered!");
+            return;
+          }
+          imu_single_input_callback_(imu);
+        },
+        imu_sub_options);
+    imu_sub_f_ = node_->create_subscription<ImuAdaptedType>(
+        "/dynosam/imu_f", rclcpp::SensorDataQoS(),
+        [&](const dyno::ImuMeasurement& imu_f) -> void {
+          if (!imu_single_input_callback_) {
+            RCLCPP_ERROR_THROTTLE(
+                node_->get_logger(), *node_->get_clock(), 1000,
+                "Imu follower callback triggered but "
+                "imu_single_input_callback_ is not registered!");
+            return;
+          }
+          imu_single_input_callback_(imu_f);
+        },
+        imu_sub_options);
+  }
+
+  int queue_size =
+      ros::Parameter::Builder(node_.get(), "image_queue_size", 1000)
+          .description("Queue size for the image subscriber(s)")
+          .finish()
+          .get<int>();
+
+  auto image_qos = rclcpp::SensorDataQoS()
+                       .keep_last(static_cast<size_t>(queue_size))
+                       .reliable();
+
+  const bool listen_to_ground_truth =
+      ros::Parameter::Builder(node_.get(), "enable_groundtruth_sub", false)
+          .description(
+              "If the subscriber should additionally listen to ground truth "
+              "data")
+          .finish()
+          .get<bool>();
+
+  if (listen_to_ground_truth) {
+    RCLCPP_INFO_STREAM(node_->get_logger(),
+                       "Ground truth enabled. Subscribing...");
+    ground_truth_sub_ = node_->create_subscription<GroundTruthAdaptedType>(
+        "/dynosam/ground_truth", image_qos,
+        [&](const GroundTruthInputPacket& msg) -> void {
+          if (!ground_truth_packet_callback_) {
+            RCLCPP_ERROR_THROTTLE(
+                node_->get_logger(), *node_->get_clock(), 1000,
+                "Ground truth callback triggered but "
+                "ground_truth_packet_callback_ is not registered!");
+            return;
+          }
+          LOG(INFO) << "Gotten gt for sequence: " << msg.frame_id_;
+          ground_truth_packet_callback_(msg);
+        });
+  }
+
+  // Need to explicitly pass VoidPtr, transport options (nullptr) and subscriber
+  // options to subscribe to avoid ambiguous overloading specifically in the
+  // case when we specify a rmw_qos_profile (which we want to), rahter than just
+  // a queue size likely this is only a problem with ROS kilted
+  rclcpp::SubscriptionOptions subscriber_options;
+  // set up callbacks
+  for (size_t i = 0; i < sensor_system_->numCameraStreams() + sensor_system_f_->numCameraStreams(); ++i) {
+    const bool is_follow = i >= sensor_system_->numCameraStreams();
+    const std::string stream_name = is_follow
+        ? sensor_system_f_->streamName(i - sensor_system_->numCameraStreams())
+        : sensor_system_->streamName(i);
+    const std::string topic = "/dynosam/" + stream_name + (is_follow ? "_f" : "") + "/image_raw";
+
+    RCLCPP_INFO_STREAM(node_->get_logger(),
+                       "Subscribing to image topic " << topic);
+
+    image_subscribers_[i] = img_transport_->subscribe(
+        topic, image_qos.get_rmw_qos_profile(),
+        // 30 * sensor_system->numCameraStreams(),
+        std::bind(&Subscriber::imageMultiRigCallback, this, std::placeholders::_1, i),
+        image_transport::ImageTransport::VoidPtr(), nullptr,
+        subscriber_options);
+  }
+}
+
 bool Subscriber::spin() { return !shutdown_; }
 void Subscriber::shutdown() {
   shutdown_ = true;
@@ -134,6 +266,66 @@ void Subscriber::shutdown() {
 CanonicalSensorRig::Ptr Subscriber::sensorRig() const { return sensor_system_; }
 
 void Subscriber::imageCallback(const ImageMsgPtr& msg,
+                               unsigned int stream_index) {
+  static constexpr Timestamp kDynoThresholdSync = 0.01;
+
+  const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
+  images_received_.at(stream_index)[toNSec(timestamp)] = msg;
+
+  // try sync
+  std::lock_guard<std::mutex> lock(time_mutex_);
+  std::set<uint64_t> all_times;
+  const int num_streams = images_received_.size();
+  for (int i = 0; i < num_streams; ++i) {
+    for (const auto& entry : images_received_.at(i)) {
+      all_times.insert(entry.first);
+    }
+  }
+  for (const auto& time : all_times) {
+    // note: ordered old to new
+    std::vector<uint64_t> syncedTimes(num_streams, 0);
+    std::map<size_t, ImageMsgPtr> images;
+    Timestamp tcheck = fromNSec(time);
+
+    bool synced = true;
+    for (int i = 0; i < num_streams; ++i) {
+      bool syncedi = false;
+      for (const auto& entry : images_received_.at(i)) {
+        Timestamp ti = fromNSec(entry.first);
+        if (fabs((tcheck - ti)) < kDynoThresholdSync) {
+          syncedTimes.at(i) = entry.first;
+          images[i] = images_received_.at(i).at(entry.first);
+          syncedi = true;
+          break;
+        }
+      }
+      if (!syncedi) {
+        synced = false;
+        break;
+      }
+    }
+    if (synced) {
+      addImages(tcheck, images);
+      // remove all the older stuff from buffer
+      for (int i = 0; i < num_streams; ++i) {
+        const int size0 = images_received_.at(i).size();
+        auto end = images_received_.at(i).find(syncedTimes.at(i));
+        if (end != images_received_.at(i).end()) {
+          ++end;
+        }
+        images_received_.at(i).erase(images_received_.at(i).begin(), end);
+        const int size1 = images_received_.at(i).size();
+        if (size0 - size1 > 1) {
+          LOG(WARNING) << "dropped " << size0 - size1 - 1
+                       << " unsyncable frame(s) of camera " << i
+                       << " before t=" << tcheck;
+        }
+      }
+    }
+  }
+}
+
+void Subscriber::imageMultiRigCallback(const ImageMsgPtr& msg,
                                unsigned int stream_index) {
   static constexpr Timestamp kDynoThresholdSync = 0.01;
 
@@ -243,6 +435,62 @@ bool Subscriber::addImages(Timestamp timestamp,
 
   // LOG(INFO) << image_container->toString();
   image_container_callback_(image_container);
+  return true;
+}
+
+bool Subscriber::addImagesMultiRig(Timestamp timestamp,
+                           const std::map<size_t, ImageMsgPtr>& image_msgs) {
+  if (!image_container_callback_) {
+    return false;
+  }
+
+  //TODO: maybe create a sensor system that is multi-rig
+  std::map<size_t, cv::Mat> images;
+  for (const auto& [i, msg] : image_msgs) {
+    // read and process image based on config type
+    cv::Mat image = read_image_functions_[sensor_system_->streamType(i)](msg);
+    images[i] = image;
+  }
+
+  CHECK_GE(images.size(), 2);
+  const cv::Mat depth_rig0 = images.at(0);
+  const cv::Mat depth_rig1 = images.at(1);
+
+  cv::Mat depth_rig0_processed, depth_rig1_processed;
+  sensor_system_->calibrateDetphRig(depth_rig0, depth_rig1,
+                                    depth_rig0_processed, depth_rig1_processed);
+
+  auto image_container_l =
+      std::make_shared<ImageContainer>(driving_frame_id_, timestamp);
+  auto image_container_r =
+      std::make_shared<ImageContainer>(driving_frame_id_, timestamp);
+  driving_frame_id_++;
+
+  // for now only support rgb+depth/stereo
+  // TODO: it would be MUCH better to map the image stream names to the names
+  // expected by the image container...
+  image_container_l->rgb(depth_rig0_processed);
+  if (sensor_system_->depthRigType() == DepthRigType::RGBD) {
+    image_container_l->depth(depth_rig1_processed);
+  } else if (sensor_system_->depthRigType() == DepthRigType::Stereo) {
+    image_container_l->rightRgb(depth_rig1_processed);
+  } else {
+    throw DynosamException("Unknown DepthRigType!");
+  }
+
+  // process other streams
+  images.erase(0);
+  images.erase(1);
+  for (const auto& [i, image] : images) {
+    // TODO: Which kind of mask!? need name associated with it!! For now just do
+    // motion mask
+    if (sensor_system_->streamType(i) == StreamConfig::Types::Mask) {
+      image_container_l->objectMotionMask(image);
+    }
+  }
+
+  // LOG(INFO) << image_container_l->toString();
+  image_container_multirig_callback_(image_container_l, image_container_r);
   return true;
 }
 

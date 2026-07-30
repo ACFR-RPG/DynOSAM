@@ -34,6 +34,8 @@ class DataProvider {
   using ImuSingleInputCallback = std::function<void(const ImuMeasurement&)>;
   using ImuMultiInputCallback = std::function<void(const ImuMeasurements&)>;
 
+  using ImageContainerMultiRigCallback = std::function<void(ImageContainer::Ptr, ImageContainer::Ptr)>; // only considers two rigs
+
   using GroundTruthPacketCallback =
       std::function<void(const GroundTruthInputPacket&)>;
 
@@ -138,6 +140,8 @@ class DataProvider {
   ImageContainerCallback image_container_callback_;
   ImuSingleInputCallback imu_single_input_callback_;
   ImuMultiInputCallback imu_multi_input_callback_;
+
+  ImageContainerMultiRigCallback image_container_multirig_callback_;
 
   GroundTruthPacketCallback ground_truth_packet_callback_;
 

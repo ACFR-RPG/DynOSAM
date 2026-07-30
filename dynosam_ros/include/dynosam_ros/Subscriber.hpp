@@ -33,6 +33,10 @@ class Subscriber : public DataProvider {
   // NOTE: ground truth subscription handled via ros param gotten through node
   Subscriber(SensorSystem::Ptr sensor_system,
              std::shared_ptr<rclcpp::Node> node);
+  // For two rigs exactly
+  Subscriber(SensorSystem::Ptr sensor_system_l,
+             SensorSystem::Ptr sensor_system_f,
+             std::shared_ptr<rclcpp::Node> node);
   ~Subscriber() = default;
 
   /** No end to the dataset */
@@ -48,6 +52,11 @@ class Subscriber : public DataProvider {
   void imageCallback(const ImageMsgPtr& msg, unsigned int stream_index);
 
   bool addImages(Timestamp timestamp,
+                 const std::map<size_t, ImageMsgPtr>& image_msgs);
+
+  // Currently only account for having two rigs
+  void imageMultiRigCallback(const ImageMsgPtr& msg, unsigned int stream_index);
+  bool addImagesMultiRig(Timestamp timestamp,
                  const std::map<size_t, ImageMsgPtr>& image_msgs);
 
  private:
@@ -139,6 +148,7 @@ class Subscriber : public DataProvider {
 
  private:
   SensorSystem::Ptr sensor_system_;
+  SensorSystem::Ptr sensor_system_f_;
   std::shared_ptr<rclcpp::Node> node_;
 
   /// @}
@@ -151,6 +161,7 @@ class Subscriber : public DataProvider {
   using ImuAdaptedType =
       rclcpp::adapt_type<dyno::ImuMeasurement>::as<sensor_msgs::msg::Imu>;
   rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_;
+  rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_f_; // if there is a second rig
   std::mutex time_mutex_;  ///< Lock when accessing time
 
   using GroundTruthAdaptedType =
