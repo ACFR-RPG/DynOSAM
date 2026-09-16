@@ -487,6 +487,7 @@ class FeatureTrackerBatch {
 
     // calculate distance transform for each mask
     utils::ChronoTimingStats distance_t("distance masks");
+    // this can take up to 3-4ms
     std::vector<cv::Mat> distanceTransformMasks(detection_params.size());
     for (size_t i = 0; i < detection_params.size(); i++) {
       cv::distanceTransform(detection_params[i].mask, distanceTransformMasks[i],
@@ -998,8 +999,6 @@ class FeatureTrackerBatch {
       cv::Mat static_mask;
       cv::bitwise_not(object_masks_binary, static_mask);
       mask_map[0] = static_mask;
-
-      cv::imshow("Static mask", static_mask);
 
       std::set<ObjectId> object_needs_detection;
       for (auto& [j, detailed_tracks_j] : detailed_tracks) {
@@ -1624,11 +1623,10 @@ int main(int argc, char* argv[]) {
   // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
   // loader.setStartingFrame(600);
-  OMDDataLoader loader(
-      "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
+  // OMDDataLoader loader(
+  //     "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
 
-  // TartanAirShibuyaLoader
-  // loader("/root/data/TartanAir_shibuya/RoadCrossing07/");
+  TartanAirShibuyaLoader loader("/root/data/TartanAir_shibuya/RoadCrossing07/");
   // ViodeLoader loader("/root/data/VIODE/city_day/mid");
 
   // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();

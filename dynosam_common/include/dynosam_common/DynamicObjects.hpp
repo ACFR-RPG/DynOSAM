@@ -111,8 +111,8 @@ struct ObjectDetection {
   //! Binary object mask of type CV_8U
   cv::Mat mask;
   cv::Rect bounding_box{};
-  std::string class_name;
-  float confidence;
+  std::string class_name{"unknown"};
+  float confidence{0.0};
 };
 
 struct SingleDetectionResult : public ObjectDetection {

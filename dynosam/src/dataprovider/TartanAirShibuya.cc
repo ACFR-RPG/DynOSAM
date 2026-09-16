@@ -67,6 +67,10 @@ class TartanAirShibuyaAllLoader {
                      CameraParams::DistortionCoeffs({0, 0, 0, 0}),
                      cv::Size(640, 360), DistortionModel::RADTAN);
 
+    // baseline as specified in the dataset:
+    // https://github.com/haleqiu/tartanair-shibuya/blob/main/data_type.md
+    camera_params_.setDepthParams(0.25);
+
     const auto times_file_path = file_path + "/times.txt";
     utils::throwExceptionIfPathInvalid(times_file_path);
     loadTimes(times_file_path);
@@ -295,7 +299,7 @@ TartanAirShibuyaLoader::TartanAirShibuyaLoader(const fs::path& dataset_path)
     // TODO: for now
     //  CHECK_EQ(timestamp, gt_object_pose_gt.timestamp_);
 
-    CHECK(ground_truth_packet_callback_);
+    // CHECK(ground_truth_packet_callback_);
     if (ground_truth_packet_callback_)
       ground_truth_packet_callback_(gt_object_pose_gt);
 

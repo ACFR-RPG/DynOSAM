@@ -91,6 +91,7 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/VisionImuOutputPacket.cc
   src/frontend/vision/ORBextractor.cc
   src/frontend/vision/FeatureTracker.cc
+  src/frontend/vision/FeatureTrackerFast.cc
   src/frontend/vision/VisionTools.cc
   src/frontend/vision/StereoMatcher.cc
   src/frontend/vision/StaticFeatureTracker.cc
