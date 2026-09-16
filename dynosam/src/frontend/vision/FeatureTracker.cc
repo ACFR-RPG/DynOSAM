@@ -219,6 +219,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // update tracking/sampling information for dynamic obejcts
   new_frame->retracked_objects_ = objects_resampled;
   new_frame->retroactive_tracks = retroactive_tracks;
+  f_timer.stop();
 
   VLOG(1) << "Tracked on frame " << frame_id << " t= " << std::setprecision(15)
           << timestamp << ", object ids "
@@ -227,12 +228,15 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   // update depths before returning the frame so the frontend does not need to
   // do it!
-  DepthUpdater depth_updater(this);
-  CHECK(depth_updater.update(new_frame));
+  {
+    utils::ChronoTimingStats depth_update("feature_track.depth_update");
+    DepthUpdater depth_updater(this);
+    CHECK(depth_updater.update(new_frame));
 
-  // update the previous frame if we have any retroactive tracks
-  if (previous_frame_ && !retroactive_tracks.empty()) {
-    CHECK(depth_updater.update(previous_frame_, retroactive_tracks));
+    // update the previous frame if we have any retroactive tracks
+    if (previous_frame_ && !retroactive_tracks.empty()) {
+      CHECK(depth_updater.update(previous_frame_, retroactive_tracks));
+    }
   }
 
   previous_frame_ = new_frame;
@@ -884,6 +888,8 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
   }
   detection_loop_t.stop();
 
+  LOG(INFO) << "here";
+
   // now check and fill new features
   utils::ChronoTimingStats fill_t("dynamic_feature_track_klt.detection.fill");
   for (const DetectionsWithTrack& dwt : detections_with_tracks) {
@@ -954,6 +960,8 @@ void FeatureTracker::DynamicTrackerImpl::detectNewFeatures(
       }
     }
   }
+
+  LOG(INFO) << "here";
 }
 
 bool FeatureTracker::DynamicTrackerImpl::trackRetroactively(

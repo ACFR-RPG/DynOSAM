@@ -118,6 +118,22 @@ void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
 ObjectIds getObjectLabels(const cv::Mat& image);
 
 /**
+ * @brief Get the Object Bounding Boxes object given a mask and a set of object
+ * ids.
+ *
+ * Super optimized function to run very quickly as discovering bounding boxes
+ * using regular opencv functions can take up to 5-10ms depending on image size
+ * and this is often a bottle-neck.
+ *
+ *
+ * @param mask
+ * @param object_ids
+ * @param bounding_boxes
+ */
+void getObjectBoundingBoxes(const cv::Mat& mask, const ObjectIds& object_ids,
+                            std::vector<cv::Rect>& bounding_boxes);
+
+/**
  * @brief Shrinks all found object masks by a given ammount.
  *
  * @param mask const cv::Mat& input object mask with pixel values 0, 1... j

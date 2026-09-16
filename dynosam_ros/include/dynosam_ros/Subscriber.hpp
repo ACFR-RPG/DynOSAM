@@ -4,7 +4,7 @@
 #include <mutex>
 
 #include "cv_bridge/cv_bridge.hpp"
-#include "dynamic_slam_interfaces/msg/groundtruth_packet.hpp"
+// #include "dynamic_slam_interfaces/msg/groundtruth_packet.hpp"
 #include "dynosam_ros/CameraSystem.hpp"
 #include "dynosam_ros/adaptors/GroundtuthPacketAdaptor.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
@@ -19,7 +19,7 @@ namespace dyno {
 
 typedef sensor_msgs::msg::Image::ConstSharedPtr ImageMsgPtr;
 
-typedef dynamic_slam_interfaces::msg::GroundtruthPacket GroundtruthMsg;
+// typedef dynamic_slam_interfaces::msg::GroundtruthPacket GroundtruthMsg;
 
 /**
  * @brief
@@ -153,9 +153,9 @@ class Subscriber : public DataProvider {
   rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_;
   std::mutex time_mutex_;  ///< Lock when accessing time
 
-  using GroundTruthAdaptedType =
-      rclcpp::adapt_type<dyno::GroundTruthInputPacket>::as<GroundtruthMsg>;
-  rclcpp::Subscription<GroundTruthAdaptedType>::SharedPtr ground_truth_sub_;
+  // using GroundTruthAdaptedType =
+  //     rclcpp::adapt_type<dyno::GroundTruthInputPacket>::as<GroundtruthMsg>;
+  // rclcpp::Subscription<GroundTruthAdaptedType>::SharedPtr ground_truth_sub_;
 
   /// @}
 

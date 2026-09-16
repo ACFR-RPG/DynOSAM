@@ -306,6 +306,7 @@ bool KltFeatureTracker::detectFeatures(const ImageContainer& image_container,
                                        const FeatureContainer& current_features,
                                        FeatureContainer& new_features,
                                        const cv::Mat& detection_mask) {
+  utils::ChronoTimingStats timer("static_feature_track.detectFeatures");
   const FrameId frame_k = image_container.frameId();
   const cv::Mat& motion_mask = image_container.objectMotionMask();
 
@@ -412,6 +413,7 @@ bool KltFeatureTracker::trackPoints(
     FeatureContainer& tracked_features, TrackletIds& outlier_previous_features,
     FeatureTrackerInfo& tracker_info, const cv::Mat& detection_mask,
     const std::optional<gtsam::Rot3>& R_km1_k) {
+  utils::ChronoTimingStats timer("static_feature_track.trackPoints");
   const cv::Mat current_img = image_container.rgb();
   const cv::Mat previous_img = previous_image_container.rgb();
   if (current_img.empty() || previous_img.empty() ||

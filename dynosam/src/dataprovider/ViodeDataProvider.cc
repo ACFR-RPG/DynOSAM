@@ -529,7 +529,7 @@ ViodeLoader::ViodeLoader(const fs::path& dataset_path)
                       std::optional<cv::Mat> right_rgb) -> bool {
     CHECK_EQ(timestamp, gt_object_pose_gt.timestamp_);
 
-    CHECK(ground_truth_packet_callback_);
+    // CHECK(ground_truth_packet_callback_);
     if (ground_truth_packet_callback_)
       ground_truth_packet_callback_(gt_object_pose_gt);
 

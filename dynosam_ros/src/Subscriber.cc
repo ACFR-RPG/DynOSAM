@@ -75,23 +75,23 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
           .finish()
           .get<bool>();
 
-  if (listen_to_ground_truth) {
-    RCLCPP_INFO_STREAM(node_->get_logger(),
-                       "Ground truth enabled. Subscribing...");
-    ground_truth_sub_ = node_->create_subscription<GroundTruthAdaptedType>(
-        "/dynosam/ground_truth", image_qos,
-        [&](const GroundTruthInputPacket& msg) -> void {
-          if (!ground_truth_packet_callback_) {
-            RCLCPP_ERROR_THROTTLE(
-                node_->get_logger(), *node_->get_clock(), 1000,
-                "Ground truth callback triggered but "
-                "ground_truth_packet_callback_ is not registered!");
-            return;
-          }
-          LOG(INFO) << "Gotten gt for sequence: " << msg.frame_id_;
-          ground_truth_packet_callback_(msg);
-        });
-  }
+  // if (listen_to_ground_truth) {
+  //   RCLCPP_INFO_STREAM(node_->get_logger(),
+  //                      "Ground truth enabled. Subscribing...");
+  //   ground_truth_sub_ = node_->create_subscription<GroundTruthAdaptedType>(
+  //       "/dynosam/ground_truth", image_qos,
+  //       [&](const GroundTruthInputPacket& msg) -> void {
+  //         if (!ground_truth_packet_callback_) {
+  //           RCLCPP_ERROR_THROTTLE(
+  //               node_->get_logger(), *node_->get_clock(), 1000,
+  //               "Ground truth callback triggered but "
+  //               "ground_truth_packet_callback_ is not registered!");
+  //           return;
+  //         }
+  //         LOG(INFO) << "Gotten gt for sequence: " << msg.frame_id_;
+  //         ground_truth_packet_callback_(msg);
+  //       });
+  // }
 
   // Need to explicitly pass VoidPtr, transport options (nullptr) and subscriber
   // options to subscribe to avoid ambiguous overloading specifically in the
@@ -126,9 +126,9 @@ void Subscriber::shutdown() {
     imu_sub_.reset();
   }
 
-  if (ground_truth_sub_) {
-    ground_truth_sub_.reset();
-  }
+  // if (ground_truth_sub_) {
+  //   ground_truth_sub_.reset();
+  // }
 }
 
 CanonicalSensorRig::Ptr Subscriber::sensorRig() const { return sensor_system_; }
