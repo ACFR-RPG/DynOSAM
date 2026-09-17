@@ -19,7 +19,7 @@ class FeatureBlockContainer {
   struct FeatureData {
     std::vector<cv::Point2f> points;
     std::vector<cv::Point2f> previous_points;
-    std::vector<int> ids;
+    std::vector<TrackletId> ids;
     std::vector<uchar> status;
     std::vector<float> errors;
 
@@ -35,6 +35,14 @@ class FeatureBlockContainer {
         throw std::invalid_argument(
             "FeatureData: all feature arrays must have the same size");
       }
+    }
+
+    void reserve(size_t n) {
+      points.reserve(n);
+      previous_points.reserve(n);
+      ids.reserve(n);
+      status.reserve(n);
+      errors.reserve(n);
     }
   };
 
@@ -65,6 +73,18 @@ class FeatureBlockContainer {
       return features_->points.data() + begin_;
     }
 
+    // potentiall dangerous as we could modify the points mat!
+    cv::Mat pointsMat() {
+      return cv::Mat(static_cast<int>(size()), 1, CV_32FC2, points());
+    }
+
+    // dangerous as not actually const as cv::Mat will mantain a non-const
+    // pointer to the raw data
+    cv::Mat pointsMat() const {
+      return cv::Mat(static_cast<int>(size()), 1, CV_32FC2,
+                     const_cast<cv::Point2f*>(points()));
+    }
+
     cv::Point2f* previousPoints() {
       return features_->previous_points.data() + begin_;
     }
@@ -73,13 +93,13 @@ class FeatureBlockContainer {
       return features_->previous_points.data() + begin_;
     }
 
-    int* ids() { return features_->ids.data() + begin_; }
+    TrackletId* ids() { return features_->ids.data() + begin_; }
 
-    const int* ids() const { return features_->ids.data() + begin_; }
+    const TrackletId* ids() const { return features_->ids.data() + begin_; }
 
-    int* objectIds() { return features_->object_ids.data() + begin_; }
+    ObjectId* objectIds() { return features_->object_ids.data() + begin_; }
 
-    const int* objectIds() const {
+    const ObjectId* objectIds() const {
       return features_->object_ids.data() + begin_;
     }
 
@@ -140,6 +160,9 @@ class FeatureBlockContainer {
     size_t end_;
   };
 
+  // empty initaliser
+  FeatureBlockContainer() {}
+
   FeatureBlockContainer(std::initializer_list<FeatureBlockDim> specs) {
     initialize(specs.begin(), specs.end());
   }
@@ -185,6 +208,15 @@ class FeatureBlockContainer {
   size_t size() const { return points.size(); }
 
   size_t objectCount() const { return objects_.size(); }
+
+  std::vector<FeatureBlockView> objectViews() const {
+    std::vector<FeatureBlockView> views;
+    views.reserve(objectCount());
+    for (const auto& [object_id, _] : object_lookup_) {
+      views.push_back(objectView(object_id));
+    }
+    return views;
+  }
 
   bool containsObject(ObjectId object_id) const {
     return object_lookup_.find(object_id) != object_lookup_.end();
@@ -307,10 +339,24 @@ class FeatureBlockContainer {
 
   std::vector<cv::Point2f> points;
   std::vector<cv::Point2f> previous_points;
-  std::vector<int> ids;
-  std::vector<int> object_ids;
+  std::vector<TrackletId> ids;
+  std::vector<ObjectId> object_ids;
   std::vector<uchar> status;
   std::vector<float> errors;
+
+  void printDebugInfo() const {
+#ifndef NDEBUG
+    std::cout << "FeatureSet"
+              << " | total_features=" << size()
+              << " | objects=" << objectCount() << '\n';
+
+    for (const FeatureBlockLayout& object : objects_) {
+      std::cout << "  object_id=" << object.object_id
+                << " | size=" << object.size() << " | range=[" << object.begin
+                << ", " << object.end << ")" << '\n';
+    }
+#endif
+  }
 
   void checkInvariants() const {
 #ifndef NDEBUG
@@ -481,7 +527,6 @@ class FeatureTrackerFast {
   const FrontendParams frontend_params_;
   TrackletIdManager& tracklet_id_manager;
 
-  Frame::Ptr prev_frame_;
   cv::Mat prev_mono_;
   //! Image pyramid for the previous mono frame
   std::vector<cv::Mat> prev_mono_pyr_;

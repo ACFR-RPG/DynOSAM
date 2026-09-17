@@ -93,6 +93,15 @@ void getCorrespondences(FeaturePairs& correspondences,
   }
 }
 
+// NOTE: returns the inlier/outlier mask not H
+cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
+                       const std::vector<cv::Point2f>& current);
+// // should represent cv::Point2f stored as a cv::mat (ie N x 1 x 2)
+// void outlierRejectHomography(
+//     const cv::Mat& previous_points,
+//     const cv::Mat& current_points,
+//     cv::Mat& inlier_mask);
+
 void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
                             const std::vector<cv::Point2f>& current,
                             const TrackletIds& tracklet_ids, const cv::Mat& K,

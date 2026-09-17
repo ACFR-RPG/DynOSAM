@@ -46,6 +46,23 @@ namespace dyno {
 
 namespace vision_tools {
 
+// void outlierRejectHomography(
+//     const cv::Mat& previous_points,
+//     const cv::Mat& current_points,
+//     cv::Mat& inlier_mask)
+// {
+//   CHECK_EQ(previous_points.rows, current_points.rows);
+//   // Minimum number of points required for RANSAC
+//   if(previous_points.rows >= 4) {
+//     cv::findHomography(previous_points, current_points, cv::RANSAC, 5.0,
+//     inlier_mask);
+//   }
+//   else {
+//     // If not enough points, assume all are outliers
+//     inlier_mask = cv::Mat::ones(previous_points.rows, 0, CV_8U);
+//   }
+// }
+
 // helper function to homography
 cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
                        const std::vector<cv::Point2f>& current) {
@@ -58,7 +75,7 @@ cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
     return mask;
   } else {
     // If not enough points, assume all are outliers
-    return cv::Mat::ones(previous.size(), 0, CV_8U);
+    return cv::Mat::ones(previous.size(), 1, CV_8U);
   }
 }
 

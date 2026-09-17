@@ -2251,6 +2251,11 @@ class FeatureSet {
 
     const float* errors() const { return features_->errors.data() + begin_; }
 
+    // potentiall dangerous as we could modify the points mat!
+    cv::Mat pointsMat() {
+      return cv::Mat(static_cast<int>(size()), 1, CV_32FC2, points());
+    }
+
     // ---------------------------------------------------------------------
     // Convenient bulk assignment
     // ---------------------------------------------------------------------
@@ -3581,6 +3586,57 @@ TEST(FeatureSetTest, MergeAllowsDifferentObjectSets) {
 
 //     merged.checkInvariants();
 // }
+
+TEST(FeatureSetTest, ObjectViewPointsMatIsZeroCopy) {
+  FeatureSet features({{1, 3}, {2, 2}});
+
+  auto object = features.objectView(1);
+
+  object.points()[0] = cv::Point2f(1.0f, 2.0f);
+  object.points()[1] = cv::Point2f(3.0f, 4.0f);
+  object.points()[2] = cv::Point2f(5.0f, 6.0f);
+
+  cv::Mat points = object.pointsMat();
+
+  ASSERT_EQ(points.rows, 3);
+  ASSERT_EQ(points.cols, 1);
+  ASSERT_EQ(points.type(), CV_32FC2);
+
+  // Check the Mat sees the original FeatureSet data.
+  EXPECT_FLOAT_EQ(points.at<cv::Point2f>(0, 0).x, 1.0f);
+  EXPECT_FLOAT_EQ(points.at<cv::Point2f>(0, 0).y, 2.0f);
+  EXPECT_FLOAT_EQ(points.at<cv::Point2f>(1, 0).x, 3.0f);
+  EXPECT_FLOAT_EQ(points.at<cv::Point2f>(1, 0).y, 4.0f);
+  EXPECT_FLOAT_EQ(points.at<cv::Point2f>(2, 0).x, 5.0f);
+  EXPECT_FLOAT_EQ(points.at<cv::Point2f>(2, 0).y, 6.0f);
+
+  // Modify through cv::Mat.
+  points.at<cv::Point2f>(1, 0) = cv::Point2f(10.0f, 20.0f);
+
+  // The underlying FeatureSet must see the modification.
+  EXPECT_FLOAT_EQ(object.points()[1].x, 10.0f);
+  EXPECT_FLOAT_EQ(object.points()[1].y, 20.0f);
+}
+
+TEST(FeatureSetTest, ObjectViewPointsMatContainsOnlyObjectFeatures) {
+  FeatureSet features({{10, 3}, {20, 2}, {30, 4}});
+
+  for (size_t i = 0; i < features.size(); ++i) {
+    features.points[i] =
+        cv::Point2f(static_cast<float>(i), static_cast<float>(i + 100));
+  }
+
+  auto object = features.objectView(20);
+  cv::Mat points = object.pointsMat();
+
+  ASSERT_EQ(points.rows, 2);
+  ASSERT_EQ(points.cols, 1);
+  ASSERT_EQ(points.type(), CV_32FC2);
+
+  EXPECT_EQ(points.at<cv::Point2f>(0, 0), cv::Point2f(3.0f, 103.0f));
+
+  EXPECT_EQ(points.at<cv::Point2f>(1, 0), cv::Point2f(4.0f, 104.0f));
+}
 
 TEST(FeatureSetTest, MergeDoesNotModifyInputs) {
   FeatureSet features({
