@@ -203,6 +203,7 @@ class Feature {
    */
   void setPredictedKeypoint(const OpticalFlow& measured_flow);
 
+  Feature& keypoint(const cv::Point2f& pt);
   Feature& keypoint(const Keypoint& kp);
 
   Feature& measuredFlow(const OpticalFlow& measured_flow);

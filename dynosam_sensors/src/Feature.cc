@@ -116,6 +116,10 @@ void Feature::setPredictedKeypoint(const OpticalFlow& measured_flow) {
       CalculatePredictedKeypoint(data_.keypoint, measured_flow);
 }
 
+Feature& Feature::keypoint(const cv::Point2f& pt) {
+  return this->keypoint(utils::cvPointToGtsam<float>(pt));
+}
+
 Feature& Feature::keypoint(const Keypoint& kp) {
   std::lock_guard<std::mutex> lk(mutex_);
   data_.keypoint = kp;

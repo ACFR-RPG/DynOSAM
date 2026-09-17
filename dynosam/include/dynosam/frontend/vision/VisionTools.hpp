@@ -93,6 +93,19 @@ void getCorrespondences(FeaturePairs& correspondences,
   }
 }
 
+void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
+                            const std::vector<cv::Point2f>& current,
+                            const TrackletIds& tracklet_ids, const cv::Mat& K,
+                            std::vector<cv::Point2f>& verified_previous,
+                            std::vector<cv::Point2f>& verified_current,
+                            TrackletIds& verified_tracklet_ids);
+
+void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
+                            const std::vector<cv::Point2f>& current,
+                            const cv::Mat& K,
+                            std::vector<cv::Point2f>& verified_previous,
+                            std::vector<cv::Point2f>& verified_current);
+
 void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
                              const std::vector<cv::Point2f>& current,
                              const TrackletIds& tracklet_ids,

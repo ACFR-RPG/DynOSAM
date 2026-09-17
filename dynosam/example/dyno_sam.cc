@@ -60,6 +60,7 @@ DEFINE_string(
 #include "dynosam/dataprovider/DynopetsDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/OMDDataProvider.hpp"
+#include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 
 // // 1. Define the nanoflann adapter interface for dynamically growing
@@ -934,27 +935,29 @@ class FeatureTrackerBatch {
 
       gtsam::FastMap<ObjectId, CornerTracks> detected_feature_map;
       for (size_t i = 0; i < detected_features.size(); i++) {
+        const ObjectId object_id = object_ids[i];
         if (detected_features[i].size() > 0) {
           CornerTracks tracks;
           tracks.keypoints = detected_features[i].keypoints;
           // fill new trackletids
           tracks.tracklet_ids.reserve(tracks.keypoints.size());
-          for (auto i = 0u; i < tracks.keypoints.size(); i++) {
+          for (const auto& corner : tracks.keypoints) {
             TrackletId tracklet_to_use =
                 tracklet_id_manager.getAndIncrementTrackletId();
             tracks.tracklet_ids.push_back(tracklet_to_use);
           }
 
-          detected_feature_map[object_ids[i]] = tracks;
+          detected_feature_map[object_id] = tracks;
 
           TrackingInfo details;
-          details.object_id = object_ids[i];
+          details.object_id = object_id;
           details.num_last_detected_features = tracks.keypoints.size();
 
-          tracking_infos_[object_ids[i]] = details;
+          tracking_infos_[object_id] = details;
         }
       }
       previous_tracks_ = std::move(detected_feature_map);
+      previous_features_ = std::move(new_features);
       // fill detection mask
       prev_mono_ = current_mono;
       prev_object_mask_ = object_masks;
@@ -973,6 +976,7 @@ class FeatureTrackerBatch {
       // fill tracks with tracking only as we will eventially discovard the
       // verification info?
       gtsam::FastMap<ObjectId, CornerTracks> tracks;
+
       // waste of copying?
       for (const auto& [object_id, detailed_tracks_j] : detailed_tracks) {
         tracks[object_id] = detailed_tracks_j.corner_tracks;
@@ -1623,11 +1627,12 @@ int main(int argc, char* argv[]) {
   // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
   // loader.setStartingFrame(600);
-  // OMDDataLoader loader(
-  //     "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
+  OMDDataLoader loader(
+      "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
 
-  TartanAirShibuyaLoader loader("/root/data/TartanAir_shibuya/RoadCrossing07/");
-  // ViodeLoader loader("/root/data/VIODE/city_day/mid");
+  // TartanAirShibuyaLoader
+  // loader("/root/data/TartanAir_shibuya/RoadCrossing07/"); ViodeLoader
+  // loader("/root/data/VIODE/city_day/mid");
 
   // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
   // CHECK_NOTNULL(detector);

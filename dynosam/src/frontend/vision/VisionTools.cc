@@ -57,8 +57,60 @@ cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
     cv::findHomography(previous, current, cv::RANSAC, 5.0, mask);
     return mask;
   } else {
-    // If not enough points, assume all are inliers
-    return cv::Mat::ones(previous.size(), 1, CV_8U);
+    // If not enough points, assume all are outliers
+    return cv::Mat::ones(previous.size(), 0, CV_8U);
+  }
+}
+
+cv::Mat findEssential(const std::vector<cv::Point2f>& previous,
+                      const std::vector<cv::Point2f>& current,
+                      const cv::Mat& K) {
+  CHECK_EQ(previous.size(), current.size());
+
+  // Minimum number of points required for RANSAC
+  if (previous.size() >= 4) {
+    cv::Mat mask;
+    cv::findEssentialMat(previous, current, K, cv::RANSAC, 0.999, 1.0, 500,
+                         mask);
+    return mask;
+  } else {
+    // If not enough points, assume all are outliers
+    return cv::Mat::ones(previous.size(), 0, CV_8U);
+  }
+}
+
+void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
+                            const std::vector<cv::Point2f>& current,
+                            const TrackletIds& tracklet_ids, const cv::Mat& K,
+                            std::vector<cv::Point2f>& verified_previous,
+                            std::vector<cv::Point2f>& verified_current,
+                            TrackletIds& verified_tracklet_ids) {
+  CHECK_EQ(tracklet_ids.size(), previous.size());
+  const cv::Mat geometric_verification_mask =
+      findEssential(previous, current, K);
+
+  for (int i = 0; i < geometric_verification_mask.rows; ++i) {
+    if (geometric_verification_mask.at<uchar>(i)) {
+      verified_current.push_back(current.at(i));
+      verified_previous.push_back(previous.at(i));
+      verified_tracklet_ids.push_back(tracklet_ids.at(i));
+    }
+  }
+}
+
+void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
+                            const std::vector<cv::Point2f>& current,
+                            const cv::Mat& K,
+                            std::vector<cv::Point2f>& verified_previous,
+                            std::vector<cv::Point2f>& verified_current) {
+  const cv::Mat geometric_verification_mask =
+      findEssential(previous, current, K);
+
+  for (int i = 0; i < geometric_verification_mask.rows; ++i) {
+    if (geometric_verification_mask.at<uchar>(i)) {
+      verified_current.push_back(current.at(i));
+      verified_previous.push_back(previous.at(i));
+    }
   }
 }
 
