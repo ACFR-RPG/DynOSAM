@@ -90,6 +90,18 @@ class TrackletIdManager {
     return tracklet;
   }
 
+  inline std::vector<TrackletId> getAndIncrementTrackletIds(std::size_t N) {
+    const std::lock_guard<std::mutex> l(mutex_);
+
+    const TrackletId first_id = tracklet_count_;
+    tracklet_count_ += N;
+
+    std::vector<TrackletId> tracklet_ids(N);
+    std::iota(tracklet_ids.begin(), tracklet_ids.end(), first_id);
+
+    return tracklet_ids;
+  }
+
  private:
   TrackletIdManager() = default;
   TrackletId tracklet_count_{0};  //! Global TrackletId
@@ -247,6 +259,8 @@ class FeatureTrackerBase {
 
   bool drawStereoMatches(cv::Mat& output_image,
                          const Frame& current_frame) const;
+
+  const TrackerParams& trackerParams() const { return params_; }
 
  protected:
   /**

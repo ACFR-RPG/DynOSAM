@@ -158,25 +158,24 @@ struct CornerTracks {
   }
 };
 
-struct VerificationInfo {
+struct FlowTrackingStats {
+  //! Valid features tracked by LKT
+  size_t tracked_after_flow{0};
   //! Num tracks after outlier rejection (ie. verification)
-  size_t num_tracks{0};
+  size_t tracked_after_or{0};
   //! Number of tracks in the previous frame
   size_t num_previous_tracks{0};
 
   float survivalRatio() const {
-    if (num_previous_tracks > 0 && num_tracks > 0) {
-      return (float)num_tracks / num_previous_tracks;
+    if (num_previous_tracks > 0 && tracked_after_or > 0) {
+      return (float)tracked_after_or / num_previous_tracks;
     } else {
       return 0.0;
     }
   }
 };
 
-struct DetailedCornerTracks {
-  CornerTracks corner_tracks;
-  VerificationInfo info;
-};
+using FlowTrackingStatsMap = gtsam::FastMap<ObjectId, FlowTrackingStats>;
 
 class FeatureTrackerBatch {
  private:
@@ -423,18 +422,17 @@ class FeatureTrackerBatch {
   //   return nextBatched;
   // }
 
-  FeatureBlockContainer trackGfftBatched(const cv::Mat& mono,
-                                         const cv::Mat& object_mask) {
+  std::pair<FeatureBlockContainer, FlowTrackingStatsMap> trackGfftBatched(
+      const cv::Mat& mono, const cv::Mat& object_mask) {
     CHECK(!prev_mono_.empty());
     CV_Assert(prev_mono_.type() == CV_8UC1 && mono.type() == CV_8UC1);
 
     gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
         tracks_per_object;
-    gtsam::FastMap<ObjectId, size_t> num_previous_points;
+    FlowTrackingStatsMap tracking_stats;
     for (const auto& object_view : previous_features_.objectViews()) {
       size_t num_points = object_view.size();
       auto object_id = object_view.objectId();
-      num_previous_points[object_id] = num_points;
 
       FeatureBlockContainer::FeatureData data;
       data.points.reserve(num_points);
@@ -442,9 +440,10 @@ class FeatureTrackerBatch {
       data.ids.reserve(num_points);
 
       data.errors.reserve(num_points);
-      data.status.reserve(num_points);
+      data.inlier.reserve(num_points);
 
       tracks_per_object[object_id] = data;
+      tracking_stats[object_id].num_previous_tracks = num_points;
 
       LOG(INFO) << "Preparing featue tracking structures j=" << object_id
                 << " n=" << num_points;
@@ -528,7 +527,7 @@ class FeatureTrackerBatch {
         tracks_per_object[object_id].previous_points.push_back(flatPrev[i]);
         tracks_per_object[object_id].ids.push_back(tracklet_id);
 
-        tracks_per_object[object_id].status.push_back(1);
+        tracks_per_object[object_id].inlier.push_back(1);
         tracks_per_object[object_id].errors.push_back(forward_err[i]);
       }
     }
@@ -537,6 +536,9 @@ class FeatureTrackerBatch {
         verified_tracks_per_object;
 
     for (const auto& [object_id, good_tracks] : tracks_per_object) {
+      auto num_good_points = good_tracks.size();
+
+      tracking_stats[object_id].tracked_after_flow = num_good_points;
       // cv::Mat inlier_mask;
       // outlierRejectHomography(
       //   good_tracks.previousPointsMat(),
@@ -545,15 +547,13 @@ class FeatureTrackerBatch {
       cv::Mat inlier_mask = vision_tools::findHomography(
           good_tracks.previous_points, good_tracks.points);
 
-      auto num_good_points = good_tracks.size();
-
       // replace FeatureTracks
       FeatureBlockContainer::FeatureData verified_tracks;
       verified_tracks.points.reserve(num_good_points);
       verified_tracks.previous_points.reserve(num_good_points);
       verified_tracks.ids.reserve(num_good_points);
       verified_tracks.errors.reserve(num_good_points);
-      verified_tracks.status.reserve(num_good_points);
+      verified_tracks.inlier.reserve(num_good_points);
 
       for (int i = 0; i < inlier_mask.rows; ++i) {
         if (inlier_mask.at<uchar>(i)) {
@@ -562,7 +562,7 @@ class FeatureTrackerBatch {
               good_tracks.previous_points[i]);
           verified_tracks.ids.push_back(good_tracks.ids[i]);
           verified_tracks.errors.push_back(good_tracks.errors[i]);
-          verified_tracks.status.push_back(good_tracks.status[i]);
+          verified_tracks.inlier.push_back(good_tracks.inlier[i]);
         }
       }
 
@@ -572,6 +572,7 @@ class FeatureTrackerBatch {
         LOG(INFO) << "j= " << object_id << "inlier/outlier "
                   << verified_tracks.size() << "/" << num_good_points;
         verified_tracks_per_object[object_id] = verified_tracks;
+        tracking_stats[object_id].tracked_after_or = verified_tracks.size();
       }
     }
 
@@ -607,8 +608,8 @@ class FeatureTrackerBatch {
     prev_mono_pyr_ = current_mono_pyr;
 
     FeatureBlockContainer tracked_features(verified_tracks_per_object);
-    tracked_features.printDebugInfo();
-    return tracked_features;
+    LOG(INFO) << tracked_features.debugInfoString();
+    return {tracked_features, tracking_stats};
   }
 
   void buildOpticalFlowPyramid(const cv::Mat& mono,
@@ -618,6 +619,257 @@ class FeatureTrackerBatch {
                                 cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT,
                                 true  // critical for reuse
     );
+  }
+
+  FeatureBlockContainer detectGfftBatchedANMS(
+      const cv::Mat& mono,
+      const std::vector<SingleDetectionParam>& detection_params,
+      float qualityLevel = 0.01, int blockSize = 3) {
+    using namespace dyno;
+    utils::ChronoTimingStats t("gfft_batch");
+    CV_Assert(mono.type() == CV_8UC1 || mono.type() == CV_32FC1);
+    // CV_Assert(masks.size() == maxCorners.size());
+
+    if (detection_params.empty()) {
+      return {};
+    }
+
+    // --- STEP 1: Compute the Eigenvalue Map ONCE for the whole frame ---
+    // cv::Mat eig;
+    // cornerMinEigenVal handles the Sobel derivatives internally in a highly
+    // optimized pass
+    // utils::ChronoTimingStats t1("corner_min_eigen");
+    // cv::cornerMinEigenVal(mono, eig, blockSize, 3);
+    // t1.stop();
+    // Copy normal CPU memory -> pinned memory.
+    //
+    utils::ChronoTimingStats t1("corner_min_eigen");
+    // If your camera/image pipeline can write directly into mono_,
+    // this copy can be eliminated entirely.
+    mono.copyTo(mono_);
+
+    // Pinned host memory -> GPU.
+    d_mono_.upload(mono_, stream_);
+
+    // GPU min-eigenvalue corner response.
+    detector_->compute(d_mono_, d_eig_, stream_);
+
+    // GPU -> pinned host memory.
+    d_eig_.download(eig_, stream_);
+
+    // Because compute() returns a CPU cv::Mat, we need to wait before
+    // returning it.
+    stream_.waitForCompletion();
+    t1.stop();
+
+    // Find the global maximum corner score across the entire image
+    utils::ChronoTimingStats tmin("minMaxLoc");
+    double maxVal = 0;
+    cv::minMaxLoc(eig_, nullptr, &maxVal);
+    tmin.stop();
+
+    // Establish the baseline absolute threshold based on global max quality
+    const float threshold = static_cast<float>(maxVal * qualityLevel);
+
+    // --- STEP 2: Local Non-Maximum Suppression (NMS) via Dilation ---
+    // OpenCV's internal GFTT uses a dilation trick to find local maxima
+    // efficiently
+    utils::ChronoTimingStats t2("dilate");
+    cv::Mat localMax;
+    cv::dilate(eig_, localMax, cv::Mat());
+    t2.stop();
+
+    // calculate distance transform for each mask
+    utils::ChronoTimingStats distance_t("distance masks");
+    // this can take up to 3-4ms
+    std::vector<cv::Mat> distanceTransformMasks(detection_params.size());
+    for (size_t i = 0; i < detection_params.size(); i++) {
+      cv::distanceTransform(detection_params[i].mask, distanceTransformMasks[i],
+                            cv::DIST_L2, 3);
+    }
+    distance_t.stop();
+
+    std::vector<CornerResponses> batchedResults(detection_params.size());
+
+    utils::ChronoTimingStats t3("masks_loop");
+    cv::parallel_for_(
+        cv::Range(0, static_cast<int>(detection_params.size())),
+        [&](const cv::Range& range) {
+          for (int m = range.start; m < range.end; ++m) {
+            const auto& params = detection_params[m];
+
+            const cv::Mat& mask = params.mask;
+            const cv::Mat& dist = distanceTransformMasks[m];
+
+            const int maxFeatureCount = params.max_corners;
+
+            if (maxFeatureCount <= 0) {
+              continue;
+            }
+
+            const cv::Rect& bbox = params.bbox;
+
+            if (bbox.empty()) {
+              continue;
+            }
+
+            const int x0 = bbox.x;
+            const int y0 = bbox.y;
+            const int x1 = bbox.x + bbox.width;
+            const int y1 = bbox.y + bbox.height;
+
+            // ------------------------------------------------------------------
+            // Generate candidate corners.
+            // ------------------------------------------------------------------
+
+            std::vector<CornerCandidate> candidates;
+            candidates.reserve(256);
+
+            for (int y = y0; y < y1; ++y) {
+              const float* eigPtr = eig_.ptr<float>(y);
+              const float* maxPtr = localMax.ptr<float>(y);
+
+              const uchar* maskPtr =
+                  mask.empty() ? nullptr : mask.ptr<uchar>(y);
+
+              const float* distPtr =
+                  dist.empty() ? nullptr : dist.ptr<float>(y);
+
+              for (int x = x0; x < x1; ++x) {
+                // Reject points outside the object mask.
+                if (maskPtr && !maskPtr[x]) {
+                  continue;
+                }
+
+                const float val = eigPtr[x];
+
+                // GFTT response threshold.
+                if (val <= threshold) {
+                  continue;
+                }
+
+                // Image-space local maximum.
+                if (val != maxPtr[x]) {
+                  continue;
+                }
+
+                // Reject points too close to the object boundary.
+                if (distPtr && distPtr[x] <= 5.0f) {
+                  continue;
+                }
+
+                candidates.push_back(
+                    {cv::Point2f(static_cast<float>(x), static_cast<float>(y)),
+                     val});
+              }
+            }
+
+            if (candidates.empty()) {
+              continue;
+            }
+
+            // ------------------------------------------------------------------
+            // Sort strongest candidates first.
+            //
+            // RangeTree() keeps the first point it encounters and suppresses
+            // points around it. Therefore, sorting by response ensures that
+            // stronger corners are preferred during ANMS.
+            // ------------------------------------------------------------------
+
+            std::sort(candidates.begin(), candidates.end(),
+                      std::greater<CornerCandidate>());
+
+            // ------------------------------------------------------------------
+            // Convert candidates to cv::KeyPoint.
+            //
+            // RangeTree() expects coordinates relative to an image whose
+            // dimensions are bbox.width x bbox.height. Translate the global
+            // image coordinates into this local coordinate system.
+            // ------------------------------------------------------------------
+
+            std::vector<cv::KeyPoint> keypoints;
+            keypoints.reserve(candidates.size());
+
+            for (const CornerCandidate& candidate : candidates) {
+              keypoints.emplace_back(
+                  cv::Point2f(candidate.pt.x - static_cast<float>(x0),
+                              candidate.pt.y - static_cast<float>(y0)),
+                  1.0f,            // size
+                  -1.0f,           // angle
+                  candidate.score  // response
+              );
+            }
+
+            // ------------------------------------------------------------------
+            // Adaptive Non-Maximum Suppression.
+            // ------------------------------------------------------------------
+
+            const int numRetPoints =
+                std::min(maxFeatureCount, static_cast<int>(keypoints.size()));
+
+            constexpr float anmsTolerance = 0.10f;
+            static Eigen::MatrixXd binning_mask;
+
+            AdaptiveNonMaximumSuppression non_maximum_supression(
+                AnmsAlgorithmType::RangeTree);
+
+            auto& selectedKeypoints = keypoints;
+            selectedKeypoints = non_maximum_supression.suppressNonMax(
+                keypoints, numRetPoints, anmsTolerance, bbox.width, bbox.height,
+                5, 5, binning_mask);
+
+            // ------------------------------------------------------------------
+            // Convert selected keypoints back to global image coordinates.
+            // ------------------------------------------------------------------
+
+            CornerResponses& acceptedCorners = batchedResults[m];
+            acceptedCorners.reserve(selectedKeypoints.size());
+
+            for (cv::KeyPoint& keypoint : selectedKeypoints) {
+              keypoint.pt.x += static_cast<float>(x0);
+              keypoint.pt.y += static_cast<float>(y0);
+
+              acceptedCorners.push_back({keypoint.pt, keypoint.response});
+            }
+          }
+        });
+    t3.stop();
+
+    utils::ChronoTimingStats t_terms("make_blocks");
+    std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms(
+        detection_params.size());
+    for (size_t i = 0; i < detection_params.size(); i++) {
+      terms[i].first = detection_params[i].object_id;
+
+      const CornerResponses& corner_responses = batchedResults[i];
+      terms[i].second.points = corner_responses.keypoints;
+      terms[i].second.errors.resize(corner_responses.size());
+      terms[i].second.previous_points.resize(corner_responses.size());
+      terms[i].second.ids.resize(corner_responses.size());
+      terms[i].second.inlier.resize(corner_responses.size());
+      terms[i].second.errors.resize(corner_responses.size());
+    }
+
+    FeatureBlockContainer feature_blocks(terms);
+    t_terms.stop();
+
+    LOG(INFO) << "Detection: " << feature_blocks.debugInfoString();
+
+    utils::ChronoTimingStats t4("sub_pixe_refine");
+
+    if (feature_blocks.size() == 0) {
+      return feature_blocks;
+    }
+
+    const cv::Size window_size = cv::Size(5, 5);
+    const cv::Size zero_zone = cv::Size(-1, -1);
+    const cv::TermCriteria criteria = cv::TermCriteria(
+        cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.001);
+
+    cv::cornerSubPix(mono, feature_blocks.points, window_size, zero_zone,
+                     criteria);
+
+    return feature_blocks;
   }
 
   FeatureBlockContainer detectGfftBatched(
@@ -886,15 +1138,14 @@ class FeatureTrackerBatch {
       terms[i].second.errors.resize(corner_responses.size());
       terms[i].second.previous_points.resize(corner_responses.size());
       terms[i].second.ids.resize(corner_responses.size());
-      terms[i].second.status.resize(corner_responses.size());
+      terms[i].second.inlier.resize(corner_responses.size());
       terms[i].second.errors.resize(corner_responses.size());
     }
 
     FeatureBlockContainer feature_blocks(terms);
     t_terms.stop();
 
-    LOG(INFO) << "Detection:";
-    feature_blocks.printDebugInfo();
+    LOG(INFO) << "Detection: " << feature_blocks.debugInfoString();
 
     utils::ChronoTimingStats t4("sub_pixe_refine");
 
@@ -907,32 +1158,8 @@ class FeatureTrackerBatch {
     const cv::TermCriteria criteria = cv::TermCriteria(
         cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.001);
 
-    // // flattern batched results (bit gross but should be fast)
-    // std::vector<cv::Point2f> points;
-    // std::vector<size_t> sizes;
-
-    // for (const auto& object : batchedResults) {
-    //   sizes.push_back(object.size());
-    //   points.insert(points.end(), object.keypoints.begin(),
-    //                 object.keypoints.end());
-    // }
-
-    // if (points.empty()) {
-    //   return batchedResults;
-    // }
-
     cv::cornerSubPix(mono, feature_blocks.points, window_size, zero_zone,
                      criteria);
-
-    // // Split back into per-object vectors.
-    // size_t offset = 0;
-
-    // for (size_t i = 0; i < batchedResults.size(); ++i) {
-    //   std::copy(points.begin() + offset, points.begin() + offset + sizes[i],
-    //             batchedResults[i].keypoints.begin());
-
-    //   offset += sizes[i];
-    // }
 
     return feature_blocks;
   }
@@ -1347,7 +1574,7 @@ class FeatureTrackerBatch {
     } else {
       utils::ChronoTimingStats feature_track_t("batched.track_gfft");
 
-      FeatureBlockContainer tracked_features =
+      auto [tracked_features, tracking_stats] =
           trackGfftBatched(current_mono, object_masks);
       feature_track_t.stop();
 
@@ -1378,6 +1605,8 @@ class FeatureTrackerBatch {
       for (const auto& object_view : tracked_features.objectViews()) {
         const auto j = object_view.objectId();
 
+        const auto& tracking_stats_j = tracking_stats[j];
+
         // should only be inliers!
         const auto num_tracked = object_view.size();
         LOG(INFO) << "Tracked features for j=" << j << " n=" << num_tracked;
@@ -1392,8 +1621,9 @@ class FeatureTrackerBatch {
         const bool too_few_tracks =
             static_cast<int>(num_tracked) < min_allowed_tracks;
 
-        // bool needs_detection = poor_tracking || too_few_tracks;
-        bool needs_detection = too_few_tracks;
+        const float survival_ratio = tracking_stats_j.survivalRatio();
+        const bool poor_tracking = survival_ratio < 0.4;
+        bool needs_detection = poor_tracking || too_few_tracks;
 
         const bool is_object = j > 0;
         if (is_object) {
@@ -2003,8 +2233,8 @@ struct TrackingDetails {
  * reimplement re-detection features (ie survivial rate)
  * properly fill out FeatureData and ensure tracklet ids are correctly
  * generated/propogated check which properties we actually want in the
- * FeatureData move tests to use the new FeatureBLockContainer so any changes
- * are reflected in the tests test additional outlier rejection with opengv
+ *
+ * test additional outlier rejection with opengv
  * 2DPnP solve (although this might just  be essential matrix calc!) do
  * technical writeup of changes! Implement full tracker in FeatureTrackerFast
  * class!
@@ -2023,12 +2253,12 @@ int main(int argc, char* argv[]) {
   // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
   // loader.setStartingFrame(600);
-  // OMDDataLoader loader(
-  // "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
+  OMDDataLoader loader(
+      "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
 
   // TartanAirShibuyaLoader
   // loader("/root/data/TartanAir_shibuya/RoadCrossing07/");
-  ViodeLoader loader("/root/data/VIODE/city_day/mid");
+  // ViodeLoader loader("/root/data/VIODE/city_day/mid");
 
   // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
   // CHECK_NOTNULL(detector);
@@ -2049,6 +2279,8 @@ int main(int argc, char* argv[]) {
 
   auto camera = std::make_shared<Camera>(loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);
+
+  FeatureTrackerFast ftf(fp, camera);
 
   // std::vector<std::vector<cv::Point2f>> previousBatchFeatures;
   gtsam::FastMap<ObjectId, std::vector<cv::Point2f>> previousBatchFeatures;
@@ -2081,14 +2313,14 @@ int main(int argc, char* argv[]) {
         auto frame_id = container->frameId();
         auto timestamp = container->timestamp();
 
-        // auto frame = tracker->track(frame_id, timestamp, *container);
-
-        ftb.track(container->rgb(), container->objectMotionMask());
+        auto frame = tracker->track(frame_id, timestamp, *container);
+        ftf.track(frame_id, timestamp, *container);
+        // ftb.track(container->rgb(), container->objectMotionMask());
 
         // // LOG(INFO) << "Batched extraction: " << time_ms << " [ms]";
 
         // // // cv::waitKey(0);
-        // Frame::Ptr previous_frame = tracker->getPreviousFrame();
+        Frame::Ptr previous_frame = tracker->getPreviousFrame();
         // utils::ChronoTimingStats batch_all_t("batched.all");
         // const cv::Mat object_masks = container->objectMotionMask();
         // const cv::Mat current_mono =
@@ -2157,19 +2389,14 @@ int main(int argc, char* argv[]) {
 
         // // LOG(INFO) << to_string(tracker->getTrackerInfo());
 
-        // if (previous_frame) {
-        //   ImageTracksParams track_viz_params(true);
-        //   track_viz_params.show_intermediate_tracking = true;
-        //   cv::Mat tracking = tracker->computeFeatureTracks(*previous_frame,
-        //   *frame,
-        //                                                    track_viz_params);
+        if (previous_frame) {
+          ImageTracksParams track_viz_params(true);
+          track_viz_params.show_intermediate_tracking = true;
+          cv::Mat tracking = tracker->computeFeatureTracks(
+              *previous_frame, *frame, track_viz_params);
 
-        //   cv::imshow("Tracks", tracking);
-
-        //   // auto previous_mono =
-        //   //
-        //   ImageType::RGBMono::toMono(previous_frame->imageContainer().rgb());
-        // }
+          cv::imshow("Tracks", tracking);
+        }
 
         //   utils::ChronoTimingStats track_t("batched.track");
         //   auto tracked_features = trackFeaturesUnified(

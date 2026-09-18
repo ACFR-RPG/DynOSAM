@@ -33,6 +33,7 @@
 
 #include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
+#include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/logger/Logger.hpp"
@@ -2152,535 +2153,19 @@ TEST_F(FeatureStorageBenchmark, Scaling) {
   EXPECT_NE(sink, 0.0);
 }
 
-class FeatureSet {
- public:
-  // =========================================================================
-  // External feature data
-  //
-  // This is the convenient representation used when constructing/filling a
-  // FeatureSet. All vectors must have the same size.
-  // =========================================================================
-
-  struct FeatureData {
-    std::vector<cv::Point2f> points;
-    std::vector<cv::Point2f> previous_points;
-    std::vector<int> ids;
-    std::vector<uchar> status;
-    std::vector<float> errors;
-
-    size_t size() const { return points.size(); }
-
-    bool empty() const { return points.empty(); }
-
-    void checkSizes() const {
-      const size_t n = points.size();
-
-      if (previous_points.size() != n || ids.size() != n ||
-          status.size() != n || errors.size() != n) {
-        throw std::invalid_argument(
-            "FeatureData: all feature arrays must have the same size");
-      }
-    }
-  };
-
-  // =========================================================================
-  // Object specification
-  //
-  // The caller specifies the logical layout only.
-  // Physical begin/end indices are completely internal to FeatureSet.
-  // =========================================================================
-
-  struct ObjectSpec {
-    int object_id;
-    size_t size;
-  };
-
- private:
-  // =========================================================================
-  // Internal object metadata
-  // =========================================================================
-
-  struct ObjectMetadata {
-    int object_id;
-    size_t begin;
-    size_t end;
-
-    size_t size() const { return end - begin; }
-  };
-
- public:
-  // =========================================================================
-  // Writable object view
-  // =========================================================================
-
-  class ObjectView {
-   public:
-    size_t size() const { return end_ - begin_; }
-
-    int objectId() const { return object_id_; }
-
-    cv::Point2f* points() { return features_->points.data() + begin_; }
-
-    const cv::Point2f* points() const {
-      return features_->points.data() + begin_;
-    }
-
-    cv::Point2f* previousPoints() {
-      return features_->previous_points.data() + begin_;
-    }
-
-    const cv::Point2f* previousPoints() const {
-      return features_->previous_points.data() + begin_;
-    }
-
-    int* ids() { return features_->ids.data() + begin_; }
-
-    const int* ids() const { return features_->ids.data() + begin_; }
-
-    int* objectIds() { return features_->object_ids.data() + begin_; }
-
-    const int* objectIds() const {
-      return features_->object_ids.data() + begin_;
-    }
-
-    uchar* status() { return features_->status.data() + begin_; }
-
-    const uchar* status() const { return features_->status.data() + begin_; }
-
-    float* errors() { return features_->errors.data() + begin_; }
-
-    const float* errors() const { return features_->errors.data() + begin_; }
-
-    // potentiall dangerous as we could modify the points mat!
-    cv::Mat pointsMat() {
-      return cv::Mat(static_cast<int>(size()), 1, CV_32FC2, points());
-    }
-
-    // ---------------------------------------------------------------------
-    // Convenient bulk assignment
-    // ---------------------------------------------------------------------
-
-    void copyFrom(const FeatureData& data) {
-      data.checkSizes();
-
-      if (data.size() != size()) {
-        throw std::invalid_argument(
-            "FeatureSet::ObjectView::copyFrom: "
-            "FeatureData size does not match object size");
-      }
-
-      copyBlock(points(), data.points.data(), size());
-      copyBlock(previousPoints(), data.previous_points.data(), size());
-      copyBlock(ids(), data.ids.data(), size());
-      copyBlock(status(), data.status.data(), size());
-      copyBlock(errors(), data.errors.data(), size());
-    }
-
-   private:
-    friend class FeatureSet;
-
-    ObjectView(FeatureSet* features, int object_id, size_t begin, size_t end)
-        : features_(features),
-          object_id_(object_id),
-          begin_(begin),
-          end_(end) {}
-
-    template <typename T>
-    static void copyBlock(T* destination, const T* source, size_t count) {
-      static_assert(std::is_trivially_copyable<T>::value,
-                    "FeatureSet fields must be trivially copyable");
-
-      if (count > 0) {
-        std::memcpy(destination, source, count * sizeof(T));
-      }
-    }
-
-    // in reality might be pointer to const FeatureSet.
-    // TODO: redesign with template as before
-    FeatureSet* features_;
-    int object_id_;
-    size_t begin_;
-    size_t end_;
-  };
-
-  // =========================================================================
-  // Read-only object view
-  // =========================================================================
-
-  // =========================================================================
-  // Construction
-  // =========================================================================
-
-  FeatureSet(std::initializer_list<ObjectSpec> specs) {
-    initialize(specs.begin(), specs.end());
-  }
-
-  explicit FeatureSet(const std::vector<ObjectSpec>& specs) {
-    initialize(specs.begin(), specs.end());
-  }
-
-  //@tparam TERMS A container whose value type is std::pair<ObjectId,
-  // FeatureData>
-  template <typename TERMS>
-  explicit FeatureSet(const TERMS& terms) {
-    std::vector<ObjectSpec> specs;
-    specs.reserve(terms.size());
-    for (typename TERMS::const_iterator it = terms.begin(); it != terms.end();
-         ++it) {
-      const auto& term = *it;
-
-      const ObjectId object_id = term.first;
-      const FeatureData& data = term.second;
-
-      data.checkSizes();
-
-      specs.push_back({object_id, data.size()});
-    }
-
-    initialize(specs.begin(), specs.end());
-
-    for (typename TERMS::const_iterator it = terms.begin(); it != terms.end();
-         ++it) {
-      const auto& term = *it;
-
-      const ObjectId object_id = term.first;
-      const FeatureData& source = term.second;
-
-      ObjectView destination = objectView(term.first);
-      destination.copyFrom(source);
-    }
-
-    checkInvariants();
-  }
-
-  // =========================================================================
-  // Basic information
-  // =========================================================================
-
-  size_t size() const { return points.size(); }
-
-  size_t objectCount() const { return objects_.size(); }
-
-  bool containsObject(int object_id) const {
-    return object_lookup_.find(object_id) != object_lookup_.end();
-  }
-
-  FeatureSet merge(const FeatureSet& other) const {
-    // check for tracklet ids dupliactes
-    // TODO: comment out for now - this makes creating empty or initalised but
-    // inassigned FeatureSets invalid becuase all objectids/trackletids will
-    // have the same id!
-    //  std::unordered_set<int> feature_ids;
-    //  feature_ids.reserve(ids.size() + other.ids.size());
-
-    // for (const int id : ids)
-    // {
-    //     feature_ids.insert(id);
-    // }
-
-    // for (const int id : other.ids)
-    // {
-    //     if (!feature_ids.insert(id).second)
-    //     {
-    //         throw std::invalid_argument(
-    //             "FeatureSet::merge: duplicate feature ID " +
-    //             std::to_string(id));
-    //     }
-    // }
-
-    // -------------------------------------------------------------------------
-    // Build the resulting object layout.
-    //
-    // Existing objects retain their order.
-    // New objects from `other` are appended in `other`'s order.
-    // -------------------------------------------------------------------------
-
-    std::vector<ObjectSpec> specs;
-    specs.reserve(objects_.size() + other.objects_.size());
-
-    // Existing objects.
-    for (const ObjectMetadata& object : objects_) {
-      const auto other_it = other.object_lookup_.find(object.object_id);
-
-      const size_t other_size = other_it != other.object_lookup_.end()
-                                    ? other.objects_[other_it->second].size()
-                                    : 0;
-
-      specs.push_back({object.object_id, object.size() + other_size});
-    }
-
-    // Objects which only exist in `other`.
-    for (const ObjectMetadata& object : other.objects_) {
-      if (object_lookup_.find(object.object_id) == object_lookup_.end()) {
-        specs.push_back({object.object_id, object.size()});
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // Allocate the final FeatureSet exactly once.
-    // -------------------------------------------------------------------------
-
-    FeatureSet result(specs);
-
-    // -------------------------------------------------------------------------
-    // Copy the existing features into their final locations.
-    // -------------------------------------------------------------------------
-
-    for (const ObjectMetadata& object : objects_) {
-      const ObjectView source = objectView(object.object_id);
-
-      ObjectView destination = result.objectView(object.object_id);
-
-      // copyBlock(
-      //     destination.points(),
-      //     source.points(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.previousPoints(),
-      //     source.previousPoints(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.ids(),
-      //     source.ids(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.status(),
-      //     source.status(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.errors(),
-      //     source.errors(),
-      //     source.size());
-      copyFeatures(destination, source);
-    }
-
-    // -------------------------------------------------------------------------
-    // Append features from `other`.
-    //
-    // Existing objects are appended after their existing features.
-    // New-only objects are copied starting at offset zero.
-    // -------------------------------------------------------------------------
-
-    for (const ObjectMetadata& other_object : other.objects_) {
-      const ObjectView source = other.objectView(other_object.object_id);
-
-      ObjectView destination = result.objectView(other_object.object_id);
-
-      const auto existing_it = object_lookup_.find(other_object.object_id);
-
-      const size_t destination_offset =
-          existing_it != object_lookup_.end()
-              ? objects_[existing_it->second].size()
-              : 0;
-
-      if (source.size() == 0) continue;
-
-      copyFeatures(destination, source, destination_offset);
-
-      // copyBlock(
-      //     destination.points() + destination_offset,
-      //     source.points(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.previousPoints() + destination_offset,
-      //     source.previousPoints(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.ids() + destination_offset,
-      //     source.ids(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.status() + destination_offset,
-      //     source.status(),
-      //     source.size());
-
-      // copyBlock(
-      //     destination.errors() + destination_offset,
-      //     source.errors(),
-      //     source.size());
-    }
-
-    // object_ids are established by the FeatureSet constructor and therefore
-    // don't need to be copied during the merge.
-
-    result.checkInvariants();
-
-    return result;
-  }
-
-  // =========================================================================
-  // Object access
-  // =========================================================================
-
-  ObjectView objectView(int object_id) {
-    const ObjectMetadata& metadata = objectMetadata(object_id);
-
-    return ObjectView(this, metadata.object_id, metadata.begin, metadata.end);
-  }
-
-  const ObjectView objectView(int object_id) const {
-    const ObjectMetadata& metadata = objectMetadata(object_id);
-
-    return ObjectView(const_cast<FeatureSet*>(this), metadata.object_id,
-                      metadata.begin, metadata.end);
-  }
-
-  // =========================================================================
-  // Public SoA storage
-  // =========================================================================
-
-  std::vector<cv::Point2f> points;
-  std::vector<cv::Point2f> previous_points;
-  std::vector<int> ids;
-  std::vector<int> object_ids;
-  std::vector<uchar> status;
-  std::vector<float> errors;
-
-  // =========================================================================
-  // Debug invariant checking
-  // =========================================================================
-
-  void checkInvariants() const {
-#ifndef NDEBUG
-    const size_t n = points.size();
-
-    assert(previous_points.size() == n);
-    assert(ids.size() == n);
-    assert(object_ids.size() == n);
-    assert(status.size() == n);
-    assert(errors.size() == n);
-
-    size_t expected_begin = 0;
-
-    for (const ObjectMetadata& object : objects_) {
-      assert(object.begin == expected_begin);
-      assert(object.begin <= object.end);
-      assert(object.end <= n);
-
-      for (size_t i = object.begin; i < object.end; ++i) {
-        assert(object_ids[i] == object.object_id);
-      }
-
-      expected_begin = object.end;
-    }
-
-    assert(expected_begin == n);
-#endif
-  }
-
- private:
-  template <typename T>
-  static void copyBlock(T* destination, const T* source, size_t count) {
-    static_assert(std::is_trivially_copyable<T>::value,
-                  "FeatureSet fields must be trivially copyable");
-
-    if (count > 0) {
-      std::memcpy(destination, source, count * sizeof(T));
-    }
-  }
-
-  static void copyFeatures(ObjectView destination, const ObjectView& source,
-                           size_t destination_offset = 0) {
-    copyBlock(destination.points() + destination_offset, source.points(),
-              source.size());
-
-    copyBlock(destination.previousPoints() + destination_offset,
-              source.previousPoints(), source.size());
-
-    copyBlock(destination.ids() + destination_offset, source.ids(),
-              source.size());
-
-    copyBlock(destination.status() + destination_offset, source.status(),
-              source.size());
-
-    copyBlock(destination.errors() + destination_offset, source.errors(),
-              source.size());
-  }
-
-  // =========================================================================
-  // Layout construction
-  // =========================================================================
-
-  template <typename Iterator>
-  void initialize(Iterator begin, Iterator end) {
-    const size_t object_count = static_cast<size_t>(std::distance(begin, end));
-
-    objects_.reserve(object_count);
-    object_lookup_.reserve(object_count);
-
-    size_t total_size = 0;
-
-    for (Iterator it = begin; it != end; ++it) {
-      const ObjectSpec& spec = *it;
-
-      if (object_lookup_.find(spec.object_id) != object_lookup_.end()) {
-        throw std::invalid_argument("FeatureSet: duplicate object ID " +
-                                    std::to_string(spec.object_id));
-      }
-
-      const size_t object_begin = total_size;
-      const size_t object_end = total_size + spec.size;
-
-      object_lookup_.emplace(spec.object_id, objects_.size());
-
-      objects_.push_back(
-          ObjectMetadata{spec.object_id, object_begin, object_end});
-
-      total_size = object_end;
-    }
-
-    points.resize(total_size);
-    previous_points.resize(total_size);
-    ids.resize(total_size);
-    object_ids.resize(total_size);
-    status.resize(total_size);
-    errors.resize(total_size);
-
-    // Initialise object IDs immediately so the FeatureSet is valid even
-    // before the caller fills the feature data.
-    for (const ObjectMetadata& object : objects_) {
-      std::fill(object_ids.begin() + object.begin,
-                object_ids.begin() + object.end, object.object_id);
-    }
-
-    checkInvariants();
-  }
-
-  const ObjectMetadata& objectMetadata(int object_id) const {
-    auto it = object_lookup_.find(object_id);
-
-    if (it == object_lookup_.end()) {
-      throw std::out_of_range("FeatureSet: unknown object ID " +
-                              std::to_string(object_id));
-    }
-
-    return objects_[it->second];
-  }
-
-  std::vector<ObjectMetadata> objects_;
-  std::unordered_map<int, size_t> object_lookup_;
-};
-
 volatile float benchmark_sink = 0.0f;
 
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
 
-// FeatureSet createFeatureSet(
+// FeatureBlockContainer createFeatureSet(
 //     const std::vector<int>& object_ids,
 //     const std::vector<size_t>& features_per_object)
 // {
 //     EXPECT_EQ(object_ids.size(), features_per_object.size());
 
-//     FeatureSet features(object_ids);
+//     FeatureBlockContainer features(object_ids);
 
 //     size_t total_features = 0;
 
@@ -2693,7 +2178,7 @@ volatile float benchmark_sink = 0.0f;
 //     features.previous_points.resize(total_features);
 //     features.ids.resize(total_features);
 //     features.object_ids.resize(total_features);
-//     features.status.resize(total_features);
+//     features.inlier.resize(total_features);
 //     features.errors.resize(total_features);
 
 //     size_t offset = 0;
@@ -2723,7 +2208,7 @@ volatile float benchmark_sink = 0.0f;
 
 //             features.ids[offset + i] = feature_id;
 //             features.object_ids[offset + i] = object_id;
-//             features.status[offset + i] = 1;
+//             features.inlier[offset + i] = 1;
 //             features.errors[offset + i] =
 //                 static_cast<float>(feature_id) * 0.1f;
 
@@ -2738,14 +2223,11 @@ volatile float benchmark_sink = 0.0f;
 //     return features;
 // }
 
-FeatureSet::FeatureData createFeatureData(size_t n, int id_offset = 0) {
-  FeatureSet::FeatureData data;
+FeatureBlockContainer::FeatureData createFeatureData(size_t n,
+                                                     int id_offset = 0) {
+  FeatureBlockContainer::FeatureData data;
 
-  data.points.resize(n);
-  data.previous_points.resize(n);
-  data.ids.resize(n);
-  data.status.resize(n);
-  data.errors.resize(n);
+  data.resize(n);
 
   for (size_t i = 0; i < n; ++i) {
     data.points[i] =
@@ -2756,7 +2238,7 @@ FeatureSet::FeatureData createFeatureData(size_t n, int id_offset = 0) {
 
     data.ids[i] = id_offset + static_cast<int>(i);
 
-    data.status[i] = static_cast<uchar>(i % 2);
+    data.inlier[i] = static_cast<uchar>(i % 2);
 
     data.errors[i] = static_cast<float>(i) * 0.5f;
   }
@@ -2764,22 +2246,23 @@ FeatureSet::FeatureData createFeatureData(size_t n, int id_offset = 0) {
   return data;
 }
 
-FeatureSet createFeatureSet(const std::vector<int>& object_ids,
-                            const std::vector<size_t>& features_per_object) {
+FeatureBlockContainer createFeatureSet(
+    const std::vector<int>& object_ids,
+    const std::vector<size_t>& features_per_object) {
   EXPECT_EQ(object_ids.size(), features_per_object.size());
 
-  std::vector<FeatureSet::ObjectSpec> specs;
+  std::vector<FeatureBlockContainer::BlockDim> specs;
   specs.reserve(object_ids.size());
 
   for (size_t i = 0; i < object_ids.size(); ++i) {
     specs.push_back({object_ids[i], features_per_object[i]});
   }
 
-  return FeatureSet(specs);
+  return FeatureBlockContainer(specs);
 }
 
-void copyObjectData(FeatureSet& features, int object_id,
-                    const FeatureSet::FeatureData& data) {
+void copyObjectData(FeatureBlockContainer& features, int object_id,
+                    const FeatureBlockContainer::FeatureData& data) {
   features.objectView(object_id).copyFrom(data);
 }
 
@@ -2809,8 +2292,8 @@ double benchmarkNsPerFeature(Function&& function, size_t n, size_t iterations) {
 // Construction
 // =============================================================================
 
-TEST(FeatureSetTest, ConstructsKnownObjects) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ConstructsKnownObjects) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -2828,8 +2311,8 @@ TEST(FeatureSetTest, ConstructsKnownObjects) {
   features.checkInvariants();
 }
 
-TEST(FeatureSetTest, ConstructsEmptyFeatureSet) {
-  FeatureSet features({});
+TEST(FeatureBlockContainerTest, ConstructsEmptyFeatureSet) {
+  FeatureBlockContainer features({});
 
   EXPECT_EQ(features.objectCount(), 0);
   EXPECT_EQ(features.size(), 0);
@@ -2837,8 +2320,8 @@ TEST(FeatureSetTest, ConstructsEmptyFeatureSet) {
   features.checkInvariants();
 }
 
-TEST(FeatureSetTest, AllowsObjectsWithZeroFeatures) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, AllowsObjectsWithZeroFeatures) {
+  FeatureBlockContainer features({
       {10, 0},
       {20, 5},
       {30, 0},
@@ -2854,8 +2337,8 @@ TEST(FeatureSetTest, AllowsObjectsWithZeroFeatures) {
   features.checkInvariants();
 }
 
-TEST(FeatureSetTest, RejectsDuplicateObjectIds) {
-  EXPECT_THROW(FeatureSet({
+TEST(FeatureBlockContainerTest, RejectsDuplicateObjectIds) {
+  EXPECT_THROW(FeatureBlockContainer({
                    {10, 3},
                    {20, 5},
                    {10, 2},
@@ -2863,8 +2346,8 @@ TEST(FeatureSetTest, RejectsDuplicateObjectIds) {
                std::invalid_argument);
 }
 
-TEST(FeatureSetTest, RejectsUnknownObject) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, RejectsUnknownObject) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
   });
@@ -2876,8 +2359,8 @@ TEST(FeatureSetTest, RejectsUnknownObject) {
 // ObjectView
 // =============================================================================
 
-TEST(FeatureSetTest, ObjectViewHasCorrectSize) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectViewHasCorrectSize) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -2888,8 +2371,8 @@ TEST(FeatureSetTest, ObjectViewHasCorrectSize) {
   EXPECT_EQ(features.objectView(30).size(), 2);
 }
 
-TEST(FeatureSetTest, ObjectViewHasCorrectObjectId) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectViewHasCorrectObjectId) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -2900,8 +2383,8 @@ TEST(FeatureSetTest, ObjectViewHasCorrectObjectId) {
   EXPECT_EQ(features.objectView(30).objectId(), 30);
 }
 
-TEST(FeatureSetTest, ObjectViewIsZeroCopy) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectViewIsZeroCopy) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -2921,13 +2404,13 @@ TEST(FeatureSetTest, ObjectViewIsZeroCopy) {
 
   EXPECT_EQ(object.objectIds(), features.object_ids.data() + 3);
 
-  EXPECT_EQ(object.status(), features.status.data() + 3);
+  EXPECT_EQ(object.inlier(), features.inlier.data() + 3);
 
   EXPECT_EQ(object.errors(), features.errors.data() + 3);
 }
 
-TEST(FeatureSetTest, ConstObjectViewIsZeroCopy) {
-  const FeatureSet features({
+TEST(FeatureBlockContainerTest, ConstObjectViewIsZeroCopy) {
+  const FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -2943,18 +2426,18 @@ TEST(FeatureSetTest, ConstObjectViewIsZeroCopy) {
 
   EXPECT_EQ(object.objectIds(), features.object_ids.data() + 3);
 
-  EXPECT_EQ(object.status(), features.status.data() + 3);
+  EXPECT_EQ(object.inlier(), features.inlier.data() + 3);
 
   EXPECT_EQ(object.errors(), features.errors.data() + 3);
 }
 
-TEST(FeatureSetTest, ObjectViewProvidesCorrectData) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectViewProvidesCorrectData) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
   });
 
-  const FeatureSet::FeatureData data = createFeatureData(5, 100);
+  const FeatureBlockContainer::FeatureData data = createFeatureData(5, 100);
 
   features.objectView(20).copyFrom(data);
 
@@ -2967,7 +2450,7 @@ TEST(FeatureSetTest, ObjectViewProvidesCorrectData) {
 
     EXPECT_EQ(object.ids()[i], data.ids[i]);
 
-    EXPECT_EQ(object.status()[i], data.status[i]);
+    EXPECT_EQ(object.inlier()[i], data.inlier[i]);
 
     EXPECT_EQ(object.errors()[i], data.errors[i]);
 
@@ -2975,8 +2458,8 @@ TEST(FeatureSetTest, ObjectViewProvidesCorrectData) {
   }
 }
 
-TEST(FeatureSetTest, ObjectViewModificationUpdatesFeatureSet) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectViewModificationUpdatesFeatureSet) {
+  FeatureBlockContainer features({
       {10, 3},
   });
 
@@ -2984,21 +2467,21 @@ TEST(FeatureSetTest, ObjectViewModificationUpdatesFeatureSet) {
 
   object.points()[0] = cv::Point2f(123.0f, 456.0f);
   object.ids()[1] = 42;
-  object.status()[2] = 0;
+  object.inlier()[2] = 0;
 
   EXPECT_EQ(features.points[0], cv::Point2f(123.0f, 456.0f));
 
   EXPECT_EQ(features.ids[1], 42);
 
-  EXPECT_EQ(features.status[2], 0);
+  EXPECT_EQ(features.inlier[2], 0);
 }
 
 // =============================================================================
 // Object block layout
 // =============================================================================
 
-TEST(FeatureSetTest, ObjectBlocksAreContiguous) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectBlocksAreContiguous) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -3013,8 +2496,8 @@ TEST(FeatureSetTest, ObjectBlocksAreContiguous) {
   EXPECT_EQ(object20.points() + object20.size(), object30.points());
 }
 
-TEST(FeatureSetTest, ObjectBlocksContainCorrectObjectIds) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, ObjectBlocksContainCorrectObjectIds) {
+  FeatureBlockContainer features({
       {10, 3},
       {20, 5},
       {30, 2},
@@ -3037,15 +2520,15 @@ TEST(FeatureSetTest, ObjectBlocksContainCorrectObjectIds) {
 // FeatureData
 // =============================================================================
 
-TEST(FeatureSetTest, FeatureDataReportsCorrectSize) {
-  const FeatureSet::FeatureData data = createFeatureData(10);
+TEST(FeatureBlockContainerTest, FeatureDataReportsCorrectSize) {
+  const FeatureBlockContainer::FeatureData data = createFeatureData(10);
 
   EXPECT_EQ(data.size(), 10);
   EXPECT_FALSE(data.empty());
 }
 
-TEST(FeatureSetTest, FeatureDataReportsEmpty) {
-  FeatureSet::FeatureData data;
+TEST(FeatureBlockContainerTest, FeatureDataReportsEmpty) {
+  FeatureBlockContainer::FeatureData data;
 
   EXPECT_EQ(data.size(), 0);
   EXPECT_TRUE(data.empty());
@@ -3053,18 +2536,18 @@ TEST(FeatureSetTest, FeatureDataReportsEmpty) {
   EXPECT_NO_THROW(data.checkSizes());
 }
 
-TEST(FeatureSetTest, FeatureDataRejectsMismatchedArrays) {
-  FeatureSet::FeatureData data = createFeatureData(5);
+TEST(FeatureBlockContainerTest, FeatureDataRejectsMismatchedArrays) {
+  FeatureBlockContainer::FeatureData data = createFeatureData(5);
 
   data.ids.resize(4);
 
   EXPECT_THROW(data.checkSizes(), std::invalid_argument);
 }
 
-TEST(FeatureSetTest, CopyFeatureData) {
-  const FeatureSet::FeatureData data = createFeatureData(5, 100);
+TEST(FeatureBlockContainerTest, CopyFeatureData) {
+  const FeatureBlockContainer::FeatureData data = createFeatureData(5, 100);
 
-  FeatureSet features({
+  FeatureBlockContainer features({
       {42, 5},
   });
 
@@ -3076,32 +2559,32 @@ TEST(FeatureSetTest, CopyFeatureData) {
     EXPECT_EQ(object.points()[i], data.points[i]);
     EXPECT_EQ(object.previousPoints()[i], data.previous_points[i]);
     EXPECT_EQ(object.ids()[i], data.ids[i]);
-    EXPECT_EQ(object.status()[i], data.status[i]);
+    EXPECT_EQ(object.inlier()[i], data.inlier[i]);
     EXPECT_EQ(object.errors()[i], data.errors[i]);
 
-    // object_ids are generated by FeatureSet.
+    // object_ids are generated by FeatureBlockContainer.
     EXPECT_EQ(object.objectIds()[i], 42);
   }
 
   features.checkInvariants();
 }
 
-TEST(FeatureSetTest, CopyFeatureDataRejectsIncorrectSize) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, CopyFeatureDataRejectsIncorrectSize) {
+  FeatureBlockContainer features({
       {42, 5},
   });
 
-  const FeatureSet::FeatureData data = createFeatureData(4);
+  const FeatureBlockContainer::FeatureData data = createFeatureData(4);
 
   EXPECT_THROW(features.objectView(42).copyFrom(data), std::invalid_argument);
 }
 
-TEST(FeatureSetTest, CopyFeatureDataDoesNotModifySource) {
-  const FeatureSet::FeatureData data = createFeatureData(5, 100);
+TEST(FeatureBlockContainerTest, CopyFeatureDataDoesNotModifySource) {
+  const FeatureBlockContainer::FeatureData data = createFeatureData(5, 100);
 
-  const FeatureSet::FeatureData original = data;
+  const FeatureBlockContainer::FeatureData original = data;
 
-  FeatureSet features({
+  FeatureBlockContainer features({
       {42, 5},
   });
 
@@ -3111,15 +2594,15 @@ TEST(FeatureSetTest, CopyFeatureDataDoesNotModifySource) {
     EXPECT_EQ(data.points[i], original.points[i]);
     EXPECT_EQ(data.previous_points[i], original.previous_points[i]);
     EXPECT_EQ(data.ids[i], original.ids[i]);
-    EXPECT_EQ(data.status[i], original.status[i]);
+    EXPECT_EQ(data.inlier[i], original.inlier[i]);
     EXPECT_EQ(data.errors[i], original.errors[i]);
   }
 }
 
-TEST(FeatureSetTest, ObjectIdsAreGeneratedFromObjectSpecification) {
-  const FeatureSet::FeatureData data = createFeatureData(5);
+TEST(FeatureBlockContainerTest, ObjectIdsAreGeneratedFromObjectSpecification) {
+  const FeatureBlockContainer::FeatureData data = createFeatureData(5);
 
-  FeatureSet features({
+  FeatureBlockContainer features({
       {42, 5},
   });
 
@@ -3130,10 +2613,10 @@ TEST(FeatureSetTest, ObjectIdsAreGeneratedFromObjectSpecification) {
   }
 }
 
-TEST(FeatureSet, MergeRejectsDuplicateFeatureIdsAcrossObjects) {
-  FeatureSet first = createFeatureSet({1}, {2});
+TEST(FeatureBlockContainer, MergeRejectsDuplicateFeatureIdsAcrossObjects) {
+  FeatureBlockContainer first = createFeatureSet({1}, {2});
 
-  FeatureSet second = createFeatureSet({2}, {2});
+  FeatureBlockContainer second = createFeatureSet({2}, {2});
 
   first.objectView(1).copyFrom(createFeatureData(2, 10));
 
@@ -3151,14 +2634,14 @@ TEST(FeatureSet, MergeRejectsDuplicateFeatureIdsAcrossObjects) {
 // Multiple objects
 // =============================================================================
 
-TEST(FeatureSetTest, CopiesMultipleObjects) {
-  const FeatureSet::FeatureData object1 = createFeatureData(3, 100);
+TEST(FeatureBlockContainerTest, CopiesMultipleObjects) {
+  const FeatureBlockContainer::FeatureData object1 = createFeatureData(3, 100);
 
-  const FeatureSet::FeatureData object2 = createFeatureData(5, 200);
+  const FeatureBlockContainer::FeatureData object2 = createFeatureData(5, 200);
 
-  const FeatureSet::FeatureData object3 = createFeatureData(2, 300);
+  const FeatureBlockContainer::FeatureData object3 = createFeatureData(2, 300);
 
-  FeatureSet features({
+  FeatureBlockContainer features({
       {10, object1.size()},
       {20, object2.size()},
       {30, object3.size()},
@@ -3177,7 +2660,7 @@ TEST(FeatureSetTest, CopiesMultipleObjects) {
 
     EXPECT_EQ(features.ids[i], object1.ids[i]);
 
-    EXPECT_EQ(features.status[i], object1.status[i]);
+    EXPECT_EQ(features.inlier[i], object1.inlier[i]);
 
     EXPECT_EQ(features.errors[i], object1.errors[i]);
 
@@ -3193,7 +2676,7 @@ TEST(FeatureSetTest, CopiesMultipleObjects) {
 
     EXPECT_EQ(features.ids[index], object2.ids[i]);
 
-    EXPECT_EQ(features.status[index], object2.status[i]);
+    EXPECT_EQ(features.inlier[index], object2.inlier[i]);
 
     EXPECT_EQ(features.errors[index], object2.errors[i]);
 
@@ -3209,7 +2692,7 @@ TEST(FeatureSetTest, CopiesMultipleObjects) {
 
     EXPECT_EQ(features.ids[index], object3.ids[i]);
 
-    EXPECT_EQ(features.status[index], object3.status[i]);
+    EXPECT_EQ(features.inlier[index], object3.inlier[i]);
 
     EXPECT_EQ(features.errors[index], object3.errors[i]);
 
@@ -3223,21 +2706,21 @@ TEST(FeatureSetTest, CopiesMultipleObjects) {
 // Merge
 // =============================================================================
 
-TEST(FeatureSetTest, MergePreservesObjectOrder) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergePreservesObjectOrder) {
+  FeatureBlockContainer features({
       {1, 2},
       {2, 2},
       {3, 2},
       {4, 2},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 1},
       {3, 1},
       {5, 1},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_TRUE(merged.containsObject(1));
   EXPECT_TRUE(merged.containsObject(2));
@@ -3254,43 +2737,43 @@ TEST(FeatureSetTest, MergePreservesObjectOrder) {
   EXPECT_EQ(merged.objectView(5).objectId(), 5);
 }
 
-TEST(FeatureSetTest, MergeProducesCorrectTotalSize) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeProducesCorrectTotalSize) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 5},
       {3, 2},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 4},
       {2, 1},
       {3, 6},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(merged.size(), 3 + 4 + 5 + 1 + 2 + 6);
 }
 
-TEST(FeatureSetTest, MergePreservesExistingFeatures) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergePreservesExistingFeatures) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 2},
   });
 
-  const FeatureSet::FeatureData object1 = createFeatureData(3, 100);
+  const FeatureBlockContainer::FeatureData object1 = createFeatureData(3, 100);
 
-  const FeatureSet::FeatureData object2 = createFeatureData(2, 200);
+  const FeatureBlockContainer::FeatureData object2 = createFeatureData(2, 200);
 
   features.objectView(1).copyFrom(object1);
   features.objectView(2).copyFrom(object2);
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {2, 3},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   const auto merged1 = merged.objectView(1);
 
@@ -3313,32 +2796,32 @@ TEST(FeatureSetTest, MergePreservesExistingFeatures) {
   }
 }
 
-TEST(FeatureSetTest, MergeAppendsNewFeaturesToEachObject) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeAppendsNewFeaturesToEachObject) {
+  FeatureBlockContainer features({
       {1, 2},
       {2, 3},
   });
 
-  const FeatureSet::FeatureData old1 = createFeatureData(2, 100);
+  const FeatureBlockContainer::FeatureData old1 = createFeatureData(2, 100);
 
-  const FeatureSet::FeatureData old2 = createFeatureData(3, 200);
+  const FeatureBlockContainer::FeatureData old2 = createFeatureData(3, 200);
 
   features.objectView(1).copyFrom(old1);
   features.objectView(2).copyFrom(old2);
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 3},
       {2, 2},
   });
 
-  const FeatureSet::FeatureData new1 = createFeatureData(3, 300);
+  const FeatureBlockContainer::FeatureData new1 = createFeatureData(3, 300);
 
-  const FeatureSet::FeatureData new2 = createFeatureData(2, 400);
+  const FeatureBlockContainer::FeatureData new2 = createFeatureData(2, 400);
 
   new_features.objectView(1).copyFrom(new1);
   new_features.objectView(2).copyFrom(new2);
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   const auto merged1 = merged.objectView(1);
 
@@ -3374,19 +2857,19 @@ TEST(FeatureSetTest, MergeAppendsNewFeaturesToEachObject) {
   merged.checkInvariants();
 }
 
-TEST(FeatureSetTest, MergeHandlesObjectsWithNoNewFeatures) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeHandlesObjectsWithNoNewFeatures) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 4},
       {3, 2},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {3, 5},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(merged.objectView(1).size(), 5);
 
@@ -3397,18 +2880,18 @@ TEST(FeatureSetTest, MergeHandlesObjectsWithNoNewFeatures) {
   merged.checkInvariants();
 }
 
-TEST(FeatureSetTest, MergeHandlesObjectsWithNoExistingFeatures) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeHandlesObjectsWithNoExistingFeatures) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 4},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {3, 5},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(merged.objectView(1).size(), 5);
 
@@ -3421,8 +2904,8 @@ TEST(FeatureSetTest, MergeHandlesObjectsWithNoExistingFeatures) {
   merged.checkInvariants();
 }
 
-TEST(FeatureSetTest, MergeAllowsMissingObjects) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeAllowsMissingObjects) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 4},
       {3, 5},
@@ -3430,12 +2913,12 @@ TEST(FeatureSetTest, MergeAllowsMissingObjects) {
   });
 
   // Objects 2 and 4 do not require new features.
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {3, 3},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(merged.objectView(1).size(), 5);
 
@@ -3450,15 +2933,15 @@ TEST(FeatureSetTest, MergeAllowsMissingObjects) {
   merged.checkInvariants();
 }
 
-TEST(FeatureSetTest, MergeAllowsAdditionalObjects) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeAllowsAdditionalObjects) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 4},
   });
   features.objectView(1).copyFrom(createFeatureData(3, 0));
   features.objectView(2).copyFrom(createFeatureData(4, 3));
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {3, 5},
       {4, 2},
@@ -3467,7 +2950,7 @@ TEST(FeatureSetTest, MergeAllowsAdditionalObjects) {
   new_features.objectView(3).copyFrom(createFeatureData(5, 9));
   new_features.objectView(4).copyFrom(createFeatureData(2, 14));
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(merged.objectCount(), 4);
 
@@ -3482,20 +2965,20 @@ TEST(FeatureSetTest, MergeAllowsAdditionalObjects) {
   merged.checkInvariants();
 }
 
-TEST(FeatureSetTest, MergeAllowsDifferentObjectSets) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeAllowsDifferentObjectSets) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 4},
       {3, 2},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {3, 5},
       {4, 6},
       {5, 1},
   });
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(merged.objectCount(), 5);
 
@@ -3512,16 +2995,16 @@ TEST(FeatureSetTest, MergeAllowsDifferentObjectSets) {
   merged.checkInvariants();
 }
 
-// TEST(FeatureSetTest, MergeHandlesEmptyFeatureSets)
+// TEST(FeatureBlockContainerTest, MergeHandlesEmptyFeatureSets)
 // {
-//     FeatureSet features({
+//     FeatureBlockContainer features({
 //         {1, 3},
 //         {2, 4},
 //     });
 
-//     FeatureSet empty;
+//     FeatureBlockContainer empty;
 
-//     FeatureSet merged =
+//     FeatureBlockContainer merged =
 //         features.merge(empty);
 
 //     EXPECT_EQ(merged.objectCount(), 2);
@@ -3538,25 +3021,25 @@ TEST(FeatureSetTest, MergeAllowsDifferentObjectSets) {
 //     merged.checkInvariants();
 // }
 
-// TEST(FeatureSetTest, MergeEmptyIntoPopulated)
+// TEST(FeatureBlockContainerTest, MergeEmptyIntoPopulated)
 // {
-//     FeatureSet empty;
+//     FeatureBlockContainer empty;
 
-//     FeatureSet new_features({
+//     FeatureBlockContainer new_features({
 //         {1, 3},
 //         {2, 5},
 //     });
 
-//     const FeatureSet::FeatureData object1 =
+//     const FeatureBlockContainer::FeatureData object1 =
 //         createFeatureData(3, 100);
 
-//     const FeatureSet::FeatureData object2 =
+//     const FeatureBlockContainer::FeatureData object2 =
 //         createFeatureData(5, 200);
 
 //     new_features.objectView(1).copyFrom(object1);
 //     new_features.objectView(2).copyFrom(object2);
 
-//     FeatureSet merged =
+//     FeatureBlockContainer merged =
 //         empty.merge(new_features);
 
 //     EXPECT_EQ(merged.objectCount(), 2);
@@ -3587,8 +3070,8 @@ TEST(FeatureSetTest, MergeAllowsDifferentObjectSets) {
 //     merged.checkInvariants();
 // }
 
-TEST(FeatureSetTest, ObjectViewPointsMatIsZeroCopy) {
-  FeatureSet features({{1, 3}, {2, 2}});
+TEST(FeatureBlockContainerTest, ObjectViewPointsMatIsZeroCopy) {
+  FeatureBlockContainer features({{1, 3}, {2, 2}});
 
   auto object = features.objectView(1);
 
@@ -3602,7 +3085,7 @@ TEST(FeatureSetTest, ObjectViewPointsMatIsZeroCopy) {
   ASSERT_EQ(points.cols, 1);
   ASSERT_EQ(points.type(), CV_32FC2);
 
-  // Check the Mat sees the original FeatureSet data.
+  // Check the Mat sees the original FeatureBlockContainer data.
   EXPECT_FLOAT_EQ(points.at<cv::Point2f>(0, 0).x, 1.0f);
   EXPECT_FLOAT_EQ(points.at<cv::Point2f>(0, 0).y, 2.0f);
   EXPECT_FLOAT_EQ(points.at<cv::Point2f>(1, 0).x, 3.0f);
@@ -3613,13 +3096,13 @@ TEST(FeatureSetTest, ObjectViewPointsMatIsZeroCopy) {
   // Modify through cv::Mat.
   points.at<cv::Point2f>(1, 0) = cv::Point2f(10.0f, 20.0f);
 
-  // The underlying FeatureSet must see the modification.
+  // The underlying FeatureBlockContainer must see the modification.
   EXPECT_FLOAT_EQ(object.points()[1].x, 10.0f);
   EXPECT_FLOAT_EQ(object.points()[1].y, 20.0f);
 }
 
-TEST(FeatureSetTest, ObjectViewPointsMatContainsOnlyObjectFeatures) {
-  FeatureSet features({{10, 3}, {20, 2}, {30, 4}});
+TEST(FeatureBlockContainerTest, ObjectViewPointsMatContainsOnlyObjectFeatures) {
+  FeatureBlockContainer features({{10, 3}, {20, 2}, {30, 4}});
 
   for (size_t i = 0; i < features.size(); ++i) {
     features.points[i] =
@@ -3638,24 +3121,24 @@ TEST(FeatureSetTest, ObjectViewPointsMatContainsOnlyObjectFeatures) {
   EXPECT_EQ(points.at<cv::Point2f>(1, 0), cv::Point2f(4.0f, 104.0f));
 }
 
-TEST(FeatureSetTest, MergeDoesNotModifyInputs) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeDoesNotModifyInputs) {
+  FeatureBlockContainer features({
       {1, 3},
       {2, 2},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {3, 4},
   });
 
-  const FeatureSet::FeatureData old1 = createFeatureData(3, 100);
+  const FeatureBlockContainer::FeatureData old1 = createFeatureData(3, 100);
 
-  const FeatureSet::FeatureData old2 = createFeatureData(2, 200);
+  const FeatureBlockContainer::FeatureData old2 = createFeatureData(2, 200);
 
-  const FeatureSet::FeatureData new1 = createFeatureData(2, 300);
+  const FeatureBlockContainer::FeatureData new1 = createFeatureData(2, 300);
 
-  const FeatureSet::FeatureData new3 = createFeatureData(4, 400);
+  const FeatureBlockContainer::FeatureData new3 = createFeatureData(4, 400);
 
   features.objectView(1).copyFrom(old1);
   features.objectView(2).copyFrom(old2);
@@ -3667,44 +3150,44 @@ TEST(FeatureSetTest, MergeDoesNotModifyInputs) {
   const auto original_previous_points = features.previous_points;
   const auto original_ids = features.ids;
   const auto original_object_ids = features.object_ids;
-  const auto original_status = features.status;
+  const auto original_status = features.inlier;
   const auto original_errors = features.errors;
 
   const auto original_new_points = new_features.points;
   const auto original_new_previous_points = new_features.previous_points;
   const auto original_new_ids = new_features.ids;
   const auto original_new_object_ids = new_features.object_ids;
-  const auto original_new_status = new_features.status;
+  const auto original_new_status = new_features.inlier;
   const auto original_new_errors = new_features.errors;
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   EXPECT_EQ(features.points, original_points);
   EXPECT_EQ(features.previous_points, original_previous_points);
   EXPECT_EQ(features.ids, original_ids);
   EXPECT_EQ(features.object_ids, original_object_ids);
-  EXPECT_EQ(features.status, original_status);
+  EXPECT_EQ(features.inlier, original_status);
   EXPECT_EQ(features.errors, original_errors);
 
   EXPECT_EQ(new_features.points, original_new_points);
   EXPECT_EQ(new_features.previous_points, original_new_previous_points);
   EXPECT_EQ(new_features.ids, original_new_ids);
   EXPECT_EQ(new_features.object_ids, original_new_object_ids);
-  EXPECT_EQ(new_features.status, original_new_status);
+  EXPECT_EQ(new_features.inlier, original_new_status);
   EXPECT_EQ(new_features.errors, original_new_errors);
 
   merged.checkInvariants();
 }
 
-TEST(FeatureSet, ConstructsFromFeatureData) {
-  FeatureSet::FeatureData object1 = createFeatureData(3, 10);
-  FeatureSet::FeatureData object2 = createFeatureData(2, 20);
+TEST(FeatureBlockContainerTest, ConstructsFromFeatureData) {
+  FeatureBlockContainer::FeatureData object1 = createFeatureData(3, 10);
+  FeatureBlockContainer::FeatureData object2 = createFeatureData(2, 20);
 
-  std::vector<std::pair<ObjectId, FeatureSet::FeatureData>> terms;
+  std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms;
   terms.emplace_back(1, object1);
   terms.emplace_back(2, object2);
 
-  FeatureSet features(terms);
+  FeatureBlockContainer features(terms);
 
   ASSERT_EQ(features.objectCount(), 2u);
   ASSERT_EQ(features.size(), 5u);
@@ -3719,15 +3202,15 @@ TEST(FeatureSet, ConstructsFromFeatureData) {
   EXPECT_EQ(second.objectId(), 2);
 }
 
-TEST(FeatureSet, ConstructsFromFeatureDataCopiesEveryField) {
-  FeatureSet::FeatureData object1 = createFeatureData(3, 100);
-  FeatureSet::FeatureData object2 = createFeatureData(2, 200);
+TEST(FeatureBlockContainerTest, ConstructsFromFeatureDataCopiesEveryField) {
+  FeatureBlockContainer::FeatureData object1 = createFeatureData(3, 100);
+  FeatureBlockContainer::FeatureData object2 = createFeatureData(2, 200);
 
-  std::vector<std::pair<ObjectId, FeatureSet::FeatureData>> terms;
+  std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms;
   terms.emplace_back(10, object1);
   terms.emplace_back(20, object2);
 
-  FeatureSet features(terms);
+  FeatureBlockContainer features(terms);
 
   const auto first = features.objectView(10);
   const auto second = features.objectView(20);
@@ -3736,7 +3219,7 @@ TEST(FeatureSet, ConstructsFromFeatureDataCopiesEveryField) {
     EXPECT_EQ(first.points()[i], object1.points[i]);
     EXPECT_EQ(first.previousPoints()[i], object1.previous_points[i]);
     EXPECT_EQ(first.ids()[i], object1.ids[i]);
-    EXPECT_EQ(first.status()[i], object1.status[i]);
+    EXPECT_EQ(first.inlier()[i], object1.inlier[i]);
     EXPECT_EQ(first.errors()[i], object1.errors[i]);
     EXPECT_EQ(first.objectIds()[i], 10);
   }
@@ -3745,19 +3228,19 @@ TEST(FeatureSet, ConstructsFromFeatureDataCopiesEveryField) {
     EXPECT_EQ(second.points()[i], object2.points[i]);
     EXPECT_EQ(second.previousPoints()[i], object2.previous_points[i]);
     EXPECT_EQ(second.ids()[i], object2.ids[i]);
-    EXPECT_EQ(second.status()[i], object2.status[i]);
+    EXPECT_EQ(second.inlier()[i], object2.inlier[i]);
     EXPECT_EQ(second.errors()[i], object2.errors[i]);
     EXPECT_EQ(second.objectIds()[i], 20);
   }
 }
 
-TEST(FeatureSet, ConstructsFromEmptyFeatureData) {
-  FeatureSet::FeatureData empty;
+TEST(FeatureBlockContainerTest, ConstructsFromEmptyFeatureData) {
+  FeatureBlockContainer::FeatureData empty;
 
-  std::vector<std::pair<ObjectId, FeatureSet::FeatureData>> terms;
+  std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms;
   terms.emplace_back(42, empty);
 
-  FeatureSet features(terms);
+  FeatureBlockContainer features(terms);
 
   EXPECT_EQ(features.objectCount(), 1u);
   EXPECT_EQ(features.size(), 0u);
@@ -3769,30 +3252,31 @@ TEST(FeatureSet, ConstructsFromEmptyFeatureData) {
   EXPECT_EQ(object.size(), 0u);
 }
 
-TEST(FeatureSet, ConstructsFromFeatureDataRejectsMismatchedArrays) {
-  FeatureSet::FeatureData data;
+TEST(FeatureBlockContainerTest,
+     ConstructsFromFeatureDataRejectsMismatchedArrays) {
+  FeatureBlockContainer::FeatureData data;
   data.points.resize(3);
   data.previous_points.resize(3);
   data.ids.resize(2);  // Incorrect size.
-  data.status.resize(3);
+  data.inlier.resize(3);
   data.errors.resize(3);
 
-  std::vector<std::pair<ObjectId, FeatureSet::FeatureData>> terms;
+  std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms;
   terms.emplace_back(1, data);
 
-  EXPECT_THROW(FeatureSet features(terms), std::invalid_argument);
+  EXPECT_THROW(FeatureBlockContainer features(terms), std::invalid_argument);
 }
 
-TEST(FeatureSet, ConstructsFromFeatureDataDoesNotAliasSource) {
-  FeatureSet::FeatureData data = createFeatureData(3, 100);
+TEST(FeatureBlockContainerTest, ConstructsFromFeatureDataDoesNotAliasSource) {
+  FeatureBlockContainer::FeatureData data = createFeatureData(3, 100);
 
   const cv::Point2f original_point = data.points[0];
   const int original_id = data.ids[0];
 
-  std::vector<std::pair<ObjectId, FeatureSet::FeatureData>> terms;
+  std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms;
   terms.emplace_back(1, data);
 
-  FeatureSet features(terms);
+  FeatureBlockContainer features(terms);
 
   data.points[0] = cv::Point2f(999.0f, 888.0f);
   data.ids[0] = 9999;
@@ -3803,13 +3287,13 @@ TEST(FeatureSet, ConstructsFromFeatureDataDoesNotAliasSource) {
   EXPECT_EQ(object.ids()[0], original_id);
 }
 
-TEST(FeatureSet, ConstructsFromMap) {
-  std::map<ObjectId, FeatureSet::FeatureData> terms;
+TEST(FeatureBlockContainerTest, ConstructsFromMap) {
+  std::map<ObjectId, FeatureBlockContainer::FeatureData> terms;
 
   terms.emplace(10, createFeatureData(3, 100));
   terms.emplace(20, createFeatureData(2, 200));
 
-  FeatureSet features(terms);
+  FeatureBlockContainer features(terms);
 
   EXPECT_EQ(features.objectCount(), 2u);
   EXPECT_EQ(features.size(), 5u);
@@ -3818,24 +3302,24 @@ TEST(FeatureSet, ConstructsFromMap) {
   EXPECT_EQ(features.objectView(20).size(), 2u);
 }
 
-TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
-  FeatureSet features({
+TEST(FeatureBlockContainerTest, MergeCopiesEverySoAFieldCorrectly) {
+  FeatureBlockContainer features({
       {1, 2},
       {2, 3},
   });
 
-  FeatureSet new_features({
+  FeatureBlockContainer new_features({
       {1, 2},
       {2, 1},
   });
 
-  const FeatureSet::FeatureData old1 = createFeatureData(2, 10);
+  const FeatureBlockContainer::FeatureData old1 = createFeatureData(2, 10);
 
-  const FeatureSet::FeatureData old2 = createFeatureData(3, 20);
+  const FeatureBlockContainer::FeatureData old2 = createFeatureData(3, 20);
 
-  const FeatureSet::FeatureData new1 = createFeatureData(2, 30);
+  const FeatureBlockContainer::FeatureData new1 = createFeatureData(2, 30);
 
-  const FeatureSet::FeatureData new2 = createFeatureData(1, 40);
+  const FeatureBlockContainer::FeatureData new2 = createFeatureData(1, 40);
 
   features.objectView(1).copyFrom(old1);
   features.objectView(2).copyFrom(old2);
@@ -3843,7 +3327,7 @@ TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
   new_features.objectView(1).copyFrom(new1);
   new_features.objectView(2).copyFrom(new2);
 
-  FeatureSet merged = features.merge(new_features);
+  FeatureBlockContainer merged = features.merge(new_features);
 
   const auto object1 = merged.objectView(1);
 
@@ -3859,7 +3343,7 @@ TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
 
     EXPECT_EQ(object1.objectIds()[i], 1);
 
-    EXPECT_EQ(object1.status()[i], old1.status[i]);
+    EXPECT_EQ(object1.inlier()[i], old1.inlier[i]);
 
     EXPECT_EQ(object1.errors()[i], old1.errors[i]);
   }
@@ -3875,7 +3359,7 @@ TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
 
     EXPECT_EQ(object1.objectIds()[index], 1);
 
-    EXPECT_EQ(object1.status()[index], new1.status[i]);
+    EXPECT_EQ(object1.inlier()[index], new1.inlier[i]);
 
     EXPECT_EQ(object1.errors()[index], new1.errors[i]);
   }
@@ -3890,7 +3374,7 @@ TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
 
     EXPECT_EQ(object2.objectIds()[i], 2);
 
-    EXPECT_EQ(object2.status()[i], old2.status[i]);
+    EXPECT_EQ(object2.inlier()[i], old2.inlier[i]);
 
     EXPECT_EQ(object2.errors()[i], old2.errors[i]);
   }
@@ -3906,7 +3390,7 @@ TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
 
     EXPECT_EQ(object2.objectIds()[index], 2);
 
-    EXPECT_EQ(object2.status()[index], new2.status[i]);
+    EXPECT_EQ(object2.inlier()[index], new2.inlier[i]);
 
     EXPECT_EQ(object2.errors()[index], new2.errors[i]);
   }
@@ -3918,11 +3402,11 @@ TEST(FeatureSetTest, MergeCopiesEverySoAFieldCorrectly) {
 // Performance
 // =============================================================================
 
-TEST(FeatureSetPerformance, ObjectViewMatchesSoA) {
+TEST(FeatureBlockContainerTest, ObjectViewMatchesSoAPerformance) {
   constexpr size_t N = 10000;
   constexpr size_t ITERATIONS = 1000;
 
-  FeatureSet features({
+  FeatureBlockContainer features({
       {1, N},
   });
 
@@ -3972,13 +3456,13 @@ TEST(FeatureSetPerformance, ObjectViewMatchesSoA) {
   EXPECT_LT(view_ns, soa_ns * 1.10);
 }
 
-TEST(FeatureSetPerformance, PerObjectIteration) {
+TEST(FeatureBlockContainerTest, PerObjectIterationPerformance) {
   constexpr size_t FEATURES_PER_OBJECT = 2500;
   constexpr size_t OBJECT_COUNT = 4;
   constexpr size_t N = FEATURES_PER_OBJECT * OBJECT_COUNT;
   constexpr size_t ITERATIONS = 1000;
 
-  FeatureSet features({
+  FeatureBlockContainer features({
       {1, FEATURES_PER_OBJECT},
       {2, FEATURES_PER_OBJECT},
       {3, FEATURES_PER_OBJECT},

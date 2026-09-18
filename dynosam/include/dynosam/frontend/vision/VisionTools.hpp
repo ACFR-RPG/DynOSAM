@@ -95,7 +95,8 @@ void getCorrespondences(FeaturePairs& correspondences,
 
 // NOTE: returns the inlier/outlier mask not H
 cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
-                       const std::vector<cv::Point2f>& current);
+                       const std::vector<cv::Point2f>& current,
+                       double repr_threshold = 3.0, const int max_iters = 1000);
 // // should represent cv::Point2f stored as a cv::mat (ie N x 1 x 2)
 // void outlierRejectHomography(
 //     const cv::Mat& previous_points,

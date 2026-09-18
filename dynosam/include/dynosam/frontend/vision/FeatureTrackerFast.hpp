@@ -20,39 +20,34 @@ class FeatureBlockContainer {
     std::vector<cv::Point2f> points;
     std::vector<cv::Point2f> previous_points;
     std::vector<TrackletId> ids;
-    std::vector<uchar> status;
+    std::vector<size_t> age;
+    std::vector<uchar> inlier;
     std::vector<float> errors;
 
-    size_t size() const { return points.size(); }
-
-    bool empty() const { return points.empty(); }
-
-    void checkSizes() const {
-      const size_t n = points.size();
-
-      if (previous_points.size() != n || ids.size() != n ||
-          status.size() != n || errors.size() != n) {
-        throw std::invalid_argument(
-            "FeatureData: all feature arrays must have the same size");
-      }
-    }
-
-    void reserve(size_t n) {
-      points.reserve(n);
-      previous_points.reserve(n);
-      ids.reserve(n);
-      status.reserve(n);
-      errors.reserve(n);
-    }
+    inline size_t size() const { return points.size(); }
+    inline bool empty() const { return points.empty(); }
+    void checkSizes() const;
+    void reserve(size_t n);
+    void resize(size_t n);
   };
 
-  struct FeatureBlockDim {
+  /**
+   * @brief Specifies the number of features for an object id.
+   *
+   * Used to generated a block of contiguous memory
+   *
+   */
+  struct BlockDim {
     ObjectId object_id;
     size_t size{0};
   };
 
  private:
-  struct FeatureBlockLayout {
+  /**
+   * @brief Internal storage for memory layout
+   *
+   */
+  struct BlockLayout {
     ObjectId object_id;
     size_t begin{0};
     size_t end{0};
@@ -61,90 +56,93 @@ class FeatureBlockContainer {
   };
 
  public:
-  class FeatureBlockView {
+  /**
+   * @brief View to a block of features pertaining to a single object.
+   *
+   * Access is via raw pointers for speed.
+   *
+   * NOTE: After doing performance profiling it is very important to keep all
+   * these functions in the header file to make them inline. We loose about 12%
+   * performance on access compared to direct SoA access if they are not inline!
+   *
+   */
+  class BlockView {
    public:
-    size_t size() const { return end_ - begin_; }
+    inline size_t size() const { return layout_.size(); }
+    inline ObjectId objectId() const { return layout_.object_id; }
 
-    ObjectId objectId() const { return object_id_; }
-
-    cv::Point2f* points() { return features_->points.data() + begin_; }
-
-    const cv::Point2f* points() const {
-      return features_->points.data() + begin_;
+    inline cv::Point2f* points() {
+      return features_->points.data() + layout_.begin;
+    }
+    inline const cv::Point2f* points() const {
+      return features_->points.data() + layout_.begin;
     }
 
     // potentiall dangerous as we could modify the points mat!
-    cv::Mat pointsMat() {
+    inline cv::Mat pointsMat() {
       return cv::Mat(static_cast<int>(size()), 1, CV_32FC2, points());
     }
-
     // dangerous as not actually const as cv::Mat will mantain a non-const
     // pointer to the raw data
-    cv::Mat pointsMat() const {
+    inline cv::Mat pointsMat() const {
       return cv::Mat(static_cast<int>(size()), 1, CV_32FC2,
                      const_cast<cv::Point2f*>(points()));
     }
 
-    cv::Point2f* previousPoints() {
-      return features_->previous_points.data() + begin_;
+    inline cv::Point2f* previousPoints() {
+      return features_->previous_points.data() + layout_.begin;
+    }
+    inline const cv::Point2f* previousPoints() const {
+      return features_->previous_points.data() + layout_.begin;
     }
 
-    const cv::Point2f* previousPoints() const {
-      return features_->previous_points.data() + begin_;
+    inline TrackletId* ids() { return features_->ids.data() + layout_.begin; }
+    inline const TrackletId* ids() const {
+      return features_->ids.data() + layout_.begin;
     }
 
-    TrackletId* ids() { return features_->ids.data() + begin_; }
-
-    const TrackletId* ids() const { return features_->ids.data() + begin_; }
-
-    ObjectId* objectIds() { return features_->object_ids.data() + begin_; }
-
-    const ObjectId* objectIds() const {
-      return features_->object_ids.data() + begin_;
+    inline ObjectId* objectIds() {
+      return features_->object_ids.data() + layout_.begin;
+    }
+    inline const ObjectId* objectIds() const {
+      return features_->object_ids.data() + layout_.begin;
     }
 
-    uchar* status() { return features_->status.data() + begin_; }
+    inline uchar* inlier() { return features_->inlier.data() + layout_.begin; }
+    inline const uchar* inlier() const {
+      return features_->inlier.data() + layout_.begin;
+    }
 
-    const uchar* status() const { return features_->status.data() + begin_; }
+    inline float* errors() { return features_->errors.data() + layout_.begin; }
+    inline const float* errors() const {
+      return features_->errors.data() + layout_.begin;
+    }
 
-    float* errors() { return features_->errors.data() + begin_; }
-
-    const float* errors() const { return features_->errors.data() + begin_; }
+    inline size_t* age() { return features_->age.data() + layout_.begin; }
+    inline const size_t* age() const {
+      return features_->age.data() + layout_.begin;
+    }
 
     // ---------------------------------------------------------------------
     // Convenient bulk assignment
     // ---------------------------------------------------------------------
 
-    void copyFrom(const FeatureData& data) {
-      data.checkSizes();
-
-      if (data.size() != size()) {
-        throw std::invalid_argument(
-            "FeatureSet::FeatureBlockView::copyFrom: "
-            "FeatureData size does not match object size");
-      }
-
-      copyBlock(points(), data.points.data(), size());
-      copyBlock(previousPoints(), data.previous_points.data(), size());
-      copyBlock(ids(), data.ids.data(), size());
-      copyBlock(status(), data.status.data(), size());
-      copyBlock(errors(), data.errors.data(), size());
-    }
+    void copyFrom(const FeatureData& data);
 
    private:
     friend class FeatureBlockContainer;
 
-    FeatureBlockView(FeatureBlockContainer* features, ObjectId object_id,
-                     size_t begin, size_t end)
-        : features_(features),
-          object_id_(object_id),
-          begin_(begin),
-          end_(end) {}
+    BlockView(FeatureBlockContainer* features, ObjectId object_id, size_t begin,
+              size_t end)
+        : features_(features), layout_{object_id, begin, end} {}
+
+    BlockView(FeatureBlockContainer* features, const BlockLayout& layout)
+        : features_(features), layout_(layout) {}
 
     template <typename T>
     static void copyBlock(T* destination, const T* source, size_t count) {
       static_assert(std::is_trivially_copyable<T>::value,
-                    "FeatureBlockView fields must be trivially copyable");
+                    "BlockView fields must be trivially copyable");
 
       if (count > 0) {
         std::memcpy(destination, source, count * sizeof(T));
@@ -154,28 +152,21 @@ class FeatureBlockContainer {
     // in reality might be pointer to const FeatureSet.
     // TODO: redesign with template as before
     FeatureBlockContainer* features_;
-    // TODO: make FeatureBlockLayout
-    ObjectId object_id_;
-    size_t begin_;
-    size_t end_;
+    // Layout for this feature blocks
+    BlockLayout layout_;
   };
 
   // empty initaliser
   FeatureBlockContainer() {}
 
-  FeatureBlockContainer(std::initializer_list<FeatureBlockDim> specs) {
-    initialize(specs.begin(), specs.end());
-  }
-
-  explicit FeatureBlockContainer(const std::vector<FeatureBlockDim>& specs) {
-    initialize(specs.begin(), specs.end());
-  }
+  FeatureBlockContainer(std::initializer_list<BlockDim> specs);
+  explicit FeatureBlockContainer(const std::vector<BlockDim>& specs);
 
   //@tparam TERMS A container whose value type is std::pair<ObjectId,
   // FeatureData>
   template <typename TERMS>
   explicit FeatureBlockContainer(const TERMS& terms) {
-    std::vector<FeatureBlockDim> specs;
+    std::vector<BlockDim> specs;
     specs.reserve(terms.size());
     for (typename TERMS::const_iterator it = terms.begin(); it != terms.end();
          ++it) {
@@ -185,7 +176,6 @@ class FeatureBlockContainer {
       const FeatureData& data = term.second;
 
       data.checkSizes();
-
       specs.push_back({object_id, data.size()});
     }
 
@@ -194,197 +184,56 @@ class FeatureBlockContainer {
     for (typename TERMS::const_iterator it = terms.begin(); it != terms.end();
          ++it) {
       const auto& term = *it;
-
-      const ObjectId object_id = term.first;
       const FeatureData& source = term.second;
 
-      FeatureBlockView destination = objectView(term.first);
+      BlockView destination = objectView(term.first);
       destination.copyFrom(source);
     }
 
     checkInvariants();
   }
 
-  size_t size() const { return points.size(); }
+  /// @brief Number of total features (all blocks)
+  /// @return size_t
+  size_t size() const;
 
-  size_t objectCount() const { return objects_.size(); }
+  /// @brief Number of memory blocks representing number of objects stored
+  /// @return
+  size_t objectCount() const;
+  /**
+   * @brief Get views for all feature blocks, one for each object
+   *
+   * @return std::vector<BlockView>
+   */
+  std::vector<BlockView> objectViews() const;
 
-  std::vector<FeatureBlockView> objectViews() const {
-    std::vector<FeatureBlockView> views;
-    views.reserve(objectCount());
-    for (const auto& [object_id, _] : object_lookup_) {
-      views.push_back(objectView(object_id));
-    }
-    return views;
-  }
+  /**
+   * @brief If an object exists in the container.
+   *
+   * (ie. a block of contiguous memory has been allocated for this object)
+   *
+   * @param object_id ObjectId
+   * @return true
+   * @return false
+   */
+  bool containsObject(ObjectId object_id) const;
 
-  bool containsObject(ObjectId object_id) const {
-    return object_lookup_.find(object_id) != object_lookup_.end();
-  }
+  FeatureBlockContainer merge(const FeatureBlockContainer& other) const;
 
-  FeatureBlockContainer merge(const FeatureBlockContainer& other) const {
-    // check for tracklet ids dupliactes
-    // TODO: comment out for now - this makes creating empty or initalised but
-    // inassigned FeatureSets invalid becuase all objectids/trackletids will
-    // have the same id!
-    //  std::unordered_set<int> feature_ids;
-    //  feature_ids.reserve(ids.size() + other.ids.size());
-
-    // for (const int id : ids)
-    // {
-    //     feature_ids.insert(id);
-    // }
-
-    // for (const int id : other.ids)
-    // {
-    //     if (!feature_ids.insert(id).second)
-    //     {
-    //         throw std::invalid_argument(
-    //             "FeatureSet::merge: duplicate feature ID " +
-    //             std::to_string(id));
-    //     }
-    // }
-
-    // -------------------------------------------------------------------------
-    // Build the resulting object layout.
-    //
-    // Existing objects retain their order.
-    // New objects from `other` are appended in `other`'s order.
-    // -------------------------------------------------------------------------
-
-    std::vector<FeatureBlockDim> specs;
-    specs.reserve(objects_.size() + other.objects_.size());
-
-    // Existing objects.
-    for (const FeatureBlockLayout& object : objects_) {
-      const auto other_it = other.object_lookup_.find(object.object_id);
-
-      const size_t other_size = other_it != other.object_lookup_.end()
-                                    ? other.objects_[other_it->second].size()
-                                    : 0;
-
-      specs.push_back({object.object_id, object.size() + other_size});
-    }
-
-    // Objects which only exist in `other`.
-    for (const FeatureBlockLayout& object : other.objects_) {
-      if (object_lookup_.find(object.object_id) == object_lookup_.end()) {
-        specs.push_back({object.object_id, object.size()});
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // Allocate the final FeatureSet exactly once.
-    // -------------------------------------------------------------------------
-
-    FeatureBlockContainer result(specs);
-
-    // -------------------------------------------------------------------------
-    // Copy the existing features into their final locations.
-    // -------------------------------------------------------------------------
-
-    for (const FeatureBlockLayout& object : objects_) {
-      const FeatureBlockView source = objectView(object.object_id);
-
-      FeatureBlockView destination = result.objectView(object.object_id);
-
-      copyFeatures(destination, source);
-    }
-
-    // -------------------------------------------------------------------------
-    // Append features from `other`.
-    //
-    // Existing objects are appended after their existing features.
-    // New-only objects are copied starting at offset zero.
-    // -------------------------------------------------------------------------
-
-    for (const FeatureBlockLayout& other_object : other.objects_) {
-      const FeatureBlockView source = other.objectView(other_object.object_id);
-
-      FeatureBlockView destination = result.objectView(other_object.object_id);
-
-      const auto existing_it = object_lookup_.find(other_object.object_id);
-
-      const size_t destination_offset =
-          existing_it != object_lookup_.end()
-              ? objects_[existing_it->second].size()
-              : 0;
-
-      if (source.size() == 0) continue;
-
-      copyFeatures(destination, source, destination_offset);
-    }
-
-    // object_ids are established by the FeatureSet constructor and therefore
-    // don't need to be copied during the merge.
-
-    result.checkInvariants();
-
-    return result;
-  }
-
-  FeatureBlockView objectView(int object_id) {
-    const FeatureBlockLayout& metadata = objectMetadata(object_id);
-
-    return FeatureBlockView(this, metadata.object_id, metadata.begin,
-                            metadata.end);
-  }
-
-  const FeatureBlockView objectView(int object_id) const {
-    const FeatureBlockLayout& metadata = objectMetadata(object_id);
-
-    return FeatureBlockView(const_cast<FeatureBlockContainer*>(this),
-                            metadata.object_id, metadata.begin, metadata.end);
-  }
+  BlockView objectView(ObjectId object_id);
+  const BlockView objectView(ObjectId object_id) const;
 
   std::vector<cv::Point2f> points;
   std::vector<cv::Point2f> previous_points;
   std::vector<TrackletId> ids;
+  std::vector<size_t> age;
   std::vector<ObjectId> object_ids;
-  std::vector<uchar> status;
+  std::vector<uchar> inlier;
   std::vector<float> errors;
 
-  void printDebugInfo() const {
-#ifndef NDEBUG
-    std::cout << "FeatureSet"
-              << " | total_features=" << size()
-              << " | objects=" << objectCount() << '\n';
+  std::string debugInfoString() const;
 
-    for (const FeatureBlockLayout& object : objects_) {
-      std::cout << "  object_id=" << object.object_id
-                << " | size=" << object.size() << " | range=[" << object.begin
-                << ", " << object.end << ")" << '\n';
-    }
-#endif
-  }
-
-  void checkInvariants() const {
-#ifndef NDEBUG
-    const size_t n = points.size();
-
-    assert(previous_points.size() == n);
-    assert(ids.size() == n);
-    assert(object_ids.size() == n);
-    assert(status.size() == n);
-    assert(errors.size() == n);
-
-    size_t expected_begin = 0;
-
-    for (const FeatureBlockLayout& object : objects_) {
-      assert(object.begin == expected_begin);
-      assert(object.begin <= object.end);
-      assert(object.end <= n);
-
-      for (size_t i = object.begin; i < object.end; ++i) {
-        assert(object_ids[i] == object.object_id);
-      }
-
-      expected_begin = object.end;
-    }
-
-    assert(expected_begin == n);
-#endif
-  }
+  void checkInvariants() const;
 
  private:
   template <typename T>
@@ -397,24 +246,8 @@ class FeatureBlockContainer {
     }
   }
 
-  static void copyFeatures(FeatureBlockView destination,
-                           const FeatureBlockView& source,
-                           size_t destination_offset = 0) {
-    copyBlock(destination.points() + destination_offset, source.points(),
-              source.size());
-
-    copyBlock(destination.previousPoints() + destination_offset,
-              source.previousPoints(), source.size());
-
-    copyBlock(destination.ids() + destination_offset, source.ids(),
-              source.size());
-
-    copyBlock(destination.status() + destination_offset, source.status(),
-              source.size());
-
-    copyBlock(destination.errors() + destination_offset, source.errors(),
-              source.size());
-  }
+  static void copyFeatures(BlockView destination, const BlockView& source,
+                           size_t destination_offset = 0);
 
   // =========================================================================
   // Layout construction
@@ -424,13 +257,13 @@ class FeatureBlockContainer {
   void initialize(Iterator begin, Iterator end) {
     const size_t object_count = static_cast<size_t>(std::distance(begin, end));
 
-    objects_.reserve(object_count);
+    block_layout_.reserve(object_count);
     object_lookup_.reserve(object_count);
 
     size_t total_size = 0;
 
     for (Iterator it = begin; it != end; ++it) {
-      const FeatureBlockDim& spec = *it;
+      const BlockDim& spec = *it;
 
       if (object_lookup_.find(spec.object_id) != object_lookup_.end()) {
         throw std::invalid_argument(
@@ -441,10 +274,10 @@ class FeatureBlockContainer {
       const size_t object_begin = total_size;
       const size_t object_end = total_size + spec.size;
 
-      object_lookup_.emplace(spec.object_id, objects_.size());
+      object_lookup_.emplace(spec.object_id, block_layout_.size());
 
-      objects_.push_back(
-          FeatureBlockLayout{spec.object_id, object_begin, object_end});
+      block_layout_.push_back(
+          BlockLayout{spec.object_id, object_begin, object_end});
 
       total_size = object_end;
     }
@@ -452,13 +285,14 @@ class FeatureBlockContainer {
     points.resize(total_size);
     previous_points.resize(total_size);
     ids.resize(total_size);
+    age.resize(total_size);
     object_ids.resize(total_size);
-    status.resize(total_size);
+    inlier.resize(total_size);
     errors.resize(total_size);
 
     // Initialise object IDs immediately so the FeatureSet is valid even
     // before the caller fills the feature data.
-    for (const FeatureBlockLayout& object : objects_) {
+    for (const BlockLayout& object : block_layout_) {
       std::fill(object_ids.begin() + object.begin,
                 object_ids.begin() + object.end, object.object_id);
     }
@@ -467,7 +301,7 @@ class FeatureBlockContainer {
   }
 
   // TODO: change name!
-  const FeatureBlockLayout& objectMetadata(ObjectId object_id) const {
+  const BlockLayout& objectMetadata(ObjectId object_id) const {
     auto it = object_lookup_.find(object_id);
 
     if (it == object_lookup_.end()) {
@@ -475,16 +309,23 @@ class FeatureBlockContainer {
                               std::to_string(object_id));
     }
 
-    return objects_[it->second];
+    return block_layout_[it->second];
   }
 
-  // TODO: change name
-  std::vector<FeatureBlockLayout> objects_;
+  //! Memory layout of each block, where each block represents contiguous memory
+  //! block per object
+  std::vector<BlockLayout> block_layout_;
+  //! Index of object id -> index in the block_layout vector
   std::unordered_map<ObjectId, size_t> object_lookup_;
 };
 
+/// @brief Alias to FeatureBlockContainer::BlockDim
+using FeatureBlockDim = FeatureBlockContainer::BlockDim;
+/// @brief Alias to FeatureBlockContainer::BlockView
+using FeatureBlockView = FeatureBlockContainer::BlockView;
+
 // Should just be called tracker or something as also does object tracking!
-class FeatureTrackerFast {
+class FeatureTrackerFast : public FeatureTrackerBase {
  public:
   DYNO_POINTER_TYPEDEFS(FeatureTrackerFast)
 
@@ -492,13 +333,11 @@ class FeatureTrackerFast {
                      ImageDisplayQueue* display_queue = nullptr);
   virtual ~FeatureTrackerFast() {}
 
-  Frame::Ptr track(FrameId frame_id, Timestamp timestamp,
-                   const ImageContainer& image_container,
-                   const std::optional<gtsam::Rot3>& R_km1_k = {});
+  void track(FrameId frame_id, Timestamp timestamp,
+             const ImageContainer& image_container,
+             const std::optional<gtsam::Rot3>& R_km1_k = {});
 
  private:
-  void initDeviceMemory(const cv::Size& size);
-
   struct ObjectDetectionImpl {
     FeatureTrackerFast* parent;
 
@@ -520,9 +359,6 @@ class FeatureTrackerFast {
   //     const cv::Mat& mono,
   //     const cv::Mat& object_mask);
 
-  // void buildOpticalFlowPyramid(const cv::Mat& mono,
-  //                         std::vector<cv::Mat>& pyramid) const;
-
  private:
   const FrontendParams frontend_params_;
   TrackletIdManager& tracklet_id_manager;
@@ -535,44 +371,116 @@ class FeatureTrackerFast {
   //! Object mask for the previous frame
   cv::Mat prev_object_mask_;
 
-  //! Page locked host allocations which own the image memory. Owns memory
-  cv::cuda::HostMem h_mono_;
-  cv::cuda::HostMem h_eig_;
-  //! cv::Mat headers pointing to the page-locked allocations above. Does not
-  //! own memory
-  cv::Mat mono_;
-  cv::Mat eig_;
+  FeatureBlockContainer previous_features_;
 
-  cv::cuda::GpuMat d_mono_;
-  cv::cuda::GpuMat d_eig_;
+  struct GfttDetector {
+    struct Param {
+      ObjectId object_id;
+      //! Binary object/detection mask
+      cv::Mat mask;
+      cv::Rect bbox;
+      // num total corners to extract
+      int max_corners;
+      // int corners_after_anms;
+      float min_distance;
+    };
 
-  cv::cuda::Stream stream_;
-  cv::Ptr<cv::cuda::CornernessCriteria> detector_;
+    struct Params : public std::vector<Param> {
+      using Base = std::vector<Param>;
+      using Base::Base;
 
-  //   struct TrackingInfo {
-  //     ObjectId object_id{};
-  //     FrameId last_detection{};
-  //     size_t num_last_detected_features{0};
-  //     size_t num_last_tracked{0};
-  //   };
+      float quality_level{0.01};
+      int block_size{3};
+    };
 
-  //   gtsam::FastMap<ObjectId, CornerTracks> previous_tracks_;
+    GfttDetector(const cv::Size& size);
+    FeatureBlockContainer calc(const cv::Mat& mono, const Params& params);
 
-  struct CornersPerDetectionParams {
-    ObjectId object_id;
-    //! Binary object/detection mask
-    cv::Mat mask;
-    cv::Rect bbox;
-    // num total corners to extract
-    int max_corners;
-    // int corners_after_anms;
-    float min_distance;
+    TrackletIdManager& tracklet_id_manager_;
+
+    //! Page locked host allocations which own the image memory. Owns memory
+    cv::cuda::HostMem h_mono_;
+    cv::cuda::HostMem h_eig_;
+    //! cv::Mat headers pointing to the page-locked allocations above. Does not
+    //! own memory
+    cv::Mat mono_;
+    cv::Mat eig_;
+
+    cv::cuda::GpuMat d_mono_;
+    cv::cuda::GpuMat d_eig_;
+
+    cv::cuda::Stream stream_;
+    // impl detector for min-eigenvalue corner response.
+    cv::Ptr<cv::cuda::CornernessCriteria> detector_;
   };
+
+  void fillDetectionParam(ObjectId object_id, const cv::Mat& mask,
+                          const cv::Rect& bounding_box, int current_tracks,
+                          GfttDetector::Param& detection_param) const;
+
+  GfttDetector feature_detector_;
+
+  struct FlowTrackingStats {
+    //! Valid features tracked by LKT
+    size_t tracked_after_flow{0};
+    //! Num tracks after outlier rejection (ie. verification)
+    size_t tracked_after_or{0};
+    //! Number of tracks in the previous frame
+    size_t num_previous_tracks{0};
+
+    float survivalRatio() const {
+      if (num_previous_tracks > 0 && tracked_after_or > 0) {
+        return (float)tracked_after_or / num_previous_tracks;
+      } else {
+        return 0.0;
+      }
+    }
+  };
+  using FlowTrackingStatsMap = gtsam::FastMap<ObjectId, FlowTrackingStats>;
+
+  std::pair<FeatureBlockContainer, FlowTrackingStatsMap> trackGfftBatched(
+      const cv::Mat& mono, const cv::Mat& object_mask);
+
+  void buildOpticalFlowPyramid(const cv::Mat& mono,
+                               std::vector<cv::Mat>& pyramid) const;
 
   // optical flow params
   const cv::Size win_size_;
   const int max_level_;
   const cv::TermCriteria criteria_;
+
+  /**
+   * @brief Get the desired minimum distance between features for detection,
+   * depending on if the object is static (object_id = 0) or dynamic.
+   *
+   * @param object_id
+   * @return float
+   */
+  inline float getMinFeatureDistance(ObjectId object_id) const {
+    return object_id > background_label
+               ? params_.min_distance_btw_tracked_and_detected_dynamic_features
+               : params_.min_distance_btw_tracked_and_detected_static_features;
+  }
+
+  /**
+   * @brief Get the maximum desired corners to be extracted depending on if the
+   * object is static (object_id = 0) or dynamic.
+   *
+   * @param object_id
+   * @return int
+   */
+  inline int getMaxCorners(ObjectId object_id) const {
+    return object_id > background_label ? params_.max_dynamic_features_per_frame
+                                        : params_.max_nr_keypoints_before_anms;
+  }
+
+  inline int getMinAllowableTracks(ObjectId object_id) const {
+    return object_id > background_label ? params_.min_dynamic_tracks
+                                        : params_.min_features_per_frame;
+  }
+
+  cv::Mat drawBatchedFeatures(
+      const cv::Mat& image, const FeatureBlockContainer& batchedFeatures) const;
 };
 
 }  // namespace dyno

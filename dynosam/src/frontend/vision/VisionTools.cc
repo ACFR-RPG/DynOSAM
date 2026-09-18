@@ -65,17 +65,19 @@ namespace vision_tools {
 
 // helper function to homography
 cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
-                       const std::vector<cv::Point2f>& current) {
+                       const std::vector<cv::Point2f>& current,
+                       double repr_threshold, const int max_iters) {
   CHECK_EQ(previous.size(), current.size());
 
   // Minimum number of points required for RANSAC
   if (previous.size() >= 4) {
     cv::Mat mask;
-    cv::findHomography(previous, current, cv::RANSAC, 5.0, mask);
+    cv::findHomography(previous, current, cv::RANSAC, repr_threshold, mask,
+                       max_iters);
     return mask;
   } else {
     // If not enough points, assume all are outliers
-    return cv::Mat::ones(previous.size(), 1, CV_8U);
+    return cv::Mat::zeros(previous.size(), 1, CV_8U);
   }
 }
 
