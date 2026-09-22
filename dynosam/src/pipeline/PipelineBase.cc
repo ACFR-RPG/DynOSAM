@@ -47,19 +47,6 @@ PipelineBase::TimingNaming::TimingNaming(const std::string& module_name)
       process_wrapped("process"),
       output_timing_wrapped("push_output") {}
 
-utils::ChronoTimingStats PipelineBase::TimingNaming::inputPacketTimer() const {
-  return utils::ChronoTimingStats{module + "." + input_packet_wrapped,
-                                  intermediate_timing_glog_verbosity};
-}
-utils::ChronoTimingStats PipelineBase::TimingNaming::processTimer() const {
-  return utils::ChronoTimingStats{module + "." + process_wrapped,
-                                  intermediate_timing_glog_verbosity};
-}
-utils::ChronoTimingStats PipelineBase::TimingNaming::outputTiming() const {
-  return utils::ChronoTimingStats{module + "." + output_timing_wrapped,
-                                  intermediate_timing_glog_verbosity};
-}
-
 PipelineBase::SpinTimingStats PipelineBase::TimingNaming::constructTimingStats()
     const {
   // helper lambda to get and set statistics value

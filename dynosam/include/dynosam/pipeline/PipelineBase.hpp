@@ -149,9 +149,18 @@ class PipelineBase {
     const std::string process_wrapped;
     const std::string output_timing_wrapped;
 
-    utils::ChronoTimingStats inputPacketTimer() const;
-    utils::ChronoTimingStats processTimer() const;
-    utils::ChronoTimingStats outputTiming() const;
+    inline utils::ChronoTimingStats inputPacketTimer() const {
+      return utils::ChronoTimingStats{module + "." + input_packet_wrapped,
+                                      intermediate_timing_glog_verbosity};
+    }
+    inline utils::ChronoTimingStats processTimer() const {
+      return utils::ChronoTimingStats{module + "." + process_wrapped,
+                                      intermediate_timing_glog_verbosity};
+    }
+    inline utils::ChronoTimingStats outputTiming() const {
+      return utils::ChronoTimingStats{module + "." + output_timing_wrapped,
+                                      intermediate_timing_glog_verbosity};
+    }
 
     SpinTimingStats constructTimingStats() const;
 

@@ -5,12 +5,44 @@
 #include "dynosam/frontend/PoseChangeVIFrontendViz.hpp"
 #include "dynosam/frontend/VIFrontend.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSolver.hpp"
+#include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
 
 using PoseChangeBackendSink =
     std::function<void(const PoseChangeInput::ConstPtr&)>;
+
+class PoseChangeVIFrontendFAST : public VIFrontend {
+ public:
+  DYNO_POINTER_TYPEDEFS(PoseChangeVIFrontendFAST)
+  PoseChangeVIFrontendFAST(const DynoParams& params, Camera::Ptr camera,
+                           HybridFormulationKeyFrame::Ptr formulation,
+                           ImageDisplayQueue* display_queue = nullptr,
+                           const SharedGroundTruth& shared_ground_truth = {});
+
+  ~PoseChangeVIFrontendFAST() = default;
+
+  /** Add sink to send PC data to the backend */
+  void addPoseChangeOutputSink(const PoseChangeBackendSink& func) {
+    pose_change_backend_sink_ = func;
+  };
+
+  /** Callback triggered when the backend has finished a single update */
+  void onBackendUpdateComplete(const PoseChangeUpdateComplete& event) {}
+
+ private:
+  SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
+  SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
+
+ private:
+  HybridFormulationKeyFrame::Ptr formulation_;
+  HybridFormulationKeyFrameAccessor::Ptr accessor_;
+  KeyFrameMap::Ptr map_;
+  FeatureTrackerFast feature_tracker_fast_;
+
+  PoseChangeBackendSink pose_change_backend_sink_;
+};
 
 class PoseChangeVIFrontend : public VIFrontend {
  public:

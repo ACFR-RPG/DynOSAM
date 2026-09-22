@@ -13,6 +13,72 @@ DEFINE_bool(pc_send_objects_to_backend, true,
 
 namespace dyno {
 
+PoseChangeVIFrontendFAST::PoseChangeVIFrontendFAST(
+    const DynoParams& params, Camera::Ptr camera,
+    HybridFormulationKeyFrame::Ptr formulation,
+    ImageDisplayQueue* display_queue,
+    const SharedGroundTruth& shared_ground_truth)
+    : VIFrontend("pc-frontend", params, camera, display_queue,
+                 shared_ground_truth),
+      formulation_(CHECK_NOTNULL(formulation)),
+      accessor_(CHECK_NOTNULL(
+          formulation->derivedAccessor<HybridFormulationKeyFrameAccessor>())),
+      map_(CHECK_NOTNULL(formulation->map())),
+      feature_tracker_fast_(params.frontend_params_, camera) {
+  SharedGroundTruth ground_truth;
+  if (FLAGS_init_object_pose_from_gt) {
+    LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
+                 "will attempt to initalise object poses using provided ground "
+                 "truth pose!";
+    ground_truth = shared_ground_truth_;
+  }
+}
+
+PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
+    VIFrontendInput::ConstPtr input) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".spin");
+
+  featureTrack(input);
+  ImageContainer::Ptr image_container = input->image_container_;
+  auto frame_id = image_container->frameId();
+  auto timestamp = image_container->timestamp();
+  ImageContainer container = *image_container;
+  feature_tracker_fast_.track(frame_id, timestamp, container);
+
+  return {State::Nominal, nullptr};
+}
+
+PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
+    VIFrontendInput::ConstPtr input) {
+  utils::ChronoTimingStats timer(this->moduleName() + ".spin");
+
+  featureTrack(input);
+
+  const auto t1 = utils::Timer::tic();
+
+  ImageContainer::Ptr image_container = input->image_container_;
+  ImageContainer container = *image_container;
+  auto frame_id = image_container->frameId();
+  auto timestamp = image_container->timestamp();
+  auto [track_viz, features] =
+      feature_tracker_fast_.track(frame_id, timestamp, container);
+
+  const auto t2 = utils::Timer::toc(t1);
+  const auto compute_time = utils::Timer::toUnits<std::milli>(t2);
+  LOG(INFO) << "spin time seconds= " << compute_time;
+
+  pushImageToDisplayQueue("Tracks", track_viz);
+
+  // fill depth information
+  // project points
+  // match points
+  // run ransac
+  //  camera pose estimate!
+
+  return {State::Nominal, nullptr};
+}
+
+/////////////////////// ORIGINAL //////////////////////////////
 PoseChangeVIFrontend::PoseChangeVIFrontend(
     const DynoParams& params, Camera::Ptr camera,
     HybridFormulationKeyFrame::Ptr formulation,

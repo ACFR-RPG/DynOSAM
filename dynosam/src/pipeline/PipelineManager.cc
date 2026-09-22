@@ -326,9 +326,12 @@ void DynoPipelineManager::loadPoseChangeModules(
       pose_change_backend->getFormulation();
   CHECK_NOTNULL(kf_formulation);
 
-  auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontend>(
+  auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontendFAST>(
       params_, camera, kf_formulation, &display_queue_,
       data_interface_->getSharedGroundTruth());
+  // auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontend>(
+  //     params_, camera, kf_formulation, &display_queue_,
+  //     data_interface_->getSharedGroundTruth());
   LOG(INFO) << "Made PoseChangeVIFrontend";
 
   frontend_out = pc_vi_frontend;
@@ -347,7 +350,7 @@ void DynoPipelineManager::loadPoseChangeModules(
   if (FLAGS_use_backend) {
     // register update function from backend to frontend
     pose_change_backend->registerUpdateCallback(
-        std::bind(&PoseChangeVIFrontend::onBackendUpdateComplete,
+        std::bind(&PoseChangeVIFrontendFAST::onBackendUpdateComplete,
                   pc_vi_frontend.get(), std::placeholders::_1));
 
     // register output function from frontend

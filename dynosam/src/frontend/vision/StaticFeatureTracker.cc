@@ -421,6 +421,8 @@ bool KltFeatureTracker::trackPoints(
     return false;
   }
 
+  LOG(INFO) << "prev features=" << previous_features.size();
+
   outlier_previous_features.clear();
 
   const cv::Mat& motion_mask = image_container.objectMotionMask();
@@ -500,6 +502,8 @@ bool KltFeatureTracker::trackPoints(
       lk_tracker_->track(previous_image_container, image_container,
                          previous_pts, predicted_current_points_ptr);
 
+  LOG(INFO) << "after flow=" << lk_result.pts.size();
+
   //   cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
   //                            previous_pts, current_points, klt_status, err,
   //                            klt_window_size, klt_max_level, klt_criteria,
@@ -573,6 +577,10 @@ bool KltFeatureTracker::trackPoints(
     }
   }
 
+  // auto verified_current = good_current;
+  // auto verified_previous = good_previous;
+  // auto verified_tracklets = good_tracklets;
+
   std::vector<cv::Point2f> verified_current, verified_previous;
   TrackletIds verified_tracklets;
   vision_tools::outlierRejectHomography(good_previous, good_current,
@@ -583,6 +591,8 @@ bool KltFeatureTracker::trackPoints(
 
   const size_t n_prev = previous_pts.size();
   const size_t n_verified = verified_tracklets.size();
+
+  LOG(INFO) << "after homography=" << n_verified;
 
   const double survival_ratio = n_prev > 0 ? (double)n_verified / n_prev : 0.0;
 
@@ -616,7 +626,11 @@ bool KltFeatureTracker::trackPoints(
     }
   }
 
+  LOG(INFO) << "after checks=" << tracked_features.size();
+
   pruneTracks(tracked_features);
+
+  LOG(INFO) << "after pruning=" << tracked_features.size();
 
   // Get the outliers associated with the previous_features container by taking
   // the set difference between the verified and total tracklets NOTE: verified
@@ -644,6 +658,8 @@ bool KltFeatureTracker::trackPoints(
     const auto n_detected = tracked_features.size() - n_tracked;
     tracker_info.static_track_detections += n_detected;
   }
+
+  LOG(INFO) << "after resampling=" << tracked_features.size();
 
   return true;
 }
@@ -673,6 +689,7 @@ bool KltFeatureTracker::shouldResample(const FeatureContainer& tracked_features,
 
   const bool poor_tracking = survival_ratio < 0.4;
 
+  // return many_old_points || poor_tracking;
   return too_few_features || many_old_points || poor_tracking;
 }
 

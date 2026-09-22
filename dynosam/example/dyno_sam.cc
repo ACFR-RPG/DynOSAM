@@ -2269,13 +2269,15 @@ int main(int argc, char* argv[]) {
   // fp.tracker_params.feature_detector_type =
   //   TrackerParams::FeatureDetectorType::GFFT_CUDA;
   fp.tracker_params.max_nr_keypoints_before_anms = 1000;
-  fp.tracker_params.max_dynamic_features_per_frame = 300;
+  fp.tracker_params.max_dynamic_features_per_frame = 200;
   fp.tracker_params.prefer_provided_optical_flow = false;
   fp.tracker_params.prefer_provided_object_detection = true;
   fp.tracker_params.max_dynamic_feature_age = 1000;
+  fp.tracker_params.max_feature_track_age = 1000;
   // fp.tracker_params.feature_detector_type =
   // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
   fp.tracker_params.min_distance_btw_tracked_and_detected_static_features = 15;
+  fp.tracker_params.min_distance_btw_tracked_and_detected_dynamic_features = 8;
 
   auto camera = std::make_shared<Camera>(loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);
@@ -2318,6 +2320,7 @@ int main(int argc, char* argv[]) {
         // ftb.track(container->rgb(), container->objectMotionMask());
 
         // // LOG(INFO) << "Batched extraction: " << time_ms << " [ms]";
+        LOG(INFO) << to_string(tracker->getTrackerInfo());
 
         // // // cv::waitKey(0);
         Frame::Ptr previous_frame = tracker->getPreviousFrame();

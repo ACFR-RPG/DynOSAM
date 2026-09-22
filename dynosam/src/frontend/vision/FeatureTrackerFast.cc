@@ -269,8 +269,8 @@ FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
     : FeatureTrackerBase(params.tracker_params, camera, display_queue),
       frontend_params_(params),
       tracklet_id_manager(TrackletIdManager::instance()),
-      win_size_(21, 21),
-      max_level_(3),
+      win_size_(24, 24),
+      max_level_(4),
       criteria_(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 50, 0.001),
       object_detection_impl_(this),
       feature_detector_(camera->getParams().imageSize()) {
@@ -284,9 +284,10 @@ FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
   }
 }
 
-void FeatureTrackerFast::track(FrameId frame_id, Timestamp timestamp,
-                               const ImageContainer& image_container,
-                               const std::optional<gtsam::Rot3>& R_km1_k) {
+std::pair<cv::Mat, FeatureBlockContainer> FeatureTrackerFast::track(
+    FrameId frame_id, Timestamp timestamp,
+    const ImageContainer& image_container,
+    const std::optional<gtsam::Rot3>& R_km1_k) {
   utils::ChronoTimingStats feature_track_t("fast_tracker.track");
 
   const cv::Mat rgb = image_container.rgb();
@@ -299,6 +300,8 @@ void FeatureTrackerFast::track(FrameId frame_id, Timestamp timestamp,
   const cv::Mat object_masks = object_detection_result.labelled_mask;
 
   ObjectIds object_ids = object_detection_result.objectIds();
+
+  buildOpticalFlowPyramid(current_mono, curr_mono_pyr_);
 
   if (prev_mono_.empty()) {
     // fill out initial gfft params
@@ -339,11 +342,10 @@ void FeatureTrackerFast::track(FrameId frame_id, Timestamp timestamp,
     prev_mono_ = current_mono;
     previous_features_ = detected_features;
 
-    buildOpticalFlowPyramid(prev_mono_, prev_mono_pyr_);
+    // buildOpticalFlowPyramid(prev_mono_, prev_mono_pyr_);
   } else {
     auto [tracked_features, tracking_stats] =
         trackGfftBatched(current_mono, object_masks);
-    feature_track_t.stop();
 
     // fill out binary segmentation mask map to be used as detection mask
     gtsam::FastMap<ObjectId, cv::Mat> binary_detection_masks;
@@ -380,13 +382,16 @@ void FeatureTrackerFast::track(FrameId frame_id, Timestamp timestamp,
       const auto num_tracked = object_view.size();
       const auto min_allowed_tracks = getMinAllowableTracks(j);
       const auto allowed_feature_distance = getMinFeatureDistance(j);
+      const float max_feature_age = static_cast<float>(getMaxFeatureAge(j));
 
       LOG(INFO) << "Tracked features for j=" << j << " n=" << num_tracked;
 
-      cv::Mat binary_detection_mask_j = binary_detection_masks[j];
+      cv::Mat& binary_detection_mask_j = binary_detection_masks[j];
       auto object_points = object_view.points();
+
+      // add mask over current features
+      // improve masking for longer tracks by reducing supression for old tracks
       for (size_t i = 0; i < num_tracked; i++) {
-        // mark as location to ignore when doing feature detection
         cv::circle(binary_detection_mask_j, object_points[i],
                    allowed_feature_distance, cv::Scalar(0), cv::FILLED);
       }
@@ -467,89 +472,24 @@ void FeatureTrackerFast::track(FrameId frame_id, Timestamp timestamp,
       FeatureBlockContainer detected_features =
           feature_detector_.calc(current_mono, feature_detection_params);
       detect_t.stop();
-
-      // TODO: ANMS to cut down to only the set of features we want!
-
-      AdaptiveNonMaximumSuppression non_maximum_supression(
-          AnmsAlgorithmType::RangeTree);
-
-      static constexpr float kTolerance = 0.01;
-      static Eigen::MatrixXd binning_mask;
-
-      // TODO: We extract N max featues (not always as this makes the runtime
-      // slower) and then cut down to the number of featues we want to track
-      // using ANMS!
-
-      // gtsam::FastMap<ObjectId, CornerTracks> detected_feature_map;
-      // for (size_t i = 0; i < detected_features.size(); i++) {
-      //   if (detected_features[i].size() > 0) {
-      //     ObjectId object_id = objects_ids_for_detection[i];
-
-      //     const int desired_tracks = object_id > 0 ? 300 : 800;
-      //     int current_tracks =
-      //         detailed_tracks.exists(object_id)
-      //             ? detailed_tracks.at(object_id).corner_tracks.size()
-      //             : 0;
-      //     const int tracked_needed =
-      //         std::max(desired_tracks - current_tracks, 0);
-
-      //     std::vector<cv::Point2f>& new_keypoints =
-      //         detected_features[i].keypoints;
-      //     if (tracked_needed > 0) {
-      //       std::vector<KeypointCV> keypoints =
-      //           detected_features[i].toKeypoints();
-      //       std::vector<KeypointCV>& max_keypoints = keypoints;
-
-      //       max_keypoints = non_maximum_supression.suppressNonMax(
-      //           keypoints, tracked_needed, kTolerance, current_mono.cols,
-      //           current_mono.rows, 5, 5, binning_mask);
-
-      //       LOG(INFO) << "J=" << object_id << " tracks = " <<
-      //       current_tracks
-      //                 << " needed=" << tracked_needed << " after anms "
-      //                 << max_keypoints.size();
-
-      //       // std::vector<cv::Point2f> points_after_anms;
-      //       cv::KeyPoint::convert(max_keypoints, new_keypoints);
-      //     }
-
-      //     CornerTracks new_tracks;
-      //     new_tracks.keypoints = new_keypoints;
-      //     // fill new trackletids
-      //     new_tracks.tracklet_ids.reserve(new_tracks.keypoints.size());
-      //     for (auto i = 0u; i < new_tracks.keypoints.size(); i++) {
-      //       TrackletId tracklet_to_use =
-      //           tracklet_id_manager.getAndIncrementTrackletId();
-      //       new_tracks.tracklet_ids.push_back(tracklet_to_use);
-      //     }
-
-      //     detected_feature_map[object_id] = new_tracks;
-
-      //     TrackingInfo details;
-      //     details.object_id = object_id;
-      //     details.num_last_detected_features = new_tracks.keypoints.size();
-
-      //     // TODO: missing last number of tracking
-      //     tracking_infos_[object_id] = details;
-      //   }
-      // }
-
-      // // for now just replace featues
-      // for (const auto& [j, per_object_tracks] : detected_feature_map) {
-      //   // tracked_features[j] = per_object_tracks;
-      //   // add tracks to existing tracks!
-      //   tracks[j] += per_object_tracks;
-      // }
       previous_features_ = tracked_features.merge(detected_features);
 
     } else {
       previous_features_ = tracked_features;
     }
-    prev_mono_ = current_mono;
-
-    cv::Mat viz = drawBatchedFeatures(rgb, previous_features_);
-    cv::imshow("batch Tracks", viz);
+    // cv::imshow("batch Tracks", viz);
   }
+
+  prev_mono_ = current_mono;
+  // move data from current to previous
+  // this prevents shallow copying such that updating the current pyramid
+  // will update the previous pyramid
+  prev_mono_pyr_ = std::move(curr_mono_pyr_);
+
+  // always set previous object mask
+  prev_object_mask_ = object_masks;
+
+  return {drawBatchedFeatures(rgb, previous_features_), previous_features_};
 }
 
 FeatureTrackerFast::ObjectDetectionImpl::ObjectDetectionImpl(
@@ -671,9 +611,14 @@ struct CornerResponses {
     return keypoints.size();
   }
 
-  inline void reserve(size_t n) {
-    keypoints.reserve(n);
-    responses.reserve(n);
+  inline void reserve(size_t N) {
+    keypoints.reserve(N);
+    responses.reserve(N);
+  }
+
+  inline void resize(size_t N) {
+    keypoints.resize(N);
+    responses.resize(N);
   }
 
   inline void push_back(const CornerCandidate& candidate) {
@@ -760,6 +705,8 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
           const cv::Mat& mask = param.mask;
           const cv::Mat& dist = distanceTransformMasks[m];
 
+          CV_Assert(mask.type() == CV_8UC1);
+
           const int maxFeatureCount = param.max_corners;
           const float minDistance = param.min_distance;
 
@@ -807,7 +754,6 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
           // IMPORTANT:
           // Scan only the bounding box.
           // --------------------------------------------------------------
-
           for (int y = y0; y < y1; ++y) {
             const float* eigPtr = eig_.ptr<float>(y);
             const float* maxPtr = localMax.ptr<float>(y);
@@ -822,7 +768,9 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
               // For small dynamic object masks this avoids reading
               // the distance transform for almost every background
               // pixel in the bounding box.
-              if (maskPtr && !maskPtr[x]) continue;
+              if (maskPtr && !maskPtr[x]) {
+                continue;
+              }
 
               const float val = eigPtr[x];
 
@@ -853,15 +801,10 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
           // --------------------------------------------------------------
 
           CornerResponses& acceptedCorners = batchedResults[m];
-          // std::vector<cv::Point2f>& accepted_corners =
-          // terms[m].second.points;
-
-          // acceptedCorners.clear();
           acceptedCorners.reserve(maxFeatureCount);
 
           // One linked-list head per spatial cell.
           std::vector<int> gridHeads(gridWidth * gridHeight, -1);
-
           std::vector<int> nextPointIdx;
           nextPointIdx.reserve(maxFeatureCount);
 
@@ -899,9 +842,10 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
                 while (pIdx != -1) {
                   const cv::Point2f& accepted = acceptedCorners.keypoints[pIdx];
 
-                  const float dx = candidate.pt.x - accepted.x;
-
-                  const float dy = candidate.pt.y - accepted.y;
+                  const float dx = static_cast<int>(candidate.pt.x) -
+                                   static_cast<int>(accepted.x);
+                  const float dy = static_cast<int>(candidate.pt.y) -
+                                   static_cast<int>(accepted.y);
 
                   if (dx * dx + dy * dy < minDistanceSq) {
                     good = false;
@@ -926,6 +870,48 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
             gridHeads[cellIdx] = pointIdx;
 
             acceptedCorners.push_back(candidate);
+          }
+
+          // do ANMS
+          constexpr float anmsTolerance = 0.10f;
+          static Eigen::MatrixXd binning_mask;
+
+          AdaptiveNonMaximumSuppression non_maximum_supression(
+              AnmsAlgorithmType::RangeTree);
+
+          std::vector<cv::KeyPoint> keypoints;
+          keypoints.reserve(acceptedCorners.size());
+
+          LOG(INFO) << "kps before ANMS " << acceptedCorners.size();
+          // LOG(INFO) << "keypoints needed " << param.num_corners_needed;
+
+          for (size_t i = 0; i < acceptedCorners.size(); i++) {
+            const auto& pt = acceptedCorners.keypoints[i];
+            const auto& score = acceptedCorners.responses[i];
+            keypoints.emplace_back(cv::Point2f(pt.x - static_cast<float>(x0),
+                                               pt.y - static_cast<float>(y0)),
+                                   1.0f,   // size
+                                   -1.0f,  // angle
+                                   score   // response
+            );
+          }
+
+          auto& selected_keypoints = keypoints;
+          selected_keypoints = non_maximum_supression.suppressNonMax(
+              keypoints, param.num_corners_needed, anmsTolerance, bbox.width,
+              bbox.height, 5, 5, binning_mask);
+
+          LOG(INFO) << "points after ANMS " << selected_keypoints.size();
+
+          // re-allocate correct memory size
+          acceptedCorners.resize(selected_keypoints.size());
+
+          for (size_t i = 0; i < selected_keypoints.size(); i++) {
+            auto kp = selected_keypoints[i];
+            kp.pt.x += static_cast<float>(x0);
+            kp.pt.y += static_cast<float>(y0);
+            acceptedCorners.keypoints[i] = kp.pt;
+            acceptedCorners.responses[i] = kp.response;
           }
         }
       });
@@ -1014,21 +1000,21 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
   std::vector<uchar> forward_status;
   std::vector<float> forward_err;
 
-  std::vector<cv::Mat> current_mono_pyr;
-  buildOpticalFlowPyramid(mono, current_mono_pyr);
+  // std::vector<cv::Mat> current_mono_pyr;
+  // buildOpticalFlowPyramid(mono, current_mono_pyr);
 
   // One single call allows OpenCV to run hot loops across contiguous memory
   // blocks
-  cv::calcOpticalFlowPyrLK(prev_mono_pyr_, current_mono_pyr, flatPrev, flatNext,
+  cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev, flatNext,
                            forward_status, forward_err, win_size_, max_level_,
                            criteria_, 0);
 
   // now do reverse flow
-  std::vector<uchar> reverse_status;
-  std::vector<float> reverse_err;
+  std::vector<uchar> reverse_status(flatNext.size());
+  std::vector<float> reverse_err(flatNext.size());
 
   std::vector<cv::Point2f> flatReverse = flatNext;
-  cv::calcOpticalFlowPyrLK(current_mono_pyr, prev_mono_pyr_, flatNext,
+  cv::calcOpticalFlowPyrLK(curr_mono_pyr_, prev_mono_pyr_, flatNext,
                            flatReverse, reverse_status, reverse_err, win_size_,
                            max_level_, criteria_, cv::OPTFLOW_USE_INITIAL_FLOW);
 
@@ -1084,9 +1070,11 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     static constexpr double kHomographyReprThreshold = 2.0;
     // limit the number of iterations for speed
     static constexpr double kHomographyMaxIters = 500;
+    // cv::Mat inlier_mask = vision_tools::findHomography(
+    //     good_tracks.previous_points, good_tracks.points,
+    //     kHomographyReprThreshold, kHomographyMaxIters);
     cv::Mat inlier_mask = vision_tools::findHomography(
-        good_tracks.previous_points, good_tracks.points,
-        kHomographyReprThreshold, kHomographyMaxIters);
+        good_tracks.previous_points, good_tracks.points);
 
     FeatureBlockContainer::FeatureData verified_tracks;
     verified_tracks.reserve(num_good_points);
@@ -1114,26 +1102,63 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
   }
 
   // update previous image pyramid for reuse
-  prev_mono_pyr_ = current_mono_pyr;
+  // prev_mono_pyr_ = current_mono_pyr;
 
   FeatureBlockContainer tracked_features(verified_tracks_per_object);
   LOG(INFO) << tracked_features.debugInfoString();
   return {tracked_features, tracking_stats};
 }
 
+// FeatureBlockContainer FeatureTrackerFast::trackRetroactively(const
+// FeatureBlockContainer& detected_features, const cv::Mat& object_mask)
+// {
+//   CHECK(!prev_mono_pyr_.empty());
+
+//   //track from current detected featues (on current image)
+//   // to previous image
+//   std::vector<cv::Point2f> flatNext = previous_features_.points;
+//   const auto& flatPrev = previous_features_.points;
+//   std::vector<uchar> forward_status;
+//   std::vector<float> forward_err;
+
+//   // std::vector<cv::Mat> current_mono_pyr;
+//   // buildOpticalFlowPyramid(mono, current_mono_pyr);
+
+//   // One single call allows OpenCV to run hot loops across contiguous memory
+//   // blocks
+//   cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev,
+//   flatNext,
+//                            forward_status, forward_err, win_size_,
+//                            max_level_, criteria_, 0);
+
+//   // now do reverse flow
+//   std::vector<uchar> reverse_status(flatNext.size());
+//   std::vector<float> reverse_err(flatNext.size());
+
+//   std::vector<cv::Point2f> flatReverse = flatNext;
+//   cv::calcOpticalFlowPyrLK(curr_mono_pyr_, prev_mono_pyr_, flatNext,
+//                            flatReverse, reverse_status, reverse_err,
+//                            win_size_, max_level_, criteria_,
+//                            cv::OPTFLOW_USE_INITIAL_FLOW);
+// }
+
 void FeatureTrackerFast::fillDetectionParam(
     ObjectId object_id, const cv::Mat& mask, const cv::Rect& bounding_box,
     int current_tracks,
     FeatureTrackerFast::GfttDetector::Param& detection_param) const {
-  detection_param.object_id = object_id;
-  detection_param.mask = object_id;
-  detection_param.bbox = bounding_box;
-  detection_param.min_distance = getMinFeatureDistance(object_id);
+  auto numCornersNeeded = [&](ObjectId object_id) -> int {
+    auto desired_max_tracks = getMaxTrackingCorners(object_id);
+    auto corners_needed = std::max(desired_max_tracks - current_tracks, 0);
+    return corners_needed;
+  };
 
-  auto max_corners = getMaxCorners(object_id);
-  // sort of dont want to do this: should extract N and then use ANMS maybe to
-  // cut down!
-  detection_param.max_corners = std::max(max_corners - current_tracks, 0);
+  detection_param.object_id = object_id;
+  detection_param.mask = mask;
+  detection_param.bbox = bounding_box;
+  detection_param.min_distance =
+      static_cast<float>(getMinFeatureDistance(object_id));
+  detection_param.max_corners = getMaxDetectionCorners(object_id);
+  detection_param.num_corners_needed = numCornersNeeded(object_id);
 }
 
 void FeatureTrackerFast::buildOpticalFlowPyramid(
@@ -1165,16 +1190,15 @@ cv::Mat FeatureTrackerFast::drawBatchedFeatures(
     // Draw optical-flow track
     if (batchedFeatures.age[i] > 0) {
       const auto previous_point = batchedFeatures.previous_points[i];
-      cv::arrowedLine(canvas, previous_point, current_point, color, 2,
-                      cv::LINE_AA, 0, 0.25);
+      cv::arrowedLine(canvas, previous_point, current_point, color, 1);
     }
 
     // Draw current feature location
-    cv::circle(canvas, current_point, 4, color, -1, cv::LINE_AA);
+    cv::circle(canvas, current_point, 4, color);
 
     // Optional white outer ring
-    cv::circle(canvas, current_point, 6, cv::Scalar(255, 255, 255), 1,
-               cv::LINE_AA);
+    // cv::circle(canvas, current_point, 6, cv::Scalar(255, 255, 255), 1,
+    //            cv::LINE_AA);
   }
 
   return canvas;

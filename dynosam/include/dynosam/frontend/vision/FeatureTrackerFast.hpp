@@ -21,6 +21,8 @@ class FeatureBlockContainer {
     std::vector<cv::Point2f> previous_points;
     std::vector<TrackletId> ids;
     std::vector<size_t> age;
+    // TODO: actually dont need inliers as part of feature data
+    //  as we assume all provided featues ARE inliers!
     std::vector<uchar> inlier;
     std::vector<float> errors;
 
@@ -290,6 +292,8 @@ class FeatureBlockContainer {
     inlier.resize(total_size);
     errors.resize(total_size);
 
+    // TODO: add depth!
+
     // Initialise object IDs immediately so the FeatureSet is valid even
     // before the caller fills the feature data.
     for (const BlockLayout& object : block_layout_) {
@@ -324,6 +328,28 @@ using FeatureBlockDim = FeatureBlockContainer::BlockDim;
 /// @brief Alias to FeatureBlockContainer::BlockView
 using FeatureBlockView = FeatureBlockContainer::BlockView;
 
+// class FrameFast {
+// public:
+//   DYNO_POINTER_TYPEDEFS(FrameFast)
+
+//   FrameFast(Camera::Ptr camera,
+//     const ImageContainer& image_container,
+//     const ObjectDetectionResult& object_detection,
+//     const FeatureBlockContainer& features) {}
+
+//     FrameId frameId() const { return images_.frameId(); }
+//     Timestamp timestamp() const { return images_.timestamp(); }
+//     const ImageContainer& images() const { return images_; }
+
+// private:
+//     Camera::Ptr camera_;
+//     ImageContainer images_;
+//     //! The raw object detections
+//     ObjectDetectionResult object_detection_;
+//     FeatureBlockContainer features_;
+
+// };
+
 // Should just be called tracker or something as also does object tracking!
 class FeatureTrackerFast : public FeatureTrackerBase {
  public:
@@ -333,9 +359,11 @@ class FeatureTrackerFast : public FeatureTrackerBase {
                      ImageDisplayQueue* display_queue = nullptr);
   virtual ~FeatureTrackerFast() {}
 
-  void track(FrameId frame_id, Timestamp timestamp,
-             const ImageContainer& image_container,
-             const std::optional<gtsam::Rot3>& R_km1_k = {});
+  // just for now!!!! Lets soo what kind of speed gains we get!
+  std::pair<cv::Mat, FeatureBlockContainer> track(
+      FrameId frame_id, Timestamp timestamp,
+      const ImageContainer& image_container,
+      const std::optional<gtsam::Rot3>& R_km1_k = {});
 
  private:
   struct ObjectDetectionImpl {
@@ -363,11 +391,11 @@ class FeatureTrackerFast : public FeatureTrackerBase {
   const FrontendParams frontend_params_;
   TrackletIdManager& tracklet_id_manager;
 
+  std::vector<cv::Mat> curr_mono_pyr_;
   cv::Mat prev_mono_;
   //! Image pyramid for the previous mono frame
   std::vector<cv::Mat> prev_mono_pyr_;
-  // //! Binary image used feature detection mask for the previous frame
-  // cv::Mat prev_detection_mask_;
+  gtsam::FastMap<ObjectId, cv::Mat> previous_object_detection_masks_;
   //! Object mask for the previous frame
   cv::Mat prev_object_mask_;
 
@@ -383,6 +411,9 @@ class FeatureTrackerFast : public FeatureTrackerBase {
       int max_corners;
       // int corners_after_anms;
       float min_distance;
+      //! Number of final corners after extraction and pruning
+      //! If set to zero, assume same as max_corners
+      int num_corners_needed{0};
     };
 
     struct Params : public std::vector<Param> {
@@ -441,6 +472,12 @@ class FeatureTrackerFast : public FeatureTrackerBase {
   std::pair<FeatureBlockContainer, FlowTrackingStatsMap> trackGfftBatched(
       const cv::Mat& mono, const cv::Mat& object_mask);
 
+  // TODo: assumes prev pyramid, prev detection masks and curr pyramid have been
+  // set have been set correctly!
+  FeatureBlockContainer trackRetroactively(
+      const FeatureBlockContainer& detected_features,
+      const cv::Mat& object_mask);
+
   void buildOpticalFlowPyramid(const cv::Mat& mono,
                                std::vector<cv::Mat>& pyramid) const;
 
@@ -454,9 +491,9 @@ class FeatureTrackerFast : public FeatureTrackerBase {
    * depending on if the object is static (object_id = 0) or dynamic.
    *
    * @param object_id
-   * @return float
+   * @return int
    */
-  inline float getMinFeatureDistance(ObjectId object_id) const {
+  inline int getMinFeatureDistance(ObjectId object_id) const {
     return object_id > background_label
                ? params_.min_distance_btw_tracked_and_detected_dynamic_features
                : params_.min_distance_btw_tracked_and_detected_static_features;
@@ -469,14 +506,24 @@ class FeatureTrackerFast : public FeatureTrackerBase {
    * @param object_id
    * @return int
    */
-  inline int getMaxCorners(ObjectId object_id) const {
+  inline int getMaxDetectionCorners(ObjectId object_id) const {
     return object_id > background_label ? params_.max_dynamic_features_per_frame
                                         : params_.max_nr_keypoints_before_anms;
+  }
+
+  inline int getMaxTrackingCorners(ObjectId object_id) const {
+    return object_id > background_label ? params_.max_dynamic_features_per_frame
+                                        : params_.max_features_per_frame;
   }
 
   inline int getMinAllowableTracks(ObjectId object_id) const {
     return object_id > background_label ? params_.min_dynamic_tracks
                                         : params_.min_features_per_frame;
+  }
+
+  inline int getMaxFeatureAge(ObjectId object_id) const {
+    return object_id > background_label ? params_.max_feature_track_age
+                                        : params_.max_dynamic_feature_age;
   }
 
   cv::Mat drawBatchedFeatures(
