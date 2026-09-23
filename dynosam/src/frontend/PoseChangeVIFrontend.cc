@@ -2,6 +2,8 @@
 
 #include <gflags/gflags.h>
 
+#include "dynosam/frontend/solvers/PnPRansac.hpp"
+
 DEFINE_bool(pc_smoother_allow_backend_updates, false,
             "If updates from the backend should be received.");
 
@@ -38,21 +40,60 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
     VIFrontendInput::ConstPtr input) {
   utils::ChronoTimingStats timer(this->moduleName() + ".spin");
 
-  featureTrack(input);
+  // featureTrack(input);
   ImageContainer::Ptr image_container = input->image_container_;
   auto frame_id = image_container->frameId();
   auto timestamp = image_container->timestamp();
   ImageContainer container = *image_container;
-  feature_tracker_fast_.track(frame_id, timestamp, container);
+  auto tracking_result =
+      feature_tracker_fast_.track(frame_id, timestamp, container);
+  FeatureBlockContainer& features_k = tracking_result.featues;
+
+  // fill depth information
+  DepthUpdaterFast depth_updater_k(frontendParams(), camera_, container,
+                                   features_k);
+
+  // project points
+  LocalPointMap local_points_k;
+  depth_updater_k.calcPoints(local_points_k);
+
+  IndexMapping fc_index_mapping;
+  // we must have a reduced feature set so that the memory is contiguous
+  // and we can perform batch operations in the tracking!
+  features_k.reduceToInliersInplace(&fc_index_mapping);
+
+  std::vector<ObjectId> objects_to_remove;
+  for (auto& [object_id, local_points_j] : local_points_k) {
+    // check if object has been removed
+    if (!features_k.containsObject(object_id)) {
+      objects_to_remove.push_back(object_id);
+      continue;
+    }
+
+    for (size_t i = 0; i < local_points_j.fc_indices.size(); i++) {
+      Index old_index = local_points_j.fc_indices[i];
+      CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end());
+      local_points_j.fc_indices[i] = fc_index_mapping.at(old_index);
+    }
+  }
+
+  for (auto object_id : objects_to_remove) {
+    local_points_k.erase(object_id);
+  }
+
+  local_points_km1_ = std::move(local_points_k);
 
   return {State::Nominal, nullptr};
 }
+
+// TODO: matchUninitalized
+// TODO: matchToMap
 
 PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
     VIFrontendInput::ConstPtr input) {
   utils::ChronoTimingStats timer(this->moduleName() + ".spin");
 
-  featureTrack(input);
+  // featureTrack(input);
 
   const auto t1 = utils::Timer::tic();
 
@@ -60,20 +101,163 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   ImageContainer container = *image_container;
   auto frame_id = image_container->frameId();
   auto timestamp = image_container->timestamp();
-  auto [track_viz, features] =
+  auto tracking_result =
       feature_tracker_fast_.track(frame_id, timestamp, container);
+
+  FeatureBlockContainer& features_k = tracking_result.featues;
 
   const auto t2 = utils::Timer::toc(t1);
   const auto compute_time = utils::Timer::toUnits<std::milli>(t2);
   LOG(INFO) << "spin time seconds= " << compute_time;
 
-  pushImageToDisplayQueue("Tracks", track_viz);
+  pushImageToDisplayQueue("Tracks", tracking_result.viz);
 
   // fill depth information
+  DepthUpdaterFast depth_updater_k(frontendParams(), camera_, container,
+                                   features_k);
+
   // project points
+  LocalPointMap local_points_k;
+  // this is too slow ;) (approx 3ms)
+  depth_updater_k.calcPoints(local_points_k);
   // match points
+
+  // ransac params
+  const auto& camera_params = camera_->getParams();
+  const double fx = camera_params.fx();
+  const double fy = camera_params.fy();
+  const double cx = camera_params.cu();
+  const double cy = camera_params.cv();
+
+  const gtsam::Matrix33 K_inv = camera_params.getCameraMatrixEigen().inverse();
+  // this is for camera!
+  const auto& pnp_ransac_params =
+      frontendParams().camera_pose_solver_params.pnp_ransac_params;
+  const double reprojection_error = pnp_ransac_params.ransac_threshold_pnp;
+  const double avg_focal_length = 0.5 * static_cast<double>(fx + fy);
+  double ransac_threshold_3d2d =
+      1.0 - std::cos(std::atan(std::sqrt(2.0) * reprojection_error /
+                               avg_focal_length));
+
+  // TODO: per object view!
+  // why does this take 5ms!??
+  utils::ChronoTimingStats match_t(this->moduleName() + ".matches");
+  RelativePoseMatchesMap matches;
+  for (const auto& [object_id, local_points_k] : local_points_k) {
+    RelativePoseMatches& matches_j = matches[object_id];
+
+    if (!local_points_km1_.exists(object_id)) {
+      continue;
+    }
+
+    const LocalPoints& local_points_j_km1 = local_points_km1_.at(object_id);
+
+    for (size_t curr_idx = 0; curr_idx < local_points_k.ids.size();
+         curr_idx++) {
+      Index fc_curr_idx = local_points_k.fc_indices[curr_idx];
+
+      TrackletId tracklet_id = local_points_k.ids[curr_idx];
+      CHECK_EQ(tracklet_id, features_k.ids[fc_curr_idx]);
+
+      auto it = local_points_j_km1.local_indices.find(tracklet_id);
+      // and inlier!?
+      if (it != local_points_j_km1.local_indices.end()) {
+        Index ref_idx = it->second;
+        // Index fc_ref_idx = local_points_j_km1.fc_indices[ref_idx];
+
+        if (!features_k.inlier[fc_curr_idx]) {
+          continue;
+        }
+        // is a match!
+        matches_j.lmks_C_ref.push_back(local_points_j_km1.lmks_C[ref_idx]);
+        matches_j.fc_indices_ref.push_back(
+            local_points_j_km1.fc_indices[ref_idx]);
+
+        // Some tests shows that eigen computation of the bearing vector cost up
+        // to 4ms and so helped me to write a really fast one!
+        matches_j.bearing_vecs_curr.push_back(bearingOptimized(
+            fx, fy, cx, cy, local_points_k.left_kps[curr_idx]));
+        matches_j.fc_indices_curr.push_back(
+            local_points_k.fc_indices[curr_idx]);
+
+        // check tracklet ids match
+        CHECK_EQ(local_points_j_km1.ids[ref_idx], local_points_k.ids[curr_idx]);
+        matches_j.ids.push_back(local_points_k.ids[curr_idx]);
+      }
+    }
+
+    int num_matches = matches_j.ids.size();
+    LOG(INFO) << "Found n=" << num_matches << "matches j= " << object_id;
+
+    if (num_matches > 5) {
+      utils::ChronoTimingStats pnp_t(this->moduleName() + ".pnp");
+      using AbsolutePoseProblem =
+          opengv::sac_problems::absolute_pose::AbsolutePoseSacProblem;
+      using AbsolutePoseAdaptor = opengv::absolute_pose::CentralAbsoluteAdapter;
+      AbsolutePoseAdaptor adapter(matches_j.bearing_vecs_curr,
+                                  matches_j.lmks_C_ref);
+
+      auto abs_pose_problem = std::make_shared<AbsolutePoseProblem>(
+          adapter, AbsolutePoseProblem::KNEIP);
+
+      opengv::sac::Ransac<AbsolutePoseProblem> abs_pose_ransac;
+      abs_pose_ransac.sac_model_ = abs_pose_problem;
+      abs_pose_ransac.threshold_ = ransac_threshold_3d2d;
+      abs_pose_ransac.max_iterations_ = 50;
+
+      // run the ransac
+      abs_pose_ransac.computeModel(0);
+
+      int abs_pose_inliers = int(abs_pose_ransac.inliers_.size());
+      float abs_pose_ratio = float(abs_pose_inliers) / float(num_matches);
+
+      gtsam::Pose3 abs_pose =
+          utils::openGvTfToGtsamPose3(abs_pose_ransac.model_coefficients_);
+
+      LOG(INFO) << "Solved RANSAC inler ration= " << abs_pose_ratio
+                << " j= " << object_id;
+      pnp_t.stop();
+    }
+  }
+  match_t.stop();
+
   // run ransac
+
   //  camera pose estimate!
+
+  // For PnP tracking we just need landmarks in the previous frame
+
+  utils::ChronoTimingStats update_inliers_t(this->moduleName() +
+                                            ".update_inliers");
+  IndexMapping fc_index_mapping;
+  // we must have a reduced feature set so that the memory is contiguous
+  // and we can perform batch operations in the tracking!
+  features_k.reduceToInliersInplace(&fc_index_mapping);
+
+  std::vector<ObjectId> objects_to_remove;
+  for (auto& [object_id, local_points_j] : local_points_k) {
+    // check if object has been removed
+    if (!features_k.containsObject(object_id)) {
+      objects_to_remove.push_back(object_id);
+      continue;
+    }
+
+    for (size_t i = 0; i < local_points_j.fc_indices.size(); i++) {
+      Index old_index = local_points_j.fc_indices[i];
+      CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end());
+
+      Index new_index = fc_index_mapping.at(old_index);
+      CHECK_EQ(local_points_j.ids[i], features_k.ids[new_index]);
+      local_points_j.fc_indices[i] = fc_index_mapping.at(old_index);
+    }
+  }
+
+  for (auto object_id : objects_to_remove) {
+    local_points_k.erase(object_id);
+  }
+  update_inliers_t.stop();
+
+  local_points_km1_ = std::move(local_points_k);
 
   return {State::Nominal, nullptr};
 }

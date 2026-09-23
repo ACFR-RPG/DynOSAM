@@ -45,6 +45,10 @@ class Frontend : public ModuleBase<VIFrontendInput, RealtimeOutput> {
            const SharedGroundTruth& shared_ground_truth);
   virtual ~Frontend() = default;
 
+  inline const FrontendParams& frontendParams() const {
+    return dyno_params_.frontend_params_;
+  }
+
  protected:
   bool pushImageToDisplayQueue(const std::string& wname, const cv::Mat& image);
 

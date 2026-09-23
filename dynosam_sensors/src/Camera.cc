@@ -54,6 +54,7 @@ void Camera::project(const Landmark& lmk, Keypoint* kpt) const {
   *kpt = camera_impl_->project2(lmk);
 }
 
+// TODO: probably should be inline!
 void Camera::project(const Landmarks& lmks, Keypoints* kpts) const {
   CHECK_NOTNULL(kpts)->clear();
   const auto& n_lmks = lmks.size();

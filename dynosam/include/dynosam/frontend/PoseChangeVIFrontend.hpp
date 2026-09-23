@@ -42,6 +42,8 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   FeatureTrackerFast feature_tracker_fast_;
 
   PoseChangeBackendSink pose_change_backend_sink_;
+
+  LocalPointMap local_points_km1_;
 };
 
 class PoseChangeVIFrontend : public VIFrontend {

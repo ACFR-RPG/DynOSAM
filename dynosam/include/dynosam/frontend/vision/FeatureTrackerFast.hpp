@@ -3,6 +3,12 @@
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/cudaoptflow.hpp>
 #include <opencv4/opencv2/opencv.hpp>
+#include <opengv/absolute_pose/CentralAbsoluteAdapter.hpp>
+#include <opengv/absolute_pose/methods.hpp>
+#include <opengv/relative_pose/CentralRelativeAdapter.hpp>
+#include <opengv/relative_pose/methods.hpp>
+#include <opengv/sac_problems/absolute_pose/AbsolutePoseSacProblem.hpp>
+#include <opengv/sac_problems/relative_pose/CentralRelativePoseSacProblem.hpp>
 
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
@@ -13,6 +19,35 @@
 #include "dynosam_sensors/Feature.hpp"
 
 namespace dyno {
+
+typedef std::size_t Index;
+typedef std::pair<Index, Index> IndexMatch;
+typedef std::vector<IndexMatch> IndexMatches;
+typedef std::unordered_map<Index, Index> IndexMapping;
+
+/**
+ * @brief Super fast implementation of K^{-1} * kp, returning normalized bearing
+ * vector. Basic benchmarking shows at least a 7x speed up over the raw eigen
+ * version: (K_inv * gtsam::Vector3(kp(0), kp(1), 1.0)).normzlied().
+ *
+ * Implementation takes advantage of the structure of the K matrix.
+ *
+ * @param fx
+ * @param fy
+ * @param cx
+ * @param cy
+ * @param kp
+ * @return gtsam::Vector3
+ */
+inline gtsam::Vector3 bearingOptimized(double fx, double fy, double cx,
+                                       double cy, const gtsam::Point2& kp) {
+  const double nx = (kp.x() - cx) / fx;
+  const double ny = (kp.y() - cy) / fy;
+
+  const double inv_norm = 1.0 / std::sqrt(nx * nx + ny * ny + 1.0);
+
+  return gtsam::Vector3(nx * inv_norm, ny * inv_norm, inv_norm);
+}
 
 class FeatureBlockContainer {
  public:
@@ -225,7 +260,14 @@ class FeatureBlockContainer {
   BlockView objectView(ObjectId object_id);
   const BlockView objectView(ObjectId object_id) const;
 
+  // mapping is from the original container to the new container!
+  FeatureBlockContainer reduceToInliers(
+      IndexMapping* index_mapping = nullptr) const;
+  FeatureBlockContainer& reduceToInliersInplace(
+      IndexMapping* index_mapping = nullptr);
+
   std::vector<cv::Point2f> points;
+  // TODO: not sure if we actually want previous points!
   std::vector<cv::Point2f> previous_points;
   std::vector<TrackletId> ids;
   std::vector<size_t> age;
@@ -328,27 +370,109 @@ using FeatureBlockDim = FeatureBlockContainer::BlockDim;
 /// @brief Alias to FeatureBlockContainer::BlockView
 using FeatureBlockView = FeatureBlockContainer::BlockView;
 
-// class FrameFast {
-// public:
-//   DYNO_POINTER_TYPEDEFS(FrameFast)
+// from here onwards we operate in the land of doubles
+// as all the geometric solvers operate using gtsam/egien double types!
+// these must be separately synchronized/maintaied with the
+// FeatureBlockContainer
+struct LocalPoints {
+  // note the use of double here
+  // points in the camera frame
+  gtsam::Point3Vector lmks_C;
+  gtsam::Point2Vector left_kps;
+  //! Stereo correspondent in the right camera (x coordinate)
+  std::vector<double> right_pixel;
+  TrackletIds ids;
+  // Index value in the original FeatureBlockContainer
+  // only valid while the contianer remains unchanged
+  // after a container is reduced to inliers the fc_indices must be updatd
+  std::vector<Index> fc_indices;
 
-//   FrameFast(Camera::Ptr camera,
-//     const ImageContainer& image_container,
-//     const ObjectDetectionResult& object_detection,
-//     const FeatureBlockContainer& features) {}
+  //! Tracklet ids -> index for this set of vectors
+  // ie. to get the lmk of tracklet id i -> lmks_C[local_indices[i]]
+  std::unordered_map<TrackletId, Index> local_indices;
+};
 
-//     FrameId frameId() const { return images_.frameId(); }
-//     Timestamp timestamp() const { return images_.timestamp(); }
-//     const ImageContainer& images() const { return images_; }
+typedef gtsam::FastMap<ObjectId, LocalPoints> LocalPointMap;
 
-// private:
-//     Camera::Ptr camera_;
-//     ImageContainer images_;
-//     //! The raw object detections
-//     ObjectDetectionResult object_detection_;
-//     FeatureBlockContainer features_;
+// for solving we need a points in local of previous frame (could be map or
+// previous frame) and bearing vector for PnP and pixel for of flow
+// TODO: for of flow can we use 3d point from anywhere? (technically yes, but
+// have not tried!) what about 2d2d matching?
+struct RelativePoseMatches {
+  gtsam::Point3Vector lmks_C_ref;
+  std::vector<Index> fc_indices_ref;
 
-// };
+  // TODO: cant just have this as we need pixel coodinates for OF refinement!
+  gtsam::Point3Vector bearing_vecs_curr;
+  std::vector<Index> fc_indices_curr;
+
+  TrackletIds ids;
+};
+typedef gtsam::FastMap<ObjectId, RelativePoseMatches> RelativePoseMatchesMap;
+
+class DepthUpdaterFast {
+ public:
+  DepthUpdaterFast(const FrontendParams& params, Camera::Ptr camera,
+                   const ImageContainer& images,
+                   FeatureBlockContainer& features);
+
+  // TODO: return outliers and mark features separately!
+  void calcPoints(LocalPointMap& point_map);
+  void calcPoints(const std::vector<Index>& indicies, LocalPointMap& point_map);
+
+ private:
+  FrontendParams params_;
+  Camera::Ptr camera_;
+  ImageContainer images_;
+  FeatureBlockContainer& features_;
+};
+
+class FrameFast {
+ public:
+  DYNO_POINTER_TYPEDEFS(FrameFast)
+
+  FrameFast(Camera::Ptr camera, const ImageContainer& image_container,
+            const ObjectDetectionResult& object_detection,
+            const FeatureBlockContainer& features);
+
+  FrameId frameId() const { return images_.frameId(); }
+  Timestamp timestamp() const { return images_.timestamp(); }
+  const ImageContainer& images() const { return images_; }
+
+  const FeatureBlockContainer& features() const { return features_; }
+  FeatureBlockContainer& features() { return features_; }
+
+  /// @brief NOTE: checks features not the object detection altthough these
+  /// should be the same!
+  /// @param object_id
+  /// @return
+  inline bool containsObject(ObjectId object_id) const {
+    return features_.containsObject(object_id);
+  }
+
+  static bool findMatches(const FrameFast& first, const FrameFast& second,
+                          IndexMatches& matches);
+  static bool findMatches(const FrameFast& first, const FrameFast& second,
+                          ObjectId object_id, IndexMatches& matches);
+
+ private:
+  void computeDepths();
+
+ private:
+  Camera::Ptr camera_;
+  ImageContainer images_;
+  //! The raw object detections
+  ObjectDetectionResult object_detection_;
+  FeatureBlockContainer features_;
+};
+
+struct TrackingResult {
+  ObjectDetectionResult object_detection;
+  // note is a reference!!!
+  // TODO: comment as to why!
+  FeatureBlockContainer& featues;
+  cv::Mat viz;
+};
 
 // Should just be called tracker or something as also does object tracking!
 class FeatureTrackerFast : public FeatureTrackerBase {
@@ -360,10 +484,13 @@ class FeatureTrackerFast : public FeatureTrackerBase {
   virtual ~FeatureTrackerFast() {}
 
   // just for now!!!! Lets soo what kind of speed gains we get!
-  std::pair<cv::Mat, FeatureBlockContainer> track(
-      FrameId frame_id, Timestamp timestamp,
-      const ImageContainer& image_container,
-      const std::optional<gtsam::Rot3>& R_km1_k = {});
+  // TODO: eventually we need to return a pointer or a reference to features
+  // becuase we will need to update the block outside with inlier/outliers
+  // and refine the pixel values
+  // and we want the next iteration of track to use these!
+  TrackingResult track(FrameId frame_id, Timestamp timestamp,
+                       const ImageContainer& image_container,
+                       const std::optional<gtsam::Rot3>& R_km1_k = {});
 
  private:
   struct ObjectDetectionImpl {
@@ -400,6 +527,7 @@ class FeatureTrackerFast : public FeatureTrackerBase {
   cv::Mat prev_object_mask_;
 
   FeatureBlockContainer previous_features_;
+  FeatureBlockContainer previous_tracked_features_;
 
   struct GfttDetector {
     struct Param {

@@ -241,6 +241,98 @@ void FeatureBlockContainer::checkInvariants() const {
 #endif
 }
 
+FeatureBlockContainer FeatureBlockContainer::reduceToInliers(
+    IndexMapping* index_mapping) const {
+  std::vector<BlockDim> specs;
+  specs.reserve(block_layout_.size());
+
+  std::vector<size_t> inlier_counts(block_layout_.size(), 0);
+
+  size_t total_inliers = 0;
+
+  for (size_t block_index = 0; block_index < block_layout_.size();
+       ++block_index) {
+    const BlockLayout& block = block_layout_[block_index];
+
+    size_t count = 0;
+
+    for (size_t i = block.begin; i < block.end; ++i) {
+      count += static_cast<size_t>(inlier[i] != 0);
+    }
+
+    inlier_counts[block_index] = count;
+
+    if (count > 0) {
+      specs.push_back({block.object_id, count});
+      total_inliers += count;
+    }
+  }
+
+  FeatureBlockContainer result(specs);
+
+  if (index_mapping != nullptr) {
+    index_mapping->clear();
+  }
+
+  size_t destination_block_index = 0;
+
+  for (size_t source_block_index = 0; source_block_index < block_layout_.size();
+       ++source_block_index) {
+    const size_t count = inlier_counts[source_block_index];
+
+    if (count == 0) {
+      continue;
+    }
+
+    const BlockLayout& source_block = block_layout_[source_block_index];
+
+    const BlockLayout& destination_block =
+        result.block_layout_[destination_block_index];
+
+    size_t destination_index = destination_block.begin;
+
+    for (size_t source_index = source_block.begin;
+         source_index < source_block.end; ++source_index) {
+      if (inlier[source_index] == 0) {
+        continue;
+      }
+
+      result.points[destination_index] = points[source_index];
+      result.previous_points[destination_index] = previous_points[source_index];
+      result.ids[destination_index] = ids[source_index];
+      result.age[destination_index] = age[source_index];
+
+      // initialize() already populated this correctly, but copying it
+      // explicitly keeps this function independent of that behaviour.
+      result.object_ids[destination_index] = object_ids[source_index];
+
+      // Everything in the result is an inlier.
+      result.inlier[destination_index] = 1;
+
+      result.errors[destination_index] = errors[source_index];
+
+      if (index_mapping != nullptr) {
+        index_mapping->operator[](source_index) = destination_index;
+      }
+
+      ++destination_index;
+    }
+
+    ++destination_block_index;
+  }
+
+  result.checkInvariants();
+
+  return result;
+}
+
+FeatureBlockContainer& FeatureBlockContainer::reduceToInliersInplace(
+    IndexMapping* index_mapping) {
+  FeatureBlockContainer filtered = reduceToInliers(index_mapping);
+  *this = std::move(filtered);
+  return *this;
+}
+
 void FeatureBlockContainer::copyFeatures(BlockView destination,
                                          const BlockView& source,
                                          size_t destination_offset) {
@@ -263,6 +355,137 @@ void FeatureBlockContainer::copyFeatures(BlockView destination,
             source.size());
 }
 
+bool findMatches(const std::vector<FeatureBlockView>& first_views,
+                 const std::vector<FeatureBlockView>& second_views,
+                 IndexMatches& matches) {
+  matches.clear();
+
+  gtsam::FastMap<TrackletId, Index> first_index_map;
+
+  for (const FeatureBlockView& view : first_views) {
+    const auto* ids = view.ids();
+    const auto* inliers = view.inlier();
+    for (size_t i = 0; i < view.size(); i++) {
+      if (inliers[i]) {
+        first_index_map[ids[i]] = i;
+      }
+    }
+  }
+
+  matches.reserve(first_index_map.size());
+  for (const FeatureBlockView& view : second_views) {
+    const auto* ids = view.ids();
+    const auto* inliers = view.inlier();
+
+    for (size_t i = 0; i < view.size(); i++) {
+      auto tracklet_id = ids[i];
+      auto it = first_index_map.find(tracklet_id);
+      if (inliers[i] && it != first_index_map.end()) {
+        matches.push_back(std::make_pair(it->second, i));
+      }
+    }
+  }
+
+  return !matches.empty();
+}
+
+// FrameFast::FrameFast(Camera::Ptr camera,
+//     const ImageContainer& image_container,
+//     const ObjectDetectionResult& object_detection,
+//     const FeatureBlockContainer& features)
+//   : camera_(camera),
+//     images_(image_container),
+//     object_detection_(object_detection),
+//     features_(features)
+// {
+//   computeDepths();
+// }
+
+// bool FrameFast::findMatches(const FrameFast& first, const FrameFast& second,
+// IndexMatches& matches) {
+//   return dyno::findMatches(first.features().objectViews(),
+//   second.features().objectViews(), matches);
+// }
+// bool FrameFast::findMatches(const FrameFast& first, const FrameFast& second,
+// ObjectId object_id, IndexMatches& matches) {
+//   if(first.containsObject(object_id) && second.containsObject(object_id)) {
+//     return dyno::findMatches({first.features().objectView(object_id)},
+//     {second.features().objectView(object_id)}, matches);
+//   }
+//   return false;
+// }
+
+// void FrameFast::computeDepths() {
+//   // for now just RGBD!
+//   std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+//   CHECK_NOTNULL(rgbd_camera);
+
+//   const cv::Mat& depth = images_.depth();
+//   for(size_t i = 0; i < features_.size(); i++) {
+//     const Depth depth = depth.at<Depth>(features_.points[i]);
+//   }
+// }
+
+DepthUpdaterFast::DepthUpdaterFast(const FrontendParams& params,
+                                   Camera::Ptr camera,
+                                   const ImageContainer& images,
+                                   FeatureBlockContainer& features)
+    : params_(params), camera_(camera), images_(images), features_(features) {}
+
+void DepthUpdaterFast::calcPoints(LocalPointMap& point_map) {
+  utils::ChronoTimingStats feature_track_t("depth_updater_fast.calcPoints");
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+
+  const cv::Mat& depth_img = images_.depth();
+
+  const auto max_background_threshold = params_.max_background_depth;
+  const auto max_object_threshold = params_.max_object_depth;
+
+  for (size_t i = 0; i < features_.size(); i++) {
+    if (!features_.inlier[i]) {
+      continue;
+    }
+
+    auto object_id = features_.object_ids[i];
+    auto tracklet_id = features_.ids[i];
+    const auto& kp_cv = features_.points[i];
+    const Depth depth = depth_img.at<Depth>(kp_cv);
+
+    const Depth max_depth = (object_id == background_label)
+                                ? max_background_threshold
+                                : max_object_threshold;
+
+    if (depth > max_depth || depth <= 0) {
+      features_.inlier[i] = 0;
+    } else {
+      gtsam::Point2 left_kp = utils::cvPointToGtsam(kp_cv);
+      gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
+
+      if (!rgbd_camera->isKeypointContained(right_kp, depth)) {
+        features_.inlier[i] = 0;
+        continue;
+      }
+
+      double right_pixel = right_kp(0);
+      Landmark lmk;
+      rgbd_camera->backProject(left_kp, depth, &lmk);
+
+      LocalPoints& points = point_map[object_id];
+      size_t local_index = points.lmks_C.size();
+
+      points.lmks_C.push_back(lmk);
+      points.left_kps.push_back(left_kp);
+      points.right_pixel.push_back(right_pixel);
+      points.ids.push_back(tracklet_id);
+      points.fc_indices.push_back(i);
+      points.local_indices[tracklet_id] = local_index;
+    }
+  }
+}
+
+void DepthUpdaterFast::calcPoints(const std::vector<Index>& indicies,
+                                  LocalPointMap& points) {}
+
 FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
                                        Camera::Ptr camera,
                                        ImageDisplayQueue* display_queue)
@@ -284,24 +507,36 @@ FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
   }
 }
 
-std::pair<cv::Mat, FeatureBlockContainer> FeatureTrackerFast::track(
+TrackingResult FeatureTrackerFast::track(
     FrameId frame_id, Timestamp timestamp,
     const ImageContainer& image_container,
     const std::optional<gtsam::Rot3>& R_km1_k) {
   utils::ChronoTimingStats feature_track_t("fast_tracker.track");
-
-  const cv::Mat rgb = image_container.rgb();
-  cv::Mat current_mono = ImageType::RGBMono::toMono(rgb);
-
   // object detect/psuedo object detection measurement
   ObjectDetectionResult object_detection_result =
       object_detection_impl_.detectAndTrack(image_container);
   // update image container with motion mask
   const cv::Mat object_masks = object_detection_result.labelled_mask;
-
   ObjectIds object_ids = object_detection_result.objectIds();
 
-  buildOpticalFlowPyramid(current_mono, curr_mono_pyr_);
+  const WrappedRGBMono wrapped_rgb = image_container.rgb();
+  const cv::Mat rgb = wrapped_rgb.image();
+
+  // maintain an instance of the previous feature tracks
+  // as previous_features_ will be overwritten once track()
+  // is complete to become the 'current feature set'
+  previous_tracked_features_ = previous_features_;
+
+  // buildOpticalFlowPyramid(current_mono, curr_mono_pyr_);
+
+  // build the image pyramid from the wrapped image
+  // this allows us to cache the computation of the pyramid within the
+  // image_container to save comptutation between frames as long as we keep the
+  // same image pyramid around!
+  const ImagePyramid image_pyramid =
+      wrapped_rgb.computeImagePyramid(win_size_, max_level_);
+  const cv::Mat current_mono = image_pyramid.mono;
+  curr_mono_pyr_ = image_pyramid.levels;
 
   if (prev_mono_.empty()) {
     // fill out initial gfft params
@@ -489,7 +724,8 @@ std::pair<cv::Mat, FeatureBlockContainer> FeatureTrackerFast::track(
   // always set previous object mask
   prev_object_mask_ = object_masks;
 
-  return {drawBatchedFeatures(rgb, previous_features_), previous_features_};
+  return {object_detection_result, previous_features_,
+          drawBatchedFeatures(rgb, previous_features_)};
 }
 
 FeatureTrackerFast::ObjectDetectionImpl::ObjectDetectionImpl(
@@ -1000,9 +1236,6 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
   std::vector<uchar> forward_status;
   std::vector<float> forward_err;
 
-  // std::vector<cv::Mat> current_mono_pyr;
-  // buildOpticalFlowPyramid(mono, current_mono_pyr);
-
   // One single call allows OpenCV to run hot loops across contiguous memory
   // blocks
   cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev, flatNext,
@@ -1100,9 +1333,6 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
       tracking_stats[object_id].tracked_after_or = verified_tracks.size();
     }
   }
-
-  // update previous image pyramid for reuse
-  // prev_mono_pyr_ = current_mono_pyr;
 
   FeatureBlockContainer tracked_features(verified_tracks_per_object);
   LOG(INFO) << tracked_features.debugInfoString();

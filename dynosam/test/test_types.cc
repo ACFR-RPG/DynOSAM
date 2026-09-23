@@ -3398,6 +3398,361 @@ TEST(FeatureBlockContainerTest, MergeCopiesEverySoAFieldCorrectly) {
   merged.checkInvariants();
 }
 
+TEST(FeatureBlockContainerTest, reduceToInliers) {
+  FeatureBlockContainer features({
+      {10, 4},
+      {20, 3},
+      {30, 2},
+  });
+
+  // Give every feature unique identifiable data.
+  for (size_t i = 0; i < features.size(); ++i) {
+    features.points[i] =
+        cv::Point2f(static_cast<float>(i), static_cast<float>(i + 100));
+
+    features.previous_points[i] =
+        cv::Point2f(static_cast<float>(i + 10), static_cast<float>(i + 110));
+
+    features.ids[i] = static_cast<TrackletId>(1000 + i);
+    features.age[i] = 10 + i;
+    features.inlier[i] = 0;
+    features.errors[i] = static_cast<float>(i) + 0.5f;
+  }
+
+  // Original layout:
+  //
+  // object 10: [0 1 2 3]
+  // object 20: [4 5 6]
+  // object 30: [7 8]
+  //
+  // Keep:
+  // object 10: [0 2]
+  // object 20: [5]
+  // object 30: [7 8]
+
+  features.inlier[0] = 1;
+  features.inlier[2] = 1;
+  features.inlier[5] = 1;
+  features.inlier[7] = 1;
+  features.inlier[8] = 1;
+
+  IndexMapping mapping;
+
+  const FeatureBlockContainer result = features.reduceToInliers(&mapping);
+
+  // -------------------------------------------------------------------------
+  // Size / blocks
+  // -------------------------------------------------------------------------
+
+  ASSERT_EQ(result.size(), 5);
+  ASSERT_EQ(result.objectCount(), 3);
+
+  auto blocks = result.objectViews();
+
+  ASSERT_EQ(blocks.size(), 3);
+
+  EXPECT_EQ(blocks[0].objectId(), 10);
+  EXPECT_EQ(blocks[0].size(), 2);
+
+  EXPECT_EQ(blocks[1].objectId(), 20);
+  EXPECT_EQ(blocks[1].size(), 1);
+
+  EXPECT_EQ(blocks[2].objectId(), 30);
+  EXPECT_EQ(blocks[2].size(), 2);
+
+  // -------------------------------------------------------------------------
+  // Mapping: old index -> new index
+  // -------------------------------------------------------------------------
+
+  ASSERT_EQ(mapping.size(), 5);
+
+  EXPECT_EQ(mapping.at(0), 0);
+  EXPECT_EQ(mapping.at(2), 1);
+  EXPECT_EQ(mapping.at(5), 2);
+  EXPECT_EQ(mapping.at(7), 3);
+  EXPECT_EQ(mapping.at(8), 4);
+
+  // -------------------------------------------------------------------------
+  // Data
+  // -------------------------------------------------------------------------
+
+  const std::vector<size_t> expected_old_indices = {0, 2, 5, 7, 8};
+
+  for (size_t new_index = 0; new_index < expected_old_indices.size();
+       ++new_index) {
+    const size_t old_index = expected_old_indices[new_index];
+
+    EXPECT_EQ(result.points[new_index], features.points[old_index]);
+
+    EXPECT_EQ(result.previous_points[new_index],
+              features.previous_points[old_index]);
+
+    EXPECT_EQ(result.ids[new_index], features.ids[old_index]);
+
+    EXPECT_EQ(result.age[new_index], features.age[old_index]);
+
+    EXPECT_EQ(result.object_ids[new_index], features.object_ids[old_index]);
+
+    EXPECT_EQ(result.errors[new_index], features.errors[old_index]);
+
+    EXPECT_EQ(result.inlier[new_index], 1);
+
+    EXPECT_EQ(mapping.at(old_index), new_index);
+  }
+}
+
+TEST(FeatureBlockContainerTest, reduceToInliersRemovesEmptyBlocks) {
+  FeatureBlockContainer features({
+      {10, 3},
+      {20, 3},
+      {30, 3},
+  });
+
+  features.inlier[0] = 1;
+  features.inlier[1] = 0;
+  features.inlier[2] = 0;
+
+  // Object 20 has no inliers.
+  features.inlier[3] = 0;
+  features.inlier[4] = 0;
+  features.inlier[5] = 0;
+
+  features.inlier[6] = 1;
+  features.inlier[7] = 1;
+  features.inlier[8] = 0;
+
+  IndexMapping mapping;
+
+  const auto result = features.reduceToInliers(&mapping);
+
+  ASSERT_EQ(result.size(), 3);
+  ASSERT_EQ(result.objectCount(), 2);
+
+  const auto blocks = result.objectViews();
+
+  ASSERT_EQ(blocks.size(), 2);
+
+  EXPECT_EQ(blocks[0].objectId(), 10);
+  EXPECT_EQ(blocks[0].size(), 1);
+
+  EXPECT_EQ(blocks[1].objectId(), 30);
+  EXPECT_EQ(blocks[1].size(), 2);
+
+  // Mapping: old index -> new index.
+  ASSERT_EQ(mapping.size(), 3);
+
+  EXPECT_EQ(mapping.at(0), 0);
+  EXPECT_EQ(mapping.at(6), 1);
+  EXPECT_EQ(mapping.at(7), 2);
+}
+
+TEST(FeatureBlockContainerTest, reduceToInliersNoInliers) {
+  FeatureBlockContainer features({
+      {10, 3},
+      {20, 2},
+  });
+
+  std::fill(features.inlier.begin(), features.inlier.end(),
+            static_cast<uchar>(0));
+
+  IndexMapping mapping;
+
+  const auto result = features.reduceToInliers(&mapping);
+
+  EXPECT_EQ(result.size(), 0);
+  EXPECT_EQ(result.objectCount(), 0);
+  EXPECT_TRUE(mapping.empty());
+  EXPECT_TRUE(result.objectViews().empty());
+}
+
+TEST(FeatureBlockContainerTest, reduceToInliersAllFeatures) {
+  FeatureBlockContainer features({
+      {10, 3},
+      {20, 2},
+  });
+
+  for (auto& value : features.inlier) {
+    value = 1;
+  }
+
+  IndexMapping mapping;
+
+  const auto result = features.reduceToInliers(&mapping);
+
+  ASSERT_EQ(result.size(), features.size());
+  ASSERT_EQ(result.objectCount(), features.objectCount());
+
+  ASSERT_EQ(mapping.size(), features.size());
+
+  for (size_t i = 0; i < features.size(); ++i) {
+    EXPECT_EQ(mapping.at(i), i);
+
+    EXPECT_EQ(result.points[i], features.points[i]);
+    EXPECT_EQ(result.ids[i], features.ids[i]);
+    EXPECT_EQ(result.age[i], features.age[i]);
+    EXPECT_EQ(result.errors[i], features.errors[i]);
+    EXPECT_EQ(result.inlier[i], 1);
+  }
+}
+
+TEST(FeatureBlockContainerTest, FilterInliersInPlace) {
+  FeatureBlockContainer features({
+      {10, 3},
+      {20, 4},
+      {30, 2},
+  });
+
+  // Fill identifiable feature data.
+  for (size_t i = 0; i < features.size(); ++i) {
+    features.points[i] =
+        cv::Point2f(static_cast<float>(i), static_cast<float>(i + 100));
+
+    features.previous_points[i] =
+        cv::Point2f(static_cast<float>(i + 10), static_cast<float>(i + 110));
+
+    features.ids[i] = static_cast<TrackletId>(1000 + i);
+    features.age[i] = i + 1;
+    features.errors[i] = static_cast<float>(i) * 0.5f;
+  }
+
+  // Flat layout:
+  //
+  // Object 10: indices 0, 1, 2
+  // Object 20: indices 3, 4, 5, 6
+  // Object 30: indices 7, 8
+  //
+  // Keep:
+  //   object 10 -> 0, 2
+  //   object 20 -> 4, 6
+  //   object 30 -> 8
+  //
+  // Old -> new:
+  //   0 -> 0
+  //   2 -> 1
+  //   4 -> 2
+  //   6 -> 3
+  //   8 -> 4
+
+  features.inlier = {
+      1, 0, 1, 0, 1, 0, 1, 0, 1,
+  };
+
+  IndexMapping mapping;
+
+  features.reduceToInliersInplace(&mapping);
+
+  // --------------------------------------------------------------------------
+  // Container structure
+  // --------------------------------------------------------------------------
+
+  EXPECT_EQ(features.size(), 5u);
+  EXPECT_EQ(features.objectCount(), 3u);
+
+  const auto views = features.objectViews();
+
+  ASSERT_EQ(views.size(), 3u);
+
+  EXPECT_EQ(views[0].objectId(), 10);
+  EXPECT_EQ(views[0].size(), 2u);
+
+  EXPECT_EQ(views[1].objectId(), 20);
+  EXPECT_EQ(views[1].size(), 2u);
+
+  EXPECT_EQ(views[2].objectId(), 30);
+  EXPECT_EQ(views[2].size(), 1u);
+
+  // --------------------------------------------------------------------------
+  // Index mapping: old index -> new index
+  // --------------------------------------------------------------------------
+
+  ASSERT_EQ(mapping.size(), 5u);
+
+  EXPECT_EQ(mapping.at(0u), 0u);
+  EXPECT_EQ(mapping.at(2u), 1u);
+  EXPECT_EQ(mapping.at(4u), 2u);
+  EXPECT_EQ(mapping.at(6u), 3u);
+  EXPECT_EQ(mapping.at(8u), 4u);
+
+  // --------------------------------------------------------------------------
+  // Feature data
+  // --------------------------------------------------------------------------
+
+  const std::vector<size_t> expected_old_indices = {
+      0, 2, 4, 6, 8,
+  };
+
+  ASSERT_EQ(features.points.size(), expected_old_indices.size());
+  ASSERT_EQ(features.previous_points.size(), expected_old_indices.size());
+  ASSERT_EQ(features.ids.size(), expected_old_indices.size());
+  ASSERT_EQ(features.age.size(), expected_old_indices.size());
+  ASSERT_EQ(features.object_ids.size(), expected_old_indices.size());
+  ASSERT_EQ(features.inlier.size(), expected_old_indices.size());
+  ASSERT_EQ(features.errors.size(), expected_old_indices.size());
+
+  for (size_t new_index = 0; new_index < expected_old_indices.size();
+       ++new_index) {
+    const size_t old_index = expected_old_indices[new_index];
+
+    EXPECT_EQ(features.points[new_index],
+              cv::Point2f(static_cast<float>(old_index),
+                          static_cast<float>(old_index + 100)));
+
+    EXPECT_EQ(features.previous_points[new_index],
+              cv::Point2f(static_cast<float>(old_index + 10),
+                          static_cast<float>(old_index + 110)));
+
+    EXPECT_EQ(features.ids[new_index],
+              static_cast<TrackletId>(1000 + old_index));
+
+    EXPECT_EQ(features.age[new_index], old_index + 1);
+
+    EXPECT_EQ(features.errors[new_index], static_cast<float>(old_index) * 0.5f);
+
+    EXPECT_EQ(features.inlier[new_index], 1);
+
+    EXPECT_EQ(mapping.at(old_index), new_index);
+  }
+
+  // Object IDs should correspond to the rebuilt blocks.
+  EXPECT_EQ(features.object_ids[0], 10);
+  EXPECT_EQ(features.object_ids[1], 10);
+  EXPECT_EQ(features.object_ids[2], 20);
+  EXPECT_EQ(features.object_ids[3], 20);
+  EXPECT_EQ(features.object_ids[4], 30);
+
+  features.checkInvariants();
+}
+
+TEST(FeatureBlockContainerTest, FilterInliersInPlaceWithNoInliers) {
+  FeatureBlockContainer features({
+      {10, 3},
+      {20, 2},
+  });
+
+  features.inlier = {
+      0, 0, 0, 0, 0,
+  };
+
+  IndexMapping mapping;
+
+  features.reduceToInliersInplace(&mapping);
+
+  EXPECT_EQ(features.size(), 0u);
+  EXPECT_EQ(features.objectCount(), 0u);
+  EXPECT_TRUE(features.objectViews().empty());
+  EXPECT_TRUE(mapping.empty());
+
+  EXPECT_TRUE(features.points.empty());
+  EXPECT_TRUE(features.previous_points.empty());
+  EXPECT_TRUE(features.ids.empty());
+  EXPECT_TRUE(features.age.empty());
+  EXPECT_TRUE(features.object_ids.empty());
+  EXPECT_TRUE(features.inlier.empty());
+  EXPECT_TRUE(features.errors.empty());
+
+  features.checkInvariants();
+}
+
 // =============================================================================
 // Performance
 // =============================================================================
@@ -3523,6 +3878,129 @@ TEST(FeatureBlockContainerTest, PerObjectIterationPerformance) {
             << " | Overhead=" << overhead << "%\n";
 
   EXPECT_LT(view_ns, direct_ns * 1.10);
+}
+
+static gtsam::Vector3 bearingEigen(const gtsam::Matrix3& K_inv,
+                                   const gtsam::Point2& kp) {
+  gtsam::Vector3 bearing = K_inv * gtsam::Vector3(kp(0), kp(1), 1.0);
+
+  return bearing.normalized();
+}
+
+TEST(BearingBenchmark, CompareImplementations) {
+  constexpr int kNumPoints = 100;
+  constexpr int kIterations = 1000;
+
+  // Normal pinhole camera matrix:
+  //
+  // [ fx   0  cx ]
+  // [  0  fy  cy ]
+  // [  0   0   1 ]
+  //
+  constexpr double fx = 500.0;
+  constexpr double fy = 500.0;
+  constexpr double cx = 320.0;
+  constexpr double cy = 240.0;
+
+  const gtsam::Matrix3 K =
+      (gtsam::Matrix3() << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0).finished();
+
+  const gtsam::Matrix3 K_inv = K.inverse();
+
+  std::vector<gtsam::Point2> points;
+  points.reserve(kNumPoints);
+
+  for (int i = 0; i < kNumPoints; ++i) {
+    points.emplace_back(100.0 + static_cast<double>(i % 500),
+                        100.0 + static_cast<double>(i % 300));
+  }
+
+  gtsam::Vector3 result = gtsam::Vector3::Zero();
+
+  // --------------------------------------------------------------------------
+  // Original
+  // --------------------------------------------------------------------------
+
+  const auto start_original = std::chrono::high_resolution_clock::now();
+
+  for (int iteration = 0; iteration < kIterations; ++iteration) {
+    for (const auto& kp : points) {
+      result += bearingEigen(K_inv, kp);
+    }
+  }
+
+  const auto end_original = std::chrono::high_resolution_clock::now();
+
+  // Prevent optimisation of the result.
+  ASSERT_TRUE(result.norm() > 0.0);
+
+  // --------------------------------------------------------------------------
+  // Optimized
+  // --------------------------------------------------------------------------
+
+  result.setZero();
+
+  const auto start_optimized = std::chrono::high_resolution_clock::now();
+
+  for (int iteration = 0; iteration < kIterations; ++iteration) {
+    for (const auto& kp : points) {
+      result += bearingOptimized(fx, fy, cx, cy, kp);
+      // result += bearingOptimized(K, kp);
+    }
+  }
+
+  const auto end_optimized = std::chrono::high_resolution_clock::now();
+
+  ASSERT_TRUE(result.norm() > 0.0);
+
+  const auto original_us =
+      std::chrono::duration_cast<std::chrono::microseconds>(end_original -
+                                                            start_original)
+          .count();
+
+  const auto optimized_us =
+      std::chrono::duration_cast<std::chrono::microseconds>(end_optimized -
+                                                            start_optimized)
+          .count();
+
+  LOG(INFO) << "Original:  " << original_us << " us";
+  LOG(INFO) << "Optimized: " << optimized_us << " us";
+  LOG(INFO) << "Speedup:   "
+            << static_cast<double>(original_us) /
+                   static_cast<double>(optimized_us);
+}
+
+TEST(Bearing, OptimizedMatchesEigen) {
+  constexpr double fx = 500.0;
+  constexpr double fy = 510.0;
+  constexpr double cx = 320.0;
+  constexpr double cy = 240.0;
+
+  const gtsam::Matrix3 K =
+      (gtsam::Matrix3() << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0).finished();
+
+  const gtsam::Matrix3 K_inv = K.inverse();
+
+  const std::vector<gtsam::Point2> points = {
+      {0.0, 0.0},     {320.0, 240.0}, {640.0, 480.0},
+      {100.0, 200.0}, {500.0, 300.0}, {123.456, 321.789},
+  };
+
+  constexpr double kTolerance = 1e-12;
+
+  for (const auto& kp : points) {
+    const gtsam::Vector3 expected = bearingEigen(K_inv, kp);
+
+    const gtsam::Vector3 actual = bearingOptimized(fx, fy, cx, cy, kp);
+
+    EXPECT_TRUE(expected.isApprox(actual, kTolerance))
+        << "Point: " << kp << "\nExpected: " << expected.transpose()
+        << "\nActual:   " << actual.transpose();
+
+    EXPECT_NEAR(expected.x(), actual.x(), kTolerance);
+    EXPECT_NEAR(expected.y(), actual.y(), kTolerance);
+    EXPECT_NEAR(expected.z(), actual.z(), kTolerance);
+  }
 }
 
 }  // namespace dyno

@@ -2316,11 +2316,13 @@ int main(int argc, char* argv[]) {
         auto timestamp = container->timestamp();
 
         auto frame = tracker->track(frame_id, timestamp, *container);
-        ftf.track(frame_id, timestamp, *container);
+        auto tracking_result = ftf.track(frame_id, timestamp, *container);
         // ftb.track(container->rgb(), container->objectMotionMask());
 
         // // LOG(INFO) << "Batched extraction: " << time_ms << " [ms]";
         LOG(INFO) << to_string(tracker->getTrackerInfo());
+
+        cv::imshow("Fast Track", tracking_result.viz);
 
         // // // cv::waitKey(0);
         Frame::Ptr previous_frame = tracker->getPreviousFrame();
