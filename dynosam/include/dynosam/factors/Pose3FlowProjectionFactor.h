@@ -141,6 +141,112 @@ class Pose3FlowProjectionFactor
   Calibration calibration_;
 };
 
+template <class CALIBRATION = gtsam::Cal3_S2>
+class Pose3FlowProjectionFactor2
+    : public gtsam::NoiseModelFactor2<gtsam::Point2, gtsam::Pose3> {
+ public:
+  using Calibration = CALIBRATION;
+  using This = Pose3FlowProjectionFactor2<Calibration>;
+  using Base =
+      gtsam::NoiseModelFactor2<gtsam::Point2,
+                               gtsam::Pose3>;  // keypoint to camera pose
+
+  using shared_ptr = boost::shared_ptr<This>;
+
+  Pose3FlowProjectionFactor2(gtsam::Key flow_key, gtsam::Key pose_key,
+                             const gtsam::Point2& keypoint_ref,
+                             const gtsam::Point3& point_ref,
+                             const Calibration& calibration,
+                             gtsam::SharedNoiseModel model)
+      : Base(model, flow_key, pose_key),
+        keypoint_ref_(keypoint_ref),
+        point_ref_(point_ref),
+        calibration_(calibration) {}
+
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+        gtsam::NonlinearFactor::shared_ptr(new This(*this)));
+  }
+
+  gtsam::Vector evaluateError(
+      const gtsam::Point2& optical_flow, const gtsam::Pose3& pose,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none) const override {
+    auto I = gtsam::traits<gtsam::Pose3>::Identity();
+    gtsam::PinholeCamera<Calibration> previous_camera(I, calibration_);
+
+    const double fx = calibration_.fx();
+    const double fy = calibration_.fy();
+    const double cu = calibration_.px();
+    const double cv = calibration_.py();
+
+    gtsam::Point2 predicted_keypoint = keypoint_ref_ + optical_flow;
+
+    // project p from the reference frame to the local frame of pose
+    // in which the measurement keypoint_ref_ was taken
+    // in this way the reference frame of pose is arbitrary and defined by the
+    // refernece frame of point_ref!
+    gtsam::Point3 P_local = pose.inverse() * point_ref_;
+
+    try {
+      const double x = P_local(0);
+      const double y = P_local(1);
+      const double z = P_local(2);
+
+      const double inv_z = 1.0 / z;
+
+      gtsam::Point2 predicted_keypoint_from_projection(fx * x * inv_z + cu,
+                                                       fy * y * inv_z + cv);
+
+      if (J1) {
+        *J1 = gtsam::Matrix22::Identity();
+      }
+
+      if (J2) {
+        const double z_2 = z * z;
+        const double inv_z2 = inv_z * inv_z;
+
+        // temporaty variables to avoid recomputation
+        const double x_inv_z = x * inv_z;
+        const double y_inv_z = y * inv_z;
+        const double x_inv_z2 = x * inv_z2;
+        const double y_inv_z2 = y * inv_z2;
+        const double xy_inv_z2 = x * y * inv_z2;
+        const double xx_inv_z2 = x * x * inv_z2;
+        const double yy_inv_z2 = y * y * inv_z2;
+
+        gtsam::Matrix26 H;
+        H(0, 0) = xy_inv_z2 * fx;
+        H(0, 1) = -(1.0 + xx_inv_z2) * fx;
+        H(0, 2) = y_inv_z * fx;
+        H(0, 3) = -inv_z * fx;
+        H(0, 4) = 0.0;
+        H(0, 5) = x_inv_z2 * fx;
+
+        H(1, 0) = (1.0 + yy_inv_z2) * fy;
+        H(1, 1) = -xy_inv_z2 * fy;
+        H(1, 2) = -x_inv_z * fy;
+        H(1, 3) = 0.0;
+        H(1, 4) = -inv_z * fy;
+        H(1, 5) = y_inv_z2 * fy;
+
+        *J2 = -1.0 * H;
+      }
+
+      return predicted_keypoint - predicted_keypoint_from_projection;
+    } catch (gtsam::CheiralityException&) {
+      if (J1) *J1 = gtsam::Matrix::Zero(2, 2);
+      if (J2) *J2 = gtsam::Matrix::Zero(2, 6);
+      return gtsam::Vector2::Constant(2.0 * fx);
+    }
+  }
+
+ private:
+  gtsam::Point2 keypoint_ref_;
+  gtsam::Point3 point_ref_;
+  Calibration calibration_;
+};
+
 // // expects the camera to have a calibration()
 // template <class CALIBRATION = gtsam::Cal3_S2>
 // class Pose3FlowProjectionFactor2

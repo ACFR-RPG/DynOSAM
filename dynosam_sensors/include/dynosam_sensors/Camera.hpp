@@ -86,8 +86,14 @@ class Camera {
    * @return true If the keypoint is visible from the camera frustrum
    * @return false
    */
-  bool isKeypointContained(const Keypoint& kpt, Depth depth) const;
-  bool isKeypointContained(const Keypoint& kpt) const;
+  inline bool isKeypointContained(const Keypoint& kpt, Depth depth) const {
+    return isKeypointContained(kpt) && depth > 0.0;
+  }
+
+  inline bool isKeypointContained(const Keypoint& kpt) const {
+    return kpt(0) >= 0.0 && kpt(0) < camera_params_.ImageWidth() &&
+           kpt(1) >= 0.0 && kpt(1) < camera_params_.ImageHeight();
+  }
 
   /**
    * @brief Back projects a list of keypoints from the image frame and into the
@@ -114,6 +120,38 @@ class Camera {
   void backProject(const Keypoint& kp, const Depth& depth, Landmark* lmk) const;
   void backProject(const Keypoint& kp, const Depth& depth, Landmark* lmk,
                    const gtsam::Pose3& X_world) const;
+
+  /**
+   * @brief Fast back projection function for a single point and a given depth,
+   * returning 3D landmark in the camera frame (z-forward).
+   *
+   * Assumes kp has been undistorted (ie calibrated)
+   *
+   * @param kp
+   * @param depth
+   * @param lmk
+   * @return true
+   * @return false
+   */
+  inline bool backProject2(const Keypoint& kp, const Depth& depth,
+                           Landmark& lmk) const {
+    if (depth <= 0) {
+      return false;
+    }
+
+    const double cx = camera_params_.cu();
+    const double cy = camera_params_.cv();
+
+    const double u = kp(0);
+    const double v = kp(1);
+    const double x = (u - cx) * depth * inv_fx_;
+    const double y = (v - cy) * depth * inv_fy_;
+
+    lmk(0) = x;
+    lmk(1) = y;
+    lmk(2) = depth;
+    return true;
+  }
 
   /**
    * @brief Projects a point using a keypoint measurement and a Z measurement,
@@ -187,6 +225,8 @@ class Camera {
 
  protected:
   const CameraParams camera_params_;
+  const double inv_fx_;
+  const double inv_fy_;
   std::unique_ptr<CameraImpl> camera_impl_;
 };
 

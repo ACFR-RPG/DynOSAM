@@ -37,7 +37,9 @@
 namespace dyno {
 
 Camera::Camera(const CameraParams& camera_params)
-    : camera_params_(camera_params) {
+    : camera_params_(camera_params),
+      inv_fx_(1.0 / camera_params.fx()),
+      inv_fy_(1.0 / camera_params.fy()) {
   camera_impl_ = std::make_unique<CameraImpl>(
       gtsam::Pose3::Identity(),  // this should be the body pose cam from the
                                  // calibration but currently we want everything
@@ -63,15 +65,6 @@ void Camera::project(const Landmarks& lmks, Keypoints* kpts) const {
   for (size_t i = 0u; i < n_lmks; i++) {
     project(lmks[i], &(*kpts)[i]);
   }
-}
-
-bool Camera::isKeypointContained(const Keypoint& kpt, Depth depth) const {
-  return isKeypointContained(kpt) && depth > 0.0;
-}
-
-bool Camera::isKeypointContained(const Keypoint& kpt) const {
-  return kpt(0) >= 0.0 && kpt(0) < camera_params_.ImageWidth() &&
-         kpt(1) >= 0.0 && kpt(1) < camera_params_.ImageHeight();
 }
 
 void Camera::backProject(const Keypoints& kps, const Depths& depths,

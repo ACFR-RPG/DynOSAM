@@ -49,6 +49,12 @@ inline gtsam::Vector3 bearingOptimized(double fx, double fy, double cx,
   return gtsam::Vector3(nx * inv_norm, ny * inv_norm, inv_norm);
 }
 
+inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
+  const int x = cvRound(point.x);
+  const int y = cvRound(point.y);
+  return x >= 0 && x < cols && y >= 0 && y < rows;
+}
+
 class FeatureBlockContainer {
  public:
   struct FeatureData {
@@ -159,6 +165,8 @@ class FeatureBlockContainer {
     inline const size_t* age() const {
       return features_->age.data() + layout_.begin;
     }
+
+    inline const BlockLayout& layout() const { return layout_; }
 
     // ---------------------------------------------------------------------
     // Convenient bulk assignment
@@ -403,6 +411,8 @@ struct RelativePoseMatches {
   std::vector<Index> fc_indices_ref;
 
   // TODO: cant just have this as we need pixel coodinates for OF refinement!
+  // do we just want left keypoint?
+  gtsam::Point2Vector keypoints_curr;
   gtsam::Point3Vector bearing_vecs_curr;
   std::vector<Index> fc_indices_curr;
 
@@ -425,6 +435,10 @@ class DepthUpdaterFast {
   Camera::Ptr camera_;
   ImageContainer images_;
   FeatureBlockContainer& features_;
+};
+
+class FlowRefinement {
+ public:
 };
 
 class FrameFast {
@@ -553,7 +567,8 @@ class FeatureTrackerFast : public FeatureTrackerBase {
     };
 
     GfttDetector(const cv::Size& size);
-    FeatureBlockContainer calc(const cv::Mat& mono, const Params& params);
+    FeatureBlockContainer calc(const cv::Mat& mono, const cv::Mat& object_mask,
+                               const Params& params);
 
     TrackletIdManager& tracklet_id_manager_;
 

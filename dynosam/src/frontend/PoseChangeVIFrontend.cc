@@ -99,10 +99,10 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   ImageContainer::Ptr image_container = input->image_container_;
   ImageContainer container = *image_container;
-  auto frame_id = image_container->frameId();
-  auto timestamp = image_container->timestamp();
+  auto frame_id_k = image_container->frameId();
+  auto timestamp_k = image_container->timestamp();
   auto tracking_result =
-      feature_tracker_fast_.track(frame_id, timestamp, container);
+      feature_tracker_fast_.track(frame_id_k, timestamp_k, container);
 
   FeatureBlockContainer& features_k = tracking_result.featues;
 
@@ -113,13 +113,18 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   pushImageToDisplayQueue("Tracks", tracking_result.viz);
 
   // fill depth information
+  // TODO: this is somehow a cv -> Eigen adaptor for the feature container (we
+  // keep the indicies as well!)
   DepthUpdaterFast depth_updater_k(frontendParams(), camera_, container,
                                    features_k);
 
   // project points
   LocalPointMap local_points_k;
   // this is too slow ;) (approx 3ms)
+  LOG(INFO) << "Starting calc points";
+  // TODO: return outliers (dont modify featues!)
   depth_updater_k.calcPoints(local_points_k);
+  LOG(INFO) << "Ending calc points";
   // match points
 
   // ransac params
@@ -129,7 +134,6 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   const double cx = camera_params.cu();
   const double cy = camera_params.cv();
 
-  const gtsam::Matrix33 K_inv = camera_params.getCameraMatrixEigen().inverse();
   // this is for camera!
   const auto& pnp_ransac_params =
       frontendParams().camera_pose_solver_params.pnp_ransac_params;
@@ -139,19 +143,17 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
       1.0 - std::cos(std::atan(std::sqrt(2.0) * reprojection_error /
                                avg_focal_length));
 
-  // TODO: per object view!
-  // why does this take 5ms!??
+  gtsam::Pose3 X_W_k;
   utils::ChronoTimingStats match_t(this->moduleName() + ".matches");
-  RelativePoseMatchesMap matches;
   for (const auto& [object_id, local_points_k] : local_points_k) {
-    RelativePoseMatches& matches_j = matches[object_id];
-
     if (!local_points_km1_.exists(object_id)) {
       continue;
     }
 
     const LocalPoints& local_points_j_km1 = local_points_km1_.at(object_id);
 
+    RelativePoseMatches matches_j;
+    // TODO: reserve memory
     for (size_t curr_idx = 0; curr_idx < local_points_k.ids.size();
          curr_idx++) {
       Index fc_curr_idx = local_points_k.fc_indices[curr_idx];
@@ -175,8 +177,15 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
         // Some tests shows that eigen computation of the bearing vector cost up
         // to 4ms and so helped me to write a really fast one!
-        matches_j.bearing_vecs_curr.push_back(bearingOptimized(
-            fx, fy, cx, cy, local_points_k.left_kps[curr_idx]));
+        auto left_keypoint = local_points_k.left_kps[curr_idx];
+        matches_j.keypoints_curr.push_back(left_keypoint);
+
+        auto left_keypoint_previous =
+            local_points_k.left_kps_previous[curr_idx];
+        matches_j.keypoints_previous.push_back(left_keypoint);
+
+        matches_j.bearing_vecs_curr.push_back(
+            bearingOptimized(fx, fy, cx, cy, left_keypoint));
         matches_j.fc_indices_curr.push_back(
             local_points_k.fc_indices[curr_idx]);
 
@@ -217,6 +226,54 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
       LOG(INFO) << "Solved RANSAC inler ration= " << abs_pose_ratio
                 << " j= " << object_id;
       pnp_t.stop();
+
+      // for now just assume that we solve camera pose first becuase fast map is
+      // ordered!
+      if (object_id == background_label) {
+        X_W_k = X_km1_ * abs_pose;
+        dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, X_W_k);
+      } else {
+        const gtsam::Pose3 G_W = abs_pose.inverse();
+        // NOTE: in the special case where the points are in the LOCAL
+        //  reference frame ie X_k-1, we need to resolve H differently
+        //  TODO: not sure if this is always how we want to sovle for H
+        //  Previously we solved for H using points in W but X (T) using points
+        //  in local!
+        Motion3ReferenceFrame H_W_km1_k(
+            X_W_k * G_W * X_km1_.inverse(), MotionRepresentationStyle::F2F,
+            ReferenceFrame::GLOBAL, frame_id_k - 1, frame_id_k);
+
+        // compute centroid of object if necessary
+        if (dyno_state_.object_trajectories.hasFrame(object_id,
+                                                     frame_id_k - 1)) {
+          auto& trajectory = dyno_state_.object_trajectories.at(object_id);
+          gtsam::Pose3 L_W_km1 = trajectory.at(frame_id_k - 1).pose;
+          gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1);
+          trajectory.insert(frame_id_k, timestamp_k,
+                            PoseWithMotion{L_W_k, H_W_km1_k});
+        } else {
+          // TODO: only the case the object is not in the previous frame!
+          // TODO: NOTE: ref may not be the previous frame! We shold carry the
+          // reference camera pose too
+          //  but then H may not be km-1 to k
+          gtsam::Point3 t_W_km1_centroid =
+              X_km1_ * computeCentroid(matches_j.lmks_C_ref);
+          gtsam::Pose3 L_W_km1_centroid(gtsam::Rot3::Identity(),
+                                        t_W_km1_centroid);
+
+          gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1_centroid);
+          Motion3ReferenceFrame H_W_km1_km1(
+              gtsam::Pose3::Identity(), MotionRepresentationStyle::F2F,
+              ReferenceFrame::GLOBAL, frame_id_k - 1, frame_id_k - 1);
+          // TODO: timestep is wrong!
+          dyno_state_.object_trajectories.insert(
+              object_id, frame_id_k - 1, timestamp_k,
+              PoseWithMotion{L_W_km1_centroid, H_W_km1_km1});
+          dyno_state_.object_trajectories.insert(
+              object_id, frame_id_k, timestamp_k,
+              PoseWithMotion{L_W_k, H_W_km1_k});
+        }
+      }
     }
   }
   match_t.stop();
@@ -229,37 +286,55 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   utils::ChronoTimingStats update_inliers_t(this->moduleName() +
                                             ".update_inliers");
+  size_t num_features = features_k.size();
   IndexMapping fc_index_mapping;
   // we must have a reduced feature set so that the memory is contiguous
   // and we can perform batch operations in the tracking!
   features_k.reduceToInliersInplace(&fc_index_mapping);
 
-  std::vector<ObjectId> objects_to_remove;
-  for (auto& [object_id, local_points_j] : local_points_k) {
-    // check if object has been removed
-    if (!features_k.containsObject(object_id)) {
-      objects_to_remove.push_back(object_id);
-      continue;
+  // The size of the feauture set has changed and therefore the we
+  // need to update global indices
+  // TODO: more explicit way of checking if the featues changed after reduction
+  if (num_features != features_k.size()) {
+    CHECK(!fc_index_mapping.empty());
+    std::vector<ObjectId> objects_to_remove;
+    for (auto& [object_id, local_points_j] : local_points_k) {
+      // check if object has been removed
+      if (!features_k.containsObject(object_id)) {
+        objects_to_remove.push_back(object_id);
+        continue;
+      }
+
+      for (size_t i = 0; i < local_points_j.fc_indices.size(); i++) {
+        Index old_index = local_points_j.fc_indices[i];
+        CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end())
+            << old_index;
+
+        Index new_index = fc_index_mapping.at(old_index);
+        CHECK_EQ(local_points_j.ids[i], features_k.ids[new_index]);
+        local_points_j.fc_indices[i] = fc_index_mapping.at(old_index);
+      }
     }
 
-    for (size_t i = 0; i < local_points_j.fc_indices.size(); i++) {
-      Index old_index = local_points_j.fc_indices[i];
-      CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end());
-
-      Index new_index = fc_index_mapping.at(old_index);
-      CHECK_EQ(local_points_j.ids[i], features_k.ids[new_index]);
-      local_points_j.fc_indices[i] = fc_index_mapping.at(old_index);
+    for (auto object_id : objects_to_remove) {
+      local_points_k.erase(object_id);
     }
-  }
-
-  for (auto object_id : objects_to_remove) {
-    local_points_k.erase(object_id);
   }
   update_inliers_t.stop();
 
   local_points_km1_ = std::move(local_points_k);
 
-  return {State::Nominal, nullptr};
+  RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
+  realtime_output->state.frame_id = frame_id_k;
+  realtime_output->state.timestamp = timestamp_k;
+  realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
+  // TODO: see old code where we only send the visible/good trajectories (but
+  // log all of them!)
+  realtime_output->state.object_trajectories = dyno_state_.object_trajectories;
+
+  X_km1_ = X_W_k;
+
+  return {State::Nominal, realtime_output};
 }
 
 /////////////////////// ORIGINAL //////////////////////////////

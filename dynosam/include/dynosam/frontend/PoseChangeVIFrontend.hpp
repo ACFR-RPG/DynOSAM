@@ -35,6 +35,8 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
   SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
 
+  // void solveVisualOdometryByThread()
+
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
   HybridFormulationKeyFrameAccessor::Ptr accessor_;
@@ -44,6 +46,13 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   PoseChangeBackendSink pose_change_backend_sink_;
 
   LocalPointMap local_points_km1_;
+
+  //! Current trajectories. Copied to the DynoState output.
+  //! Only contains trajectories for objects observed at the latest frame
+  DynoStateTrajectories dyno_state_;
+
+  // TODo: for now
+  gtsam::Pose3 X_km1_;
 };
 
 class PoseChangeVIFrontend : public VIFrontend {

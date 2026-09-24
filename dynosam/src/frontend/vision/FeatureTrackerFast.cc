@@ -268,6 +268,13 @@ FeatureBlockContainer FeatureBlockContainer::reduceToInliers(
     }
   }
 
+  // if no inliers no need to copy the data across
+  // IndexMapping is not updated as no change to index's
+  // TODO: (is this the desired behaviour?)
+  if (total_inliers == this->size()) {
+    return *this;
+  }
+
   FeatureBlockContainer result(specs);
 
   if (index_mapping != nullptr) {
@@ -441,45 +448,109 @@ void DepthUpdaterFast::calcPoints(LocalPointMap& point_map) {
   const auto max_background_threshold = params_.max_background_depth;
   const auto max_object_threshold = params_.max_object_depth;
 
-  for (size_t i = 0; i < features_.size(); i++) {
-    if (!features_.inlier[i]) {
-      continue;
-    }
+  // iterate over by view so we can avoid lookup and memory allocation
+  // for each LocalPoints object
+  for (auto& object_view : features_.objectViews()) {
+    auto object_id = object_view.objectId();
 
-    auto object_id = features_.object_ids[i];
-    auto tracklet_id = features_.ids[i];
-    const auto& kp_cv = features_.points[i];
-    const Depth depth = depth_img.at<Depth>(kp_cv);
+    // create new LocalPoints and allocate memory
+    int num_points = object_view.size();
 
-    const Depth max_depth = (object_id == background_label)
-                                ? max_background_threshold
-                                : max_object_threshold;
+    LocalPoints& local_points = point_map[object_id];
+    local_points.lmks_C.reserve(num_points);
+    local_points.left_kps.reserve(num_points);
+    local_points.left_kps_previous.reserve(num_points);
+    local_points.right_pixel.reserve(num_points);
+    local_points.ids.reserve(num_points);
+    local_points.fc_indices.reserve(num_points);
 
-    if (depth > max_depth || depth <= 0) {
-      features_.inlier[i] = 0;
-    } else {
-      gtsam::Point2 left_kp = utils::cvPointToGtsam(kp_cv);
-      gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
+    auto points = object_view.points();
+    // expect previous points to be updated in the container
+    auto previous_points = object_view.previousPoints();
+    auto ids = object_view.ids();
+    auto inliers = object_view.inlier();
 
-      if (!rgbd_camera->isKeypointContained(right_kp, depth)) {
-        features_.inlier[i] = 0;
+    // the starting offset of the block as stored in the feautre block container
+    // allows us to retrieve the global index!
+    size_t offset = object_view.layout().begin;
+    for (size_t i = 0; i < num_points; i++) {
+      if (!inliers[i]) {
         continue;
       }
 
-      double right_pixel = right_kp(0);
-      Landmark lmk;
-      rgbd_camera->backProject(left_kp, depth, &lmk);
+      auto tracklet_id = ids[i];
+      const auto& kp_cv = points[i];
 
-      LocalPoints& points = point_map[object_id];
-      size_t local_index = points.lmks_C.size();
+      // global index in the feature container (ie. features.points[i])
+      size_t global_index = i + offset;
+      // sanity check out local index matches our global one
+      CHECK_EQ(features_.ids[global_index], tracklet_id);
 
-      points.lmks_C.push_back(lmk);
-      points.left_kps.push_back(left_kp);
-      points.right_pixel.push_back(right_pixel);
-      points.ids.push_back(tracklet_id);
-      points.fc_indices.push_back(i);
-      points.local_indices[tracklet_id] = local_index;
+      const Depth depth = depth_img.at<Depth>(kp_cv);
+      const Depth max_depth = (object_id == background_label)
+                                  ? max_background_threshold
+                                  : max_object_threshold;
+
+      if (depth > max_depth || depth <= 0) {
+        inliers[i] = 0;
+      } else {
+        gtsam::Point2 left_kp = utils::cvPointToGtsam(kp_cv);
+        gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
+
+        gtsam::Point2 left_kp_previous =
+            utils::cvPointToGtsam(previous_points[i]);
+
+        if (!rgbd_camera->isKeypointContained(right_kp, depth)) {
+          inliers[i] = 0;
+          continue;
+        }
+
+        double right_pixel = right_kp(0);
+
+        // fast version of the back projection function
+        Landmark lmk;
+        rgbd_camera->backProject2(left_kp, depth, lmk);
+
+        size_t local_index = local_points.lmks_C.size();
+        local_points.lmks_C.push_back(lmk);
+        local_points.left_kps.push_back(left_kp);
+        local_points.left_kps_previous.push_back(left_kp_previous);
+        local_points.right_pixel.push_back(right_pixel);
+        local_points.ids.push_back(tracklet_id);
+        local_points.fc_indices.push_back(global_index);
+
+        // mapping of tracklet id to location in the local points container
+        local_points.local_indices[tracklet_id] = local_index;
+      }
     }
+  }
+}
+
+gtsam::Pose3 FlowRefinement::refine(const RelativePoseMatches& matches) const {
+  using FlowProjectionFactor =
+      Pose3FlowProjectionFactor2<Camera::CalibrationType>;
+
+  gtsam::NonlinearFactorGraph graph;
+  gtsam::Values values;
+
+  auto flowSymbol = [](TrackletId tracklet) -> gtsam::Symbol {
+    return gtsam::symbol_shorthand::F(static_cast<uint64_t>(tracklet));
+  };
+
+  auto gtsam_calibration = boost::make_shared<Camera::CalibrationType>(
+      camera_->getGtsamCalibration());
+
+  for (size_t i = 0; i < matches.lmks_C_ref.size(); i++) {
+    Index fc_index = matches.fc_indices_curr[i];
+
+    if (!features_.inlier[fc_index]) {
+      continue;
+    }
+
+    gtsam::Point3 P_ref = matches.lmks_C_ref[i];
+    gtsam::Point3 kp_ref = matches.keypoints_previous[i];
+
+    gtsam::Point3 initial_flow = matches.keypoints_curr[i] - kp_ref;
   }
 }
 
@@ -538,6 +609,16 @@ TrackingResult FeatureTrackerFast::track(
   const cv::Mat current_mono = image_pyramid.mono;
   curr_mono_pyr_ = image_pyramid.levels;
 
+  auto imageBoundingBox = [&current_mono]() -> cv::Rect {
+    constexpr static int kBorder = 5;
+    cv::Rect rect;
+    rect.x = kBorder;
+    rect.y = kBorder;
+    rect.width = current_mono.cols - kBorder;
+    rect.height = current_mono.rows - kBorder;
+    return rect;
+  };
+
   if (prev_mono_.empty()) {
     // fill out initial gfft params
     GfttDetector::Params feature_detection_params(object_ids.size() + 1);
@@ -561,18 +642,12 @@ TrackingResult FeatureTrackerFast::track(
     cv::bitwise_not(object_masks_binary, static_mask);
 
     // detection bounding box is the whole image
-    cv::Rect static_bounding_box;
-    static_bounding_box.x = 0;
-    static_bounding_box.y = 0;
-    static_bounding_box.width = current_mono.cols;
-    static_bounding_box.height = current_mono.rows;
-
-    fillDetectionParam(background_label, static_mask, static_bounding_box, 0,
+    fillDetectionParam(background_label, static_mask, imageBoundingBox(), 0,
                        feature_detection_params.back());
     object_ids.push_back(background_label);
 
-    FeatureBlockContainer detected_features =
-        feature_detector_.calc(current_mono, feature_detection_params);
+    FeatureBlockContainer detected_features = feature_detector_.calc(
+        current_mono, object_masks, feature_detection_params);
 
     prev_mono_ = current_mono;
     previous_features_ = detected_features;
@@ -686,10 +761,7 @@ TrackingResult FeatureTrackerFast::track(
         if (j > 0) {
           bbox = detected_bounding_boxes[j];
         } else {
-          bbox.x = 0;
-          bbox.y = 0;
-          bbox.width = current_mono.cols;
-          bbox.height = current_mono.rows;
+          bbox = imageBoundingBox();
         }
 
         // Assuming that tracked features ONLY contain inliers!
@@ -704,8 +776,8 @@ TrackingResult FeatureTrackerFast::track(
     if (!objects_ids_for_detection.empty()) {
       utils::ChronoTimingStats detect_t("fast_tracker.detect");
       // TODO: still need to handle tracklet ids!
-      FeatureBlockContainer detected_features =
-          feature_detector_.calc(current_mono, feature_detection_params);
+      FeatureBlockContainer detected_features = feature_detector_.calc(
+          current_mono, object_masks, feature_detection_params);
       detect_t.stop();
       previous_features_ = tracked_features.merge(detected_features);
 
@@ -864,7 +936,7 @@ struct CornerResponses {
 };
 
 FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
-    const cv::Mat& mono, const Params& params) {
+    const cv::Mat& mono, const cv::Mat& object_mask, const Params& params) {
   using namespace dyno;
   utils::ChronoTimingStats r("fast_tracker.detector");
   CV_Assert(mono.type() == CV_8UC1 || mono.type() == CV_32FC1);
@@ -1202,7 +1274,25 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
   cv::cornerSubPix(mono, feature_blocks.points, window_size, zero_zone,
                    criteria);
 
-  return feature_blocks;
+  const int rows = mono.rows;
+  const int cols = mono.cols;
+
+  // after subpix refinement points may shift such that they no longer lie
+  // within the image bounds or on the same object
+  for (size_t i = 0; i < feature_blocks.size(); i++) {
+    const auto& kp = feature_blocks.points[i];
+
+    auto object_id = feature_blocks.object_ids[i];
+    if (!checkBounds(kp, rows, cols) ||
+        object_mask.at<ObjectId>(kp) != object_id) {
+      // mark as outlier
+      feature_blocks.inlier[i] = 0;
+    }
+  }
+
+  // return the reduced version so that the tracker has access to
+  // a contiguous set of points that are all valid
+  return feature_blocks.reduceToInliers();
 }
 
 std::pair<FeatureBlockContainer, FeatureTrackerFast::FlowTrackingStatsMap>
@@ -1266,19 +1356,17 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     } else {
       forward_status.at(i) = 0;
     }
+    // do proper rounding to integer to ensure bounds checks such that
+    // we can access the images with a point2f value and not get OOB's errors
+    const cv::Point2i kp_int(cvRound(flatNext[i].x), cvRound(flatNext[i].y));
 
-    cv::Point2i flextNextInt = static_cast<cv::Point2i>(flatNext[i]);
-    if (forward_status[i] && flextNextInt.x >= 0 &&
-        flextNextInt.x < mono.cols && flextNextInt.y >= 0 &&
-        flextNextInt.y < mono.rows) {
+    if (forward_status[i] && kp_int.x >= 0 && kp_int.x < (mono.cols - 1) &&
+        kp_int.y >= 0 && kp_int.y < (mono.rows - 1)) {
       auto object_id = previous_features_.object_ids[i];
       auto tracklet_id = previous_features_.ids[i];
       auto new_age = previous_features_.age[i] + 1;
 
-      // LOG(INFO) << "obj j " << j << " with curr object mask " <<
-      // currObjectMask.at<dyno::ObjectId>(flatNext[i]);
-
-      if (object_id != object_mask.at<dyno::ObjectId>(flextNextInt)) {
+      if (object_id != object_mask.at<dyno::ObjectId>(kp_int)) {
         continue;
       }
 
@@ -1385,8 +1473,14 @@ void FeatureTrackerFast::fillDetectionParam(
   detection_param.object_id = object_id;
   detection_param.mask = mask;
   detection_param.bbox = bounding_box;
+  // min distance between detections!
+  // as suggested by a number of different implementations we could do 0.05 *
+  // image cols so instead we will try 0.05 * bounding box! with 3 pixels as the
+  // minimum possible distance (ie. we dont want such a small min distance that
+  // the detection takes forever!) detection_param.min_distance =
+  //     static_cast<float>(getMinFeatureDistance(object_id));
   detection_param.min_distance =
-      static_cast<float>(getMinFeatureDistance(object_id));
+      std::max(3.0f, 0.05f * static_cast<float>(bounding_box.width));
   detection_param.max_corners = getMaxDetectionCorners(object_id);
   detection_param.num_corners_needed = numCornersNeeded(object_id);
 }

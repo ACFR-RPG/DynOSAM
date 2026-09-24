@@ -44,17 +44,24 @@
 #include <gtsam/slam/StereoFactor.h>
 #include <gtsam/slam/dataset.h>
 #include <gtsam_unstable/slam/PoseToPointFactor.h>
+#include <tbb/task_group.h>
 
+#include <algorithm>
 #include <atomic>
+#include <chrono>
+#include <condition_variable>
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include <eigen3/unsupported/Eigen/MatrixFunctions>
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 #include <opencv4/opencv2/opencv.hpp>
 #include <optional>
 #include <string>
+#include <thread>
 #include <type_traits>
+#include <vector>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam_common/logger/Logger.hpp"
@@ -883,6 +890,408 @@ TEST(CodeConcepts, uniqueLabelSpeed) {
               << result3b.size() << ", " << result4.size() << ", "
               << result5.size() << "\n";
   }
+}
+
+struct CameraPose {
+  int value = 0;
+};
+
+struct Timing {
+  std::chrono::steady_clock::time_point start;
+  std::chrono::steady_clock::time_point camera_done;
+  std::chrono::steady_clock::time_point first_object_motion;
+  std::chrono::steady_clock::time_point last_object_motion;
+  std::chrono::steady_clock::time_point end;
+};
+
+CameraPose estimateCameraPose() {
+  // Simulate expensive camera-pose estimation.
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  return CameraPose{42};
+}
+
+void prepareObjectMeasurements(dyno::ObjectId /*object_id*/) {
+  // Simulate work that does not require the camera pose.
+  std::this_thread::sleep_for(std::chrono::milliseconds(20));
+}
+
+CameraPose estimateObjectMotion(dyno::ObjectId object_id,
+                                const CameraPose& camera_pose) {
+  // Simulate object-motion estimation.
+  std::this_thread::sleep_for(std::chrono::milliseconds(30));
+
+  return CameraPose{camera_pose.value + object_id};
+}
+
+/**
+ * This gives you a particularly nice sanity check:
+
+```text
+Sequential
+  camera       100 ms
+  objects      200 ms
+  total        300 ms
+
+TBB
+  camera       100 ms
+  object prep   20 ms   ← overlaps camera
+  object motion 30 ms   ← objects overlap each other
+  total        ~130 ms
+```
+
+So you're testing **both things you care about**: the synchronization is
+correct, and the synchronization isn't preventing the intended parallelism.
+ *
+ */
+TEST(CodeConcepts, CameraPoseSynchronizesObjectMotionWithTBBTaskGroup) {
+  constexpr int kNumObjects = 4;
+
+  // ==========================================================================
+  // Sequential baseline
+  // ==========================================================================
+
+  CameraPose sequential_camera_pose;
+  std::vector<CameraPose> sequential_object_motions(kNumObjects);
+
+  const auto sequential_start = std::chrono::steady_clock::now();
+
+  sequential_camera_pose = estimateCameraPose();
+
+  const auto sequential_camera_done = std::chrono::steady_clock::now();
+
+  for (dyno::ObjectId object_id = 0; object_id < kNumObjects; ++object_id) {
+    prepareObjectMeasurements(object_id);
+
+    sequential_object_motions[object_id] =
+        estimateObjectMotion(object_id, sequential_camera_pose);
+  }
+
+  const auto sequential_end = std::chrono::steady_clock::now();
+
+  // --------------------------------------------------------------------------
+  // Sequential correctness.
+  // --------------------------------------------------------------------------
+
+  EXPECT_EQ(sequential_camera_pose.value, 42);
+
+  for (dyno::ObjectId object_id = 0; object_id < kNumObjects; ++object_id) {
+    EXPECT_EQ(sequential_object_motions[object_id].value, 42 + object_id);
+  }
+
+  // --------------------------------------------------------------------------
+  // Sequential timing.
+  // --------------------------------------------------------------------------
+
+  const auto sequential_camera_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(
+          sequential_camera_done - sequential_start)
+          .count();
+
+  const auto sequential_object_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(
+          sequential_end - sequential_camera_done)
+          .count();
+
+  const auto sequential_total_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(sequential_end -
+                                                            sequential_start)
+          .count();
+
+  // ==========================================================================
+  // TBB task-group version
+  // ==========================================================================
+
+  CameraPose camera_pose;
+
+  std::mutex camera_pose_mutex;
+  std::condition_variable camera_pose_cv;
+  bool camera_pose_ready = false;
+
+  std::vector<CameraPose> object_motions(kNumObjects);
+
+  Timing timing;
+  timing.start = std::chrono::steady_clock::now();
+
+  tbb::task_group group;
+
+  // --------------------------------------------------------------------------
+  // Camera pose task.
+  // --------------------------------------------------------------------------
+
+  group.run([&] {
+    const CameraPose pose = estimateCameraPose();
+
+    {
+      std::lock_guard<std::mutex> lock(camera_pose_mutex);
+
+      camera_pose = pose;
+      camera_pose_ready = true;
+    }
+
+    timing.camera_done = std::chrono::steady_clock::now();
+
+    camera_pose_cv.notify_all();
+  });
+
+  // --------------------------------------------------------------------------
+  // Object motion tasks.
+  // --------------------------------------------------------------------------
+
+  for (dyno::ObjectId object_id = 0; object_id < kNumObjects; ++object_id) {
+    group.run([&, object_id] {
+      // Can execute concurrently with camera-pose estimation.
+      prepareObjectMeasurements(object_id);
+
+      // Wait until the camera pose has been published.
+      {
+        std::unique_lock<std::mutex> lock(camera_pose_mutex);
+
+        camera_pose_cv.wait(lock, [&] { return camera_pose_ready; });
+      }
+
+      const auto motion_start = std::chrono::steady_clock::now();
+
+      // Record the first object motion.
+      {
+        std::lock_guard<std::mutex> lock(camera_pose_mutex);
+
+        if (timing.first_object_motion ==
+            std::chrono::steady_clock::time_point{}) {
+          timing.first_object_motion = motion_start;
+        }
+      }
+
+      object_motions[object_id] = estimateObjectMotion(object_id, camera_pose);
+
+      const auto motion_end = std::chrono::steady_clock::now();
+
+      {
+        std::lock_guard<std::mutex> lock(camera_pose_mutex);
+
+        timing.last_object_motion =
+            std::max(timing.last_object_motion, motion_end);
+      }
+    });
+  }
+
+  group.wait();
+
+  timing.end = std::chrono::steady_clock::now();
+
+  // --------------------------------------------------------------------------
+  // TBB correctness.
+  // --------------------------------------------------------------------------
+
+  EXPECT_TRUE(camera_pose_ready);
+  EXPECT_EQ(camera_pose.value, 42);
+
+  for (dyno::ObjectId object_id = 0; object_id < kNumObjects; ++object_id) {
+    EXPECT_EQ(object_motions[object_id].value, 42 + object_id);
+  }
+
+  // --------------------------------------------------------------------------
+  // TBB timing.
+  // --------------------------------------------------------------------------
+
+  const auto tbb_total_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(timing.end -
+                                                            timing.start)
+          .count();
+
+  const auto camera_to_first_motion_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(
+          timing.first_object_motion - timing.camera_done)
+          .count();
+
+  const auto object_motion_span_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(
+          timing.last_object_motion - timing.first_object_motion)
+          .count();
+
+  // ==========================================================================
+  // Print comparison
+  // ==========================================================================
+
+  std::cout << "\nCamera pose / object motion timing:\n"
+            << "\nSequential:\n"
+            << "  camera:               " << sequential_camera_ms << " ms\n"
+            << "  objects:              " << sequential_object_ms << " ms\n"
+            << "  total:                " << sequential_total_ms << " ms\n"
+            << "\nTBB task_group:\n"
+            << "  total:                " << tbb_total_ms << " ms\n"
+            << "  camera -> first obj:  " << camera_to_first_motion_ms
+            << " ms\n"
+            << "  object motion span:   " << object_motion_span_ms << " ms\n";
+
+  // ==========================================================================
+  // Timing expectations
+  // ==========================================================================
+
+  // Sequential:
+  //
+  //   camera                  ~100 ms
+  //   4 * (prepare + motion)  ~200 ms
+  //   --------------------------------
+  //   total                   ~300 ms
+  //
+  EXPECT_GE(sequential_total_ms, 250);
+  EXPECT_LT(sequential_total_ms, 400);
+
+  // TBB:
+  //
+  //   max(camera, preparation) + object motion
+  //   = max(100, 20) + 30
+  //   ~= 130 ms
+  //
+  EXPECT_LT(tbb_total_ms, 220);
+
+  // Object motion cannot start before the camera pose is ready.
+  EXPECT_GE(timing.first_object_motion, timing.camera_done);
+
+  // The four 30 ms object-motion tasks should overlap.
+  //
+  // Serial execution would take ~120 ms.
+  EXPECT_LT(object_motion_span_ms, 90);
+
+  // ==========================================================================
+  // Show the approximate speedup.
+  // ==========================================================================
+
+  const double speedup = static_cast<double>(sequential_total_ms) /
+                         static_cast<double>(tbb_total_ms);
+
+  std::cout << "  speedup:              " << speedup << "x\n";
+}
+
+using Vector3 = Eigen::Vector3d;
+using Matrix3 = Eigen::Matrix3d;
+using Matrix3Xd = Eigen::Matrix<double, 3, Eigen::Dynamic>;
+
+using Points = std::vector<Vector3, Eigen::aligned_allocator<Vector3>>;
+
+Points makePoints(std::size_t n) {
+  Points points(n);
+
+  std::mt19937 rng(42);
+  std::uniform_real_distribution<double> dist(-10.0, 10.0);
+
+  for (auto& p : points) {
+    p << dist(rng), dist(rng), dist(rng);
+  }
+
+  return points;
+}
+
+void transformLoop(Points& points, const Matrix3& R, const Vector3& t) {
+  for (auto& p : points) {
+    p = R * p + t;
+  }
+}
+
+void transformMap(Points& points, const Matrix3& R, const Vector3& t) {
+  if (points.empty()) {
+    return;
+  }
+
+  Eigen::Map<Matrix3Xd> P(points[0].data(), 3,
+                          static_cast<Eigen::Index>(points.size()));
+
+  P = R * P;
+  P.colwise() += t;
+}
+
+double checksum(const Points& points) {
+  double result = 0.0;
+
+  for (const auto& p : points) {
+    result += p.x() + 2.0 * p.y() + 3.0 * p.z();
+  }
+
+  return result;
+}
+
+template <typename Function>
+double benchmark(const Points& input, const Matrix3& R, const Vector3& t,
+                 Function&& function, int iterations) {
+  Points points = input;
+
+  // Warmup.
+  for (int i = 0; i < 10; ++i) {
+    function(points, R, t);
+  }
+
+  const auto start = std::chrono::steady_clock::now();
+
+  for (int i = 0; i < iterations; ++i) {
+    function(points, R, t);
+  }
+
+  const auto end = std::chrono::steady_clock::now();
+
+  // Prevent the compiler from eliminating the work.
+  volatile double sink = checksum(points);
+  (void)sink;
+
+  return std::chrono::duration<double, std::nano>(end - start).count() /
+         static_cast<double>(iterations);
+}
+
+TEST(CodeConceptsPerformanceBenchmarking, LoopAndMapProduceSameResult) {
+  Matrix3 R;
+  R << 0.8660254, -0.5, 0.0, 0.5, 0.8660254, 0.0, 0.0, 0.0, 1.0;
+
+  const Vector3 t(1.5, -2.0, 3.0);
+
+  for (const std::size_t n : {200, 500, 1000, 2000}) {
+    const Points input = makePoints(n);
+
+    Points loop_points = input;
+    Points map_points = input;
+
+    transformLoop(loop_points, R, t);
+    transformMap(map_points, R, t);
+
+    ASSERT_EQ(loop_points.size(), map_points.size());
+
+    for (std::size_t i = 0; i < n; ++i) {
+      EXPECT_TRUE(loop_points[i].isApprox(map_points[i], 1e-12))
+          << "Mismatch at index " << i << " for N=" << n;
+    }
+  }
+}
+
+TEST(CodeConceptsPerformanceBenchmarking, PerformanceLoopVsMap) {
+  constexpr int kIterations = 5000;
+
+  Matrix3 R;
+  R << 0.8660254, -0.5, 0.0, 0.5, 0.8660254, 0.0, 0.0, 0.0, 1.0;
+
+  const Vector3 t(1.5, -2.0, 3.0);
+
+  std::cout << "\n";
+  std::cout << "Eigen R*p + t benchmark\n";
+  std::cout << "Iterations: " << kIterations << "\n\n";
+
+  std::cout << std::setw(8) << "N" << std::setw(16) << "Loop [us]"
+            << std::setw(16) << "Map [us]" << std::setw(14) << "Map/Loop"
+            << "\n";
+
+  std::cout << std::string(54, '-') << "\n";
+
+  for (const std::size_t n : {200, 500, 1000, 2000}) {
+    const Points input = makePoints(n);
+
+    const double loop_ns = benchmark(input, R, t, transformLoop, kIterations);
+
+    const double map_ns = benchmark(input, R, t, transformMap, kIterations);
+
+    std::cout << std::setw(8) << n << std::setw(16) << loop_ns / 1000.0
+              << std::setw(16) << map_ns / 1000.0 << std::setw(14)
+              << map_ns / loop_ns << "\n";
+  }
+
+  std::cout << "\n";
 }
 
 // TEST(CodeConcepts, getISAM2Ordering) {

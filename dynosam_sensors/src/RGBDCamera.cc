@@ -85,16 +85,6 @@ bool RGBDCamera::projectRight(Feature::Ptr feature) const {
   return false;
 }
 
-Keypoint RGBDCamera::rightKeypoint(double depth,
-                                   const Keypoint& left_keypoint) const {
-  return Keypoint(rightKeypoint(depth, left_keypoint(0)), left_keypoint(1));
-}
-
-double RGBDCamera::rightKeypoint(double depth, double uL) const {
-  const double disparity = fx_b_ / depth;
-  return uL - disparity;
-}
-
 std::pair<bool, gtsam::StereoPoint2> RGBDCamera::getStereo(
     Feature::Ptr feature, const bool force_recalculation) {
   gtsam::StereoPoint2 stereo_point;

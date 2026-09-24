@@ -68,8 +68,16 @@ class RGBDCamera : public Camera {
    * @return false
    */
   bool projectRight(Feature::Ptr feature) const;
-  Keypoint rightKeypoint(double depth, const Keypoint& left_keypoint) const;
-  double rightKeypoint(double depth, double uL) const;
+
+  inline Keypoint rightKeypoint(double depth,
+                                const Keypoint& left_keypoint) const {
+    return Keypoint(rightKeypoint(depth, left_keypoint(0)), left_keypoint(1));
+  }
+  inline double rightKeypoint(double depth, double uL) const {
+    // const double disparity = fx_b_ / depth;
+    // return uL - disparity;
+    return uL - (fx_b_ / depth);
+  }
 
   /**
    * @brief Get the stereo measurement for this feature.
