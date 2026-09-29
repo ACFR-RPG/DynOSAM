@@ -172,9 +172,6 @@ class Pose3FlowProjectionFactor2
       const gtsam::Point2& optical_flow, const gtsam::Pose3& pose,
       boost::optional<gtsam::Matrix&> J1 = boost::none,
       boost::optional<gtsam::Matrix&> J2 = boost::none) const override {
-    auto I = gtsam::traits<gtsam::Pose3>::Identity();
-    gtsam::PinholeCamera<Calibration> previous_camera(I, calibration_);
-
     const double fx = calibration_.fx();
     const double fy = calibration_.fy();
     const double cu = calibration_.px();
@@ -203,7 +200,6 @@ class Pose3FlowProjectionFactor2
       }
 
       if (J2) {
-        const double z_2 = z * z;
         const double inv_z2 = inv_z * inv_z;
 
         // temporaty variables to avoid recomputation

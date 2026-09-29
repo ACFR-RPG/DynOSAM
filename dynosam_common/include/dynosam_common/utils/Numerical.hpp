@@ -33,6 +33,7 @@
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Vector.h>  //for fpequal
 
+#include <Eigen/Dense>
 #include <boost/math/distributions/chi_squared.hpp>
 #include <boost/math/distributions/inverse_gamma.hpp>
 #include <fstream>
@@ -233,13 +234,20 @@ inline T computeCentroid(const std::vector<T>& vec) {
   return sum / static_cast<double>(vec.size());
 }
 
+// NOTE: T will be initalised with garbage!
+// TODO: initalise with first element of vector?
 template <typename T>
 inline T computeCentroid(
     const std::vector<T, Eigen::aligned_allocator<T>>& vec) {
-  T sum{};
-  for (const T& t : vec) {
-    sum += t;
+  if (vec.empty()) {
+    throw std::invalid_argument("computeCentroid: empty vector");
   }
+
+  T sum = vec.front();
+  for (size_t i = 1; i < vec.size(); ++i) {
+    sum += vec[i];
+  }
+
   return sum / static_cast<double>(vec.size());
 }
 

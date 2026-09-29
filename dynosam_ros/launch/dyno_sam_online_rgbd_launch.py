@@ -11,20 +11,20 @@ import os
 
 
 def generate_launch_description():
-    pkg_dir = get_package_share_directory('realsense2_description')
-    xacro_file = os.path.join(pkg_dir, 'urdf', '_d435.urdf.xacro')
+    # pkg_dir = get_package_share_directory('realsense2_description')
+    # xacro_file = os.path.join(pkg_dir, 'urdf', '_d435.urdf.xacro')
 
     # Process xacro to string
-    robot_description_raw = xacro.process_file(xacro_file).toxml()
+    # robot_description_raw = xacro.process_file(xacro_file).toxml()
 
     # 2. Configure robot_state_publisher
-    robot_state_publisher_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        output='screen',
-        parameters=[{'robot_description': robot_description_raw}]
-    )
+    # robot_state_publisher_node = Node(
+    #     package='robot_state_publisher',
+    #     executable='robot_state_publisher',
+    #     name='robot_state_publisher',
+    #     output='screen',
+    #     parameters=[{'robot_description': robot_description_raw}]
+    # )
 
 
     return LaunchDescription([

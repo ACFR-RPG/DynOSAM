@@ -289,7 +289,11 @@ std::vector<cv::Point_<T>> gtsamPointsToCv(
 }
 
 //  converts an opengv transformation (3x4 [R t] matrix) to a gtsam::Pose3
-gtsam::Pose3 openGvTfToGtsamPose3(const opengv::transformation_t& RT);
+inline gtsam::Pose3 openGvTfToGtsamPose3(const opengv::transformation_t& RT) {
+  gtsam::Matrix poseMat = gtsam::Matrix::Identity(4, 4);
+  poseMat.block<3, 4>(0, 0) = RT;
+  return gtsam::Pose3(poseMat);
+}
 
 template <class T>
 static bool getEstimateOfKey(const gtsam::Values& state, const gtsam::Key& key,

@@ -8,6 +8,8 @@
 using namespace dyno;
 
 using TestTrajectoryInt = Trajectory<int>;
+using TrajectoryEntryAlreadyExists =
+    TestTrajectoryInt::TrajectoryEntryAlreadyExists;
 
 TEST(TrajectoryBase, EmptyTrajectory) {
   TestTrajectoryInt traj;
@@ -270,7 +272,7 @@ TEST(TrajectoryBase, DoesNotModifyPreviousIfNotFound) {
 }
 
 TEST(TrajectoryBase, GetRangeBasicAndClamping) {
-  Trajectory<int> traj;
+  TestTrajectoryInt traj;
 
   // Insert frames 0..4
   for (FrameId i = 0; i <= 4; ++i) {
@@ -306,4 +308,82 @@ TEST(TrajectoryBase, GetRangeBasicAndClamping) {
 
   // --- 5. start <= max but start > end → throw ---
   { EXPECT_THROW(traj.range(3, 1), DynosamException); }
+}
+
+TEST(TrajectoryBase, Find) {
+  TestTrajectoryInt traj;
+
+  traj.insert(0, 0.0, 10);
+  traj.insert(2, 2.0, 20);
+  traj.insert(5, 5.0, 50);
+
+  // Existing frame: find() should return a valid iterator.
+  {
+    auto it = traj.find(2);
+
+    EXPECT_NE(it, traj.end());
+    EXPECT_EQ(it->frame_id, 2);
+    EXPECT_EQ(it->timestamp, 2.0);
+    EXPECT_EQ(it->data, 20);
+  }
+
+  // Another existing frame.
+  {
+    auto it = traj.find(5);
+
+    EXPECT_NE(it, traj.end());
+    EXPECT_EQ(it->frame_id, 5);
+    EXPECT_EQ(it->data, 50);
+  }
+
+  // Missing frame: find() should return end().
+  {
+    auto it = traj.find(3);
+
+    EXPECT_EQ(it, traj.end());
+  }
+
+  // Missing frame before the trajectory.
+  {
+    auto it = traj.find(-1);
+
+    EXPECT_EQ(it, traj.end());
+  }
+
+  // Missing frame after the trajectory.
+  {
+    auto it = traj.find(10);
+
+    EXPECT_EQ(it, traj.end());
+  }
+}
+
+TEST(TrajectoryBase, FindBegin) {
+  TestTrajectoryInt traj;
+
+  traj.insert(10, 10.0, 100);
+  traj.insert(20, 20.0, 200);
+
+  auto it = traj.find(10);
+
+  ASSERT_NE(it, traj.end());
+  EXPECT_EQ(it, traj.begin());
+  EXPECT_EQ(it->data, 100);
+}
+
+TEST(TrajectoryBase, FindConst) {
+  TestTrajectoryInt traj;
+
+  traj.insert(10, 10.0, 100);
+  traj.insert(20, 20.0, 200);
+
+  const TestTrajectoryInt& const_traj = traj;
+
+  auto it = const_traj.find(20);
+
+  EXPECT_NE(it, const_traj.end());
+  EXPECT_EQ(it->frame_id, 20);
+  EXPECT_EQ(it->data, 200);
+
+  EXPECT_EQ(const_traj.find(30), const_traj.end());
 }

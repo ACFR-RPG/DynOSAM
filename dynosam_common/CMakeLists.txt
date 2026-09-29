@@ -3,12 +3,19 @@ cmake_minimum_required(VERSION 3.11)
 project(dynosam_common)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
+    -O3
+  )
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Must be set **before** find_package(PCL)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
@@ -113,6 +120,18 @@ add_library(${PROJECT_NAME} SHARED
 #     INTERFACE -O3 -march=native
 #   )
 # endif()
+
+# target_compile_options(${PROJECT_NAME}
+#   PRIVATE -O3 -march=native
+#   INTERFACE -O3 -march=native
+# )
+
+#INTERFACE means:
+#Any target that links against dynosam_common gets these compile options too.
+target_compile_options(${PROJECT_NAME}
+  PRIVATE -O3
+  INTERFACE -O3
+)
 
 
 target_link_libraries(${PROJECT_NAME}

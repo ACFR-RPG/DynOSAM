@@ -439,24 +439,24 @@ DepthUpdaterFast::DepthUpdaterFast(const FrontendParams& params,
                                    FeatureBlockContainer& features)
     : params_(params), camera_(camera), images_(images), features_(features) {}
 
-void DepthUpdaterFast::calcPoints(LocalPointMap& point_map) {
+void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
   utils::ChronoTimingStats feature_track_t("depth_updater_fast.calcPoints");
   std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
 
   const cv::Mat& depth_img = images_.depth();
 
-  const auto max_background_threshold = params_.max_background_depth;
-  const auto max_object_threshold = params_.max_object_depth;
+  const auto max_background_threshold = params_.depth_thresholds.max_background;
+  const auto max_object_threshold = params_.depth_thresholds.max_object;
 
   // iterate over by view so we can avoid lookup and memory allocation
-  // for each LocalPoints object
+  // for each FrameGeometry object
   for (auto& object_view : features_.objectViews()) {
     auto object_id = object_view.objectId();
 
-    // create new LocalPoints and allocate memory
-    int num_points = object_view.size();
+    // create new FrameGeometry and allocate memory
+    size_t num_points = object_view.size();
 
-    LocalPoints& local_points = point_map[object_id];
+    FrameGeometry& local_points = point_map[object_id];
     local_points.lmks_C.reserve(num_points);
     local_points.left_kps.reserve(num_points);
     local_points.left_kps_previous.reserve(num_points);
@@ -526,36 +526,201 @@ void DepthUpdaterFast::calcPoints(LocalPointMap& point_map) {
   }
 }
 
-gtsam::Pose3 FlowRefinement::refine(const RelativePoseMatches& matches) const {
+void DepthUpdaterFast::calcPoints(const std::vector<Index>& indicies,
+                                  FrameGeometryMap& points) {}
+
+FlowRefinement::FlowRefinement(const Camera::Ptr camera,
+                               const ImageContainer& images,
+                               MatchingAdaptorBase& adaptor)
+    : camera_(camera), images_(images), adaptor_(adaptor) {}
+
+void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
+                            const gtsam::Pose3& pose_in,
+                            gtsam::Pose3& pose_out) {
+  utils::ChronoTimingStats timer("flow_refine.refine");
   using FlowProjectionFactor =
       Pose3FlowProjectionFactor2<Camera::CalibrationType>;
 
+  gtsam::SharedNoiseModel flow_noise =
+      gtsam::noiseModel::Isotropic::Sigma(2u, params.flow_prior_sigma);
+  gtsam::SharedNoiseModel flow_prior_noise =
+      gtsam::noiseModel::Isotropic::Sigma(2u, params.flow_sigma);
+
+  if (params.use_robust) {
+    flow_noise = gtsam::noiseModel::Robust::Create(
+        gtsam::noiseModel::mEstimator::Huber::Create(params.k_huber),
+        flow_noise);
+  }
+
+  // TODO: cahe!
+  auto gtsam_calibration = *camera_->getGtsamCalibration();
+
+  // takes a few milliseconds to build...
+  utils::ChronoTimingStats build_t("flow_refine.build");
   gtsam::NonlinearFactorGraph graph;
   gtsam::Values values;
+  gtsam::Ordering ordering;
 
-  auto flowSymbol = [](TrackletId tracklet) -> gtsam::Symbol {
-    return gtsam::symbol_shorthand::F(static_cast<uint64_t>(tracklet));
-  };
+  const gtsam::Symbol X_sym('X', 0);
+  const size_t num_matches = adaptor_.numMatches();
 
-  auto gtsam_calibration = boost::make_shared<Camera::CalibrationType>(
-      camera_->getGtsamCalibration());
+  // store reference keypoints to avoid lookup
+  gtsam::Point2Vector ref_kps;
+  ref_kps.reserve(num_matches);
 
-  for (size_t i = 0; i < matches.lmks_C_ref.size(); i++) {
-    Index fc_index = matches.fc_indices_curr[i];
+  std::vector<Index> matching_index;
+  matching_index.reserve(num_matches);
 
-    if (!features_.inlier[fc_index]) {
+  std::vector<gtsam::Key> keys;
+  keys.reserve(num_matches);
+
+  std::vector<uchar*> inlier_ptrs;
+  inlier_ptrs.reserve(num_matches);
+
+  for (size_t i = 0; i < num_matches; i++) {
+    // if we recompute this should not be needed!
+    uchar* inlier_ptr = adaptor_.inlierPtr(i);
+    // dereference and check if valid
+    if (!(*inlier_ptr)) {
       continue;
     }
 
-    gtsam::Point3 P_ref = matches.lmks_C_ref[i];
-    gtsam::Point3 kp_ref = matches.keypoints_previous[i];
+    const gtsam::Point3& ref_lmk = adaptor_.landmark(i);
+    // assuming the previous frame is the reference frame!
+    const gtsam::Point2& ref_kp = adaptor_.keypointPrev(i);
 
-    gtsam::Point3 initial_flow = matches.keypoints_curr[i] - kp_ref;
+    gtsam::Symbol flow_sym('f', adaptor_.trackletId(i));
+
+    auto factor = boost::make_shared<FlowProjectionFactor>(
+        flow_sym, X_sym, ref_kp, ref_lmk, gtsam_calibration, flow_noise);
+    graph += factor;
+
+    const gtsam::Point2& curr_kp = adaptor_.keypoint(i);
+    const gtsam::Point2 initial_flow = curr_kp - ref_kp;
+
+    // add prior factor on each flow
+    graph.addPrior<gtsam::Point2>(flow_sym, initial_flow, flow_prior_noise);
+
+    values.insert(flow_sym, initial_flow);
+    ordering += flow_sym;
+
+    matching_index.push_back(i);
+    ref_kps.push_back(ref_kp);
+    keys.push_back(flow_sym);
+    inlier_ptrs.push_back(inlier_ptr);
+  }
+
+  values.insert(X_sym, pose_in);
+  ordering += X_sym;
+
+  build_t.stop();
+
+  // setup solver
+  using BaseSolver = gtsam::GaussNewtonOptimizer;
+  gtsam::GaussNewtonParams opt_params;
+  // for speed
+
+  //
+  opt_params.setMaxIterations(3);
+  opt_params.setOrdering(ordering);
+
+  dyno::NonlinearOptimizer<BaseSolver> solver(graph, values, opt_params);
+  NonlinearOptimizerSummary summary;
+  NonlinearOptimizerOptions options;
+
+  gtsam::Values optimised_values = values;
+  {
+    utils::ChronoTimingStats timer("flow_refine.gn_solve", 7);
+    CHECK(solver.solve(optimised_values, options, &summary));
+  }
+
+  VLOG(10) << "Initial error: " << summary.initial_error << " final error "
+           << summary.final_error << " time[s] "
+           << summary.cumulative_time_in_seconds
+           << " #iterations= " << summary.numIterations();
+
+  utils::ChronoTimingStats recover_t("flow_refine.recover", 7);
+  for (size_t i = 0; i < matching_index.size(); i++) {
+    gtsam::Point2 refined_flow = optimised_values.at<gtsam::Point2>(keys[i]);
+    gtsam::Point2 refined_keypoint = refined_flow + ref_kps[i];
+
+    // or is not in the same object mask!
+    if (!camera_->isKeypointContained(refined_keypoint)) {
+      *(inlier_ptrs[i]) = 0;
+      continue;
+    }
+
+    Index index = matching_index[i];
+    // update both the gtsam representation and the opencv representation in
+    // features!
+    adaptor_.keypoint(index, refined_keypoint);
+  }
+
+  pose_out = optimised_values.at<gtsam::Pose3>(X_sym);
+}
+
+MatchingAdaptorBase::MatchingAdaptorBase(
+    FrameGeometry& local_geometry, const LocalLandmarks& reference_geometry,
+    FeatureBlockContainer& features)
+    : local_geometry_(local_geometry),
+      reference_geometry_(reference_geometry),
+      features_(features) {
+  const size_t num_features = local_geometry.ids.size();
+  matched_landmarks_ref_.reserve(num_features);
+
+  size_t adaptor_index{0};
+  for (size_t curr_idx = 0; curr_idx < num_features; curr_idx++) {
+    TrackletId tracklet_id = local_geometry.ids[curr_idx];
+    Index fc_curr_idx = local_geometry.fc_indices[curr_idx];
+
+    size_t age = features_.age[fc_curr_idx];
+    // seen at least twice (ie tracked from previous to current and not a new
+    // feature!)
+    if (age < 2) {
+      continue;
+    }
+
+    if (!features_.inlier[fc_curr_idx]) {
+      continue;
+    }
+
+    auto it = reference_geometry.local_indices.find(tracklet_id);
+    // we have a match in the local map!
+    if (it != reference_geometry.local_indices.end()) {
+      // const gtsam::Point3& lmk_ref = reference_geometry_lmks.at(it->second);
+      // check that the landmarks have the same id!
+      Index ref_index = it->second;
+      CHECK_EQ(tracklet_id, reference_geometry.ids.at(ref_index));
+      matches_[adaptor_index] = std::make_pair(curr_idx, ref_index);
+      matched_landmarks_ref_.push_back(reference_geometry_.lmks[ref_index]);
+      ++adaptor_index;
+    }
   }
 }
 
-void DepthUpdaterFast::calcPoints(const std::vector<Index>& indicies,
-                                  LocalPointMap& points) {}
+void MatchingAdaptorBase::recompute() {
+  size_t adaptor_index{0};
+
+  std::unordered_map<Index, IndexMatch> inlier_matches;
+  gtsam::Point3Vector inlier_matched_landmarks_ref;
+  for (size_t i = 0; i < numMatches(); i++) {
+    IndexMatch match = matches_[i];
+    Index local_index = match.first;
+
+    Index fc_index = local_geometry_.fc_indices[local_index];
+    if (features_.inlier[fc_index]) {
+      inlier_matched_landmarks_ref.push_back(matched_landmarks_ref_[i]);
+      inlier_matches[adaptor_index] = match;
+      ++adaptor_index;
+    }
+  }
+
+  matched_landmarks_ref_ = std::move(inlier_matched_landmarks_ref);
+  matches_ = std::move(inlier_matches);
+
+  // call virtual function now matches have been updated
+  recomputeCache();
+}
 
 FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
                                        Camera::Ptr camera,
@@ -584,8 +749,11 @@ TrackingResult FeatureTrackerFast::track(
     const std::optional<gtsam::Rot3>& R_km1_k) {
   utils::ChronoTimingStats feature_track_t("fast_tracker.track");
   // object detect/psuedo object detection measurement
+
+  utils::ChronoTimingStats object_detect_t("fast_tracker.object_detect");
   ObjectDetectionResult object_detection_result =
       object_detection_impl_.detectAndTrack(image_container);
+  object_detect_t.stop();
   // update image container with motion mask
   const cv::Mat object_masks = object_detection_result.labelled_mask;
   ObjectIds object_ids = object_detection_result.objectIds();
@@ -729,9 +897,9 @@ TrackingResult FeatureTrackerFast::track(
 
         // if detection rectangle is tiny (less than 100 pixels in area) just
         // ignore
-        if (detected_bounding_box.area() < 80) {
-          needs_detection = false;
-        }
+        // if (detected_bounding_box.area() < 80) {
+        //   needs_detection = false;
+        // }
       }
 
       if (needs_detection) {
@@ -796,8 +964,7 @@ TrackingResult FeatureTrackerFast::track(
   // always set previous object mask
   prev_object_mask_ = object_masks;
 
-  return {object_detection_result, previous_features_,
-          drawBatchedFeatures(rgb, previous_features_)};
+  return {object_detection_result, previous_features_};
 }
 
 FeatureTrackerFast::ObjectDetectionImpl::ObjectDetectionImpl(
@@ -991,239 +1158,239 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
   cv::dilate(eig_, localMax, cv::Mat());
   t2.stop();
 
-  // calculate distance transform for each mask
-  utils::ChronoTimingStats distance_t("fast_tracker.distance masks");
-  // this can take up to 3-4ms
-  std::vector<cv::Mat> distanceTransformMasks(params.size());
-  for (size_t i = 0; i < params.size(); i++) {
-    cv::distanceTransform(params[i].mask, distanceTransformMasks[i],
-                          cv::DIST_L2, 3);
-  }
-  distance_t.stop();
+  // // calculate distance transform for each mask
+  // utils::ChronoTimingStats distance_t("fast_tracker.distance masks");
+  // // this can take up to 3-4ms
+  // std::vector<cv::Mat> distanceTransformMasks(params.size());
+  // for (size_t i = 0; i < params.size(); i++) {
+  //   cv::distanceTransform(params[i].mask, distanceTransformMasks[i],
+  //                         cv::DIST_L2, 3);
+  // }
+  // distance_t.stop();
 
   std::vector<CornerResponses> batchedResults(params.size());
 
   utils::ChronoTimingStats t3("fast_tracker.masks_loop");
-  cv::parallel_for_(
-      cv::Range(0, static_cast<int>(params.size())),
-      [&](const cv::Range& range) {
-        for (int m = range.start; m < range.end; ++m) {
-          const auto& param = params[m];
+  tbb::task_group task_group;
+  for (size_t m = 0; m < params.size(); m++) {
+    task_group.run([&, m] {
+      const auto& param = params[m];
+      const cv::Mat& mask = param.mask;
 
-          const cv::Mat& mask = param.mask;
-          const cv::Mat& dist = distanceTransformMasks[m];
+      cv::Mat dist;
+      // no need to compute the mask for the static background?
+      // can we save lots of computation here?
+      // ideally should not be close to the dynamic points?
+      // i think this is the biggest computation bottleneck!
+      cv::distanceTransform(mask, dist, cv::DIST_L2, 3);
 
-          CV_Assert(mask.type() == CV_8UC1);
+      CV_Assert(mask.type() == CV_8UC1);
 
-          const int maxFeatureCount = param.max_corners;
-          const float minDistance = param.min_distance;
+      const int maxFeatureCount = param.max_corners;
+      const float minDistance = param.min_distance;
 
-          // terms[m].first = feature_detection_params[m].object_id;
+      if (maxFeatureCount <= 0) return;
 
-          if (maxFeatureCount <= 0) continue;
+      // --------------------------------------------------------------
+      // Restrict the entire detection process to the object bounding
+      // box rather than scanning the entire image.
+      // --------------------------------------------------------------
 
-          // --------------------------------------------------------------
-          // Restrict the entire detection process to the object bounding
-          // box rather than scanning the entire image.
-          // --------------------------------------------------------------
+      const cv::Rect& bbox = param.bbox;
 
-          const cv::Rect& bbox = param.bbox;
+      if (bbox.empty()) return;
 
-          if (bbox.empty()) continue;
+      const int x0 = bbox.x;
+      const int y0 = bbox.y;
+      const int x1 = bbox.x + bbox.width;
+      const int y1 = bbox.y + bbox.height;
 
-          const int x0 = bbox.x;
-          const int y0 = bbox.y;
-          const int x1 = bbox.x + bbox.width;
-          const int y1 = bbox.y + bbox.height;
+      const float minDistanceSq = minDistance * minDistance;
 
-          const float minDistanceSq = minDistance * minDistance;
+      // --------------------------------------------------------------
+      // Grid
+      // --------------------------------------------------------------
 
-          // --------------------------------------------------------------
-          // Grid
-          // --------------------------------------------------------------
+      const int cellSize = std::max(1, cvRound(minDistance));
+      const float invCellSize = 1.0f / static_cast<float>(cellSize);
 
-          const int cellSize = std::max(1, cvRound(minDistance));
-          const float invCellSize = 1.0f / static_cast<float>(cellSize);
+      const int gridWidth = (bbox.width + cellSize - 1) / cellSize;
+      const int gridHeight = (bbox.height + cellSize - 1) / cellSize;
 
-          const int gridWidth = (bbox.width + cellSize - 1) / cellSize;
+      // --------------------------------------------------------------
+      // Candidate storage
+      // --------------------------------------------------------------
 
-          const int gridHeight = (bbox.height + cellSize - 1) / cellSize;
+      std::vector<CornerCandidate> candidates;
+      candidates.reserve(256);
 
-          // --------------------------------------------------------------
-          // Candidate storage
-          // --------------------------------------------------------------
+      // --------------------------------------------------------------
+      // Find local maxima
+      //
+      // IMPORTANT:
+      // Scan only the bounding box.
+      // --------------------------------------------------------------
+      for (int y = y0; y < y1; ++y) {
+        const float* eigPtr = eig_.ptr<float>(y);
+        const float* maxPtr = localMax.ptr<float>(y);
 
-          std::vector<CornerCandidate> candidates;
-          candidates.reserve(256);
+        const uchar* maskPtr = mask.empty() ? nullptr : mask.ptr<uchar>(y);
+        const float* distPtr = dist.empty() ? nullptr : dist.ptr<float>(y);
 
-          // --------------------------------------------------------------
-          // Find local maxima
+        for (int x = x0; x < x1; ++x) {
+          // Check mask FIRST.
           //
-          // IMPORTANT:
-          // Scan only the bounding box.
-          // --------------------------------------------------------------
-          for (int y = y0; y < y1; ++y) {
-            const float* eigPtr = eig_.ptr<float>(y);
-            const float* maxPtr = localMax.ptr<float>(y);
+          // For small dynamic object masks this avoids reading
+          // the distance transform for almost every background
+          // pixel in the bounding box.
+          if (maskPtr && !maskPtr[x]) {
+            continue;
+          }
 
-            const uchar* maskPtr = mask.empty() ? nullptr : mask.ptr<uchar>(y);
+          const float val = eigPtr[x];
 
-            const float* distPtr = dist.empty() ? nullptr : dist.ptr<float>(y);
+          if (val <= threshold) continue;
 
-            for (int x = x0; x < x1; ++x) {
-              // Check mask FIRST.
-              //
-              // For small dynamic object masks this avoids reading
-              // the distance transform for almost every background
-              // pixel in the bounding box.
-              if (maskPtr && !maskPtr[x]) {
-                continue;
+          if (val != maxPtr[x]) continue;
+
+          // Mask-edge constraint
+          if (distPtr && distPtr[x] <= 5.0f) continue;
+
+          candidates.push_back(
+              {cv::Point2f(static_cast<float>(x), static_cast<float>(y)), val});
+        }
+      }
+
+      if (candidates.empty()) return;
+
+      // --------------------------------------------------------------
+      // Sort strongest corners first.
+      // --------------------------------------------------------------
+
+      std::sort(candidates.begin(), candidates.end(),
+                std::greater<CornerCandidate>());
+
+      // --------------------------------------------------------------
+      // Output
+      // --------------------------------------------------------------
+
+      CornerResponses& acceptedCorners = batchedResults[m];
+      acceptedCorners.reserve(maxFeatureCount);
+
+      // One linked-list head per spatial cell.
+      std::vector<int> gridHeads(gridWidth * gridHeight, -1);
+      std::vector<int> nextPointIdx;
+      nextPointIdx.reserve(maxFeatureCount);
+
+      // --------------------------------------------------------------
+      // Greedy GFTT distance suppression
+      // --------------------------------------------------------------
+
+      for (const CornerCandidate& candidate : candidates) {
+        if (static_cast<int>(acceptedCorners.size()) >= maxFeatureCount) {
+          break;
+        }
+
+        // Coordinates relative to bounding box.
+        const int localX = static_cast<int>(candidate.pt.x) - x0;
+
+        const int localY = static_cast<int>(candidate.pt.y) - y0;
+
+        const int xCell = static_cast<int>(localX * invCellSize);
+
+        const int yCell = static_cast<int>(localY * invCellSize);
+
+        const int x1Cell = std::max(0, xCell - 1);
+        const int y1Cell = std::max(0, yCell - 1);
+        const int x2Cell = std::min(gridWidth - 1, xCell + 1);
+        const int y2Cell = std::min(gridHeight - 1, yCell + 1);
+
+        bool good = true;
+
+        for (int yy = y1Cell; yy <= y2Cell && good; ++yy) {
+          const int rowOffset = yy * gridWidth;
+
+          for (int xx = x1Cell; xx <= x2Cell; ++xx) {
+            int pIdx = gridHeads[rowOffset + xx];
+
+            while (pIdx != -1) {
+              const cv::Point2f& accepted = acceptedCorners.keypoints[pIdx];
+
+              const float dx = static_cast<int>(candidate.pt.x) -
+                               static_cast<int>(accepted.x);
+              const float dy = static_cast<int>(candidate.pt.y) -
+                               static_cast<int>(accepted.y);
+
+              if (dx * dx + dy * dy < minDistanceSq) {
+                good = false;
+                break;
               }
 
-              const float val = eigPtr[x];
-
-              if (val <= threshold) continue;
-
-              if (val != maxPtr[x]) continue;
-
-              // Mask-edge constraint
-              if (distPtr && distPtr[x] <= 5.0f) continue;
-
-              candidates.push_back(
-                  {cv::Point2f(static_cast<float>(x), static_cast<float>(y)),
-                   val});
-            }
-          }
-
-          if (candidates.empty()) continue;
-
-          // --------------------------------------------------------------
-          // Sort strongest corners first.
-          // --------------------------------------------------------------
-
-          std::sort(candidates.begin(), candidates.end(),
-                    std::greater<CornerCandidate>());
-
-          // --------------------------------------------------------------
-          // Output
-          // --------------------------------------------------------------
-
-          CornerResponses& acceptedCorners = batchedResults[m];
-          acceptedCorners.reserve(maxFeatureCount);
-
-          // One linked-list head per spatial cell.
-          std::vector<int> gridHeads(gridWidth * gridHeight, -1);
-          std::vector<int> nextPointIdx;
-          nextPointIdx.reserve(maxFeatureCount);
-
-          // --------------------------------------------------------------
-          // Greedy GFTT distance suppression
-          // --------------------------------------------------------------
-
-          for (const CornerCandidate& candidate : candidates) {
-            if (static_cast<int>(acceptedCorners.size()) >= maxFeatureCount) {
-              break;
+              pIdx = nextPointIdx[pIdx];
             }
 
-            // Coordinates relative to bounding box.
-            const int localX = static_cast<int>(candidate.pt.x) - x0;
-
-            const int localY = static_cast<int>(candidate.pt.y) - y0;
-
-            const int xCell = static_cast<int>(localX * invCellSize);
-
-            const int yCell = static_cast<int>(localY * invCellSize);
-
-            const int x1Cell = std::max(0, xCell - 1);
-            const int y1Cell = std::max(0, yCell - 1);
-            const int x2Cell = std::min(gridWidth - 1, xCell + 1);
-            const int y2Cell = std::min(gridHeight - 1, yCell + 1);
-
-            bool good = true;
-
-            for (int yy = y1Cell; yy <= y2Cell && good; ++yy) {
-              const int rowOffset = yy * gridWidth;
-
-              for (int xx = x1Cell; xx <= x2Cell; ++xx) {
-                int pIdx = gridHeads[rowOffset + xx];
-
-                while (pIdx != -1) {
-                  const cv::Point2f& accepted = acceptedCorners.keypoints[pIdx];
-
-                  const float dx = static_cast<int>(candidate.pt.x) -
-                                   static_cast<int>(accepted.x);
-                  const float dy = static_cast<int>(candidate.pt.y) -
-                                   static_cast<int>(accepted.y);
-
-                  if (dx * dx + dy * dy < minDistanceSq) {
-                    good = false;
-                    break;
-                  }
-
-                  pIdx = nextPointIdx[pIdx];
-                }
-
-                if (!good) break;
-              }
-            }
-
-            if (!good) continue;
-
-            const int cellIdx = yCell * gridWidth + xCell;
-
-            const int pointIdx = static_cast<int>(acceptedCorners.size());
-
-            nextPointIdx.push_back(gridHeads[cellIdx]);
-
-            gridHeads[cellIdx] = pointIdx;
-
-            acceptedCorners.push_back(candidate);
-          }
-
-          // do ANMS
-          constexpr float anmsTolerance = 0.10f;
-          static Eigen::MatrixXd binning_mask;
-
-          AdaptiveNonMaximumSuppression non_maximum_supression(
-              AnmsAlgorithmType::RangeTree);
-
-          std::vector<cv::KeyPoint> keypoints;
-          keypoints.reserve(acceptedCorners.size());
-
-          LOG(INFO) << "kps before ANMS " << acceptedCorners.size();
-          // LOG(INFO) << "keypoints needed " << param.num_corners_needed;
-
-          for (size_t i = 0; i < acceptedCorners.size(); i++) {
-            const auto& pt = acceptedCorners.keypoints[i];
-            const auto& score = acceptedCorners.responses[i];
-            keypoints.emplace_back(cv::Point2f(pt.x - static_cast<float>(x0),
-                                               pt.y - static_cast<float>(y0)),
-                                   1.0f,   // size
-                                   -1.0f,  // angle
-                                   score   // response
-            );
-          }
-
-          auto& selected_keypoints = keypoints;
-          selected_keypoints = non_maximum_supression.suppressNonMax(
-              keypoints, param.num_corners_needed, anmsTolerance, bbox.width,
-              bbox.height, 5, 5, binning_mask);
-
-          LOG(INFO) << "points after ANMS " << selected_keypoints.size();
-
-          // re-allocate correct memory size
-          acceptedCorners.resize(selected_keypoints.size());
-
-          for (size_t i = 0; i < selected_keypoints.size(); i++) {
-            auto kp = selected_keypoints[i];
-            kp.pt.x += static_cast<float>(x0);
-            kp.pt.y += static_cast<float>(y0);
-            acceptedCorners.keypoints[i] = kp.pt;
-            acceptedCorners.responses[i] = kp.response;
+            if (!good) break;
           }
         }
-      });
 
+        if (!good) continue;
+
+        const int cellIdx = yCell * gridWidth + xCell;
+
+        const int pointIdx = static_cast<int>(acceptedCorners.size());
+
+        nextPointIdx.push_back(gridHeads[cellIdx]);
+
+        gridHeads[cellIdx] = pointIdx;
+
+        acceptedCorners.push_back(candidate);
+      }
+
+      // do ANMS
+      constexpr float anmsTolerance = 0.10f;
+      static Eigen::MatrixXd binning_mask;
+
+      AdaptiveNonMaximumSuppression non_maximum_supression(
+          AnmsAlgorithmType::RangeTree);
+
+      std::vector<cv::KeyPoint> keypoints;
+      keypoints.reserve(acceptedCorners.size());
+
+      LOG(INFO) << "kps before ANMS " << acceptedCorners.size();
+      // LOG(INFO) << "keypoints needed " << param.num_corners_needed;
+
+      for (size_t i = 0; i < acceptedCorners.size(); i++) {
+        const auto& pt = acceptedCorners.keypoints[i];
+        const auto& score = acceptedCorners.responses[i];
+        keypoints.emplace_back(cv::Point2f(pt.x - static_cast<float>(x0),
+                                           pt.y - static_cast<float>(y0)),
+                               1.0f,   // size
+                               -1.0f,  // angle
+                               score   // response
+        );
+      }
+
+      auto& selected_keypoints = keypoints;
+      selected_keypoints = non_maximum_supression.suppressNonMax(
+          keypoints, param.num_corners_needed, anmsTolerance, bbox.width,
+          bbox.height, 5, 5, binning_mask);
+
+      LOG(INFO) << "points after ANMS " << selected_keypoints.size();
+
+      // re-allocate correct memory size
+      acceptedCorners.resize(selected_keypoints.size());
+
+      for (size_t i = 0; i < selected_keypoints.size(); i++) {
+        auto kp = selected_keypoints[i];
+        kp.pt.x += static_cast<float>(x0);
+        kp.pt.y += static_cast<float>(y0);
+        acceptedCorners.keypoints[i] = kp.pt;
+        acceptedCorners.responses[i] = kp.response;
+      }
+    });
+  }
+
+  task_group.wait();
   t3.stop();
 
   utils::ChronoTimingStats t_terms("fast_tracker.make_blocks");
@@ -1246,8 +1413,8 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
     // for now dont use errors
     std::fill(feature_data.errors.begin(), feature_data.errors.end(), 0.0);
 
-    // start new featur ages at 0
-    std::fill(feature_data.age.begin(), feature_data.age.end(), 0);
+    // start new featur ages at 1
+    std::fill(feature_data.age.begin(), feature_data.age.end(), 1);
 
     // dummy previous points value
     feature_data.previous_points.resize(num_points);
@@ -1387,15 +1554,16 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     auto num_good_points = good_tracks.size();
 
     tracking_stats[object_id].tracked_after_flow = num_good_points;
+    LOG(INFO) << "j= " << object_id << " tracked points=" << num_good_points;
 
     static constexpr double kHomographyReprThreshold = 2.0;
     // limit the number of iterations for speed
     static constexpr double kHomographyMaxIters = 500;
-    // cv::Mat inlier_mask = vision_tools::findHomography(
-    //     good_tracks.previous_points, good_tracks.points,
-    //     kHomographyReprThreshold, kHomographyMaxIters);
     cv::Mat inlier_mask = vision_tools::findHomography(
-        good_tracks.previous_points, good_tracks.points);
+        good_tracks.previous_points, good_tracks.points,
+        kHomographyReprThreshold, kHomographyMaxIters);
+    // cv::Mat inlier_mask = vision_tools::findHomography(
+    //     good_tracks.previous_points, good_tracks.points);
 
     FeatureBlockContainer::FeatureData verified_tracks;
     verified_tracks.reserve(num_good_points);
@@ -1412,18 +1580,20 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
       }
     }
 
+    LOG(INFO) << "j= " << object_id << "inlier/outlier "
+              << verified_tracks.size() << "/" << num_good_points;
     // if we actually have any tracks
     // this will remove any objects with no tracks!
     if (verified_tracks.size() > 0) {
-      LOG(INFO) << "j= " << object_id << "inlier/outlier "
-                << verified_tracks.size() << "/" << num_good_points;
+      // LOG(INFO) << "j= " << object_id << "inlier/outlier "
+      //           << verified_tracks.size() << "/" << num_good_points;
       verified_tracks_per_object[object_id] = verified_tracks;
       tracking_stats[object_id].tracked_after_or = verified_tracks.size();
     }
   }
 
   FeatureBlockContainer tracked_features(verified_tracks_per_object);
-  LOG(INFO) << tracked_features.debugInfoString();
+  LOG(INFO) << "Tracked: " << tracked_features.debugInfoString();
   return {tracked_features, tracking_stats};
 }
 
@@ -1479,8 +1649,10 @@ void FeatureTrackerFast::fillDetectionParam(
   // minimum possible distance (ie. we dont want such a small min distance that
   // the detection takes forever!) detection_param.min_distance =
   //     static_cast<float>(getMinFeatureDistance(object_id));
+  // detection_param.min_distance =
+  //     std::max(3.0f, 0.05f * static_cast<float>(bounding_box.width));
   detection_param.min_distance =
-      std::max(3.0f, 0.05f * static_cast<float>(bounding_box.width));
+      std::max(3.0f, 0.02f * static_cast<float>(bounding_box.width));
   detection_param.max_corners = getMaxDetectionCorners(object_id);
   detection_param.num_corners_needed = numCornersNeeded(object_id);
 }
@@ -1494,8 +1666,8 @@ void FeatureTrackerFast::buildOpticalFlowPyramid(
   );
 }
 
-cv::Mat FeatureTrackerFast::drawBatchedFeatures(
-    const cv::Mat& image, const FeatureBlockContainer& batchedFeatures) const {
+cv::Mat drawBatchedFeatures(const cv::Mat& image,
+                            const FeatureBlockContainer& batchedFeatures) {
   cv::Mat canvas;
 
   // Ensure we are drawing on a 3-channel color image
@@ -1512,13 +1684,16 @@ cv::Mat FeatureTrackerFast::drawBatchedFeatures(
     const cv::Scalar color = dyno::Color::uniqueObjectId(object_id).bgra();
 
     // Draw optical-flow track
-    if (batchedFeatures.age[i] > 0) {
+    if (batchedFeatures.age[i] > 1) {
       const auto previous_point = batchedFeatures.previous_points[i];
       cv::arrowedLine(canvas, previous_point, current_point, color, 1);
+
+      // / Draw current feature location
+      cv::circle(canvas, current_point, 4, color);
     }
 
-    // Draw current feature location
-    cv::circle(canvas, current_point, 4, color);
+    // // Draw current feature location
+    // cv::circle(canvas, current_point, 4, color);
 
     // Optional white outer ring
     // cv::circle(canvas, current_point, 6, cv::Scalar(255, 255, 255), 1,

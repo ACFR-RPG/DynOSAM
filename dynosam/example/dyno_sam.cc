@@ -2322,7 +2322,10 @@ int main(int argc, char* argv[]) {
         // // LOG(INFO) << "Batched extraction: " << time_ms << " [ms]";
         LOG(INFO) << to_string(tracker->getTrackerInfo());
 
-        cv::imshow("Fast Track", tracking_result.viz);
+        const WrappedRGBMono wrapped_rgb = container->rgb();
+        const cv::Mat rgb = wrapped_rgb.image();
+        cv::imshow("Fast Track",
+                   drawBatchedFeatures(rgb, tracking_result.featues));
 
         // // // cv::waitKey(0);
         Frame::Ptr previous_frame = tracker->getPreviousFrame();

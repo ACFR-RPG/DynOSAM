@@ -34,6 +34,17 @@ PoseChangeVIFrontendFAST::PoseChangeVIFrontendFAST(
                  "truth pose!";
     ground_truth = shared_ground_truth_;
   }
+
+  // precompute variables for solve
+  const auto& vo_pnp_ransac_params =
+      frontendParams().camera_pose_solver_params.pnp_ransac_params;
+  vo_ransac_threshold_3d_2d_ =
+      computeRansacThreshold(vo_pnp_ransac_params.ransac_threshold_pnp);
+
+  const auto& doo_pnp_ransac_params =
+      frontendParams().hybrid_object_motion_solver_params.pnp_ransac_params;
+  doo_ransac_threshold_3d_2d_ =
+      computeRansacThreshold(doo_pnp_ransac_params.ransac_threshold_pnp);
 }
 
 PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
@@ -54,34 +65,71 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
                                    features_k);
 
   // project points
-  LocalPointMap local_points_k;
-  depth_updater_k.calcPoints(local_points_k);
+  FrameGeometryMap frame_geometry_k;
+  depth_updater_k.calcPoints(frame_geometry_k);
 
   IndexMapping fc_index_mapping;
   // we must have a reduced feature set so that the memory is contiguous
   // and we can perform batch operations in the tracking!
   features_k.reduceToInliersInplace(&fc_index_mapping);
 
-  std::vector<ObjectId> objects_to_remove;
-  for (auto& [object_id, local_points_j] : local_points_k) {
-    // check if object has been removed
-    if (!features_k.containsObject(object_id)) {
-      objects_to_remove.push_back(object_id);
+  LOG(INFO) << "features after depth reduction: "
+            << features_k.debugInfoString();
+
+  // std::vector<ObjectId> objects_to_remove;
+  // for (auto& [object_id, frame_geometry_j] : frame_geometry_k) {
+
+  //   // check if object has been removed
+  //   if (!features_k.containsObject(object_id)) {
+  //     objects_to_remove.push_back(object_id);
+  //     continue;
+  //   }
+
+  //   for (size_t i = 0; i < frame_geometry_j.fc_indices.size(); i++) {
+  //     Index old_index = frame_geometry_j.fc_indices[i];
+  //     CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end());
+  //     frame_geometry_j.fc_indices[i] = fc_index_mapping.at(old_index);
+  //   }
+
+  //   // //TODO: only include feautes which are inliers!!!
+  //   // LocalLandmarks& local_landmarks = local_landmarks_W_[object_id];
+  //   // local_landmarks.lmks_W = frame_geometry_j.lmks_C;
+  //   // local_landmarks.ids = frame_geometry_j.ids;
+  //   // local_landmarks.local_indices = frame_geometry_j.local_indices;
+  // }
+
+  // for (auto object_id : objects_to_remove) {
+  //   frame_geometry_k.erase(object_id);
+  // }
+
+  // TODO: so far we get the points from the frame geometry
+  for (const auto& object_view : features_k.objectViews()) {
+    const auto object_id = object_view.objectId();
+    const auto num_points = object_view.size();
+
+    auto it = frame_geometry_k.find(object_id);
+    if (it == frame_geometry_k.end()) {
       continue;
     }
 
-    for (size_t i = 0; i < local_points_j.fc_indices.size(); i++) {
-      Index old_index = local_points_j.fc_indices[i];
-      CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end());
-      local_points_j.fc_indices[i] = fc_index_mapping.at(old_index);
+    const FrameGeometry& frame_geometry_k_j = it->second;
+    LocalLandmarks& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
+    lmks_C_km1_j.lmks.reserve(num_points);
+    lmks_C_km1_j.ids.reserve(num_points);
+
+    lmks_C_km1_j.lmks.reserve(num_points);
+    for (size_t i = 0; i < num_points; i++) {
+      auto id = object_view.ids()[i];
+
+      lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
+      lmks_C_km1_j.ids.push_back(id);
+      lmks_C_km1_j.local_indices[id] = i;
     }
   }
 
-  for (auto object_id : objects_to_remove) {
-    local_points_k.erase(object_id);
-  }
+  // CHECK_EQ(frame_geometry_k.size(), local_landmarks_W_.size());
 
-  local_points_km1_ = std::move(local_points_k);
+  // local_landmarks_C_km1_ = std::move(frame_geometry_k);
 
   return {State::Nominal, nullptr};
 }
@@ -110,7 +158,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   const auto compute_time = utils::Timer::toUnits<std::milli>(t2);
   LOG(INFO) << "spin time seconds= " << compute_time;
 
-  pushImageToDisplayQueue("Tracks", tracking_result.viz);
+  // TODO: draw this afterwards!!
 
   // fill depth information
   // TODO: this is somehow a cv -> Eigen adaptor for the feature container (we
@@ -119,168 +167,151 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
                                    features_k);
 
   // project points
-  LocalPointMap local_points_k;
+  FrameGeometryMap frame_geometry_k;
   // this is too slow ;) (approx 3ms)
   LOG(INFO) << "Starting calc points";
   // TODO: return outliers (dont modify featues!)
-  depth_updater_k.calcPoints(local_points_k);
+  depth_updater_k.calcPoints(frame_geometry_k);
   LOG(INFO) << "Ending calc points";
   // match points
 
-  // ransac params
-  const auto& camera_params = camera_->getParams();
-  const double fx = camera_params.fx();
-  const double fy = camera_params.fy();
-  const double cx = camera_params.cu();
-  const double cy = camera_params.cv();
+  // gtsam::Pose3 X_W_k;
+  utils::ChronoTimingStats match_t(this->moduleName() + ".solve");
 
-  // this is for camera!
-  const auto& pnp_ransac_params =
-      frontendParams().camera_pose_solver_params.pnp_ransac_params;
-  const double reprojection_error = pnp_ransac_params.ransac_threshold_pnp;
-  const double avg_focal_length = 0.5 * static_cast<double>(fx + fy);
-  double ransac_threshold_3d2d =
-      1.0 - std::cos(std::atan(std::sqrt(2.0) * reprojection_error /
-                               avg_focal_length));
+  struct ObjectGeometry {
+    FrameGeometry* frame_geometry;
+    const LocalLandmarks* reference_geometry;
+  };
+  ObjectGeometry vo_geometry;
+
+  std::vector<ObjectGeometry> object_geometries;
+  // only include object ids here
+  std::vector<ObjectId> object_ids;
+
+  // object trajectories to write into
+  std::vector<PoseWithMotionTrajectory*> doo_solve_trajectories;
+
+  for (auto& [object_id, frame_geometry_j] : frame_geometry_k) {
+    auto local_landmarks_C_km1_it = local_landmarks_C_km1_.find(object_id);
+    if (local_landmarks_C_km1_it == local_landmarks_C_km1_.end()) {
+      continue;
+    }
+    const LocalLandmarks& local_landmarks_C_km1_j =
+        local_landmarks_C_km1_it->second;
+
+    if (object_id == background_label) {
+      vo_geometry = {&frame_geometry_j, &local_landmarks_C_km1_j};
+    } else {
+      object_geometries.emplace_back(
+          ObjectGeometry{&frame_geometry_j, &local_landmarks_C_km1_j});
+      object_ids.push_back(object_id);
+
+      PoseWithMotionTrajectory* doo_trajectory =
+          &dyno_state_.object_trajectories[object_id];
+      doo_solve_trajectories.push_back(doo_trajectory);
+    }
+  }
 
   gtsam::Pose3 X_W_k;
-  utils::ChronoTimingStats match_t(this->moduleName() + ".matches");
-  for (const auto& [object_id, local_points_k] : local_points_k) {
-    if (!local_points_km1_.exists(object_id)) {
+  GeometrySolveContext solve_context;
+  // setup context to write visual odometry into this alue
+  solve_context.vo = &X_W_k;
+  CHECK_NOTNULL(solve_context.vo);
+
+  // setup vectors in which we will write the result of the object solves
+  bool vo_success{false};
+
+  const size_t num_objects = object_ids.size();
+  std::vector<uchar> doo_solve_success(num_objects, 0);
+
+  tbb::task_group group;
+  group.run([&] {
+    solveVisualOdometryByThread(
+        container, *vo_geometry.reference_geometry, *vo_geometry.frame_geometry,
+        features_k, solve_context, dyno_state_.camera_trajectory, vo_success);
+  });
+
+  for (size_t i = 0; i < num_objects; i++) {
+    group.run([&, i] {
+      ObjectId object_id = object_ids[i];
+      ObjectGeometry object_geometry = object_geometries[i];
+      PoseWithMotionTrajectory* object_traj = doo_solve_trajectories[i];
+      uchar& solve_success = doo_solve_success.at(i);
+
+      utils::ChronoTimingStats vo_t(this->moduleName() + ".solve.doo");
+      solveObjectOdometryByThread(object_id, container,
+                                  *object_geometry.reference_geometry,
+                                  *object_geometry.frame_geometry, features_k,
+                                  solve_context, *object_traj, solve_success);
+    });
+  }
+  group.wait();
+
+  MultiObjectTrajectories trajectories_to_visualise;
+  for (size_t i = 0; i < num_objects; i++) {
+    const ObjectId object_id = object_ids[i];
+    LOG(INFO) << "j= " << object_id
+              << " solve success= " << static_cast<int>(doo_solve_success[i]);
+    if (!doo_solve_success[i]) {
       continue;
     }
 
-    const LocalPoints& local_points_j_km1 = local_points_km1_.at(object_id);
-
-    RelativePoseMatches matches_j;
-    // TODO: reserve memory
-    for (size_t curr_idx = 0; curr_idx < local_points_k.ids.size();
-         curr_idx++) {
-      Index fc_curr_idx = local_points_k.fc_indices[curr_idx];
-
-      TrackletId tracklet_id = local_points_k.ids[curr_idx];
-      CHECK_EQ(tracklet_id, features_k.ids[fc_curr_idx]);
-
-      auto it = local_points_j_km1.local_indices.find(tracklet_id);
-      // and inlier!?
-      if (it != local_points_j_km1.local_indices.end()) {
-        Index ref_idx = it->second;
-        // Index fc_ref_idx = local_points_j_km1.fc_indices[ref_idx];
-
-        if (!features_k.inlier[fc_curr_idx]) {
-          continue;
-        }
-        // is a match!
-        matches_j.lmks_C_ref.push_back(local_points_j_km1.lmks_C[ref_idx]);
-        matches_j.fc_indices_ref.push_back(
-            local_points_j_km1.fc_indices[ref_idx]);
-
-        // Some tests shows that eigen computation of the bearing vector cost up
-        // to 4ms and so helped me to write a really fast one!
-        auto left_keypoint = local_points_k.left_kps[curr_idx];
-        matches_j.keypoints_curr.push_back(left_keypoint);
-
-        auto left_keypoint_previous =
-            local_points_k.left_kps_previous[curr_idx];
-        matches_j.keypoints_previous.push_back(left_keypoint);
-
-        matches_j.bearing_vecs_curr.push_back(
-            bearingOptimized(fx, fy, cx, cy, left_keypoint));
-        matches_j.fc_indices_curr.push_back(
-            local_points_k.fc_indices[curr_idx]);
-
-        // check tracklet ids match
-        CHECK_EQ(local_points_j_km1.ids[ref_idx], local_points_k.ids[curr_idx]);
-        matches_j.ids.push_back(local_points_k.ids[curr_idx]);
-      }
-    }
-
-    int num_matches = matches_j.ids.size();
-    LOG(INFO) << "Found n=" << num_matches << "matches j= " << object_id;
-
-    if (num_matches > 5) {
-      utils::ChronoTimingStats pnp_t(this->moduleName() + ".pnp");
-      using AbsolutePoseProblem =
-          opengv::sac_problems::absolute_pose::AbsolutePoseSacProblem;
-      using AbsolutePoseAdaptor = opengv::absolute_pose::CentralAbsoluteAdapter;
-      AbsolutePoseAdaptor adapter(matches_j.bearing_vecs_curr,
-                                  matches_j.lmks_C_ref);
-
-      auto abs_pose_problem = std::make_shared<AbsolutePoseProblem>(
-          adapter, AbsolutePoseProblem::KNEIP);
-
-      opengv::sac::Ransac<AbsolutePoseProblem> abs_pose_ransac;
-      abs_pose_ransac.sac_model_ = abs_pose_problem;
-      abs_pose_ransac.threshold_ = ransac_threshold_3d2d;
-      abs_pose_ransac.max_iterations_ = 50;
-
-      // run the ransac
-      abs_pose_ransac.computeModel(0);
-
-      int abs_pose_inliers = int(abs_pose_ransac.inliers_.size());
-      float abs_pose_ratio = float(abs_pose_inliers) / float(num_matches);
-
-      gtsam::Pose3 abs_pose =
-          utils::openGvTfToGtsamPose3(abs_pose_ransac.model_coefficients_);
-
-      LOG(INFO) << "Solved RANSAC inler ration= " << abs_pose_ratio
-                << " j= " << object_id;
-      pnp_t.stop();
-
-      // for now just assume that we solve camera pose first becuase fast map is
-      // ordered!
-      if (object_id == background_label) {
-        X_W_k = X_km1_ * abs_pose;
-        dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, X_W_k);
-      } else {
-        const gtsam::Pose3 G_W = abs_pose.inverse();
-        // NOTE: in the special case where the points are in the LOCAL
-        //  reference frame ie X_k-1, we need to resolve H differently
-        //  TODO: not sure if this is always how we want to sovle for H
-        //  Previously we solved for H using points in W but X (T) using points
-        //  in local!
-        Motion3ReferenceFrame H_W_km1_k(
-            X_W_k * G_W * X_km1_.inverse(), MotionRepresentationStyle::F2F,
-            ReferenceFrame::GLOBAL, frame_id_k - 1, frame_id_k);
-
-        // compute centroid of object if necessary
-        if (dyno_state_.object_trajectories.hasFrame(object_id,
-                                                     frame_id_k - 1)) {
-          auto& trajectory = dyno_state_.object_trajectories.at(object_id);
-          gtsam::Pose3 L_W_km1 = trajectory.at(frame_id_k - 1).pose;
-          gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1);
-          trajectory.insert(frame_id_k, timestamp_k,
-                            PoseWithMotion{L_W_k, H_W_km1_k});
-        } else {
-          // TODO: only the case the object is not in the previous frame!
-          // TODO: NOTE: ref may not be the previous frame! We shold carry the
-          // reference camera pose too
-          //  but then H may not be km-1 to k
-          gtsam::Point3 t_W_km1_centroid =
-              X_km1_ * computeCentroid(matches_j.lmks_C_ref);
-          gtsam::Pose3 L_W_km1_centroid(gtsam::Rot3::Identity(),
-                                        t_W_km1_centroid);
-
-          gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1_centroid);
-          Motion3ReferenceFrame H_W_km1_km1(
-              gtsam::Pose3::Identity(), MotionRepresentationStyle::F2F,
-              ReferenceFrame::GLOBAL, frame_id_k - 1, frame_id_k - 1);
-          // TODO: timestep is wrong!
-          dyno_state_.object_trajectories.insert(
-              object_id, frame_id_k - 1, timestamp_k,
-              PoseWithMotion{L_W_km1_centroid, H_W_km1_km1});
-          dyno_state_.object_trajectories.insert(
-              object_id, frame_id_k, timestamp_k,
-              PoseWithMotion{L_W_k, H_W_km1_k});
-        }
-      }
+    const PoseWithMotionTrajectory& trajectory = *doo_solve_trajectories[i];
+    if (trajectory.size() > 1) {
+      // whole trajectory not segment
+      trajectories_to_visualise[object_id] = trajectory;
+      LOG(INFO) << trajectory;
     }
   }
+
+  // if(!newly_initalised_points.empty()) {
+  //   LOG(INFO) << "Adding " << newly_initalised_points.size() << " points to
+  //   map!";
+  //   // for the sake now we put all points in the map but really dont want to
+  //   do this! LocalLandmarks& local_lmks_W = local_landmarks_W_[object_id];
+  //   //TODO: could reserve more space!
+  //   //starting pointer offset where we will insert new points from
+  //   const size_t start = local_lmks_W.lmks.size();
+  //   const size_t num_new_points = newly_initalised_points.size();
+  //   local_lmks_W.lmks.reserve(
+  //     start + num_new_points);
+
+  //   local_lmks_W.ids.reserve(
+  //       start + num_new_points);
+
+  //   for(size_t i = 0; i < num_new_points; i++) {
+  //     Index matched_index = newly_initalised_points[i];
+  //     size_t local_index = local_lmks_W.lmks.size();
+  //     // note we start the new points in the local frame but we will
+  //     transform them!
+  //     local_lmks_W.lmks.push_back(matched_landmarks.lmks_C_ref[matched_index]);
+
+  //     TrackletId tracklet_id = matched_landmarks.ids[matched_index];
+  //     local_lmks_W.ids.push_back(tracklet_id);
+
+  //     // check this is a new lmk
+  //     CHECK(local_lmks_W.local_indices.find(tracklet_id) ==
+  //     local_lmks_W.local_indices.end());
+  //     local_lmks_W.local_indices[tracklet_id] = local_index;
+  //   }
+  //   // convert to global frame (OH BUT ONLY IF camera!?)
+
+  //   // create a pointer mapping of only the newly inserted points
+  //   // which will be in the camera frame!
+  //   size_t count = local_lmks_W.lmks.size() - start;
+  //   CHECK_EQ(count, num_new_points);
+
+  //   Eigen::Map<Eigen::Matrix3Xd> new_points_C_map(
+  //     local_lmks_W.lmks[start].data(),
+  //     3,
+  //     static_cast<Eigen::Index>(count));
+
+  //   // new points C map is internally a pointer to local_lmks so this updates
+  //   local_lmks.lmks_W dyno::transformTo(matched_landmarks.X_W_ref_,
+  //   new_points_C_map);
+  // }
+
   match_t.stop();
-
-  // run ransac
-
-  //  camera pose estimate!
 
   // For PnP tracking we just need landmarks in the previous frame
 
@@ -292,37 +323,53 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   // and we can perform batch operations in the tracking!
   features_k.reduceToInliersInplace(&fc_index_mapping);
 
-  // The size of the feauture set has changed and therefore the we
-  // need to update global indices
-  // TODO: more explicit way of checking if the featues changed after reduction
-  if (num_features != features_k.size()) {
-    CHECK(!fc_index_mapping.empty());
-    std::vector<ObjectId> objects_to_remove;
-    for (auto& [object_id, local_points_j] : local_points_k) {
-      // check if object has been removed
-      if (!features_k.containsObject(object_id)) {
-        objects_to_remove.push_back(object_id);
-        continue;
-      }
+  const WrappedRGBMono wrapped_rgb = container.rgb();
+  const cv::Mat rgb = wrapped_rgb.image();
 
-      for (size_t i = 0; i < local_points_j.fc_indices.size(); i++) {
-        Index old_index = local_points_j.fc_indices[i];
-        CHECK(fc_index_mapping.find(old_index) != fc_index_mapping.end())
-            << old_index;
+  pushImageToDisplayQueue("Tracks", drawBatchedFeatures(rgb, features_k));
 
-        Index new_index = fc_index_mapping.at(old_index);
-        CHECK_EQ(local_points_j.ids[i], features_k.ids[new_index]);
-        local_points_j.fc_indices[i] = fc_index_mapping.at(old_index);
-      }
+  // landmarks only in camera for k-1!
+  local_landmarks_C_km1_.clear();
+
+  // gross we update the depth here for all!
+  // but also maybe need contiguous information
+  // for stereo!!!
+  // TODO: do faster! have to update the depth after flow refinment but really
+  // we should be able to this inside the flow refinement!
+  frame_geometry_k.clear();
+  depth_updater_k.calcPoints(frame_geometry_k);
+
+  // TODO: so far we get the points from the frame geometry
+  // eventually we will use some kind of persistent map
+  // which will only be built from the inliers!
+  for (const auto& object_view : features_k.objectViews()) {
+    const auto object_id = object_view.objectId();
+    const auto num_points = object_view.size();
+    const auto ids = object_view.ids();
+
+    auto it = frame_geometry_k.find(object_id);
+    if (it == frame_geometry_k.end()) {
+      continue;
     }
 
-    for (auto object_id : objects_to_remove) {
-      local_points_k.erase(object_id);
+    const FrameGeometry& frame_geometry_k_j = it->second;
+    LocalLandmarks& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
+    lmks_C_km1_j.lmks.reserve(num_points);
+    lmks_C_km1_j.ids.reserve(num_points);
+
+    lmks_C_km1_j.lmks.reserve(num_points);
+    for (size_t i = 0; i < num_points; i++) {
+      TrackletId id = ids[i];
+
+      lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
+      lmks_C_km1_j.ids.push_back(id);
+      lmks_C_km1_j.local_indices[id] = i;
     }
   }
+
   update_inliers_t.stop();
 
-  local_points_km1_ = std::move(local_points_k);
+  // local_landmarks_C_km1_ = std::move(frame_geometry_k);
 
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
@@ -330,11 +377,242 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   // TODO: see old code where we only send the visible/good trajectories (but
   // log all of them!)
-  realtime_output->state.object_trajectories = dyno_state_.object_trajectories;
+  // realtime_output->state.object_trajectories =
+  // dyno_state_.object_trajectories;
+  realtime_output->state.object_trajectories = trajectories_to_visualise;
 
   X_km1_ = X_W_k;
 
   return {State::Nominal, realtime_output};
+}
+
+void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
+    const ImageContainer& image_container,
+    const LocalLandmarks& reference_geometry, FrameGeometry& local_geometry,
+    FeatureBlockContainer& features, GeometrySolveContext& context,
+    PoseTrajectory& vo_trajectory, bool& success) {
+  utils::ChronoTimingStats vo_t(this->moduleName() + ".solve.vo");
+
+  const FrameId frame_id = image_container.frameId();
+  const Timestamp timestamp = image_container.timestamp();
+
+  OpenGVCentralAbsolutePoseAdaptor adapter(camera_, local_geometry,
+                                           reference_geometry, features);
+  const size_t num_matches = adapter.getNumberCorrespondences();
+
+  CHECK(context.vo);
+  // relative motion from previous frame (j) to current frame (i)
+  gtsam::Pose3 T_ij;
+  std::vector<bool> inliers;
+
+  utils::ChronoTimingStats ransac_t(this->moduleName() + ".solve.vo.ransac");
+  context.vo_valid =
+      solve3d2dRansac(T_ij, inliers, adapter, vo_ransac_threshold_3d_2d_);
+  ransac_t.stop();
+  if (!context.vo_valid) {
+    {
+      std::lock_guard<std::mutex> lock(context.vo_mutex);
+      // alert awaiting threads that the solve was complete even if it was
+      // invalid
+      context.vo_ready = true;
+    }
+
+    success = false;
+    // alert awaiting threads
+    context.vo_cv.notify_all();
+    return;
+  }
+
+  CHECK_EQ(inliers.size(), num_matches);
+  for (size_t k = 0; k < num_matches; k++) {
+    if (!inliers[k]) {
+      TrackletId i = adapter.trackletId(k);
+      Index fc_index = local_geometry.getFeatureContainerIndex(i);
+      CHECK_EQ(features.ids[fc_index], i);
+      features.inlier[fc_index] = 0;
+    }
+  }
+
+  const auto& vo_solve_params = frontendParams().camera_pose_solver_params;
+  if (vo_solve_params.refine_with_flow) {
+    utils::ChronoTimingStats flow_t(this->moduleName() +
+                                    ".solve.vo.flow_refine");
+    FlowRefinement(camera_, image_container, adapter)
+        .refine(vo_solve_params.optical_flow_solver_params, T_ij, T_ij);
+  }
+
+  gtsam::Pose3 X_W = X_km1_ * T_ij;
+  LOG(INFO) << "Solved VO k= " << frame_id;
+  {
+    std::lock_guard<std::mutex> lock(context.vo_mutex);
+    *context.vo = X_W;
+    context.vo_ready = true;
+    CHECK(context.vo_valid);
+  }
+  // alert awaiting threads
+  context.vo_cv.notify_all();
+
+  vo_trajectory.insert(frame_id, timestamp, X_W);
+  success = true;
+}
+
+void PoseChangeVIFrontendFAST::solveObjectOdometryByThread(
+    ObjectId object_id, const ImageContainer& image_container,
+    const LocalLandmarks& reference_geometry, FrameGeometry& local_geometry,
+    FeatureBlockContainer& features, GeometrySolveContext& context,
+    PoseWithMotionTrajectory& doo_trajectory, uchar& success) {
+  OpenGVCentralAbsolutePoseAdaptor adapter(camera_, local_geometry,
+                                           reference_geometry, features);
+  const size_t num_matches = adapter.getNumberCorrespondences();
+
+  LOG(INFO) << "Solving doo j= " << object_id << " # matches= " << num_matches;
+
+  gtsam::Pose3 G_i_ij_inv;
+  std::vector<bool> inliers;
+  bool ransac_success = solve3d2dRansac(G_i_ij_inv, inliers, adapter,
+                                        doo_ransac_threshold_3d_2d_);
+
+  if (!ransac_success) {
+    success = 0;
+    return;
+  }
+
+  CHECK_EQ(inliers.size(), num_matches);
+  for (size_t k = 0; k < num_matches; k++) {
+    if (!inliers[k]) {
+      TrackletId i = adapter.trackletId(k);
+      Index fc_index = local_geometry.getFeatureContainerIndex(i);
+      CHECK_EQ(features.ids[fc_index], i);
+      features.inlier[fc_index] = 0;
+    }
+  }
+
+  const auto& doo_solve_params =
+      frontendParams().hybrid_object_motion_solver_params;
+  if (doo_solve_params.refine_with_flow) {
+    FlowRefinement(camera_, image_container, adapter)
+        .refine(doo_solve_params.optical_flow_solver_params, G_i_ij_inv,
+                G_i_ij_inv);
+  }
+
+  {
+    // wait until camera pose is ready!
+    {
+      std::unique_lock<std::mutex> lock(context.vo_mutex);
+      context.vo_cv.wait(lock, [&] { return context.vo_ready; });
+    }
+  }
+
+  if (!context.vo_valid) {
+    LOG(WARNING) << "Unable to process DOO j=" << object_id
+                 << " as visual odometry failed!";
+    success = 0;
+    return;
+  }
+
+  const FrameId frame_id_i = image_container.frameId();
+  const Timestamp timestamp_i = image_container.timestamp();
+
+  // previous frame and same frame as the reference geometry (hopefully!)
+  const FrameId frame_id_j = frame_id_i - 1u;
+
+  // in this place we replace k with i, where k is the current frame
+  const gtsam::Pose3 X_W_i = *context.vo;
+  const gtsam::Pose3 G_i_ij = G_i_ij_inv.inverse();
+  // here km1 = j
+  const gtsam::Pose3 H_W_i = X_W_i * G_i_ij * X_km1_.inverse();
+  Motion3ReferenceFrame H_W_km1_k(H_W_i, MotionRepresentationStyle::F2F,
+                                  ReferenceFrame::GLOBAL, frame_id_j,
+                                  frame_id_i);
+
+  auto traj_it = doo_trajectory.find(frame_id_j);
+  if (traj_it != doo_trajectory.end()) {
+    const auto& L_W_km1 = traj_it->data.pose;
+    gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1);
+    doo_trajectory.insert(frame_id_i, timestamp_i,
+                          PoseWithMotion{L_W_k, H_W_km1_k});
+  } else {
+    // TODO: only the case the object is not in the previous frame!
+    // TODO: NOTE: ref may not be the previous frame! We shold carry the
+    // reference camera pose too
+    //  but then H may not be km-1 to k
+    // TODO: we cache reference landmarks so these will be inliers+outliers
+    // unless recomputed!
+    gtsam::Point3 t_W_km1_centroid =
+        X_km1_ * computeCentroid(adapter.referenceLandmarks());
+    gtsam::Pose3 L_W_km1_centroid(gtsam::Rot3::Identity(), t_W_km1_centroid);
+
+    LOG(INFO) << "Inserted traj j=" << object_id << " " << frame_id_j << " -> "
+              << frame_id_i;
+
+    gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1_centroid);
+    Motion3ReferenceFrame H_W_km1_km1(
+        gtsam::Pose3::Identity(), MotionRepresentationStyle::F2F,
+        ReferenceFrame::GLOBAL, frame_id_j, frame_id_j);
+    // TODO: timestep is wrong!
+    doo_trajectory.insert(frame_id_j, timestamp_i,
+                          PoseWithMotion{L_W_km1_centroid, H_W_km1_km1});
+    doo_trajectory.insert(frame_id_i, timestamp_i,
+                          PoseWithMotion{L_W_k, H_W_km1_k});
+  }
+  success = 1;
+}
+
+bool PoseChangeVIFrontendFAST::solve3d2dRansac(
+    gtsam::Pose3& pose, std::vector<bool>& inliers,
+    OpenGVCentralAbsolutePoseAdaptor& adaptor, double ransac_threshold,
+    int max_iterations) const {
+  utils::ChronoTimingStats pnp_t(this->moduleName() + ".pnp");
+
+  const size_t num_matches = adaptor.getNumberCorrespondences();
+  if (num_matches < 5) {
+    return false;
+  }
+
+  using AbsolutePoseProblem =
+      opengv::sac_problems::absolute_pose::AbsolutePoseSacProblem;
+  auto problem = std::make_shared<AbsolutePoseProblem>(
+      adaptor, AbsolutePoseProblem::KNEIP);
+
+  opengv::sac::Ransac<AbsolutePoseProblem> ransac;
+  ransac.sac_model_ = problem;
+  ransac.threshold_ = ransac_threshold;
+  ransac.max_iterations_ = max_iterations;
+
+  // run the ransac
+  utils::ChronoTimingStats compute_t(this->moduleName() + ".pnp.compute", 7);
+  ransac.computeModel(0);
+  compute_t.stop();
+
+  int ransac_inliers = int(ransac.inliers_.size());
+  float ransac_ratio = float(ransac_inliers) / float(num_matches);
+  LOG(INFO) << ransac_ratio;
+  const bool ransac_success = ransac_inliers > 10 && ransac_ratio > 0.7;
+
+  if (!ransac_success) {
+    return false;
+  }
+
+  utils::ChronoTimingStats recover_t(this->moduleName() + ".pnp.recover", 7);
+  pose = utils::openGvTfToGtsamPose3(ransac.model_coefficients_);
+  std::vector<bool> inliers_v(num_matches, false);
+  for (size_t k = 0; k < ransac_inliers; k++) {
+    inliers_v.at(size_t(ransac.inliers_.at(k))) = true;
+  }
+  inliers = std::move(inliers_v);
+  return true;
+}
+
+double PoseChangeVIFrontendFAST::computeRansacThreshold(
+    const double repr_error) const {
+  const auto& camera_params = camera_->getParams();
+  const double fx = camera_params.fx();
+  const double fy = camera_params.fy();
+
+  const double avg_focal_length = 0.5 * static_cast<double>(fx + fy);
+  double ransac_threshold_3d2d =
+      1.0 - std::cos(std::atan(std::sqrt(2.0) * repr_error / avg_focal_length));
+  return ransac_threshold_3d2d;
 }
 
 /////////////////////// ORIGINAL //////////////////////////////

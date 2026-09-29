@@ -48,14 +48,19 @@ struct CameraPoseSolver {
   bool refine_with_flow{true};
 };
 
+struct DepthThresholds {
+  // Max static background depth in meters
+  double max_background{40.0};
+  //! Max object depth in meters
+  double max_object{25.0};
+};
+
 struct FrontendParams {
   // scene flow thresholds
   double scene_flow_magnitude = 0.12;
   double scene_flow_percentage = 0.5;
 
-  // depth thresholds
-  double max_background_depth = 40.0;
-  double max_object_depth = 25.0;
+  DepthThresholds depth_thresholds{};
 
   RegularObjectMotionSolverParams regular_object_motion_solver_params;
   HybridObjectMotionSolverParams hybrid_object_motion_solver_params;

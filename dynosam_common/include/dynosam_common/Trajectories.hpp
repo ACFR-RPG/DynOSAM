@@ -5,11 +5,13 @@
 
 namespace dyno {
 
-class TrajectoryEntryAlreadyExists : public DynosamException {
+template <typename TRAJECTORY>
+class TrajectoryEntryAlreadyExistsT : public DynosamException {
  public:
-  TrajectoryEntryAlreadyExists(const FrameId& frame_id)
-      : DynosamException("Trajectory entry already exists at k=" +
-                         std::to_string(frame_id)) {}
+  TrajectoryEntryAlreadyExistsT(const FrameId& frame_id)
+      : DynosamException(
+            TRAJECTORY::TrajectoryName() +
+            " entry already exists at k=" + std::to_string(frame_id)) {}
 };
 
 template <typename TData>
@@ -27,6 +29,9 @@ class TrajectoryBase {
 
   using This = TrajectoryBase<Derived, Data>;
   using Entry = TrajectoryEntry<Data>;
+
+  //! Typed TrajectoryEntryAlreadyExists exception
+  using TrajectoryEntryAlreadyExists = TrajectoryEntryAlreadyExistsT<This>;
 
   //! Alias for internal trajectory map
   using TrajectoryImpl = gtsam::FastMap<FrameId, Entry>;
@@ -149,6 +154,10 @@ class TrajectoryBase {
 
   Timestamp startTime() const { return first().timestamp; }
   Timestamp endTime() const { return last().timestamp; }
+
+  static std::string TrajectoryName() {
+    return "Trajectory<" + type_name<TData>() + ">";
+  }
 
   /**
    * @brief Slice a range of this trajectory and return a new trajectory.
@@ -368,9 +377,7 @@ class TrajectoryBase {
   }
 
  private:
-  std::string trajectoryName() const {
-    return "Trajectory<" + type_name<TData>() + ">";
-  }
+  std::string trajectoryName() const { return This::TrajectoryName(); }
 
   TrajectoryImpl trajectory_;
 };

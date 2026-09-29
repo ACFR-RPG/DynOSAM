@@ -35,7 +35,32 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
   SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
 
-  // void solveVisualOdometryByThread()
+  struct GeometrySolveContext {
+    std::mutex vo_mutex;
+    std::condition_variable vo_cv;
+    gtsam::Pose3* vo;
+    bool vo_ready{false};
+    bool vo_valid{false};
+  };
+
+  void solveVisualOdometryByThread(const ImageContainer& image_container,
+                                   const LocalLandmarks& reference_geometry,
+                                   FrameGeometry& local_geometry,
+                                   FeatureBlockContainer& features,
+                                   GeometrySolveContext& context,
+                                   PoseTrajectory& vo_trajectory,
+                                   bool& success);
+
+  // TODO: right now reference geometry must be in k-1!
+  void solveObjectOdometryByThread(
+      ObjectId object_id, const ImageContainer& image_container,
+      const LocalLandmarks& reference_geometry, FrameGeometry& local_geometry,
+      FeatureBlockContainer& features, GeometrySolveContext& context,
+      PoseWithMotionTrajectory& doo_trajectory, uchar& success);
+
+  bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
+                       OpenGVCentralAbsolutePoseAdaptor& adaptor,
+                       double ransac_threshold, int max_iterations = 50) const;
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
@@ -45,13 +70,27 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
 
   PoseChangeBackendSink pose_change_backend_sink_;
 
-  LocalPointMap local_points_km1_;
+  LocalLandmarksMap local_landmarks_W_;
+
+  // only needed for tracking while we dont use the local landmarks W_
+  LocalLandmarksMap local_landmarks_C_km1_;
+  // only for points!? Right now need to initalise new landmarks with a knoew
+  // geometry eventually need the set of keyframes!
+  // //TODO: wrap in frame representation with frame id + timestampe etc!
+  // FrameGeometryMap frame_geometry_km1_;
 
   //! Current trajectories. Copied to the DynoState output.
   //! Only contains trajectories for objects observed at the latest frame
   DynoStateTrajectories dyno_state_;
 
-  // TODo: for now
+  // cached parameters for geometric solve
+  double vo_ransac_threshold_3d_2d_;
+  double doo_ransac_threshold_3d_2d_;
+
+  double computeRansacThreshold(const double repr_error) const;
+
+  // VIOFrame frame_km1_;
+  // For now!
   gtsam::Pose3 X_km1_;
 };
 

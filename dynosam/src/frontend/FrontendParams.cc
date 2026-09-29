@@ -54,8 +54,8 @@ void declare_config(FrontendParams& config) {
   field(config.scene_flow_magnitude, "scene_flow_magnitude");
   field(config.scene_flow_percentage, "scene_flow_percentage");
 
-  field(config.max_background_depth, "max_background_depth");
-  field(config.max_object_depth, "max_object_depth");
+  field(config.depth_thresholds.max_background, "max_background_depth");
+  field(config.depth_thresholds.max_object, "max_object_depth");
 
   field(config.regular_object_motion_solver_params,
         "regular_object_motion_solver");

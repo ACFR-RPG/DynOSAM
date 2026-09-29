@@ -500,8 +500,8 @@ Landmark Frame::getLandmarkFromCache(LandmarkMap& cache, Feature::Ptr feature,
 DepthUpdater::DepthUpdater(FeatureTracker* tracker)
     : tracker_(CHECK_NOTNULL(tracker)) {
   const auto& params = tracker_->frontendParams();
-  max_background_threshold_ = params.max_background_depth;
-  max_object_threshold_ = params.max_object_depth;
+  max_background_threshold_ = params.depth_thresholds.max_object;
+  max_object_threshold_ = params.depth_thresholds.max_object;
 }
 
 bool DepthUpdater::update(Frame::Ptr frame,

@@ -31,6 +31,8 @@
 #pragma once
 
 #include <gtest/gtest.h>
+#include <gtsam/base/Matrix.h>
+#include <gtsam/base/Vector.h>
 
 #include "ament_index_cpp/get_package_prefix.hpp"
 #include "dynosam_common/Types.hpp"
@@ -51,20 +53,21 @@ inline std::string getTestDataPath() {
 
 namespace dyno_testing {
 
-using namespace dyno;
-
-inline KeypointStatus makeStatusKeypointMeasurement(
-    TrackletId tracklet_id, ObjectId object_id, FrameId frame_id,
-    const Keypoint& keypoint = Keypoint(), double sigma = 2.0) {
+inline dyno::KeypointStatus makeStatusKeypointMeasurement(
+    dyno::TrackletId tracklet_id, dyno::ObjectId object_id,
+    dyno::FrameId frame_id, const dyno::Keypoint& keypoint = dyno::Keypoint(),
+    double sigma = 2.0) {
   gtsam::Vector2 kp_sigmas;
   kp_sigmas << sigma, sigma;
-  MeasurementWithCovariance<Keypoint> kp_measurement =
-      MeasurementWithCovariance<Keypoint>::FromSigmas(keypoint, kp_sigmas);
-  return KeypointStatus(kp_measurement, frame_id, 0.0, tracklet_id, object_id,
-                        ReferenceFrame::LOCAL);
+  dyno::MeasurementWithCovariance<dyno::Keypoint> kp_measurement =
+      dyno::MeasurementWithCovariance<dyno::Keypoint>::FromSigmas(keypoint,
+                                                                  kp_sigmas);
+  return dyno::KeypointStatus(kp_measurement, frame_id, 0.0, tracklet_id,
+                              object_id, dyno::ReferenceFrame::LOCAL);
 }
 
-inline void compareLandmarks(const Landmarks& lmks_1, const Landmarks& lmks_2,
+inline void compareLandmarks(const dyno::Landmarks& lmks_1,
+                             const dyno::Landmarks& lmks_2,
                              const float& tol = 1e-9) {
   ASSERT_EQ(lmks_1.size(), lmks_2.size());
   for (size_t i = 0u; i < lmks_1.size(); i++) {
@@ -74,7 +77,8 @@ inline void compareLandmarks(const Landmarks& lmks_1, const Landmarks& lmks_2,
   }
 }
 
-inline void compareKeypoints(const Keypoints& lmks_1, const Keypoints& lmks_2,
+inline void compareKeypoints(const dyno::Keypoints& lmks_1,
+                             const dyno::Keypoints& lmks_2,
                              const float& tol = 1e-9) {
   ASSERT_EQ(lmks_1.size(), lmks_2.size());
   for (size_t i = 0u; i < lmks_1.size(); i++) {
@@ -84,20 +88,23 @@ inline void compareKeypoints(const Keypoints& lmks_1, const Keypoints& lmks_2,
   }
 }
 
-inline CameraParams makeDefaultCameraParams() {
-  CameraParams::IntrinsicsCoeffs intrinsics(4);
-  CameraParams::DistortionCoeffs distortion(4);
+inline dyno::CameraParams makeDefaultCameraParams() {
+  dyno::CameraParams::IntrinsicsCoeffs intrinsics(4);
+  dyno::CameraParams::DistortionCoeffs distortion(4);
   intrinsics.at(0) = 554.256;  // fx
   intrinsics.at(1) = 554.256;  // fy
   intrinsics.at(2) = 640 / 2;  // u0
   intrinsics.at(3) = 480 / 2;  // v0
-  return CameraParams(intrinsics, distortion, cv::Size(640, 480), "radtan");
+  return dyno::CameraParams(intrinsics, distortion, cv::Size(640, 480),
+                            "radtan");
 }
 
-inline Camera makeDefaultCamera() { return Camera(makeDefaultCameraParams()); }
+inline dyno::Camera makeDefaultCamera() {
+  return dyno::Camera(makeDefaultCameraParams());
+}
 
-inline Camera::Ptr makeDefaultCameraPtr() {
-  return std::make_shared<Camera>(makeDefaultCameraParams());
+inline dyno::Camera::Ptr makeDefaultCameraPtr() {
+  return std::make_shared<dyno::Camera>(makeDefaultCameraParams());
 }
 
 }  // namespace dyno_testing

@@ -116,12 +116,6 @@ gtsam::Cal3_S2 Cvmat2Cal3_S2(const cv::Mat& M) {
   return gtsam::Cal3_S2(fx, fy, s, u0, v0);
 }
 
-gtsam::Pose3 openGvTfToGtsamPose3(const opengv::transformation_t& RT) {
-  gtsam::Matrix poseMat = gtsam::Matrix::Identity(4, 4);
-  poseMat.block<3, 4>(0, 0) = RT;
-  return gtsam::Pose3(poseMat);
-}
-
 std::pair<cv::Mat, cv::Mat> Pose2cvmats(const gtsam::Pose3& pose) {
   const gtsam::Matrix3& rot = pose.rotation().matrix();
   const gtsam::Vector3& tran = pose.translation();

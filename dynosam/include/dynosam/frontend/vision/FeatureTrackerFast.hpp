@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tbb/task_group.h>
+
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/cudaoptflow.hpp>
 #include <opencv4/opencv2/opencv.hpp>
@@ -25,6 +27,9 @@ typedef std::pair<Index, Index> IndexMatch;
 typedef std::vector<IndexMatch> IndexMatches;
 typedef std::unordered_map<Index, Index> IndexMapping;
 
+// TODO: can do this (?) as a vector operation using unart expression and Batch
+// operator
+//  to a Eigen::Map of Point's for extra speed!
 /**
  * @brief Super fast implementation of K^{-1} * kp, returning normalized bearing
  * vector. Basic benchmarking shows at least a 7x speed up over the raw eigen
@@ -53,6 +58,44 @@ inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
   const int x = cvRound(point.x);
   const int y = cvRound(point.y);
   return x >= 0 && x < cols && y >= 0 && y < rows;
+}
+
+// should be of type double and of size 3xN
+template <typename Derived>
+inline void transformTo(const gtsam::Pose3& T_ij,
+                        Eigen::MatrixBase<Derived>& P) {
+  static_assert(std::is_same_v<typename Derived::Scalar, double>);
+  static_assert(Derived::RowsAtCompileTime == 3);
+
+  const gtsam::Matrix33& R = T_ij.rotation().matrix();
+  const gtsam::Vector3& t = T_ij.translation();
+
+  P = R * P;
+  P.colwise() += t;
+}
+
+/**
+ * @brief Super fast batch implementation of pose * points using Eigen map
+ * operations rather than linear operations.
+ *
+ * From simple benchmarks we get 60% improvements in speed vs a loop for vectors
+ * as small as 200!
+ *
+ * @param T_ij transform from j to i (that is p_i = T_ij * p_j)
+ * @param points
+ * @return gtsam::Point3Vector
+ */
+inline void transformTo(const gtsam::Pose3& T_ij,
+                        const gtsam::Point3Vector& points_j,
+                        gtsam::Point3Vector& points_i) {
+  if (points_j.empty()) {
+    return;
+  }
+  points_i = points_j;
+  Eigen::Map<Eigen::Matrix3Xd> P(points_i[0].data(), 3,
+                                 static_cast<Eigen::Index>(points_i.size()));
+
+  transformTo(T_ij, P);
 }
 
 class FeatureBlockContainer {
@@ -378,47 +421,205 @@ using FeatureBlockDim = FeatureBlockContainer::BlockDim;
 /// @brief Alias to FeatureBlockContainer::BlockView
 using FeatureBlockView = FeatureBlockContainer::BlockView;
 
+cv::Mat drawBatchedFeatures(const cv::Mat& image,
+                            const FeatureBlockContainer& batchedFeatures);
+
+// local map structurew mantained for geometric visual/object odometry tracking
+// should only really contain the last N keyframes or the active tracks
+//  add indicator of which frame was observed in so we can access observations
+//  of it!
+// TODO: tbh this just could be a map dirctly since we only ever access (I
+// think)
+//  we dont need contiguous memory
+//  becuase at some point we need to delete lmks (defintiely)
+//  and this is going to be slow compared to a map!
+struct LocalLandmarks {
+  gtsam::Point3Vector lmks;
+  TrackletIds ids;
+  //! Tracklet ids -> index for this set of vectors
+  // ie. to get the lmk of tracklet id i -> lmks[local_indices[i]]
+  std::unordered_map<TrackletId, Index> local_indices;
+
+  // inline
+};
+typedef gtsam::FastMap<ObjectId, LocalLandmarks> LocalLandmarksMap;
+
 // from here onwards we operate in the land of doubles
 // as all the geometric solvers operate using gtsam/egien double types!
 // these must be separately synchronized/maintaied with the
 // FeatureBlockContainer
-struct LocalPoints {
+// TODO: better name again is FeatureGeometry as this contains the referecnes to
+// the
+// feature container index. Therefor all other contains need to refer back to
+// this when something in the current container updates. Previous feature
+// containers should never need to be updated!
+struct FrameGeometry {
   // note the use of double here
   // points in the camera frame
+  // todo: eventually dont need this for all points as we will use the initial
+  // from the local map - but as we need to comptute the right pixel anyway we
+  // have to comptue the landmark somehow so might as well have it here!
   gtsam::Point3Vector lmks_C;
   gtsam::Point2Vector left_kps;
+  gtsam::Point2Vector left_kps_previous;
   //! Stereo correspondent in the right camera (x coordinate)
   std::vector<double> right_pixel;
   TrackletIds ids;
   // Index value in the original FeatureBlockContainer
   // only valid while the contianer remains unchanged
   // after a container is reduced to inliers the fc_indices must be updatd
+  // TODO: why we dont have view_indices here as well?
   std::vector<Index> fc_indices;
 
   //! Tracklet ids -> index for this set of vectors
   // ie. to get the lmk of tracklet id i -> lmks_C[local_indices[i]]
   std::unordered_map<TrackletId, Index> local_indices;
+
+  inline Index getFeatureContainerIndex(TrackletId tracklet_id) const {
+    return fc_indices.at(local_indices.at(tracklet_id));
+  }
+
+  inline const gtsam::Point3& getLandmark(TrackletId tracklet_id) const {
+    return lmks_C.at(local_indices.at(tracklet_id));
+  }
 };
 
-typedef gtsam::FastMap<ObjectId, LocalPoints> LocalPointMap;
+// A class that acts as an adaptor to match between the current frame geoemtry
+// and a reference frame defined by a set of LocalLandmarks
+// holds references to the input objects so lifetime must be managed
+class MatchingAdaptorBase {
+ public:
+  MatchingAdaptorBase(FrameGeometry& local_geometry,
+                      const LocalLandmarks& reference_geometry,
+                      FeatureBlockContainer& features);
 
-// for solving we need a points in local of previous frame (could be map or
-// previous frame) and bearing vector for PnP and pixel for of flow
-// TODO: for of flow can we use 3d point from anywhere? (technically yes, but
-// have not tried!) what about 2d2d matching?
-struct RelativePoseMatches {
-  gtsam::Point3Vector lmks_C_ref;
-  std::vector<Index> fc_indices_ref;
+  virtual ~MatchingAdaptorBase() = default;
 
-  // TODO: cant just have this as we need pixel coodinates for OF refinement!
-  // do we just want left keypoint?
-  gtsam::Point2Vector keypoints_curr;
-  gtsam::Point3Vector bearing_vecs_curr;
-  std::vector<Index> fc_indices_curr;
+  inline size_t numMatches() const { return matches_.size(); }
 
-  TrackletIds ids;
+  inline const gtsam::Point2& keypointPrev(size_t i) const {
+    return local_geometry_.left_kps_previous.at(localIndex(i));
+  }
+
+  inline const gtsam::Point2& keypoint(size_t i) const {
+    return local_geometry_.left_kps.at(localIndex(i));
+  }
+
+  inline void keypoint(size_t i, const gtsam::Point2& keypoint) {
+    auto local_index = localIndex(i);
+    local_geometry_.left_kps[local_index] = keypoint;
+
+    auto fc_index = local_geometry_.fc_indices[local_index];
+    features_.points[fc_index] = utils::gtsamPointToCv<float>(keypoint);
+  }
+
+  /// @brief Reference landmark
+  /// @param i
+  /// @return
+  inline const gtsam::Point3& landmark(size_t i) const {
+    return reference_geometry_.lmks.at(referenceIndex(i));
+  }
+
+  inline TrackletId trackletId(size_t i) const {
+    return local_geometry_.ids.at(localIndex(i));
+  }
+
+  inline bool isInlier(size_t i) const {
+    auto fc_index = local_geometry_.fc_indices.at(localIndex(i));
+    return static_cast<bool>(features_.inlier[fc_index]);
+  }
+
+  inline const gtsam::Point3Vector& referenceLandmarks() const {
+    return matched_landmarks_ref_;
+  }
+
+  /// @brief Direct access to the inlier via pointer access for match i
+  /// @param i
+  /// @return
+  uchar* inlierPtr(size_t i) const {
+    auto fc_index = local_geometry_.fc_indices.at(localIndex(i));
+    return &features_.inlier[fc_index];
+  }
+
+  /// @brief Recompute matches_ based on new inliers
+  void recompute();
+
+ protected:
+  /// @brief Recompute any cached variables based on the updated matches_
+  inline virtual void recomputeCache() {}
+
+ protected:
+  inline Index localIndex(size_t i) const { return matches_.at(i).first; }
+
+  inline Index referenceIndex(size_t i) const { return matches_.at(i).second; }
+
+  FrameGeometry& local_geometry_;
+  const LocalLandmarks& reference_geometry_;
+  FeatureBlockContainer& features_;
+
+  //! Cached matched landmarks
+  gtsam::Point3Vector matched_landmarks_ref_;
+
+  // ! Index of matches between local geometry <-> reference geometry
+  // IndexMatches matches_;
+  std::unordered_map<Index, IndexMatch> matches_;
 };
-typedef gtsam::FastMap<ObjectId, RelativePoseMatches> RelativePoseMatchesMap;
+
+class OpenGVCentralAbsolutePoseAdaptor
+    : public opengv::absolute_pose::AbsoluteAdapterBase,
+      public MatchingAdaptorBase {
+ public:
+  OpenGVCentralAbsolutePoseAdaptor(const Camera::Ptr camera,
+                                   FrameGeometry& local_geometry,
+                                   const LocalLandmarks& reference_geometry,
+                                   FeatureBlockContainer& features)
+      : opengv::absolute_pose::AbsoluteAdapterBase(),
+        MatchingAdaptorBase(local_geometry, reference_geometry, features),
+        camera_(camera) {
+    const auto& camera_params = camera_->getParams();
+    const double fx = camera_params.fx();
+    const double fy = camera_params.fy();
+    const double cx = camera_params.cu();
+    const double cy = camera_params.cv();
+
+    size_t num_matches = this->numMatches();
+    bearings_local_.reserve(num_matches);
+    for (size_t i = 0; i < num_matches; i++) {
+      bearings_local_.push_back(
+          bearingOptimized(fx, fy, cx, cy, this->keypoint(i)));
+    }
+  }
+
+  virtual ~OpenGVCentralAbsolutePoseAdaptor() override = default;
+
+  inline opengv::bearingVector_t getBearingVector(size_t index) const override {
+    return bearings_local_[index];
+  }
+
+  inline double getWeight(size_t) const override { return 1.0; }
+
+  inline opengv::translation_t getCamOffset(size_t) const override {
+    return Eigen::Vector3d::Zero();
+  }
+
+  inline opengv::rotation_t getCamRotation(size_t) const override {
+    return Eigen::Matrix3d::Identity();
+  }
+
+  inline opengv::point_t getPoint(size_t index) const override {
+    return this->landmark(index);
+  }
+
+  inline size_t getNumberCorrespondences() const override {
+    return this->numMatches();
+  }
+
+ private:
+  Camera::Ptr camera_;
+  gtsam::Point3Vector bearings_local_;
+};
+
+typedef gtsam::FastMap<ObjectId, FrameGeometry> FrameGeometryMap;
 
 class DepthUpdaterFast {
  public:
@@ -427,8 +628,9 @@ class DepthUpdaterFast {
                    FeatureBlockContainer& features);
 
   // TODO: return outliers and mark features separately!
-  void calcPoints(LocalPointMap& point_map);
-  void calcPoints(const std::vector<Index>& indicies, LocalPointMap& point_map);
+  void calcPoints(FrameGeometryMap& point_map);
+  void calcPoints(const std::vector<Index>& indicies,
+                  FrameGeometryMap& point_map);
 
  private:
   FrontendParams params_;
@@ -437,55 +639,50 @@ class DepthUpdaterFast {
   FeatureBlockContainer& features_;
 };
 
+// TODO: no depth updateer here as we want to operate (once again)
+//  on the contiguous memory block so we can do flow tracking for stereo
+//  this means we need to wait till after all the geometric solves?
+//  ah but for the object motion solves this is a problem since we use stereo
+//  measurements which need to be updated!!
+//  we will deal with this later!
 class FlowRefinement {
  public:
-};
+  FlowRefinement(const Camera::Ptr camera, const ImageContainer& images,
+                 MatchingAdaptorBase& adaptor);
+  ~FlowRefinement() = default;
 
-class FrameFast {
- public:
-  DYNO_POINTER_TYPEDEFS(FrameFast)
-
-  FrameFast(Camera::Ptr camera, const ImageContainer& image_container,
-            const ObjectDetectionResult& object_detection,
-            const FeatureBlockContainer& features);
-
-  FrameId frameId() const { return images_.frameId(); }
-  Timestamp timestamp() const { return images_.timestamp(); }
-  const ImageContainer& images() const { return images_; }
-
-  const FeatureBlockContainer& features() const { return features_; }
-  FeatureBlockContainer& features() { return features_; }
-
-  /// @brief NOTE: checks features not the object detection altthough these
-  /// should be the same!
-  /// @param object_id
-  /// @return
-  inline bool containsObject(ObjectId object_id) const {
-    return features_.containsObject(object_id);
-  }
-
-  static bool findMatches(const FrameFast& first, const FrameFast& second,
-                          IndexMatches& matches);
-  static bool findMatches(const FrameFast& first, const FrameFast& second,
-                          ObjectId object_id, IndexMatches& matches);
-
- private:
-  void computeDepths();
+  // will update the pixel values in the local geometry but NOT the 3d geometry
+  // will mark values in features as outliers but not update the memory space!
+  void refine(const OpticalFlowAndPoseSolverParams& params,
+              const gtsam::Pose3& pose_in, gtsam::Pose3& pose_out);
 
  private:
   Camera::Ptr camera_;
   ImageContainer images_;
-  //! The raw object detections
-  ObjectDetectionResult object_detection_;
-  FeatureBlockContainer features_;
+  MatchingAdaptorBase& adaptor_;
 };
+
+// struct VIOFrame {
+//   //! Current frame (ie. to)
+//   FrameId j_id{0};
+//   //! Previous frame (ie. from)
+//   FrameId i_id{0};
+//   //! Tracking keyframe id
+//   FrameId lkf_id{0};
+//   //! Current timestamp
+//   Timestamp j_timestamp{0};
+//   gtsam::NavState nav_state_j{};
+//   //! Relative camera pose between from -> to frames (ie X_i = T_ij * T_j)
+//   gtsam::Pose3 T_i_j{};
+//   //! Relative camera pose between last keyframe -> to frames
+//   gtsam::Pose3 T_lkf_j;
+// };
 
 struct TrackingResult {
   ObjectDetectionResult object_detection;
   // note is a reference!!!
   // TODO: comment as to why!
   FeatureBlockContainer& featues;
-  cv::Mat viz;
 };
 
 // Should just be called tracker or something as also does object tracking!
@@ -668,9 +865,6 @@ class FeatureTrackerFast : public FeatureTrackerBase {
     return object_id > background_label ? params_.max_feature_track_age
                                         : params_.max_dynamic_feature_age;
   }
-
-  cv::Mat drawBatchedFeatures(
-      const cv::Mat& image, const FeatureBlockContainer& batchedFeatures) const;
 };
 
 }  // namespace dyno
