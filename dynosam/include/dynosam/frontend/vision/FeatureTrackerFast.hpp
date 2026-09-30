@@ -453,6 +453,8 @@ typedef gtsam::FastMap<ObjectId, LocalLandmarks> LocalLandmarksMap;
 // feature container index. Therefor all other contains need to refer back to
 // this when something in the current container updates. Previous feature
 // containers should never need to be updated!
+// could carry object ids here as well? but the point of the frame geometry
+// is that it captures one object!
 struct FrameGeometry {
   // note the use of double here
   // points in the camera frame
@@ -481,6 +483,13 @@ struct FrameGeometry {
 
   inline const gtsam::Point3& getLandmark(TrackletId tracklet_id) const {
     return lmks_C.at(local_indices.at(tracklet_id));
+  }
+
+  inline gtsam::StereoPoint2 getStereoPoint(TrackletId tracklet_id) const {
+    Index local_index = local_indices.at(tracklet_id);
+    const auto left_kp = left_kps.at(local_index);
+    const auto uR = right_pixel.at(local_index);
+    return gtsam::StereoPoint2(left_kp(0), uR, left_kp(1));
   }
 };
 
@@ -623,17 +632,24 @@ typedef gtsam::FastMap<ObjectId, FrameGeometry> FrameGeometryMap;
 
 class DepthUpdaterFast {
  public:
-  DepthUpdaterFast(const FrontendParams& params, Camera::Ptr camera,
+  DepthUpdaterFast(const DepthThresholds& params, Camera::Ptr camera,
                    const ImageContainer& images,
                    FeatureBlockContainer& features);
 
   // TODO: return outliers and mark features separately!
   void calcPoints(FrameGeometryMap& point_map);
-  void calcPoints(const std::vector<Index>& indicies,
-                  FrameGeometryMap& point_map);
+  // void calcPoints(const std::vector<Index>& indicies,
+  //                 FrameGeometryMap& point_map);
+
+  // void updateGeometry(FrameGeometry& local_geometry, const
+  // std::vector<Index>& local_indices);
+  void updateGeometry(FrameGeometry& local_geometry);
 
  private:
-  FrontendParams params_;
+  // assume all are part of the same object and t
+  // void computeStereoMatching(const std::vector<cv::Point2f>& left_kps, )
+
+  DepthThresholds params_;
   Camera::Ptr camera_;
   ImageContainer images_;
   FeatureBlockContainer& features_;
@@ -649,7 +665,7 @@ class FlowRefinement {
  public:
   FlowRefinement(const Camera::Ptr camera, const ImageContainer& images,
                  MatchingAdaptorBase& adaptor);
-  ~FlowRefinement() = default;
+  ~FlowRefinement();
 
   // will update the pixel values in the local geometry but NOT the 3d geometry
   // will mark values in features as outliers but not update the memory space!
@@ -660,7 +676,20 @@ class FlowRefinement {
   Camera::Ptr camera_;
   ImageContainer images_;
   MatchingAdaptorBase& adaptor_;
+
+  struct ImplOptimizer;
+  std::unique_ptr<ImplOptimizer> impl_;
 };
+
+// struct VIOFrameWithMeasurements {
+//   gtsam::Pose X_W_k;
+
+//   FrameId frame_id_k;
+//   Timestamp timestamp_k;
+
+//   // static measurements!
+//   StereoMeasurementStatusVector stereo_measurements;
+// };
 
 // struct VIOFrame {
 //   //! Current frame (ie. to)

@@ -60,10 +60,10 @@ tracker_params:
   max_feature_track_age: 1000
   # currently min_features_per_frame should == max_features_per_frame
   # some internal bug that is yet to be sorted!
-  min_features_per_frame: 300
+  min_features_per_frame: 400
   # This should be wide to get a good spread.
   # Ideally should be calculated as some function of the input image size
-  min_distance_btw_tracked_and_detected_static_features: 5
+  min_distance_btw_tracked_and_detected_static_features: 8
 
 
   subpixel_corner_refinement_params: false

@@ -433,7 +433,7 @@ bool findMatches(const std::vector<FeatureBlockView>& first_views,
 //   }
 // }
 
-DepthUpdaterFast::DepthUpdaterFast(const FrontendParams& params,
+DepthUpdaterFast::DepthUpdaterFast(const DepthThresholds& params,
                                    Camera::Ptr camera,
                                    const ImageContainer& images,
                                    FeatureBlockContainer& features)
@@ -445,8 +445,8 @@ void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
 
   const cv::Mat& depth_img = images_.depth();
 
-  const auto max_background_threshold = params_.depth_thresholds.max_background;
-  const auto max_object_threshold = params_.depth_thresholds.max_object;
+  const auto max_background_threshold = params_.max_background;
+  const auto max_object_threshold = params_.max_object;
 
   // iterate over by view so we can avoid lookup and memory allocation
   // for each FrameGeometry object
@@ -526,42 +526,402 @@ void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
   }
 }
 
-void DepthUpdaterFast::calcPoints(const std::vector<Index>& indicies,
-                                  FrameGeometryMap& points) {}
+// void DepthUpdaterFast::updateGeometry(FrameGeometry& local_geometry, const
+// std::vector<Index>& local_indices) {
+//   for()
+// }
+void DepthUpdaterFast::updateGeometry(FrameGeometry& local_geometry) {
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+  const cv::Mat& depth_img = images_.depth();
+
+  const auto max_background_threshold = params_.max_background;
+  const auto max_object_threshold = params_.max_object;
+
+  size_t num_points = local_geometry.lmks_C.size();
+  for (size_t i = 0; i < num_points; i++) {
+    Index fc_index = local_geometry.fc_indices[i];
+    TrackletId id = local_geometry.ids[i];
+
+    // check internal consistency
+    CHECK_EQ(id, features_.ids[fc_index]);
+    CHECK_EQ(local_geometry.local_indices.at(id), i);
+    if (!features_.inlier[fc_index]) {
+      continue;
+    }
+
+    // should check consistency with what the geometry is MEANT to be
+    // and if all featues are of the same id!
+    const ObjectId object_id = features_.object_ids[fc_index];
+
+    const gtsam::Point2 left_kp = local_geometry.left_kps[i];
+    const Depth depth =
+        depth_img.at<Depth>(utils::gtsamPointToCv<float>(left_kp));
+    const Depth max_depth = (object_id == background_label)
+                                ? max_background_threshold
+                                : max_object_threshold;
+
+    if (depth > max_depth || depth <= 0) {
+      features_.inlier[fc_index] = 0;
+    } else {
+      gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
+
+      if (!rgbd_camera->isKeypointContained(right_kp, depth)) {
+        features_.inlier[fc_index] = 0;
+        continue;
+      }
+
+      // update geometry
+      Landmark& lmk = local_geometry.lmks_C[i];
+      rgbd_camera->backProject2(left_kp, depth, lmk);
+
+      local_geometry.right_pixel[i] = right_kp(0);
+    }
+  }
+}
+
+struct FlowRefinement::ImplOptimizer {
+  using Params = OpticalFlowAndPoseSolverParams;
+  const Params params_;
+
+  using Calibration = Camera::CalibrationType;
+  const Calibration& calibration_;
+
+  gtsam::noiseModel::mEstimator::Base::shared_ptr loss_;
+
+  double flow_information_;
+  double prior_information_;
+  double flow_sqrt_information_;
+  double prior_sqrt_information_;
+
+  struct Inputs {
+    gtsam::Point2Vector ref_kps;
+    gtsam::Point3Vector ref_lmks;
+    //! doubles as the measured flow from optical flow AND the initial value for
+    //! the estimated flow
+    gtsam::Point2Vector measured_flows;
+  };
+
+  // TODO: and timing!
+  struct TerminationCriteria {
+    size_t max_iterations = 10;
+    double relative_error_tol{1e-5};
+    double absolute_error_tol{1e-5};
+    double error_tol{0.0};
+
+    bool shouldTerminate(size_t iterations, double current_error,
+                         double new_error) const {
+      const bool exceeded_max_iterations = iterations >= max_iterations;
+      const bool has_converged = gtsam::checkConvergence(
+          relative_error_tol, absolute_error_tol, error_tol, current_error,
+          new_error, gtsam::NonlinearOptimizerParams::Verbosity::SILENT);
+      const bool has_infinite_error = std::isinf(current_error);
+
+      const bool should_terminate =
+          exceeded_max_iterations || has_infinite_error || has_converged;
+      return should_terminate;
+    }
+  };
+
+  struct Result {
+    gtsam::Pose3 pose;
+    gtsam::Point2Vector flows;
+    // TODO: inliers!
+
+    double error_before{0.0};
+    double error_after{0.0};
+
+    double total_time_ms{0.0};
+    size_t iterations{0};
+  };
+
+  struct IterationStats {
+    double avg_projection_error = 0.0;
+    // GTSAM-style unnormalized nonlinear error:
+    // sum 0.5 * ||whitened residual||^2
+    double regular_error = 0.0;
+
+    // Error after applying the robust loss.
+    double robust_error = 0.0;
+
+    double error_change = 0.0;
+
+    // // Useful diagnostics.
+    // double max_whitened_error = 0.0;
+    // double pose_update_norm = 0.0;
+    // double max_flow_update_norm = 0.0;
+  };
+
+  static void printIterationStats(const IterationStats& stats,
+                                  std::size_t iteration) {
+    LOG(INFO) << std::fixed << std::setprecision(6) << "Iteration " << iteration
+              << '\n'
+              << "  Projection error       : " << stats.avg_projection_error
+              << '\n'
+              << "  Regular error          : " << stats.regular_error << '\n'
+              << "  Robust error           : " << stats.robust_error << '\n'
+              << "  Error delta            : " << stats.error_change << '\n';
+    // << "  Max whitened error     : " << stats.max_whitened_error << '\n'
+    // << "  Pose update norm       : " << stats.pose_update_norm << '\n'
+    // << "  Max flow update norm   : " << stats.max_flow_update_norm << '\n';
+  }
+
+  ImplOptimizer(const Params& params, const Calibration& calibration)
+      : params_(params), calibration_(calibration) {
+    // validateParams
+    // setup loss
+    flow_information_ = 1.0 / (params_.flow_sigma * params_.flow_sigma);
+    prior_information_ =
+        1.0 / (params_.flow_prior_sigma * params_.flow_prior_sigma);
+
+    flow_sqrt_information_ = std::sqrt(flow_information_);
+    prior_sqrt_information_ = std::sqrt(prior_information_);
+
+    if (params_.use_robust) {
+      loss_ = gtsam::noiseModel::mEstimator::Huber::Create(params_.k_huber);
+    } else {
+      loss_ = gtsam::noiseModel::mEstimator::Null::Create();
+    }
+  }
+
+  ~ImplOptimizer() = default;
+
+  Result optimize(const gtsam::Pose3& initial_pose, const Inputs& inputs,
+                  const TerminationCriteria& criteria) const {
+    CHECK_EQ(inputs.ref_kps.size(), inputs.ref_lmks.size());
+    CHECK_EQ(inputs.ref_kps.size(), inputs.measured_flows.size());
+
+    const size_t num_measurements = inputs.ref_kps.size();
+    auto tic = utils::Timer::tic();
+
+    Result result;
+    result.pose = initial_pose;
+    result.flows = inputs.measured_flows;
+
+    gtsam::Point2Vector& refined_flows = result.flows;
+    gtsam::Pose3& refined_pose = result.pose;
+
+    std::vector<Pose3FlowProjectionResidual2> factors;
+    factors.reserve(num_measurements);
+
+    double current_error = 0.0;
+    // build factors and compute initial error
+    // there is some tiny overhead as we recompute the whitened
+    // error here and then again during the iterations
+    for (size_t i = 0; i < num_measurements; i++) {
+      Pose3FlowProjectionResidual2 residual(inputs.ref_kps[i],
+                                            inputs.ref_lmks[i], calibration_);
+      gtsam::Vector2 unwhitened_error =
+          residual(refined_flows[i], refined_pose);
+      gtsam::Vector2 whitened_error = unwhitened_error * flow_sqrt_information_;
+      current_error += 0.5 * whitened_error.squaredNorm();
+
+      factors.push_back(std::move(residual));
+    }
+
+    struct LinearizedMeasurement {
+      Matrix62 Hxf;
+      Matrix22 Hff;
+      Vector2 bf;
+    };
+    std::vector<LinearizedMeasurement> linearized(num_measurements);
+
+    double new_error = current_error;
+    size_t iterations = 0;
+    std::vector<IterationStats> stats_per_iterations;
+    do {
+      stats_per_iterations.emplace_back();
+      IterationStats& stats = stats_per_iterations.back();
+      current_error = new_error;
+
+      gtsam::Matrix66 H = gtsam::Matrix66::Zero();
+      gtsam::Vector6 b = gtsam::Vector6::Zero();
+
+      // temporary variables
+      gtsam::Matrix H1;
+      gtsam::Matrix H2;
+
+      for (size_t i = 0; i < num_measurements; ++i) {
+        Eigen::Matrix<double, 2, 2> Jf;
+        Eigen::Matrix<double, 2, 6> Jx;
+
+        const gtsam::Vector2& measured_flow = inputs.measured_flows.at(i);
+        const gtsam::Vector2& esimated_flow = refined_flows.at(i);
+
+        const auto& residual = factors.at(i);
+        gtsam::Vector2 projection_error =
+            residual(esimated_flow, refined_pose, H1, H2);
+        Jf = H1;
+        Jx = H2;
+
+        stats.avg_projection_error += projection_error.norm();
+
+        // whitened error
+        gtsam::Vector2 whitened_error =
+            projection_error * flow_sqrt_information_;
+        // NOTE: this should actually sum to the current error since it is
+        // recalculated from the same linerization point at the end of the last
+        // iteration
+        // TODO: we could actually cache the residuals then as we compute them
+        // once at the end of each iteration and then again at the start!
+        stats.regular_error += 0.5 * whitened_error.squaredNorm();
+
+        // whitened Jacobians
+        Jf *= flow_sqrt_information_;
+        Jx *= flow_sqrt_information_;
+
+        // --------------------------------------------------------------
+        // Robust reweighting.
+        //
+        // This matches GTSAM's Block robust weighting:
+        //
+        //   w = HuberWeight(||r||)
+        //
+        // followed by:
+        //
+        //   J <- sqrt(w) J
+        //   r <- sqrt(w) r
+        //
+        // where r is already whitened by sigma.
+        // --------------------------------------------------------------
+        const double whitened_distance = whitened_error.norm();
+        const double robust_weight = loss_->weight(whitened_distance);
+        const double sqrt_weight = std::sqrt(robust_weight);
+
+        stats.robust_error += loss_->loss(whitened_distance);
+
+        if (robust_weight != 1.0) {
+          Jf *= sqrt_weight;
+          Jx *= sqrt_weight;
+          whitened_error *= sqrt_weight;
+        }
+
+        // --------------------------------------------------------------
+        // Projection Hessian and gradient contributions.
+        // --------------------------------------------------------------
+        const gtsam::Matrix62 Jx_T = Jx.transpose();
+        const gtsam::Matrix22 Jf_T = Jf.transpose();
+
+        const gtsam::Matrix66 Hxx = Jx_T * Jx;
+        const gtsam::Matrix62 Hxf = Jx_T * Jf;
+        gtsam::Matrix22 Hff = Jf_T * Jf;
+
+        const gtsam::Vector6 bx = Jx_T * whitened_error;
+        gtsam::Vector2 bf = Jf_T * whitened_error;
+
+        // Flow prior.  The prior is intentionally NOT robustified.
+        const gtsam::Vector2 prior_r =
+            (esimated_flow - measured_flow).template cast<double>();
+
+        // Hessian: Jᵀ Λ J, with J = I.
+        Hff.noalias() += prior_information_ * gtsam::Matrix22::Identity();
+
+        // Gradient: Jᵀ Λ r, with J = I.
+        const gtsam::Vector2 prior_gradient = prior_information_ * prior_r;
+        bf.noalias() += prior_gradient;
+
+        // Error: 0.5 rᵀ Λ r = 0.5 ||Λ½ r||².
+        const gtsam::Vector2 whitened_prior_r =
+            prior_sqrt_information_ * prior_r;
+
+        const double prior_error = 0.5 * whitened_prior_r.squaredNorm();
+
+        stats.regular_error += prior_error;
+        stats.robust_error += prior_error;
+
+        linearized[i].Hxf = Hxf;
+        linearized[i].Hff = Hff;
+        linearized[i].bf = bf;
+
+        // Factor Hff only once.
+        const Eigen::LDLT<Matrix22> Hff_ldlt(Hff);
+        const gtsam::Matrix26 Hff_inv_Hfx = Hff_ldlt.solve(Hxf.transpose());
+        const gtsam::Vector2 Hff_inv_bf = Hff_ldlt.solve(bf);
+
+        H.noalias() += Hxx - Hxf * Hff_inv_Hfx;
+        b.noalias() += bx - Hxf * Hff_inv_bf;
+      }  // finish measurement loop
+
+      if (num_measurements > 0) {
+        stats.avg_projection_error /= (double)num_measurements;
+      } else {
+        stats.avg_projection_error = 0.0;
+      }
+
+      // printIterationStats(stats, iterations);
+
+      // solve reduced system
+      const gtsam::Vector6 dx = H.ldlt().solve(-b);
+      // update pose
+      refined_pose = refined_pose.retract(dx);
+
+      new_error = 0.0;
+      // update flows and recompute error term
+      for (size_t i = 0; i < num_measurements; ++i) {
+        const LinearizedMeasurement& lin = linearized[i];
+
+        const Eigen::LDLT<Matrix22> Hff_ldlt(lin.Hff);
+
+        const gtsam::Vector2 df =
+            -Hff_ldlt.solve(lin.bf + lin.Hxf.transpose() * dx);
+
+        refined_flows.at(i) += df;
+
+        const auto& residual = factors.at(i);
+        // TODO: probably could cache then and then use it for the start of the
+        // next iteration!
+        gtsam::Vector2 unwhitened_error =
+            residual(refined_flows.at(i), refined_pose);
+        gtsam::Vector2 whitened_error =
+            unwhitened_error * flow_sqrt_information_;
+        new_error += 0.5 * whitened_error.squaredNorm();
+      }
+
+      ++iterations;
+      stats.error_change = new_error - current_error;
+
+    } while (!criteria.shouldTerminate(iterations, current_error, new_error));
+
+    auto toc = utils::Timer::toc(tic);
+    double optimize_time_ms = utils::Timer::toUnits<std::milli>(toc);
+
+    result.error_before = stats_per_iterations.front().regular_error;
+    result.error_after = stats_per_iterations.back().regular_error;
+    result.total_time_ms = optimize_time_ms;
+    result.iterations = iterations;
+
+    return result;
+  }
+
+  Result optimize(const gtsam::Pose3& initial_pose,
+                  const Inputs& inputs) const {
+    return this->optimize(initial_pose, inputs, TerminationCriteria{});
+  }
+};
 
 FlowRefinement::FlowRefinement(const Camera::Ptr camera,
                                const ImageContainer& images,
                                MatchingAdaptorBase& adaptor)
     : camera_(camera), images_(images), adaptor_(adaptor) {}
 
+FlowRefinement::~FlowRefinement() = default;
+
 void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
                             const gtsam::Pose3& pose_in,
                             gtsam::Pose3& pose_out) {
   utils::ChronoTimingStats timer("flow_refine.refine");
-  using FlowProjectionFactor =
-      Pose3FlowProjectionFactor2<Camera::CalibrationType>;
-
-  gtsam::SharedNoiseModel flow_noise =
-      gtsam::noiseModel::Isotropic::Sigma(2u, params.flow_prior_sigma);
-  gtsam::SharedNoiseModel flow_prior_noise =
-      gtsam::noiseModel::Isotropic::Sigma(2u, params.flow_sigma);
-
-  if (params.use_robust) {
-    flow_noise = gtsam::noiseModel::Robust::Create(
-        gtsam::noiseModel::mEstimator::Huber::Create(params.k_huber),
-        flow_noise);
-  }
-
   // TODO: cahe!
   auto gtsam_calibration = *camera_->getGtsamCalibration();
+  impl_ = std::make_unique<ImplOptimizer>(params, gtsam_calibration);
+
+  ImplOptimizer::Inputs impl_inputs;
 
   // takes a few milliseconds to build...
   utils::ChronoTimingStats build_t("flow_refine.build");
-  gtsam::NonlinearFactorGraph graph;
-  gtsam::Values values;
-  gtsam::Ordering ordering;
+  // gtsam::NonlinearFactorGraph graph;
+  // gtsam::Values values;
+  // gtsam::Ordering ordering;
 
-  const gtsam::Symbol X_sym('X', 0);
+  // const gtsam::Symbol X_sym('X', 0);
   const size_t num_matches = adaptor_.numMatches();
 
   // store reference keypoints to avoid lookup
@@ -571,11 +931,14 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
   std::vector<Index> matching_index;
   matching_index.reserve(num_matches);
 
-  std::vector<gtsam::Key> keys;
-  keys.reserve(num_matches);
+  // std::vector<gtsam::Key> keys;
+  // keys.reserve(num_matches);
 
   std::vector<uchar*> inlier_ptrs;
   inlier_ptrs.reserve(num_matches);
+
+  // ObjectIds object_ids;
+  // object_ids.reserve(num_matches);
 
   for (size_t i = 0; i < num_matches; i++) {
     // if we recompute this should not be needed!
@@ -589,66 +952,47 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
     // assuming the previous frame is the reference frame!
     const gtsam::Point2& ref_kp = adaptor_.keypointPrev(i);
 
-    gtsam::Symbol flow_sym('f', adaptor_.trackletId(i));
+    // gtsam::Symbol flow_sym('f', adaptor_.trackletId(i));
 
-    auto factor = boost::make_shared<FlowProjectionFactor>(
-        flow_sym, X_sym, ref_kp, ref_lmk, gtsam_calibration, flow_noise);
-    graph += factor;
+    // auto factor = boost::make_shared<FlowProjectionFactor>(
+    //     flow_sym, X_sym, ref_kp, ref_lmk, gtsam_calibration, flow_noise);
+    // graph += factor;
 
     const gtsam::Point2& curr_kp = adaptor_.keypoint(i);
     const gtsam::Point2 initial_flow = curr_kp - ref_kp;
 
-    // add prior factor on each flow
-    graph.addPrior<gtsam::Point2>(flow_sym, initial_flow, flow_prior_noise);
-
-    values.insert(flow_sym, initial_flow);
-    ordering += flow_sym;
-
     matching_index.push_back(i);
     ref_kps.push_back(ref_kp);
-    keys.push_back(flow_sym);
     inlier_ptrs.push_back(inlier_ptr);
-  }
 
-  values.insert(X_sym, pose_in);
-  ordering += X_sym;
+    // object_ids.push_back()
+
+    impl_inputs.ref_kps.push_back(ref_kp);
+    impl_inputs.ref_lmks.push_back(ref_lmk);
+    impl_inputs.measured_flows.push_back(initial_flow);
+  }
 
   build_t.stop();
 
-  // setup solver
-  using BaseSolver = gtsam::GaussNewtonOptimizer;
-  gtsam::GaussNewtonParams opt_params;
-  // for speed
+  ImplOptimizer::TerminationCriteria criteria;
+  criteria.max_iterations = 5;
 
-  //
-  opt_params.setMaxIterations(3);
-  opt_params.setOrdering(ordering);
+  utils::ChronoTimingStats solve_t("flow_refine.shur_solve", 7);
+  const auto result = impl_->optimize(pose_in, impl_inputs, criteria);
+  solve_t.stop();
 
-  dyno::NonlinearOptimizer<BaseSolver> solver(graph, values, opt_params);
-  NonlinearOptimizerSummary summary;
-  NonlinearOptimizerOptions options;
+  CHECK_EQ(matching_index.size(), result.flows.size());
+  const cv::Mat& object_masks = images_.objectMotionMask();
 
-  gtsam::Values optimised_values = values;
-  {
-    utils::ChronoTimingStats timer("flow_refine.gn_solve", 7);
-    CHECK(solver.solve(optimised_values, options, &summary));
-  }
-
-  VLOG(10) << "Initial error: " << summary.initial_error << " final error "
-           << summary.final_error << " time[s] "
-           << summary.cumulative_time_in_seconds
-           << " #iterations= " << summary.numIterations();
-
-  utils::ChronoTimingStats recover_t("flow_refine.recover", 7);
   for (size_t i = 0; i < matching_index.size(); i++) {
-    gtsam::Point2 refined_flow = optimised_values.at<gtsam::Point2>(keys[i]);
-    gtsam::Point2 refined_keypoint = refined_flow + ref_kps[i];
+    gtsam::Point2 refined_keypoint = result.flows[i] + ref_kps[i];
 
-    // or is not in the same object mask!
     if (!camera_->isKeypointContained(refined_keypoint)) {
       *(inlier_ptrs[i]) = 0;
       continue;
     }
+
+    // TODO: still within object mask!
 
     Index index = matching_index[i];
     // update both the gtsam representation and the opencv representation in
@@ -656,7 +1000,12 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
     adaptor_.keypoint(index, refined_keypoint);
   }
 
-  pose_out = optimised_values.at<gtsam::Pose3>(X_sym);
+  pose_out = result.pose;
+
+  // VLOG(10) << "Initial error: " << result.error_before << " final error "
+  //          << result.error_after << " time[ms] "
+  //          << result.total_time_ms
+  //          << " #iterations= " << result.iterations;
 }
 
 MatchingAdaptorBase::MatchingAdaptorBase(

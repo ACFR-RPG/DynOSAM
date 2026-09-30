@@ -327,6 +327,9 @@ class CameraMeasurement {
 //     VisualMeasurementStatus<MeasurementWithCovariance<T>>;
 
 using CameraMeasurementStatus = GenericValueTrack<CameraMeasurement>;
+using StereoMeasurementStatus = GenericValueTrack<StereoMeasurement>;
+typedef GenericTrackedStatusVector<StereoMeasurementStatus>
+    StereoMeasurementStatusVector;
 // TODO: all these structure are VERY cache and probably memory efficient
 //  as they re are arrays of structures not structures of arrays
 //  and we have to do gross copying all the time!!!!

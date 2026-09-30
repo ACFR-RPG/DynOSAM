@@ -26,7 +26,8 @@ PoseChangeVIFrontendFAST::PoseChangeVIFrontendFAST(
       accessor_(CHECK_NOTNULL(
           formulation->derivedAccessor<HybridFormulationKeyFrameAccessor>())),
       map_(CHECK_NOTNULL(formulation->map())),
-      feature_tracker_fast_(params.frontend_params_, camera) {
+      feature_tracker_fast_(params.frontend_params_, camera),
+      local_map_(StereoMap::create()) {
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
     LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
@@ -61,8 +62,8 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
   FeatureBlockContainer& features_k = tracking_result.featues;
 
   // fill depth information
-  DepthUpdaterFast depth_updater_k(frontendParams(), camera_, container,
-                                   features_k);
+  DepthUpdaterFast depth_updater_k(frontendParams().depth_thresholds, camera_,
+                                   container, features_k);
 
   // project points
   FrameGeometryMap frame_geometry_k;
@@ -163,8 +164,8 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   // fill depth information
   // TODO: this is somehow a cv -> Eigen adaptor for the feature container (we
   // keep the indicies as well!)
-  DepthUpdaterFast depth_updater_k(frontendParams(), camera_, container,
-                                   features_k);
+  DepthUpdaterFast depth_updater_k(frontendParams().depth_thresholds, camera_,
+                                   container, features_k);
 
   // project points
   FrameGeometryMap frame_geometry_k;
@@ -336,8 +337,8 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   // for stereo!!!
   // TODO: do faster! have to update the depth after flow refinment but really
   // we should be able to this inside the flow refinement!
-  frame_geometry_k.clear();
-  depth_updater_k.calcPoints(frame_geometry_k);
+  // frame_geometry_k.clear();
+  // depth_updater_k.calcPoints(frame_geometry_k);
 
   // TODO: so far we get the points from the frame geometry
   // eventually we will use some kind of persistent map
@@ -369,11 +370,39 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   update_inliers_t.stop();
 
-  // local_landmarks_C_km1_ = std::move(frame_geometry_k);
-
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
+
+  const LocalLandmarks& lmks_C_static = local_landmarks_C_km1_[0];
+  const FrameGeometry& frame_geometry_C = frame_geometry_k[0];
+
+  StatusLandmarkVector& points_W_used = realtime_output->state.static_map;
+  points_W_used.reserve(lmks_C_static.ids.size());
+
+  StereoMeasurementStatusVector stereo_measurements;
+  stereo_measurements.reserve(lmks_C_static.ids.size());
+
+  gtsam::Vector3 sigmas;
+  sigmas << 2, 2, 2;
+
+  for (size_t i = 0; i < lmks_C_static.ids.size(); i++) {
+    gtsam::Point3 mW = X_W_k * lmks_C_static.lmks[i];
+
+    TrackletId id = lmks_C_static.ids[i];
+    auto stereo_measurement = StereoMeasurement::FromSigmas(
+        frame_geometry_C.getStereoPoint(id), sigmas);
+    stereo_measurements.push_back(
+        StereoMeasurementStatus(stereo_measurement, frame_id_k, timestamp_k, id,
+                                0, ReferenceFrame::LOCAL));
+
+    points_W_used.push_back(
+        LandmarkStatus::StaticInGlobal(mW, frame_id_k, timestamp_k, id));
+  }
+
+  // local_map_->updateObservations(stereo_measurements);
+
+  // local_landmarks_C_km1_ = std::move(frame_geometry_k);
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   // TODO: see old code where we only send the visible/good trajectories (but
   // log all of them!)
@@ -439,6 +468,10 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
                                     ".solve.vo.flow_refine");
     FlowRefinement(camera_, image_container, adapter)
         .refine(vo_solve_params.optical_flow_solver_params, T_ij, T_ij);
+
+    DepthUpdaterFast depth_updater(frontendParams().depth_thresholds, camera_,
+                                   image_container, features);
+    depth_updater.updateGeometry(local_geometry);
   }
 
   gtsam::Pose3 X_W = X_km1_ * T_ij;
@@ -493,6 +526,10 @@ void PoseChangeVIFrontendFAST::solveObjectOdometryByThread(
     FlowRefinement(camera_, image_container, adapter)
         .refine(doo_solve_params.optical_flow_solver_params, G_i_ij_inv,
                 G_i_ij_inv);
+
+    DepthUpdaterFast depth_updater(frontendParams().depth_thresholds, camera_,
+                                   image_container, features);
+    depth_updater.updateGeometry(local_geometry);
   }
 
   {
@@ -586,7 +623,6 @@ bool PoseChangeVIFrontendFAST::solve3d2dRansac(
 
   int ransac_inliers = int(ransac.inliers_.size());
   float ransac_ratio = float(ransac_inliers) / float(num_matches);
-  LOG(INFO) << ransac_ratio;
   const bool ransac_success = ransac_inliers > 10 && ransac_ratio > 0.7;
 
   if (!ransac_success) {

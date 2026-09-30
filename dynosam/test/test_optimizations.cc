@@ -196,6 +196,34 @@ class FastFlowPoseOptimizer {
     double huber_k = 1.345;
   };
 
+  struct IterationStats {
+    double avg_projection_error = 0.0;
+    // GTSAM-style unnormalized nonlinear error:
+    // sum 0.5 * ||whitened residual||^2
+    double regular_error = 0.0;
+
+    // Error after applying the robust loss.
+    double robust_error = 0.0;
+
+    // // Useful diagnostics.
+    // double max_whitened_error = 0.0;
+    // double pose_update_norm = 0.0;
+    // double max_flow_update_norm = 0.0;
+  };
+
+  static void printIterationStats(const IterationStats& stats,
+                                  std::size_t iteration,
+                                  std::ostream& os = std::cout) {
+    os << std::fixed << std::setprecision(6) << "Iteration " << iteration
+       << '\n'
+       << "  Projection error       : " << stats.avg_projection_error << '\n'
+       << "  Regular error          : " << stats.regular_error << '\n'
+       << "  Robust error           : " << stats.robust_error << '\n';
+    // << "  Max whitened error     : " << stats.max_whitened_error << '\n'
+    // << "  Pose update norm       : " << stats.pose_update_norm << '\n'
+    // << "  Max flow update norm   : " << stats.max_flow_update_norm << '\n';
+  }
+
   struct Result {
     gtsam::Pose3 pose;
     std::vector<gtsam::Point2> flows;
@@ -207,6 +235,17 @@ class FastFlowPoseOptimizer {
                         Params params)
       : calibration_(calibration), params_(params) {
     validateParams();
+
+    switch (params_.robust_loss) {
+      case RobustLoss::None:
+        loss_ = gtsam::noiseModel::mEstimator::Null::Create();
+        break;
+
+      case RobustLoss::Huber:
+        loss_ = gtsam::noiseModel::mEstimator::Huber::Create(params_.huber_k);
+        break;
+        // return huberWeight(whitened_error.norm(), params_.huber_k);
+    }
   }
 
   Result optimize(const gtsam::Pose3& initial_pose,
@@ -225,6 +264,7 @@ class FastFlowPoseOptimizer {
         1.0 / (params_.flow_prior_sigma * params_.flow_prior_sigma);
 
     const double flow_sqrt_information = std::sqrt(flow_information);
+    const double prior_sqrt_information = std::sqrt(prior_information);
 
     struct LinearizedMeasurement {
       Matrix62 Hxf;
@@ -235,10 +275,10 @@ class FastFlowPoseOptimizer {
     std::vector<LinearizedMeasurement> linearized(measurements.size());
 
     size_t iterations = 0;
-
-    for (size_t iteration = 0; iteration < params_.max_iterations;
-         ++iteration) {
-      ++iterations;
+    double current_error = 0.0;
+    IterationStats stats;
+    do {
+      stats = IterationStats();
 
       const auto linearize_start = Clock::now();
 
@@ -257,8 +297,9 @@ class FastFlowPoseOptimizer {
 
         const auto factor_start = Clock::now();
 
-        const gtsam::Point2 error =
+        const gtsam::Point2 projection_error =
             evaluateProjection(measurement, pose, Jf, Jx);
+        stats.avg_projection_error += projection_error.norm();
 
         timing.factor_eval_ms += elapsedMs(factor_start);
 
@@ -268,11 +309,14 @@ class FastFlowPoseOptimizer {
 
         const auto matrix_start = Clock::now();
 
-        Vector2 r = error.template cast<double>();
+        // whitened error
+        gtsam::Vector2 whitened_error =
+            projection_error * flow_sqrt_information;
+        stats.regular_error += 0.5 * whitened_error.squaredNorm();
 
+        // whitened Jacobians
         Jf *= flow_sqrt_information;
         Jx *= flow_sqrt_information;
-        r *= flow_sqrt_information;
 
         // --------------------------------------------------------------
         // Robust reweighting.
@@ -289,29 +333,39 @@ class FastFlowPoseOptimizer {
         // where r is already whitened by sigma.
         // --------------------------------------------------------------
 
-        const double robust_weight = projectionWeight(r);
+        const double whitened_distance = whitened_error.norm();
+        const double robust_weight = loss_->weight(whitened_distance);
+        const double sqrt_weight = std::sqrt(robust_weight);
+
+        stats.robust_error += loss_->loss(whitened_distance);
+
+        // const double robust_weight_manual = projectionWeight(whitened_error);
+        // const double sqrt_weight_manual = std::sqrt(robust_weight_manual);
 
         if (robust_weight != 1.0) {
-          const double sqrt_weight = std::sqrt(robust_weight);
-
           Jf *= sqrt_weight;
           Jx *= sqrt_weight;
-          r *= sqrt_weight;
+          whitened_error *= sqrt_weight;
         }
+        // Jf *= sqrt_weight;
+        // Jx *= sqrt_weight;
+        // whitened_error *= sqrt_weight;
 
         // --------------------------------------------------------------
         // Projection Hessian and gradient contributions.
         // --------------------------------------------------------------
+        const Matrix62 Jx_T = Jx.transpose();
+        const Matrix22 Jf_T = Jf.transpose();
 
-        const Matrix66 Hxx = Jx.transpose() * Jx;
+        const Matrix66 Hxx = Jx_T * Jx;
 
-        const Matrix62 Hxf = Jx.transpose() * Jf;
+        const Matrix62 Hxf = Jx_T * Jf;
 
-        Matrix22 Hff = Jf.transpose() * Jf;
+        Matrix22 Hff = Jf_T * Jf;
 
-        const Vector6 bx = Jx.transpose() * r;
+        const Vector6 bx = Jx_T * whitened_error;
 
-        Vector2 bf = Jf.transpose() * r;
+        Vector2 bf = Jf_T * whitened_error;
 
         // --------------------------------------------------------------
         // Flow prior.
@@ -322,9 +376,21 @@ class FastFlowPoseOptimizer {
         const Vector2 prior_r = (measurement.flow - measurement.measured_flow)
                                     .template cast<double>();
 
+        // Hessian: Jᵀ Λ J, with J = I.
         Hff.noalias() += prior_information * Matrix22::Identity();
 
-        bf.noalias() += prior_information * prior_r;
+        // Gradient: Jᵀ Λ r, with J = I.
+        const Vector2 prior_gradient = prior_information * prior_r;
+
+        bf.noalias() += prior_gradient;
+
+        // Error: 0.5 rᵀ Λ r = 0.5 ||Λ½ r||².
+        const Vector2 whitened_prior_r = prior_sqrt_information * prior_r;
+
+        const double prior_error = 0.5 * whitened_prior_r.squaredNorm();
+
+        stats.regular_error += prior_error;
+        stats.robust_error += prior_error;
 
         timing.matrix_ops_ms += elapsedMs(matrix_start);
 
@@ -355,6 +421,16 @@ class FastFlowPoseOptimizer {
 
         timing.local_solve_ms += elapsedMs(local_solve_start);
       }
+
+      if (measurements.size() > 0) {
+        stats.avg_projection_error /= (double)measurements.size();
+      } else {
+        stats.avg_projection_error = 0.0;
+      }
+
+      printIterationStats(stats, iterations);
+      double error_change = current_error - stats.regular_error;
+      current_error = stats.regular_error;
 
       timing.linearize_ms += elapsedMs(linearize_start);
 
@@ -395,7 +471,8 @@ class FastFlowPoseOptimizer {
       pose = pose.retract(gtsam::Vector6(dx.data()));
 
       timing.pose_update_ms += elapsedMs(pose_update_start);
-    }
+      ++iterations;
+    } while (iterations < params_.max_iterations);
 
     std::vector<gtsam::Point2> flows;
     flows.reserve(measurements.size());
@@ -433,26 +510,39 @@ class FastFlowPoseOptimizer {
                                    const gtsam::Pose3& pose,
                                    Eigen::Matrix<double, 2, 2>& Jf,
                                    Eigen::Matrix<double, 2, 6>& Jx) const {
-    // Unit noise is intentional here. The optimizer performs
-    // whitening explicitly so that robust weighting can be applied
-    // to the whitened residual.
-    const gtsam::SharedNoiseModel unit_noise =
-        gtsam::noiseModel::Isotropic::Sigma(2, 1.0);
+    // // Unit noise is intentional here. The optimizer performs
+    // // whitening explicitly so that robust weighting can be applied
+    // // to the whitened residual.
+    // const gtsam::SharedNoiseModel unit_noise =
+    //     gtsam::noiseModel::Isotropic::Sigma(2, 1.0);
 
-    FlowProjectionFactor factor(gtsam::Symbol('f', 0), gtsam::Symbol('X', 0),
-                                measurement.ref_kp, measurement.landmark,
-                                calibration_, unit_noise);
+    // FlowProjectionFactor factor(gtsam::Symbol('f', 0), gtsam::Symbol('X', 0),
+    //                             measurement.ref_kp, measurement.landmark,
+    //                             calibration_, unit_noise);
+
+    // gtsam::Matrix H1;
+    // gtsam::Matrix H2;
+
+    // const gtsam::Vector2 error =
+    //     factor.evaluateError(measurement.flow, pose, H1, H2);
+
+    // Jf = H1;
+    // Jx = H2;
+
+    // probably dont need to recompute this every time
+    Pose3FlowProjectionResidual2 residual(measurement.ref_kp,
+                                          measurement.landmark, calibration_);
 
     gtsam::Matrix H1;
     gtsam::Matrix H2;
 
-    const gtsam::Vector2 error =
-        factor.evaluateError(measurement.flow, pose, H1, H2);
-
+    gtsam::Vector2 error = residual(measurement.flow, pose, H1, H2);
     Jf = H1;
     Jx = H2;
 
-    return gtsam::Point2(error(0), error(1));
+    return error;
+
+    // return gtsam::Point2(error(0), error(1));
   }
 
   void validateParams() const {
@@ -482,6 +572,7 @@ class FastFlowPoseOptimizer {
 
   const Camera::CalibrationType& calibration_;
   Params params_;
+  gtsam::noiseModel::mEstimator::Base::shared_ptr loss_;
 };
 
 struct FlowRefinementProblem {
