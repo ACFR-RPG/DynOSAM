@@ -122,6 +122,8 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
     for (size_t i = 0; i < num_points; i++) {
       auto id = object_view.ids()[i];
 
+      CHECK(object_view.inlier()[i]);
+
       lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
       lmks_C_km1_j.ids.push_back(id);
       lmks_C_km1_j.local_indices[id] = i;

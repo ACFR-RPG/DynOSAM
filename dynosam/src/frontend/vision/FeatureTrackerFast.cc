@@ -437,16 +437,31 @@ DepthUpdaterFast::DepthUpdaterFast(const DepthThresholds& params,
                                    Camera::Ptr camera,
                                    const ImageContainer& images,
                                    FeatureBlockContainer& features)
-    : params_(params), camera_(camera), images_(images), features_(features) {}
+    : params_(params), camera_(camera), images_(images), features_(features) {
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+  CHECK(rgbd_camera);
+  baseline_ = rgbd_camera->baseline();
+
+  const auto& camera_params = camera_->getParams();
+  fx_ = camera_params.fx();
+  fy_ = camera_params.fy();
+  cu_ = camera_params.cu();
+  cv_ = camera_params.cv();
+}
 
 void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
-  utils::ChronoTimingStats feature_track_t("depth_updater_fast.calcPoints");
+  if (images_.hasRightRgb()) {
+    return calcPointsStereo(point_map);
+  } else if (images_.hasDepth()) {
+    return calcPointsRGBD(point_map);
+  }
+}
+
+void DepthUpdaterFast::calcPointsRGBD(FrameGeometryMap& point_map) {
+  utils::ChronoTimingStats feature_track_t("depth_updater_fast.calcPointsRGBD");
   std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
 
   const cv::Mat& depth_img = images_.depth();
-
-  const auto max_background_threshold = params_.max_background;
-  const auto max_object_threshold = params_.max_object;
 
   // iterate over by view so we can avoid lookup and memory allocation
   // for each FrameGeometry object
@@ -487,11 +502,8 @@ void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
       CHECK_EQ(features_.ids[global_index], tracklet_id);
 
       const Depth depth = depth_img.at<Depth>(kp_cv);
-      const Depth max_depth = (object_id == background_label)
-                                  ? max_background_threshold
-                                  : max_object_threshold;
 
-      if (depth > max_depth || depth <= 0) {
+      if (!checkRGBDDepth(depth, object_id)) {
         inliers[i] = 0;
       } else {
         gtsam::Point2 left_kp = utils::cvPointToGtsam(kp_cv);
@@ -511,6 +523,11 @@ void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
         Landmark lmk;
         rgbd_camera->backProject2(left_kp, depth, lmk);
 
+        if (!checkTwoViewGeometry(lmk, left_kp, right_kp)) {
+          inliers[i] = 0;
+          continue;
+        }
+
         size_t local_index = local_points.lmks_C.size();
         local_points.lmks_C.push_back(lmk);
         local_points.left_kps.push_back(left_kp);
@@ -526,16 +543,133 @@ void DepthUpdaterFast::calcPoints(FrameGeometryMap& point_map) {
   }
 }
 
-// void DepthUpdaterFast::updateGeometry(FrameGeometry& local_geometry, const
-// std::vector<Index>& local_indices) {
-//   for()
-// }
+void DepthUpdaterFast::calcPointsStereo(FrameGeometryMap& point_map) {
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+
+  for (auto& object_view : features_.objectViews()) {
+    auto object_id = object_view.objectId();
+
+    // create new FrameGeometry and allocate memory
+    size_t num_points = object_view.size();
+
+    auto points = object_view.points();
+    // expect previous points to be updated in the container
+    auto previous_points = object_view.previousPoints();
+    auto ids = object_view.ids();
+    auto inliers = object_view.inlier();
+
+    std::vector<cv::Point2f> left_kps;
+    left_kps.reserve(num_points);
+
+    std::vector<size_t> left_kp_indices;
+    left_kp_indices.reserve(num_points);
+
+    TrackletIds tracklet_ids;
+    tracklet_ids.reserve(num_points);
+    // the starting offset of the block as stored in the feautre block container
+    // allows us to retrieve the global index!
+    size_t offset = object_view.layout().begin;
+    for (size_t i = 0; i < num_points; i++) {
+      if (!inliers[i]) {
+        continue;
+      }
+      left_kps.push_back(points[i]);
+      left_kp_indices.push_back(i);
+      tracklet_ids.push_back(ids[i]);
+
+      // maybe a hack?
+      // mark all as outliers
+      // then remark the matched ones as inliers after matching!
+      inliers[i] = 0;
+    }
+
+    // perform stereo matching
+    std::vector<cv::Point2f> matched_right_kps;
+    // index in the left_kps/trackletids in which we have a match
+    std::vector<size_t> matched_indexs;
+    if (!computeStereoMatching(left_kps, matched_right_kps, matched_indexs)) {
+      LOG(INFO) << "Stereo matchinf failed!";
+      continue;
+    }
+
+    size_t num_stereo_matches = matched_indexs.size();
+    LOG(INFO) << "Stereo matches =" << num_stereo_matches;
+
+    FrameGeometry& local_points = point_map[object_id];
+    local_points.lmks_C.reserve(num_stereo_matches);
+    local_points.left_kps.reserve(num_stereo_matches);
+    local_points.left_kps_previous.reserve(num_stereo_matches);
+    local_points.right_pixel.reserve(num_stereo_matches);
+    local_points.ids.reserve(num_stereo_matches);
+    local_points.fc_indices.reserve(num_stereo_matches);
+
+    for (size_t i = 0; i < matched_indexs.size(); i++) {
+      size_t matched_index = matched_indexs[i];
+      // which index this point is found at in the local obect view
+      size_t object_view_index = left_kp_indices[matched_index];
+
+      // global index in the feature container (ie. features.points[i])
+      size_t fc_index = object_view_index + offset;
+
+      TrackletId id = tracklet_ids[matched_index];
+      // sanity check out local index matches our global one
+      CHECK_EQ(features_.ids[fc_index], id);
+      CHECK_EQ(ids[object_view_index], id);
+
+      gtsam::Point2 left_kp = utils::cvPointToGtsam(left_kps[matched_index]);
+      gtsam::Point2 right_kp = utils::cvPointToGtsam(matched_right_kps[i]);
+      gtsam::Point2 left_kp_previous =
+          utils::cvPointToGtsam(previous_points[object_view_index]);
+
+      const double uL = left_kp.x();
+      const double v = left_kp.y();
+      const double uR = right_kp.x();
+
+      const double disparity = uL - uR;
+      double depth = rgbd_camera->depthFromDisparity(disparity);
+
+      if (!checkStereoDepth(disparity, depth, object_id)) {
+        // inliers[object_view_index] = 0;
+        continue;
+      }
+
+      // fast version of the back projection function
+      Landmark lmk;
+      rgbd_camera->backProject2(left_kp, depth, lmk);
+
+      if (!checkTwoViewGeometry(lmk, left_kp, right_kp)) {
+        // inliers[object_view_index] = 0;
+        continue;
+      }
+
+      size_t local_index = local_points.lmks_C.size();
+      local_points.lmks_C.push_back(lmk);
+      local_points.left_kps.push_back(left_kp);
+      local_points.left_kps_previous.push_back(left_kp_previous);
+      local_points.right_pixel.push_back(uR);
+      local_points.ids.push_back(id);
+      local_points.fc_indices.push_back(fc_index);
+
+      // mapping of tracklet id to location in the local points container
+      local_points.local_indices[id] = local_index;
+
+      // remark as inlier
+      inliers[object_view_index] = 1;
+    }
+  }
+}
+
 void DepthUpdaterFast::updateGeometry(FrameGeometry& local_geometry) {
+  if (images_.hasRightRgb()) {
+    return updateGeometryStereo(local_geometry);
+  } else if (images_.hasDepth()) {
+    return updateGeometryRGBD(local_geometry);
+  }
+}
+
+void DepthUpdaterFast::updateGeometryRGBD(FrameGeometry& local_geometry) {
   std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
   const cv::Mat& depth_img = images_.depth();
-
-  const auto max_background_threshold = params_.max_background;
-  const auto max_object_threshold = params_.max_object;
 
   size_t num_points = local_geometry.lmks_C.size();
   for (size_t i = 0; i < num_points; i++) {
@@ -556,11 +690,8 @@ void DepthUpdaterFast::updateGeometry(FrameGeometry& local_geometry) {
     const gtsam::Point2 left_kp = local_geometry.left_kps[i];
     const Depth depth =
         depth_img.at<Depth>(utils::gtsamPointToCv<float>(left_kp));
-    const Depth max_depth = (object_id == background_label)
-                                ? max_background_threshold
-                                : max_object_threshold;
 
-    if (depth > max_depth || depth <= 0) {
+    if (!checkRGBDDepth(depth, object_id)) {
       features_.inlier[fc_index] = 0;
     } else {
       gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
@@ -571,12 +702,197 @@ void DepthUpdaterFast::updateGeometry(FrameGeometry& local_geometry) {
       }
 
       // update geometry
-      Landmark& lmk = local_geometry.lmks_C[i];
+      Landmark lmk;
       rgbd_camera->backProject2(left_kp, depth, lmk);
 
+      if (!checkTwoViewGeometry(lmk, left_kp, right_kp)) {
+        features_.inlier[fc_index] = 0;
+        continue;
+      }
+
+      local_geometry.lmks_C[i] = lmk;
       local_geometry.right_pixel[i] = right_kp(0);
     }
   }
+}
+
+void DepthUpdaterFast::updateGeometryStereo(FrameGeometry& local_geometry) {
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+
+  size_t num_points = local_geometry.lmks_C.size();
+  std::vector<cv::Point2f> left_kps;
+  left_kps.reserve(num_points);
+
+  std::vector<size_t> left_kp_indices;
+  left_kp_indices.reserve(num_points);
+
+  TrackletIds tracklet_ids;
+  tracklet_ids.reserve(num_points);
+
+  for (size_t i = 0; i < num_points; i++) {
+    Index fc_index = local_geometry.fc_indices[i];
+    TrackletId id = local_geometry.ids[i];
+
+    // check internal consistency
+    CHECK_EQ(id, features_.ids[fc_index]);
+    CHECK_EQ(local_geometry.local_indices.at(id), i);
+    if (!features_.inlier[fc_index]) {
+      continue;
+    }
+
+    const gtsam::Point2 left_kp = local_geometry.left_kps[i];
+    left_kps.push_back(utils::gtsamPointToCv<float>(left_kp));
+    left_kp_indices.push_back(i);
+    tracklet_ids.push_back(id);
+
+    // mark all featues as outliers here
+    // then remark as inliers for those with matches!
+    // this ensures that only features with matches are marked inliers
+    // and is faster (probably) then computing the negative subset
+    // to mark those without matches as inliers!
+    features_.inlier[fc_index] = 0;
+  }
+
+  // perform stereo matching
+  std::vector<cv::Point2f> matched_right_kps;
+  // contains the index for which a right kp is matched too
+  std::vector<size_t> matched_indexs;
+  if (!computeStereoMatching(left_kps, matched_right_kps, matched_indexs)) {
+    // failed!
+    return;
+  }
+
+  size_t num_stereo_matches = matched_indexs.size();
+
+  for (size_t i = 0; i < matched_indexs.size(); i++) {
+    size_t matched_index = matched_indexs[i];
+    TrackletId id = tracklet_ids[matched_index];
+    // index where the point can be found in the original feature geometry
+    size_t local_index = left_kp_indices[matched_index];
+
+    Index fc_index = local_geometry.fc_indices[local_index];
+    // sanity check out local index matches our global one
+    CHECK_EQ(features_.ids[fc_index], id);
+
+    const gtsam::Point2 left_kp = local_geometry.left_kps[local_index];
+    const gtsam::Point2 right_kp = utils::cvPointToGtsam(matched_right_kps[i]);
+
+    // should check consistency with what the geometry is MEANT to be
+    // and if all featues are of the same id!
+    const ObjectId object_id = features_.object_ids[fc_index];
+
+    const double uL = left_kp.x();
+    const double v = left_kp.y();
+    const double uR = right_kp.x();
+
+    const double disparity = uL - uR;
+    double depth = rgbd_camera->depthFromDisparity(disparity);
+
+    if (!checkStereoDepth(disparity, depth, object_id)) {
+      // features_.inlier[fc_index] = 0;
+      continue;
+    }
+
+    // fast version of the back projection function
+    Landmark lmk;
+    rgbd_camera->backProject2(left_kp, depth, lmk);
+
+    if (!checkTwoViewGeometry(lmk, left_kp, right_kp)) {
+      // features_.inlier[fc_index] = 0;
+      continue;
+    }
+
+    local_geometry.lmks_C[local_index] = lmk;
+    local_geometry.right_pixel[local_index] = uR;
+
+    // re mark as inlier!
+    features_.inlier[fc_index] = 1;
+  }
+}
+
+bool DepthUpdaterFast::computeStereoMatching(
+    const std::vector<cv::Point2f>& left_kps,
+    std::vector<cv::Point2f>& matched_right_kps,
+    std::vector<size_t>& matched_indexs) {
+  CHECK(images_.hasRightRgb());
+
+  LOG(INFO) << "Attempting stereo match with " << left_kps.size();
+
+  if (left_kps.size() < kMinStereoMatches) {
+    return false;
+  }
+
+  OpticalFlowLK optical_flow(60);
+
+  const WrappedRGBMono wrapped_left = images_.rgb();
+  const WrappedRGBMono wrapped_right = images_.rightRgb();
+
+  const int rows = wrapped_left.image().rows;
+  const int cols = wrapped_left.image().cols;
+
+  // the image wrapper will cache the image pyramid!
+  const ImagePyramid left_image_pyr = wrapped_left.computeImagePyramid(
+      optical_flow.win_size, optical_flow.max_level);
+
+  const ImagePyramid right_image_pyr = wrapped_right.computeImagePyramid(
+      optical_flow.win_size, optical_flow.max_level);
+
+  // track left to right
+  OpticalFlowLK::Result flow_result =
+      optical_flow(left_image_pyr.levels, right_image_pyr.levels, left_kps);
+
+  const size_t num_flows = flow_result.size();
+  CHECK_EQ(num_flows, left_kps.size());
+
+  std::vector<cv::Point2f> good_left, good_right;
+  good_left.reserve(num_flows);
+  good_right.reserve(num_flows);
+
+  std::vector<size_t> good_indices;
+  good_indices.reserve(num_flows);
+
+  const std::vector<cv::Point2f>& predicted_points =
+      flow_result.predictedPoints();
+  const std::vector<cv::Point2f>& from_points = flow_result.fromPoints();
+  for (size_t i = 0; i < flow_result.size(); i++) {
+    if (!flow_result.isGood(i)) {
+      continue;
+    }
+
+    const cv::Point2f& predicted_pt = predicted_points[i];
+    if (!checkBounds(predicted_pt, rows, cols)) {
+      continue;
+    }
+
+    good_left.push_back(from_points[i]);
+    good_right.push_back(predicted_pt);
+    good_indices.push_back(i);
+  }
+
+  size_t num_good = good_indices.size();
+  if (good_indices.size() < kMinStereoMatches) {
+    return false;
+  }
+
+  matched_right_kps.reserve(num_good);
+  matched_indexs.reserve(num_good);
+
+  std::vector<uchar> epipolar_inliers;
+  cv::findFundamentalMat(good_left, good_right, cv::FM_RANSAC, 1.0, 0.99,
+                         epipolar_inliers);
+
+  CHECK_EQ(epipolar_inliers.size(), num_good);
+
+  for (size_t i = 0; i < epipolar_inliers.size(); ++i) {
+    if (epipolar_inliers[i]) {
+      matched_right_kps.push_back(good_right[i]);
+
+      // indices in the original entries (ie left_kps)
+      matched_indexs.push_back(good_indices[i]);
+    }
+  }
+
+  return matched_indexs.size() > kMinStereoMatches;
 }
 
 struct FlowRefinement::ImplOptimizer {
@@ -1071,17 +1387,44 @@ void MatchingAdaptorBase::recompute() {
   recomputeCache();
 }
 
+OpticalFlowLK::Result OpticalFlowLK::operator()(
+    const std::vector<cv::Mat>& prev_pyr, const std::vector<cv::Mat>& next_pyr,
+    const std::vector<cv::Point2f>& prev_points) const {
+  CHECK_EQ(prev_pyr.size(), next_pyr.size());
+
+  ImplResult forward;
+  forward.next = prev_points;
+  forward.prev = prev_points;
+
+  cv::calcOpticalFlowPyrLK(prev_pyr, next_pyr, forward.prev, forward.next,
+                           forward.status, forward.error, win_size, max_level,
+                           criteria, 0);
+
+  CHECK_EQ(forward.size(), prev_points.size());
+
+  ImplResult reverse;
+  // now do reverse flow
+  reverse.status.resize(forward.size());
+  reverse.error.resize(forward.size());
+  reverse.next = forward.next;
+  reverse.prev = forward.next;
+
+  cv::calcOpticalFlowPyrLK(next_pyr, prev_pyr, forward.next, reverse.next,
+                           reverse.status, reverse.error, win_size, max_level,
+                           criteria, cv::OPTFLOW_USE_INITIAL_FLOW);
+
+  return Result{forward, reverse};
+}
+
 FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
                                        Camera::Ptr camera,
                                        ImageDisplayQueue* display_queue)
     : FeatureTrackerBase(params.tracker_params, camera, display_queue),
       frontend_params_(params),
       tracklet_id_manager(TrackletIdManager::instance()),
-      win_size_(24, 24),
-      max_level_(4),
-      criteria_(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 50, 0.001),
       object_detection_impl_(this),
-      feature_detector_(camera->getParams().imageSize()) {
+      feature_detector_(camera->getParams().imageSize()),
+      optical_flow_impl_(50) {
   if (!trackerParams().prefer_provided_object_detection) {
     LOG(INFO) << "Creating object detection engine";
     dyno::YoloConfig yolo_config;
@@ -1121,8 +1464,8 @@ TrackingResult FeatureTrackerFast::track(
   // this allows us to cache the computation of the pyramid within the
   // image_container to save comptutation between frames as long as we keep the
   // same image pyramid around!
-  const ImagePyramid image_pyramid =
-      wrapped_rgb.computeImagePyramid(win_size_, max_level_);
+  const ImagePyramid image_pyramid = wrapped_rgb.computeImagePyramid(
+      optical_flow_impl_.win_size, optical_flow_impl_.max_level);
   const cv::Mat current_mono = image_pyramid.mono;
   curr_mono_pyr_ = image_pyramid.levels;
 
@@ -1799,8 +2142,7 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
     const auto& kp = feature_blocks.points[i];
 
     auto object_id = feature_blocks.object_ids[i];
-    if (!checkBounds(kp, rows, cols) ||
-        object_mask.at<ObjectId>(kp) != object_id) {
+    if (!checkBoundsAndLabel(kp, object_mask, object_id, rows, cols)) {
       // mark as outlier
       feature_blocks.inlier[i] = 0;
     }
@@ -1819,6 +2161,9 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
   CHECK(!prev_mono_.empty());
   CV_Assert(prev_mono_.type() == CV_8UC1 && mono.type() == CV_8UC1);
 
+  const int rows = mono.rows;
+  const int cols = mono.cols;
+
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       tracks_per_object;
   FlowTrackingStatsMap tracking_stats;
@@ -1836,65 +2181,100 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
               << " n=" << num_points;
   }
 
-  // 2. --- SINGLE-PASS KLT EXECUTION ---
-  std::vector<cv::Point2f> flatNext = previous_features_.points;
-  const auto& flatPrev = previous_features_.points;
-  std::vector<uchar> forward_status;
-  std::vector<float> forward_err;
+  OpticalFlowLK::Result flow_result = optical_flow_impl_(
+      prev_mono_pyr_, curr_mono_pyr_, previous_features_.points);
 
-  // One single call allows OpenCV to run hot loops across contiguous memory
-  // blocks
-  cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev, flatNext,
-                           forward_status, forward_err, win_size_, max_level_,
-                           criteria_, 0);
+  const std::vector<cv::Point2f>& predicted_points =
+      flow_result.predictedPoints();
+  const std::vector<cv::Point2f>& from_points = flow_result.fromPoints();
+  const std::vector<float>& error = flow_result.error();
+  for (size_t i = 0; i < flow_result.size(); i++) {
+    const cv::Point2f& predicted_pt = predicted_points[i];
 
-  // now do reverse flow
-  std::vector<uchar> reverse_status(flatNext.size());
-  std::vector<float> reverse_err(flatNext.size());
-
-  std::vector<cv::Point2f> flatReverse = flatNext;
-  cv::calcOpticalFlowPyrLK(curr_mono_pyr_, prev_mono_pyr_, flatNext,
-                           flatReverse, reverse_status, reverse_err, win_size_,
-                           max_level_, criteria_, cv::OPTFLOW_USE_INITIAL_FLOW);
-
-  static constexpr float kMaxErr = 20.0f;
-  for (size_t i = 0; i < flatPrev.size(); ++i) {
-    const bool both_status_good = forward_status.at(i) && reverse_status.at(i);
-    const bool within_distance =
-        utils::distance(flatPrev.at(i), flatReverse.at(i)) <= 0.5;
-    const bool within_error =
-        reverse_err[i] < kMaxErr && forward_err[i] < kMaxErr;
-
-    // Check if KLT tracking succeeded and point remains inside image
-    // boundaries use 2i to check image boundaries
-    if (both_status_good && within_distance && within_error) {
-      forward_status.at(i) = 1;
-    } else {
-      forward_status.at(i) = 0;
+    if (!flow_result.isGood(i)) {
+      continue;
     }
-    // do proper rounding to integer to ensure bounds checks such that
-    // we can access the images with a point2f value and not get OOB's errors
-    const cv::Point2i kp_int(cvRound(flatNext[i].x), cvRound(flatNext[i].y));
 
-    if (forward_status[i] && kp_int.x >= 0 && kp_int.x < (mono.cols - 1) &&
-        kp_int.y >= 0 && kp_int.y < (mono.rows - 1)) {
-      auto object_id = previous_features_.object_ids[i];
-      auto tracklet_id = previous_features_.ids[i];
-      auto new_age = previous_features_.age[i] + 1;
-
-      if (object_id != object_mask.at<dyno::ObjectId>(kp_int)) {
-        continue;
-      }
-
-      tracks_per_object[object_id].points.push_back(flatNext[i]);
-      tracks_per_object[object_id].previous_points.push_back(flatPrev[i]);
-      tracks_per_object[object_id].ids.push_back(tracklet_id);
-      tracks_per_object[object_id].age.push_back(new_age);
-
-      tracks_per_object[object_id].inlier.push_back(1);
-      tracks_per_object[object_id].errors.push_back(forward_err[i]);
+    auto object_id = previous_features_.object_ids[i];
+    if (!checkBoundsAndLabel(predicted_pt, object_mask, object_id, rows,
+                             cols)) {
+      continue;
     }
+
+    auto tracklet_id = previous_features_.ids[i];
+    auto new_age = previous_features_.age[i] + 1;
+    const cv::Point2f from_pt = from_points[i];
+
+    tracks_per_object[object_id].points.push_back(predicted_pt);
+    tracks_per_object[object_id].previous_points.push_back(from_pt);
+    tracks_per_object[object_id].ids.push_back(tracklet_id);
+    tracks_per_object[object_id].age.push_back(new_age);
+
+    tracks_per_object[object_id].inlier.push_back(1);
+    tracks_per_object[object_id].errors.push_back(error[i]);
   }
+
+  // // 2. --- SINGLE-PASS KLT EXECUTION ---
+  // std::vector<cv::Point2f> flatNext = previous_features_.points;
+  // const auto& flatPrev = previous_features_.points;
+  // std::vector<uchar> forward_status;
+  // std::vector<float> forward_err;
+
+  // // One single call allows OpenCV to run hot loops across contiguous memory
+  // // blocks
+  // cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev,
+  // flatNext,
+  //                          forward_status, forward_err, win_size_,
+  //                          max_level_, criteria_, 0);
+
+  // // now do reverse flow
+  // std::vector<uchar> reverse_status(flatNext.size());
+  // std::vector<float> reverse_err(flatNext.size());
+
+  // std::vector<cv::Point2f> flatReverse = flatNext;
+  // cv::calcOpticalFlowPyrLK(curr_mono_pyr_, prev_mono_pyr_, flatNext,
+  //                          flatReverse, reverse_status, reverse_err,
+  //                          win_size_, max_level_, criteria_,
+  //                          cv::OPTFLOW_USE_INITIAL_FLOW);
+
+  // static constexpr float kMaxErr = 20.0f;
+  // for (size_t i = 0; i < flatPrev.size(); ++i) {
+  //   const bool both_status_good = forward_status.at(i) &&
+  //   reverse_status.at(i); const bool within_distance =
+  //       utils::distance(flatPrev.at(i), flatReverse.at(i)) <= 0.5;
+  //   const bool within_error =
+  //       reverse_err[i] < kMaxErr && forward_err[i] < kMaxErr;
+
+  //   // Check if KLT tracking succeeded and point remains inside image
+  //   // boundaries use 2i to check image boundaries
+  //   if (both_status_good && within_distance && within_error) {
+  //     forward_status.at(i) = 1;
+  //   } else {
+  //     forward_status.at(i) = 0;
+  //   }
+  //   // do proper rounding to integer to ensure bounds checks such that
+  //   // we can access the images with a point2f value and not get OOB's errors
+  //   const cv::Point2i kp_int(cvRound(flatNext[i].x), cvRound(flatNext[i].y));
+
+  //   if (forward_status[i] && kp_int.x >= 0 && kp_int.x < (mono.cols - 1) &&
+  //       kp_int.y >= 0 && kp_int.y < (mono.rows - 1)) {
+  //     auto object_id = previous_features_.object_ids[i];
+  //     auto tracklet_id = previous_features_.ids[i];
+  //     auto new_age = previous_features_.age[i] + 1;
+
+  //     if (object_id != object_mask.at<dyno::ObjectId>(kp_int)) {
+  //       continue;
+  //     }
+
+  //     tracks_per_object[object_id].points.push_back(flatNext[i]);
+  //     tracks_per_object[object_id].previous_points.push_back(flatPrev[i]);
+  //     tracks_per_object[object_id].ids.push_back(tracklet_id);
+  //     tracks_per_object[object_id].age.push_back(new_age);
+
+  //     tracks_per_object[object_id].inlier.push_back(1);
+  //     tracks_per_object[object_id].errors.push_back(forward_err[i]);
+  //   }
+  // }
 
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       verified_tracks_per_object;
@@ -2004,15 +2384,6 @@ void FeatureTrackerFast::fillDetectionParam(
       std::max(3.0f, 0.02f * static_cast<float>(bounding_box.width));
   detection_param.max_corners = getMaxDetectionCorners(object_id);
   detection_param.num_corners_needed = numCornersNeeded(object_id);
-}
-
-void FeatureTrackerFast::buildOpticalFlowPyramid(
-    const cv::Mat& mono, std::vector<cv::Mat>& pyramid) const {
-  pyramid.resize(max_level_ + 1);
-  cv::buildOpticalFlowPyramid(mono, pyramid, win_size_, max_level_, false,
-                              cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT,
-                              true  // critical for reuse
-  );
 }
 
 cv::Mat drawBatchedFeatures(const cv::Mat& image,

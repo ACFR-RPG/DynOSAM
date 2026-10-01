@@ -60,6 +60,15 @@ inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
   return x >= 0 && x < cols && y >= 0 && y < rows;
 }
 
+inline bool checkBoundsAndLabel(const cv::Point2f& point,
+                                const cv::Mat& object_masks,
+                                ObjectId expected_id, int rows, int cols) {
+  const int x = cvRound(point.x);
+  const int y = cvRound(point.y);
+  return x >= 0 && x < cols && y >= 0 && y < rows &&
+         object_masks.at<ObjectId>(y, x) == expected_id;
+}
+
 // should be of type double and of size 3xN
 template <typename Derived>
 inline void transformTo(const gtsam::Pose3& T_ij,
@@ -632,6 +641,9 @@ typedef gtsam::FastMap<ObjectId, FrameGeometry> FrameGeometryMap;
 
 class DepthUpdaterFast {
  public:
+  //! need more than 8 points for fundamental matrix calc with ransac
+  constexpr static size_t kMinStereoMatches{8};
+
   DepthUpdaterFast(const DepthThresholds& params, Camera::Ptr camera,
                    const ImageContainer& images,
                    FeatureBlockContainer& features);
@@ -643,16 +655,96 @@ class DepthUpdaterFast {
 
   // void updateGeometry(FrameGeometry& local_geometry, const
   // std::vector<Index>& local_indices);
+
+  // update geoemtry based on new pixel location in the provided feature
+  // geometry
   void updateGeometry(FrameGeometry& local_geometry);
 
  private:
+  void calcPointsRGBD(FrameGeometryMap& point_map);
+  void calcPointsStereo(FrameGeometryMap& point_map);
+
+  void updateGeometryRGBD(FrameGeometry& local_geometry);
+  void updateGeometryStereo(FrameGeometry& local_geometry);
+
+  inline bool checkTwoViewGeometry(const gtsam::Point3& point_left,
+                                   const gtsam::Point2& left_kp,
+                                   const gtsam::Point2& right_kp,
+                                   double max_reprojection_error = 2.0,
+                                   double min_parallax = 1.0 * M_PI / 180.0) {
+    if (!point_left.allFinite() || point_left.z() <= 0.0) {
+      return false;
+    }
+
+    if (!std::isfinite(fx_) || !std::isfinite(fy_) || fx_ <= 0.0 ||
+        fy_ <= 0.0 || !std::isfinite(baseline_) || baseline_ <= 0.0) {
+      throw DynosamException(
+          "checkTwoViewGeometry failed: invalid camera params!");
+    }
+
+    // Left-camera reprojection.
+    const double u_left = fx_ * point_left.x() / point_left.z() + cu_;
+
+    const double v_left = fy_ * point_left.y() / point_left.z() + cv_;
+
+    double reprojection_error_left =
+        std::hypot(u_left - left_kp.x(), v_left - left_kp.y());
+
+    // Right-camera point.
+    const Eigen::Vector3d point_right(point_left.x() - baseline_,
+                                      point_left.y(), point_left.z());
+
+    if (!point_right.allFinite() || point_right.z() <= 0.0) {
+      return false;
+    }
+
+    const double u_right = fx_ * point_right.x() / point_right.z() + cu_;
+
+    const double v_right = fy_ * point_right.y() / point_right.z() + cv_;
+
+    double reprojection_error_right =
+        std::hypot(u_right - right_kp.x(), v_right - right_kp.y());
+
+    return reprojection_error_left <= max_reprojection_error &&
+           reprojection_error_right <= max_reprojection_error;
+  }
+
+  inline bool checkStereoDepth(double disparity, double depth,
+                               ObjectId object_id, double min_depth = 0.1,
+                               double min_disparity = 1.0) const {
+    const Depth max_depth = (object_id == background_label)
+                                ? params_.max_background
+                                : params_.max_object;
+
+    return std::isfinite(disparity) && disparity >= min_disparity &&
+           std::isfinite(depth) && depth > min_depth && depth <= max_depth;
+  }
+
+  inline bool checkRGBDDepth(Depth depth, ObjectId object_id,
+                             double min_depth = 0.1) const {
+    const Depth max_depth = (object_id == background_label)
+                                ? params_.max_background
+                                : params_.max_object;
+
+    return std::isfinite(depth) && depth >= min_depth && depth <= max_depth;
+  }
+
   // assume all are part of the same object and t
-  // void computeStereoMatching(const std::vector<cv::Point2f>& left_kps, )
+  // matched* vectors will all have the same size (may be < left_kps)
+  // as well matched_indexs and will say which index in the original left_kps
+  // the matching is for!
+  bool computeStereoMatching(const std::vector<cv::Point2f>& left_kps,
+                             std::vector<cv::Point2f>& matched_right_kps,
+                             std::vector<size_t>& matched_indexs);
 
   DepthThresholds params_;
   Camera::Ptr camera_;
   ImageContainer images_;
   FeatureBlockContainer& features_;
+
+  // cached camera paramters
+  double fx_, fy_, cu_, cv_;
+  double baseline_;
 };
 
 // TODO: no depth updateer here as we want to operate (once again)
@@ -712,6 +804,71 @@ struct TrackingResult {
   // note is a reference!!!
   // TODO: comment as to why!
   FeatureBlockContainer& featues;
+};
+
+struct OpticalFlowLK {
+  static constexpr float kMaxErr = 20.0f;
+
+  const cv::Size win_size;
+  const int max_level;
+  const cv::TermCriteria criteria;
+
+  OpticalFlowLK(int iterations)
+      : win_size(24, 24),
+        max_level(4),
+        criteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, iterations,
+                 0.001) {}
+
+  OpticalFlowLK() : OpticalFlowLK(50) {}
+
+  struct ImplResult {
+    std::vector<uchar> status;
+    std::vector<float> error;
+    std::vector<cv::Point2f> prev;
+    std::vector<cv::Point2f> next;
+
+    size_t size() const { return status.size(); }
+  };
+
+  struct Result {
+    const ImplResult forward_result;
+    const ImplResult reverse_result;
+
+    Result(const ImplResult& forward, const ImplResult& reverse)
+        : forward_result(forward), reverse_result(reverse) {}
+
+    const std::vector<cv::Point2f>& predictedPoints() const {
+      return forward_result.next;
+    }
+
+    const std::vector<cv::Point2f>& fromPoints() const {
+      return forward_result.prev;
+    }
+
+    const std::vector<float>& error() const { return forward_result.error; }
+
+    size_t size() const { return forward_result.size(); }
+
+    bool isGood(size_t i) const {
+      const bool both_status_good =
+          forward_result.status.at(i) && reverse_result.status.at(i);
+
+      // compare distance betwen original pixel local and reverse predicted
+      // pixel location (which should be the same)
+      const bool within_distance =
+          utils::distance(forward_result.prev.at(i),
+                          reverse_result.next.at(i)) <= 0.5;
+
+      const bool within_error = forward_result.error[i] < kMaxErr &&
+                                reverse_result.error[i] < kMaxErr;
+
+      return both_status_good && within_distance && within_error;
+    }
+  };
+
+  Result operator()(const std::vector<cv::Mat>& prev_pyr,
+                    const std::vector<cv::Mat>& next_pyr,
+                    const std::vector<cv::Point2f>& prev_points) const;
 };
 
 // Should just be called tracker or something as also does object tracking!
@@ -847,13 +1004,7 @@ class FeatureTrackerFast : public FeatureTrackerBase {
       const FeatureBlockContainer& detected_features,
       const cv::Mat& object_mask);
 
-  void buildOpticalFlowPyramid(const cv::Mat& mono,
-                               std::vector<cv::Mat>& pyramid) const;
-
-  // optical flow params
-  const cv::Size win_size_;
-  const int max_level_;
-  const cv::TermCriteria criteria_;
+  OpticalFlowLK optical_flow_impl_;
 
   /**
    * @brief Get the desired minimum distance between features for detection,
