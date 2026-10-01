@@ -773,37 +773,77 @@ class FlowRefinement {
   std::unique_ptr<ImplOptimizer> impl_;
 };
 
-// struct VIOFrameWithMeasurements {
-//   gtsam::Pose X_W_k;
-
-//   FrameId frame_id_k;
-//   Timestamp timestamp_k;
-
-//   // static measurements!
-//   StereoMeasurementStatusVector stereo_measurements;
-// };
-
-// struct VIOFrame {
-//   //! Current frame (ie. to)
-//   FrameId j_id{0};
-//   //! Previous frame (ie. from)
-//   FrameId i_id{0};
-//   //! Tracking keyframe id
-//   FrameId lkf_id{0};
-//   //! Current timestamp
-//   Timestamp j_timestamp{0};
-//   gtsam::NavState nav_state_j{};
-//   //! Relative camera pose between from -> to frames (ie X_i = T_ij * T_j)
-//   gtsam::Pose3 T_i_j{};
-//   //! Relative camera pose between last keyframe -> to frames
-//   gtsam::Pose3 T_lkf_j;
-// };
-
 struct TrackingResult {
   ObjectDetectionResult object_detection;
   // note is a reference!!!
   // TODO: comment as to why!
   FeatureBlockContainer& featues;
+};
+
+template <>
+struct measurement_traits<StereoMeasurement> {
+  static StereoMeasurement::Optional stereo(
+      const StereoMeasurement& measurement) {
+    return measurement;
+  }
+};
+
+using StereoMap = RegularMap<StereoMeasurement>;
+
+class LocalBAGraph {
+ public:
+  LocalBAGraph() : observations_(StereoMap::create()) {}
+  virtual ~LocalBAGraph() = default;
+
+  inline void addMeasurements(
+      const StereoMeasurementStatusVector& measurements) {
+    observations_->updateObservations(measurements);
+  }
+
+  void setLandmark(TrackletId tracklet_id, const Landmark& lmk) {
+    landmarks_[tracklet_id] = lmk;
+  }
+
+  bool landmarkExists(TrackletId tracklet_id) const {
+    return landmarks_.exists(tracklet_id);
+  }
+
+  const Landmark& getLandmark(TrackletId tracklet_id) const {
+    return landmarks_.at(tracklet_id);
+  }
+
+ protected:
+ protected:
+  StereoMap::Ptr observations_;
+  gtsam::FastMap<TrackletId, Landmark> landmarks_;
+
+  // gtsam::FastMap<FrameId, gtsam::FastMap<FrameId, int>>
+  // co_observation_counts_;
+
+  // poses?
+};
+
+class LocalVIOGraph : public LocalBAGraph {
+ public:
+  LocalVIOGraph(Camera::Ptr camera);
+
+  void optimize(FrameId frame_id);
+
+  void setPose(FrameId frame_id, const gtsam::Pose3& pose) {
+    states_[frame_id] = pose;
+  }
+
+  bool poseExists(FrameId frame_id) const { return states_.exists(frame_id); }
+
+  const gtsam::Pose3 getPose(FrameId frame_id) const {
+    return states_.at(frame_id);
+  }
+
+ private:
+  gtsam::FastMap<FrameId, gtsam::Pose3> states_;
+
+  Camera::CalibrationType::shared_ptr K_;
+  StereoCalibPtr K_stereo_;
 };
 
 struct OpticalFlowLK {

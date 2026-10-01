@@ -13,16 +13,6 @@ namespace dyno {
 using PoseChangeBackendSink =
     std::function<void(const PoseChangeInput::ConstPtr&)>;
 
-template <>
-struct measurement_traits<StereoMeasurement> {
-  static StereoMeasurement::Optional stereo(
-      const StereoMeasurement& measurement) {
-    return measurement;
-  }
-};
-
-using StereoMap = RegularMap<StereoMeasurement>;
-
 class PoseChangeVIFrontendFAST : public VIFrontend {
  public:
   DYNO_POINTER_TYPEDEFS(PoseChangeVIFrontendFAST)
@@ -83,8 +73,8 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   KeyFrameMap::Ptr map_;
   FeatureTrackerFast feature_tracker_fast_;
 
-  StereoMap::Ptr local_map_;
   // std::vector<VIOFrameWithMeasurements> vio_frames_;
+  LocalVIOGraph vio_graph_;
 
   PoseChangeBackendSink pose_change_backend_sink_;
 

@@ -976,9 +976,6 @@ struct FlowRefinement::ImplOptimizer {
               << "  Regular error          : " << stats.regular_error << '\n'
               << "  Robust error           : " << stats.robust_error << '\n'
               << "  Error delta            : " << stats.error_change << '\n';
-    // << "  Max whitened error     : " << stats.max_whitened_error << '\n'
-    // << "  Pose update norm       : " << stats.pose_update_norm << '\n'
-    // << "  Max flow update norm   : " << stats.max_flow_update_norm << '\n';
   }
 
   ImplOptimizer(const Params& params, const Calibration& calibration)
@@ -1233,11 +1230,6 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
 
   // takes a few milliseconds to build...
   utils::ChronoTimingStats build_t("flow_refine.build");
-  // gtsam::NonlinearFactorGraph graph;
-  // gtsam::Values values;
-  // gtsam::Ordering ordering;
-
-  // const gtsam::Symbol X_sym('X', 0);
   const size_t num_matches = adaptor_.numMatches();
 
   // store reference keypoints to avoid lookup
@@ -1247,14 +1239,8 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
   std::vector<Index> matching_index;
   matching_index.reserve(num_matches);
 
-  // std::vector<gtsam::Key> keys;
-  // keys.reserve(num_matches);
-
   std::vector<uchar*> inlier_ptrs;
   inlier_ptrs.reserve(num_matches);
-
-  // ObjectIds object_ids;
-  // object_ids.reserve(num_matches);
 
   for (size_t i = 0; i < num_matches; i++) {
     // if we recompute this should not be needed!
@@ -1268,20 +1254,12 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
     // assuming the previous frame is the reference frame!
     const gtsam::Point2& ref_kp = adaptor_.keypointPrev(i);
 
-    // gtsam::Symbol flow_sym('f', adaptor_.trackletId(i));
-
-    // auto factor = boost::make_shared<FlowProjectionFactor>(
-    //     flow_sym, X_sym, ref_kp, ref_lmk, gtsam_calibration, flow_noise);
-    // graph += factor;
-
     const gtsam::Point2& curr_kp = adaptor_.keypoint(i);
     const gtsam::Point2 initial_flow = curr_kp - ref_kp;
 
     matching_index.push_back(i);
     ref_kps.push_back(ref_kp);
     inlier_ptrs.push_back(inlier_ptr);
-
-    // object_ids.push_back()
 
     impl_inputs.ref_kps.push_back(ref_kp);
     impl_inputs.ref_lmks.push_back(ref_lmk);
@@ -1385,6 +1363,168 @@ void MatchingAdaptorBase::recompute() {
 
   // call virtual function now matches have been updated
   recomputeCache();
+}
+
+LocalVIOGraph::LocalVIOGraph(Camera::Ptr camera) {
+  std::shared_ptr<RGBDCamera> rgbd_camera =
+      CHECK_NOTNULL(camera->safeGetRGBDCamera());
+  K_stereo_ = rgbd_camera->getFakeStereoCalib();
+  CHECK_NOTNULL(K_stereo_);
+  K_ = camera->getGtsamCalibration();
+}
+
+void LocalVIOGraph::optimize(FrameId frame_id) {
+  // covisible tracklets
+  //  auto frame_node_ptr = observations_->getFrame(frame_id);
+  utils::ChronoTimingStats timer_t("vio_graph.opt");
+  gtsam::FastMap<FrameId, gtsam::FastMap<FrameId, std::set<TrackletId>>>
+      covisibilities;
+  // collect all co-visible landmarks at selected frames!
+  // for(const auto& [frame_i0, frame_node] : observations_->getFrames()) {
+  //   auto landmarks = frame_node->staticLandmarks();
+  //   for(const auto& lmk_node : landmarks) {
+  //     TrackletId tracklet_id = lmk_node->trackletId();
+  //     FrameId frame_i1 = frame_node->frameId();
+
+  //     covisibilities[frame_i0][frame_i1].insert(tracklet_id);
+  //   }
+  // }
+  for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
+    if (!landmarkExists(tracklet_id)) {
+      continue;
+    }
+
+    FrameIds seen_frame_ids = lmk_node->getSeenFrameIds();
+    for (FrameId frame_i0 : seen_frame_ids) {
+      if (frame_i0 < frame_id - 10) {
+        continue;
+      }
+
+      for (FrameId frame_i1 : seen_frame_ids) {
+        // to ensure unique pairings!
+        // that is frame a -> b is the same as b -> a!
+        if (frame_i1 > frame_i0) {
+          continue;
+        }
+
+        // and id is initalsied!?
+        covisibilities[frame_i0][frame_i1].insert(tracklet_id);
+      }
+    }
+  }
+
+  gtsam::Values values;
+  gtsam::NonlinearFactorGraph graph;
+
+  std::vector<FrameId> frames_to_try(
+      {frame_id - 7, frame_id - 3, frame_id - 1, frame_id});
+
+  std::set<TrackletId> tracklets_with_update;
+  std::set<FrameId> poses_with_update;
+
+  for (FrameId frame_i0 : frames_to_try) {
+    auto it0 = covisibilities.find(frame_i0);
+    if (it0 == covisibilities.end()) {
+      continue;
+    }
+
+    // TODO: prior on first pose!
+    CHECK(poseExists(frame_i0)) << frame_i0;
+    gtsam::Symbol pose_sym_i0('x', frame_i0);
+
+    const gtsam::Pose3& X_i0 = getPose(frame_i0);
+    values.insert(pose_sym_i0, X_i0);
+
+    if (frame_i0 == frames_to_try.front()) {
+      graph.addPrior<gtsam::Pose3>(
+          pose_sym_i0, X_i0, gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001));
+    }
+
+    for (FrameId frame_i1 : frames_to_try) {
+      gtsam::Symbol pose_sym_i1('x', frame_i1);
+
+      auto it1 = it0->second.find(frame_i1);
+      if (it1 != it0->second.end()) {
+        std::set<TrackletId> shared_tracklets = it1->second;
+        // LOG(INFO) << frame_i0 << " -> " << frame_i1 << " with n=" <<
+        // shared_tracklets.size();
+
+        for (TrackletId id : shared_tracklets) {
+          auto lmk_node = observations_->getLandmark(id);
+
+          gtsam::Symbol lmk_sym('l', id);
+
+          if (!values.exists(lmk_sym)) {
+            values.insert(lmk_sym, getLandmark(id));
+          }
+
+          tracklets_with_update.insert(id);
+
+          // TODo: robustify
+          //  only one measurement needed
+          auto [measurement_i0, model_i0] = lmk_node->getMeasurement(frame_i0);
+
+          auto factor_i0 = boost::make_shared<GenericStereoFactor>(
+              measurement_i0, model_i0, pose_sym_i0, lmk_sym, K_stereo_);
+          graph += factor_i0;
+
+          poses_with_update.insert(frame_i0);
+
+          // two measurements needed!
+          if (frame_i0 != frame_i1) {
+            auto [measurement_i1, model_i1] =
+                lmk_node->getMeasurement(frame_i1);
+
+            auto factor_i1 = boost::make_shared<GenericStereoFactor>(
+                measurement_i1, model_i1, pose_sym_i1, lmk_sym, K_stereo_);
+            graph += factor_i1;
+
+            poses_with_update.insert(frame_i1);
+          }
+        }
+      }
+    }
+  }
+
+  gtsam::GaussNewtonParams opt_params;
+  // for speed
+  opt_params.setMaxIterations(2);
+
+  dyno::NonlinearOptimizer<gtsam::GaussNewtonOptimizer> solver(graph, values,
+                                                               opt_params);
+
+  NonlinearOptimizerSummary summary;
+  NonlinearOptimizerOptions options;
+
+  gtsam::Values optimised_values = values;
+  { CHECK(solver.solve(optimised_values, options, &summary)); }
+
+  VLOG(10) << "Initial error: " << summary.initial_error << " final error "
+           << summary.final_error << " time[s] "
+           << summary.cumulative_time_in_seconds
+           << " #iterations= " << summary.numIterations();
+
+  for (FrameId frame_id : poses_with_update) {
+    gtsam::Symbol pose_sym('x', frame_id);
+    gtsam::Pose3 pose = optimised_values.at<gtsam::Pose3>(pose_sym);
+    setPose(frame_id, pose);
+  }
+
+  for (TrackletId id : tracklets_with_update) {
+    gtsam::Symbol lmk_sym('l', id);
+    gtsam::Point3 lmk = optimised_values.at<gtsam::Point3>(lmk_sym);
+    setLandmark(id, lmk);
+  }
+
+  // std::stringstream ss;
+  // for(const auto& [frame_i0, seen_map] : covisibilities) {
+  //   ss << "Frame " << frame_i0 << " seen frames: ";
+  //   for(const auto& [frame_i1, tracks] : seen_map) {
+  //     ss << frame_i1 <<  " [ " << tracks.size() << " ]\n";
+  //   }
+  // }
+  //
+  // LOG(INFO) << ss.str();
 }
 
 OpticalFlowLK::Result OpticalFlowLK::operator()(
