@@ -27,7 +27,7 @@ PoseChangeVIFrontendFAST::PoseChangeVIFrontendFAST(
           formulation->derivedAccessor<HybridFormulationKeyFrameAccessor>())),
       map_(CHECK_NOTNULL(formulation->map())),
       feature_tracker_fast_(params.frontend_params_, camera),
-      vio_graph_(camera) {
+      landmarks_W_(camera) {
   SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
     LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
@@ -93,7 +93,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
   //   }
 
   //   // //TODO: only include feautes which are inliers!!!
-  //   // LocalLandmarks& local_landmarks = local_landmarks_W_[object_id];
+  //   // LandmarkMap& local_landmarks = local_landmarks_W_[object_id];
   //   // local_landmarks.lmks_W = frame_geometry_j.lmks_C;
   //   // local_landmarks.ids = frame_geometry_j.ids;
   //   // local_landmarks.local_indices = frame_geometry_j.local_indices;
@@ -103,32 +103,65 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
   //   frame_geometry_k.erase(object_id);
   // }
 
+  gtsam::Vector3 sigmas;
+  sigmas << 2, 2, 2;
+
   // TODO: so far we get the points from the frame geometry
   for (const auto& object_view : features_k.objectViews()) {
     const auto object_id = object_view.objectId();
     const auto num_points = object_view.size();
 
-    auto it = frame_geometry_k.find(object_id);
-    if (it == frame_geometry_k.end()) {
+    auto frame_geometry_it = frame_geometry_k.find(object_id);
+    if (frame_geometry_it == frame_geometry_k.end()) {
       continue;
     }
 
-    const FrameGeometry& frame_geometry_k_j = it->second;
-    LocalLandmarks& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
-    lmks_C_km1_j.lmks.reserve(num_points);
-    lmks_C_km1_j.ids.reserve(num_points);
+    StereoMeasurementStatusVector stereo_measurements;
 
-    lmks_C_km1_j.lmks.reserve(num_points);
+    LocalBAGraph::Ptr graph = nullptr;
+    if (landmarks_W_.exists(object_id)) {
+      graph = landmarks_W_.get(object_id);
+    } else {
+      CHECK_GT(object_id, background_label);
+      graph = landmarks_W_.add(object_id);
+    }
+    // TODO: add measurements and first pose!
+    //  LocalBAGraph::Ptr lmks = nullptr;
+    //  if(!landmarks_W_.exists(object_id) && object_id == 0) {
+    //    lmks = std::make_shared<LocalVIOGraph>(camera_);
+    //    landmarks_W_.add(object_id, lmks);
+    //  }
+    //
+
+    const FrameGeometry& frame_geometry_k_j = frame_geometry_it->second;
+    // // lmks_C_km1_j.lmks.reserve(num_points);
+    // // lmks_C_km1_j.ids.reserve(num_points);
+
+    // // lmks_C_km1_j.lmks.reserve(num_points);
     for (size_t i = 0; i < num_points; i++) {
       auto id = object_view.ids()[i];
 
       CHECK(object_view.inlier()[i]);
+      // poor attempt at initalising landmarks!
+      // graph->setLandmark(id, frame_geometry_k_j.getLandmark(id));
+      auto stereo_measurement = StereoMeasurement::FromSigmas(
+          frame_geometry_k_j.getStereoPoint(id), sigmas);
 
-      lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
-      lmks_C_km1_j.ids.push_back(id);
-      lmks_C_km1_j.local_indices[id] = i;
+      stereo_measurements.push_back(
+          StereoMeasurementStatus(stereo_measurement, frame_id, timestamp, id,
+                                  object_id, ReferenceFrame::LOCAL));
+
+      // lmks_C_km1_j.setLandmark(id, frame_geometry_k_j.getLandmark(id));
+      // lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
+      // lmks_C_km1_j.ids.push_back(id);
+      // lmks_C_km1_j.local_indices[id] = i;
     }
+
+    graph->addMeasurements(stereo_measurements);
   }
+
+  LocalVIOGraph::Ptr vio_graph = landmarks_W_.getStaticMap();
+  vio_graph->setPose(frame_id, gtsam::Pose3::Identity());
 
   // CHECK_EQ(frame_geometry_k.size(), local_landmarks_W_.size());
 
@@ -159,7 +192,10 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   const auto t2 = utils::Timer::toc(t1);
   const auto compute_time = utils::Timer::toUnits<std::milli>(t2);
-  LOG(INFO) << "spin time seconds= " << compute_time;
+  // LOG(INFO) << "spin time seconds= " << compute_time;
+
+  LOG(INFO) << "Features k= " << frame_id_k << " : "
+            << features_k.debugInfoString();
 
   // TODO: draw this afterwards!!
 
@@ -172,10 +208,10 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   // project points
   FrameGeometryMap frame_geometry_k;
   // this is too slow ;) (approx 3ms)
-  LOG(INFO) << "Starting calc points";
   // TODO: return outliers (dont modify featues!)
+  utils::ChronoTimingStats calc_points_t(this->moduleName() + ".calc_points");
   depth_updater_k.calcPoints(frame_geometry_k);
-  LOG(INFO) << "Ending calc points";
+  calc_points_t.stop();
   // match points
 
   // gtsam::Pose3 X_W_k;
@@ -183,7 +219,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   struct ObjectGeometry {
     FrameGeometry* frame_geometry;
-    const LocalLandmarks* reference_geometry;
+    const LandmarkMap* reference_geometry;
   };
   ObjectGeometry vo_geometry;
 
@@ -195,23 +231,32 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   std::vector<PoseWithMotionTrajectory*> doo_solve_trajectories;
 
   for (auto& [object_id, frame_geometry_j] : frame_geometry_k) {
-    auto local_landmarks_C_km1_it = local_landmarks_C_km1_.find(object_id);
-    if (local_landmarks_C_km1_it == local_landmarks_C_km1_.end()) {
-      continue;
+    // auto local_landmarks_C_km1_it = local_landmarks_C_km1_.find(object_id);
+    // if (local_landmarks_C_km1_it == local_landmarks_C_km1_.end()) {
+    //   continue;
+    // }
+    const LandmarkMap* local_map = nullptr;
+    if (landmarks_W_.exists(object_id)) {
+      local_map = landmarks_W_.get(object_id).get();
+    } else {
+      CHECK_GT(object_id, background_label);
+      local_map = landmarks_W_.add(object_id).get();
     }
-    const LocalLandmarks& local_landmarks_C_km1_j =
-        local_landmarks_C_km1_it->second;
+    CHECK_NOTNULL(local_map);
+
+    // const LandmarkMap& local_landmarks_C_km1_j =
+    //     local_landmarks_C_km1_it->second;
 
     if (object_id == background_label) {
-      vo_geometry = {&frame_geometry_j, &local_landmarks_C_km1_j};
+      vo_geometry = {&frame_geometry_j, local_map};
     } else {
-      object_geometries.emplace_back(
-          ObjectGeometry{&frame_geometry_j, &local_landmarks_C_km1_j});
-      object_ids.push_back(object_id);
+      // object_geometries.emplace_back(
+      //     ObjectGeometry{&frame_geometry_j, local_map});
+      // object_ids.push_back(object_id);
 
-      PoseWithMotionTrajectory* doo_trajectory =
-          &dyno_state_.object_trajectories[object_id];
-      doo_solve_trajectories.push_back(doo_trajectory);
+      // PoseWithMotionTrajectory* doo_trajectory =
+      //     &dyno_state_.object_trajectories[object_id];
+      // doo_solve_trajectories.push_back(doo_trajectory);
     }
   }
 
@@ -271,7 +316,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   //   LOG(INFO) << "Adding " << newly_initalised_points.size() << " points to
   //   map!";
   //   // for the sake now we put all points in the map but really dont want to
-  //   do this! LocalLandmarks& local_lmks_W = local_landmarks_W_[object_id];
+  //   do this! LandmarkMap& local_lmks_W = local_landmarks_W_[object_id];
   //   //TODO: could reserve more space!
   //   //starting pointer offset where we will insert new points from
   //   const size_t start = local_lmks_W.lmks.size();
@@ -318,6 +363,13 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   // For PnP tracking we just need landmarks in the previous frame
 
+  const WrappedRGBMono wrapped_rgb = container.rgb();
+  const cv::Mat rgb = wrapped_rgb.image();
+
+  utils::ChronoTimingStats draw_tracks_t(this->moduleName() + ".draw_tracks");
+  pushImageToDisplayQueue("Tracks", drawBatchedFeatures(rgb, features_k));
+  draw_tracks_t.stop();
+
   utils::ChronoTimingStats update_inliers_t(this->moduleName() +
                                             ".update_inliers");
   size_t num_features = features_k.size();
@@ -326,13 +378,10 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   // and we can perform batch operations in the tracking!
   features_k.reduceToInliersInplace(&fc_index_mapping);
 
-  const WrappedRGBMono wrapped_rgb = container.rgb();
-  const cv::Mat rgb = wrapped_rgb.image();
-
-  pushImageToDisplayQueue("Tracks", drawBatchedFeatures(rgb, features_k));
+  update_inliers_t.stop();
 
   // landmarks only in camera for k-1!
-  local_landmarks_C_km1_.clear();
+  // local_landmarks_C_km1_.clear();
 
   // gross we update the depth here for all!
   // but also maybe need contiguous information
@@ -342,9 +391,26 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   // frame_geometry_k.clear();
   // depth_updater_k.calcPoints(frame_geometry_k);
 
-  // TODO: so far we get the points from the frame geometry
-  // eventually we will use some kind of persistent map
-  // which will only be built from the inliers!
+  RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
+  realtime_output->state.frame_id = frame_id_k;
+  realtime_output->state.timestamp = timestamp_k;
+
+  gtsam::Vector3 sigmas;
+  sigmas << 2, 2, 2;
+
+  StatusLandmarkVector& points_W_used = realtime_output->state.static_map;
+  // TODO: eventually reserve with the actual map!
+  //  points_W_used.reserve(lmks_C_static.ids.size());
+
+  StereoMeasurementStatusVector stereo_measurements;
+  // stereo_measurements.reserve(lmks_C_static.ids.size());
+
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+  const gtsam::StereoCamera& stereo_camera = rgbd_camera->getFakeStereoCamera();
+
+  utils::ChronoTimingStats make_obs_t(this->moduleName() + ".make_obs");
+  // LocalVIOGraph::Ptr vio_graph =
+  // landmarks_W_.getAs<LocalVIOGraph>(background_label);
   for (const auto& object_view : features_k.objectViews()) {
     const auto object_id = object_view.objectId();
     const auto num_points = object_view.size();
@@ -356,73 +422,61 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
     }
 
     const FrameGeometry& frame_geometry_k_j = it->second;
-    LocalLandmarks& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
-    lmks_C_km1_j.lmks.reserve(num_points);
-    lmks_C_km1_j.ids.reserve(num_points);
+    // LandmarkMap& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
+    auto lmks = landmarks_W_.get(object_id);
+    // lmks_C_km1_j.lmks.reserve(num_points);
+    // lmks_C_km1_j.ids.reserve(num_points);
 
-    lmks_C_km1_j.lmks.reserve(num_points);
+    // lmks_C_km1_j.lmks.reserve(num_points);
     for (size_t i = 0; i < num_points; i++) {
       TrackletId id = ids[i];
 
       // test for now!
 
       // no object points!
-      if (vio_graph_.landmarkExists(id)) {
-        lmks_C_km1_j.lmks.push_back(X_W_k.inverse() *
-                                    vio_graph_.getLandmark(id));
-        lmks_C_km1_j.ids.push_back(id);
-        lmks_C_km1_j.local_indices[id] = i;
-      }
+      // if (lmks->landmarkExists(id)) {
+      //   gtsam::Point3 m_W = lmks->getLandmark(id);
+      //   points_W_used.push_back(
+      //       LandmarkStatus::StaticInGlobal(m_W, frame_id_k, timestamp_k,
+      //       id));
+      //   // lmks_C_km1_j.lmks.push_back(X_W_k.inverse() *
+      //   //                             vio_graph->getLandmark(id));
+      //   // lmks_C_km1_j.ids.push_back(id);
+      //   // lmks_C_km1_j.local_indices[id] = i;
+      // }
+
+      auto stereo_measurement = StereoMeasurement::FromSigmas(
+          frame_geometry_k_j.getStereoPoint(id), sigmas);
+
+      stereo_measurements.push_back(
+          StereoMeasurementStatus(stereo_measurement, frame_id_k, timestamp_k,
+                                  id, object_id, ReferenceFrame::LOCAL));
 
       // lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
       // lmks_C_km1_j.ids.push_back(id);
       // lmks_C_km1_j.local_indices[id] = i;
     }
+
+    utils::ChronoTimingStats add_obs_t(this->moduleName() + ".add_obs");
+    lmks->addMeasurements(stereo_measurements);
+    add_obs_t.stop();
   }
 
-  update_inliers_t.stop();
+  // vio_graph->addMeasurements(stereo_measurements);
+  // vio_graph->setPose(frame_id_k, X_W_k);
 
-  RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
-  realtime_output->state.frame_id = frame_id_k;
-  realtime_output->state.timestamp = timestamp_k;
-
-  const LocalLandmarks& lmks_C_static = local_landmarks_C_km1_[0];
-  const FrameGeometry& frame_geometry_C = frame_geometry_k[0];
-
-  StatusLandmarkVector& points_W_used = realtime_output->state.static_map;
-  points_W_used.reserve(lmks_C_static.ids.size());
-
-  StereoMeasurementStatusVector stereo_measurements;
-  stereo_measurements.reserve(lmks_C_static.ids.size());
-
-  gtsam::Vector3 sigmas;
-  sigmas << 2, 2, 2;
-
-  for (size_t i = 0; i < lmks_C_static.ids.size(); i++) {
-    gtsam::Point3 mW = X_W_k * lmks_C_static.lmks[i];
-
-    TrackletId id = lmks_C_static.ids[i];
-
-    // if(!vio_graph_.landmarkExists(id)) {
-    //   vio_graph_.setLandmark(id, mW);
-    // }
-
-    auto stereo_measurement = StereoMeasurement::FromSigmas(
-        frame_geometry_C.getStereoPoint(id), sigmas);
-    stereo_measurements.push_back(
-        StereoMeasurementStatus(stereo_measurement, frame_id_k, timestamp_k, id,
-                                0, ReferenceFrame::LOCAL));
-
-    points_W_used.push_back(
-        LandmarkStatus::StaticInGlobal(mW, frame_id_k, timestamp_k, id));
-  }
-
-  vio_graph_.addMeasurements(stereo_measurements);
-  vio_graph_.setPose(frame_id_k, X_W_k);
-
-  vio_graph_.optimize(frame_id_k);
-  // local_map_->updateObservations(stereo_measurements);
-
+  // //TODO: states affected and then update trajectory!
+  // // and build landmarks after optimize!
+  // std::vector<FrameId> frames_affected;
+  // vio_graph->optimize(frame_id_k, &frames_affected);
+  // // local_map_->updateObservations(stereo_measurements);
+  // for(FrameId frame_id : frames_affected) {
+  //   //TODO: timestamp is wrong!
+  //   //get timestamp from map!?
+  //   CHECK(vio_graph->poseExists(frame_id)) << frame_id;
+  //   CHECK(dyno_state_.camera_trajectory.update(frame_id,
+  //   vio_graph->getPose(frame_id)));
+  // }
   // local_landmarks_C_km1_ = std::move(frame_geometry_k);
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   // TODO: see old code where we only send the visible/good trajectories (but
@@ -437,28 +491,108 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 }
 
 void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
-    const ImageContainer& image_container,
-    const LocalLandmarks& reference_geometry, FrameGeometry& local_geometry,
-    FeatureBlockContainer& features, GeometrySolveContext& context,
-    PoseTrajectory& vo_trajectory, bool& success) {
+    const ImageContainer& image_container, const LandmarkMap&,
+    FrameGeometry& local_geometry, FeatureBlockContainer& features,
+    GeometrySolveContext& context, PoseTrajectory& vo_trajectory,
+    bool& success) {
   utils::ChronoTimingStats vo_t(this->moduleName() + ".solve.vo");
 
   const FrameId frame_id = image_container.frameId();
   const Timestamp timestamp = image_container.timestamp();
 
-  OpenGVCentralAbsolutePoseAdaptor adapter(camera_, local_geometry,
-                                           reference_geometry, features);
-  const size_t num_matches = adapter.getNumberCorrespondences();
+  LocalVIOGraph::Ptr vio_graph = landmarks_W_.getStaticMap();
+  CHECK_NOTNULL(vio_graph);
+
+  // convert to reference frame (ie X_k_1)
+  LandmarkMap reference_geometry = vio_graph->transformTo(X_km1_.inverse());
+
+  // equivalent of match to map!
+  auto adapter = std::make_shared<OpenGVCentralAbsolutePoseAdaptor>(
+      camera_, local_geometry, reference_geometry, features);
+  // how many matches we have in the map!
+  size_t num_matches = adapter->getNumberCorrespondences();
 
   // if not enough matches try and intalise!
-  LOG(INFO) << num_matches;
 
-  // matched to map!
-  TrackletIds matched_to_map;
-  for (TrackletId id : local_geometry.ids) {
-    if (vio_graph_.landmarkExists(id)) {
-      matched_to_map.push_back(id);
+  // // matched to map!
+  // TrackletIds matched_to_map;
+  // for (TrackletId id : local_geometry.ids) {
+  //   if (vio_graph->landmarkExists(id)) {
+  //     matched_to_map.push_back(id);
+  //   }
+  // }
+
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+  const gtsam::StereoCamera& stereo_camera = rgbd_camera->getFakeStereoCamera();
+
+  // if tracking list (or not initalised) do matching to stereo
+  // which is matching to older co-visible frames and triangulate!
+  // / TODO: testing with local map
+  //  should do keyframe coverage (ie. draw lmks in keyframe!)
+  TrackletIds new_landmarks;
+  LOG(INFO) << "Number matched to map " << num_matches;
+  // TODO: not local geometry.ids but should be number of inliers!
+  if (num_matches == 0 ||
+      (double)num_matches / (double)local_geometry.ids.size() < 0.8) {
+    LOG(INFO) << "Initalising new map points!";
+    utils::ChronoTimingStats init_map(this->moduleName() + ".solve.init_map");
+
+    const StereoMap& observations = vio_graph->getObservations();
+    // this assumes we have solved succificnelt for frame_id - 1u!
+    TrackletIds tracklets_km1 =
+        observations.staticTrackletsByFrame(frame_id - 1u);
+
+    // TODO: should initalise via co-visibility not just the currently visiblt
+    // ones!
+    //  right now just init from measurements of previous frames
+    size_t count = 0;
+    for (TrackletId i0 : tracklets_km1) {
+      // if already in local map, ignore as we want to intalise new points!
+      if (reference_geometry.landmarkExists(i0)) {
+        continue;
+      }
+
+      auto it1 = local_geometry.local_indices.find(i0);
+      // check this landmark is also seen in the current frame!
+      if (it1 == local_geometry.local_indices.end()) {
+        continue;
+      }
+
+      Index fc_index = local_geometry.getFeatureContainerIndex(i0);
+      if (!features.inlier[fc_index]) {
+        continue;
+      }
+
+      auto lmk_node = observations.getLandmark(i0);
+      auto stereo_measurement = lmk_node->getMeasurement(frame_id - 1u);
+      // for now just initalise as a simple projection
+      // only valid becuase we find measurements in k-1
+      // compute in reference frame!
+      gtsam::Point3 m_C = stereo_camera.backproject(stereo_measurement);
+
+      reference_geometry.setLandmark(i0, m_C);
+      new_landmarks.push_back(i0);
+      count++;
     }
+
+    // update adapter
+    adapter = std::make_shared<OpenGVCentralAbsolutePoseAdaptor>(
+        camera_, local_geometry, reference_geometry, features);
+
+    size_t original_matches = num_matches;
+    num_matches = adapter->getNumberCorrespondences();
+    // for (size_t i = 0; i < local_geometry.ids.size(); i++) {
+    //   TrackletId id = local_geometry.ids[i];
+    //   Index fc_index = local_geometry.getFeatureContainerIndex(id);
+    //   if (features.inlier[fc_index]) {
+    //     gtsam::Point3 mW = X_W * local_geometry.getLandmark(id);
+    //     vio_graph->setLandmark(id, mW);
+    //     count++;
+    //   }
+    // }
+
+    LOG(INFO) << "Initalised  " << count << " new lmks"
+              << " num new matches =" << num_matches;
   }
 
   CHECK(context.vo);
@@ -468,7 +602,7 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
 
   utils::ChronoTimingStats ransac_t(this->moduleName() + ".solve.vo.ransac");
   context.vo_valid =
-      solve3d2dRansac(T_ij, inliers, adapter, vo_ransac_threshold_3d_2d_);
+      solve3d2dRansac(T_ij, inliers, *adapter, vo_ransac_threshold_3d_2d_);
   ransac_t.stop();
   if (!context.vo_valid) {
     {
@@ -481,13 +615,17 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
     success = false;
     // alert awaiting threads
     context.vo_cv.notify_all();
+
+    LOG(WARNING) << "3D2D RANSAC failed for VO!";
     return;
   }
+
+  // TODO: mark all features not matched as outlier!?
 
   CHECK_EQ(inliers.size(), num_matches);
   for (size_t k = 0; k < num_matches; k++) {
     if (!inliers[k]) {
-      TrackletId i = adapter.trackletId(k);
+      TrackletId i = adapter->trackletId(k);
       Index fc_index = local_geometry.getFeatureContainerIndex(i);
       CHECK_EQ(features.ids[fc_index], i);
       features.inlier[fc_index] = 0;
@@ -498,12 +636,18 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   if (vo_solve_params.refine_with_flow) {
     utils::ChronoTimingStats flow_t(this->moduleName() +
                                     ".solve.vo.flow_refine");
-    FlowRefinement(camera_, image_container, adapter)
+    FlowRefinement(camera_, image_container, *adapter)
         .refine(vo_solve_params.optical_flow_solver_params, T_ij, T_ij);
+    flow_t.stop();
 
     DepthUpdaterFast depth_updater(frontendParams().depth_thresholds, camera_,
                                    image_container, features);
+
+    utils::ChronoTimingStats geo_update_t(this->moduleName() +
+                                          ".solve.vo.geometry_update");
+    // TODO: why is this updating more points than we have matched?
     depth_updater.updateGeometry(local_geometry);
+    geo_update_t.stop();
   }
 
   gtsam::Pose3 X_W = X_km1_ * T_ij;
@@ -517,27 +661,56 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   // alert awaiting threads
   context.vo_cv.notify_all();
 
-  // TODO: testing with local map
-  //  should do keyframe coverage (ie. draw lmks in keyframe!)
-  LOG(INFO) << "Number matched to map " << matched_to_map.size();
-  // TODO: not local geometry.ids but should be number of inliers!
-  if (matched_to_map.empty() ||
-      (double)matched_to_map.size() / (double)local_geometry.ids.size() < 0.7) {
-    LOG(INFO) << "Initalising new map points!";
+  // get the same reference geometry used for matching but now in W
+  const gtsam::Point3Vector& lmks_R = adapter->referenceLandmarks();
+  gtsam::Point3Vector lmk_W;
+  // TODO: once again assuming X_km1_ is solved for and is the reference index!
+  dyno::transformTo(X_km1_, lmks_R, lmk_W);
 
-    size_t count = 0;
-    for (size_t i = 0; i < local_geometry.ids.size(); i++) {
-      TrackletId id = local_geometry.ids[i];
-      Index fc_index = local_geometry.getFeatureContainerIndex(id);
-      if (features.inlier[fc_index]) {
-        gtsam::Point3 mW = X_W * local_geometry.getLandmark(id);
-        vio_graph_.setLandmark(id, mW);
-        count++;
+  for (size_t i = 0; i < adapter->numMatches(); i++) {
+    if (adapter->isInlier(i)) {
+      TrackletId id = adapter->trackletId(i);
+      if (!vio_graph->landmarkExists(id)) {
+        vio_graph->setLandmark(id, lmk_W[i]);
       }
     }
-
-    LOG(INFO) << "Initalised  " << count << " new lmks";
   }
+  // CHECK_EQ(reference_geometry_W.size(), local_geometry.ids.size());
+  // for(size_t i = 0; i  < reference_geometry_W.size(); i++) {
+  //   TrackletId id = local_geometry.ids[i];
+  //     Index fc_index = local_geometry.getFeatureContainerIndex(id);
+  //     if (features.inlier[fc_index]) {
+  //       vio_graph->setLandmark(id, reference_geometry_W.getLandmark(id));
+  //     }
+  // }
+
+  // // if tracking list (or not initalised) do matching to stereo
+  // // which is matching to older co-visible frames and triangulate!
+  // // / TODO: testing with local map
+  // //  should do keyframe coverage (ie. draw lmks in keyframe!)
+  // LOG(INFO) << "Number matched to map " << matched_to_map.size();
+  // // TODO: not local geometry.ids but should be number of inliers!
+  // if (matched_to_map.empty() ||
+  //     (double)matched_to_map.size() / (double)local_geometry.ids.size() <
+  //     0.7) {
+  //   LOG(INFO) << "Initalising new map points!";
+
+  //   //TODO: should initalise via co-visibility not just the currently visiblt
+  //   ones!
+  //   // right now just init from measurements of previous frames
+  //   size_t count = 0;
+  //   for (size_t i = 0; i < local_geometry.ids.size(); i++) {
+  //     TrackletId id = local_geometry.ids[i];
+  //     Index fc_index = local_geometry.getFeatureContainerIndex(id);
+  //     if (features.inlier[fc_index]) {
+  //       gtsam::Point3 mW = X_W * local_geometry.getLandmark(id);
+  //       vio_graph->setLandmark(id, mW);
+  //       count++;
+  //     }
+  //   }
+
+  //   LOG(INFO) << "Initalised  " << count << " new lmks";
+  // }
 
   vo_trajectory.insert(frame_id, timestamp, X_W);
   success = true;
@@ -545,9 +718,15 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
 
 void PoseChangeVIFrontendFAST::solveObjectOdometryByThread(
     ObjectId object_id, const ImageContainer& image_container,
-    const LocalLandmarks& reference_geometry, FrameGeometry& local_geometry,
+    const LandmarkMap& reference_geometry, FrameGeometry& local_geometry,
     FeatureBlockContainer& features, GeometrySolveContext& context,
     PoseWithMotionTrajectory& doo_trajectory, uchar& success) {
+  // LocalVIOGraph::Ptr vio_graph = landmarks_W_.getStaticMap();
+  // CHECK_NOTNULL(vio_graph);
+
+  // convert to reference frame (ie X_k_1)
+  // LandmarkMap reference_geometry = vio_graph->transformTo(X_km1_.inverse());
+
   OpenGVCentralAbsolutePoseAdaptor adapter(camera_, local_geometry,
                                            reference_geometry, features);
   const size_t num_matches = adapter.getNumberCorrespondences();
@@ -657,6 +836,7 @@ bool PoseChangeVIFrontendFAST::solve3d2dRansac(
 
   const size_t num_matches = adaptor.getNumberCorrespondences();
   if (num_matches < 5) {
+    VLOG(10) << "3D2D RANSAC failed: not enough matches";
     return false;
   }
 
@@ -680,6 +860,8 @@ bool PoseChangeVIFrontendFAST::solve3d2dRansac(
   const bool ransac_success = ransac_inliers > 10 && ransac_ratio > 0.7;
 
   if (!ransac_success) {
+    VLOG(10)
+        << "3D2D RANSAC failed: not enough inliers or ransac ratio failed!";
     return false;
   }
 

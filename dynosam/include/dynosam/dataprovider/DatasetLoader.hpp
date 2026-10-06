@@ -424,7 +424,7 @@ class GenericDataset : public DataFolderStructure<DataTypes...> {
   }
 
   template <size_t I>
-  DataStorageVector<I>& getDataVector() {
+  inline DataStorageVector<I>& getDataVector() {
     return std::get<I>(data_);
   }
 

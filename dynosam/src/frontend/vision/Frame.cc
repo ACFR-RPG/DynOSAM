@@ -171,8 +171,7 @@ Landmark Frame::backProjectToCamera(TrackletId tracklet_id) const {
   CHECK(feature->hasDepth());
 
   // Landmark lmk;
-  return getLandmarkFromCache(landmark_in_camera_cache_, feature,
-                              gtsam::Pose3::Identity());
+  return getLandmarkFromCache(feature, gtsam::Pose3::Identity());
   // return lmk;
 }
 
@@ -189,8 +188,7 @@ Landmark Frame::backProjectToWorld(TrackletId tracklet_id) const {
   // Landmark lmk;
   // camera_->backProject(feature->keypoint_, feature->depth_, &lmk,
   // T_world_camera_);
-  return getLandmarkFromCache(landmark_in_world_cache_, feature,
-                              T_world_camera_);
+  return getLandmarkFromCache(feature, T_world_camera_);
 }
 
 Camera::CameraImpl Frame::getFrameCamera() const {
@@ -482,7 +480,7 @@ void Frame::constructDynamicObservations() {
   }
 }
 
-Landmark Frame::getLandmarkFromCache(LandmarkMap& cache, Feature::Ptr feature,
+Landmark Frame::getLandmarkFromCache(Feature::Ptr feature,
                                      const gtsam::Pose3& X_world) const {
   // TODO: dont cache as we now update the optical flow and the depth in the
   // frontend and cacheing it will not use the right values!!!

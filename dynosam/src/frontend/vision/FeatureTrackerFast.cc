@@ -561,6 +561,7 @@ void DepthUpdaterFast::calcPointsStereo(FrameGeometryMap& point_map) {
     std::vector<cv::Point2f> left_kps;
     left_kps.reserve(num_points);
 
+    // object view index
     std::vector<size_t> left_kp_indices;
     left_kp_indices.reserve(num_points);
 
@@ -822,7 +823,7 @@ bool DepthUpdaterFast::computeStereoMatching(
     return false;
   }
 
-  OpticalFlowLK optical_flow(60);
+  OpticalFlowLK optical_flow(30);
 
   const WrappedRGBMono wrapped_left = images_.rgb();
   const WrappedRGBMono wrapped_right = images_.rightRgb();
@@ -1302,9 +1303,9 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
   //          << " #iterations= " << result.iterations;
 }
 
-MatchingAdaptorBase::MatchingAdaptorBase(
-    FrameGeometry& local_geometry, const LocalLandmarks& reference_geometry,
-    FeatureBlockContainer& features)
+MatchingAdaptorBase::MatchingAdaptorBase(FrameGeometry& local_geometry,
+                                         const LandmarkMap& reference_geometry,
+                                         FeatureBlockContainer& features)
     : local_geometry_(local_geometry),
       reference_geometry_(reference_geometry),
       features_(features) {
@@ -1327,15 +1328,16 @@ MatchingAdaptorBase::MatchingAdaptorBase(
       continue;
     }
 
-    auto it = reference_geometry.local_indices.find(tracklet_id);
+    auto it = reference_geometry.find(tracklet_id);
     // we have a match in the local map!
-    if (it != reference_geometry.local_indices.end()) {
+    if (it != reference_geometry.end()) {
       // const gtsam::Point3& lmk_ref = reference_geometry_lmks.at(it->second);
       // check that the landmarks have the same id!
       Index ref_index = it->second;
-      CHECK_EQ(tracklet_id, reference_geometry.ids.at(ref_index));
+      // CHECK_EQ(tracklet_id, reference_geometry.ids.at(ref_index));
       matches_[adaptor_index] = std::make_pair(curr_idx, ref_index);
-      matched_landmarks_ref_.push_back(reference_geometry_.lmks[ref_index]);
+      matched_landmarks_ref_.push_back(
+          reference_geometry_.getLandmarkByIndex(ref_index));
       ++adaptor_index;
     }
   }
@@ -1373,7 +1375,8 @@ LocalVIOGraph::LocalVIOGraph(Camera::Ptr camera) {
   K_ = camera->getGtsamCalibration();
 }
 
-void LocalVIOGraph::optimize(FrameId frame_id) {
+void LocalVIOGraph::optimize(FrameId frame_id,
+                             std::vector<FrameId>* frames_affected) {
   // covisible tracklets
   //  auto frame_node_ptr = observations_->getFrame(frame_id);
   utils::ChronoTimingStats timer_t("vio_graph.opt");
@@ -1389,6 +1392,8 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
   //     covisibilities[frame_i0][frame_i1].insert(tracklet_id);
   //   }
   // }
+
+  utils::ChronoTimingStats covis_t("vio_graph.opt.covis");
   for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
     if (!landmarkExists(tracklet_id)) {
       continue;
@@ -1412,6 +1417,7 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
       }
     }
   }
+  covis_t.stop();
 
   gtsam::Values values;
   gtsam::NonlinearFactorGraph graph;
@@ -1422,6 +1428,7 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
   std::set<TrackletId> tracklets_with_update;
   std::set<FrameId> poses_with_update;
 
+  utils::ChronoTimingStats build_t("vio_graph.opt.build");
   for (FrameId frame_i0 : frames_to_try) {
     auto it0 = covisibilities.find(frame_i0);
     if (it0 == covisibilities.end()) {
@@ -1463,6 +1470,7 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
           // TODo: robustify
           //  only one measurement needed
           auto [measurement_i0, model_i0] = lmk_node->getMeasurement(frame_i0);
+          model_i0 = factor_graph_tools::robustifyHuber(0.01, model_i0);
 
           auto factor_i0 = boost::make_shared<GenericStereoFactor>(
               measurement_i0, model_i0, pose_sym_i0, lmk_sym, K_stereo_);
@@ -1474,6 +1482,7 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
           if (frame_i0 != frame_i1) {
             auto [measurement_i1, model_i1] =
                 lmk_node->getMeasurement(frame_i1);
+            model_i1 = factor_graph_tools::robustifyHuber(0.01, model_i1);
 
             auto factor_i1 = boost::make_shared<GenericStereoFactor>(
                 measurement_i1, model_i1, pose_sym_i1, lmk_sym, K_stereo_);
@@ -1485,6 +1494,7 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
       }
     }
   }
+  build_t.stop();
 
   gtsam::GaussNewtonParams opt_params;
   // for speed
@@ -1496,6 +1506,7 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
   NonlinearOptimizerSummary summary;
   NonlinearOptimizerOptions options;
 
+  utils::ChronoTimingStats solve_recover_t("vio_graph.opt.solve_recover");
   gtsam::Values optimised_values = values;
   { CHECK(solver.solve(optimised_values, options, &summary)); }
 
@@ -1504,10 +1515,13 @@ void LocalVIOGraph::optimize(FrameId frame_id) {
            << summary.cumulative_time_in_seconds
            << " #iterations= " << summary.numIterations();
 
+  if (frames_affected) frames_affected->reserve(poses_with_update.size());
   for (FrameId frame_id : poses_with_update) {
     gtsam::Symbol pose_sym('x', frame_id);
     gtsam::Pose3 pose = optimised_values.at<gtsam::Pose3>(pose_sym);
     setPose(frame_id, pose);
+
+    if (frames_affected) frames_affected->push_back(frame_id);
   }
 
   for (TrackletId id : tracklets_with_update) {
@@ -2257,7 +2271,7 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
   FeatureBlockContainer feature_blocks(terms);
   t_terms.stop();
 
-  LOG(INFO) << "Detection: " << feature_blocks.debugInfoString();
+  // LOG(INFO) << "Detection: " << feature_blocks.debugInfoString();
 
   utils::ChronoTimingStats t4("fast_tracker.sub_pixe_refine");
 

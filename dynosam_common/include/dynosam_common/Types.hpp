@@ -92,7 +92,7 @@ using BearingVectors =
 using Landmark = gtsam::Point3;
 using Landmarks = gtsam::Point3Vector;  //! Vector of Landmarks using gtsam's
                                         //! definition for allocation
-using LandmarkMap = gtsam::FastMap<TrackletId, Landmark>;
+// using LandmarkMap = gtsam::FastMap<TrackletId, Landmark>;
 
 using OpticalFlow =
     gtsam::Point2;  //! Observed optical flow vector (ordered x, y)

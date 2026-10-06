@@ -33,6 +33,7 @@
 #include <gtsam/base/FastMap.h>
 
 #include <memory>
+#include <unordered_set>
 
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
@@ -68,10 +69,10 @@ struct NodeTraits {
   typedef std::shared_ptr<Node> SharedNode;
   typedef gtsam::FastMap<KeyType, SharedNode> SharedNodeMap;
 
-  static KeyType getKey(const Node& node) { return node.getId(); }
+  inline static KeyType getKey(const Node& node) { return node.getId(); }
+  inline static KeyType getKey(const SharedNode& node) { return getKey(*node); }
 
-  static KeyType getKey(const SharedNode& node) { return getKey(*node); }
-
+  // only needed for ordered things
   struct Compare {
     // enables heterogeneous lookup
     using is_transparent = void;
@@ -88,16 +89,59 @@ struct NodeTraits {
     }
   };
 
+  struct NodeHash {
+    std::size_t operator()(const SharedNode& a) const noexcept {
+      return std::hash<KeyType>{}(a->getId());
+    }
+
+    std::size_t operator()(KeyType id) const noexcept {
+      return std::hash<KeyType>{}(id);
+    }
+  };
+
+  struct NodeEqual {
+    bool operator()(const SharedNode& a, const SharedNode& b) const noexcept {
+      return a->getId() == b->getId();
+    }
+  };
+
   /** Define a specalist node set that also has some specific functionality */
-  class SharedNodeSet : public dyno::FastSet<SharedNode, Compare> {
+  class SharedNodeSet
+      : public dyno::FastUnorderedSet<SharedNode, NodeHash, NodeEqual> {
    public:
-    typedef dyno::FastSet<SharedNode, Compare> Base;
+    typedef dyno::FastUnorderedSet<SharedNode, NodeHash, NodeEqual> Base;
     using Base::Base;
 
     SharedNodeSet() = default;
 
     /** Additional exists function */
-    bool exists(KeyType key) const { return this->find(key) != this->end(); }
+    // bool exists(KeyType key) const { return this->find(key) != this->end(); }
+
+    /**
+     * Find a node directly by its KeyType.
+     *
+     * C++17 does not provide heterogeneous lookup for unordered_set, so
+     * manually select the bucket using the hash of the key.
+     */
+    auto find(KeyType key) const {
+      const std::size_t bucket_count = Base::bucket_count();
+
+      if (bucket_count == 0) {
+        return Base::end();
+      }
+
+      const std::size_t bucket = Base::hash_function()(key) % bucket_count;
+
+      for (auto it = Base::begin(bucket); it != Base::end(bucket); ++it) {
+        if ((*it)->getId() == key) {
+          return it;
+        }
+      }
+
+      return Base::end();
+    }
+
+    bool exists(KeyType key) const { return find(key) != Base::end(); }
 
     std::vector<KeyType> collectKeys() const {
       std::vector<KeyType> keys;
@@ -833,6 +877,16 @@ class RegularLandmarkNode : public LandmarkNodeBase<NodeTypes> {
       : Base(tracklet_id, object_id) {}
 };
 
+struct AffectedStates {
+  std::unordered_set<FrameId> new_frames;
+  std::unordered_set<TrackletId> new_landmarks;
+  std::unordered_set<ObjectId> new_objects;
+
+  std::unordered_set<FrameId> modified_frames;
+  std::unordered_set<TrackletId> modified_landmarks;
+  std::unordered_set<ObjectId> modified_objects;
+};
+
 template <typename Measurement_>
 struct RegularNodeTypes {
   using Measurement = Measurement_;
@@ -940,11 +994,12 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
   }
 
   template <typename DERIVEDSTATUS>
-  void updateObservations(
+  AffectedStates updateObservations(
       const GenericTrackedStatusVector<DERIVEDSTATUS>& measurements) {
     using DerivedMeasurement =
         typename GenericTrackedStatusVector<DERIVEDSTATUS>::Value;
 
+    AffectedStates affected_states;
     for (const DERIVEDSTATUS& status_measurement : measurements) {
       const GenericValueTrack<DerivedMeasurement>& derived_status =
           static_cast<const GenericValueTrack<DerivedMeasurement>&>(
@@ -952,13 +1007,14 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
       const GenericValueTrack<Measurement>& track =
           derived_status.template asType<Measurement>();
       // thread safe update
-      updateFromTrack(track);
+      updateFromTrack(track, affected_states);
     }
+    return affected_states;
   }
 
   template <typename DERIVEDSTATUS>
-  void updateObservations(const DERIVEDSTATUS& derived_status) {
-    updateObservations(
+  AffectedStates updateObservations(const DERIVEDSTATUS& derived_status) {
+    return updateObservations(
         GenericTrackedStatusVector<DERIVEDSTATUS>({derived_status}));
   }
 
@@ -978,7 +1034,8 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
  private:
   typedef GenericValueTrack<Measurement> GenericValueTrackT;
 
-  void updateFromTrack(const GenericValueTrackT& track) {
+  void updateFromTrack(const GenericValueTrackT& track,
+                       AffectedStates& affected_states) {
     const Measurement& measurement = track.value();
     const TrackletId tracklet_id = track.trackletId();
     const FrameId frame_id = track.frameId();
@@ -995,11 +1052,13 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     if (!landmark_interface->landmarkExists(tracklet_id)) {
       landmark_interface->push_back(
           std::make_shared<LandmarkNodeT>(tracklet_id, object_id));
+      // affected_states.new_landmarks.insert(tracklet_id);
     }
 
     if (!frame_interface->frameExists(frame_id)) {
       frame_interface->push_back(
           std::make_shared<FrameNodeT>(frame_id, timestamp));
+      // affected_states.new_frames.insert(frame_id);
     }
 
     SharedLandmarkNodeT landmark_node =
@@ -1024,6 +1083,9 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
 
     landmark_node->add(frame_node, measurement);
 
+    // affected_states.modified_frames.insert(frame_id);
+    // affected_states.modified_landmarks.insert(tracklet_id);
+
     if (is_static) {
       frame_node->staticLandmarks().insert(landmark_node);
     } else {
@@ -1032,7 +1094,10 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
       auto object_interface = this->asObjectInterface();
       if (!object_interface->objectExists(object_id)) {
         object_interface->push_back(std::make_shared<ObjectNodeT>(object_id));
+        // affected_states.new_objects.insert(object_id);
       }
+
+      // affected_states.modified_objects.insert(object_id);
 
       SharedObjectNodeT object_node = object_interface->getObject(object_id);
       CHECK_NOTNULL(object_node);

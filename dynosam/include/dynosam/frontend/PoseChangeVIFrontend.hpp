@@ -44,7 +44,7 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   };
 
   void solveVisualOdometryByThread(const ImageContainer& image_container,
-                                   const LocalLandmarks& reference_geometry,
+                                   const LandmarkMap& reference_geometry,
                                    FrameGeometry& local_geometry,
                                    FeatureBlockContainer& features,
                                    GeometrySolveContext& context,
@@ -54,7 +54,7 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   // TODO: right now reference geometry must be in k-1!
   void solveObjectOdometryByThread(
       ObjectId object_id, const ImageContainer& image_container,
-      const LocalLandmarks& reference_geometry, FrameGeometry& local_geometry,
+      const LandmarkMap& reference_geometry, FrameGeometry& local_geometry,
       FeatureBlockContainer& features, GeometrySolveContext& context,
       PoseWithMotionTrajectory& doo_trajectory, uchar& success);
 
@@ -74,14 +74,15 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   FeatureTrackerFast feature_tracker_fast_;
 
   // std::vector<VIOFrameWithMeasurements> vio_frames_;
-  LocalVIOGraph vio_graph_;
+  // LocalVIOGraph vio_graph_;
 
   PoseChangeBackendSink pose_change_backend_sink_;
 
-  LocalLandmarksMap local_landmarks_W_;
-
+  // Landmarks stored in estimation reference frame!
+  // Camera in W and objects in O!
+  DynamicSlamMap landmarks_W_;
   // only needed for tracking while we dont use the local landmarks W_
-  LocalLandmarksMap local_landmarks_C_km1_;
+  // LocalLandmarksMap local_landmarks_C_km1_;
   // only for points!? Right now need to initalise new landmarks with a knoew
   // geometry eventually need the set of keyframes!
   // //TODO: wrap in frame representation with frame id + timestampe etc!

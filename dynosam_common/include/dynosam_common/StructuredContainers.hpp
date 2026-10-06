@@ -36,6 +36,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "dynosam_common/Types.hpp"
@@ -511,6 +512,87 @@ class FastSet
 
   /** insert another set: handy for MATLAB access */
   void merge(const FastSet& other) { Base::insert(other.begin(), other.end()); }
+
+  const VALUE& front() const { return *this->cbegin(); }
+  const VALUE& back() const { return *this->crbegin(); }
+  // VALUE& front() { return *this->begin(); }
+  // VALUE& back() { return *this->rbegin(); }
+
+ private:
+};
+
+/**
+ * FastUnorderedSet is a thin wrapper around std::unordered_set that uses the
+ * boost fast_pool_allocator instead of the default STL allocator.  This is just
+ * a convenience to avoid having lengthy types in the code.  Through timing,
+ * we've seen that the fast_pool_allocator can lead to speedups of several %.
+ * @ingroup base
+ */
+template <typename VALUE, typename Hash = std::hash<VALUE>,
+          typename KeyEqual = std::equal_to<VALUE>>
+class FastUnorderedSet
+    : public std::unordered_set<
+          VALUE, Hash, KeyEqual,
+          typename gtsam::internal::FastDefaultAllocator<VALUE>::type> {
+ public:
+  typedef std::unordered_set<
+      VALUE, Hash, KeyEqual,
+      typename gtsam::internal::FastDefaultAllocator<VALUE>::type>
+      Base;
+
+  using Base::Base;  // Inherit the set constructors
+  using Base::find;
+
+  FastUnorderedSet() = default;  ///< Default constructor
+
+  /** Constructor from a iterable container, passes through to base class */
+  template <typename INPUTCONTAINER>
+  explicit FastUnorderedSet(const INPUTCONTAINER& container)
+      : Base(container.begin(), container.end()) {}
+
+  /** Copy constructor from another FastSet */
+  FastUnorderedSet(const FastUnorderedSet<VALUE>& x) : Base(x) {}
+
+  /** Copy constructor from the base set class */
+  FastUnorderedSet(const Base& x) : Base(x) {}
+
+  FastUnorderedSet& operator=(const FastUnorderedSet& other) = default;
+
+#ifdef GTSAM_ALLOCATOR_BOOSTPOOL
+  /** Copy constructor from a standard STL container */
+  FastUnorderedSet(const std::set<VALUE>& x) {
+    // This if statement works around a bug in boost pool allocator and/or
+    // STL vector where if the size is zero, the pool allocator will allocate
+    // huge amounts of memory.
+    if (x.size() > 0) Base::insert(x.begin(), x.end());
+  }
+#endif
+
+  /** Conversion to a standard STL container */
+  operator std::set<VALUE>() const {
+    return std::set<VALUE>(this->begin(), this->end());
+  }
+
+  /** Handy 'exists' function */
+  bool exists(const VALUE& e) const { return this->find(e) != this->end(); }
+
+  // /** Check for equality within tolerance to implement Testable */
+  // bool equals(const FastUnorderedSet<VALUE>& other, double tol = 1e-9) const
+  // {
+  //   typename Base::const_iterator it1 = this->begin(), it2 = other.begin();
+  //   while (it1 != this->end()) {
+  //     if (it2 == other.end() || !traits<VALUE>::Equals(*it2, *it2, tol))
+  //       return false;
+  //     ++it1;
+  //     ++it2;
+  //   }
+  //   return true;
+  // }
+
+  /** insert another set: handy for MATLAB access */
+  void merge(const FastUnorderedSet& other) {
+    Base::insert(other.begin(), other.end());
+  }
 
   const VALUE& front() const { return *this->cbegin(); }
   const VALUE& back() const { return *this->crbegin(); }

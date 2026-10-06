@@ -74,12 +74,12 @@ void for_each_apply_impl(Function f, std::index_sequence<Is...>) {
 }
 
 template <std::size_t N, class Function>
-void for_each_apply(Function f) {
+inline void for_each_apply(Function f) {
   for_each_apply_impl(f, std::make_index_sequence<N>{});
 }
 
 template <std::size_t N, class Function>
-void select_apply(std::size_t i, Function f) {
+inline void select_apply(std::size_t i, Function f) {
   for_each_apply<N>([&](auto&& Is) {
     if (Is == i) f(std::forward<decltype(Is)>(Is));
   });

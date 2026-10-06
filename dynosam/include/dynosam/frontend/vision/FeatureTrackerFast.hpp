@@ -442,16 +442,72 @@ cv::Mat drawBatchedFeatures(const cv::Mat& image,
 //  we dont need contiguous memory
 //  becuase at some point we need to delete lmks (defintiely)
 //  and this is going to be slow compared to a map!
-struct LocalLandmarks {
-  gtsam::Point3Vector lmks;
-  TrackletIds ids;
-  //! Tracklet ids -> index for this set of vectors
-  // ie. to get the lmk of tracklet id i -> lmks[local_indices[i]]
-  std::unordered_map<TrackletId, Index> local_indices;
+class LandmarkMap {
+ public:
+  typedef dyno::FastUnorderedMap<TrackletId, Index> TrackletIndices;
 
-  // inline
+  LandmarkMap() = default;
+  virtual ~LandmarkMap() = default;
+
+  void setLandmark(TrackletId tracklet_id, const Landmark& lmk) {
+    auto it = landmark_indices_.find(tracklet_id);
+    if (it == landmark_indices_.end()) {
+      Index new_idx = landmarks_.size();
+      landmark_indices_[tracklet_id] = new_idx;
+      landmarks_.push_back(lmk);
+    } else {
+      Index index = it->second;
+      landmarks_.at(index) = lmk;
+    }
+  }
+
+  inline size_t size() const { return landmarks_.size(); }
+
+  bool landmarkExists(TrackletId tracklet_id) const {
+    return landmark_indices_.exists(tracklet_id);
+  }
+
+  const Landmark& getLandmark(TrackletId tracklet_id) const {
+    return landmarks_[landmark_indices_.at(tracklet_id)];
+  }
+
+  // index is between 0 and size() - 1 and is the index of the stored position
+  // if the landmark
+  inline const Landmark& getLandmarkByIndex(Index index) const {
+    return landmarks_[index];
+  }
+
+  const gtsam::Point3Vector& getLandmarks() const { return landmarks_; }
+
+  // fast transform of landmarks p = P*p (R*p + t)
+  LandmarkMap transformTo(const gtsam::Pose3& pose) const {
+    TrackletIndices indices = landmark_indices_;
+    gtsam::Point3Vector landmarks;
+
+    dyno::transformTo(pose, landmarks_, landmarks);
+    return LandmarkMap(indices, landmarks);
+  }
+
+  inline TrackletIndices::const_iterator find(TrackletId id) const {
+    return landmark_indices_.find(id);
+  }
+
+  inline TrackletIndices::const_iterator begin() const {
+    return landmark_indices_.begin();
+  }
+
+  inline TrackletIndices::const_iterator end() const {
+    return landmark_indices_.end();
+  }
+
+ private:
+  LandmarkMap(const TrackletIndices& indices, const gtsam::Point3Vector& lmks)
+      : landmark_indices_(indices), landmarks_(lmks) {}
+
+ protected:
+  TrackletIndices landmark_indices_;
+  gtsam::Point3Vector landmarks_;
 };
-typedef gtsam::FastMap<ObjectId, LocalLandmarks> LocalLandmarksMap;
 
 // from here onwards we operate in the land of doubles
 // as all the geometric solvers operate using gtsam/egien double types!
@@ -503,12 +559,12 @@ struct FrameGeometry {
 };
 
 // A class that acts as an adaptor to match between the current frame geoemtry
-// and a reference frame defined by a set of LocalLandmarks
+// and a reference frame defined by a set of LandmarkMap
 // holds references to the input objects so lifetime must be managed
 class MatchingAdaptorBase {
  public:
   MatchingAdaptorBase(FrameGeometry& local_geometry,
-                      const LocalLandmarks& reference_geometry,
+                      const LandmarkMap& reference_geometry,
                       FeatureBlockContainer& features);
 
   virtual ~MatchingAdaptorBase() = default;
@@ -535,7 +591,7 @@ class MatchingAdaptorBase {
   /// @param i
   /// @return
   inline const gtsam::Point3& landmark(size_t i) const {
-    return reference_geometry_.lmks.at(referenceIndex(i));
+    return reference_geometry_.getLandmarkByIndex(referenceIndex(i));
   }
 
   inline TrackletId trackletId(size_t i) const {
@@ -559,6 +615,10 @@ class MatchingAdaptorBase {
     return &features_.inlier[fc_index];
   }
 
+  inline Index localIndex(size_t i) const { return matches_.at(i).first; }
+  inline Index referenceIndex(size_t i) const { return matches_.at(i).second; }
+
+  // TODO: pretty sure not used!
   /// @brief Recompute matches_ based on new inliers
   void recompute();
 
@@ -567,12 +627,8 @@ class MatchingAdaptorBase {
   inline virtual void recomputeCache() {}
 
  protected:
-  inline Index localIndex(size_t i) const { return matches_.at(i).first; }
-
-  inline Index referenceIndex(size_t i) const { return matches_.at(i).second; }
-
   FrameGeometry& local_geometry_;
-  const LocalLandmarks& reference_geometry_;
+  const LandmarkMap& reference_geometry_;
   FeatureBlockContainer& features_;
 
   //! Cached matched landmarks
@@ -589,7 +645,7 @@ class OpenGVCentralAbsolutePoseAdaptor
  public:
   OpenGVCentralAbsolutePoseAdaptor(const Camera::Ptr camera,
                                    FrameGeometry& local_geometry,
-                                   const LocalLandmarks& reference_geometry,
+                                   const LandmarkMap& reference_geometry,
                                    FeatureBlockContainer& features)
       : opengv::absolute_pose::AbsoluteAdapterBase(),
         MatchingAdaptorBase(local_geometry, reference_geometry, features),
@@ -790,8 +846,10 @@ struct measurement_traits<StereoMeasurement> {
 
 using StereoMap = RegularMap<StereoMeasurement>;
 
-class LocalBAGraph {
+class LocalBAGraph : public LandmarkMap {
  public:
+  DYNO_POINTER_TYPEDEFS(LocalBAGraph)
+
   LocalBAGraph() : observations_(StereoMap::create()) {}
   virtual ~LocalBAGraph() = default;
 
@@ -800,22 +858,10 @@ class LocalBAGraph {
     observations_->updateObservations(measurements);
   }
 
-  void setLandmark(TrackletId tracklet_id, const Landmark& lmk) {
-    landmarks_[tracklet_id] = lmk;
-  }
+  const StereoMap& getObservations() const { return *observations_; }
 
-  bool landmarkExists(TrackletId tracklet_id) const {
-    return landmarks_.exists(tracklet_id);
-  }
-
-  const Landmark& getLandmark(TrackletId tracklet_id) const {
-    return landmarks_.at(tracklet_id);
-  }
-
- protected:
  protected:
   StereoMap::Ptr observations_;
-  gtsam::FastMap<TrackletId, Landmark> landmarks_;
 
   // gtsam::FastMap<FrameId, gtsam::FastMap<FrameId, int>>
   // co_observation_counts_;
@@ -825,9 +871,11 @@ class LocalBAGraph {
 
 class LocalVIOGraph : public LocalBAGraph {
  public:
+  DYNO_POINTER_TYPEDEFS(LocalVIOGraph)
   LocalVIOGraph(Camera::Ptr camera);
 
-  void optimize(FrameId frame_id);
+  void optimize(FrameId frame_id,
+                std::vector<FrameId>* frames_affected = nullptr);
 
   void setPose(FrameId frame_id, const gtsam::Pose3& pose) {
     states_[frame_id] = pose;
@@ -835,7 +883,7 @@ class LocalVIOGraph : public LocalBAGraph {
 
   bool poseExists(FrameId frame_id) const { return states_.exists(frame_id); }
 
-  const gtsam::Pose3 getPose(FrameId frame_id) const {
+  const gtsam::Pose3& getPose(FrameId frame_id) const {
     return states_.at(frame_id);
   }
 
@@ -844,6 +892,79 @@ class LocalVIOGraph : public LocalBAGraph {
 
   Camera::CalibrationType::shared_ptr K_;
   StereoCalibPtr K_stereo_;
+};
+
+// dynamic object graph
+class DOGraph : public LocalBAGraph {
+ public:
+  DYNO_POINTER_TYPEDEFS(DOGraph)
+};
+
+class MultiBAGraph {
+ public:
+  MultiBAGraph() = default;
+  // virtual ~MultiBaGraph() = default;
+
+  bool exists(ObjectId object_id) const { return maps_.exists(object_id); }
+
+  void add(ObjectId object_id, LocalBAGraph::Ptr map) {
+    maps_[object_id] = map;
+  }
+
+  LocalBAGraph::Ptr get(ObjectId object_id) const {
+    auto map = maps_.at(object_id);
+    CHECK_NOTNULL(map);
+    return map;
+  }
+
+  template <typename T>
+  std::shared_ptr<T> getAs(ObjectId object_id) const {
+    auto map_base = this->get(object_id);
+    std::shared_ptr<T> map_derived = std::dynamic_pointer_cast<T>(map_base);
+    CHECK_NOTNULL(map_derived);
+    return map_derived;
+  }
+
+ protected:
+  gtsam::FastMap<ObjectId, LocalBAGraph::Ptr> maps_;
+};
+
+class DynamicSlamMap : private MultiBAGraph {
+ public:
+  using MultiBAGraph::exists;
+  using MultiBAGraph::get;
+
+  DynamicSlamMap(Camera::Ptr camera) : camera_(camera) {
+    maps_[background_label] = std::make_shared<LocalVIOGraph>(camera_);
+  }
+
+  bool hasStaticMap() const { return this->exists(background_label); }
+  bool hasDynamicMap(ObjectId object_id) {
+    CHECK_GT(object_id, background_label);
+    return this->exists(object_id);
+  }
+
+  LocalVIOGraph::Ptr getStaticMap() const {
+    return this->getAs<LocalVIOGraph>(background_label);
+  }
+
+  DOGraph::Ptr getDynamicObjectMap(ObjectId object_id) const {
+    return this->getAs<DOGraph>(object_id);
+  }
+
+  LocalBAGraph::Ptr add(ObjectId object_id) {
+    if (!exists(object_id)) {
+      CHECK_GT(object_id, background_label);
+      auto map = std::make_shared<DOGraph>();
+      maps_[object_id] = map;
+      return map;
+    } else {
+      return getStaticMap();
+    }
+  }
+
+ private:
+  Camera::Ptr camera_;
 };
 
 struct OpticalFlowLK {

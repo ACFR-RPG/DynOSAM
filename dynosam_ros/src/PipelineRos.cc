@@ -164,7 +164,7 @@ void DynosamNodeImpl::init() {
   // NOTE: MUST be MutuallyExclusive to prevent execution in parallel to itself
   spin_timer_group = node_ptr->create_callback_group(
       rclcpp::CallbackGroupType::MutuallyExclusive);
-  spin_timer = node_ptr->create_wall_timer(std::chrono::milliseconds(50),
+  spin_timer = node_ptr->create_wall_timer(std::chrono::milliseconds(30),
                                            spinOnce, spin_timer_group);
 }
 
