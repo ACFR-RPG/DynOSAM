@@ -4003,4 +4003,347 @@ TEST(Bearing, OptimizedMatchesEigen) {
   }
 }
 
+template <typename T, typename Key, typename KeyOfValue,
+          typename Hash = std::hash<Key>,
+          typename KeyEqual = std::equal_to<Key>>
+class ContiguousSet {
+ public:
+  using value_type = T;
+  using key_type = Key;
+  using size_type = std::size_t;
+
+ private:
+  using IndexMap = std::unordered_map<Key, size_type, Hash, KeyEqual>;
+
+ public:
+  ContiguousSet() = default;
+
+  explicit ContiguousSet(const KeyOfValue& key_of_value)
+      : key_of_value_(key_of_value) {}
+
+  void reserve(size_type n) {
+    values_.reserve(n);
+    index_.reserve(n);
+  }
+
+  bool empty() const noexcept { return values_.empty(); }
+
+  size_type size() const noexcept { return values_.size(); }
+
+  bool contains(const Key& key) const {
+    return index_.find(key) != index_.end();
+  }
+
+  bool insert(const T& value) {
+    const Key key = key_of_value_(value);
+
+    if (index_.find(key) != index_.end()) {
+      return false;
+    }
+
+    const size_type index = values_.size();
+
+    values_.push_back(value);
+    index_.emplace(key, index);
+
+    return true;
+  }
+
+  bool insert(T&& value) {
+    const Key key = key_of_value_(value);
+
+    if (index_.find(key) != index_.end()) {
+      return false;
+    }
+
+    const size_type index = values_.size();
+
+    values_.push_back(std::move(value));
+    index_.emplace(key, index);
+
+    return true;
+  }
+
+  const T& at(const Key& key) const {
+    const auto it = index_.find(key);
+
+    assert(it != index_.end());
+
+    return values_[it->second];
+  }
+
+  const T& operator[](size_type i) const noexcept { return values_[i]; }
+
+  typename std::vector<T>::const_iterator find(const Key& key) const {
+    auto it = index_.find(key);
+    if (it == index_.end()) {
+      return values_.end();
+    }
+
+    return values_.begin() + it->second;
+  }
+
+  const T& front() const {
+    assert(!empty());
+    return values_.front();
+  }
+
+  const T& back() const {
+    assert(!empty());
+    return values_.back();
+  }
+
+  auto begin() const noexcept { return values_.begin(); }
+
+  auto end() const noexcept { return values_.end(); }
+
+ private:
+  std::vector<T> values_;
+  IndexMap index_;
+  KeyOfValue key_of_value_;
+};
+
+struct Item {
+  uint64_t id;
+};
+
+struct ItemKey {
+  uint64_t operator()(const Item& item) const noexcept { return item.id; }
+};
+
+using TestContiguousSet = ContiguousSet<Item, uint64_t, ItemKey>;
+
+TEST(ContiguousSetTest, InsertUniqueValues) {
+  TestContiguousSet set;
+  set.reserve(1000);
+
+  for (uint64_t i = 0; i < 1000; ++i) {
+    EXPECT_TRUE(set.insert(Item{i}));
+  }
+
+  EXPECT_EQ(set.size(), 1000);
+}
+
+TEST(ContiguousSetTest, RejectsDuplicates) {
+  TestContiguousSet set;
+  set.reserve(1000);
+
+  EXPECT_TRUE(set.insert(Item{42}));
+  EXPECT_FALSE(set.insert(Item{42}));
+
+  EXPECT_EQ(set.size(), 1);
+}
+
+TEST(ContiguousSetTest, Lookup) {
+  TestContiguousSet set;
+  set.reserve(1000);
+
+  for (uint64_t i = 0; i < 1000; ++i) {
+    set.insert(Item{i});
+  }
+
+  for (uint64_t i = 0; i < 1000; ++i) {
+    EXPECT_TRUE(set.contains(i));
+    EXPECT_EQ(set.at(i).id, i);
+  }
+
+  EXPECT_FALSE(set.contains(1001));
+}
+
+constexpr std::size_t N = 16384;
+constexpr int NUM_RUNS = 100;
+
+template <typename Fn>
+double benchmark(Fn&& fn, int num_runs) {
+  const auto start = std::chrono::steady_clock::now();
+
+  for (int i = 0; i < num_runs; ++i) {
+    fn();
+  }
+
+  const auto end = std::chrono::steady_clock::now();
+
+  return std::chrono::duration<double, std::milli>(end - start).count() /
+         static_cast<double>(num_runs);
+}
+
+// -----------------------------------------------------------------------------
+// Input generation
+// -----------------------------------------------------------------------------
+
+std::vector<Item> makeIncreasing() {
+  std::vector<Item> values;
+  values.reserve(N);
+
+  for (std::size_t i = 0; i < N; ++i) {
+    values.emplace_back(Item{static_cast<uint64_t>(i)});
+  }
+
+  return values;
+}
+
+std::vector<Item> makeDecreasing() {
+  std::vector<Item> values;
+  values.reserve(N);
+
+  for (std::size_t i = N; i-- > 0;) {
+    values.emplace_back(Item{static_cast<uint64_t>(i)});
+  }
+
+  return values;
+}
+
+std::vector<Item> makeRandom() {
+  std::vector<Item> values = makeIncreasing();
+
+  std::mt19937 rng(42);
+
+  std::shuffle(values.begin(), values.end(), rng);
+
+  return values;
+}
+
+// -----------------------------------------------------------------------------
+// Construction
+// -----------------------------------------------------------------------------
+
+TestContiguousSet makeContiguousSet(const std::vector<Item>& values) {
+  TestContiguousSet set;
+  set.reserve(values.size());
+
+  for (const Item& value : values) {
+    set.insert(value);
+  }
+
+  return set;
+}
+
+std::set<uint64_t> makeStdSet(const std::vector<Item>& values) {
+  std::set<uint64_t> set;
+
+  for (const Item& value : values) {
+    set.insert(value.id);
+  }
+
+  return set;
+}
+
+// -----------------------------------------------------------------------------
+// Benchmarks
+// -----------------------------------------------------------------------------
+
+void runInsertionBenchmark(const char* name, const std::vector<Item>& values) {
+  const double dense_ns = benchmark(
+      [&] {
+        TestContiguousSet set;
+        set.reserve(N);
+
+        for (const Item& value : values) {
+          set.insert(value);
+        }
+      },
+      NUM_RUNS);
+
+  const double std_set_ns = benchmark(
+      [&] {
+        std::set<uint64_t> set;
+
+        for (const Item& value : values) {
+          set.insert(value.id);
+        }
+      },
+      NUM_RUNS);
+
+  std::cout << name << " - insert\n"
+            << "  ContiguousSet: " << dense_ns << " ms\n"
+            << "  std::set: " << std_set_ns << " ms\n"
+            << "  Speedup: " << std_set_ns / dense_ns << "x\n\n";
+}
+
+void runFindBenchmark(const char* name, const std::vector<Item>& values) {
+  const TestContiguousSet dense_set = makeContiguousSet(values);
+
+  const std::set<uint64_t> std_set = makeStdSet(values);
+
+  volatile uint64_t sink = 0;
+
+  const double dense_ns = benchmark(
+      [&] {
+        for (const Item& value : values) {
+          const auto it = dense_set.find(value.id);
+
+          if (it != dense_set.end()) {
+            sink += it->id;
+          }
+        }
+      },
+      NUM_RUNS);
+
+  const double std_set_ns = benchmark(
+      [&] {
+        for (const Item& value : values) {
+          const auto it = std_set.find(value.id);
+
+          if (it != std_set.end()) {
+            sink += *it;
+          }
+        }
+      },
+      NUM_RUNS);
+
+  std::cout << name << " - find\n"
+            << "  ContiguousSet: " << dense_ns << " ms\n"
+            << "  std::set: " << std_set_ns << " ms\n"
+            << "  Speedup: " << std_set_ns / dense_ns << "x\n\n";
+}
+
+void runIterationBenchmark(const char* name, const std::vector<Item>& values) {
+  const TestContiguousSet dense_set = makeContiguousSet(values);
+
+  const std::set<uint64_t> std_set = makeStdSet(values);
+
+  volatile uint64_t dense_sum = 0;
+  volatile uint64_t std_sum = 0;
+
+  const double dense_ns = benchmark(
+      [&] {
+        for (const Item& value : dense_set) {
+          dense_sum += value.id;
+        }
+      },
+      NUM_RUNS);
+
+  const double std_set_ns = benchmark(
+      [&] {
+        for (const uint64_t value : std_set) {
+          std_sum += value;
+        }
+      },
+      NUM_RUNS);
+
+  std::cout << name << " - iterate\n"
+            << "  ContiguousSet: " << dense_ns << " ms\n"
+            << "  std::set: " << std_set_ns << " ms\n"
+            << "  Speedup: " << std_set_ns / dense_ns << "x\n\n";
+}
+
+// -----------------------------------------------------------------------------
+// Test
+// -----------------------------------------------------------------------------
+
+void runBenchmarks(const char* name, const std::vector<Item>& values) {
+  runInsertionBenchmark(name, values);
+  runFindBenchmark(name, values);
+  runIterationBenchmark(name, values);
+}
+
+TEST(ContiguousSetBenchmark, Increasing) {
+  runBenchmarks("Increasing", makeIncreasing());
+}
+
+TEST(ContiguousSetBenchmark, Decreasing) {
+  runBenchmarks("Decreasing", makeDecreasing());
+}
+
+TEST(ContiguousSetBenchmark, Random) { runBenchmarks("Random", makeRandom()); }
 }  // namespace dyno

@@ -755,134 +755,1889 @@ TEST(Map, getInitialObjectMotionMissingFrame) {
 
 // }
 
-// TEST(Map, testEstimateWithStaticAndDynamicViaLmk) {
-//     Map2d::Ptr map = Map2d::create();
-//     StatusKeypointMeasurements measurements;
+#include <gtest/gtest.h>
 
-//     //tracklet 0, static, frame 0
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 0,
-//     0));
-//     //tracklet 0, static, frame 1
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 0,
-//     1));
-//     //static points should return the same estimate
+#include <algorithm>
+#include <chrono>
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <random>
+#include <set>
+#include <unordered_map>
+#include <vector>
 
-//     //tracklet 1, dynamic, frame 0
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1,
-//     0));
-//     //tracklet 1, dynamic, frame 1
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1,
-//     1));
-//     //dynamic points should return different estimates
+// ============================================================================
+// Dummy value
+// ============================================================================
 
-//     gtsam::Point3 static_lmk(0, 0, 0);
-//     gtsam::Point3 dynamic_lmk_1(0, 0, 1);
-//     gtsam::Point3 dynamic_lmk_2(0, 0, 2);
+struct Dummy {
+  std::uint64_t id = 0;
+  std::uint64_t payload = 0;
 
-//     gtsam::Values estimate;
-//     estimate.insert(StaticLandmarkSymbol(0), static_lmk);
-//     estimate.insert(DynamicLandmarkSymbol(0, 1), dynamic_lmk_1);
-//     estimate.insert(DynamicLandmarkSymbol(1, 1), dynamic_lmk_2);
+  bool operator<(const Dummy& other) const noexcept { return id < other.id; }
 
-//     map->updateObservations(measurements);
-//     map->updateEstimates(estimate,gtsam::NonlinearFactorGraph{}, 0 );
+  bool operator==(const Dummy& other) const noexcept {
+    return id == other.id && payload == other.payload;
+  }
 
-//     LandmarkNode2d::Ptr static_lmk_node = map->getLandmark(0);
-//     EXPECT_TRUE(static_lmk_node->isStatic());
-//     auto estimate_query = static_lmk_node->getStaticLandmarkEstimate();
-//     EXPECT_TRUE(estimate_query);
-//     EXPECT_TRUE(estimate_query.isValid());
-//     EXPECT_TRUE(gtsam::assert_equal(estimate_query.get(), static_lmk));
+  void print(const std::string& s = "") const {}
+  bool equals(const Dummy& q, double tol = 1e-9) const { return false; }
+};
 
-//     LandmarkNode2d::Ptr dynamic_lmk_1_node = map->getLandmark(1);
-//     EXPECT_FALSE(dynamic_lmk_1_node->isStatic());
-//     estimate_query = dynamic_lmk_1_node->getDynamicLandmarkEstimate(0);
-//     EXPECT_TRUE(estimate_query);
-//     EXPECT_TRUE(estimate_query.isValid());
-//     EXPECT_TRUE(gtsam::assert_equal(estimate_query.get(), dynamic_lmk_1));
+// needed for use in gtsam::FastSet
+template <>
+struct gtsam::traits<Dummy> : public gtsam::Testable<Dummy> {};
 
-//     LandmarkNode2d::Ptr dynamic_lmk_2_node = map->getLandmark(1);
-//     EXPECT_FALSE(dynamic_lmk_2_node->isStatic());
-//     estimate_query = dynamic_lmk_2_node->getDynamicLandmarkEstimate(1);
-//     EXPECT_TRUE(estimate_query);
-//     EXPECT_TRUE(estimate_query.isValid());
-//     EXPECT_TRUE(gtsam::assert_equal(estimate_query.get(), dynamic_lmk_2));
+#pragma once
 
-// }
+#include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <functional>
+#include <iterator>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
-// TEST(Map, testEstimateWithStaticAndDynamicViaFrame) {
+#pragma once
 
-// }
+#include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <functional>
+#include <iterator>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
-// TEST(Map, testObjectNodeWithOnlyMotion) {
-//     Map2d::Ptr map = Map2d::create();
+// =============================================================================
+// DenseSetStorage
+//
+// Common storage for DenseSet and DenseOrderedSet.
+//
+// Invariants:
+//   values_.size() == number of unique keys
+//   index_[key] == index of the corresponding value in values_
+//
+// values_ is never reordered after insertion.
+// =============================================================================
 
-//     //create dynamic observations for object 1 at frames 0 and 1
-//     StatusKeypointMeasurements measurements;
-//      //tracklet 1, dynamic, frame 0
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1,
-//     0));
-//     //tracklet 1, dynamic, frame 1
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1,
-//     1));
+template <typename T, typename Key, typename KeyOfValue,
+          typename Hash = std::hash<Key>,
+          typename KeyEqual = std::equal_to<Key>>
+class DenseSetStorage {
+ public:
+  using value_type = T;
+  using key_type = Key;
+  using size_type = std::size_t;
 
-//     gtsam::Values estimate;
-//     //add motion only at frame 1
-//     const gtsam::Pose3 pose_estimate =
-//     utils::createRandomAroundIdentity<gtsam::Pose3>(0.3);
-//     estimate.insert(ObjectMotionSymbol(1, 1), pose_estimate);
+ protected:
+  using IndexMap = std::unordered_map<Key, size_type, Hash, KeyEqual>;
 
-//     map->updateObservations(measurements);
-//     map->updateEstimates(estimate,gtsam::NonlinearFactorGraph{}, 1 );
+  DenseSetStorage() = default;
 
-//     ObjectNode2d::Ptr object1 = map->getObject(1);
-//     EXPECT_TRUE(object1->getMotionEstimate(1));
+  explicit DenseSetStorage(const KeyOfValue& key_of_value)
+      : key_of_value_(key_of_value) {}
 
-//     gtsam::Pose3 recovered_pose_estimate;
-//     EXPECT_TRUE(object1->hasMotionEstimate(1, &recovered_pose_estimate));
-//     //check nullptr version
-//     EXPECT_TRUE(object1->hasMotionEstimate(1));
-//     EXPECT_TRUE(gtsam::assert_equal(recovered_pose_estimate, pose_estimate));
+  void reserve(size_type n) {
+    values_.reserve(n);
+    index_.reserve(n);
+  }
 
-//     //should not throw exception as we have seen this obejct at frames 0 and
-//     1 (based on the measurements)
-//     //we just dont have an estimate of the pose
-//     EXPECT_FALSE(object1->getPoseEstimate(0));
-//     EXPECT_FALSE(object1->getPoseEstimate(1));
-// }
+  bool empty() const noexcept { return values_.empty(); }
 
-// TEST(Map, testObjectNodeWithOnlyPose) {
-//     Map2d::Ptr map = Map2d::create();
+  size_type size() const noexcept { return values_.size(); }
 
-//     //create dynamic observations for object 1 at frames 0 and 1
-//     StatusKeypointMeasurements measurements;
-//      //tracklet 1, dynamic, frame 0
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1,
-//     0));
-//     //tracklet 1, dynamic, frame 1
-//     measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1,
-//     1));
+  bool contains(const Key& key) const {
+    return index_.find(key) != index_.end();
+  }
 
-//     gtsam::Values estimate;
-//     //add motion only at frame 1
-//     const gtsam::Pose3 pose_estimate =
-//     utils::createRandomAroundIdentity<gtsam::Pose3>(0.3);
-//     estimate.insert(ObjectPoseSymbol(1, 1), pose_estimate);
+  const T& at(const Key& key) const {
+    const auto it = index_.find(key);
 
-//     map->updateObservations(measurements);
-//     map->updateEstimates(estimate,gtsam::NonlinearFactorGraph{}, 1 );
+    assert(it != index_.end());
 
-//     ObjectNode2d::Ptr object1 = map->getObject(1);
-//     EXPECT_TRUE(object1->getPoseEstimate(1));
+    return values_[it->second];
+  }
 
-//     gtsam::Pose3 recovered_pose_estimate;
-//     EXPECT_TRUE(object1->hasPoseEstimate(1, &recovered_pose_estimate));
-//     //check nullptr version
-//     EXPECT_TRUE(object1->hasPoseEstimate(1));
-//     EXPECT_TRUE(gtsam::assert_equal(recovered_pose_estimate, pose_estimate));
+  // Inserts into the contiguous storage and hash index.
+  //
+  // Returns false if the key already exists.
+  //
+  // On success:
+  //   storage_index = index of the new value in values_
+  //
+  // Exception safety:
+  //   If index_.emplace() throws, values_ is rolled back.
+  template <typename U>
+  bool emplaceValue(U&& value, size_type& storage_index) {
+    const Key key = key_of_value_(value);
 
-//     //should not throw exception as we have seen this obejct at frames 0 and
-//     1 (based on the measurements)
-//     //we just dont have an estimate of the motion
-//     EXPECT_FALSE(object1->getMotionEstimate(1));
-// }
+    // Uniqueness check before modifying storage.
+    if (index_.find(key) != index_.end()) {
+      return false;
+    }
+
+    storage_index = values_.size();
+
+    values_.emplace_back(std::forward<U>(value));
+
+    try {
+      index_.emplace(key, storage_index);
+    } catch (...) {
+      values_.pop_back();
+      throw;
+    }
+
+    return true;
+  }
+
+  std::vector<T> values_;
+  IndexMap index_;
+  KeyOfValue key_of_value_;
+};
+
+// =============================================================================
+// DenseSet
+//
+// Unique keys.
+// Contiguous storage.
+// Iteration order is insertion/storage order.
+//
+// Does NOT guarantee sorted ordering.
+// =============================================================================
+
+template <typename T, typename Key, typename KeyOfValue,
+          typename Hash = std::hash<Key>,
+          typename KeyEqual = std::equal_to<Key>>
+class DenseSet : private DenseSetStorage<T, Key, KeyOfValue, Hash, KeyEqual> {
+ private:
+  using Base = DenseSetStorage<T, Key, KeyOfValue, Hash, KeyEqual>;
+
+ public:
+  using value_type = typename Base::value_type;
+  using key_type = typename Base::key_type;
+  using size_type = typename Base::size_type;
+
+  // --------------------------------------------------------------------------
+  // Iterator
+  // --------------------------------------------------------------------------
+
+  class const_iterator {
+   public:
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = const T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const T*;
+    using reference = const T&;
+
+    const_iterator() = default;
+
+    reference operator*() const noexcept { return owner_->values_[position_]; }
+
+    pointer operator->() const noexcept { return &owner_->values_[position_]; }
+
+    const_iterator& operator++() noexcept {
+      ++position_;
+      return *this;
+    }
+
+    const_iterator operator++(int) noexcept {
+      const_iterator tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    const_iterator& operator--() noexcept {
+      --position_;
+      return *this;
+    }
+
+    const_iterator operator--(int) noexcept {
+      const_iterator tmp = *this;
+      --(*this);
+      return tmp;
+    }
+
+    const_iterator& operator+=(difference_type n) noexcept {
+      position_ += n;
+      return *this;
+    }
+
+    const_iterator& operator-=(difference_type n) noexcept {
+      position_ -= n;
+      return *this;
+    }
+
+    const_iterator operator+(difference_type n) const noexcept {
+      const_iterator result = *this;
+      result += n;
+      return result;
+    }
+
+    const_iterator operator-(difference_type n) const noexcept {
+      const_iterator result = *this;
+      result -= n;
+      return result;
+    }
+
+    difference_type operator-(const const_iterator& other) const noexcept {
+      return static_cast<difference_type>(position_) -
+             static_cast<difference_type>(other.position_);
+    }
+
+    reference operator[](difference_type n) const noexcept {
+      return owner_->values_[position_ + n];
+    }
+
+    bool operator==(const const_iterator& other) const noexcept {
+      return owner_ == other.owner_ && position_ == other.position_;
+    }
+
+    bool operator!=(const const_iterator& other) const noexcept {
+      return !(*this == other);
+    }
+
+    bool operator<(const const_iterator& other) const noexcept {
+      return position_ < other.position_;
+    }
+
+    bool operator>(const const_iterator& other) const noexcept {
+      return other < *this;
+    }
+
+    bool operator<=(const const_iterator& other) const noexcept {
+      return !(other < *this);
+    }
+
+    bool operator>=(const const_iterator& other) const noexcept {
+      return !(*this < other);
+    }
+
+   private:
+    friend class DenseSet;
+
+    const_iterator(const DenseSet* owner, size_type position) noexcept
+        : owner_(owner), position_(position) {}
+
+    const DenseSet* owner_ = nullptr;
+    size_type position_ = 0;
+  };
+
+  // --------------------------------------------------------------------------
+  // Construction
+  // --------------------------------------------------------------------------
+
+  DenseSet() = default;
+
+  explicit DenseSet(const KeyOfValue& key_of_value) : Base(key_of_value) {}
+
+  // --------------------------------------------------------------------------
+  // Capacity
+  // --------------------------------------------------------------------------
+
+  using Base::empty;
+  using Base::size;
+
+  void reserve(size_type n) { Base::reserve(n); }
+
+  // --------------------------------------------------------------------------
+  // Lookup
+  // --------------------------------------------------------------------------
+
+  using Base::at;
+  using Base::contains;
+
+  const_iterator find(const Key& key) const noexcept {
+    const auto it = Base::index_.find(key);
+
+    if (it == Base::index_.end()) {
+      return end();
+    }
+
+    return const_iterator{this, it->second};
+  }
+
+  // --------------------------------------------------------------------------
+  // Iteration
+  // --------------------------------------------------------------------------
+
+  const_iterator begin() const noexcept { return const_iterator{this, 0}; }
+
+  const_iterator end() const noexcept {
+    return const_iterator{this, Base::values_.size()};
+  }
+
+  // --------------------------------------------------------------------------
+  // Access
+  // --------------------------------------------------------------------------
+
+  const T& front() const {
+    assert(!empty());
+    return Base::values_.front();
+  }
+
+  const T& back() const {
+    assert(!empty());
+    return Base::values_.back();
+  }
+
+  // --------------------------------------------------------------------------
+  // Insertion
+  // --------------------------------------------------------------------------
+
+  bool insert(const T& value) {
+    size_type storage_index;
+    return Base::emplaceValue(value, storage_index);
+  }
+
+  bool insert(T&& value) {
+    size_type storage_index;
+    return Base::emplaceValue(std::move(value), storage_index);
+  }
+};
+
+// =============================================================================
+// DenseOrderedSet
+//
+// Unique keys.
+// Contiguous storage.
+// Sorted iteration.
+//
+// Data layout:
+//
+//   values_
+//       [ T ][ T ][ T ][ T ][ T ]
+//         0    1    2    3    4
+//
+//   ordered_keys_
+//       [ k0 ][ k1 ][ k2 ][ k3 ][ k4 ]
+//
+//   ordered_indices_
+//       [  3  ][  0  ][  4  ][  1  ][ 2 ]
+//
+// Thus:
+//
+//   ordered_keys_[i]
+//   ordered_indices_[i]
+//
+// together describe the i-th element in sorted order.
+//
+// Insertion:
+//
+//   increasing:
+//       O(1) amortised
+//
+//   arbitrary:
+//       O(log N) lower_bound
+//       O(N) vector shift
+// =============================================================================
+
+template <typename T, typename Key, typename KeyOfValue,
+          typename Hash = std::hash<Key>,
+          typename KeyEqual = std::equal_to<Key>>
+class DenseOrderedSet
+    : private DenseSetStorage<T, Key, KeyOfValue, Hash, KeyEqual> {
+ private:
+  using Base = DenseSetStorage<T, Key, KeyOfValue, Hash, KeyEqual>;
+
+ public:
+  using value_type = typename Base::value_type;
+  using key_type = typename Base::key_type;
+  using size_type = typename Base::size_type;
+
+  // --------------------------------------------------------------------------
+  // Iterator
+  // --------------------------------------------------------------------------
+
+  class const_iterator {
+   public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = const T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const T*;
+    using reference = const T&;
+
+    const_iterator() = default;
+
+    reference operator*() const noexcept {
+      return owner_->values_[owner_->ordered_indices_[position_]];
+    }
+
+    pointer operator->() const noexcept { return &operator*(); }
+
+    const_iterator& operator++() noexcept {
+      ++position_;
+      return *this;
+    }
+
+    const_iterator operator++(int) noexcept {
+      const_iterator tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    bool operator==(const const_iterator& other) const noexcept {
+      return owner_ == other.owner_ && position_ == other.position_;
+    }
+
+    bool operator!=(const const_iterator& other) const noexcept {
+      return !(*this == other);
+    }
+
+   private:
+    friend class DenseOrderedSet;
+
+    const_iterator(const DenseOrderedSet* owner, size_type position) noexcept
+        : owner_(owner), position_(position) {}
+
+    const DenseOrderedSet* owner_ = nullptr;
+    size_type position_ = 0;
+  };
+
+  // --------------------------------------------------------------------------
+  // Construction
+  // --------------------------------------------------------------------------
+
+  DenseOrderedSet() = default;
+
+  explicit DenseOrderedSet(const KeyOfValue& key_of_value)
+      : Base(key_of_value) {}
+
+  // --------------------------------------------------------------------------
+  // Capacity
+  // --------------------------------------------------------------------------
+
+  using Base::empty;
+  using Base::size;
+
+  void reserve(size_type n) {
+    Base::reserve(n);
+    ordered_keys_.reserve(n);
+    ordered_indices_.reserve(n);
+  }
+
+  // --------------------------------------------------------------------------
+  // Lookup
+  // --------------------------------------------------------------------------
+
+  using Base::at;
+  using Base::contains;
+
+  // --------------------------------------------------------------------------
+  // Iteration
+  // --------------------------------------------------------------------------
+
+  const_iterator begin() const noexcept { return const_iterator{this, 0}; }
+
+  const_iterator end() const noexcept {
+    return const_iterator{this, ordered_indices_.size()};
+  }
+
+  // --------------------------------------------------------------------------
+  // Ordered access
+  // --------------------------------------------------------------------------
+
+  const T& front() const {
+    assert(!empty());
+
+    return Base::values_[ordered_indices_.front()];
+  }
+
+  const T& back() const {
+    assert(!empty());
+
+    return Base::values_[ordered_indices_.back()];
+  }
+
+  // --------------------------------------------------------------------------
+  // Insertion
+  // --------------------------------------------------------------------------
+
+  bool insert(const T& value) { return insertImpl(value); }
+
+  bool insert(T&& value) { return insertImpl(std::move(value)); }
+
+ private:
+  template <typename U>
+  bool insertImpl(U&& value) {
+    // Extract the key before moving value.
+    const Key key = Base::key_of_value_(value);
+
+    size_type storage_index;
+
+    // ------------------------------------------------------------------------
+    // Common insertion:
+    //
+    //   1. uniqueness check
+    //   2. append to contiguous storage
+    //   3. add key -> storage index
+    //
+    // ------------------------------------------------------------------------
+
+    if (!Base::emplaceValue(std::forward<U>(value), storage_index)) {
+      return false;
+    }
+
+    // ------------------------------------------------------------------------
+    // Fast path: first element or monotonically increasing key.
+    //
+    // This is just two push_backs and is the critical common case.
+    // ------------------------------------------------------------------------
+
+    if (ordered_keys_.empty() || ordered_keys_.back() < key) {
+      ordered_keys_.push_back(key);
+      ordered_indices_.push_back(storage_index);
+
+      return true;
+    }
+
+    // ------------------------------------------------------------------------
+    // General case.
+    //
+    // Search ONLY the contiguous key array.
+    //
+    // This avoids:
+    //
+    //   ordered_indices_[i]
+    //       -> values_[...]
+    //           -> key_of_value_(...)
+    //
+    // for every binary-search comparison.
+    // ------------------------------------------------------------------------
+
+    const auto position =
+        std::lower_bound(ordered_keys_.begin(), ordered_keys_.end(), key);
+
+    const size_type ordered_position =
+        static_cast<size_type>(position - ordered_keys_.begin());
+
+    // The two vectors have identical logical ordering, so the same position
+    // can be used for both insertions.
+    ordered_keys_.insert(position, key);
+
+    ordered_indices_.insert(ordered_indices_.begin() + ordered_position,
+                            storage_index);
+
+    return true;
+  }
+
+  // Sorted keys. Used exclusively for binary search.
+  std::vector<Key> ordered_keys_;
+
+  // Maps sorted position -> contiguous storage index.
+  std::vector<size_type> ordered_indices_;
+};
+// template <typename T, typename Key, typename KeyOfValue>
+// class DenseOrderedSetBinarySearch {
+//  public:
+//   using value_type = T;
+//   using key_type = Key;
+//   using size_type = std::size_t;
+
+//  private:
+//   std::vector<T> values_;
+//   std::vector<size_type> ordered_indices_;
+
+//   KeyOfValue key_of_;
+
+//  public:
+//   class const_iterator {
+//     public:
+//       using iterator_category = std::forward_iterator_tag;
+//       using value_type = const T;
+//       using difference_type = std::ptrdiff_t;
+//       using pointer = const T*;
+//       using reference = const T&;
+
+//       const_iterator() = default;
+
+//       reference operator*() const {
+//         return owner_->values_[owner_->ordered_indices_[position_]];
+//       }
+
+//       pointer operator->() const {
+//         return &owner_->values_[owner_->ordered_indices_[position_]];
+//       }
+
+//       const_iterator& operator++() {
+//         ++position_;
+//         return *this;
+//       }
+
+//       const_iterator operator++(int) {
+//         const_iterator copy = *this;
+//         ++(*this);
+//         return copy;
+//       }
+
+//       friend bool operator==(
+//           const const_iterator& lhs,
+//           const const_iterator& rhs) {
+//         return lhs.owner_ == rhs.owner_ &&
+//               lhs.position_ == rhs.position_;
+//       }
+
+//       friend bool operator!=(
+//           const const_iterator& lhs,
+//           const const_iterator& rhs) {
+//         return !(lhs == rhs);
+//       }
+
+//     private:
+//       friend class DenseOrderedSetBinarySearch;
+
+//       const DenseOrderedSetBinarySearch* owner_ = nullptr;
+//       size_type position_ = 0;
+
+//       const_iterator(
+//           const DenseOrderedSetBinarySearch* owner,
+//           size_type position)
+//           : owner_(owner),
+//             position_(position) {}
+//     };
+
+//   const_iterator begin() const {
+//     return const_iterator(this, 0);
+//   }
+
+//   const_iterator end() const {
+//     return const_iterator(this, ordered_indices_.size());
+//   }
+
+//   void reserve(size_type n) {
+//     values_.reserve(n);
+//     ordered_indices_.reserve(n);
+//   }
+
+//   bool insert(const T& value) {
+//     const Key key = key_of_(value);
+
+//     // Empty container.
+//     if (ordered_indices_.empty()) {
+//       values_.push_back(value);
+//       ordered_indices_.push_back(0);
+//       return true;
+//     }
+
+//     // Very common case: monotonically increasing keys.
+//     const Key& last_key =
+//         key_of_(values_[ordered_indices_.back()]);
+
+//     if (last_key < key) {
+//       const size_type storage_index = values_.size();
+
+//       values_.push_back(value);
+//       ordered_indices_.push_back(storage_index);
+
+//       return true;
+//     }
+
+//     // General case.
+//     const auto it = std::lower_bound(
+//         ordered_indices_.begin(),
+//         ordered_indices_.end(),
+//         key,
+//         [&](size_type index, const Key& k) {
+//           return key_of_(values_[index]) < k;
+//         });
+
+//     // Check uniqueness.
+//     if (it != ordered_indices_.end() &&
+//         key_of_(values_[*it]) == key) {
+//       return false;
+//     }
+
+//     const size_type storage_index = values_.size();
+
+//     values_.push_back(value);
+
+//     // Important: values_ does not move after this point because
+//     // ordered_indices_ contains indices, not pointers.
+//     ordered_indices_.insert(it, storage_index);
+
+//     return true;
+//   }
+
+//   const T& at(const Key& key) const {
+//     return find(key);
+//   }
+
+//   const T& find(const Key& key) const {
+//     const auto it = std::lower_bound(
+//         ordered_indices_.begin(),
+//         ordered_indices_.end(),
+//         key,
+//         [&](size_type index, const Key& k) {
+//           return key_of_(values_[index]) < k;
+//         });
+
+//     if (it == ordered_indices_.end() ||
+//         key_of_(values_[*it]) != key) {
+//       throw std::out_of_range("Key not found");
+//     }
+
+//     return values_[*it];
+//   }
+
+//   bool contains(const Key& key) const {
+//     const auto it = std::lower_bound(
+//         ordered_indices_.begin(),
+//         ordered_indices_.end(),
+//         key,
+//         [&](size_type index, const Key& k) {
+//           return key_of_(values_[index]) < k;
+//         });
+
+//     return it != ordered_indices_.end() &&
+//            key_of_(values_[*it]) == key;
+//   }
+
+//   const T& front() const {
+//     assert(!ordered_indices_.empty());
+//     return values_[ordered_indices_.front()];
+//   }
+
+//   const T& back() const {
+//     assert(!ordered_indices_.empty());
+//     return values_[ordered_indices_.back()];
+//   }
+
+//   size_type size() const {
+//     return values_.size();
+//   }
+
+//   bool empty() const {
+//     return values_.empty();
+//   }
+// };
+
+template <typename T, typename Key, typename KeyOfValue,
+          typename Compare = std::less<Key>>
+class DenseOrderedSetBinary {
+ public:
+  using value_type = T;
+  using key_type = Key;
+  using size_type = std::size_t;
+
+ private:
+  struct OrderedKeyCompare {
+    const Compare& compare;
+
+    bool operator()(const Key& lhs, const Key& rhs) const {
+      return compare(lhs, rhs);
+    }
+
+    bool operator()(const size_type index, const Key& key) const {
+      return compare(key_of(index), key);
+    }
+
+    bool operator()(const Key& key, const size_type index) const {
+      return compare(key, key_of(index));
+    }
+
+    const Key& key_of(const size_type index) const { return keys[index]; }
+
+    const std::vector<Key>& keys;
+  };
+
+ public:
+  class const_iterator {
+   public:
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = const T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const T*;
+    using reference = const T&;
+
+    const_iterator() = default;
+
+    reference operator*() const {
+      return owner_->values_[owner_->ordered_indices_[position_]];
+    }
+
+    pointer operator->() const { return &(**this); }
+
+    const_iterator& operator++() {
+      ++position_;
+      return *this;
+    }
+
+    const_iterator operator++(int) {
+      auto tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    const_iterator& operator--() {
+      --position_;
+      return *this;
+    }
+
+    const_iterator operator--(int) {
+      auto tmp = *this;
+      --(*this);
+      return tmp;
+    }
+
+    const_iterator& operator+=(difference_type n) {
+      position_ += static_cast<size_type>(n);
+      return *this;
+    }
+
+    const_iterator& operator-=(difference_type n) {
+      position_ -= static_cast<size_type>(n);
+      return *this;
+    }
+
+    const_iterator operator+(difference_type n) const {
+      auto result = *this;
+      result += n;
+      return result;
+    }
+
+    const_iterator operator-(difference_type n) const {
+      auto result = *this;
+      result -= n;
+      return result;
+    }
+
+    difference_type operator-(const const_iterator& other) const {
+      return static_cast<difference_type>(position_) -
+             static_cast<difference_type>(other.position_);
+    }
+
+    reference operator[](difference_type n) const { return *(*this + n); }
+
+    bool operator==(const const_iterator& other) const {
+      return owner_ == other.owner_ && position_ == other.position_;
+    }
+
+    bool operator!=(const const_iterator& other) const {
+      return !(*this == other);
+    }
+
+    bool operator<(const const_iterator& other) const {
+      return position_ < other.position_;
+    }
+
+    bool operator>(const const_iterator& other) const { return other < *this; }
+
+    bool operator<=(const const_iterator& other) const {
+      return !(other < *this);
+    }
+
+    bool operator>=(const const_iterator& other) const {
+      return !(*this < other);
+    }
+
+   private:
+    friend class DenseOrderedSetBinary;
+
+    const_iterator(const DenseOrderedSetBinary* owner, size_type position)
+        : owner_(owner), position_(position) {}
+
+    const DenseOrderedSetBinary* owner_ = nullptr;
+    size_type position_ = 0;
+  };
+
+  DenseOrderedSetBinary() = default;
+
+  explicit DenseOrderedSetBinary(const KeyOfValue& key_of) : key_of_(key_of) {}
+
+  void reserve(size_type n) {
+    values_.reserve(n);
+    ordered_keys_.reserve(n);
+    ordered_indices_.reserve(n);
+  }
+
+  bool empty() const noexcept { return values_.empty(); }
+
+  size_type size() const noexcept { return values_.size(); }
+
+  bool insert(const T& value) { return emplaceImpl(value); }
+
+  bool insert(T&& value) { return emplaceImpl(std::move(value)); }
+
+  bool contains(const Key& key) const {
+    const auto it = findPosition(key);
+    return it != ordered_keys_.end() && equivalent(*it, key);
+  }
+
+  const T& at(const Key& key) const {
+    const auto it = findPosition(key);
+
+    assert(it != ordered_keys_.end() && equivalent(*it, key));
+
+    const size_type position =
+        static_cast<size_type>(it - ordered_keys_.begin());
+
+    return values_[ordered_indices_[position]];
+  }
+
+  const T& front() const {
+    assert(!empty());
+    return values_[ordered_indices_.front()];
+  }
+
+  const T& back() const {
+    assert(!empty());
+    return values_[ordered_indices_.back()];
+  }
+
+  const_iterator find(const Key& key) const {
+    const auto it = findPosition(key);
+
+    if (it == ordered_keys_.end() || !equivalent(*it, key)) {
+      return end();
+    }
+
+    return const_iterator{this,
+                          static_cast<size_type>(it - ordered_keys_.begin())};
+  }
+
+  const_iterator begin() const noexcept { return const_iterator{this, 0}; }
+
+  const_iterator end() const noexcept {
+    return const_iterator{this, ordered_indices_.size()};
+  }
+
+ private:
+  template <typename U>
+  bool emplaceImpl(U&& value) {
+    const Key key = key_of_(value);
+
+    // Find the sorted position before modifying anything.
+    const auto position = std::lower_bound(ordered_keys_.begin(),
+                                           ordered_keys_.end(), key, compare_);
+
+    const size_type ordered_position =
+        static_cast<size_type>(position - ordered_keys_.begin());
+
+    // Uniqueness check.
+    if (position != ordered_keys_.end() && equivalent(*position, key)) {
+      return false;
+    }
+
+    // Values remain in insertion order / storage order.
+    const size_type value_index = values_.size();
+    values_.emplace_back(std::forward<U>(value));
+
+    // Maintain the sorted key/index mapping.
+    ordered_keys_.insert(
+        ordered_keys_.begin() + static_cast<std::ptrdiff_t>(ordered_position),
+        key);
+
+    ordered_indices_.insert(ordered_indices_.begin() +
+                                static_cast<std::ptrdiff_t>(ordered_position),
+                            value_index);
+
+    return true;
+  }
+
+  // const_iterator findPosition(const Key& key) const {
+  //   const auto it = std::lower_bound(
+  //       ordered_keys_.begin(),
+  //       ordered_keys_.end(),
+  //       key,
+  //       compare_);
+
+  //   return const_iterator{
+  //       this,
+  //       static_cast<size_type>(it - ordered_keys_.begin())};
+  // }
+
+  using KeyIterator = typename std::vector<Key>::const_iterator;
+  // This overload is only used internally for findPosition's
+  // existence check, so return an actual vector iterator instead.
+  KeyIterator findPosition(const Key& key) const {
+    return std::lower_bound(ordered_keys_.begin(), ordered_keys_.end(), key,
+                            compare_);
+  }
+
+  bool equivalent(const Key& lhs, const Key& rhs) const {
+    return !compare_(lhs, rhs) && !compare_(rhs, lhs);
+  }
+
+  std::vector<T> values_;
+  std::vector<Key> ordered_keys_;
+  std::vector<size_type> ordered_indices_;
+
+  KeyOfValue key_of_;
+  Compare compare_;
+};
+
+// ============================================================================
+// Dummy specialisation
+// ============================================================================
+
+struct DummyKey {
+  std::uint64_t operator()(const Dummy& value) const noexcept {
+    return value.id;
+  }
+};
+
+struct DummyCompare {
+  // enables heterogeneous lookup
+  using is_transparent = void;
+
+  bool operator()(const Dummy& a, const Dummy& b) const { return a.id < b.id; }
+
+  bool operator()(const Dummy& a, std::uint64_t id) const { return a.id < id; }
+  bool operator()(std::uint64_t id, const Dummy& a) const { return id < a.id; }
+};
+
+// ============================================================================
+// Test container types
+// ============================================================================
+
+// Adjust these aliases/includes to your actual types.
+
+using TestDenseSet = DenseSet<Dummy, std::uint64_t, DummyKey>;
+
+using TestDenseOrderedSet =
+    DenseOrderedSetBinary<Dummy, std::uint64_t, DummyKey>;
+
+using TestDynoSet = dyno::FastSet<Dummy, DummyCompare>;
+
+// ============================================================================
+// TestContains
+// ============================================================================
+
+template <typename Container>
+struct TestContains;
+
+// DenseSet:
+// O(1) average lookup through the unordered_map.
+template <>
+struct TestContains<TestDenseSet> {
+  static bool contains(const TestDenseSet& container, std::uint64_t key) {
+    return container.contains(key);
+  }
+
+  static Dummy at(const TestDenseSet& container, std::uint64_t key) {
+    return container.at(key);
+  }
+
+  static auto find(const TestDenseSet& container, std::uint64_t key) {
+    return container.find(key);
+  }
+};
+
+// DenseOrderedSet:
+// O(log N) lookup through ordered_keys_.
+template <>
+struct TestContains<TestDenseOrderedSet> {
+  static bool contains(const TestDenseOrderedSet& container,
+                       std::uint64_t key) {
+    return container.contains(key);
+  }
+
+  static Dummy at(const TestDenseOrderedSet& container, std::uint64_t key) {
+    return container.at(key);
+  }
+
+  static auto find(const TestDenseOrderedSet& container, std::uint64_t key) {
+    return container.find(key);
+  }
+};
+
+// std::set:
+// Use find() because std::set has no contains()/at().
+template <>
+struct TestContains<TestDynoSet> {
+  static bool contains(const TestDynoSet& container, std::uint64_t key) {
+    return container.find(Dummy{key, 0}) != container.end();
+  }
+
+  static Dummy at(const TestDynoSet& container, std::uint64_t key) {
+    return *container.find(Dummy{key, 0});
+  }
+
+  static auto find(const TestDynoSet& container, std::uint64_t key) {
+    return container.find(key);
+  }
+};
+
+// ============================================================================
+// Helpers
+// ============================================================================
+
+Dummy makeDummy(std::uint64_t id) {
+  Dummy value;
+  value.id = id;
+
+  // Make the object large enough that moving objects is non-trivial,
+  // while still keeping this benchmark simple.
+  value.payload = id * 0x9e3779b97f4a7c15ULL + 1234567;
+
+  return value;
+}
+
+enum class InsertionOrder { Increasing, Decreasing, Random, NearlySorted };
+
+std::vector<std::uint64_t> makeKeys(std::size_t n, InsertionOrder order,
+                                    std::uint64_t seed = 12345) {
+  std::vector<std::uint64_t> keys(n);
+
+  std::iota(keys.begin(), keys.end(), std::uint64_t{0});
+
+  switch (order) {
+    case InsertionOrder::Increasing:
+      break;
+
+    case InsertionOrder::Decreasing:
+      std::reverse(keys.begin(), keys.end());
+      break;
+
+    case InsertionOrder::Random: {
+      std::mt19937_64 rng(seed);
+
+      std::shuffle(keys.begin(), keys.end(), rng);
+
+      break;
+    }
+
+    case InsertionOrder::NearlySorted: {
+      if (n < 2) {
+        break;
+      }
+
+      std::mt19937_64 rng(seed);
+
+      const std::size_t swaps = std::max<std::size_t>(1, n / 100);
+
+      std::uniform_int_distribution<std::size_t> dist(0, n - 1);
+
+      for (std::size_t i = 0; i < swaps; ++i) {
+        std::swap(keys[dist(rng)], keys[dist(rng)]);
+      }
+
+      break;
+    }
+  }
+
+  return keys;
+}
+
+// ============================================================================
+// Correctness: basic behaviour
+// ============================================================================
+
+TEST(DenseSetCorrectness, StartsEmpty) {
+  TestDenseSet set;
+
+  EXPECT_TRUE(set.empty());
+  EXPECT_EQ(set.size(), 0);
+}
+
+TEST(DenseOrderedSetCorrectness, StartsEmpty) {
+  TestDenseOrderedSet set;
+
+  EXPECT_TRUE(set.empty());
+  EXPECT_EQ(set.size(), 0);
+}
+
+TEST(DenseSetCorrectness, InsertSingleElement) {
+  TestDenseSet set;
+
+  EXPECT_TRUE(set.insert(makeDummy(42)));
+
+  EXPECT_FALSE(set.empty());
+  EXPECT_EQ(set.size(), 1);
+
+  EXPECT_TRUE(set.contains(42));
+  EXPECT_EQ(set.at(42).id, 42);
+
+  EXPECT_EQ(set.front().id, 42);
+  EXPECT_EQ(set.back().id, 42);
+}
+
+TEST(DenseOrderedSetCorrectness, InsertSingleElement) {
+  TestDenseOrderedSet set;
+
+  EXPECT_TRUE(set.insert(makeDummy(42)));
+
+  EXPECT_FALSE(set.empty());
+  EXPECT_EQ(set.size(), 1);
+
+  EXPECT_TRUE(set.contains(42));
+  EXPECT_EQ(set.at(42).id, 42);
+
+  EXPECT_EQ(set.front().id, 42);
+  EXPECT_EQ(set.back().id, 42);
+}
+
+TEST(DenseSetCorrectness, DuplicateKeysAreRejected) {
+  TestDenseSet set;
+
+  Dummy first = makeDummy(42);
+  Dummy duplicate = makeDummy(42);
+
+  first.payload = 100;
+  duplicate.payload = 999;
+
+  EXPECT_TRUE(set.insert(first));
+  EXPECT_FALSE(set.insert(duplicate));
+
+  EXPECT_EQ(set.size(), 1);
+  EXPECT_EQ(set.at(42).payload, 100);
+}
+
+TEST(DenseOrderedSetCorrectness, DuplicateKeysAreRejected) {
+  TestDenseOrderedSet set;
+
+  Dummy first = makeDummy(42);
+  Dummy duplicate = makeDummy(42);
+
+  first.payload = 100;
+  duplicate.payload = 999;
+
+  EXPECT_TRUE(set.insert(first));
+  EXPECT_FALSE(set.insert(duplicate));
+
+  EXPECT_EQ(set.size(), 1);
+  EXPECT_EQ(set.at(42).payload, 100);
+}
+
+TEST(DenseSetCorrectness, MissingKey) {
+  TestDenseSet set;
+
+  set.insert(makeDummy(10));
+  set.insert(makeDummy(20));
+
+  EXPECT_FALSE(set.contains(30));
+}
+
+TEST(DenseOrderedSetCorrectness, MissingKey) {
+  TestDenseOrderedSet set;
+
+  set.insert(makeDummy(10));
+  set.insert(makeDummy(20));
+
+  EXPECT_FALSE(set.contains(30));
+}
+
+TEST(DenseSetCorrectness, LookupReturnsCorrectValue) {
+  TestDenseSet set;
+
+  for (std::uint64_t i = 0; i < 1000; ++i) {
+    EXPECT_TRUE(set.insert(makeDummy(i)));
+  }
+
+  for (std::uint64_t i = 0; i < 1000; ++i) {
+    ASSERT_TRUE(set.contains(i));
+    EXPECT_EQ(set.at(i).id, i);
+  }
+}
+
+TEST(DenseOrderedSetCorrectness, LookupReturnsCorrectValue) {
+  TestDenseOrderedSet set;
+
+  for (std::uint64_t i = 0; i < 1000; ++i) {
+    EXPECT_TRUE(set.insert(makeDummy(i)));
+  }
+
+  for (std::uint64_t i = 0; i < 1000; ++i) {
+    ASSERT_TRUE(set.contains(i));
+    EXPECT_EQ(set.at(i).id, i);
+  }
+}
+
+// ============================================================================
+// Correctness: DenseSet does NOT guarantee ordering
+// ============================================================================
+
+TEST(DenseSetCorrectness, IterationFollowsStorageInsertionOrder) {
+  TestDenseSet set;
+
+  const std::vector<std::uint64_t> keys = {7, 2, 9, 1, 5, 3};
+
+  for (const auto key : keys) {
+    ASSERT_TRUE(set.insert(makeDummy(key)));
+  }
+
+  ASSERT_EQ(set.size(), keys.size());
+
+  std::size_t index = 0;
+
+  for (const auto& value : set) {
+    ASSERT_LT(index, keys.size());
+    EXPECT_EQ(value.id, keys[index]);
+    ++index;
+  }
+
+  EXPECT_EQ(index, keys.size());
+}
+
+TEST(DenseSetCorrectness, FrontAndBackFollowStorageOrder) {
+  TestDenseSet set;
+
+  ASSERT_TRUE(set.insert(makeDummy(50)));
+  ASSERT_TRUE(set.insert(makeDummy(10)));
+  ASSERT_TRUE(set.insert(makeDummy(90)));
+
+  EXPECT_EQ(set.front().id, 50);
+  EXPECT_EQ(set.back().id, 90);
+}
+
+// ============================================================================
+// Correctness: DenseOrderedSet ordering
+// ============================================================================
+
+TEST(DenseOrderedSetCorrectness, IncreasingInsertionIsOrdered) {
+  TestDenseOrderedSet set;
+
+  for (std::uint64_t i = 0; i < 100; ++i) {
+    ASSERT_TRUE(set.insert(makeDummy(i)));
+  }
+
+  ASSERT_EQ(set.front().id, 0);
+  ASSERT_EQ(set.back().id, 99);
+
+  std::uint64_t expected = 0;
+
+  for (const auto& value : set) {
+    EXPECT_EQ(value.id, expected);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 100);
+}
+
+TEST(DenseOrderedSetCorrectness, DecreasingInsertionIsOrdered) {
+  TestDenseOrderedSet set;
+
+  for (std::uint64_t i = 100; i > 0; --i) {
+    ASSERT_TRUE(set.insert(makeDummy(i - 1)));
+  }
+
+  ASSERT_EQ(set.front().id, 0);
+  ASSERT_EQ(set.back().id, 99);
+
+  std::uint64_t expected = 0;
+
+  for (const auto& value : set) {
+    EXPECT_EQ(value.id, expected);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, 100);
+}
+
+TEST(DenseOrderedSetCorrectness, RandomInsertionIsOrdered) {
+  constexpr std::size_t N = 10000;
+
+  const auto keys = makeKeys(N, InsertionOrder::Random, 12345);
+
+  TestDenseOrderedSet set;
+
+  for (const auto key : keys) {
+    ASSERT_TRUE(set.insert(makeDummy(key)));
+  }
+
+  ASSERT_EQ(set.size(), N);
+  ASSERT_EQ(set.front().id, 0);
+  ASSERT_EQ(set.back().id, N - 1);
+
+  std::uint64_t expected = 0;
+
+  for (const auto& value : set) {
+    ASSERT_EQ(value.id, expected);
+    ++expected;
+  }
+
+  EXPECT_EQ(expected, N);
+}
+
+TEST(DenseOrderedSetCorrectness, NearlySortedInsertionIsOrdered) {
+  constexpr std::size_t N = 10000;
+
+  const auto keys = makeKeys(N, InsertionOrder::NearlySorted, 54321);
+
+  TestDenseOrderedSet set;
+
+  for (const auto key : keys) {
+    ASSERT_TRUE(set.insert(makeDummy(key)));
+  }
+
+  ASSERT_EQ(set.size(), N);
+  ASSERT_EQ(set.front().id, 0);
+  ASSERT_EQ(set.back().id, N - 1);
+
+  std::uint64_t previous = 0;
+  bool first = true;
+
+  for (const auto& value : set) {
+    if (!first) {
+      EXPECT_GT(value.id, previous);
+    }
+
+    previous = value.id;
+    first = false;
+  }
+}
+
+// ============================================================================
+// Correctness: arbitrary insertion sequences
+// ============================================================================
+
+TEST(DenseOrderedSetCorrectness, AllInsertionOrdersProduceSameOrderedView) {
+  constexpr std::size_t N = 5000;
+
+  std::vector<std::uint64_t> expected(N);
+
+  std::iota(expected.begin(), expected.end(), std::uint64_t{0});
+
+  for (const auto order :
+       {InsertionOrder::Increasing, InsertionOrder::Decreasing,
+        InsertionOrder::Random, InsertionOrder::NearlySorted}) {
+    TestDenseOrderedSet set;
+
+    const auto keys = makeKeys(N, order, 1234);
+
+    for (const auto key : keys) {
+      ASSERT_TRUE(set.insert(makeDummy(key)));
+    }
+
+    ASSERT_EQ(set.size(), N);
+
+    std::size_t index = 0;
+
+    for (const auto& value : set) {
+      ASSERT_LT(index, expected.size());
+
+      EXPECT_EQ(value.id, expected[index]);
+
+      ++index;
+    }
+
+    EXPECT_EQ(index, N);
+    EXPECT_EQ(set.front().id, 0);
+    EXPECT_EQ(set.back().id, N - 1);
+  }
+}
+
+// ============================================================================
+// Correctness: compare ordered dense set against std::set
+// ============================================================================
+
+TEST(DenseOrderedSetCorrectness, MatchesStdSetOrdering) {
+  constexpr std::size_t N = 10000;
+
+  const auto keys = makeKeys(N, InsertionOrder::Random, 98765);
+
+  TestDenseOrderedSet dense;
+  TestDynoSet tree;
+
+  for (const auto key : keys) {
+    const Dummy value = makeDummy(key);
+
+    ASSERT_TRUE(dense.insert(value));
+
+    ASSERT_TRUE(tree.insert(value).second);
+  }
+
+  ASSERT_EQ(dense.size(), tree.size());
+
+  auto dense_it = dense.begin();
+  auto tree_it = tree.begin();
+
+  while (dense_it != dense.end() && tree_it != tree.end()) {
+    EXPECT_EQ(dense_it->id, tree_it->id);
+
+    EXPECT_EQ(dense_it->payload, tree_it->payload);
+
+    ++dense_it;
+    ++tree_it;
+  }
+
+  EXPECT_EQ(dense_it, dense.end());
+
+  EXPECT_EQ(tree_it, tree.end());
+
+  EXPECT_EQ(dense.front().id, tree.begin()->id);
+
+  EXPECT_EQ(dense.back().id, tree.rbegin()->id);
+}
+
+// ============================================================================
+// Correctness: duplicate stress
+// ============================================================================
+
+TEST(DenseSetCorrectness, DuplicateStress) {
+  constexpr std::size_t N = 10000;
+
+  TestDenseSet set;
+
+  for (std::size_t i = 0; i < N; ++i) {
+    ASSERT_TRUE(set.insert(makeDummy(i)));
+  }
+
+  ASSERT_EQ(set.size(), N);
+
+  std::vector<std::uint64_t> keys;
+  keys.reserve(N * 5);
+
+  for (std::size_t repeat = 0; repeat < 5; ++repeat) {
+    for (std::size_t i = 0; i < N; ++i) {
+      keys.push_back(i);
+    }
+  }
+
+  std::mt19937_64 rng(12345);
+
+  std::shuffle(keys.begin(), keys.end(), rng);
+
+  for (const auto key : keys) {
+    EXPECT_FALSE(set.insert(makeDummy(key)));
+  }
+
+  EXPECT_EQ(set.size(), N);
+}
+
+TEST(DenseOrderedSetCorrectness, DuplicateStress) {
+  constexpr std::size_t N = 10000;
+
+  TestDenseOrderedSet set;
+
+  for (std::size_t i = 0; i < N; ++i) {
+    ASSERT_TRUE(set.insert(makeDummy(i)));
+  }
+
+  ASSERT_EQ(set.size(), N);
+
+  std::vector<std::uint64_t> keys;
+  keys.reserve(N * 5);
+
+  for (std::size_t repeat = 0; repeat < 5; ++repeat) {
+    for (std::size_t i = 0; i < N; ++i) {
+      keys.push_back(i);
+    }
+  }
+
+  std::mt19937_64 rng(12345);
+
+  std::shuffle(keys.begin(), keys.end(), rng);
+
+  for (const auto key : keys) {
+    EXPECT_FALSE(set.insert(makeDummy(key)));
+  }
+
+  EXPECT_EQ(set.size(), N);
+}
+
+// ============================================================================
+// Performance infrastructure
+// ============================================================================
+
+struct BenchmarkResult {
+  double insertion_ns = 0.0;
+  double lookup_ns = 0.0;
+  double iteration_ns = 0.0;
+
+  std::uint64_t checksum = 0;
+};
+
+template <typename Container>
+BenchmarkResult benchmarkContainer(
+    const std::vector<std::uint64_t>& insertion_keys,
+    const std::vector<std::uint64_t>& lookup_keys, std::size_t repetitions) {
+  using Clock = std::chrono::steady_clock;
+
+  double insertion_total = 0.0;
+  double lookup_total = 0.0;
+  double iteration_total = 0.0;
+
+  std::uint64_t checksum = 0;
+
+  using TestContainsT = TestContains<Container>;
+
+  for (std::size_t repetition = 0; repetition < repetitions; ++repetition) {
+    Container container;
+
+    // ------------------------------------------------------------------------
+    // Insertion
+    // ------------------------------------------------------------------------
+
+    auto start = Clock::now();
+
+    for (const auto key : insertion_keys) {
+      container.insert(makeDummy(key));
+    }
+
+    auto end = Clock::now();
+
+    insertion_total +=
+        std::chrono::duration<double, std::nano>(end - start).count();
+
+    // ------------------------------------------------------------------------
+    // Lookup
+    //
+    // Important:
+    // This performs one logical lookup per key.
+    //
+    // We use the adapter's `at()` directly rather than:
+    //
+    //   contains() + at()
+    //
+    // because that would perform TWO lookups for every successful key.
+    //
+    // The benchmark contains both existing and missing keys.
+    // ------------------------------------------------------------------------
+
+    std::uint64_t lookup_checksum = 0;
+
+    start = Clock::now();
+
+    for (const auto key : lookup_keys) {
+      const auto it = TestContains<Container>::find(container, key);
+      if (it != container.end()) {
+        checksum += it->payload;
+      }
+      // if (TestContainsT::contains(
+      //         container,
+      //         key)) {
+
+      //   lookup_checksum +=
+      //       TestContainsT::at(
+      //           container,
+      //           key)
+      //           .payload;
+      // }
+    }
+
+    end = Clock::now();
+
+    lookup_total +=
+        std::chrono::duration<double, std::nano>(end - start).count();
+
+    // ------------------------------------------------------------------------
+    // Iteration
+    // ------------------------------------------------------------------------
+
+    std::uint64_t iteration_checksum = 0;
+
+    start = Clock::now();
+
+    for (const auto& value : container) {
+      iteration_checksum += value.id;
+
+      iteration_checksum += value.payload;
+    }
+
+    end = Clock::now();
+
+    iteration_total +=
+        std::chrono::duration<double, std::nano>(end - start).count();
+
+    checksum ^= lookup_checksum + iteration_checksum;
+  }
+
+  return {insertion_total / static_cast<double>(repetitions),
+
+          lookup_total / static_cast<double>(repetitions),
+
+          iteration_total / static_cast<double>(repetitions),
+
+          checksum};
+}
+
+// ============================================================================
+// Performance output
+// ============================================================================
+
+const char* insertionOrderName(InsertionOrder order) {
+  switch (order) {
+    case InsertionOrder::Increasing:
+      return "increasing";
+
+    case InsertionOrder::Decreasing:
+      return "decreasing";
+
+    case InsertionOrder::Random:
+      return "random";
+
+    case InsertionOrder::NearlySorted:
+      return "nearly-sorted";
+  }
+
+  return "unknown";
+}
+
+// ============================================================================
+// Run one benchmark
+// ============================================================================
+
+void runBenchmark(InsertionOrder order, std::size_t n,
+                  std::size_t repetitions) {
+  const auto insertion_keys = makeKeys(n, order, 123456 + n);
+
+  // --------------------------------------------------------------------------
+  // Lookup workload
+  //
+  // 50% existing keys
+  // 50% missing keys
+  // --------------------------------------------------------------------------
+
+  std::vector<std::uint64_t> lookup_keys;
+
+  lookup_keys.reserve(2 * n);
+
+  for (std::size_t i = 0; i < n; ++i) {
+    lookup_keys.push_back(insertion_keys[i]);
+
+    lookup_keys.push_back(static_cast<std::uint64_t>(n + i));
+  }
+
+  std::mt19937_64 rng(999999 + n);
+
+  std::shuffle(lookup_keys.begin(), lookup_keys.end(), rng);
+
+  // --------------------------------------------------------------------------
+  // Benchmark all three containers
+  // --------------------------------------------------------------------------
+
+  const auto dense = benchmarkContainer<TestDenseSet>(insertion_keys,
+                                                      lookup_keys, repetitions);
+
+  const auto dense_ordered = benchmarkContainer<TestDenseOrderedSet>(
+      insertion_keys, lookup_keys, repetitions);
+
+  const auto tree =
+      benchmarkContainer<TestDynoSet>(insertion_keys, lookup_keys, repetitions);
+
+  // --------------------------------------------------------------------------
+  // Sanity check
+  //
+  // All three containers should perform the same logical lookup/iteration
+  // work.
+  // --------------------------------------------------------------------------
+
+  ASSERT_EQ(dense.checksum, dense_ordered.checksum);
+
+  ASSERT_EQ(dense.checksum, tree.checksum);
+
+  // --------------------------------------------------------------------------
+  // Ratios relative to std::set
+  //
+  // > 1.0 = dense is faster
+  // < 1.0 = dense is slower
+  // --------------------------------------------------------------------------
+
+  const double dense_insert_x = tree.insertion_ns / dense.insertion_ns;
+
+  const double ordered_insert_x =
+      tree.insertion_ns / dense_ordered.insertion_ns;
+
+  const double dense_lookup_x = tree.lookup_ns / dense.lookup_ns;
+
+  const double ordered_lookup_x = tree.lookup_ns / dense_ordered.lookup_ns;
+
+  const double dense_iterate_x = tree.iteration_ns / dense.iteration_ns;
+
+  const double ordered_iterate_x =
+      tree.iteration_ns / dense_ordered.iteration_ns;
+
+  std::cout << std::left << std::setw(16) << insertionOrderName(order)
+
+            << std::right << std::setw(8) << n
+
+            << std::setw(15) << dense.insertion_ns
+
+            << std::setw(15) << dense_ordered.insertion_ns
+
+            << std::setw(15) << tree.insertion_ns
+
+            << std::setw(10) << dense_insert_x
+
+            << std::setw(10) << ordered_insert_x
+
+            << std::setw(15) << dense.lookup_ns
+
+            << std::setw(15) << dense_ordered.lookup_ns
+
+            << std::setw(15) << tree.lookup_ns
+
+            << std::setw(10) << dense_lookup_x
+
+            << std::setw(10) << ordered_lookup_x
+
+            << std::setw(15) << dense.iteration_ns
+
+            << std::setw(15) << dense_ordered.iteration_ns
+
+            << std::setw(15) << tree.iteration_ns
+
+            << std::setw(10) << dense_iterate_x
+
+            << std::setw(10) << ordered_iterate_x
+
+            << '\n';
+}
+
+// ============================================================================
+// Performance test
+// ============================================================================
+
+TEST(DenseSetPerformance, CompareAllContainers) {
+  std::cout << '\n';
+
+  std::cout << std::left << std::setw(16) << "order"
+
+            << std::setw(8) << "N"
+
+            << std::setw(15) << "dense insert"
+
+            << std::setw(15) << "ordered insert"
+
+            << std::setw(15) << "set insert"
+
+            << std::setw(10) << "dense x"
+
+            << std::setw(10) << "ordered x"
+
+            << std::setw(15) << "dense lookup"
+
+            << std::setw(15) << "ordered lookup"
+
+            << std::setw(15) << "set lookup"
+
+            << std::setw(10) << "dense x"
+
+            << std::setw(10) << "ordered x"
+
+            << std::setw(15) << "dense iterate"
+
+            << std::setw(15) << "ordered iterate"
+
+            << std::setw(15) << "set iterate"
+
+            << std::setw(10) << "dense x"
+
+            << std::setw(10) << "ordered x"
+
+            << '\n';
+
+  std::cout << std::string(200, '-') << '\n';
+
+  const std::vector<std::size_t> sizes = {16,   32,   64,   128,  256,  512,
+                                          1024, 2048, 4096, 8192, 16384};
+
+  const std::vector<InsertionOrder> orders = {
+      InsertionOrder::Increasing, InsertionOrder::Decreasing,
+      InsertionOrder::Random, InsertionOrder::NearlySorted};
+
+  for (const auto order : orders) {
+    for (const auto n : sizes) {
+      const std::size_t repetitions = n <= 128    ? 1000
+                                      : n <= 1024 ? 300
+                                      : n <= 4096 ? 100
+                                                  : 30;
+
+      runBenchmark(order, n, repetitions);
+    }
+  }
+}

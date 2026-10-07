@@ -69,10 +69,10 @@ struct NodeTraits {
   typedef std::shared_ptr<Node> SharedNode;
   typedef gtsam::FastMap<KeyType, SharedNode> SharedNodeMap;
 
-  inline static KeyType getKey(const Node& node) { return node.getId(); }
-  inline static KeyType getKey(const SharedNode& node) { return getKey(*node); }
+  static KeyType getKey(const Node& node) { return node.getId(); }
 
-  // only needed for ordered things
+  static KeyType getKey(const SharedNode& node) { return getKey(*node); }
+
   struct Compare {
     // enables heterogeneous lookup
     using is_transparent = void;
@@ -89,59 +89,16 @@ struct NodeTraits {
     }
   };
 
-  struct NodeHash {
-    std::size_t operator()(const SharedNode& a) const noexcept {
-      return std::hash<KeyType>{}(a->getId());
-    }
-
-    std::size_t operator()(KeyType id) const noexcept {
-      return std::hash<KeyType>{}(id);
-    }
-  };
-
-  struct NodeEqual {
-    bool operator()(const SharedNode& a, const SharedNode& b) const noexcept {
-      return a->getId() == b->getId();
-    }
-  };
-
   /** Define a specalist node set that also has some specific functionality */
-  class SharedNodeSet
-      : public dyno::FastUnorderedSet<SharedNode, NodeHash, NodeEqual> {
+  class SharedNodeSet : public dyno::FastSet<SharedNode, Compare> {
    public:
-    typedef dyno::FastUnorderedSet<SharedNode, NodeHash, NodeEqual> Base;
+    typedef dyno::FastSet<SharedNode, Compare> Base;
     using Base::Base;
 
     SharedNodeSet() = default;
 
     /** Additional exists function */
-    // bool exists(KeyType key) const { return this->find(key) != this->end(); }
-
-    /**
-     * Find a node directly by its KeyType.
-     *
-     * C++17 does not provide heterogeneous lookup for unordered_set, so
-     * manually select the bucket using the hash of the key.
-     */
-    auto find(KeyType key) const {
-      const std::size_t bucket_count = Base::bucket_count();
-
-      if (bucket_count == 0) {
-        return Base::end();
-      }
-
-      const std::size_t bucket = Base::hash_function()(key) % bucket_count;
-
-      for (auto it = Base::begin(bucket); it != Base::end(bucket); ++it) {
-        if ((*it)->getId() == key) {
-          return it;
-        }
-      }
-
-      return Base::end();
-    }
-
-    bool exists(KeyType key) const { return find(key) != Base::end(); }
+    bool exists(KeyType key) const { return this->find(key) != this->end(); }
 
     std::vector<KeyType> collectKeys() const {
       std::vector<KeyType> keys;

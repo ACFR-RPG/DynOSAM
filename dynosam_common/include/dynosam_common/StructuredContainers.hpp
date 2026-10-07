@@ -521,6 +521,7 @@ class FastSet
  private:
 };
 
+// TODO: not used!
 /**
  * FastUnorderedSet is a thin wrapper around std::unordered_set that uses the
  * boost fast_pool_allocator instead of the default STL allocator.  This is just
