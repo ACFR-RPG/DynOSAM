@@ -701,6 +701,33 @@ class OpenGVCentralAbsolutePoseAdaptor
   gtsam::Point3Vector bearings_local_;
 };
 
+class ViFrame {
+ public:
+  TrackletIds ids;
+  gtsam::Point3Vector lmks_C;
+  std::vector<gtsam::StereoPoint2> measurements;
+  std::unordered_map<TrackletId, Index> local_indices;
+
+  size_t numKeypoints() const noexcept { return ids.size(); }
+
+  inline void getKeypointByIndex(Index index, Keypoint& keypoint) const {
+    keypoint = measurements[index].point2();
+  }
+
+  inline void getCvKeypointByIndex(Index index, cv::Point2f& keypoint) const {
+    keypoint = utils::gtsamPointToCv<float>(measurements[index].point2());
+  }
+
+  /* Indicates that the landmark was observed */
+  inline bool observedLandmark(TrackletId id) const {
+    return local_indices.find(id) != local_indices.end();
+  }
+
+  FrameId frame_id;
+  Timestamp timestamp;
+};
+typedef dyno::FastUnorderedMap<FrameId, ViFrame> ViFrames;
+
 typedef gtsam::FastMap<ObjectId, FrameGeometry> FrameGeometryMap;
 
 class DepthUpdaterFast {
@@ -867,9 +894,19 @@ class LocalBAGraph : public LandmarkMap {
   }
 
   const StereoMap& getObservations() const { return *observations_; }
+  const std::set<FrameId>& keyFrames() const { return keyframes_; }
+
+  // currently no removal of keyframe
+  bool setKeyframe(FrameId id, bool is_keyframe) {
+    CHECK(is_keyframe);
+    keyframes_.insert(id);
+    return true;
+  }
 
  protected:
   StereoMap::Ptr observations_;
+
+  std::set<FrameId> keyframes_;
 
   // gtsam::FastMap<FrameId, gtsam::FastMap<FrameId, int>>
   // co_observation_counts_;

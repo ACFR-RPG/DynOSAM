@@ -106,6 +106,10 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
   gtsam::Vector3 sigmas;
   sigmas << 2, 2, 2;
 
+  ViFrame& vi_frame = vi_frames_[frame_id];
+  vi_frame.frame_id = frame_id;
+  vi_frame.timestamp = timestamp;
+
   // TODO: so far we get the points from the frame geometry
   for (const auto& object_view : features_k.objectViews()) {
     const auto object_id = object_view.objectId();
@@ -133,6 +137,10 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
     //  }
     //
 
+    if (object_id != background_label) {
+      continue;
+    }
+
     const FrameGeometry& frame_geometry_k_j = frame_geometry_it->second;
     // // lmks_C_km1_j.lmks.reserve(num_points);
     // // lmks_C_km1_j.ids.reserve(num_points);
@@ -142,14 +150,23 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
       auto id = object_view.ids()[i];
 
       CHECK(object_view.inlier()[i]);
-      // poor attempt at initalising landmarks!
-      // graph->setLandmark(id, frame_geometry_k_j.getLandmark(id));
-      auto stereo_measurement = StereoMeasurement::FromSigmas(
-          frame_geometry_k_j.getStereoPoint(id), sigmas);
 
-      stereo_measurements.push_back(
-          StereoMeasurementStatus(stereo_measurement, frame_id, timestamp, id,
-                                  object_id, ReferenceFrame::LOCAL));
+      size_t index = vi_frame.ids.size();
+      vi_frame.ids.push_back(id);
+      vi_frame.lmks_C.push_back(frame_geometry_k_j.getLandmark(id));
+      vi_frame.measurements.push_back(frame_geometry_k_j.getStereoPoint(id));
+      vi_frame.local_indices[id] = index;
+      // // poor attempt at initalising landmarks!
+      // // graph->setLandmark(id, frame_geometry_k_j.getLandmark(id));
+      // auto stereo_measurement = StereoMeasurement::FromSigmas(
+      //     frame_geometry_k_j.getStereoPoint(id), sigmas);
+
+      // stereo_measurements.push_back(
+      //     StereoMeasurementStatus(stereo_measurement, frame_id, timestamp,
+      //     id,
+      //                             object_id, ReferenceFrame::LOCAL));
+
+      // if()
 
       // lmks_C_km1_j.setLandmark(id, frame_geometry_k_j.getLandmark(id));
       // lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
@@ -157,7 +174,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::boostrapSpin(
       // lmks_C_km1_j.local_indices[id] = i;
     }
 
-    graph->addMeasurements(stereo_measurements);
+    // graph->addMeasurements(stereo_measurements);
   }
 
   LocalVIOGraph::Ptr vio_graph = landmarks_W_.getStaticMap();
@@ -544,16 +561,23 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
     LOG(INFO) << "Initalising new map points!";
     utils::ChronoTimingStats init_map(this->moduleName() + ".solve.init_map");
 
-    const StereoMap& observations = vio_graph->getObservations();
-    // this assumes we have solved succificnelt for frame_id - 1u!
-    auto landmarks_km1 = observations.staticLandmarksByFrame(frame_id - 1u);
+    // // obsrvations should just be for building BA!
 
+    // TODO: this is basically matchMotionStereo
+    //  TODO: overlap between previous frame (since we have solved for X k-1)
+    //  and previous keypoints
+    std::set<FrameId> all_frames = vio_graph->keyFrames();
+    CHECK(vi_frames_.exists(frame_id - 1u));
+    // observations in previous frame and in current
+    const ViFrame& vi_frame_km1 = vi_frames_[frame_id - 1u];
     // TODO: should initalise via co-visibility not just the currently visiblt
-    // ones!
-    //  right now just init from measurements of previous frames
+
+    // ids seen in both k-1 and k and not in the estimator
     size_t count = 0;
-    for (const auto& lmk_i : landmarks_km1) {
-      TrackletId i0 = lmk_i->trackletId();
+
+    TrackletIds tracked_from_previous;
+    for (size_t i = 0; i < vi_frame_km1.ids.size(); i++) {
+      TrackletId i0 = vi_frame_km1.ids[i];
       // if already in local map, ignore as we want to intalise new points!
       if (reference_geometry.landmarkExists(i0)) {
         continue;
@@ -569,18 +593,74 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
       if (!features.inlier[fc_index]) {
         continue;
       }
+      tracked_from_previous.push_back(i0);
 
-      auto lmk_node = observations.getLandmark(i0);
-      auto stereo_measurement = lmk_node->getMeasurement(frame_id - 1u);
-      // for now just initalise as a simple projection
-      // only valid becuase we find measurements in k-1
-      // compute in reference frame!
-      gtsam::Point3 m_C = stereo_camera.backproject(stereo_measurement);
+      // TODO: if not initalised - just do projection and mark as needing
+      // refinement this handles the case we have no points (ie lost tracking!)
+      //  else try and do triangulation based on current pose and quality!
+      //  LOG(INFO) << "i= " << i0 << " age=" << features.age[fc_index];
 
+      // TODO: just for now!
+      gtsam::Point3 m_C = vi_frame_km1.lmks_C[i];
       reference_geometry.setLandmark(i0, m_C);
-      new_landmarks.push_back(i0);
+
       count++;
     }
+
+    // TODO: should restrict to local keyframes or ones with overlap
+    // now check if we have this in any of the previous keyframes
+    // TODO: what if other_frame_id is k-1?
+    std::unordered_map<TrackletId, size_t> num_seen;
+    for (auto other_frame_id : all_frames) {
+      LOG(INFO) << "Searcking KF: " << other_frame_id;
+      const ViFrame& other_vi_frame = vi_frames_.at(other_frame_id);
+      for (auto tracked_id : tracked_from_previous) {
+        if (!other_vi_frame.hasLandmark(tracked_id)) {
+          continue;
+        }
+
+        auto it = num_seen.find(tracked_id);
+        if (it == num_seen.end()) {
+          num_seen[tracked_id] = 1;
+        }
+        num_seen[tracked_id]++;
+      }
+    }
+
+    for (const auto& [id, num] : num_seen) {
+      LOG(INFO) << "Tracklet " << id << " seen: " << num;
+    }
+
+    // TODO: overlap!
+    //  for(size_t i = 0; i < vi_frame_km1.ids.size(); i++) {
+    //    TrackletId i0 = vi_frame_km1.ids[i];
+    //    // if already in local map, ignore as we want to intalise new points!
+    //    if (reference_geometry.landmarkExists(i0)) {
+    //      continue;
+    //    }
+
+    //   auto it1 = local_geometry.local_indices.find(i0);
+    //   // check this landmark is also seen in the current frame!
+    //   if (it1 == local_geometry.local_indices.end()) {
+    //     continue;
+    //   }
+
+    //   Index fc_index = local_geometry.getFeatureContainerIndex(i0);
+    //   if (!features.inlier[fc_index]) {
+    //     continue;
+    //   }
+
+    //   // for now just initalise as a simple projection
+    //   // only valid becuase we find measurements in k-1
+    //   // compute in reference frame!
+    //   // otherwis look at other ViFrame keyframes
+    //   gtsam::Point3 m_C = vi_frame_km1.lmks_C[i];
+    //   // gtsam::Point3 m_C = stereo_camera.backproject(stereo_measurement);
+
+    //   reference_geometry.setLandmark(i0, m_C);
+    //   new_landmarks.push_back(i0);
+    //   count++;
+    // }
 
     // update adapter
     adapter = std::make_shared<OpenGVCentralAbsolutePoseAdaptor>(
@@ -688,19 +768,40 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
         vio_graph->setLandmark(id, lmk_W[i]);
       }
 
-      //  auto stereo_measurement = StereoMeasurement::FromSigmas(
-      //     local_geometry.getStereoPoint(id), sigmas);
+      auto stereo_measurement = StereoMeasurement::FromSigmas(
+          local_geometry.getStereoPoint(id), sigmas);
 
-      //   stereo_measurements.push_back(
-      //     StereoMeasurementStatus(stereo_measurement, frame_id, timestamp,
-      //                             id, 0, ReferenceFrame::LOCAL));
+      stereo_measurements.push_back(
+          StereoMeasurementStatus(stereo_measurement, frame_id, timestamp, id,
+                                  0, ReferenceFrame::LOCAL));
     }
   }
+
+  vio_graph->addMeasurements(stereo_measurements);
+  vio_graph->setPose(frame_id, X_W);
+
+  vo_trajectory.insert(frame_id, timestamp, X_W);
+
+  // std::vector<FrameId> frames_affected;
+  // // should be fixed!
+  // vio_graph->optimize(frame_id, &frames_affected);
+
+  //  for(FrameId frame_id : frames_affected) {
+  //   //TODO: timestamp is wrong!
+  //   //get timestamp from map!?
+  //   CHECK(vio_graph->poseExists(frame_id)) << frame_id;
+  //   CHECK(vo_trajectory.update(frame_id, vio_graph->getPose(frame_id)));
+  // }
 
   // TEST: add all measurements not just the ones matched
   //  this seems wrong, but maybe its becuase we're then not including
   //  the additional measurements needed to add new landmarks!
   //  Correct that is why!
+  // TODO: not thread safe!
+  ViFrame& vi_frame = vi_frames_[frame_id];
+  vi_frame.frame_id = frame_id;
+  vi_frame.timestamp = timestamp;
+
   for (size_t i = 0; i < local_geometry.ids.size(); i++) {
     TrackletId id = local_geometry.ids[i];
     Index fc_index = local_geometry.getFeatureContainerIndex(id);
@@ -709,15 +810,22 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
       continue;
     }
 
-    auto stereo_measurement = StereoMeasurement::FromSigmas(
-        local_geometry.getStereoPoint(id), sigmas);
-
-    stereo_measurements.push_back(StereoMeasurementStatus(
-        stereo_measurement, frame_id, timestamp, id, 0, ReferenceFrame::LOCAL));
+    size_t index = vi_frame.ids.size();
+    vi_frame.ids.push_back(id);
+    vi_frame.lmks_C.push_back(local_geometry.getLandmark(id));
+    vi_frame.measurements.push_back(local_geometry.getStereoPoint(id));
+    vi_frame.local_indices[id] = index;
   }
 
-  vio_graph->addMeasurements(stereo_measurements);
-  vio_graph->setPose(frame_id, X_W);
+  bool should_be_keyframe = shouldBeViKeyFrame(*vio_graph, vi_frame);
+  // TODO: must bound keyframes (only for estimator and covisibility checking)
+  //  somehow this must be different from full SLAM and trajectory output!
+  //  full SLAM will use Keyframe MAP which represents the full SLAM problem!
+  //  this is just maybe the local problem
+  if (should_be_keyframe) {
+    LOG(INFO) << "k=" << frame_id << " is new VI keyframe!";
+    vio_graph->setKeyframe(frame_id, true);
+  }
 
   // CHECK_EQ(reference_geometry_W.size(), local_geometry.ids.size());
   // for(size_t i = 0; i  < reference_geometry_W.size(); i++) {
@@ -756,7 +864,6 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   //   LOG(INFO) << "Initalised  " << count << " new lmks";
   // }
 
-  vo_trajectory.insert(frame_id, timestamp, X_W);
   success = true;
 }
 
@@ -917,6 +1024,110 @@ bool PoseChangeVIFrontendFAST::solve3d2dRansac(
   }
   inliers = std::move(inliers_v);
   return true;
+}
+
+// compare against existing landmarks in the estimator which implies matches and
+// good initalisation
+bool PoseChangeVIFrontendFAST::shouldBeViKeyFrame(
+    const LocalBAGraph& vi_estimator, const ViFrame& frame) const {
+  utils::ChronoTimingStats timer_t(this->moduleName() + ".vi_kf_selection");
+  if (frame.frame_id < 4) {
+    // just starting, so yes, we need this as a new keyframe
+    return true;
+  }
+
+  // TODO: not initalised!
+  const auto& camera_params = camera_->getParams();
+  const int rows = camera_params.ImageHeight() / 10;
+  const int cols = camera_params.ImageWidth() / 10;
+
+  const double kptradius_ = 0.09;
+  const double radius = double(std::min(rows, cols)) * kptradius_;
+
+  // TODO: careful this does not grow forever as this will just take up more and
+  // more time!
+  std::set<FrameId> all_frames = vi_estimator.keyFrames();
+
+  const size_t num_keypoints = frame.numKeypoints();
+
+  cv::Mat matches = cv::Mat::zeros(rows, cols, CV_8UC1);
+  cv::Mat detections = cv::Mat::zeros(rows, cols, CV_8UC1);
+
+  int intersection_count = 0;
+  int union_count = 0;
+
+  cv::Point2f keypoint;
+  for (size_t i = 0; i < num_keypoints; i++) {
+    frame.getCvKeypointByIndex(i, keypoint);
+    cv::circle(detections, keypoint * 0.1, int(radius), cv::Scalar(255),
+               cv::FILLED);
+
+    TrackletId id = frame.ids[i];
+    if (vi_estimator.landmarkExists(id)) {
+      cv::circle(matches, keypoint * 0.1, int(radius), cv::Scalar(255),
+                 cv::FILLED);
+    }
+
+    cv::Mat intersectionMask, unionMask;
+    cv::bitwise_and(matches, detections, intersectionMask);
+    cv::bitwise_or(matches, detections, unionMask);
+    intersection_count = cv::countNonZero(intersectionMask);
+    union_count = cv::countNonZero(unionMask);
+  }
+
+  // overlap of current frame with landmarks!
+  double overlap = double(intersection_count) / double(union_count);
+
+  double overlap_others = 0.0;
+  for (auto other_frame_id : all_frames) {
+    cv::Mat matches = cv::Mat::zeros(rows, cols, CV_8UC1);
+    cv::Mat detections = cv::Mat::zeros(rows, cols, CV_8UC1);
+
+    CHECK(vi_frames_.exists(other_frame_id));
+    const ViFrame& other_frame = vi_frames_.at(other_frame_id);
+
+    const size_t num_other_keypoints = other_frame.numKeypoints();
+
+    cv::Point2f keypoint;
+    for (size_t i = 0; i < num_other_keypoints; i++) {
+      other_frame.getCvKeypointByIndex(i, keypoint);
+      cv::circle(detections, keypoint * 0.1, int(radius), cv::Scalar(255),
+                 cv::FILLED);
+
+      // check both if we have a match AND that the landmark is in the BA (ie
+      // has been tracked and initalised)
+      TrackletId id = other_frame.ids[i];
+      if (vi_estimator.landmarkExists(id) && frame.observedLandmark(id)) {
+        cv::circle(matches, keypoint * 0.1, int(radius), cv::Scalar(255),
+                   cv::FILLED);
+      }
+    }
+
+    // IoU
+    cv::Mat intersectionMask, unionMask;
+    cv::bitwise_and(matches, detections, intersectionMask);
+    cv::bitwise_or(matches, detections, unionMask);
+    int intersection_count = cv::countNonZero(intersectionMask);
+    int union_count = cv::countNonZero(unionMask);
+
+    overlap_others = std::max(overlap_others,
+                              double(intersection_count) / double(union_count));
+  }
+
+  overlap = std::min(overlap_others, overlap);
+  // take a decision
+  if (num_keypoints < 14) {
+    // a respectable keyframe needs some detections...
+    return false;
+  }
+
+  const double overlap_thresh = 0.55;  // spatial redundancy
+  if (overlap > overlap_thresh
+      /*&& double(numMatches)/double(numKeypoints) > 0.35*/) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 double PoseChangeVIFrontendFAST::computeRansacThreshold(

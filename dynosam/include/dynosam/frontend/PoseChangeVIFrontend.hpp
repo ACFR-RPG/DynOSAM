@@ -64,6 +64,10 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
 
   // void solveVisualOdometryBundle()
 
+  // compare to last keyframe?
+  bool shouldBeViKeyFrame(const LocalBAGraph& vi_estimator,
+                          const ViFrame& frame) const;
+
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
   HybridFormulationKeyFrameAccessor::Ptr accessor_;
@@ -78,6 +82,12 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
 
   PoseChangeBackendSink pose_change_backend_sink_;
 
+  // should represent all inlier and refined measurements for all frames
+  // some of these may be keyframes
+  ViFrames vi_frames_;
+
+  std::set<FrameId> keyframes_;
+  // only matched measurements are included which were used for estimation!
   // Landmarks stored in estimation reference frame!
   // Camera in W and objects in O!
   DynamicSlamMap landmarks_W_;
