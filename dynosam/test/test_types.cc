@@ -4103,6 +4103,153 @@ class ContiguousSet {
   KeyOfValue key_of_value_;
 };
 
+template <typename T, typename Key, typename KeyOfValue>
+class ContiguousOrderedSet {
+ public:
+  using value_type = T;
+  using key_type = Key;
+  using size_type = std::size_t;
+
+ private:
+  using IndexMap = std::map<Key, size_type>;
+
+ public:
+  ContiguousOrderedSet() = default;
+
+  class const_iterator {
+   public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = const T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const T*;
+    using reference = const T&;
+
+    reference operator*() const noexcept {
+      return owner_->values_[it_->second];
+    }
+
+    pointer operator->() const noexcept {
+      return &owner_->values_[it_->second];
+    }
+
+    const_iterator& operator++() noexcept {
+      ++it_;
+      return *this;
+    }
+
+    const_iterator operator++(int) noexcept {
+      const_iterator tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    bool operator==(const const_iterator& other) const noexcept {
+      return it_ == other.it_;
+    }
+
+    bool operator!=(const const_iterator& other) const noexcept {
+      return !(*this == other);
+    }
+
+   private:
+    friend class ContiguousOrderedSet;
+
+    using MapIterator = typename IndexMap::const_iterator;
+
+    const_iterator(const ContiguousOrderedSet* owner, MapIterator it)
+        : owner_(owner), it_(it) {}
+
+    const ContiguousOrderedSet* owner_;
+    MapIterator it_;
+  };
+
+  explicit ContiguousOrderedSet(const KeyOfValue& key_of_value)
+      : key_of_value_(key_of_value) {}
+
+  void reserve(size_type n) { values_.reserve(n); }
+
+  bool empty() const noexcept { return values_.empty(); }
+
+  size_type size() const noexcept { return values_.size(); }
+
+  bool contains(const Key& key) const {
+    return index_.find(key) != index_.end();
+  }
+
+  const_iterator begin() const noexcept {
+    return const_iterator{this, index_.begin()};
+  }
+
+  const_iterator end() const noexcept {
+    return const_iterator{this, index_.end()};
+  }
+
+  const_iterator find(const Key& key) const noexcept {
+    return const_iterator{this, index_.find(key)};
+  }
+
+  bool insert(const T& value) {
+    const Key key = key_of_value_(value);
+
+    if (index_.find(key) != index_.end()) {
+      return false;
+    }
+
+    const size_type index = values_.size();
+
+    values_.push_back(value);
+    index_.emplace(key, index);
+
+    return true;
+  }
+
+  bool insert(T&& value) {
+    const Key key = key_of_value_(value);
+
+    if (index_.find(key) != index_.end()) {
+      return false;
+    }
+
+    const size_type index = values_.size();
+
+    values_.push_back(std::move(value));
+    index_.emplace(key, index);
+
+    return true;
+  }
+
+  const T& at(const Key& key) const {
+    const auto it = index_.find(key);
+
+    assert(it != index_.end());
+
+    return values_[it->second];
+  }
+
+  // const T& operator[](size_type i) const noexcept {
+  //   return values_[i];
+  // }
+
+  const T& front() const {
+    assert(!empty());
+    return values_[index_.begin()->second];
+  }
+
+  const T& back() const {
+    assert(!empty());
+
+    auto it = index_.end();
+    --it;
+
+    return values_[it->second];
+  }
+
+ private:
+  std::vector<T> values_;
+  IndexMap index_;
+  KeyOfValue key_of_value_;
+};
+
 struct Item {
   uint64_t id;
 };
@@ -4112,6 +4259,7 @@ struct ItemKey {
 };
 
 using TestContiguousSet = ContiguousSet<Item, uint64_t, ItemKey>;
+using TestContiguousOrderedSet = ContiguousOrderedSet<Item, uint64_t, ItemKey>;
 
 TEST(ContiguousSetTest, InsertUniqueValues) {
   TestContiguousSet set;
@@ -4228,6 +4376,28 @@ std::set<uint64_t> makeStdSet(const std::vector<Item>& values) {
   return set;
 }
 
+std::unordered_set<uint64_t> makeUnorderedStdSet(
+    const std::vector<Item>& values) {
+  std::unordered_set<uint64_t> set;
+
+  for (const Item& value : values) {
+    set.insert(value.id);
+  }
+
+  return set;
+}
+
+TestContiguousOrderedSet makeContiguousOrderedSet(
+    const std::vector<Item>& values) {
+  TestContiguousOrderedSet set;
+
+  for (const Item& value : values) {
+    set.insert(value);
+  }
+
+  return set;
+}
+
 // -----------------------------------------------------------------------------
 // Benchmarks
 // -----------------------------------------------------------------------------
@@ -4254,16 +4424,45 @@ void runInsertionBenchmark(const char* name, const std::vector<Item>& values) {
       },
       NUM_RUNS);
 
+  const double ordered_dense_ns = benchmark(
+      [&] {
+        TestContiguousOrderedSet set;
+        set.reserve(N);
+
+        for (const Item& value : values) {
+          set.insert(value);
+        }
+      },
+      NUM_RUNS);
+
+  const double std_unordered_set_ns = benchmark(
+      [&] {
+        std::unordered_set<uint64_t> set;
+
+        for (const Item& value : values) {
+          set.insert(value.id);
+        }
+      },
+      NUM_RUNS);
+
   std::cout << name << " - insert\n"
             << "  ContiguousSet: " << dense_ns << " ms\n"
+            << "  ContiguousOrderedSet: " << ordered_dense_ns << " ms\n"
             << "  std::set: " << std_set_ns << " ms\n"
-            << "  Speedup: " << std_set_ns / dense_ns << "x\n\n";
+            << "  std::unordered_set: " << std_unordered_set_ns << " ms\n"
+            << "  Speedup ContiguousSet: " << std_set_ns / dense_ns << "x\n"
+            << "  Speedup ContiguousOrderedSet: "
+            << std_set_ns / ordered_dense_ns << "x\n"
+            << "  Speedup unordered_set: " << std_set_ns / std_unordered_set_ns
+            << "x\n\n";
 }
 
 void runFindBenchmark(const char* name, const std::vector<Item>& values) {
   const TestContiguousSet dense_set = makeContiguousSet(values);
 
   const std::set<uint64_t> std_set = makeStdSet(values);
+  const auto ordered_set = makeContiguousOrderedSet(values);
+  const auto unordered_set = makeUnorderedStdSet(values);
 
   volatile uint64_t sink = 0;
 
@@ -4291,19 +4490,53 @@ void runFindBenchmark(const char* name, const std::vector<Item>& values) {
       },
       NUM_RUNS);
 
+  const double std_unordered_set_ns = benchmark(
+      [&] {
+        for (const Item& value : values) {
+          const auto it = unordered_set.find(value.id);
+
+          if (it != unordered_set.end()) {
+            sink += *it;
+          }
+        }
+      },
+      NUM_RUNS);
+
+  const double ordered_dense_ns = benchmark(
+      [&] {
+        for (const Item& value : values) {
+          const auto it = ordered_set.find(value.id);
+
+          if (it != ordered_set.end()) {
+            sink += it->id;
+          }
+        }
+      },
+      NUM_RUNS);
+
   std::cout << name << " - find\n"
             << "  ContiguousSet: " << dense_ns << " ms\n"
+            << "  ContiguousOrderedSet: " << ordered_dense_ns << " ms\n"
             << "  std::set: " << std_set_ns << " ms\n"
-            << "  Speedup: " << std_set_ns / dense_ns << "x\n\n";
+            << "  std::unordered_set: " << std_unordered_set_ns << " ms\n"
+            << "  Speedup ContiguousSet: " << std_set_ns / dense_ns << "x\n"
+            << "  Speedup ContiguousOrderedSet: "
+            << std_set_ns / ordered_dense_ns << "x\n"
+            << "  Speedup unordered_set: " << std_set_ns / std_unordered_set_ns
+            << "x\n\n";
 }
 
 void runIterationBenchmark(const char* name, const std::vector<Item>& values) {
   const TestContiguousSet dense_set = makeContiguousSet(values);
 
   const std::set<uint64_t> std_set = makeStdSet(values);
+  const auto ordered_set = makeContiguousOrderedSet(values);
+  const auto unordered_set = makeUnorderedStdSet(values);
 
   volatile uint64_t dense_sum = 0;
   volatile uint64_t std_sum = 0;
+  volatile uint64_t ordered_dense_sum = 0;
+  volatile uint64_t std_unordered_sum = 0;
 
   const double dense_ns = benchmark(
       [&] {
@@ -4321,10 +4554,32 @@ void runIterationBenchmark(const char* name, const std::vector<Item>& values) {
       },
       NUM_RUNS);
 
+  const double std_unordered_set_ns = benchmark(
+      [&] {
+        for (const uint64_t value : unordered_set) {
+          std_unordered_sum += value;
+        }
+      },
+      NUM_RUNS);
+
+  const double ordered_dense_ns = benchmark(
+      [&] {
+        for (const Item& value : ordered_set) {
+          ordered_dense_sum += value.id;
+        }
+      },
+      NUM_RUNS);
+
   std::cout << name << " - iterate\n"
             << "  ContiguousSet: " << dense_ns << " ms\n"
+            << "  ContiguousOrderedSet: " << ordered_dense_ns << " ms\n"
             << "  std::set: " << std_set_ns << " ms\n"
-            << "  Speedup: " << std_set_ns / dense_ns << "x\n\n";
+            << "  std::unordered_set: " << std_unordered_set_ns << " ms\n"
+            << "  Speedup ContiguousSet: " << std_set_ns / dense_ns << "x\n"
+            << "  Speedup ContiguousOrderedSet: "
+            << std_set_ns / ordered_dense_ns << "x\n"
+            << "  Speedup unordered_set: " << std_set_ns / std_unordered_set_ns
+            << "x\n\n";
 }
 
 // -----------------------------------------------------------------------------

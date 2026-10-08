@@ -56,23 +56,37 @@ struct HasGetId : std::false_type {};
 template <typename T>
 struct HasGetId<T, std::void_t<decltype(std::declval<const T&>().getId())>>
     : std::true_type {};
+
 }  // namespace internal
 
-template <typename Key, typename NODE>
+template <typename Key, typename NODE, bool Ordered = true>
 struct NodeTraits {
   //! Storage key type, may be different for each node
-  //! Used for comparison operator in SharedNodeSet and
+  //! Used for comparison operator in SharedNodes and
   //! as the key_type in MapInterface<>##SharedNodes
   //! Must match the return value type of Node##getId()
   typedef NODE Node;
   typedef Key KeyType;
   typedef std::shared_ptr<Node> SharedNode;
-  typedef gtsam::FastMap<KeyType, SharedNode> SharedNodeMap;
+  static constexpr bool isOrdered = Ordered;
 
-  static KeyType getKey(const Node& node) { return node.getId(); }
+  inline static KeyType getKey(const Node& node) { return node.getId(); }
+  inline static KeyType getKey(const SharedNode& node) { return node->getId(); }
+};
 
-  static KeyType getKey(const SharedNode& node) { return getKey(*node); }
+/**
+ * @brief Which data-structures to use based on the provided NodeTraits
+ *
+ * @tparam NodeTraits
+ */
+template <typename NodeTraits>
+struct NodeStructures {
+  typedef typename NodeTraits::Node Node;
+  typedef typename NodeTraits::KeyType KeyType;
+  typedef typename NodeTraits::SharedNode SharedNode;
+  static constexpr bool isOrdered = NodeTraits::isOrdered;
 
+ private:
   struct Compare {
     // enables heterogeneous lookup
     using is_transparent = void;
@@ -110,16 +124,119 @@ struct NodeTraits {
       return keys;
     }
   };
+
+  struct KeyGetter {
+    inline KeyType operator()(const Node& node) const noexcept {
+      return NodeTraits::getKey(node);
+    }
+    inline KeyType operator()(const SharedNode& node) const noexcept {
+      return NodeTraits::getKey(node);
+    }
+  };
+
+  /**
+   * @brief An unordered, unique, contiguous storage for SharedNodes.
+   * Allows very fast insetion (with uniqueness checks based on Node::getId),
+   * lookup, and iteration. In principle the same as std::unordered_set but
+   * timings reveal slightly faster in iteration and lookup.
+   *
+   * Additionally allows O(1) access to the set of (unordered) keys since these
+   * are stored sepately upon insertion.
+   *
+   */
+  class SharedNodeVector {
+   public:
+    SharedNodeVector() = default;
+    ~SharedNodeVector() = default;
+
+    template <class CONTAINER>
+    explicit SharedNodeVector(const CONTAINER& container) {
+      reserve(std::size(container));
+      for (const auto& value : container) {
+        insert(value);
+      }
+    }
+
+    explicit SharedNodeVector(std::initializer_list<SharedNode> container) {
+      reserve(std::size(container));
+      for (const auto& value : container) {
+        insert(value);
+      }
+    }
+
+    bool operator==(const SharedNodeVector& rhs) const noexcept {
+      return data_ == rhs.data_ && keys_ == rhs.keys_;
+    }
+
+    bool operator!=(const SharedNodeVector& rhs) const noexcept {
+      return !(*this == rhs);
+    }
+
+    inline bool empty() const noexcept { return data_.empty(); }
+    inline auto size() const noexcept { return data_.size(); }
+
+    inline bool exists(const KeyType& key) const { return data_.contains(key); }
+
+    inline void reserve(size_t n) {
+      data_.reserve(n);
+      keys_.reserve(n);
+    }
+
+    bool insert(const SharedNode& value) {
+      const auto [success, key] = data_.insert(value);
+      if (success) {
+        keys_.push_back(key);
+      }
+
+      CHECK_EQ(data_.size(), keys_.size());
+      return success;
+    }
+
+    const SharedNode& operator[](size_t i) const noexcept { return data_[i]; }
+    SharedNode& operator[](size_t i) noexcept { return data_[i]; }
+
+    inline auto find(const KeyType& key) const { return data_.find(key); }
+
+    inline const SharedNode& front() const { return data_.front(); }
+    inline const SharedNode& back() const { return data_.back(); }
+
+    auto begin() const noexcept { return data_.begin(); }
+    auto end() const noexcept { return data_.end(); }
+
+    /* Reurn all keys for the nodes stored. With the undordered version we can
+     * do this in O(1)! */
+    const std::vector<KeyType>& collectKeys() const { return keys_; }
+
+   private:
+    using ImplVector = UniqueVector<SharedNode, KeyType, KeyGetter>;
+    ImplVector data_;
+    std::vector<KeyType> keys_;
+  };
+
+ public:
+  /* Define the type of container that each node will use based on if it should
+   * be ordered or not!*/
+  using SharedNodes =
+      std::conditional_t<isOrdered, SharedNodeSet, SharedNodeVector>;
+
+  /* Define the type of container that each MapInterface will use based on if it
+   * should be ordered or not!*/
+  using SharedNodeMap =
+      std::conditional_t<isOrdered, gtsam::FastMap<KeyType, SharedNode>,
+                         dyno::FastUnorderedMap<KeyType, SharedNode>>;
 };
 
-template <typename KeyType, typename Node>
+template <typename NodeTraits>
 class MapInterfaceBase {
  public:
-  typedef NodeTraits<KeyType, Node> NodeTraitsT;
+  typedef NodeTraits NodeTraitsT;
   //! Shared pointer to the Node
   typedef typename NodeTraitsT::SharedNode SharedNode;
-  //! Fast Map of KeyType to shared node pointer
-  typedef typename NodeTraitsT::SharedNodeMap SharedNodeMap;
+  typedef typename NodeTraitsT::Node Node;
+  typedef typename NodeTraitsT::KeyType KeyType;
+
+  typedef NodeStructures<NodeTraitsT> NodeStructuresT;
+  typedef typename NodeStructuresT::SharedNodeMap SharedNodeMap;
   typedef typename SharedNodeMap::iterator iterator;
   typedef typename SharedNodeMap::const_iterator const_iterator;
 
@@ -144,6 +261,8 @@ class MapInterfaceBase {
   size_t size() const { return nodes_.size(); }
   bool empty() const { return nodes_.empty(); }
 
+  // TODO: overwrite SharedNodeMap with custom behaviour to avoid
+  //  collecting this every time!
   std::vector<KeyType> collectKeys() const {
     std::vector<KeyType> keys;
     keys.reserve(this->size());
@@ -174,10 +293,19 @@ class MapInterfaceBase {
   SharedNodeMap nodes_;
 };
 
+template <typename LandmarkNode>
+using LandmarkNodeTraits = NodeTraits<TrackletId, LandmarkNode, false>;
+
+template <typename ObjectNode>
+using ObjectNodeTraits = NodeTraits<ObjectId, ObjectNode, false>;
+
 template <typename FrameNode>
-class FrameNodeInterface : public MapInterfaceBase<FrameId, FrameNode> {
+using FrameNodeTraits = NodeTraits<FrameId, FrameNode, true>;
+
+template <typename FrameNode>
+class FrameNodeInterface : public MapInterfaceBase<FrameNodeTraits<FrameNode>> {
  public:
-  using Base = MapInterfaceBase<FrameId, FrameNode>;
+  using Base = MapInterfaceBase<FrameNodeTraits<FrameNode>>;
   using SharedNode = typename Base::SharedNode;
   using SharedNodeMap = typename Base::SharedNodeMap;
 
@@ -222,13 +350,33 @@ class FrameNodeInterface : public MapInterfaceBase<FrameId, FrameNode> {
     }
     return tracklet_ids;
   }
+
+  auto staticLandmarksByFrame(FrameId frame_id) const {
+    using Node = typename Base::Node;
+    // we dont have the templated definition for Landmarks directly available
+    // since it requires some complex NodeType definition
+    // since we need to return an empty container we need to declare the type
+    // directly so we just infer it using invoke result and let the compiler
+    // figure out the type! Since staticLandmarks has two overloads, we resolve
+    // to the const version
+    using LandmarksT = std::remove_cv_t<std::remove_reference_t<
+        decltype(std::declval<Node&>().staticLandmarks())>>;
+
+    if (!frameExists(frame_id)) {
+      return LandmarksT{};
+    }
+
+    const SharedNode frame_node = getFrame(frame_id);
+    const LandmarksT& static_landmarks = frame_node->staticLandmarks();
+    return static_landmarks;
+  }
 };
 
 template <typename LandmarkNode>
 class LandmarkNodeInterface
-    : public MapInterfaceBase<TrackletId, LandmarkNode> {
+    : public MapInterfaceBase<LandmarkNodeTraits<LandmarkNode>> {
  public:
-  using Base = MapInterfaceBase<TrackletId, LandmarkNode>;
+  using Base = MapInterfaceBase<LandmarkNodeTraits<LandmarkNode>>;
   using SharedNode = typename Base::SharedNode;
   using SharedNodeMap = typename Base::SharedNodeMap;
 
@@ -250,9 +398,10 @@ class LandmarkNodeInterface
 };
 
 template <typename ObjectNode>
-class ObjectNodeInterface : public MapInterfaceBase<ObjectId, ObjectNode> {
+class ObjectNodeInterface
+    : public MapInterfaceBase<ObjectNodeTraits<ObjectNode>> {
  public:
-  using Base = MapInterfaceBase<ObjectId, ObjectNode>;
+  using Base = MapInterfaceBase<ObjectNodeTraits<ObjectNode>>;
   using SharedNode = typename Base::SharedNode;
   using SharedNodeMap = typename Base::SharedNodeMap;
 
@@ -280,15 +429,6 @@ class ObjectNodeInterface : public MapInterfaceBase<ObjectId, ObjectNode> {
   SharedNodeMap& getObjects() { return this->template getNodes(); }
 };
 
-template <typename LandmarkNode>
-using LandmarkNodeTraits = NodeTraits<TrackletId, LandmarkNode>;
-
-template <typename ObjectNode>
-using ObjectNodeTraits = NodeTraits<ObjectId, ObjectNode>;
-
-template <typename FrameNode>
-using FrameNodeTraits = NodeTraits<FrameId, FrameNode>;
-
 template <typename NodeTypes>
 class ObjectNodeBase {
  public:
@@ -296,11 +436,16 @@ class ObjectNodeBase {
   using FrameNode = typename NodeTypes::FrameNodeT;
   using LandmarkNode = typename NodeTypes::LandmarkNodeT;
 
+ private:
   typedef LandmarkNodeTraits<LandmarkNode> LandmarkNodeTraitsT;
-  typedef typename LandmarkNodeTraitsT::SharedNodeSet Landmarks;
+  typedef NodeStructures<LandmarkNodeTraitsT> LandmarkNodeStructuresT;
 
   typedef FrameNodeTraits<FrameNode> FrameNodeTraitsT;
-  typedef typename FrameNodeTraitsT::SharedNodeSet Frames;
+  typedef NodeStructures<FrameNodeTraitsT> FrameNodeStructuresT;
+
+ public:
+  typedef typename LandmarkNodeStructuresT::SharedNodes Landmarks;
+  typedef typename FrameNodeStructuresT::SharedNodes Frames;
 
   ObjectNodeBase(ObjectId object_id) : object_id_(object_id) {}
 
@@ -433,12 +578,16 @@ class FrameNodeBase {
   using ObjectNode = typename NodeTypes::ObjectNodeT;
 
   typedef LandmarkNodeTraits<LandmarkNode> LandmarkNodeTraitsT;
+  typedef NodeStructures<LandmarkNodeTraitsT> LandmarkNodeStructuresT;
+
   typedef ObjectNodeTraits<ObjectNode> ObjectNodeTraitsT;
+  typedef NodeStructures<ObjectNodeTraitsT> ObjectNodeStructuresT;
 
   typedef typename LandmarkNodeTraitsT::SharedNode SharedLandmark;
+  typedef typename ObjectNodeTraitsT::SharedNode SharedObject;
 
-  typedef typename LandmarkNodeTraitsT::SharedNodeSet Landmarks;
-  typedef typename ObjectNodeTraitsT::SharedNodeSet Objects;
+  typedef typename LandmarkNodeStructuresT::SharedNodes Landmarks;
+  typedef typename ObjectNodeStructuresT::SharedNodes Objects;
 
   FrameNodeBase(FrameId frame_id, Timestamp timestamp)
       : frame_id_(frame_id), timestamp_(timestamp) {}
@@ -482,7 +631,6 @@ class FrameNodeBase {
   }
 
   const Objects& objectsSeen() const { return objects_; }
-  Objects& objectsSeen() { return objects_; }
 
   ObjectIds objectSeenIds() const {
     return objectsSeen().template collectKeys();
@@ -511,24 +659,23 @@ class FrameNodeBase {
   }
 
   const Landmarks& dynamicLandmarks() const { return dynamic_landmarks_; }
-  Landmarks& dynamicLandmarks() { return dynamic_landmarks_; }
+  void addDynamicObjectLandmark(const SharedLandmark& lmk,
+                                const SharedObject& object) {
+    CHECK_EQ(lmk->objectId(), object->objectId());
+    dynamic_landmarks_.insert(lmk);
+    dynamic_landmarks_j_[lmk->objectId()].insert(lmk);
+    objects_.insert(object);
+  }
 
   const Landmarks& staticLandmarks() const { return static_landmarks_; }
   Landmarks& staticLandmarks() { return static_landmarks_; }
 
-  Landmarks dynamicLandmarks(ObjectId object_id) const {
-    Landmarks landmarks_j;
-
+  const Landmarks& dynamicLandmarks(ObjectId object_id) const {
     if (!objectObserved(object_id)) {
-      return landmarks_j;
+      static const Landmarks empty{};
+      return empty;
     }
-
-    for (const auto& lmk_node : dynamic_landmarks_) {
-      if (lmk_node->objectId() == object_id) {
-        landmarks_j.insert(lmk_node);
-      }
-    }
-    return landmarks_j;
+    return dynamic_landmarks_j_.at(object_id);
   }
 
   /// @brief Const SharedLandmarkNode with corresponding Measurement value
@@ -544,7 +691,7 @@ class FrameNodeBase {
 
   std::vector<LandmarkMeasurementPair> dynamicMeasurements(
       ObjectId object_id) const {
-    const Landmarks lmks_j = dynamicLandmarks(object_id);
+    const Landmarks& lmks_j = dynamicLandmarks(object_id);
     return measurementsFromLandmarks(lmks_j);
   }
 
@@ -571,6 +718,9 @@ class FrameNodeBase {
   Landmarks dynamic_landmarks_;
   Landmarks static_landmarks_;
 
+  //! Dynamic landmarks per object
+  dyno::FastUnorderedMap<ObjectId, Landmarks> dynamic_landmarks_j_;
+
   Objects objects_;
 
   /// @brief Optional initial camera pose in world, provided by the front-end
@@ -589,12 +739,17 @@ class LandmarkNodeBase {
   using FrameNode = typename NodeTypes::FrameNodeT;
   using ObjectNode = typename NodeTypes::ObjectNodeT;
 
+ private:
   typedef FrameNodeTraits<FrameNode> FrameNodeTraitsT;
+
+  typedef NodeStructures<FrameNodeTraitsT> FrameNodeStructuresT;
+
+ public:
   typedef typename FrameNodeTraitsT::SharedNode SharedFrame;
-  typedef typename FrameNodeTraitsT::SharedNodeSet Frames;
+  typedef typename FrameNodeStructuresT::SharedNodes Frames;
 
   // Map of measurements, via the frame this measurement was seen in
-  using Measurements = gtsam::FastMap<SharedFrame, M>;
+  using Measurements = dyno::FastUnorderedMap<SharedFrame, M>;
 
   LandmarkNodeBase(TrackletId tracklet_id, ObjectId object_id)
       : tracklet_id_(tracklet_id), object_id_(object_id) {}
@@ -875,6 +1030,7 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
   typedef LandmarkNodeInterface<LandmarkNodeT> LandmarkNodeInterfaceT;
   typedef ObjectNodeInterface<ObjectNodeT> ObjectNodeInterfaceT;
 
+  // Define traits for each Node type
   typedef FrameNodeTraits<FrameNodeT> FrameNodeTraitsT;
   typedef LandmarkNodeTraits<LandmarkNodeT> LandmarkNodeTraitsT;
   typedef ObjectNodeTraits<ObjectNodeT> ObjectNodeTraitsT;
@@ -883,9 +1039,14 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
   typedef typename LandmarkNodeTraitsT::SharedNode SharedLandmarkNodeT;
   typedef typename ObjectNodeTraitsT::SharedNode SharedObjectNodeT;
 
-  typedef typename FrameNodeTraitsT::SharedNodeSet SharedFrameSet;
-  typedef typename LandmarkNodeTraitsT::SharedNodeSet SharedLandmarkSet;
-  typedef typename ObjectNodeTraitsT::SharedNodeSet SharedObjectSet;
+  // Define data-structures for each Node type
+  typedef NodeStructures<FrameNodeTraitsT> FrameNodeStructuresT;
+  typedef NodeStructures<LandmarkNodeTraitsT> LandmarkNodeStructuresT;
+  typedef NodeStructures<ObjectNodeTraitsT> ObjectNodeStructuresT;
+
+  typedef typename FrameNodeStructuresT::SharedNodes SharedFrameSet;
+  typedef typename LandmarkNodeStructuresT::SharedNodes SharedLandmarkSet;
+  typedef typename ObjectNodeStructuresT::SharedNodes SharedObjectSet;
 
  private:
   /* Simple struct to validate the internals of a node (as we're in C++17 no
@@ -1060,8 +1221,7 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
       CHECK_NOTNULL(object_node);
 
       object_node->landmarks().insert(landmark_node);
-      frame_node->dynamicLandmarks().insert(landmark_node);
-      frame_node->objectsSeen().insert(object_node);
+      frame_node->addDynamicObjectLandmark(landmark_node, object_node);
     }
   }
 };

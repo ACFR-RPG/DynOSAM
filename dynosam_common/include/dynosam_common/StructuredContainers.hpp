@@ -603,6 +603,139 @@ class FastUnorderedSet
  private:
 };
 
+/**
+ * @brief A contiguous storage structure that acts like a std::unordered_set.
+ * Allows very fast iteration, insetion and lookup for unique elements based on
+ * Key.
+ *
+ * Instead of relying on std::hash<T> we proviude a template KeyOfValue
+ * where its KeyOfValue::operator()(T) -> Key. Key should then be hashable.
+ *
+ * @tparam T
+ * @tparam Key
+ * @tparam KeyOfValue
+ * @tparam gtsam::internal::FastDefaultAllocator<T>::type
+ * @tparam Hash
+ * @tparam KeyEqual
+ */
+template <typename T, typename Key, typename KeyOfValue,
+          typename Allocator =
+              typename gtsam::internal::FastDefaultAllocator<T>::type,
+          typename Hash = std::hash<Key>,
+          typename KeyEqual = std::equal_to<Key>>
+class UniqueVector {
+ public:
+  using value_type = T;
+  using key_type = Key;
+  using size_type = std::size_t;
+
+  using Storage = std::vector<T, Allocator>;
+  using const_iterator = typename Storage::const_iterator;
+
+ private:
+  using IndexMap = std::unordered_map<Key, size_type, Hash, KeyEqual>;
+
+ public:
+  UniqueVector() = default;
+
+  template <class CONTAINER>
+  explicit UniqueVector(const CONTAINER& container) {
+    reserve(std::size(container));
+    for (const auto& value : container) {
+      insert(value);
+    }
+  }
+
+  bool operator==(const UniqueVector& rhs) const noexcept {
+    return values_ == rhs.values_ && index_ == rhs.index_;
+  }
+
+  bool operator!=(const UniqueVector& rhs) const noexcept {
+    return !(*this == rhs);
+  }
+
+  void reserve(size_type n) {
+    values_.reserve(n);
+    index_.reserve(n);
+  }
+
+  inline bool empty() const noexcept { return values_.empty(); }
+  inline size_type size() const noexcept { return values_.size(); }
+
+  inline bool contains(const Key& key) const {
+    return index_.find(key) != index_.end();
+  }
+
+  std::pair<bool, Key> insert(const value_type& value) {
+    const Key key = key_of_value_(value);
+
+    if (index_.find(key) != index_.end()) {
+      return {false, key};
+    }
+
+    const size_type index = values_.size();
+
+    values_.push_back(value);
+    index_.emplace(key, index);
+
+    return {true, key};
+  }
+
+  std::pair<bool, Key> insert(value_type&& value) {
+    const Key key = key_of_value_(value);
+
+    if (index_.find(key) != index_.end()) {
+      return {false, key};
+    }
+
+    const size_type index = values_.size();
+
+    values_.push_back(std::move(value));
+    index_.emplace(key, index);
+
+    return {true, key};
+  }
+
+  const value_type& at(const Key& key) const {
+    const auto it = index_.find(key);
+
+    assert(it != index_.end());
+
+    return values_[it->second];
+  }
+
+  inline const value_type& operator[](size_type i) const noexcept {
+    return values_[i];
+  }
+
+  const_iterator find(const Key& key) const {
+    auto it = index_.find(key);
+    if (it == index_.end()) {
+      return values_.end();
+    }
+
+    return values_.begin() + it->second;
+  }
+
+  const value_type& front() const {
+    assert(!empty());
+    return values_.front();
+  }
+
+  const value_type& back() const {
+    assert(!empty());
+    return values_.back();
+  }
+
+  auto begin() const noexcept { return values_.begin(); }
+  auto end() const noexcept { return values_.end(); }
+
+ private:
+  Storage values_;
+  IndexMap index_;
+  KeyOfValue key_of_value_;
+};
+
 }  // namespace dyno
 
 // allow convenience tuple like getters for FrameRange

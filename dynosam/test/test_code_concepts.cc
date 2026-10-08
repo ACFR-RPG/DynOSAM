@@ -1294,6 +1294,227 @@ TEST(CodeConceptsPerformanceBenchmarking, PerformanceLoopVsMap) {
   std::cout << "\n";
 }
 
+using Key = std::size_t;
+
+struct DummyNode {
+  explicit DummyNode(Key id) : id(id) {}
+
+  Key getId() const { return id; }
+
+  Key id;
+};
+
+using DummyNodePtr = std::shared_ptr<DummyNode>;
+
+struct NodeCompare {
+  // enables heterogeneous lookup
+  using is_transparent = void;
+
+  bool operator()(const DummyNodePtr& lhs, const DummyNodePtr& rhs) const {
+    return lhs->getId() < rhs->getId();
+  }
+  bool operator()(const DummyNodePtr& a, Key id) const {
+    return a->getId() < id;
+  }
+  bool operator()(Key id, const DummyNodePtr& a) const {
+    return id < a->getId();
+  }
+};
+
+using StdSet = std::set<DummyNodePtr, NodeCompare>;
+using StdMap = std::map<Key, DummyNodePtr>;
+
+constexpr std::size_t kNumNodes = 10000;
+constexpr std::size_t kNumTrials = 100;
+
+std::vector<DummyNodePtr> makeNodes() {
+  std::vector<DummyNodePtr> nodes;
+  nodes.reserve(kNumNodes);
+
+  for (Key i = 0; i < kNumNodes; ++i) {
+    nodes.push_back(std::make_shared<DummyNode>(i));
+  }
+
+  return nodes;
+}
+
+std::vector<Key> makeRandomKeys() {
+  std::vector<Key> keys;
+  keys.reserve(kNumNodes);
+
+  for (Key i = 0; i < kNumNodes; ++i) {
+    keys.push_back(i);
+  }
+
+  std::mt19937 rng(42);
+  std::shuffle(keys.begin(), keys.end(), rng);
+
+  return keys;
+}
+
+double elapsedMs(const auto& function) {
+  const auto start = std::chrono::steady_clock::now();
+
+  function();
+
+  const auto end = std::chrono::steady_clock::now();
+
+  return std::chrono::duration<double, std::milli>(end - start).count();
+}
+
+// -----------------------------------------------------------------------------
+// Insert
+// -----------------------------------------------------------------------------
+
+TEST(SetVsMapBenchmark, Insert) {
+  const auto nodes = makeNodes();
+  const auto random_keys = makeRandomKeys();
+
+  double set_time = 0.0;
+  double map_time = 0.0;
+
+  for (std::size_t trial = 0; trial < kNumTrials; ++trial) {
+    set_time += elapsedMs([&] {
+      StdSet set;
+
+      for (const Key key : random_keys) {
+        set.insert(nodes[key]);
+      }
+
+      ASSERT_EQ(set.size(), kNumNodes);
+    });
+
+    map_time += elapsedMs([&] {
+      StdMap map;
+
+      for (const Key key : random_keys) {
+        map.emplace(key, nodes[key]);
+      }
+
+      ASSERT_EQ(map.size(), kNumNodes);
+    });
+  }
+
+  std::cout << "\nSet vs Map - insert\n"
+            << "  std::set: " << set_time / kNumTrials << " ms\n"
+            << "  std::map: " << map_time / kNumTrials << " ms\n"
+            << "  std::set speedup: " << map_time / set_time << "x\n"
+            << "  std::map speedup: " << set_time / map_time << "x\n";
+}
+
+// -----------------------------------------------------------------------------
+// Find
+// -----------------------------------------------------------------------------
+
+TEST(SetVsMapBenchmark, Find) {
+  const auto nodes = makeNodes();
+  const auto random_keys = makeRandomKeys();
+
+  StdSet set;
+  StdMap map;
+
+  for (const auto& node : nodes) {
+    set.insert(node);
+    map.emplace(node->getId(), node);
+  }
+
+  volatile std::size_t set_found = 0;
+  volatile std::size_t map_found = 0;
+
+  double set_time = 0.0;
+  double map_time = 0.0;
+
+  for (std::size_t trial = 0; trial < kNumTrials; ++trial) {
+    set_time += elapsedMs([&] {
+      std::size_t found = 0;
+
+      for (const Key key : random_keys) {
+        auto lookup = nodes[key];
+
+        if (set.find(lookup) != set.end()) {
+          ++found;
+        }
+      }
+
+      set_found = found;
+    });
+
+    map_time += elapsedMs([&] {
+      std::size_t found = 0;
+
+      for (const Key key : random_keys) {
+        if (map.find(key) != map.end()) {
+          ++found;
+        }
+      }
+
+      map_found = found;
+    });
+  }
+
+  ASSERT_EQ(set_found, kNumNodes);
+  ASSERT_EQ(map_found, kNumNodes);
+
+  std::cout << "\nSet vs Map - find\n"
+            << "  std::set: " << set_time / kNumTrials << " ms\n"
+            << "  std::map: " << map_time / kNumTrials << " ms\n"
+            << "  std::set speedup: " << map_time / set_time << "x\n"
+            << "  std::map speedup: " << set_time / map_time << "x\n";
+}
+
+// -----------------------------------------------------------------------------
+// Iterate
+// -----------------------------------------------------------------------------
+
+TEST(SetVsMapBenchmark, Iterate) {
+  const auto nodes = makeNodes();
+
+  StdSet set;
+  StdMap map;
+
+  for (const auto& node : nodes) {
+    set.insert(node);
+    map.emplace(node->getId(), node);
+  }
+
+  volatile std::size_t set_sum = 0;
+  volatile std::size_t map_sum = 0;
+
+  double set_time = 0.0;
+  double map_time = 0.0;
+
+  for (std::size_t trial = 0; trial < kNumTrials; ++trial) {
+    set_time += elapsedMs([&] {
+      std::size_t sum = 0;
+
+      for (const auto& node : set) {
+        sum += node->getId();
+      }
+
+      set_sum = sum;
+    });
+
+    map_time += elapsedMs([&] {
+      std::size_t sum = 0;
+
+      for (const auto& [key, node] : map) {
+        sum += key;
+        static_cast<void>(node);
+      }
+
+      map_sum = sum;
+    });
+  }
+
+  ASSERT_EQ(set_sum, map_sum);
+
+  std::cout << "\nSet vs Map - iterate\n"
+            << "  std::set: " << set_time / kNumTrials << " ms\n"
+            << "  std::map: " << map_time / kNumTrials << " ms\n"
+            << "  std::set speedup: " << map_time / set_time << "x\n"
+            << "  std::map speedup: " << set_time / map_time << "x\n";
+}
+
 // TEST(CodeConcepts, getISAM2Ordering) {
 //     using namespace gtsam;
 //     Cal3_S2::shared_ptr K(new Cal3_S2(50.0, 50.0, 0.0, 50.0, 50.0));

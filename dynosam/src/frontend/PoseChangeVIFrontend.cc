@@ -395,72 +395,79 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
 
-  gtsam::Vector3 sigmas;
-  sigmas << 2, 2, 2;
-
   StatusLandmarkVector& points_W_used = realtime_output->state.static_map;
-  // TODO: eventually reserve with the actual map!
-  //  points_W_used.reserve(lmks_C_static.ids.size());
 
-  StereoMeasurementStatusVector stereo_measurements;
-  // stereo_measurements.reserve(lmks_C_static.ids.size());
+  for (const auto& [object_id, map_W] : landmarks_W_) {
+    const auto& landmarks_W = map_W->getLandmarks();
+    const auto& tracklet_ids = map_W->getTrackletIds();
 
-  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
-  const gtsam::StereoCamera& stereo_camera = rgbd_camera->getFakeStereoCamera();
+    const size_t num_lmks = landmarks_W.size();
+    points_W_used.reserve(points_W_used.size() + num_lmks);
 
-  utils::ChronoTimingStats make_obs_t(this->moduleName() + ".make_obs");
-  // LocalVIOGraph::Ptr vio_graph =
-  // landmarks_W_.getAs<LocalVIOGraph>(background_label);
-  for (const auto& object_view : features_k.objectViews()) {
-    const auto object_id = object_view.objectId();
-    const auto num_points = object_view.size();
-    const auto ids = object_view.ids();
+    for (size_t i = 0; i < num_lmks; i++) {
+      const auto& m_W = landmarks_W[i];
+      const auto tracklet_id = tracklet_ids[i];
 
-    auto it = frame_geometry_k.find(object_id);
-    if (it == frame_geometry_k.end()) {
-      continue;
+      points_W_used.push_back(LandmarkStatus(m_W, frame_id_k, timestamp_k,
+                                             tracklet_id, object_id,
+                                             ReferenceFrame::GLOBAL));
     }
-
-    const FrameGeometry& frame_geometry_k_j = it->second;
-    // LandmarkMap& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
-    auto lmks = landmarks_W_.get(object_id);
-    // lmks_C_km1_j.lmks.reserve(num_points);
-    // lmks_C_km1_j.ids.reserve(num_points);
-
-    // lmks_C_km1_j.lmks.reserve(num_points);
-    for (size_t i = 0; i < num_points; i++) {
-      TrackletId id = ids[i];
-
-      // test for now!
-
-      // no object points!
-      // if (lmks->landmarkExists(id)) {
-      //   gtsam::Point3 m_W = lmks->getLandmark(id);
-      //   points_W_used.push_back(
-      //       LandmarkStatus::StaticInGlobal(m_W, frame_id_k, timestamp_k,
-      //       id));
-      //   // lmks_C_km1_j.lmks.push_back(X_W_k.inverse() *
-      //   //                             vio_graph->getLandmark(id));
-      //   // lmks_C_km1_j.ids.push_back(id);
-      //   // lmks_C_km1_j.local_indices[id] = i;
-      // }
-
-      auto stereo_measurement = StereoMeasurement::FromSigmas(
-          frame_geometry_k_j.getStereoPoint(id), sigmas);
-
-      stereo_measurements.push_back(
-          StereoMeasurementStatus(stereo_measurement, frame_id_k, timestamp_k,
-                                  id, object_id, ReferenceFrame::LOCAL));
-
-      // lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
-      // lmks_C_km1_j.ids.push_back(id);
-      // lmks_C_km1_j.local_indices[id] = i;
-    }
-
-    utils::ChronoTimingStats add_obs_t(this->moduleName() + ".add_obs");
-    lmks->addMeasurements(stereo_measurements);
-    add_obs_t.stop();
   }
+
+  // utils::ChronoTimingStats make_obs_t(this->moduleName() + ".make_obs");
+  // // LocalVIOGraph::Ptr vio_graph =
+  // // landmarks_W_.getAs<LocalVIOGraph>(background_label);
+  // for (const auto& object_view : features_k.objectViews()) {
+  //   const auto object_id = object_view.objectId();
+  //   const auto num_points = object_view.size();
+  //   const auto ids = object_view.ids();
+
+  //   auto it = frame_geometry_k.find(object_id);
+  //   if (it == frame_geometry_k.end()) {
+  //     continue;
+  //   }
+
+  //   const FrameGeometry& frame_geometry_k_j = it->second;
+  //   // LandmarkMap& lmks_C_km1_j = local_landmarks_C_km1_[object_id];
+  //   auto lmks = landmarks_W_.get(object_id);
+  //   // lmks_C_km1_j.lmks.reserve(num_points);
+  //   // lmks_C_km1_j.ids.reserve(num_points);
+
+  //   // lmks_C_km1_j.lmks.reserve(num_points);
+  //   for (size_t i = 0; i < num_points; i++) {
+  //     TrackletId id = ids[i];
+
+  //     // test for now!
+
+  //     // no object points!
+  //     // if (lmks->landmarkExists(id)) {
+  //     //   gtsam::Point3 m_W = lmks->getLandmark(id);
+  //     //   points_W_used.push_back(
+  //     //       LandmarkStatus::StaticInGlobal(m_W, frame_id_k, timestamp_k,
+  //     //       id));
+  //     //   // lmks_C_km1_j.lmks.push_back(X_W_k.inverse() *
+  //     //   //                             vio_graph->getLandmark(id));
+  //     //   // lmks_C_km1_j.ids.push_back(id);
+  //     //   // lmks_C_km1_j.local_indices[id] = i;
+  //     // }
+
+  //     auto stereo_measurement = StereoMeasurement::FromSigmas(
+  //         frame_geometry_k_j.getStereoPoint(id), sigmas);
+
+  //     stereo_measurements.push_back(
+  //         StereoMeasurementStatus(stereo_measurement, frame_id_k,
+  //         timestamp_k,
+  //                                 id, object_id, ReferenceFrame::LOCAL));
+
+  //     // lmks_C_km1_j.lmks.push_back(frame_geometry_k_j.getLandmark(id));
+  //     // lmks_C_km1_j.ids.push_back(id);
+  //     // lmks_C_km1_j.local_indices[id] = i;
+  //   }
+
+  //   utils::ChronoTimingStats add_obs_t(this->moduleName() + ".add_obs");
+  //   lmks->addMeasurements(stereo_measurements);
+  //   add_obs_t.stop();
+  // }
 
   // vio_graph->addMeasurements(stereo_measurements);
   // vio_graph->setPose(frame_id_k, X_W_k);
@@ -539,14 +546,14 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
 
     const StereoMap& observations = vio_graph->getObservations();
     // this assumes we have solved succificnelt for frame_id - 1u!
-    TrackletIds tracklets_km1 =
-        observations.staticTrackletsByFrame(frame_id - 1u);
+    auto landmarks_km1 = observations.staticLandmarksByFrame(frame_id - 1u);
 
     // TODO: should initalise via co-visibility not just the currently visiblt
     // ones!
     //  right now just init from measurements of previous frames
     size_t count = 0;
-    for (TrackletId i0 : tracklets_km1) {
+    for (const auto& lmk_i : landmarks_km1) {
+      TrackletId i0 = lmk_i->trackletId();
       // if already in local map, ignore as we want to intalise new points!
       if (reference_geometry.landmarkExists(i0)) {
         continue;
@@ -661,20 +668,57 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   // alert awaiting threads
   context.vo_cv.notify_all();
 
+  gtsam::Vector3 sigmas;
+  sigmas << 2, 2, 2;
+
   // get the same reference geometry used for matching but now in W
   const gtsam::Point3Vector& lmks_R = adapter->referenceLandmarks();
   gtsam::Point3Vector lmk_W;
   // TODO: once again assuming X_km1_ is solved for and is the reference index!
   dyno::transformTo(X_km1_, lmks_R, lmk_W);
 
+  StereoMeasurementStatusVector stereo_measurements;
+  stereo_measurements.reserve(adapter->numMatches());
+
+  // add measurements for all matcheds
   for (size_t i = 0; i < adapter->numMatches(); i++) {
     if (adapter->isInlier(i)) {
       TrackletId id = adapter->trackletId(i);
       if (!vio_graph->landmarkExists(id)) {
         vio_graph->setLandmark(id, lmk_W[i]);
       }
+
+      //  auto stereo_measurement = StereoMeasurement::FromSigmas(
+      //     local_geometry.getStereoPoint(id), sigmas);
+
+      //   stereo_measurements.push_back(
+      //     StereoMeasurementStatus(stereo_measurement, frame_id, timestamp,
+      //                             id, 0, ReferenceFrame::LOCAL));
     }
   }
+
+  // TEST: add all measurements not just the ones matched
+  //  this seems wrong, but maybe its becuase we're then not including
+  //  the additional measurements needed to add new landmarks!
+  //  Correct that is why!
+  for (size_t i = 0; i < local_geometry.ids.size(); i++) {
+    TrackletId id = local_geometry.ids[i];
+    Index fc_index = local_geometry.getFeatureContainerIndex(id);
+
+    if (!features.inlier[fc_index]) {
+      continue;
+    }
+
+    auto stereo_measurement = StereoMeasurement::FromSigmas(
+        local_geometry.getStereoPoint(id), sigmas);
+
+    stereo_measurements.push_back(StereoMeasurementStatus(
+        stereo_measurement, frame_id, timestamp, id, 0, ReferenceFrame::LOCAL));
+  }
+
+  vio_graph->addMeasurements(stereo_measurements);
+  vio_graph->setPose(frame_id, X_W);
+
   // CHECK_EQ(reference_geometry_W.size(), local_geometry.ids.size());
   // for(size_t i = 0; i  < reference_geometry_W.size(); i++) {
   //   TrackletId id = local_geometry.ids[i];

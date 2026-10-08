@@ -455,6 +455,7 @@ class LandmarkMap {
       Index new_idx = landmarks_.size();
       landmark_indices_[tracklet_id] = new_idx;
       landmarks_.push_back(lmk);
+      ids_.push_back(tracklet_id);
     } else {
       Index index = it->second;
       landmarks_.at(index) = lmk;
@@ -477,21 +478,26 @@ class LandmarkMap {
     return landmarks_[index];
   }
 
+  inline TrackletId getIdByIndex(Index index) const { return ids_[index]; }
+
   const gtsam::Point3Vector& getLandmarks() const { return landmarks_; }
+  const TrackletIds& getTrackletIds() const { return ids_; }
 
   // fast transform of landmarks p = P*p (R*p + t)
   LandmarkMap transformTo(const gtsam::Pose3& pose) const {
     TrackletIndices indices = landmark_indices_;
+    TrackletIds tracklet_ids = ids_;
     gtsam::Point3Vector landmarks;
 
     dyno::transformTo(pose, landmarks_, landmarks);
-    return LandmarkMap(indices, landmarks);
+    return LandmarkMap(indices, landmarks, tracklet_ids);
   }
 
   inline TrackletIndices::const_iterator find(TrackletId id) const {
     return landmark_indices_.find(id);
   }
 
+  /* Walk over the tracklets -> stored index from the beginning */
   inline TrackletIndices::const_iterator begin() const {
     return landmark_indices_.begin();
   }
@@ -501,12 +507,14 @@ class LandmarkMap {
   }
 
  private:
-  LandmarkMap(const TrackletIndices& indices, const gtsam::Point3Vector& lmks)
-      : landmark_indices_(indices), landmarks_(lmks) {}
+  LandmarkMap(const TrackletIndices& indices, const gtsam::Point3Vector& lmks,
+              const TrackletIds& tracklet_ids)
+      : landmark_indices_(indices), landmarks_(lmks), ids_(tracklet_ids) {}
 
  protected:
   TrackletIndices landmark_indices_;
   gtsam::Point3Vector landmarks_;
+  TrackletIds ids_;
 };
 
 // from here onwards we operate in the land of doubles
@@ -902,19 +910,26 @@ class DOGraph : public LocalBAGraph {
 
 class MultiBAGraph {
  public:
+  typedef gtsam::FastMap<ObjectId, LocalBAGraph::Ptr> BaGraphs;
+
   MultiBAGraph() = default;
   // virtual ~MultiBaGraph() = default;
 
   bool exists(ObjectId object_id) const { return maps_.exists(object_id); }
 
-  void add(ObjectId object_id, LocalBAGraph::Ptr map) {
-    maps_[object_id] = map;
-  }
-
   LocalBAGraph::Ptr get(ObjectId object_id) const {
     auto map = maps_.at(object_id);
     CHECK_NOTNULL(map);
     return map;
+  }
+
+  BaGraphs::const_iterator begin() const { return maps_.begin(); }
+
+  BaGraphs::const_iterator end() const { return maps_.end(); }
+
+ protected:
+  void add(ObjectId object_id, LocalBAGraph::Ptr map) {
+    maps_[object_id] = map;
   }
 
   template <typename T>
@@ -926,14 +941,11 @@ class MultiBAGraph {
   }
 
  protected:
-  gtsam::FastMap<ObjectId, LocalBAGraph::Ptr> maps_;
+  BaGraphs maps_;
 };
 
-class DynamicSlamMap : private MultiBAGraph {
+class DynamicSlamMap : public MultiBAGraph {
  public:
-  using MultiBAGraph::exists;
-  using MultiBAGraph::get;
-
   DynamicSlamMap(Camera::Ptr camera) : camera_(camera) {
     maps_[background_label] = std::make_shared<LocalVIOGraph>(camera_);
   }

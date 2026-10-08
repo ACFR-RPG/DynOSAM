@@ -51,11 +51,15 @@ struct SimpleNode {
 
 using SimpleFrameNode = SimpleNode<struct F>;
 
-TEST(Map, SharedNodeSet) {
+TEST(Map, SharedNodes) {
+  // by default this is ordered
   using Traits = NodeTraits<int, SimpleFrameNode>;
-  using SharedNodeSet = Traits::SharedNodeSet;
+  using Structures = NodeStructures<Traits>;
+  using SharedNodes = Structures::SharedNodes;
 
-  SharedNodeSet set;
+  EXPECT_TRUE(Structures::isOrdered);
+
+  SharedNodes set;
   set.insert(std::make_shared<SimpleFrameNode>(0));
   EXPECT_EQ(set.size(), 1);
   EXPECT_EQ(set.collectKeys(), std::vector<int>({0}));
@@ -67,6 +71,35 @@ TEST(Map, SharedNodeSet) {
   set.insert(std::make_shared<SimpleFrameNode>(1));
   EXPECT_EQ(set.size(), 2);
   EXPECT_EQ(set.collectKeys(), std::vector<int>({0, 1}));
+}
+
+TEST(Map, SharedNodesUnordered) {
+  using Traits = NodeTraits<int, SimpleFrameNode, false>;
+  using Structures = NodeStructures<Traits>;
+  using SharedNodes = Structures::SharedNodes;
+
+  EXPECT_FALSE(Structures::isOrdered);
+
+  SharedNodes set;
+  set.insert(std::make_shared<SimpleFrameNode>(0));
+  EXPECT_EQ(set.size(), 1);
+  EXPECT_EQ(set.collectKeys(), std::vector<int>({0}));
+
+  set.insert(std::make_shared<SimpleFrameNode>(1));
+  EXPECT_EQ(set.size(), 2);
+
+  auto keys = set.collectKeys();
+  EXPECT_EQ(keys.size(), 2);
+  EXPECT_NE(std::find(keys.begin(), keys.end(), 0), keys.end());
+  EXPECT_NE(std::find(keys.begin(), keys.end(), 1), keys.end());
+
+  set.insert(std::make_shared<SimpleFrameNode>(1));
+  EXPECT_EQ(set.size(), 2);
+
+  keys = set.collectKeys();
+  EXPECT_EQ(keys.size(), 2);
+  EXPECT_NE(std::find(keys.begin(), keys.end(), 0), keys.end());
+  EXPECT_NE(std::find(keys.begin(), keys.end(), 1), keys.end());
 }
 
 TEST(Map, basicAddOnlyStatic) {
@@ -298,7 +331,7 @@ TEST(Map, objectSeenFrames) {
             SharedObjectSet({object1, object3}));
   // frame 1 has seen object 1, 2 and 3
   EXPECT_EQ(map->getFrame(1)->objectsSeen(),
-            SharedObjectSet({object1, object3, object2}));
+            SharedObjectSet({object1, object2, object3}));
   // frame 2 has seen object 2 and 3
   EXPECT_EQ(map->getFrame(2)->objectsSeen(),
             SharedObjectSet({object2, object3}));
