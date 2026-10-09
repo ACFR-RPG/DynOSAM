@@ -1,5 +1,6 @@
 #include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 
+#include "dynosam/factors/FixedStereoFactor.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
 
@@ -1380,32 +1381,90 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   // covisible tracklets
   //  auto frame_node_ptr = observations_->getFrame(frame_id);
   utils::ChronoTimingStats timer_t("vio_graph.opt");
-  gtsam::FastMap<FrameId, gtsam::FastMap<FrameId, std::set<TrackletId>>>
+  dyno::FastUnorderedMap<
+      FrameId, dyno::FastUnorderedMap<FrameId, std::unordered_set<TrackletId>>>
       covisibilities;
-  // collect all co-visible landmarks at selected frames!
-  // for(const auto& [frame_i0, frame_node] : observations_->getFrames()) {
-  //   auto landmarks = frame_node->staticLandmarks();
-  //   for(const auto& lmk_node : landmarks) {
-  //     TrackletId tracklet_id = lmk_node->trackletId();
-  //     FrameId frame_i1 = frame_node->frameId();
 
-  //     covisibilities[frame_i0][frame_i1].insert(tracklet_id);
+  size_t last_n_kfs = 3;
+  const std::set<FrameId>& keyframes = keyframes_;
+
+  std::vector<FrameId> frames_to_try;
+  frames_to_try.reserve(last_n_kfs + 2);
+
+  const auto add_unique = [&frames_to_try](FrameId id) {
+    if (std::find(frames_to_try.begin(), frames_to_try.end(), id) ==
+        frames_to_try.end()) {
+      frames_to_try.push_back(id);
+    }
+  };
+
+  // Try the most recent keyframes first.
+  size_t added_kfs = 0;
+  for (auto it = keyframes.rbegin();
+       it != keyframes.rend() && added_kfs < last_n_kfs; ++it) {
+    add_unique(*it);
+    ++added_kfs;
+  }
+
+  // Also try the current and previous frames.
+  add_unique(frame_id - 1);
+  add_unique(frame_id);
+
+  // this is silly - we can build frames_to_try in order...
+  std::sort(frames_to_try.begin(), frames_to_try.end());
+
+  // thius is taking longer and longer!
+  // keep track of landmarks seen recently?
+  utils::ChronoTimingStats covis_t("vio_graph.opt.covis");
+  // for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
+  //   if (!landmarkExists(tracklet_id)) {
+  //     continue;
+  //   }
+
+  //   FrameIds seen_frame_ids = lmk_node->getSeenFrameIds();
+  //   for (FrameId frame_i0 : seen_frame_ids) {
+  //     // less than the smallest frame id to try
+  //     // build covisability with the frames to try!
+  //     if (frame_i0 < frames_to_try.front()) {
+  //       continue;
+  //     }
+
+  //     for (FrameId frame_i1 : seen_frame_ids) {
+  //       // to ensure unique pairings!
+  //       // that is frame a -> b is the same as b -> a!
+  //       if (frame_i1 > frame_i0) {
+  //         continue;
+  //       }
+
+  //       // and id is initalsied!?
+  //       covisibilities[frame_i0][frame_i1].insert(tracklet_id);
+  //     }
   //   }
   // }
 
-  utils::ChronoTimingStats covis_t("vio_graph.opt.covis");
+  // dont want all landmarks, just the ones seen at frames_to_try!
+
   for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
     if (!landmarkExists(tracklet_id)) {
       continue;
     }
 
-    FrameIds seen_frame_ids = lmk_node->getSeenFrameIds();
-    for (FrameId frame_i0 : seen_frame_ids) {
-      if (frame_i0 < frame_id - 10) {
+    // only build covisabilies for the requested frames
+    std::set<FrameId> seen_at_frames;
+    for (FrameId k0 : frames_to_try) {
+      if (lmk_node->seenAtFrame(k0)) {
+        seen_at_frames.insert(k0);
+      }
+    }
+
+    for (FrameId frame_i0 : seen_at_frames) {
+      // less than the smallest frame id to try
+      // build covisability with the frames to try!
+      if (frame_i0 < frames_to_try.front()) {
         continue;
       }
 
-      for (FrameId frame_i1 : seen_frame_ids) {
+      for (FrameId frame_i1 : seen_at_frames) {
         // to ensure unique pairings!
         // that is frame a -> b is the same as b -> a!
         if (frame_i1 > frame_i0) {
@@ -1419,14 +1478,15 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   }
   covis_t.stop();
 
+  // TODO: sanity check we're not ading factors twice...
   gtsam::Values values;
   gtsam::NonlinearFactorGraph graph;
 
-  std::vector<FrameId> frames_to_try(
-      {frame_id - 7, frame_id - 3, frame_id - 1, frame_id});
+  std::unordered_set<TrackletId> tracklets_with_update;
+  std::unordered_set<FrameId> poses_with_update;
 
-  std::set<TrackletId> tracklets_with_update;
-  std::set<FrameId> poses_with_update;
+  using GenericFixedStereoFactor =
+      gtsam::GenericFixedStereoFactor<gtsam::Pose3>;
 
   utils::ChronoTimingStats build_t("vio_graph.opt.build");
   for (FrameId frame_i0 : frames_to_try) {
@@ -1452,28 +1512,35 @@ void LocalVIOGraph::optimize(FrameId frame_id,
 
       auto it1 = it0->second.find(frame_i1);
       if (it1 != it0->second.end()) {
-        std::set<TrackletId> shared_tracklets = it1->second;
+        const std::unordered_set<TrackletId>& shared_tracklets = it1->second;
         // LOG(INFO) << frame_i0 << " -> " << frame_i1 << " with n=" <<
         // shared_tracklets.size();
+
+        if (shared_tracklets.size() < 4) {
+          continue;
+        }
 
         for (TrackletId id : shared_tracklets) {
           auto lmk_node = observations_->getLandmark(id);
 
-          gtsam::Symbol lmk_sym('l', id);
+          // gtsam::Symbol lmk_sym('l', id);
+          const Landmark lmk = getLandmark(id);
 
-          if (!values.exists(lmk_sym)) {
-            values.insert(lmk_sym, getLandmark(id));
-          }
+          // if (!values.exists(lmk_sym)) {
+          //   values.insert(lmk_sym, getLandmark(id));
+          // }
 
-          tracklets_with_update.insert(id);
+          // tracklets_with_update.insert(id);
 
           // TODo: robustify
           //  only one measurement needed
           auto [measurement_i0, model_i0] = lmk_node->getMeasurement(frame_i0);
           model_i0 = factor_graph_tools::robustifyHuber(0.01, model_i0);
 
-          auto factor_i0 = boost::make_shared<GenericStereoFactor>(
-              measurement_i0, model_i0, pose_sym_i0, lmk_sym, K_stereo_);
+          // auto factor_i0 = boost::make_shared<GenericStereoFactor>(
+          //     measurement_i0, model_i0, pose_sym_i0, lmk_sym, K_stereo_);
+          auto factor_i0 = boost::make_shared<GenericFixedStereoFactor>(
+              measurement_i0, model_i0, pose_sym_i0, lmk, K_stereo_);
           graph += factor_i0;
 
           poses_with_update.insert(frame_i0);
@@ -1484,8 +1551,10 @@ void LocalVIOGraph::optimize(FrameId frame_id,
                 lmk_node->getMeasurement(frame_i1);
             model_i1 = factor_graph_tools::robustifyHuber(0.01, model_i1);
 
-            auto factor_i1 = boost::make_shared<GenericStereoFactor>(
-                measurement_i1, model_i1, pose_sym_i1, lmk_sym, K_stereo_);
+            // auto factor_i1 = boost::make_shared<GenericStereoFactor>(
+            //     measurement_i1, model_i1, pose_sym_i1, lmk_sym, K_stereo_);
+            auto factor_i1 = boost::make_shared<GenericFixedStereoFactor>(
+                measurement_i1, model_i1, pose_sym_i1, lmk, K_stereo_);
             graph += factor_i1;
 
             poses_with_update.insert(frame_i1);
@@ -1496,12 +1565,13 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   }
   build_t.stop();
 
-  gtsam::GaussNewtonParams opt_params;
+  gtsam::LevenbergMarquardtParams opt_params;
+  // gtsam::GaussNewtonParams opt_params;
   // for speed
   opt_params.setMaxIterations(2);
 
-  dyno::NonlinearOptimizer<gtsam::GaussNewtonOptimizer> solver(graph, values,
-                                                               opt_params);
+  dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
+      graph, values, opt_params);
 
   NonlinearOptimizerSummary summary;
   NonlinearOptimizerOptions options;
@@ -1708,7 +1778,7 @@ TrackingResult FeatureTrackerFast::track(
       const auto allowed_feature_distance = getMinFeatureDistance(j);
       const float max_feature_age = static_cast<float>(getMaxFeatureAge(j));
 
-      LOG(INFO) << "Tracked features for j=" << j << " n=" << num_tracked;
+      VLOG(20) << "Tracked features for j=" << j << " n=" << num_tracked;
 
       cv::Mat& binary_detection_mask_j = binary_detection_masks[j];
       auto object_points = object_view.points();
@@ -1750,12 +1820,12 @@ TrackingResult FeatureTrackerFast::track(
 
       if (needs_detection) {
         // hack for now
-        LOG(INFO) << "Replacing tracks for poorly tracked object " << j;
+        VLOG(20) << "Replacing tracks for poorly tracked object " << j;
         // per_object_tracks = detected_feature_map[j];
         object_needs_detection.insert(j);
 
       } else {
-        LOG(INFO) << "Good tracks for object " << j;
+        VLOG(20) << "Good tracks for object " << j;
       }
     }
 
@@ -1763,12 +1833,11 @@ TrackingResult FeatureTrackerFast::track(
     ObjectIds objects_ids_for_detection;
 
     for (const auto& [j, masks_j] : binary_detection_masks) {
-      LOG(INFO) << "Looking at mask j=" << j;
       // if does not exist in current tracking and we have detections
       // add as new object
       bool is_new = !tracked_features.containsObject(j);
       if (object_needs_detection.count(j) > 0 || is_new) {
-        LOG(INFO) << "Object j " << j << " needs detection";
+        VLOG(20) << "Object j " << j << " needs detection";
         objects_ids_for_detection.push_back(j);
 
         cv::Rect bbox;
@@ -2016,6 +2085,15 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
 
   std::vector<CornerResponses> batchedResults(params.size());
 
+  // 11 approximatees a radius of 5 pixels from the edge
+  // but we could do more?!
+  // in pixels
+  // should maybe be adaptive with object size? Whatever
+  constexpr int boundary_distance = 8;
+  const cv::Mat kernel = cv::getStructuringElement(
+      cv::MORPH_RECT,
+      cv::Size(2 * boundary_distance + 1, 2 * boundary_distance + 1));
+
   utils::ChronoTimingStats t3("fast_tracker.masks_loop");
   tbb::task_group task_group;
   for (size_t m = 0; m < params.size(); m++) {
@@ -2023,12 +2101,15 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
       const auto& param = params[m];
       const cv::Mat& mask = param.mask;
 
-      cv::Mat dist;
-      // no need to compute the mask for the static background?
-      // can we save lots of computation here?
-      // ideally should not be close to the dynamic points?
-      // i think this is the biggest computation bottleneck!
-      cv::distanceTransform(mask, dist, cv::DIST_L2, 3);
+      cv::Mat safe_mask;
+      cv::erode(mask, safe_mask, kernel);
+
+      // cv::Mat dist;
+      // // no need to compute the mask for the static background?
+      // // can we save lots of computation here?
+      // // ideally should not be close to the dynamic points?
+      // // i think this is the biggest computation bottleneck!
+      // cv::distanceTransform(mask, dist, cv::DIST_L2, 3);
 
       CV_Assert(mask.type() == CV_8UC1);
 
@@ -2081,7 +2162,9 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
         const float* maxPtr = localMax.ptr<float>(y);
 
         const uchar* maskPtr = mask.empty() ? nullptr : mask.ptr<uchar>(y);
-        const float* distPtr = dist.empty() ? nullptr : dist.ptr<float>(y);
+        const uchar* safePtr =
+            safe_mask.empty() ? nullptr : safe_mask.ptr<uchar>(y);
+        // const float* distPtr = dist.empty() ? nullptr : dist.ptr<float>(y);
 
         for (int x = x0; x < x1; ++x) {
           // Check mask FIRST.
@@ -2093,14 +2176,18 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
             continue;
           }
 
+          // Mask-edge constraint
+          // if (distPtr && distPtr[x] <= 5.0f) continue;
+          if (safePtr && safePtr[x] == 0) continue;
+
           const float val = eigPtr[x];
 
           if (val <= threshold) continue;
 
           if (val != maxPtr[x]) continue;
 
-          // Mask-edge constraint
-          if (distPtr && distPtr[x] <= 5.0f) continue;
+          // // Mask-edge constraint
+          // if (distPtr && distPtr[x] <= 5.0f) continue;
 
           candidates.push_back(
               {cv::Point2f(static_cast<float>(x), static_cast<float>(y)), val});
@@ -2331,8 +2418,8 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     tracks_per_object[object_id] = data;
     tracking_stats[object_id].num_previous_tracks = num_points;
 
-    LOG(INFO) << "Preparing featue tracking structures j=" << object_id
-              << " n=" << num_points;
+    VLOG(30) << "Preparing featue tracking structures j=" << object_id
+             << " n=" << num_points;
   }
 
   OpticalFlowLK::Result flow_result = optical_flow_impl_(
@@ -2368,85 +2455,28 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     tracks_per_object[object_id].errors.push_back(error[i]);
   }
 
-  // // 2. --- SINGLE-PASS KLT EXECUTION ---
-  // std::vector<cv::Point2f> flatNext = previous_features_.points;
-  // const auto& flatPrev = previous_features_.points;
-  // std::vector<uchar> forward_status;
-  // std::vector<float> forward_err;
-
-  // // One single call allows OpenCV to run hot loops across contiguous memory
-  // // blocks
-  // cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev,
-  // flatNext,
-  //                          forward_status, forward_err, win_size_,
-  //                          max_level_, criteria_, 0);
-
-  // // now do reverse flow
-  // std::vector<uchar> reverse_status(flatNext.size());
-  // std::vector<float> reverse_err(flatNext.size());
-
-  // std::vector<cv::Point2f> flatReverse = flatNext;
-  // cv::calcOpticalFlowPyrLK(curr_mono_pyr_, prev_mono_pyr_, flatNext,
-  //                          flatReverse, reverse_status, reverse_err,
-  //                          win_size_, max_level_, criteria_,
-  //                          cv::OPTFLOW_USE_INITIAL_FLOW);
-
-  // static constexpr float kMaxErr = 20.0f;
-  // for (size_t i = 0; i < flatPrev.size(); ++i) {
-  //   const bool both_status_good = forward_status.at(i) &&
-  //   reverse_status.at(i); const bool within_distance =
-  //       utils::distance(flatPrev.at(i), flatReverse.at(i)) <= 0.5;
-  //   const bool within_error =
-  //       reverse_err[i] < kMaxErr && forward_err[i] < kMaxErr;
-
-  //   // Check if KLT tracking succeeded and point remains inside image
-  //   // boundaries use 2i to check image boundaries
-  //   if (both_status_good && within_distance && within_error) {
-  //     forward_status.at(i) = 1;
-  //   } else {
-  //     forward_status.at(i) = 0;
-  //   }
-  //   // do proper rounding to integer to ensure bounds checks such that
-  //   // we can access the images with a point2f value and not get OOB's errors
-  //   const cv::Point2i kp_int(cvRound(flatNext[i].x), cvRound(flatNext[i].y));
-
-  //   if (forward_status[i] && kp_int.x >= 0 && kp_int.x < (mono.cols - 1) &&
-  //       kp_int.y >= 0 && kp_int.y < (mono.rows - 1)) {
-  //     auto object_id = previous_features_.object_ids[i];
-  //     auto tracklet_id = previous_features_.ids[i];
-  //     auto new_age = previous_features_.age[i] + 1;
-
-  //     if (object_id != object_mask.at<dyno::ObjectId>(kp_int)) {
-  //       continue;
-  //     }
-
-  //     tracks_per_object[object_id].points.push_back(flatNext[i]);
-  //     tracks_per_object[object_id].previous_points.push_back(flatPrev[i]);
-  //     tracks_per_object[object_id].ids.push_back(tracklet_id);
-  //     tracks_per_object[object_id].age.push_back(new_age);
-
-  //     tracks_per_object[object_id].inlier.push_back(1);
-  //     tracks_per_object[object_id].errors.push_back(forward_err[i]);
-  //   }
-  // }
-
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       verified_tracks_per_object;
 
+  const cv::Mat K = cameraParams().getCameraMatrix();
   for (const auto& [object_id, good_tracks] : tracks_per_object) {
     auto num_good_points = good_tracks.size();
 
     tracking_stats[object_id].tracked_after_flow = num_good_points;
-    LOG(INFO) << "j= " << object_id << " tracked points=" << num_good_points;
-
-    static constexpr double kHomographyReprThreshold = 2.0;
-    // limit the number of iterations for speed
-    static constexpr double kHomographyMaxIters = 500;
-    cv::Mat inlier_mask = vision_tools::findHomography(
-        good_tracks.previous_points, good_tracks.points,
-        kHomographyReprThreshold, kHomographyMaxIters);
+    // static constexpr double kHomographyReprThreshold = 5.0;
+    // // limit the number of iterations for speed
+    // static constexpr double kHomographyMaxIters = 500;
     // cv::Mat inlier_mask = vision_tools::findHomography(
-    //     good_tracks.previous_points, good_tracks.points);
+    //     good_tracks.previous_points, good_tracks.points,
+    //     kHomographyReprThreshold, kHomographyMaxIters);
+
+    static constexpr double kThresholdE = 9.0;
+    static constexpr double kEMaxIters = 100;
+    // should is basically equivalent to the 2d2d RANSAC problem
+    // in opengv, depending on which exact method isused
+    cv::Mat inlier_mask = vision_tools::findEssential(
+        good_tracks.previous_points, good_tracks.points, K, kThresholdE,
+        kEMaxIters);
 
     FeatureBlockContainer::FeatureData verified_tracks;
     verified_tracks.reserve(num_good_points);
@@ -2463,8 +2493,8 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
       }
     }
 
-    LOG(INFO) << "j= " << object_id << "inlier/outlier "
-              << verified_tracks.size() << "/" << num_good_points;
+    VLOG(30) << "j= " << object_id << "inlier/outlier "
+             << verified_tracks.size() << "/" << num_good_points;
     // if we actually have any tracks
     // this will remove any objects with no tracks!
     if (verified_tracks.size() > 0) {
@@ -2479,39 +2509,6 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
   LOG(INFO) << "Tracked: " << tracked_features.debugInfoString();
   return {tracked_features, tracking_stats};
 }
-
-// FeatureBlockContainer FeatureTrackerFast::trackRetroactively(const
-// FeatureBlockContainer& detected_features, const cv::Mat& object_mask)
-// {
-//   CHECK(!prev_mono_pyr_.empty());
-
-//   //track from current detected featues (on current image)
-//   // to previous image
-//   std::vector<cv::Point2f> flatNext = previous_features_.points;
-//   const auto& flatPrev = previous_features_.points;
-//   std::vector<uchar> forward_status;
-//   std::vector<float> forward_err;
-
-//   // std::vector<cv::Mat> current_mono_pyr;
-//   // buildOpticalFlowPyramid(mono, current_mono_pyr);
-
-//   // One single call allows OpenCV to run hot loops across contiguous memory
-//   // blocks
-//   cv::calcOpticalFlowPyrLK(prev_mono_pyr_, curr_mono_pyr_, flatPrev,
-//   flatNext,
-//                            forward_status, forward_err, win_size_,
-//                            max_level_, criteria_, 0);
-
-//   // now do reverse flow
-//   std::vector<uchar> reverse_status(flatNext.size());
-//   std::vector<float> reverse_err(flatNext.size());
-
-//   std::vector<cv::Point2f> flatReverse = flatNext;
-//   cv::calcOpticalFlowPyrLK(curr_mono_pyr_, prev_mono_pyr_, flatNext,
-//                            flatReverse, reverse_status, reverse_err,
-//                            win_size_, max_level_, criteria_,
-//                            cv::OPTFLOW_USE_INITIAL_FLOW);
-// }
 
 void FeatureTrackerFast::fillDetectionParam(
     ObjectId object_id, const cv::Mat& mask, const cv::Rect& bounding_box,
@@ -2541,7 +2538,8 @@ void FeatureTrackerFast::fillDetectionParam(
 }
 
 cv::Mat drawBatchedFeatures(const cv::Mat& image,
-                            const FeatureBlockContainer& batchedFeatures) {
+                            const FeatureBlockContainer& batchedFeatures,
+                            bool show_intermediate) {
   cv::Mat canvas;
 
   // Ensure we are drawing on a 3-channel color image
@@ -2551,27 +2549,44 @@ cv::Mat drawBatchedFeatures(const cv::Mat& image,
     canvas = image.clone();
   }
 
+  static const cv::Scalar red(Color::red().bgra());
+  static const cv::Scalar green(Color::green().bgra());
+  static const cv::Scalar blue(Color::blue().bgra());
+
   for (size_t i = 0; i < batchedFeatures.size(); ++i) {
     const auto object_id = batchedFeatures.object_ids[i];
     const auto current_point = batchedFeatures.points[i];
+    const auto inlier = batchedFeatures.inlier[i];
+    const auto id = batchedFeatures.ids[i];
 
-    const cv::Scalar color = dyno::Color::uniqueObjectId(object_id).bgra();
+    const cv::Scalar object_color =
+        dyno::Color::uniqueObjectId(object_id).bgra();
 
-    // Draw optical-flow track
-    if (batchedFeatures.age[i] > 1) {
-      const auto previous_point = batchedFeatures.previous_points[i];
-      cv::arrowedLine(canvas, previous_point, current_point, color, 1);
+    const bool is_static = object_id == background_label;
+    cv::Scalar color = is_static ? green : object_color;
 
+    if (!inlier && show_intermediate) {
       // / Draw current feature location
-      cv::circle(canvas, current_point, 4, color);
+      cv::circle(canvas, current_point, 4, red, 2);
+    } else {
+      // Draw optical-flow track
+      if (batchedFeatures.age[i] > 1) {
+        const auto previous_point = batchedFeatures.previous_points[i];
+        cv::arrowedLine(canvas, previous_point, current_point, color, 1);
+        cv::circle(canvas, current_point, 4, color);
+
+        if (is_static) {
+          cv::putText(canvas, std::to_string(id),
+                      current_point + cv::Point2f(10, 5),
+                      cv::FONT_HERSHEY_COMPLEX, 0.35, cv::Scalar(255, 255, 0),
+                      1, cv::LINE_AA);
+        }
+      }
+      // show as new point
+      else if (show_intermediate) {
+        cv::circle(canvas, current_point, 6, blue, 1);
+      }
     }
-
-    // // Draw current feature location
-    // cv::circle(canvas, current_point, 4, color);
-
-    // Optional white outer ring
-    // cv::circle(canvas, current_point, 6, cv::Scalar(255, 255, 255), 1,
-    //            cv::LINE_AA);
   }
 
   return canvas;

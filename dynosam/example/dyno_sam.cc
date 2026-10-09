@@ -2325,7 +2325,7 @@ int main(int argc, char* argv[]) {
         const WrappedRGBMono wrapped_rgb = container->rgb();
         const cv::Mat rgb = wrapped_rgb.image();
         cv::imshow("Fast Track",
-                   drawBatchedFeatures(rgb, tracking_result.featues));
+                   drawBatchedFeatures(rgb, tracking_result.featues, true));
 
         // // // cv::waitKey(0);
         Frame::Ptr previous_frame = tracker->getPreviousFrame();

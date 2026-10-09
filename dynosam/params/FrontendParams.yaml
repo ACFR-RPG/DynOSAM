@@ -12,7 +12,7 @@ max_object_depth: 35.0
 
 camera_pose_solver:
   pnp_ransac:
-    ransac_threshold_pnp: 1.0
+    ransac_threshold_pnp: 2.0
     ransac_iterations: 500
     ransac_probability:  0.995
   optical_flow_solver:
@@ -53,8 +53,8 @@ tracker_params:
   shrink_col: 0
   # max_nr_keypoints_before_anms: 1500 # 2000 good for cluster
   max_nr_keypoints_before_anms: 800 # 2000 good for cluster
-  # max_features_per_frame: 800
-  max_features_per_frame: 600
+  max_features_per_frame: 500
+  # max_features_per_frame: 600
   # max_feature_track_age: 20
   # for KF should be unlimited
   max_feature_track_age: 1000

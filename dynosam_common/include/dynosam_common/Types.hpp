@@ -89,6 +89,20 @@ using TrackletIds = std::vector<TrackletId>;
 using BearingVectors =
     std::vector<gtsam::Vector3, Eigen::aligned_allocator<gtsam::Vector3>>;
 
+/// \brief Eigen aligned std::vector.
+template <typename VALUE_T>
+using AlignedVector = std::vector<VALUE_T, Eigen::aligned_allocator<VALUE_T>>;
+
+/// \brief Eigen aligned std::map.
+template <typename KEY_T, typename VALUE_T>
+using AlignedMap =
+    std::map<KEY_T, VALUE_T, std::less<KEY_T>,
+             Eigen::aligned_allocator<std::pair<const KEY_T, VALUE_T>>>;
+
+/// \brief Eigen aligned std::set.
+template <typename VALUE_T>
+using AlignedSet = std::set<VALUE_T, Eigen::aligned_allocator<VALUE_T>>;
+
 using Landmark = gtsam::Point3;
 using Landmarks = gtsam::Point3Vector;  //! Vector of Landmarks using gtsam's
                                         //! definition for allocation

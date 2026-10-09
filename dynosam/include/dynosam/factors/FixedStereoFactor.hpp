@@ -124,7 +124,7 @@ class GenericFixedStereoFactor : public NoiseModelFactor1<POSE> {
       const KeyFormatter& keyFormatter = DefaultKeyFormatter) const override {
     Base::print(s, keyFormatter);
     measured_.print(s + ".z");
-    landmark_.print(s + ".landmark");
+    // landmark_.print(s + ".landmark");
 
     if (body_P_sensor_) {
       body_P_sensor_->print("  sensor pose in body frame: ");
@@ -138,7 +138,7 @@ class GenericFixedStereoFactor : public NoiseModelFactor1<POSE> {
     const This* e = dynamic_cast<const This*>(&f);
 
     return e && Base::equals(f) && measured_.equals(e->measured_, tol) &&
-           landmark_.equals(e->landmark_, tol) &&
+           //  landmark_.equals(e->landmark_, tol) &&
            ((!body_P_sensor_ && !e->body_P_sensor_) ||
             (body_P_sensor_ && e->body_P_sensor_ &&
              body_P_sensor_->equals(*e->body_P_sensor_, tol)));

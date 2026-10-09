@@ -261,6 +261,7 @@ class FeatureTrackerBase {
                          const Frame& current_frame) const;
 
   const TrackerParams& trackerParams() const { return params_; }
+  const CameraParams& cameraParams() const { return camera_->getParams(); }
 
  protected:
   /**

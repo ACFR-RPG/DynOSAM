@@ -82,19 +82,19 @@ cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
 }
 
 cv::Mat findEssential(const std::vector<cv::Point2f>& previous,
-                      const std::vector<cv::Point2f>& current,
-                      const cv::Mat& K) {
+                      const std::vector<cv::Point2f>& current, const cv::Mat& K,
+                      double threshold, const int max_iters) {
   CHECK_EQ(previous.size(), current.size());
 
-  // Minimum number of points required for RANSAC
-  if (previous.size() >= 4) {
+  // Minimum number of points required for Essential matrix
+  if (previous.size() >= 5) {
     cv::Mat mask;
-    cv::findEssentialMat(previous, current, K, cv::RANSAC, 0.999, 1.0, 500,
-                         mask);
+    cv::findEssentialMat(previous, current, K, cv::RANSAC, 0.999, threshold,
+                         max_iters, mask);
     return mask;
   } else {
     // If not enough points, assume all are outliers
-    return cv::Mat::ones(previous.size(), 0, CV_8U);
+    return cv::Mat::zeros(previous.size(), 1, CV_8U);
   }
 }
 

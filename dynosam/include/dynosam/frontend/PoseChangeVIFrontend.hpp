@@ -86,6 +86,20 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   // some of these may be keyframes
   ViFrames vi_frames_;
 
+  struct MatchInfo {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    gtsam::Point3 m_W;
+    TrackletId id{0};
+    bool is_valid{false};
+    double quality{0.0};
+  };
+
+  struct ViTrackingState {
+    bool tracking_lost{false};
+    bool is_initalized{false};
+  };
+  ViTrackingState vi_tracking_state_;
+
   std::set<FrameId> keyframes_;
   // only matched measurements are included which were used for estimation!
   // Landmarks stored in estimation reference frame!

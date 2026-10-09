@@ -97,11 +97,11 @@ void getCorrespondences(FeaturePairs& correspondences,
 cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
                        const std::vector<cv::Point2f>& current,
                        double repr_threshold = 3.0, const int max_iters = 1000);
-// // should represent cv::Point2f stored as a cv::mat (ie N x 1 x 2)
-// void outlierRejectHomography(
-//     const cv::Mat& previous_points,
-//     const cv::Mat& current_points,
-//     cv::Mat& inlier_mask);
+
+// NOTE: returns the inlier/outlier mask not E
+cv::Mat findEssential(const std::vector<cv::Point2f>& previous,
+                      const std::vector<cv::Point2f>& current, const cv::Mat& K,
+                      double threshold = 3.0, const int max_iters = 1000);
 
 void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
                             const std::vector<cv::Point2f>& current,

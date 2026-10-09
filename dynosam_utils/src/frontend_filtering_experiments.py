@@ -30,7 +30,7 @@ def run_sequnce(path, name, data_loader_num, backend_type, *args, **kwargs):
 
     additional_args = [
         "--data_provider_type={}".format(data_loader_num),
-        "--v=30"
+        "--v=20"
     ]
 
     parsed_args["launch_file"] = "dyno_sam_launch.py"
@@ -374,7 +374,7 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti_test", kitti_dataset,
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti_test", kitti_dataset,
                              "--use_backend=true",
                              "--hybrid_motion_solver=4",
                              "--pc_send_objects_to_backend=true")

@@ -54,6 +54,20 @@ inline gtsam::Vector3 bearingOptimized(double fx, double fy, double cx,
   return gtsam::Vector3(nx * inv_norm, ny * inv_norm, inv_norm);
 }
 
+struct ComputeBearing {
+  const double fx_, fy_, cx_, cy_;
+
+  ComputeBearing(const CameraParams& params)
+      : fx_(params.fx()),
+        fy_(params.fy()),
+        cx_(params.cu()),
+        cy_(params.cv()) {}
+
+  inline gtsam::Vector3 operator()(const gtsam::Point2& kp) const {
+    return bearingOptimized(fx_, fy_, cx_, cy_, kp);
+  }
+};
+
 inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
   const int x = cvRound(point.x);
   const int y = cvRound(point.y);
@@ -431,7 +445,8 @@ using FeatureBlockDim = FeatureBlockContainer::BlockDim;
 using FeatureBlockView = FeatureBlockContainer::BlockView;
 
 cv::Mat drawBatchedFeatures(const cv::Mat& image,
-                            const FeatureBlockContainer& batchedFeatures);
+                            const FeatureBlockContainer& batchedFeatures,
+                            bool show_intermediate = false);
 
 // local map structurew mantained for geometric visual/object odometry tracking
 // should only really contain the last N keyframes or the active tracks
@@ -462,7 +477,7 @@ class LandmarkMap {
     }
   }
 
-  inline size_t size() const { return landmarks_.size(); }
+  inline size_t size() const noexcept { return landmarks_.size(); }
 
   bool landmarkExists(TrackletId tracklet_id) const {
     return landmark_indices_.exists(tracklet_id);
@@ -716,6 +731,10 @@ class ViFrame {
 
   inline void getCvKeypointByIndex(Index index, cv::Point2f& keypoint) const {
     keypoint = utils::gtsamPointToCv<float>(measurements[index].point2());
+  }
+
+  inline const gtsam::StereoPoint2& stereoPointById(TrackletId id) const {
+    return measurements.at(local_indices.at(id));
   }
 
   /* Indicates that the landmark was observed */
