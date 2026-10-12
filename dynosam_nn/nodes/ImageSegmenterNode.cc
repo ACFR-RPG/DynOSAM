@@ -17,42 +17,30 @@
 #include "sensor_msgs/image_encodings.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
-/**
- * @brief Setting up Tensorrt logger
- */
-class Logger : public nvinfer1::ILogger {
-  void log(Severity severity, const char* msg) noexcept override {
-    // Only output logs with severity greater than warning
-    LOG(INFO) << msg;
-    // if (severity <= Severity::kWARNING)
-    //     std::cout << msg << std::endl;
-  }
-};
-
 class ImageSegmenterNode : public rclcpp::Node {
  public:
-  ImageSegmenterNode() : Node("image_subscriber_node") {
-    // engine_ = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
+  ImageSegmenterNode()
+      : Node("image_subscriber_node"),
+        topic_(declare_parameter<std::string>(
+            "image_topic", "/camera/color/image_rect_color")),
+        model_name_(
+            declare_parameter<std::string>("model_name", "yolov8n-seg.pt")) {
     dyno::YoloConfig yolo_config;
     dyno::ModelConfig model_config;
-    model_config.model_file = "yolov8n-seg.pt";
-    // model_config.model_file = "yolo11s.pt";
+
+    RCLCPP_INFO_STREAM(this->get_logger(), "Using model: " << model_name_);
+    model_config.model_file = model_name_;
     engine_ =
         std::make_unique<dyno::YoloV8ObjectDetector>(model_config, yolo_config);
-    // model_ = std::make_unique<dyno::Model>(config);
-    // yolov11_ =
-    // std::make_unique<YOLOv11>(model_config.modelPath().replace_extension(".engine"),
-    // nv_logger_); yolov11_ =
-    // std::make_unique<YOLOv11>(model_config.onnxPath(), nv_logger_); Use
-    // image_transport for efficiency (handles compressed images too)
+
     subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
-        "/camera/color/image_rect_color", 100,
+        topic_, 100,
         std::bind(&ImageSegmenterNode::imageCallback, this,
                   std::placeholders::_1));
 
-    RCLCPP_INFO(this->get_logger(),
-                "Image subscriber initialized and listening on "
-                "/camera/color/image_rect_color");
+    RCLCPP_INFO_STREAM(
+        this->get_logger(),
+        "Image subscriber initialized and listening on " << topic_);
   }
 
  private:
@@ -102,9 +90,9 @@ class ImageSegmenterNode : public rclcpp::Node {
 
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
   dyno::ObjectDetectionEngine::UniquePtr engine_;
-  // std::unique_ptr<YOLOv11> yolov11_;
-  // std::unique_ptr<dyno::Model> model_;
-  Logger nv_logger_;
+
+  std::string topic_;
+  std::string model_name_;
 };
 
 int main(int argc, char** argv) {
@@ -116,24 +104,7 @@ int main(int argc, char** argv) {
   FLAGS_log_prefix = 1;
   FLAGS_v = 10;
 
-  // const std::string enginePath = dyno::getNNWeightsPath() /
-  // "yolov8n-seg.engine";
-
-  // dyno::ModelConfig config;
-  // config.model_file = "yolov8n-seg.pt";
-  // dyno::Model model(config);
-
-  // Py_Initialize();
-  // {
-  auto node = std::make_shared<ImageSegmenterNode>();
-  //   FLAGS_logtostderr = 1;
-  //   FLAGS_colorlogtostderr = 1;
-  //   FLAGS_log_prefix = 1;
-
-  rclcpp::spin(node);
-  // // }
+  rclcpp::spin(std::make_shared<ImageSegmenterNode>());
   rclcpp::shutdown();
-  // // Finalize the Python interpreter.
-  // Py_FinalizeEx();
   return 0;
 }

@@ -225,7 +225,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   vi_frame.frame_id = frame_id_k;
   vi_frame.timestamp = timestamp_k;
 
-  const LocalVIOGraph& vi_estimator = *landmarks_W_.getStaticMap();
+  LocalVIOGraph::Ptr vi_estimator = landmarks_W_.getStaticMap();
 
   tbb::task_group group;
   group.run([&] {
@@ -243,9 +243,11 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
       DOGraph& estimator = *object_states.estimator;
       DoFrame& do_frame = *doo_frames.at(i);
 
+      const LocalVIOGraph& const_vi_estimator = *vi_estimator;
+
       utils::ChronoTimingStats vo_t(this->moduleName() + ".solve.doo");
       solveObjectOdometryByThread(
-          object_id, container, vi_estimator, *object_states.frames,
+          object_id, container, const_vi_estimator, *object_states.frames,
           *object_states.frame_geometry, estimator, features_k, solve_context,
           do_frame, *object_traj, solve_success);
     });
@@ -253,6 +255,8 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   group.wait();
 
   if (vo_success) {
+    // prune keyframes
+    vi_estimator->pruneKeyframes(5, 3);
   }
 
   MultiObjectTrajectories trajectories_to_visualise;

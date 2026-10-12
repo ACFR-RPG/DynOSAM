@@ -1378,6 +1378,70 @@ void MatchingAdaptorBase::recompute() {
   recomputeCache();
 }
 
+bool LocalBAGraph::computeCovisibilities() {
+  if (covisibilities_computed_) {
+    return true;
+  }
+
+  covisibilities_.clear();
+  visible_frames_.clear();
+
+  utils::ChronoTimingStats timer_t("ba_graph.compute_covis");
+
+  const size_t num_landmarks = this->size();
+  for (size_t i = 0; i < num_landmarks; i++) {
+    const TrackletId id = ids_[i];
+    const Landmark& lmk = landmarks_[i];
+
+    const auto lmk_node = observations_->getLandmark(id);
+    // if we have initalised this landmark we must have added observations of it
+    CHECK(lmk_node);
+
+    // is ordered
+    const FrameIds seen_at_frames = lmk_node->getSeenFrameIds();
+    visible_frames_.insert(seen_at_frames.begin(), seen_at_frames.end());
+
+    for (size_t i0 = 0; i0 < seen_at_frames.size(); ++i0) {
+      const FrameId frame_i = seen_at_frames[i0];
+
+      for (size_t j0 = 0; j0 < i0; ++j0) {
+        const FrameId frame_j = seen_at_frames[j0];
+        covisibilities_[frame_i][frame_j].push_back(id);
+      }
+    }
+  }
+
+  covisibilities_computed_ = true;
+  return covisibilities_.size() > 0;
+}
+
+int LocalBAGraph::covisibilities(FrameId frame_i, FrameId frame_j) const {
+  checkAndThrow(covisibilities_computed_, "covisibilities not yet computed");
+
+  if (frame_i == frame_j) {
+    return 0;
+  }
+
+  size_t a = frame_i;
+  size_t b = frame_j;
+
+  if (frame_i < frame_j) {
+    b = frame_i;
+    a = frame_j;
+  }
+
+  auto it0 = covisibilities_.find(a);
+  if (it0 != covisibilities_.end()) {
+    const FrameCovisibilities& frame_co = it0->second;
+    auto it1 = frame_co.find(b);
+    if (it1 != frame_co.end()) {
+      // tracklet ids
+      return it1->second.size();
+    }
+  }
+  return 0;
+}
+
 LocalVIOGraph::LocalVIOGraph(Camera::Ptr camera) {
   std::shared_ptr<RGBDCamera> rgbd_camera =
       CHECK_NOTNULL(camera->safeGetRGBDCamera());
@@ -1426,9 +1490,8 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   // dont want all landmarks, just the ones seen at frames_to_try!
 
   // using TrackletSet = std::unordered_set<TrackletId>;
-  using FrameCovisibilities = dyno::FastUnorderedMap<FrameId, TrackletIds>;
-
-  dyno::FastUnorderedMap<FrameId, FrameCovisibilities> covisibilities;
+  Covisibilities covisibilities;
+  // TODO: use covisibilities from the base graph!
 
   for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
     if (!landmarkExists(tracklet_id)) {
@@ -1493,6 +1556,8 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   }
 
   // Deduplicate each frame's selected tracklets.
+  // TODO: should not actually need to do this as we expect tracklets to be
+  // unique from the map!
   for (auto& [frame_id, tracklets] : selected_tracklets_by_frame) {
     std::sort(tracklets.begin(), tracklets.end());
 
@@ -1621,42 +1686,86 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   }
 }
 
-bool LocalVIOGraph::setActiveFrames(FrameId current_frame_id,
-                                    size_t num_keyframes,
-                                    size_t num_motion_frames) {
-  const std::set<FrameId>& keyframes = keyframes_;
+bool LocalVIOGraph::pruneKeyframes(size_t num_keyframes,
+                                   size_t num_motion_frames) {
+  utils::ChronoTimingStats timer_t("vio_graph.prune_kf");
+  // const std::set<FrameId>& keyframes = keyframes_;
 
-  std::vector<FrameId> frames_to_try;
-  frames_to_try.reserve(num_keyframes + num_motion_frames);
+  // std::vector<FrameId> frames_to_try;
+  // frames_to_try.reserve(num_keyframes + num_motion_frames);
 
-  const auto add_unique = [&frames_to_try](FrameId id) {
-    if (std::find(frames_to_try.begin(), frames_to_try.end(), id) ==
-        frames_to_try.end()) {
-      frames_to_try.push_back(id);
-    }
-  };
+  // const auto add_unique = [&frames_to_try](FrameId id) {
+  //   if (std::find(frames_to_try.begin(), frames_to_try.end(), id) ==
+  //       frames_to_try.end()) {
+  //     frames_to_try.push_back(id);
+  //   }
+  // };
 
-  // Try the most recent keyframes first.
-  size_t added_kfs = 0;
-  for (auto it = keyframes.rbegin();
-       it != keyframes.rend() && added_kfs < num_keyframes; ++it) {
-    add_unique(*it);
-    ++added_kfs;
+  // // Try the most recent keyframes first.
+  // size_t added_kfs = 0;
+  // for (auto it = keyframes.rbegin();
+  //      it != keyframes.rend() && added_kfs < num_keyframes; ++it) {
+  //   add_unique(*it);
+  //   ++added_kfs;
+  // }
+
+  // size_t num_motions_added = 0;
+  // for (FrameId frame_id = current_frame_id; frame_id >= 0; frame_id--) {
+  //   if (num_motions_added >= num_motion_frames) {
+  //     break;
+  //   }
+
+  //   add_unique(frame_id);
+  //   ++num_motions_added;
+  // }
+  // // this is silly - we can build frames_to_try in order...
+  // std::sort(frames_to_try.begin(), frames_to_try.end());
+  // active_frames_ = std::move(frames_to_try);
+  // return true;
+
+  // missing tracking...
+  {
+    utils::ChronoTimingStats t("vio_graph.prune_kf.compute_covis");
+    computeCovisibilities();
   }
 
-  size_t num_motions_added = 0;
-  for (FrameId frame_id = current_frame_id; frame_id >= 0; frame_id--) {
-    if (num_motions_added >= num_motion_frames) {
-      break;
+  VLOG(10) << "Beginning keyframe pruing: Initial set="
+           << container_to_string(keyframes_);
+
+  utils::ChronoTimingStats t("vio_graph.prune_kf.loop");
+  while (keyframes_.size() > num_keyframes) {
+    const FrameId current_keyframe_id = currentKeyframeId();
+    const FrameId current_frame_id = currentFrameId();
+
+    auto min_it = keyframes_.end();
+    int min_obs = std::numeric_limits<int>::max();
+
+    for (auto it = keyframes_.begin(); it != keyframes_.end(); ++it) {
+      const FrameId keyframe = *it;
+
+      const int coObs = std::max(covisibilities(current_frame_id, keyframe),
+                                 covisibilities(current_keyframe_id, keyframe));
+
+      // Preserve the oldest keyframe if it has sufficient covisibility.
+      if (keyframe == *keyframes_.begin() && coObs >= 2) {
+        continue;
+      }
+
+      if (coObs < min_obs) {
+        min_obs = coObs;
+        min_it = it;
+      }
     }
 
-    add_unique(frame_id);
-    ++num_motions_added;
+    // Fall back to the oldest keyframe if every candidate was skipped.
+    if (min_it == keyframes_.end()) {
+      min_it = keyframes_.begin();
+    }
+
+    keyframes_.erase(min_it);
   }
-  // this is silly - we can build frames_to_try in order...
-  std::sort(frames_to_try.begin(), frames_to_try.end());
-  active_frames_ = std::move(frames_to_try);
-  return true;
+
+  VLOG(10) << "After keyframe pruing: " << container_to_string(keyframes_);
 }
 
 OpticalFlowLK::Result OpticalFlowLK::operator()(

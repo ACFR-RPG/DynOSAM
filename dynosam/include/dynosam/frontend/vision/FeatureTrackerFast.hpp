@@ -943,22 +943,49 @@ struct measurement_traits<StereoMeasurement> {
   }
 };
 
-using StereoMap = RegularMap<StereoMeasurement>;
+struct StereoBaNodeTypes {
+  using Measurement = StereoMeasurement;
+  using ObjectNodeT = ObjectNodeBase<StereoBaNodeTypes>;
+  using FrameNodeT = FrameNodeBase<StereoBaNodeTypes>;
+  using LandmarkNodeT = LandmarkNodeBase<StereoBaNodeTypes>;
+};
+
+/// @brief A map only containing measurements and nodes ready for BA
+/// does not store any state information as this is contained within the BAGraph
+class StereoBaMap : public Map<StereoBaNodeTypes> {
+  struct Private {};
+
+ public:
+  using This = StereoBaMap;
+  using Base = Map<StereoBaNodeTypes>;
+  DYNO_POINTER_TYPEDEFS(This)
+
+  // Constructor is only usable by this class
+  StereoBaMap(Private) {}
+
+  static std::shared_ptr<This> create() {
+    return std::make_shared<This>(Private());
+  }
+};
 
 // valid states for the estimator (ie we have solved for this state!)
 class LocalBAGraph : public LandmarkMap {
  public:
   DYNO_POINTER_TYPEDEFS(LocalBAGraph)
 
-  LocalBAGraph() : observations_(StereoMap::create()) {}
+  using FrameCovisibilities = dyno::FastUnorderedMap<FrameId, TrackletIds>;
+  using Covisibilities = dyno::FastUnorderedMap<FrameId, FrameCovisibilities>;
+
+  LocalBAGraph() : observations_(StereoBaMap::create()) {}
   virtual ~LocalBAGraph() = default;
 
   inline void addMeasurements(
       const StereoMeasurementStatusVector& measurements) {
+    covisibilities_computed_ = false;
     observations_->updateObservations(measurements);
   }
 
-  const StereoMap& getObservations() const { return *observations_; }
+  const StereoBaMap& getObservations() const { return *observations_; }
   const std::set<FrameId>& keyFrames() const { return keyframes_; }
 
   // currently no removal of keyframe
@@ -981,6 +1008,10 @@ class LocalBAGraph : public LandmarkMap {
   }
 
   FrameId currentFrameId() const { return states_.rbegin()->first; }
+  FrameId currentKeyframeId() const { return *keyframes_.rbegin(); }
+
+  bool computeCovisibilities();
+  int covisibilities(FrameId frame_i, FrameId frame_j) const;
 
  protected:
   struct State {
@@ -990,8 +1021,12 @@ class LocalBAGraph : public LandmarkMap {
   // single representative data is stored here
   gtsam::FastMap<FrameId, State> states_;
 
-  StereoMap::Ptr observations_;
+  StereoBaMap::Ptr observations_;
   std::set<FrameId> keyframes_;
+
+  bool covisibilities_computed_{false};
+  Covisibilities covisibilities_;
+  std::set<FrameId> visible_frames_;
 };
 
 class LocalVIOGraph : public LocalBAGraph {
@@ -1020,15 +1055,9 @@ class LocalVIOGraph : public LocalBAGraph {
   bool poseExists(FrameId frame_id) const { return stateExists(frame_id); }
 
   // should actually be 'prune keyframes'!
-  bool setActiveFrames(FrameId current_frame_id, size_t num_keyframes,
-                       size_t num_motion_frames);
-
-  const FrameIds& getActiveFrames() const { return active_frames_; }
+  bool pruneKeyframes(size_t num_keyframes, size_t num_motion_frames);
 
  private:
-  //! Will be naturally ordered
-  FrameIds active_frames_;
-
   Camera::CalibrationType::shared_ptr K_;
   StereoCalibPtr K_stereo_;
 };

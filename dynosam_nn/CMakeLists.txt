@@ -3,12 +3,19 @@ cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 project(dynosam_nn LANGUAGES C CXX CUDA)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
+    -O3
+  )
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -121,6 +128,12 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set(nvcc_options --ftz=true --prec-div=false --prec-sqrt=false --fmad=true --default-stream per-thread -O3)
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:${nvcc_options}>)
+
+target_compile_options(${PROJECT_NAME}
+  PRIVATE -O3
+  INTERFACE -O3
+)
+
 
 target_link_libraries(${PROJECT_NAME}
 PUBLIC
