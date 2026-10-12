@@ -43,20 +43,20 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
     bool vo_valid{false};
   };
 
-  void solveVisualOdometryByThread(const ImageContainer& image_container,
-                                   const LandmarkMap& reference_geometry,
-                                   FrameGeometry& local_geometry,
-                                   FeatureBlockContainer& features,
-                                   GeometrySolveContext& context,
-                                   PoseTrajectory& vo_trajectory,
-                                   bool& success);
+  void solveVisualOdometryByThread(
+      const ImageContainer& image_container, const ViFrames& vi_frames,
+      FrameGeometry& local_geometry, FeatureBlockContainer& features,
+      GeometrySolveContext& context, ViFrame& vi_frame,
+      PoseTrajectory& vo_trajectory, bool& success);
 
   // TODO: right now reference geometry must be in k-1!
   void solveObjectOdometryByThread(
       ObjectId object_id, const ImageContainer& image_container,
-      const LandmarkMap& reference_geometry, FrameGeometry& local_geometry,
+      const LocalVIOGraph& vi_estimator, const DoFrames& do_frames,
+      FrameGeometry& local_geometry, DOGraph& estimator,
       FeatureBlockContainer& features, GeometrySolveContext& context,
-      PoseWithMotionTrajectory& doo_trajectory, uchar& success);
+      DoFrame& do_frame, PoseWithMotionTrajectory& doo_trajectory,
+      uchar& success);
 
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        OpenGVCentralAbsolutePoseAdaptor& adaptor,
@@ -77,14 +77,26 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   KeyFrameMap::Ptr map_;
   FeatureTrackerFast feature_tracker_fast_;
 
-  // std::vector<VIOFrameWithMeasurements> vio_frames_;
-  // LocalVIOGraph vio_graph_;
-
   PoseChangeBackendSink pose_change_backend_sink_;
 
   // should represent all inlier and refined measurements for all frames
   // some of these may be keyframes
   ViFrames vi_frames_;
+  std::map<ObjectId, DoFrames> do_frames_;
+
+  // TODO: get rid of!
+  /// @brief Get or create a new frame. Return as Frame even if Doo
+  /// @param frame_id
+  /// @param object_id
+  /// @return
+  FrameFast& allocateFrame(FrameId frame_id, ObjectId object_id = 0) {
+    if (object_id == background_label) {
+      return static_cast<FrameFast&>(vi_frames_[frame_id]);
+    } else {
+      DoFrames& do_frame = do_frames_[object_id];
+      return static_cast<FrameFast&>(do_frame[frame_id]);
+    }
+  }
 
   struct MatchInfo {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -121,10 +133,6 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   double doo_ransac_threshold_3d_2d_;
 
   double computeRansacThreshold(const double repr_error) const;
-
-  // VIOFrame frame_km1_;
-  // For now!
-  gtsam::Pose3 X_km1_;
 };
 
 class PoseChangeVIFrontend : public VIFrontend {

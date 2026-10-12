@@ -5,14 +5,14 @@ scene_flow_dist_threshold: 0.5
 # # max_object_depth: 30.0
 # max_object_depth: 20.0
 # max_background_depth: 40.0
-max_background_depth: 400.0
+max_background_depth: 200.0
 max_object_depth: 35.0
 
 # max_object_depth: 8.0 #indoors
 
 camera_pose_solver:
   pnp_ransac:
-    ransac_threshold_pnp: 2.0
+    ransac_threshold_pnp: 1.0
     ransac_iterations: 500
     ransac_probability:  0.995
   optical_flow_solver:

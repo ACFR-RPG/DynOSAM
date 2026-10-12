@@ -14,8 +14,6 @@
 
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
-#include "dynosam/frontend/vision/Frame.hpp"
-#include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/Feature.hpp"
@@ -610,6 +608,11 @@ class MatchingAdaptorBase {
     features_.points[fc_index] = utils::gtsamPointToCv<float>(keypoint);
   }
 
+  inline void getCvKeypoint(size_t i, cv::Point2f& pt) const {
+    auto fc_index = local_geometry_.fc_indices[localIndex(i)];
+    pt = features_.points[fc_index];
+  }
+
   /// @brief Reference landmark
   /// @param i
   /// @return
@@ -636,6 +639,11 @@ class MatchingAdaptorBase {
   uchar* inlierPtr(size_t i) const {
     auto fc_index = local_geometry_.fc_indices.at(localIndex(i));
     return &features_.inlier[fc_index];
+  }
+
+  inline ObjectId objectId(size_t i) const {
+    auto fc_index = local_geometry_.fc_indices.at(localIndex(i));
+    return features_.object_ids[fc_index];
   }
 
   inline Index localIndex(size_t i) const { return matches_.at(i).first; }
@@ -716,7 +724,7 @@ class OpenGVCentralAbsolutePoseAdaptor
   gtsam::Point3Vector bearings_local_;
 };
 
-class ViFrame {
+class FrameFast {
  public:
   TrackletIds ids;
   gtsam::Point3Vector lmks_C;
@@ -724,6 +732,12 @@ class ViFrame {
   std::unordered_map<TrackletId, Index> local_indices;
 
   size_t numKeypoints() const noexcept { return ids.size(); }
+
+  inline void reserve(size_t n) {
+    ids.reserve(n);
+    lmks_C.reserve(n);
+    measurements.reserve(n);
+  }
 
   inline void getKeypointByIndex(Index index, Keypoint& keypoint) const {
     keypoint = measurements[index].point2();
@@ -742,10 +756,41 @@ class ViFrame {
     return local_indices.find(id) != local_indices.end();
   }
 
+  void fill(const FrameGeometry& local_geometry,
+            const FeatureBlockContainer& features) {
+    size_t n = local_geometry.ids.size();
+    reserve(n);
+
+    for (size_t i = 0; i < n; i++) {
+      TrackletId id = local_geometry.ids[i];
+      Index fc_index = local_geometry.getFeatureContainerIndex(id);
+
+      if (!features.inlier[fc_index]) {
+        continue;
+      }
+
+      size_t index = numKeypoints();
+      ids.push_back(id);
+      lmks_C.push_back(local_geometry.getLandmark(id));
+      measurements.push_back(local_geometry.getStereoPoint(id));
+      local_indices[id] = index;
+    }
+  }
+
   FrameId frame_id;
   Timestamp timestamp;
 };
+
+struct ViFrame : public FrameFast {};
+
+struct DoFrame : public ViFrame {
+  ObjectId object_id;
+};
+
+// not sure these need to be ordered as we look for them in
+// the Estimator!
 typedef dyno::FastUnorderedMap<FrameId, ViFrame> ViFrames;
+typedef dyno::FastUnorderedMap<FrameId, DoFrame> DoFrames;
 
 typedef gtsam::FastMap<ObjectId, FrameGeometry> FrameGeometryMap;
 
@@ -831,7 +876,7 @@ class DepthUpdaterFast {
   }
 
   inline bool checkRGBDDepth(Depth depth, ObjectId object_id,
-                             double min_depth = 0.1) const {
+                             double min_depth = 0.5) const {
     const Depth max_depth = (object_id == background_label)
                                 ? params_.max_background
                                 : params_.max_object;
@@ -900,6 +945,7 @@ struct measurement_traits<StereoMeasurement> {
 
 using StereoMap = RegularMap<StereoMeasurement>;
 
+// valid states for the estimator (ie we have solved for this state!)
 class LocalBAGraph : public LandmarkMap {
  public:
   DYNO_POINTER_TYPEDEFS(LocalBAGraph)
@@ -922,15 +968,30 @@ class LocalBAGraph : public LandmarkMap {
     return true;
   }
 
+  bool stateExists(FrameId frame_id) const { return states_.exists(frame_id); }
+
+  // TODO: remove state if not valid
+
+  FrameId frameIdbyAge(size_t age) const {
+    auto iter = states_.rbegin();
+    for (size_t k = 0; k < age; k++) {
+      iter++;
+    }
+    return iter->first;
+  }
+
+  FrameId currentFrameId() const { return states_.rbegin()->first; }
+
  protected:
+  struct State {
+    gtsam::Pose3 pose;
+  };
+
+  // single representative data is stored here
+  gtsam::FastMap<FrameId, State> states_;
+
   StereoMap::Ptr observations_;
-
   std::set<FrameId> keyframes_;
-
-  // gtsam::FastMap<FrameId, gtsam::FastMap<FrameId, int>>
-  // co_observation_counts_;
-
-  // poses?
 };
 
 class LocalVIOGraph : public LocalBAGraph {
@@ -938,21 +999,35 @@ class LocalVIOGraph : public LocalBAGraph {
   DYNO_POINTER_TYPEDEFS(LocalVIOGraph)
   LocalVIOGraph(Camera::Ptr camera);
 
-  void optimize(FrameId frame_id,
-                std::vector<FrameId>* frames_affected = nullptr);
+  void optimize(FrameId frame_id, std::vector<FrameId>& frames_affected,
+                bool only_states = false);
 
+  // overriwite state
+  // TODO: why not use the map nodes to store the states
+  // Right now deleting states is really hard in the map
+  // so we just store states separately from the map which is only used
+  // to store things for BA
+  // this allows us to have measurements for frames that does
+  // not have good tracking
   void setPose(FrameId frame_id, const gtsam::Pose3& pose) {
-    states_[frame_id] = pose;
+    states_[frame_id].pose = pose;
   }
-
-  bool poseExists(FrameId frame_id) const { return states_.exists(frame_id); }
 
   const gtsam::Pose3& getPose(FrameId frame_id) const {
-    return states_.at(frame_id);
+    return states_.at(frame_id).pose;
   }
 
+  bool poseExists(FrameId frame_id) const { return stateExists(frame_id); }
+
+  // should actually be 'prune keyframes'!
+  bool setActiveFrames(FrameId current_frame_id, size_t num_keyframes,
+                       size_t num_motion_frames);
+
+  const FrameIds& getActiveFrames() const { return active_frames_; }
+
  private:
-  gtsam::FastMap<FrameId, gtsam::Pose3> states_;
+  //! Will be naturally ordered
+  FrameIds active_frames_;
 
   Camera::CalibrationType::shared_ptr K_;
   StereoCalibPtr K_stereo_;
@@ -980,7 +1055,6 @@ class MultiBAGraph {
   }
 
   BaGraphs::const_iterator begin() const { return maps_.begin(); }
-
   BaGraphs::const_iterator end() const { return maps_.end(); }
 
  protected:
@@ -1046,7 +1120,7 @@ struct OpticalFlowLK {
       : win_size(24, 24),
         max_level(4),
         criteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, iterations,
-                 0.001) {}
+                 0.01) {}
 
   OpticalFlowLK() : OpticalFlowLK(50) {}
 

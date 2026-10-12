@@ -2247,10 +2247,10 @@ int main(int argc, char* argv[]) {
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
-  FLAGS_v = 30;
+  FLAGS_v = 60;
 
   // KittiDataLoader::Params params;
-  // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
+  // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0020/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
   // loader.setStartingFrame(600);
   OMDDataLoader loader(
@@ -2276,8 +2276,10 @@ int main(int argc, char* argv[]) {
   fp.tracker_params.max_feature_track_age = 1000;
   // fp.tracker_params.feature_detector_type =
   // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
-  fp.tracker_params.min_distance_btw_tracked_and_detected_static_features = 15;
-  fp.tracker_params.min_distance_btw_tracked_and_detected_dynamic_features = 8;
+  // fp.tracker_params.min_distance_btw_tracked_and_detected_static_features =
+  // 15;
+  // fp.tracker_params.min_distance_btw_tracked_and_detected_dynamic_features =
+  // 8;
 
   auto camera = std::make_shared<Camera>(loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);

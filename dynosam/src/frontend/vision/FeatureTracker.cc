@@ -578,6 +578,8 @@ void FeatureTracker::DynamicTrackerImpl::trackFromPreviousFrame(
   const LKWorkspace& lk_result = lk_tracker_dynamic->track(
       previous_frame->imageContainer(), current_image_container, previous_pts);
 
+  LOG(INFO) << "Tracked from previous " << lk_result.pts.size();
+
   const auto& klt_status = lk_result.status;
   const auto& current_points = lk_result.pts;
 
@@ -1183,6 +1185,7 @@ void FeatureTracker::trackDynamicKLT(
   if (previous_frame_) {
     // intermally modifies info_ which is used to determine how many features
     // per object we have successfully tracked from the previous frame
+    LOG(INFO) << "Track from previous";
     dynamic_lkt_tracker_impl_.trackFromPreviousFrame(
         previous_frame_, image_container, dynamic_features,
         dynamic_detection_mask, dynamic_tracking_mask);

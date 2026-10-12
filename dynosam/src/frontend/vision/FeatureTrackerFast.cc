@@ -1244,6 +1244,9 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
   std::vector<uchar*> inlier_ptrs;
   inlier_ptrs.reserve(num_matches);
 
+  ObjectIds object_ids;
+  object_ids.reserve(num_matches);
+
   for (size_t i = 0; i < num_matches; i++) {
     // if we recompute this should not be needed!
     uchar* inlier_ptr = adaptor_.inlierPtr(i);
@@ -1255,6 +1258,7 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
     const gtsam::Point3& ref_lmk = adaptor_.landmark(i);
     // assuming the previous frame is the reference frame!
     const gtsam::Point2& ref_kp = adaptor_.keypointPrev(i);
+    const ObjectId object_id = adaptor_.objectId(i);
 
     const gtsam::Point2& curr_kp = adaptor_.keypoint(i);
     const gtsam::Point2 initial_flow = curr_kp - ref_kp;
@@ -1262,6 +1266,7 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
     matching_index.push_back(i);
     ref_kps.push_back(ref_kp);
     inlier_ptrs.push_back(inlier_ptr);
+    object_ids.push_back(object_id);
 
     impl_inputs.ref_kps.push_back(ref_kp);
     impl_inputs.ref_lmks.push_back(ref_lmk);
@@ -1271,7 +1276,7 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
   build_t.stop();
 
   ImplOptimizer::TerminationCriteria criteria;
-  criteria.max_iterations = 5;
+  criteria.max_iterations = 10;
 
   utils::ChronoTimingStats solve_t("flow_refine.shur_solve", 7);
   const auto result = impl_->optimize(pose_in, impl_inputs, criteria);
@@ -1279,21 +1284,26 @@ void FlowRefinement::refine(const OpticalFlowAndPoseSolverParams& params,
 
   CHECK_EQ(matching_index.size(), result.flows.size());
   const cv::Mat& object_masks = images_.objectMotionMask();
+  const int rows = object_masks.rows;
+  const int cols = object_masks.cols;
 
+  cv::Point2f pt;
   for (size_t i = 0; i < matching_index.size(); i++) {
     gtsam::Point2 refined_keypoint = result.flows[i] + ref_kps[i];
-
-    if (!camera_->isKeypointContained(refined_keypoint)) {
-      *(inlier_ptrs[i]) = 0;
-      continue;
-    }
-
-    // TODO: still within object mask!
 
     Index index = matching_index[i];
     // update both the gtsam representation and the opencv representation in
     // features!
     adaptor_.keypoint(index, refined_keypoint);
+
+    // get updated keypoint
+    adaptor_.getCvKeypoint(index, pt);
+
+    // ensure updated keypoint is still within the object mask
+    ObjectId object_id = object_ids[i];
+    if (!checkBoundsAndLabel(pt, object_masks, object_id, rows, cols)) {
+      *(inlier_ptrs[i]) = 0;
+    }
   }
 
   pose_out = result.pose;
@@ -1377,14 +1387,11 @@ LocalVIOGraph::LocalVIOGraph(Camera::Ptr camera) {
 }
 
 void LocalVIOGraph::optimize(FrameId frame_id,
-                             std::vector<FrameId>* frames_affected) {
+                             std::vector<FrameId>& frames_affected,
+                             bool only_states) {
   // covisible tracklets
   //  auto frame_node_ptr = observations_->getFrame(frame_id);
   utils::ChronoTimingStats timer_t("vio_graph.opt");
-  dyno::FastUnorderedMap<
-      FrameId, dyno::FastUnorderedMap<FrameId, std::unordered_set<TrackletId>>>
-      covisibilities;
-
   size_t last_n_kfs = 3;
   const std::set<FrameId>& keyframes = keyframes_;
 
@@ -1416,33 +1423,12 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   // thius is taking longer and longer!
   // keep track of landmarks seen recently?
   utils::ChronoTimingStats covis_t("vio_graph.opt.covis");
-  // for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
-  //   if (!landmarkExists(tracklet_id)) {
-  //     continue;
-  //   }
-
-  //   FrameIds seen_frame_ids = lmk_node->getSeenFrameIds();
-  //   for (FrameId frame_i0 : seen_frame_ids) {
-  //     // less than the smallest frame id to try
-  //     // build covisability with the frames to try!
-  //     if (frame_i0 < frames_to_try.front()) {
-  //       continue;
-  //     }
-
-  //     for (FrameId frame_i1 : seen_frame_ids) {
-  //       // to ensure unique pairings!
-  //       // that is frame a -> b is the same as b -> a!
-  //       if (frame_i1 > frame_i0) {
-  //         continue;
-  //       }
-
-  //       // and id is initalsied!?
-  //       covisibilities[frame_i0][frame_i1].insert(tracklet_id);
-  //     }
-  //   }
-  // }
-
   // dont want all landmarks, just the ones seen at frames_to_try!
+
+  // using TrackletSet = std::unordered_set<TrackletId>;
+  using FrameCovisibilities = dyno::FastUnorderedMap<FrameId, TrackletIds>;
+
+  dyno::FastUnorderedMap<FrameId, FrameCovisibilities> covisibilities;
 
   for (const auto& [tracklet_id, lmk_node] : observations_->getLandmarks()) {
     if (!landmarkExists(tracklet_id)) {
@@ -1450,119 +1436,150 @@ void LocalVIOGraph::optimize(FrameId frame_id,
     }
 
     // only build covisabilies for the requested frames
-    std::set<FrameId> seen_at_frames;
+    std::vector<FrameId> seen_at_frames;
+    seen_at_frames.reserve(frames_to_try.size());
     for (FrameId k0 : frames_to_try) {
       if (lmk_node->seenAtFrame(k0)) {
-        seen_at_frames.insert(k0);
+        seen_at_frames.push_back(k0);
       }
     }
+    // Build undirected covisibility edges.
+    //
+    // Each tracklet is inserted once into each frame-pair edge.
+    // Only distinct frame pairs are stored; there are no self-edges.
+    for (size_t i = 0; i < seen_at_frames.size(); ++i) {
+      const FrameId frame_i = seen_at_frames[i];
 
-    for (FrameId frame_i0 : seen_at_frames) {
-      // less than the smallest frame id to try
-      // build covisability with the frames to try!
-      if (frame_i0 < frames_to_try.front()) {
-        continue;
-      }
+      for (size_t j = 0; j < i; ++j) {
+        const FrameId frame_j = seen_at_frames[j];
 
-      for (FrameId frame_i1 : seen_at_frames) {
-        // to ensure unique pairings!
-        // that is frame a -> b is the same as b -> a!
-        if (frame_i1 > frame_i0) {
-          continue;
-        }
-
-        // and id is initalsied!?
-        covisibilities[frame_i0][frame_i1].insert(tracklet_id);
+        covisibilities[frame_i][frame_j].push_back(tracklet_id);
       }
     }
   }
   covis_t.stop();
 
-  // TODO: sanity check we're not ading factors twice...
+  utils::ChronoTimingStats build_t("vio_graph.opt.build");
+
+  // ---------------------------------------------------------------------------
+  // 1. Select tracklets using contiguous vectors.
+  //
+  // A tracklet may be shared by multiple qualifying edges incident to a frame.
+  // Accumulate these tracklets first and deduplicate after processing all
+  // edges.
+  // ---------------------------------------------------------------------------
+
+  dyno::FastUnorderedMap<FrameId, std::vector<TrackletId>>
+      selected_tracklets_by_frame;
+
+  constexpr static size_t kMinSharedTracklets = 4;
+
+  for (const auto& [frame_i, neighbours] : covisibilities) {
+    for (const auto& [frame_j, shared_tracklets] : neighbours) {
+      if (shared_tracklets.size() < kMinSharedTracklets) {
+        continue;
+      }
+
+      auto& tracklets_i = selected_tracklets_by_frame[frame_i];
+      auto& tracklets_j = selected_tracklets_by_frame[frame_j];
+
+      // No hashing or uniqueness checks in this inner loop.
+      tracklets_i.insert(tracklets_i.end(), shared_tracklets.begin(),
+                         shared_tracklets.end());
+
+      tracklets_j.insert(tracklets_j.end(), shared_tracklets.begin(),
+                         shared_tracklets.end());
+    }
+  }
+
+  // Deduplicate each frame's selected tracklets.
+  for (auto& [frame_id, tracklets] : selected_tracklets_by_frame) {
+    std::sort(tracklets.begin(), tracklets.end());
+
+    tracklets.erase(std::unique(tracklets.begin(), tracklets.end()),
+                    tracklets.end());
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Build the factor graph.
+  // ---------------------------------------------------------------------------
+
   gtsam::Values values;
   gtsam::NonlinearFactorGraph graph;
 
-  std::unordered_set<TrackletId> tracklets_with_update;
-  std::unordered_set<FrameId> poses_with_update;
+  TrackletIds tracklets_with_update;
+  FrameIds poses_with_update;
 
   using GenericFixedStereoFactor =
       gtsam::GenericFixedStereoFactor<gtsam::Pose3>;
 
-  utils::ChronoTimingStats build_t("vio_graph.opt.build");
-  for (FrameId frame_i0 : frames_to_try) {
-    auto it0 = covisibilities.find(frame_i0);
-    if (it0 == covisibilities.end()) {
+  for (FrameId frame_id : frames_to_try) {
+    auto selected_it = selected_tracklets_by_frame.find(frame_id);
+
+    if (selected_it == selected_tracklets_by_frame.end() ||
+        selected_it->second.empty()) {
       continue;
     }
 
-    // TODO: prior on first pose!
-    CHECK(poseExists(frame_i0)) << frame_i0;
-    gtsam::Symbol pose_sym_i0('x', frame_i0);
+    CHECK(poseExists(frame_id)) << frame_id;
 
-    const gtsam::Pose3& X_i0 = getPose(frame_i0);
-    values.insert(pose_sym_i0, X_i0);
+    const gtsam::Symbol pose_sym('x', frame_id);
 
-    if (frame_i0 == frames_to_try.front()) {
-      graph.addPrior<gtsam::Pose3>(
-          pose_sym_i0, X_i0, gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001));
-    }
+    // Each frame appears once in frames_to_try.
+    values.insert(pose_sym, getPose(frame_id));
+    poses_with_update.push_back(frame_id);
 
-    for (FrameId frame_i1 : frames_to_try) {
-      gtsam::Symbol pose_sym_i1('x', frame_i1);
+    const auto& selected_tracklets = selected_it->second;
 
-      auto it1 = it0->second.find(frame_i1);
-      if (it1 != it0->second.end()) {
-        const std::unordered_set<TrackletId>& shared_tracklets = it1->second;
-        // LOG(INFO) << frame_i0 << " -> " << frame_i1 << " with n=" <<
-        // shared_tracklets.size();
+    for (TrackletId tracklet_id : selected_tracklets) {
+      const auto lmk_node = observations_->getLandmark(tracklet_id);
+      CHECK(lmk_node);
 
-        if (shared_tracklets.size() < 4) {
-          continue;
+      const Landmark lmk = getLandmark(tracklet_id);
+
+      auto [measurement, model] = lmk_node->getMeasurement(frame_id);
+      model = factor_graph_tools::robustifyHuber(0.01, model);
+
+      if (only_states) {
+        // Landmark is fixed; only the pose is optimised.
+        graph.emplace_shared<GenericFixedStereoFactor>(
+            measurement, model, pose_sym, lmk, K_stereo_);
+      } else {
+        // Insert each landmark variable only once.
+        const gtsam::Symbol lmk_sym('l', tracklet_id);
+
+        if (!values.exists(lmk_sym)) {
+          values.insert(lmk_sym, lmk);
+          tracklets_with_update.push_back(tracklet_id);
         }
 
-        for (TrackletId id : shared_tracklets) {
-          auto lmk_node = observations_->getLandmark(id);
-
-          // gtsam::Symbol lmk_sym('l', id);
-          const Landmark lmk = getLandmark(id);
-
-          // if (!values.exists(lmk_sym)) {
-          //   values.insert(lmk_sym, getLandmark(id));
-          // }
-
-          // tracklets_with_update.insert(id);
-
-          // TODo: robustify
-          //  only one measurement needed
-          auto [measurement_i0, model_i0] = lmk_node->getMeasurement(frame_i0);
-          model_i0 = factor_graph_tools::robustifyHuber(0.01, model_i0);
-
-          // auto factor_i0 = boost::make_shared<GenericStereoFactor>(
-          //     measurement_i0, model_i0, pose_sym_i0, lmk_sym, K_stereo_);
-          auto factor_i0 = boost::make_shared<GenericFixedStereoFactor>(
-              measurement_i0, model_i0, pose_sym_i0, lmk, K_stereo_);
-          graph += factor_i0;
-
-          poses_with_update.insert(frame_i0);
-
-          // two measurements needed!
-          if (frame_i0 != frame_i1) {
-            auto [measurement_i1, model_i1] =
-                lmk_node->getMeasurement(frame_i1);
-            model_i1 = factor_graph_tools::robustifyHuber(0.01, model_i1);
-
-            // auto factor_i1 = boost::make_shared<GenericStereoFactor>(
-            //     measurement_i1, model_i1, pose_sym_i1, lmk_sym, K_stereo_);
-            auto factor_i1 = boost::make_shared<GenericFixedStereoFactor>(
-                measurement_i1, model_i1, pose_sym_i1, lmk, K_stereo_);
-            graph += factor_i1;
-
-            poses_with_update.insert(frame_i1);
-          }
-        }
+        graph.emplace_shared<GenericStereoFactor>(measurement, model, pose_sym,
+                                                  lmk_sym, K_stereo_);
       }
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // 3. Anchor the first requested pose.
+  // ---------------------------------------------------------------------------
+
+  if (!frames_to_try.empty()) {
+    const FrameId anchor_frame = frames_to_try.front();
+
+    CHECK(poseExists(anchor_frame)) << anchor_frame;
+
+    const gtsam::Symbol anchor_sym('x', anchor_frame);
+
+    // The anchor may have no selected observations, so ensure its value exists.
+    if (!values.exists(anchor_sym)) {
+      values.insert(anchor_sym, getPose(anchor_frame));
+    }
+
+    graph.addPrior<gtsam::Pose3>(
+        anchor_sym, getPose(anchor_frame),
+        gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001));
+  }
+
   build_t.stop();
 
   gtsam::LevenbergMarquardtParams opt_params;
@@ -1576,22 +1593,25 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   NonlinearOptimizerSummary summary;
   NonlinearOptimizerOptions options;
 
-  utils::ChronoTimingStats solve_recover_t("vio_graph.opt.solve_recover");
+  utils::ChronoTimingStats solve_t("vio_graph.opt.solve");
   gtsam::Values optimised_values = values;
   { CHECK(solver.solve(optimised_values, options, &summary)); }
+  solve_t.stop();
 
   VLOG(10) << "Initial error: " << summary.initial_error << " final error "
            << summary.final_error << " time[s] "
            << summary.cumulative_time_in_seconds
            << " #iterations= " << summary.numIterations();
 
-  if (frames_affected) frames_affected->reserve(poses_with_update.size());
+  utils::ChronoTimingStats recover_t("vio_graph.opt.recover");
+
+  frames_affected.reserve(poses_with_update.size());
   for (FrameId frame_id : poses_with_update) {
     gtsam::Symbol pose_sym('x', frame_id);
     gtsam::Pose3 pose = optimised_values.at<gtsam::Pose3>(pose_sym);
     setPose(frame_id, pose);
 
-    if (frames_affected) frames_affected->push_back(frame_id);
+    frames_affected.push_back(frame_id);
   }
 
   for (TrackletId id : tracklets_with_update) {
@@ -1599,16 +1619,44 @@ void LocalVIOGraph::optimize(FrameId frame_id,
     gtsam::Point3 lmk = optimised_values.at<gtsam::Point3>(lmk_sym);
     setLandmark(id, lmk);
   }
+}
 
-  // std::stringstream ss;
-  // for(const auto& [frame_i0, seen_map] : covisibilities) {
-  //   ss << "Frame " << frame_i0 << " seen frames: ";
-  //   for(const auto& [frame_i1, tracks] : seen_map) {
-  //     ss << frame_i1 <<  " [ " << tracks.size() << " ]\n";
-  //   }
-  // }
-  //
-  // LOG(INFO) << ss.str();
+bool LocalVIOGraph::setActiveFrames(FrameId current_frame_id,
+                                    size_t num_keyframes,
+                                    size_t num_motion_frames) {
+  const std::set<FrameId>& keyframes = keyframes_;
+
+  std::vector<FrameId> frames_to_try;
+  frames_to_try.reserve(num_keyframes + num_motion_frames);
+
+  const auto add_unique = [&frames_to_try](FrameId id) {
+    if (std::find(frames_to_try.begin(), frames_to_try.end(), id) ==
+        frames_to_try.end()) {
+      frames_to_try.push_back(id);
+    }
+  };
+
+  // Try the most recent keyframes first.
+  size_t added_kfs = 0;
+  for (auto it = keyframes.rbegin();
+       it != keyframes.rend() && added_kfs < num_keyframes; ++it) {
+    add_unique(*it);
+    ++added_kfs;
+  }
+
+  size_t num_motions_added = 0;
+  for (FrameId frame_id = current_frame_id; frame_id >= 0; frame_id--) {
+    if (num_motions_added >= num_motion_frames) {
+      break;
+    }
+
+    add_unique(frame_id);
+    ++num_motions_added;
+  }
+  // this is silly - we can build frames_to_try in order...
+  std::sort(frames_to_try.begin(), frames_to_try.end());
+  active_frames_ = std::move(frames_to_try);
+  return true;
 }
 
 OpticalFlowLK::Result OpticalFlowLK::operator()(
@@ -1753,7 +1801,17 @@ TrackingResult FeatureTrackerFast::track(
           object_detection.bounding_box;
     }
 
-    const auto outer_thickness = 10;
+    // const auto outer_thickness = 12;
+    static constexpr double kReferenceBorderThickness = 15.0;
+    static constexpr double kReferenceImageArea = 640.0 * 480.0;
+
+    const double image_scale = static_cast<double>(current_mono.cols) *
+                               static_cast<double>(current_mono.rows) /
+                               kReferenceImageArea;
+
+    const int scaled_border_thickness =
+        std::round(kReferenceBorderThickness * std::sqrt(image_scale));
+
     cv::Mat object_masks_binary = object_masks > 0;
     // to ensure the validatiy of the mask we will do some dilation
     // to both fill holes and to expant the object masks so we dont
@@ -1761,8 +1819,8 @@ TrackingResult FeatureTrackerFast::track(
     // this is slightly conservative but is helpful in practice
     cv::dilate(object_masks_binary, object_masks_binary,
                cv::getStructuringElement(
-                   cv::MORPH_RECT,
-                   cv::Size(2 * outer_thickness + 1, 2 * outer_thickness + 1)));
+                   cv::MORPH_RECT, cv::Size(2 * scaled_border_thickness + 1,
+                                            2 * scaled_border_thickness + 1)));
     cv::Mat static_mask;
     cv::bitwise_not(object_masks_binary, static_mask);
     binary_detection_masks[background_label] = static_mask;
@@ -1830,6 +1888,7 @@ TrackingResult FeatureTrackerFast::track(
     }
 
     GfttDetector::Params feature_detection_params;
+    feature_detection_params.quality_level = 0.01;
     ObjectIds objects_ids_for_detection;
 
     for (const auto& [j, masks_j] : binary_detection_masks) {
@@ -2089,7 +2148,7 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
   // but we could do more?!
   // in pixels
   // should maybe be adaptive with object size? Whatever
-  constexpr int boundary_distance = 8;
+  constexpr int boundary_distance = 5;
   const cv::Mat kernel = cv::getStructuringElement(
       cv::MORPH_RECT,
       cv::Size(2 * boundary_distance + 1, 2 * boundary_distance + 1));
@@ -2289,7 +2348,6 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
       std::vector<cv::KeyPoint> keypoints;
       keypoints.reserve(acceptedCorners.size());
 
-      LOG(INFO) << "kps before ANMS " << acceptedCorners.size();
       // LOG(INFO) << "keypoints needed " << param.num_corners_needed;
 
       for (size_t i = 0; i < acceptedCorners.size(); i++) {
@@ -2307,8 +2365,6 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
       selected_keypoints = non_maximum_supression.suppressNonMax(
           keypoints, param.num_corners_needed, anmsTolerance, bbox.width,
           bbox.height, 5, 5, binning_mask);
-
-      LOG(INFO) << "points after ANMS " << selected_keypoints.size();
 
       // re-allocate correct memory size
       acceptedCorners.resize(selected_keypoints.size());
@@ -2427,18 +2483,23 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
 
   const std::vector<cv::Point2f>& predicted_points =
       flow_result.predictedPoints();
+
+  size_t flow_bad_count{0};
+  size_t bounds_bad_count{0};
   const std::vector<cv::Point2f>& from_points = flow_result.fromPoints();
   const std::vector<float>& error = flow_result.error();
   for (size_t i = 0; i < flow_result.size(); i++) {
     const cv::Point2f& predicted_pt = predicted_points[i];
 
     if (!flow_result.isGood(i)) {
+      flow_bad_count++;
       continue;
     }
 
     auto object_id = previous_features_.object_ids[i];
     if (!checkBoundsAndLabel(predicted_pt, object_mask, object_id, rows,
                              cols)) {
+      bounds_bad_count++;
       continue;
     }
 
@@ -2455,6 +2516,10 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     tracks_per_object[object_id].errors.push_back(error[i]);
   }
 
+  LOG(INFO) << "Optical flow: flow bad: " << flow_bad_count
+            << " bounds bad: " << bounds_bad_count
+            << " total: " << flow_result.size();
+
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       verified_tracks_per_object;
 
@@ -2467,10 +2532,10 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     // // limit the number of iterations for speed
     // static constexpr double kHomographyMaxIters = 500;
     // cv::Mat inlier_mask = vision_tools::findHomography(
-    //     good_tracks.previous_points, good_tracks.points,
+    //     good_tracks.previous_points, good_tracks.points);
     //     kHomographyReprThreshold, kHomographyMaxIters);
 
-    static constexpr double kThresholdE = 9.0;
+    static constexpr double kThresholdE = 1.0;
     static constexpr double kEMaxIters = 100;
     // should is basically equivalent to the 2d2d RANSAC problem
     // in opengv, depending on which exact method isused
@@ -2575,12 +2640,12 @@ cv::Mat drawBatchedFeatures(const cv::Mat& image,
         cv::arrowedLine(canvas, previous_point, current_point, color, 1);
         cv::circle(canvas, current_point, 4, color);
 
-        if (is_static) {
-          cv::putText(canvas, std::to_string(id),
-                      current_point + cv::Point2f(10, 5),
-                      cv::FONT_HERSHEY_COMPLEX, 0.35, cv::Scalar(255, 255, 0),
-                      1, cv::LINE_AA);
-        }
+        // if (is_static) {
+        //   cv::putText(canvas, std::to_string(id),
+        //               current_point + cv::Point2f(10, 5),
+        //               cv::FONT_HERSHEY_COMPLEX, 0.35, cv::Scalar(255, 255,
+        //               0), 1, cv::LINE_AA);
+        // }
       }
       // show as new point
       else if (show_intermediate) {

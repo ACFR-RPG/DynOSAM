@@ -498,7 +498,7 @@ Landmark Frame::getLandmarkFromCache(Feature::Ptr feature,
 DepthUpdater::DepthUpdater(FeatureTracker* tracker)
     : tracker_(CHECK_NOTNULL(tracker)) {
   const auto& params = tracker_->frontendParams();
-  max_background_threshold_ = params.depth_thresholds.max_object;
+  max_background_threshold_ = params.depth_thresholds.max_background;
   max_object_threshold_ = params.depth_thresholds.max_object;
 }
 
@@ -526,25 +526,28 @@ bool DepthUpdater::updateFromDepth(
   CHECK_NOTNULL(rgbd_camera);
 
   for (Feature::Ptr feature : features) {
-    const int x = functional_keypoint::u(feature->keypoint());
-    const int y = functional_keypoint::v(feature->keypoint());
+    cv::Point2f pt = utils::gtsamPointToCv<float>(feature->keypoint());
+
     const ObjectId j = feature->objectId();
-    const Depth d = depth.at<Depth>(y, x);
+    const Depth d = depth.at<Depth>(pt);
 
     const Depth max_depth = (j == background_label) ? max_background_threshold_
                                                     : max_object_threshold_;
 
+    LOG(INFO) << d;
+    LOG(INFO) << max_depth;
+
     if (d > max_depth || d <= 0) {
-      feature->markInvalid();
-      feature->depth(Feature::invalid_depth);
+      // feature->markInvalid();
+      // feature->depth(Feature::invalid_depth);
     } else {
       feature->depth(d);
       // right projected right keypoint with virtual camera
       //  if projection fails, set as outlier
-      if (!rgbd_camera->projectRight(feature)) {
-        feature->depth(Feature::invalid_depth);
-        feature->markOutlier();
-      }
+      // if (!rgbd_camera->projectRight(feature)) {
+      //   feature->depth(Feature::invalid_depth);
+      //   feature->markOutlier();
+      // }
     }
   }
 
