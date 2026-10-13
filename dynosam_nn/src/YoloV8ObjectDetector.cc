@@ -5,6 +5,8 @@
 #include <cuda_runtime.h>
 #include <cuda_runtime_api.h>
 
+#include <opencv2/core/cuda.hpp>
+
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
@@ -119,6 +121,9 @@ struct YoloV8ObjectDetector::Impl {
   // Avoids constant reallocation
   DeviceMemory<uchar> input_image_device_;
 
+  // Pinned host memory for the prototype masks
+  cv::cuda::HostMem proto_host_{cv::cuda::HostMem::AllocType::PAGE_LOCKED};
+
   //! Size of the input image prior to preprocessing (ie. size of the camera
   //! image)
   cv::Size original_size_;
@@ -207,18 +212,21 @@ struct YoloV8ObjectDetector::Impl {
     // stream);
 
     // letter_box_size_ = actual_size;
-    std::vector<float> blob;
-    letterBoxToBlob(rgb, blob, 3, requiredInputSize(), actual_size);
+    input_vector.allocate(input_info);
+    float* input_data = input_vector.get();
+    CHECK_NOTNULL(input_data);
+    letterBoxToBlob(rgb, input_data, 3, requiredInputSize(), actual_size);
     letter_box_size_ = actual_size;
 
     // CHECK_EQ(blob.size(), input_info.size());
 
     // // float* blobPtr = new float[letter_box_size];
-    input_vector.allocate(input_info);
-    float* input_data = input_vector.get();
+    // input_vector.allocate(input_info);
+    // float* input_data = input_vector.get();
 
     // //copy data to GPU
-    std::copy(blob.begin(), blob.end(), input_data);
+    // std::copy(preprocessing_blob_.begin(), preprocessing_blob_.end(),
+    // input_data);
 
     is_first = false;
     return true;
@@ -245,36 +253,50 @@ struct YoloV8ObjectDetector::Impl {
         cv::Mat::zeros(original_size, ObjectDetectionEngine::MaskDType);
     result.input_image = rgb;
 
-    // const float* output0_data = output0;
-    // const float* output1_data = output1;
+    // in our expected YOLO model export the number of dimensions should be
+    // fixed
+    constexpr static int kNumChnnels =
+        116;  //// e.g 80 class + 4 bbox parms + 32 seg masks = 116
+    constexpr static int kMaskChannels = 32;
+    constexpr static int kMaskHeight = 160;
+    constexpr static int kMaskWidth = 160;
 
-    const size_t numChannels =
-        output0_dims.d[1];  // e.g 80 class + 4 bbox parms + 32 seg masks = 116
-    // const size_t numAnchors = output0_dims.d[2];
+    // sanity check the output dims matches out expected values
+    CHECK_EQ(kNumChnnels, output0_dims.d[1]);
 
-    // const int num_boxes = static_cast<int>(num_detections);
-    const int SEG_H = static_cast<int>(output1_dims.d[2]);
-    const int SEG_W = static_cast<int>(output1_dims.d[3]);
+    CHECK_EQ(kMaskHeight, static_cast<int>(output1_dims.d[2]));
+    CHECK_EQ(kMaskWidth, static_cast<int>(output1_dims.d[3]));
 
-    const int numClasses =
-        static_cast<int>(numChannels - 32 - 4);  // Corrected number of classes
+    constexpr static int numClasses =
+        static_cast<int>(kNumChnnels - 32 - 4);  // Corrected number of classes
 
     const int MaskCoeffOffset =
         YoloV8ModelInfo::Constants::MaskCoeffOffset(numClasses);
 
     const float* d_output1_void = d_output1;
-    std::vector<cv::Mat> prototypeMasks;
-    prototypeMasks.reserve(32);
+    // // Reuse this buffer across frames rather than allocating each frame.
+    // cv::cuda::GpuMat proto_d(
+    //     kMaskChannels * kMaskHeight,
+    //     kMaskWidth,
+    //     CV_32FC1,
+    //     const_cast<float*>(d_output1));
 
-    for (int m = 0; m < 32; ++m) {
-      cv::cuda::GpuMat proto_d(
-          SEG_H, SEG_W, CV_32F,
-          const_cast<float*>(d_output1_void + m * SEG_H * SEG_W));
+    // // Download the entire tensor in one transfer.
+    // cv::Mat proto_h;
+    // proto_d.download(proto_h);
 
-      cv::Mat proto_h;
-      proto_d.download(proto_h);
-      prototypeMasks.emplace_back(proto_h.clone());
-    }
+    proto_host_.create(cv::Size(kMaskWidth, kMaskChannels * kMaskHeight),
+                       CV_32FC1);
+
+    cv::cuda::GpuMat proto_d(kMaskChannels * kMaskHeight, kMaskWidth, CV_32FC1,
+                             const_cast<float*>(d_output1_void));
+
+    // Download into pinned memory.
+    auto proto_stream = stream_pool_.getCvStream();
+    proto_d.download(proto_host_, proto_stream);
+
+    // Obtain a cv::Mat header over the pinned buffer.
+    cv::Mat proto_h = proto_host_.createMatHeader();
 
     timing_setup.stop();
 
@@ -286,21 +308,34 @@ struct YoloV8ObjectDetector::Impl {
     utils::ChronoTimingStats timing_detection(
         "yolov8_detection.post_process.compute_detections", 5);
 
+    auto detection_stream = stream_pool_.getCudaStream();
     int count = internal::YoloOutputToDetections(
         d_output0,  // The raw GPU pointer from TensorRT/ONNX
         config,
         h_indir_buffer_,   // Destination on CPU
         d_indir_buffer_,   // Temp storage on GPU
         d_indir_counter_,  // Temp counter on GPU,
-        h_indir_counter_, stream_pool_.getCudaStream());
+        h_indir_counter_, detection_stream);
 
     timing_detection.stop();
 
     std::vector<int> labels;
+    labels.reserve(count);
+
     std::vector<float> scores;
+    scores.reserve(count);
+
     std::vector<cv::Rect> bboxes;
+    bboxes.reserve(count);
+
     std::vector<cv::Mat> maskConfs;
+    maskConfs.reserve(count);
+
     std::vector<int> indices;
+    indices.reserve(count);
+
+    proto_stream.waitForCompletion();
+    cudaStreamSynchronize(detection_stream);
 
     for (int i = 0; i < count; ++i) {
       // 1. Get a reference to the detection data in the contiguous array
@@ -337,9 +372,10 @@ struct YoloV8ObjectDetector::Impl {
     getScalePad(original_size, letter_box_size_, gain, padW, padH);
     const float invGain = 1.0f / gain;
 
-    const float maskScaleX = static_cast<float>(SEG_W) / letter_box_size_.width;
+    const float maskScaleX =
+        static_cast<float>(kMaskWidth) / letter_box_size_.width;
     const float maskScaleY =
-        static_cast<float>(SEG_H) / letter_box_size_.height;
+        static_cast<float>(kMaskHeight) / letter_box_size_.height;
 
     std::vector<ObjectDetection> detections;
     detections.reserve(indices.size());
@@ -368,11 +404,21 @@ struct YoloV8ObjectDetector::Impl {
                                original_size.height - box.y);
 
       // Compute mask from prototype masks and coefficients
-      cv::Mat finalMask = cv::Mat::zeros(SEG_H, SEG_W, CV_32F);
+      cv::Mat finalMask = cv::Mat::zeros(kMaskHeight, kMaskWidth, CV_32F);
       float* mask_ptr = maskConfs[idx].ptr<float>();
       for (int m = 0; m < 32; ++m) {
         float conf = *(mask_ptr + m);
-        finalMask += conf * prototypeMasks[m];
+
+        cv::Mat proto_d(kMaskHeight, kMaskWidth, CV_32FC1,
+                        proto_h.ptr<float>(static_cast<int>(m * kMaskHeight)));
+
+        //  cv::Mat proto_mask(
+        //     kMaskHeight,
+        //     kMaskWidth,
+        //     CV_32FC1,
+        //     proto_d.ptr<float>(m * kMaskHeight));
+        // finalMask += conf * prototypeMasks[m];
+        finalMask += conf * proto_d;
       }
 
       // Apply sigmoid activation
@@ -387,15 +433,14 @@ struct YoloV8ObjectDetector::Impl {
       int y2 = static_cast<int>(
           std::round((letter_box_size_.height - padH + 0.1f) * maskScaleY));
 
-      x1 = std::max(0, std::min(x1, SEG_W - 1));
-      y1 = std::max(0, std::min(y1, SEG_H - 1));
-      x2 = std::max(x1, std::min(x2, SEG_W));
-      y2 = std::max(y1, std::min(y2, SEG_H));
+      x1 = std::max(0, std::min(x1, kMaskWidth - 1));
+      y1 = std::max(0, std::min(y1, kMaskHeight - 1));
+      x2 = std::max(x1, std::min(x2, kMaskWidth));
+      y2 = std::max(y1, std::min(y2, kMaskHeight));
 
       if (x2 <= x1 || y2 <= y1) continue;
 
-      cv::Mat croppedMask =
-          finalMask(cv::Rect(x1, y1, x2 - x1, y2 - y1)).clone();
+      cv::Mat croppedMask = finalMask(cv::Rect(x1, y1, x2 - x1, y2 - y1));
 
       // Resize to original image size
       cv::Mat resizedMask;
@@ -455,7 +500,7 @@ struct YoloV8ObjectDetector::Impl {
   /// @param targetSize Target size for inference
   /// @param[out] actualSize Actual output size
   /// @param dynamicShape Whether to use dynamic shape
-  inline void letterBoxToBlob(const cv::Mat& image, std::vector<float>& blob,
+  inline void letterBoxToBlob(const cv::Mat& image, float* blob,
                               int targetChannels, const cv::Size& targetSize,
                               cv::Size& actualSize, bool dynamicShape = false) {
     const int srcH = image.rows;
@@ -480,8 +525,8 @@ struct YoloV8ObjectDetector::Impl {
 
     actualSize = cv::Size(dstW, dstH);
     // buffer.ensureCapacity(dstH, dstW, targetChannels);
-    size_t required = static_cast<size_t>(dstH * dstW * targetChannels);
-    blob.resize(required);
+    // size_t required = static_cast<size_t>(dstH * dstW * targetChannels);
+    // blob.resize(required);
 
     // Ultralytics uses asymmetric padding with -0.1/+0.1 adjustment
     const float dh = (dstH - newH) / 2.0f;
@@ -491,8 +536,9 @@ struct YoloV8ObjectDetector::Impl {
 
     // Fill with padding (normalized 114/255)
     constexpr float padNorm = 114.0f / 255.0f;
-    std::fill(blob.begin(), blob.begin() + dstH * dstW * targetChannels,
-              padNorm);
+    // std::fill(blob.begin(), blob.begin() + dstH * dstW * targetChannels,
+    //           padNorm);
+    std::fill(blob, blob + dstH * dstW * targetChannels, padNorm);
 
     // Resize if needed
     cv::Mat resized;
@@ -505,9 +551,9 @@ struct YoloV8ObjectDetector::Impl {
     constexpr float scale255 = 1.0f / 255.0f;
     if (targetChannels == 3) {
       // Direct BGR->RGB + normalize to CHW blob
-      float* rChannel = blob.data();
-      float* gChannel = blob.data() + dstH * dstW;
-      float* bChannel = blob.data() + 2 * dstH * dstW;
+      float* rChannel = blob;
+      float* gChannel = blob + dstH * dstW;
+      float* bChannel = blob + 2 * dstH * dstW;
 
       for (int y = 0; y < newH; ++y) {
         const int dstY = y + padTop;
@@ -525,7 +571,7 @@ struct YoloV8ObjectDetector::Impl {
       }
     } else {
       // normalize directly into blob (single channel)
-      float* blobPtr = blob.data();
+      float* blobPtr = blob;
       for (int y = 0; y < newH; ++y) {
         const int dstY = y + padTop;
         const uchar* row = resized.ptr<uchar>(y);
@@ -669,12 +715,14 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   // set output address tensors
   {
     utils::ChronoTimingStats timing("yolov8_detection.infer");
-    cudaStreamSynchronize(stream_);
+    // cudaStreamSynchronize(stream_);
+    // cudaDeviceSynchronize();
     bool status = context_->enqueueV3(stream_);
     if (!status) {
       LOG(ERROR) << "initializing inference failed!";
       return ObjectDetectionResult{};
     }
+    cudaStreamSynchronize(stream_);
   }
 
   const auto output0_dims = context_->getTensorShape(output0_info.name.c_str());

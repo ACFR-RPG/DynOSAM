@@ -1817,18 +1817,22 @@ FeatureTrackerFast::FeatureTrackerFast(const FrontendParams& params,
 }
 
 TrackingResult FeatureTrackerFast::track(
-    FrameId frame_id, Timestamp timestamp,
-    const ImageContainer& image_container,
+    FrameId frame_id, Timestamp timestamp, ImageContainer& image_container,
     const std::optional<gtsam::Rot3>& R_km1_k) {
   utils::ChronoTimingStats feature_track_t("fast_tracker.track");
   // object detect/psuedo object detection measurement
 
   utils::ChronoTimingStats object_detect_t("fast_tracker.object_detect");
-  ObjectDetectionResult object_detection_result =
+  const auto [object_detection_result, update_object_mask] =
       object_detection_impl_.detectAndTrack(image_container);
   object_detect_t.stop();
   // update image container with motion mask
   const cv::Mat object_masks = object_detection_result.labelled_mask;
+
+  if (update_object_mask) {
+    image_container.objectMotionMask(object_masks);
+  }
+
   ObjectIds object_ids = object_detection_result.objectIds();
 
   const WrappedRGBMono wrapped_rgb = image_container.rgb();
@@ -2054,7 +2058,8 @@ FeatureTrackerFast::ObjectDetectionImpl::ObjectDetectionImpl(
     FeatureTrackerFast* parent_)
     : parent(parent_) {}
 
-ObjectDetectionResult FeatureTrackerFast::ObjectDetectionImpl::detectAndTrack(
+std::pair<ObjectDetectionResult, bool>
+FeatureTrackerFast::ObjectDetectionImpl::detectAndTrack(
     const ImageContainer& image_container) const {
   if (parent->trackerParams().prefer_provided_object_detection) {
     if (!image_container.hasObjectMask()) {
@@ -2068,7 +2073,7 @@ ObjectDetectionResult FeatureTrackerFast::ObjectDetectionImpl::detectAndTrack(
   }
 }
 
-ObjectDetectionResult
+std::pair<ObjectDetectionResult, bool>
 FeatureTrackerFast::ObjectDetectionImpl::detectionViaObjectMask(
     const ImageContainer& image_container) const {
   const cv::Mat object_masks = image_container.objectMotionMask();
@@ -2099,10 +2104,10 @@ FeatureTrackerFast::ObjectDetectionImpl::detectionViaObjectMask(
 
     result.detections.push_back(detection_result);
   }
-  return result;
+  return {result, false};
 }
 
-ObjectDetectionResult
+std::pair<ObjectDetectionResult, bool>
 FeatureTrackerFast::ObjectDetectionImpl::detectionViaInference(
     const ImageContainer& image_container) const {
   auto& detection_engine = parent->object_detection_engine_;
@@ -2110,7 +2115,7 @@ FeatureTrackerFast::ObjectDetectionImpl::detectionViaInference(
 
   VLOG(50) << "Running object detection and tracking inference k="
            << image_container.frameId();
-  return detection_engine->process(image_container.rgb());
+  return {detection_engine->process(image_container.rgb()), true};
 }
 
 FeatureTrackerFast::GfttDetector::GfttDetector(const cv::Size& size)
@@ -2253,6 +2258,8 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
 
   std::vector<CornerResponses> batchedResults(params.size());
 
+  const cv::Rect image_bounds(1, 1, mono.cols - 2, mono.rows - 2);
+
   // 11 approximatees a radius of 5 pixels from the edge
   // but we could do more?!
   // in pixels
@@ -2291,7 +2298,9 @@ FeatureBlockContainer FeatureTrackerFast::GfttDetector::calc(
       // box rather than scanning the entire image.
       // --------------------------------------------------------------
 
-      const cv::Rect& bbox = param.bbox;
+      // clip bounding box so that it is not at the immediate edge of the image
+      // and therefore out of bounds
+      const cv::Rect bbox = param.bbox & image_bounds;
 
       if (bbox.empty()) return;
 

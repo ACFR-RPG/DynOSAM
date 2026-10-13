@@ -1218,7 +1218,7 @@ class FeatureTrackerFast : public FeatureTrackerBase {
   // and refine the pixel values
   // and we want the next iteration of track to use these!
   TrackingResult track(FrameId frame_id, Timestamp timestamp,
-                       const ImageContainer& image_container,
+                       ImageContainer& image_container,
                        const std::optional<gtsam::Rot3>& R_km1_k = {});
 
  private:
@@ -1227,11 +1227,11 @@ class FeatureTrackerFast : public FeatureTrackerBase {
 
     ObjectDetectionImpl(FeatureTrackerFast* parent_);
 
-    ObjectDetectionResult detectAndTrack(
+    std::pair<ObjectDetectionResult, bool> detectAndTrack(
         const ImageContainer& image_container) const;
-    ObjectDetectionResult detectionViaObjectMask(
+    std::pair<ObjectDetectionResult, bool> detectionViaObjectMask(
         const ImageContainer& image_container) const;
-    ObjectDetectionResult detectionViaInference(
+    std::pair<ObjectDetectionResult, bool> detectionViaInference(
         const ImageContainer& image_container) const;
   };
 

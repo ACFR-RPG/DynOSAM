@@ -256,7 +256,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
 
   if (vo_success) {
     // prune keyframes
-    vi_estimator->pruneKeyframes(5, 3);
+    // vi_estimator->pruneKeyframes(5, 3);
   }
 
   MultiObjectTrajectories trajectories_to_visualise;
@@ -646,7 +646,7 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   if (estimator->keyFrames().size() > 2) {
     std::vector<FrameId> frames_affected;
     // should be fixed!
-    // estimator->optimize(frame_id, frames_affected, true);
+    estimator->optimize(frame_id, frames_affected, false);
 
     for (FrameId frame_id : frames_affected) {
       CHECK(estimator->poseExists(frame_id)) << frame_id;
