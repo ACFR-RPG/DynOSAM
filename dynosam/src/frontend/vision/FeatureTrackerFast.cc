@@ -1690,92 +1690,75 @@ void LocalVIOGraph::optimize(FrameId frame_id,
 
 bool LocalVIOGraph::pruneKeyframes(size_t num_keyframes,
                                    size_t num_motion_frames) {
+  // we do this until we fix speed with covisiblity and growing checks as we
+  // hae to remove observations to do that!
   utils::ChronoTimingStats timer_t("vio_graph.prune_kf");
-  // const std::set<FrameId>& keyframes = keyframes_;
+  std::set<FrameId> keyframes;
 
-  // std::vector<FrameId> frames_to_try;
-  // frames_to_try.reserve(num_keyframes + num_motion_frames);
+  // Try the most recent keyframes first.
+  size_t added_kfs = 0;
+  for (auto it = keyframes_.rbegin();
+       it != keyframes_.rend() && added_kfs < num_keyframes; ++it) {
+    // add_unique(*it);
+    keyframes.insert(*it);
+    ++added_kfs;
+  }
 
-  // const auto add_unique = [&frames_to_try](FrameId id) {
-  //   if (std::find(frames_to_try.begin(), frames_to_try.end(), id) ==
-  //       frames_to_try.end()) {
-  //     frames_to_try.push_back(id);
-  //   }
-  // };
-
-  // // Try the most recent keyframes first.
-  // size_t added_kfs = 0;
-  // for (auto it = keyframes.rbegin();
-  //      it != keyframes.rend() && added_kfs < num_keyframes; ++it) {
-  //   add_unique(*it);
-  //   ++added_kfs;
-  // }
-
-  // size_t num_motions_added = 0;
-  // for (FrameId frame_id = current_frame_id; frame_id >= 0; frame_id--) {
-  //   if (num_motions_added >= num_motion_frames) {
-  //     break;
-  //   }
-
-  //   add_unique(frame_id);
-  //   ++num_motions_added;
-  // }
-  // // this is silly - we can build frames_to_try in order...
-  // std::sort(frames_to_try.begin(), frames_to_try.end());
-  // active_frames_ = std::move(frames_to_try);
-  // return true;
+  keyframes_ = keyframes;
+  return true;
 
   // missing tracking...
 
-  VLOG(10) << "Beginning keyframe pruing: Initial set="
-           << container_to_string(keyframes_);
+  // VLOG(10) << "Beginning keyframe pruing: Initial set="
+  //          << container_to_string(keyframes_);
 
-  // we still have a good number of keyframes
-  if (keyframes_.size() <= num_keyframes) {
-    return false;
-  }
+  // // we still have a good number of keyframes
+  // if (keyframes_.size() <= num_keyframes) {
+  //   return false;
+  // }
 
-  {
-    // only compute if necessary
-    utils::ChronoTimingStats t("vio_graph.prune_kf.compute_covis");
-    computeCovisibilities();
-  }
+  // {
+  //   // only compute if necessary
+  //   utils::ChronoTimingStats t("vio_graph.prune_kf.compute_covis");
+  //   computeCovisibilities();
+  // }
 
-  utils::ChronoTimingStats t("vio_graph.prune_kf.loop");
-  while (keyframes_.size() > num_keyframes) {
-    const FrameId current_keyframe_id = currentKeyframeId();
-    const FrameId current_frame_id = currentFrameId();
+  // utils::ChronoTimingStats t("vio_graph.prune_kf.loop");
+  // while (keyframes_.size() > num_keyframes) {
+  //   const FrameId current_keyframe_id = currentKeyframeId();
+  //   const FrameId current_frame_id = currentFrameId();
 
-    auto min_it = keyframes_.end();
-    int min_obs = std::numeric_limits<int>::max();
+  //   auto min_it = keyframes_.end();
+  //   int min_obs = std::numeric_limits<int>::max();
 
-    for (auto it = keyframes_.begin(); it != keyframes_.end(); ++it) {
-      const FrameId keyframe = *it;
+  //   for (auto it = keyframes_.begin(); it != keyframes_.end(); ++it) {
+  //     const FrameId keyframe = *it;
 
-      const int coObs = std::max(covisibilities(current_frame_id, keyframe),
-                                 covisibilities(current_keyframe_id, keyframe));
+  //     const int coObs = std::max(covisibilities(current_frame_id, keyframe),
+  //                                covisibilities(current_keyframe_id,
+  //                                keyframe));
 
-      // Preserve the oldest keyframe if it has sufficient covisibility.
-      if (keyframe == *keyframes_.begin() && coObs >= 2) {
-        continue;
-      }
+  //     // Preserve the oldest keyframe if it has sufficient covisibility.
+  //     if (keyframe == *keyframes_.begin() && coObs >= 2) {
+  //       continue;
+  //     }
 
-      if (coObs < min_obs) {
-        min_obs = coObs;
-        min_it = it;
-      }
-    }
+  //     if (coObs < min_obs) {
+  //       min_obs = coObs;
+  //       min_it = it;
+  //     }
+  //   }
 
-    // Fall back to the oldest keyframe if every candidate was skipped.
-    if (min_it == keyframes_.end()) {
-      min_it = keyframes_.begin();
-    }
+  //   // Fall back to the oldest keyframe if every candidate was skipped.
+  //   if (min_it == keyframes_.end()) {
+  //     min_it = keyframes_.begin();
+  //   }
 
-    keyframes_.erase(min_it);
-  }
+  //   keyframes_.erase(min_it);
+  // }
 
-  VLOG(10) << "After keyframe pruing: " << container_to_string(keyframes_);
-  return true;
+  // VLOG(10) << "After keyframe pruing: " << container_to_string(keyframes_);
+  // return true;
 }
 
 OpticalFlowLK::Result OpticalFlowLK::operator()(
