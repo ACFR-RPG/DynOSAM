@@ -985,6 +985,16 @@ class LocalBAGraph : public LandmarkMap {
     observations_->updateObservations(measurements);
   }
 
+  bool hasObservation(FrameId frame_id, TrackletId tracklet_id) const {
+    // way faster to lookup by tracklet id
+    auto lmk_node = observations_->getLandmark(tracklet_id);
+    if (!lmk_node) {
+      return false;
+    }
+
+    return lmk_node->seenAtFrame(frame_id);
+  }
+
   const StereoBaMap& getObservations() const { return *observations_; }
   const std::set<FrameId>& keyFrames() const { return keyframes_; }
 

@@ -169,6 +169,7 @@ void DynosamNodeImpl::init() {
 }
 
 DynosamNodeImpl::~DynosamNodeImpl() {
+  LOG(INFO) << utils::Statistics::Print();
   // stop diagnostic updater before pipeline as all the pipeline owns
   //  the memory for all diagnostics tasks which are only stored in the
   //  updater with references/raw pointers

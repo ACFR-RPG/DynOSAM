@@ -1535,7 +1535,7 @@ void LocalVIOGraph::optimize(FrameId frame_id,
   dyno::FastUnorderedMap<FrameId, std::vector<TrackletId>>
       selected_tracklets_by_frame;
 
-  constexpr static size_t kMinSharedTracklets = 4;
+  constexpr static size_t kMinSharedTracklets = 2;
 
   for (const auto& [frame_i, neighbours] : covisibilities) {
     for (const auto& [frame_j, shared_tracklets] : neighbours) {
@@ -1571,6 +1571,8 @@ void LocalVIOGraph::optimize(FrameId frame_id,
 
   gtsam::Values values;
   gtsam::NonlinearFactorGraph graph;
+
+  graph.print("BA");
 
   TrackletIds tracklets_with_update;
   FrameIds poses_with_update;
@@ -1724,13 +1726,20 @@ bool LocalVIOGraph::pruneKeyframes(size_t num_keyframes,
   // return true;
 
   // missing tracking...
-  {
-    utils::ChronoTimingStats t("vio_graph.prune_kf.compute_covis");
-    computeCovisibilities();
-  }
 
   VLOG(10) << "Beginning keyframe pruing: Initial set="
            << container_to_string(keyframes_);
+
+  // we still have a good number of keyframes
+  if (keyframes_.size() <= num_keyframes) {
+    return false;
+  }
+
+  {
+    // only compute if necessary
+    utils::ChronoTimingStats t("vio_graph.prune_kf.compute_covis");
+    computeCovisibilities();
+  }
 
   utils::ChronoTimingStats t("vio_graph.prune_kf.loop");
   while (keyframes_.size() > num_keyframes) {
@@ -1766,6 +1775,7 @@ bool LocalVIOGraph::pruneKeyframes(size_t num_keyframes,
   }
 
   VLOG(10) << "After keyframe pruing: " << container_to_string(keyframes_);
+  return true;
 }
 
 OpticalFlowLK::Result OpticalFlowLK::operator()(
