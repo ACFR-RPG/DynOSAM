@@ -3,6 +3,7 @@
 #include <config_utilities/config_utilities.h>
 
 #include "dynosam/frontend/Frontend-Definitions.hpp"
+#include "dynosam/frontend/MotionKeyFrame.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSRIF.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSmoother.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSolver-Impl.hpp"
@@ -10,8 +11,7 @@
 #include "dynosam/frontend/solvers/OpticalFlowAndPoseSolver.hpp"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
-#include "dynosam_common/GroundTruthPacket.hpp"
-#include "dynosam_common/MotionKeyFrame.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
 #include "dynosam_sensors/Camera.hpp"
 
 namespace dyno {
@@ -111,8 +111,8 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
     return true;
   }
 
-  ObjectPoseChangeInfo& appendPoseChangeInfo(
-      ObjectId object_id, ObjectKeyFrameStatus keyframe_status);
+  ObjectPoseChangeInfo& appendPoseChangeInfo(ObjectId object_id,
+                                             DoKeyframeType keyframe_status);
 
  private:
   HybridObjectMotionSolverParams params_;

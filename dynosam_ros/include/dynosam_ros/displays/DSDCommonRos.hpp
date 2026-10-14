@@ -33,9 +33,9 @@
 #include "dynamic_slam_interfaces/msg/multi_object_odometry_path.hpp"
 #include "dynamic_slam_interfaces/msg/object_odometry.hpp"
 #include "dynamic_slam_interfaces/msg/object_odometry_path.hpp"
-#include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_core/DynoState.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "dynosam_sensors/SensorRig.hpp"
@@ -82,7 +82,8 @@ class DynoStatePublisher {
 
  private:
   void publishObjects(FrameId frame_id,
-                      const MultiObjectTrajectories& object_trajectories);
+                      const MultiObjectTrajectories& object_trajectories,
+                      const KeyFrameInfoMap& keyframe_infos);
 
   ObjectOdometry constructObjectOdometry(
       ObjectId object_id, FrameId frame_id,
@@ -149,6 +150,7 @@ class DynoStatePublisher {
   PointCloud2Pub::SharedPtr dynamic_points_pub_;
 
   MarkerArrayPub::SharedPtr camera_wireframe_pub_;
+  MarkerArrayPub::SharedPtr object_wireframe_pub_;
 
   //! Settings
 };

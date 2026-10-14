@@ -2,73 +2,21 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include <opencv4/opencv2/opencv.hpp>
+#include <filesystem>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
-#include "dynosam_common/utils/OpenCVUtils.hpp"
-
-namespace dyno {
-namespace utils {
+namespace dyno::utils {
 
 void throwExceptionIfPathInvalid(const std::string& image_path) {
   namespace fs = std::filesystem;
   if (!fs::exists(image_path)) {
     throw std::runtime_error("Path does not exist: " + image_path);
   }
-}
-
-void loadRGB(const std::string& image_path, cv::Mat& img) {
-  throwExceptionIfPathInvalid(image_path);
-  img = cv::imread(image_path, cv::IMREAD_UNCHANGED);
-}
-
-void loadFlow(const std::string& image_path, cv::Mat& img) {
-  throwExceptionIfPathInvalid(image_path);
-  img = readOpticalFlow(image_path);
-}
-
-void loadDepth(const std::string& image_path, cv::Mat& img) {
-  throwExceptionIfPathInvalid(image_path);
-  img = cv::imread(image_path, cv::IMREAD_UNCHANGED);
-  img.convertTo(img, CV_64F);
-}
-
-void loadSemanticMask(const std::string& image_path, const cv::Size& size,
-                      cv::Mat& mask) {
-  throwExceptionIfPathInvalid(image_path);
-  CHECK(!size.empty());
-
-  mask = cv::Mat(size, CV_32SC1);
-
-  std::ifstream file_mask;
-  file_mask.open(image_path.c_str());
-
-  int count = 0;
-  while (!file_mask.eof()) {
-    std::string s;
-    getline(file_mask, s);
-    if (!s.empty()) {
-      std::stringstream ss;
-      ss << s;
-      int tmp;
-      for (int i = 0; i < mask.cols; ++i) {
-        ss >> tmp;
-        if (tmp != 0) {
-          mask.at<int>(count, i) = tmp;
-        } else {
-          mask.at<int>(count, i) = 0;
-        }
-      }
-      count++;
-    }
-  }
-
-  file_mask.close();
-}
-
-void loadMask(const std::string& image_path, cv::Mat& mask) {
-  throwExceptionIfPathInvalid(image_path);
-  mask = cv::imread(image_path, cv::IMREAD_UNCHANGED);
-  mask.convertTo(mask, CV_32SC1);
 }
 
 std::vector<std::filesystem::path> getAllFilesInDir(
@@ -112,7 +60,7 @@ std::vector<std::string> trimAndSplit(const std::string& input,
 
 bool getLine(std::ifstream& fstream, std::vector<std::string>& split_lines) {
   std::string line;
-  getline(fstream, line);
+  std::getline(fstream, line);
 
   split_lines.clear();
 
@@ -122,5 +70,4 @@ bool getLine(std::ifstream& fstream, std::vector<std::string>& split_lines) {
   return true;
 }
 
-}  // namespace utils
-}  // namespace dyno
+}  // namespace dyno::utils

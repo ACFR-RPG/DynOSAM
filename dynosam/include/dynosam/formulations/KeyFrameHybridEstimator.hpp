@@ -270,7 +270,7 @@ class HybridFormulationKeyFrame : public HybridFormulation<KeyFrameMap> {
   };
 
   struct KeyFrameMetaData {
-    ObjectKeyFrameStatus keyframe_status;
+    DoKeyframeType keyframe_status;
 
     //! Measured object motion from the frontend
     //! Taking us from last RKF to most recent KF (ie. k)

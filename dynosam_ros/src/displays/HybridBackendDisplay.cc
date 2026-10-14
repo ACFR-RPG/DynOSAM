@@ -1,6 +1,6 @@
 #include "dynosam_ros/displays/HybridBackendDisplay.hpp"
 
-#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_ros/BackendDisplayPolicyRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/BackendDisplayRos.hpp"

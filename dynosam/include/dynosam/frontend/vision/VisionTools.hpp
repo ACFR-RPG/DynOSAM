@@ -39,13 +39,14 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
 #include "dynosam_common/Cuda.hpp"
-#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Histogram.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/ImageContainer.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 #ifdef DYNO_CUDA_OPENCV_ENABLED
 #include <opencv2/cudaoptflow.hpp>
@@ -56,15 +57,6 @@ namespace dyno {
 class FrontendParams;
 
 namespace vision_tools {
-
-/// triangulateSafe: extensive checking of the outcome
-/// a modifed version that lets use use triangulateLOST
-/// while still on gtsam 4.2
-template <class CAMERA>
-gtsam::TriangulationResult triangulateSafe(
-    const gtsam::CameraSet<CAMERA>& cameras,
-    const typename CAMERA::MeasurementVector& measured,
-    const gtsam::TriangulationParameters& params, const bool useLOST = false);
 
 template <typename Predicate>
 void getCorrespondences(FeaturePairs& correspondences,
@@ -93,129 +85,19 @@ void getCorrespondences(FeaturePairs& correspondences,
   }
 }
 
-// NOTE: returns the inlier/outlier mask not H
-cv::Mat findHomography(const std::vector<cv::Point2f>& previous,
-                       const std::vector<cv::Point2f>& current,
-                       double repr_threshold = 3.0, const int max_iters = 1000);
-
-// NOTE: returns the inlier/outlier mask not E
-cv::Mat findEssential(const std::vector<cv::Point2f>& previous,
-                      const std::vector<cv::Point2f>& current, const cv::Mat& K,
-                      double threshold = 3.0, const int max_iters = 1000);
-
-void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
-                            const std::vector<cv::Point2f>& current,
-                            const TrackletIds& tracklet_ids, const cv::Mat& K,
-                            std::vector<cv::Point2f>& verified_previous,
-                            std::vector<cv::Point2f>& verified_current,
-                            TrackletIds& verified_tracklet_ids);
-
-void outlierRejectEssential(const std::vector<cv::Point2f>& previous,
-                            const std::vector<cv::Point2f>& current,
-                            const cv::Mat& K,
-                            std::vector<cv::Point2f>& verified_previous,
-                            std::vector<cv::Point2f>& verified_current);
-
-void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
-                             const std::vector<cv::Point2f>& current,
-                             const TrackletIds& tracklet_ids,
-                             std::vector<cv::Point2f>& verified_previous,
-                             std::vector<cv::Point2f>& verified_current,
-                             TrackletIds& verified_tracklet_ids);
-
-void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
-                             const std::vector<cv::Point2f>& current,
-                             std::vector<cv::Point2f>& verified_previous,
-                             std::vector<cv::Point2f>& verified_current);
-
-// unique object labels as present in a semantic/motion segmented image -> does
-// not include background label
-
 /**
- * @brief Finds the unique object labels (j) as present in the instance
- * segmentation image. Does not include the background label.
+ * @brief Gets and sets the stereo measurement from the feature, computing the
+ * right keypoint if necessary as long as depth information is provided in the
+ * Feature
  *
- * @param image const cv::Mat&
- * @return ObjectIds
+ * @param feature
+ * @param camera
+ * @param force_recalculation
+ * @return std::pair<bool, gtsam::StereoPoint2>
  */
-ObjectIds getObjectLabels(const cv::Mat& image);
-
-/**
- * @brief Get the Object Bounding Boxes object given a mask and a set of object
- * ids.
- *
- * Super optimized function to run very quickly as discovering bounding boxes
- * using regular opencv functions can take up to 5-10ms depending on image size
- * and this is often a bottle-neck.
- *
- *
- * @param mask
- * @param object_ids
- * @param bounding_boxes
- */
-void getObjectBoundingBoxes(const cv::Mat& mask, const ObjectIds& object_ids,
-                            std::vector<cv::Rect>& bounding_boxes);
-
-/**
- * @brief Shrinks all found object masks by a given ammount.
- *
- * @param mask const cv::Mat& input object mask with pixel values 0, 1... j
- * @param shrunk_mask cv::Mat& output object mask with shrink masks.
- * @param erosion_size int erosion size
- */
-void shrinkMask(const cv::Mat& mask, cv::Mat& shrunk_mask, int erosion_size);
-
-/**
- * @brief From a instance/semantic mask type img, construct the bounding box for
- * the mask of object_id
- *
- * If object_id is not present in the mask (ie.e no pixe values with this mask),
- * or no valid contours could be constructed, false is returned.
- *
- *
- *
- * @param mask const cv::Mat&
- * @param object_id ObjectId
- * @param detected_rect cv::Rect& The calcualted bounding box
- * @param detected_contours std::vector<std::vector<cv::Point>>& The calcualted
- * contours used to find the bounding box
- * @return true
- * @return false
- */
-bool findObjectBoundingBox(
-    const cv::Mat& mask, ObjectId object_id, cv::Rect& detected_rect,
-    std::vector<std::vector<cv::Point>>& detected_contours);
-
-/**
- * @brief From a instance/semantic mask type img, construct the bounding box for
- * the mask of object_id.
- *
- * Differes only in output variables.
- *
- * @param mask
- * @param object_id
- * @param detected_rect
- * @return true
- * @return false
- */
-bool findObjectBoundingBox(const cv::Mat& mask, ObjectId object_id,
-                           cv::Rect& detected_rect);
-
-/**
- * @brief From a instance/semantic mask type img, construct the bounding box for
- * the mask of object_id.
- *
- * Differes only in output variables.
- *
- * @param mask
- * @param object_id
- * @param detected_contours
- * @return true
- * @return false
- */
-bool findObjectBoundingBox(
-    const cv::Mat& mask, ObjectId object_id,
-    std::vector<std::vector<cv::Point>>& detected_contours);
+std::pair<bool, gtsam::StereoPoint2> getStereo(
+    Feature::Ptr feature, const RGBDCamera::Ptr camera,
+    const bool force_recalculation = false);
 
 struct ObjectBoundaryMaskResult {
   //! Modified boundary mask for each object (dilated and eroded) representing
@@ -271,9 +153,6 @@ void computeObjectMaskBoundaryMask(
     ObjectBoundaryMaskResult& result,
     const ObjectDetectionResult& detection_result, int thickness,
     bool use_as_feature_detection_mask = true);
-
-void relabelMasks(const cv::Mat& mask, cv::Mat& relabelled_mask,
-                  const ObjectIds& old_labels, const ObjectIds& new_labels);
 
 /**
  * @brief Constructs a map of histograms (static features: 0, one for each
@@ -346,42 +225,6 @@ std::pair<gtsam::Vector3, gtsam::Matrix33> backProjectAndCovariance(
     const Feature& feature, const Camera& camera, double pixel_sigma,
     double depth_sigma);
 
-// /**
-//  * @brief Fully rectifies all images in the ImageContainerSubset
-//  *
-//  * Quite slow :)
-//  *
-//  * @tparam ImageTypes
-//  * @param images
-//  * @param undistorted_images
-//  * @param undistorted
-//  * @return ImageContainerSubset<ImageTypes...>
-//  */
-// template<typename... ImageTypes>
-// void rectifyImages(const ImageContainerSubset<ImageTypes...>& images,
-// ImageContainerSubset<ImageTypes...>& undistorted_images, const
-// UndistorterRectifier& undistorter) {
-//     //do deep copy (the underlying ImageWrapper class has a deep copy in its
-//     copy constructor so
-//     //the image data is cloned)
-//     using ImageSet = ImageContainerSubset<ImageTypes...>;
-//     undistorted_images = ImageSet(images);
-
-//     static constexpr size_t N = ImageSet::N;
-//     for (size_t i = 0; i < N; i++) {
-//         internal::select_apply<N>(i, [&](auto I){
-//             using ImageType = typename ImageSet::ImageTypeStruct<I>;
-
-//             //get reference to image and modify in place
-//             cv::Mat& distorted_image = undistorted_images.template
-//             get<ImageType>();
-//             undistorter.undistortRectifyImage(distorted_image,
-//             distorted_image);
-
-//         });
-//     }
-// }
-
 }  // namespace vision_tools
 
 /**
@@ -405,5 +248,3 @@ void determineOutlierIds(const TrackletIds& inliers,
                          const TrackletIds& tracklets, TrackletIds& outliers);
 
 }  // namespace dyno
-
-#include "dynosam/frontend/vision/VisionTools-inl.hpp"

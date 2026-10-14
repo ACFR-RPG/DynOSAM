@@ -30,11 +30,11 @@
 
 #pragma once
 
-#include "dynosam/pipeline/PipelineBase.hpp"
-#include "dynosam_common/DynoState.hpp"
-#include "dynosam_common/GroundTruthPacket.hpp"
-#include "dynosam_common/RealtimeOutput.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/DynoState.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
+#include "dynosam_core/RealtimeOutput.hpp"
+#include "dynosam_processing/PipelineBase.hpp"
 
 namespace dyno {
 

@@ -583,9 +583,9 @@ bool KltFeatureTracker::trackPoints(
 
   std::vector<cv::Point2f> verified_current, verified_previous;
   TrackletIds verified_tracklets;
-  vision_tools::outlierRejectHomography(good_previous, good_current,
-                                        good_tracklets, verified_previous,
-                                        verified_current, verified_tracklets);
+  outlierRejectHomography(good_previous, good_current, good_tracklets,
+                          verified_previous, verified_current,
+                          verified_tracklets);
 
   CHECK_EQ(verified_tracklets.size(), verified_current.size());
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dynosam/backend/PoseChangeBackendModule.hpp"
-#include "dynosam/pipeline/PipelineModuleProcessor.hpp"
+#include "dynosam_processing/PipelineModuleProcessor.hpp"
 
 namespace dyno {
 

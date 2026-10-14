@@ -39,7 +39,7 @@
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/formulations/VIOFormulation.hpp"
-#include "dynosam_common/MotionKeyFrame.hpp"
+#include "dynosam/frontend/MotionKeyFrame.hpp"
 #include "dynosam_common/StructuredContainers.hpp"  //for FrameRange
 #include "dynosam_common/Types.hpp"                 //only needed for factors
 #include "dynosam_opt/Map.hpp"

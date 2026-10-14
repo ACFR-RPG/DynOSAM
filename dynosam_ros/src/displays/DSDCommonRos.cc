@@ -2,9 +2,9 @@
 
 #include <glog/logging.h>
 
-#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 
@@ -41,6 +41,8 @@ DynoStatePublisher::DynoStatePublisher(
   if (options_.publish_wireframe_cameras) {
     camera_wireframe_pub_ =
         node->create_publisher<MarkerArray>("camera_frustrum", markers_qos);
+    object_wireframe_pub_ =
+        node->create_publisher<MarkerArray>("object_frustrum", markers_qos);
   }
 }
 
@@ -134,19 +136,12 @@ void DynoStatePublisher::publish(const DynoState& state) {
   DisplayCommon::publishPointCloud(dynamic_points_pub_, state.dynamic_map,
                                    reference_frames.odom_frame, T_RC);
 
-  publishObjects(frame_id, state.object_trajectories);
+  publishObjects(frame_id, state.object_trajectories, state.keyframe_infos);
 }
 
 void DynoStatePublisher::publishObjects(
-    FrameId frame_id, const MultiObjectTrajectories& object_trajectories) {
-  // get subset of trajectories that has an object observed at k
-  // TODO: for now!
-  // auto object_trajectories_k =
-  //     object_trajectories.trajectoriesAtFrame(frame_id);
-
-  // if (object_trajectories_k.empty()) {
-  //   return;
-  // }
+    FrameId frame_id, const MultiObjectTrajectories& object_trajectories,
+    const KeyFrameInfoMap& keyframe_infos) {
   MultiObjectTrajectories object_trajectories_k = object_trajectories;
 
   if (object_trajectories_k.empty()) {
@@ -156,16 +151,13 @@ void DynoStatePublisher::publishObjects(
   const auto reference_frames = sensor_rig_->getReferenceFrames();
   const gtsam::Pose3 T_RC = sensor_rig_->getCanonicalExtrinsics();
 
-  // camera (optical) frame to robot (base) frame
+  // Convert object pose and motion from the sensor-world convention
+  // into the robot-world convention.
   auto camera_to_base_frame_object = [&T_RC](PoseWithMotionEntry& entry_WS) {
-    // change basis for both pose and motion to go from sensor-world to
-    // robot-world
     entry_WS.data.pose = changeBasis(T_RC, entry_WS.data.pose);
 
-    // loose notation here to indicate that motion is in W as defined by sensor
-    // (S)
-    gtsam::Pose3 H_WS = entry_WS.data.motion;
-    gtsam::Pose3 H_WR = changeBasis(T_RC, H_WS);
+    const gtsam::Pose3 H_WS = entry_WS.data.motion;
+    const gtsam::Pose3 H_WR = changeBasis(T_RC, H_WS);
     entry_WS.data.motion.estimate() = H_WR;
   };
 
@@ -177,8 +169,25 @@ void DynoStatePublisher::publishObjects(
 
   multi_object_odom_paths.header.frame_id = reference_frames.odom_frame;
 
+  // Rebuild the marker array on each publication.
+  visualization_msgs::msg::MarkerArray keyframe_markers;
+
+  visualization_msgs::msg::Marker delete_marker;
+  delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;
+  keyframe_markers.markers.push_back(delete_marker);
+
+  static constexpr int kShowLastNKeyframes = 10;
+  static constexpr double kArrowScale = 1.0;
+  static constexpr double kLineWidth = 0.02;
+
+  Color anchor_colour(1.0F * 255, 0.25F * 255, 0.15F * 255);
+  Color regular_colour(0.15F * 255, 0.85F * 255, 0.65F * 255);
+
+  // Marker IDs must be unique within the marker namespace.
+  int marker_id = 0;
+
   for (const auto& [object_id, object_trajectory_S] : object_trajectories_k) {
-    // object trajectory in the world frame as defined by the robot frame
+    // Work on a copy because the basis conversion modifies the trajectory.
     PoseWithMotionTrajectory object_trajectory_R = object_trajectory_S;
 
     if (options_.convert_to_optical) {
@@ -186,58 +195,205 @@ void DynoStatePublisher::publishObjects(
                     camera_to_base_frame_object);
     }
 
-    // latest object odometry
+    // Latest object odometry.
     ObjectOdometry object_odometry = constructObjectOdometry(
         object_id, object_trajectory_R.maxFrame(), object_trajectory_R);
+
     object_odom_publisher_->publish(object_odometry);
 
     if (options_.publish_oo_tf) {
       sendObjectOdometryTransform(object_odometry);
     }
 
-    // full path for object j
-    ObjectOdometryPath object_path;
-
+    // Full trajectory path.
     std_msgs::msg::ColorRGBA colour_msg;
     convert(Color::uniqueId(object_id), colour_msg);
 
-    // TODO: for now ignore segmenebts becuase the backend will always be
-    // segmented due to non-consequative frames
     ObjectOdometryPath path_per_segment;
     path_per_segment.colour = colour_msg;
     path_per_segment.object_id = object_id;
     path_per_segment.path_segment = 0;
     path_per_segment.header = multi_object_odom_paths.header;
-    for (FrameId frame_i : object_trajectory_R.toFrameIds()) {
-      path_per_segment.object_odometries.push_back(
-          constructObjectOdometry(object_id, frame_i, object_trajectory_R));
+
+    for (FrameId trajectory_frame : object_trajectory_R.toFrameIds()) {
+      path_per_segment.object_odometries.push_back(constructObjectOdometry(
+          object_id, trajectory_frame, object_trajectory_R));
     }
 
     multi_object_odom_paths.paths.push_back(path_per_segment);
-    // // construct full paths
-    // const auto trajectory_segments = object_trajectory.segments();
-    // for (size_t i = 0; i < trajectory_segments.size(); i++) {
-    //   size_t segment_id = i + 1;
 
-    //   const auto& segment = trajectory_segments.at(i);
+    // ---------------------------------------------------------------
+    // Object keyframe visualisation.
+    // ---------------------------------------------------------------
 
-    //   ObjectOdometryPath path_per_segment;
-    //   path_per_segment.colour = colour_msg;
-    //   path_per_segment.object_id = object_id;
-    //   path_per_segment.path_segment = segment_id;
-    //   path_per_segment.header = multi_object_odom_paths.header;
+    // Map each object keyframe's destination frame to its status.
+    // If a frame has multiple entries, an anchor takes precedence.
+    std::map<FrameId, DoKeyframeType> object_keyframes;
 
-    //   for (const auto& entry : segment.trajectory) {
-    //     path_per_segment.object_odometries.push_back(
-    //         constructObjectOdometry(object_id, entry));
-    //   }
+    for (const auto& [info_frame_id, kf_info] : keyframe_infos) {
+      for (const auto& motion_pair : kf_info.object_keyframes) {
+        if (motion_pair.object_id != object_id) {
+          continue;
+        }
 
-    //   multi_object_odom_paths.paths.push_back(path_per_segment);
-    // }
+        if (motion_pair.status != DoKeyframeType::AnchorKeyFrame &&
+            motion_pair.status != DoKeyframeType::RegularKeyFrame) {
+          continue;
+        }
+
+        const FrameId object_frame_id = motion_pair.to_motion;
+
+        auto [it, inserted] =
+            object_keyframes.emplace(object_frame_id, motion_pair.status);
+
+        if (!inserted && motion_pair.status == DoKeyframeType::AnchorKeyFrame) {
+          it->second = DoKeyframeType::AnchorKeyFrame;
+        }
+      }
+    }
+
+    // The current frame's object pose is not drawn as an additional
+    // historical keyframe marker.
+    object_keyframes.erase(frame_id);
+
+    // Iterate over the most recent N object keyframes.
+    auto start_it = object_keyframes.size() > kShowLastNKeyframes
+                        ? std::prev(object_keyframes.end(), kShowLastNKeyframes)
+                        : object_keyframes.begin();
+
+    for (auto it = start_it; it != object_keyframes.end(); ++it) {
+      const FrameId object_frame_id = it->first;
+      const DoKeyframeType status = it->second;
+
+      // A keyframe may exist in the metadata even when its trajectory
+      // entry is no longer available.
+      if (!object_trajectory_R.exists(object_frame_id)) {
+        continue;
+      }
+
+      const auto entry = object_trajectory_R.get(object_frame_id);
+      const gtsam::Pose3& L_WO = entry.data.pose;
+
+      const auto& marker_colour = status == DoKeyframeType::AnchorKeyFrame
+                                      ? anchor_colour
+                                      : regular_colour;
+
+      // publish in the 'odom' frame which is out fixed estimation frame
+      keyframe_markers.markers.push_back(DisplayCommon::makeObjectPoseArrow(
+          L_WO, object_trajectories_k.lastTimestamp(),
+          reference_frames.odom_frame, marker_colour, marker_id++, kArrowScale,
+          kLineWidth));
+    }
   }
 
   multi_object_odom_path_publisher_->publish(multi_object_odom_paths);
+
+  object_wireframe_pub_->publish(keyframe_markers);
 }
+
+// void DynoStatePublisher::publishObjects(
+//     FrameId frame_id, const MultiObjectTrajectories& object_trajectories) {
+//   // get subset of trajectories that has an object observed at k
+//   // TODO: for now!
+//   // auto object_trajectories_k =
+//   //     object_trajectories.trajectoriesAtFrame(frame_id);
+
+//   // if (object_trajectories_k.empty()) {
+//   //   return;
+//   // }
+//   MultiObjectTrajectories object_trajectories_k = object_trajectories;
+
+//   if (object_trajectories_k.empty()) {
+//     return;
+//   }
+
+//   const auto reference_frames = sensor_rig_->getReferenceFrames();
+//   const gtsam::Pose3 T_RC = sensor_rig_->getCanonicalExtrinsics();
+
+//   // camera (optical) frame to robot (base) frame
+//   auto camera_to_base_frame_object = [&T_RC](PoseWithMotionEntry& entry_WS) {
+//     // change basis for both pose and motion to go from sensor-world to
+//     // robot-world
+//     entry_WS.data.pose = changeBasis(T_RC, entry_WS.data.pose);
+
+//     // loose notation here to indicate that motion is in W as defined by
+//     sensor
+//     // (S)
+//     gtsam::Pose3 H_WS = entry_WS.data.motion;
+//     gtsam::Pose3 H_WR = changeBasis(T_RC, H_WS);
+//     entry_WS.data.motion.estimate() = H_WR;
+//   };
+
+//   ObjectOdometryMap object_odometries;
+
+//   MultiObjectOdometryPath multi_object_odom_paths;
+//   multi_object_odom_paths.header.stamp =
+//       ros::toRosTime(object_trajectories_k.lastTimestamp());
+
+//   multi_object_odom_paths.header.frame_id = reference_frames.odom_frame;
+
+//   for (const auto& [object_id, object_trajectory_S] : object_trajectories_k)
+//   {
+//     // object trajectory in the world frame as defined by the robot frame
+//     PoseWithMotionTrajectory object_trajectory_R = object_trajectory_S;
+
+//     if (options_.convert_to_optical) {
+//       std::for_each(object_trajectory_R.begin(), object_trajectory_R.end(),
+//                     camera_to_base_frame_object);
+//     }
+
+//     // latest object odometry
+//     ObjectOdometry object_odometry = constructObjectOdometry(
+//         object_id, object_trajectory_R.maxFrame(), object_trajectory_R);
+//     object_odom_publisher_->publish(object_odometry);
+
+//     if (options_.publish_oo_tf) {
+//       sendObjectOdometryTransform(object_odometry);
+//     }
+
+//     // full path for object j
+//     ObjectOdometryPath object_path;
+
+//     std_msgs::msg::ColorRGBA colour_msg;
+//     convert(Color::uniqueId(object_id), colour_msg);
+
+//     // TODO: for now ignore segmenebts becuase the backend will always be
+//     // segmented due to non-consequative frames
+//     ObjectOdometryPath path_per_segment;
+//     path_per_segment.colour = colour_msg;
+//     path_per_segment.object_id = object_id;
+//     path_per_segment.path_segment = 0;
+//     path_per_segment.header = multi_object_odom_paths.header;
+//     for (FrameId frame_i : object_trajectory_R.toFrameIds()) {
+//       path_per_segment.object_odometries.push_back(
+//           constructObjectOdometry(object_id, frame_i, object_trajectory_R));
+//     }
+
+//     multi_object_odom_paths.paths.push_back(path_per_segment);
+//     // // construct full paths
+//     // const auto trajectory_segments = object_trajectory.segments();
+//     // for (size_t i = 0; i < trajectory_segments.size(); i++) {
+//     //   size_t segment_id = i + 1;
+
+//     //   const auto& segment = trajectory_segments.at(i);
+
+//     //   ObjectOdometryPath path_per_segment;
+//     //   path_per_segment.colour = colour_msg;
+//     //   path_per_segment.object_id = object_id;
+//     //   path_per_segment.path_segment = segment_id;
+//     //   path_per_segment.header = multi_object_odom_paths.header;
+
+//     //   for (const auto& entry : segment.trajectory) {
+//     //     path_per_segment.object_odometries.push_back(
+//     //         constructObjectOdometry(object_id, entry));
+//     //   }
+
+//     //   multi_object_odom_paths.paths.push_back(path_per_segment);
+//     // }
+//   }
+
+//   multi_object_odom_path_publisher_->publish(multi_object_odom_paths);
+// }
 
 ObjectOdometry DynoStatePublisher::constructObjectOdometry(
     ObjectId object_id, FrameId frame_id,

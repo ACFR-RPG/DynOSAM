@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "dynosam/dataprovider/DataProvider.hpp"
+#include "dynosam_processing/DataReader.hpp"
 
 namespace dyno {
 
@@ -46,9 +46,9 @@ enum DatasetType {
 };
 
 struct DataProviderFactory {
-  static DataProvider::Ptr Create(const std::string& dataset_folder_path,
-                                  const std::string& params_path,
-                                  DatasetType dataset_type);
+  static DataReader::Ptr Create(const std::string& dataset_folder_path,
+                                const std::string& params_path,
+                                DatasetType dataset_type);
 };
 
 }  // namespace dyno

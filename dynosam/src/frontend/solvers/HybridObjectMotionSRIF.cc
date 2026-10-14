@@ -1,6 +1,7 @@
 #include "dynosam/frontend/solvers/HybridObjectMotionSRIF.hpp"
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 
@@ -266,7 +267,7 @@ HybridObjectMotionSRIFResult HybridObjectMotionSRIF::update(
     gtsam::Point3 m_L = m_linearized_.at(tracklet_id);
 
     const auto [stereo_keypoint_status, stereo_measurement] =
-        rgbd_camera_->getStereo(feature);
+        vision_tools::getStereo(feature, rgbd_camera_);
     if (!stereo_keypoint_status) {
       continue;
     }
@@ -337,7 +338,7 @@ HybridObjectMotionSRIFResult HybridObjectMotionSRIF::update(
       CHECK(feature);
 
       const auto [stereo_keypoint_status, stereo_measurement] =
-          rgbd_camera_->getStereo(feature);
+          vision_tools::getStereo(feature, rgbd_camera_);
       if (!stereo_keypoint_status) {
         weights(i) = 0.0;  // Skip point
         continue;
@@ -702,7 +703,8 @@ HybridObjectMotionSRIFResult FullHybridObjectMotionSRIF::updateSchur(
     }  // Skip points behind camera
 
     gtsam::Vector3 res =
-        (rgbd_camera_->getStereo(frame->at(tid)).second - z_pred).vector();
+        (vision_tools::getStereo(frame->at(tid), rgbd_camera_).second - z_pred)
+            .vector();
 
     // Robust Weighting
     double error = std::sqrt(res.transpose() * R_inv_ * res);
@@ -991,7 +993,9 @@ HybridObjectMotionSRIFResult FullHybridObjectMotionSRIF::update(
       }  // Skip points behind camera
 
       gtsam::Vector3 res =
-          (rgbd_camera_->getStereo(frame->at(tid)).second - z_pred).vector();
+          (vision_tools::getStereo(frame->at(tid), rgbd_camera_).second -
+           z_pred)
+              .vector();
 
       double error_sq = res.transpose() * R_inv_ * res;
       double error = std::sqrt(error_sq);

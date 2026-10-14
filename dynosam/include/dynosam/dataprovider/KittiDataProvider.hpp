@@ -32,12 +32,13 @@
 
 #include <png++/png.hpp>
 
-#include "dynosam/dataprovider/DatasetProvider.hpp"
-#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DatasetReader.hpp"
 #include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/VIFrontendInput.hpp"
 
 namespace dyno {
 
@@ -349,9 +350,8 @@ class KittiClassSegmentationDataFolder : public dyno::DataFolder<cv::Mat> {
 
 // additional loaders are depth, semantic/motion mask, camera pose gt and gt
 // input packet
-class KittiDataLoader
-    : public DynoDatasetProvider<cv::Mat, cv::Mat, gtsam::Pose3,
-                                 GroundTruthInputPacket> {
+class KittiDataLoader : public DatasetReader<cv::Mat, cv::Mat, gtsam::Pose3,
+                                             GroundTruthInputPacket> {
  public:
   struct Params {
     MaskType mask_type = MaskType::MOTION;
@@ -396,8 +396,8 @@ class KittiDataLoader
    * @param params
    */
   KittiDataLoader(const fs::path& dataset_path, const Params& params)
-      : DynoDatasetProvider<cv::Mat, cv::Mat, gtsam::Pose3,
-                            GroundTruthInputPacket>(dataset_path),
+      : DatasetReader<cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket>(
+            dataset_path),
         params_(params) {
     TimestampFile::Ptr timestamp_file = std::make_shared<TimestampFile>();
     RGBDataFolder::Ptr rgb_folder = std::make_shared<RGBDataFolder>();

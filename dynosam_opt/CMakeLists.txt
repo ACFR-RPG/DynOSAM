@@ -3,12 +3,19 @@ cmake_minimum_required(VERSION 3.11)
 project(dynosam_opt)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
+    -O3
+  )
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(dynosam_common REQUIRED)
 

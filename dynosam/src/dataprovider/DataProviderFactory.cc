@@ -33,7 +33,6 @@
 #include <glog/logging.h>
 
 #include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
-#include "dynosam/dataprovider/DataProvider.hpp"
 #include "dynosam/dataprovider/DynopetsDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/OMDDataProvider.hpp"
@@ -42,6 +41,7 @@
 #include "dynosam/dataprovider/ViodeDataProvider.hpp"
 #include "dynosam/dataprovider/VirtualKittiDataProvider.hpp"
 #include "dynosam_common/utils/YamlParser.hpp"
+#include "dynosam_processing/DataReader.hpp"
 
 DEFINE_int32(starting_frame, -1,
              "Starting frame of the dataset. If -1 use the default which is "
@@ -52,7 +52,7 @@ DEFINE_int32(ending_frame, -1,
 
 namespace dyno {
 
-DataProvider::Ptr DataProviderFactory::Create(
+DataReader::Ptr DataProviderFactory::Create(
     const std::string& dataset_folder_path, const std::string& params_path,
     DatasetType dataset_type) {
   if (dataset_type == DatasetType::KITTI) {

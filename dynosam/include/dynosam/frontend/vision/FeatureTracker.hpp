@@ -34,13 +34,13 @@
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam/frontend/FrontendParams.hpp"
+#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
 #include "dynosam_sensors/Camera.hpp"
-#include "dynosam_sensors/Feature.hpp"
 
-// #include "dynosam_common/DynamicObjects.hpp"
+// #include "dynosam_core/DynamicObjects.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
 
 namespace dyno {

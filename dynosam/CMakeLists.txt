@@ -2,23 +2,17 @@ cmake_minimum_required(VERSION 3.11)
 
 project(dynosam)
 
-# set(CMAKE_C_FLAGS "-std=gnu11 -Wall -Wextra -O3 -march=sandybridge -flto")
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
+    -O3
+  )
 endif()
-
-set(CMAKE_CXX_STANDARD 17)
-
-# Must be set **before** find_package(PCL)
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-
-include(FetchContent)
-
-
-
-set(WITH_MPI OFF CACHE BOOL "Disable MPI in PCL")
 
 
 find_package(ament_cmake REQUIRED)
@@ -27,25 +21,24 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(dynosam_common REQUIRED)
+find_package(dynosam_cv REQUIRED)
+find_package(dynosam_core REQUIRED)
 find_package(dynosam_sensors REQUIRED)
 find_package(dynosam_opt REQUIRED)
+find_package(dynosam_processing REQUIRED)
 find_package(dynosam_nn REQUIRED)
 
-
-
-include(VerifyGtsamConfig)
-option(DYNO_VERIFY_GTSAM_CONFIG "Check that GTSAM was compiled with the right options" ON)
-if (DYNO_VERIFY_GTSAM_CONFIG)
-    verify_gtsam_config()
-endif()
 
 
 # setup targets
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
+  ${dynosam_core_INCLUDE_DIRS}
+  ${dynosam_cv_INCLUDE_DIRS}
   ${dynosam_sensors_INCLUDE_DIRS}
   ${dynosam_opt_INCLUDE_DIRS}
+  ${dynosam_processing_INCLUDE_DIRS}
   ${dynosam_nn_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
@@ -56,22 +49,14 @@ include_directories(
 
 # build library
 add_library(${PROJECT_NAME} SHARED
-  src/dataprovider/DataInterfacePipeline.cc
-  src/dataprovider/DataProvider.cc
-  src/dataprovider/DatasetLoader.cc
-  src/dataprovider/DataProviderUtils.cc
   src/dataprovider/DataProviderFactory.cc
   src/dataprovider/VirtualKittidataProvider.cc
   src/dataprovider/ClusterSlamDataProvider.cc
   src/dataprovider/OMDDataProvider.cc
-  src/dataprovider/DatasetProvider.cc
   src/dataprovider/ProjectAriaDataProvider.cc
   src/dataprovider/TartanAirShibuya.cc
   src/dataprovider/ViodeDataProvider.cc
   src/dataprovider/DynopetsDataProvider.cc
-
-  src/frontend/imu/ThreadSafeImuBuffer.cc
-  src/frontend/imu/ImuFrontend.cc
 
   src/frontend/solvers/PnPRansac.cc
   src/frontend/solvers/HybridObjectMotionSRIF.cc
@@ -82,6 +67,8 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/solvers/OpticalFlowAndPoseSolver.cc
   src/frontend/solvers/MotionOnlyRefinementSolver.cc
 
+
+  src/frontend/vision/Feature.cc
   src/frontend/vision/Frame.cc
   src/frontend/FrontendParams.cc
   src/frontend/VIFrontend.cc
@@ -98,8 +85,6 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/vision/TrackerParams.cc
   src/frontend/vision/FeatureTrackerBase.cc
   src/frontend/vision/FeatureDetector.cc
-  src/frontend/anms/NonMaximumSupression.cc
-  src/frontend/anms/anms.cc
 
   src/backend/Accessor.cc
   src/backend/Formulation.cc
@@ -128,7 +113,6 @@ add_library(${PROJECT_NAME} SHARED
 
   src/pipeline/PipelineManager.cc
   src/pipeline/PipelineParams.cc
-  src/pipeline/PipelineBase.cc
   src/pipeline/PipelineSpinner.cc
 
   src/visualizer/VisualizerPipelines.cc
@@ -150,24 +134,9 @@ target_link_libraries(${PROJECT_NAME}
   dynosam_sensors::dynosam_sensors
   dynosam_opt::dynosam_opt
   dynosam_nn::dynosam_nn
-  # rclcpp::rclcpp
-  # opengv
-  # nlohmann_json::nlohmann_json
-  # config_utilities::config_utilities
-  # # PUBLIC
-  # ${rclcpp_LIBRARIES}
-  # glog
-  # gflags
-  # gtsam
-  # gtsam_unstable
-  # Boost::boost
-  # png # We need png++ (libpng-dev) for png manipulation in VirtualKittiDatasetLoader
-  # # Eigen3::Eigen
-  # ${OpenCV_LIBRARIES}
-  # ${PCL_LIBRARIES}
-  # TBB::tbb
-  # TBB::tbbmalloc
-  # PRIVATE
+  dynosam_processing::dynosam_processing
+  dynosam_core::dynosam_core
+  dynosam_cv::dynosam_cv
 )
 
 
@@ -189,6 +158,7 @@ ament_export_libraries(${PROJECT_NAME}
   dynosam_sensors::dynosam_sensors
   dynosam_opt::dynosam_opt
   dynosam_nn::dynosam_nn
+  dynosam_processing::dynosam_processing
 )
 
 
@@ -208,6 +178,7 @@ set(DYNO_EXPORT_DEPS
   dynosam_sensors
   dynosam_opt
   dynosam_nn
+  dynosam_processing
 )
 
 
@@ -286,10 +257,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
-    test/thread_safe_queue_tests.cc
-    test/thread_safe_temporal_buffer_test.cc
-    test/test_threadsafe_imu_buffer.cc
-    test/test_dataset_provider.cc
     test/test_types.cc
     test/test_code_concepts.cc
     test/test_camera_params.cc
@@ -303,7 +270,6 @@ if(BUILD_TESTING)
     test/test_tools.cc
     test/test_map.cc
     test/test_histogram.cc
-    test/test_pipelines.cc
     test/test_structured_containers.cc
     # test/test_triangulation.cc
     test/test_backend_structures.cc

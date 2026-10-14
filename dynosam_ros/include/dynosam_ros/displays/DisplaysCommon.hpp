@@ -34,8 +34,8 @@
 
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
-#include "dynosam_common/PointCloudProcess.hpp"  //for CloudPerObject
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"  //for CloudPerObject
 #include "dynosam_sensors/SensorRig.hpp"
 #include "image_transport/image_transport.hpp"
 #include "nav_msgs/msg/odometry.hpp"
@@ -86,6 +86,23 @@ struct DisplayCommon {
                                      const double scale = 0.15,
                                      const double line_width = 0.1,
                                      const std::string& ns = "camera_frustum");
+
+  /// Creates a wireframe arrow representing an object pose.
+  ///
+  /// Geometry:
+  ///   - Small rear ring at the origin.
+  ///   - Larger front ring along local +X.
+  ///   - Connecting edges forming an expanding frustum.
+  ///   - Wireframe arrowhead at the front.
+  ///
+  /// All points are transformed into the world frame, so the resulting
+  /// marker has an identity pose and uses the supplied reference frame.
+  static Marker makeObjectPoseArrow(const gtsam::Pose3& T_WR,
+                                    const Timestamp timestamp,
+                                    const std::string& frame_id,
+                                    const Color& colour, int marker_id,
+                                    double scale = 1.0,
+                                    double line_width = 0.02);
 };
 
 }  // namespace dyno

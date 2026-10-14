@@ -30,10 +30,10 @@
 
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 
-#include "dynosam/frontend/anms/NonMaximumSuppression.h"
+#include "dynosam_common/anms/NonMaximumSuppression.h"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 
 namespace dyno {
 

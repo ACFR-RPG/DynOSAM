@@ -31,14 +31,14 @@
 #pragma once
 
 #include "dynosam/frontend/Frontend-Definitions.hpp"
-#include "dynosam/frontend/imu/ImuFrontend.hpp"
-#include "dynosam_common/DynamicObjects.hpp"
-#include "dynosam_common/GroundTruthPacket.hpp"
-#include "dynosam_common/PointCloudProcess.hpp"
-#include "dynosam_common/RealtimeOutput.hpp"
 #include "dynosam_common/SensorModels.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
+#include "dynosam_core/RealtimeOutput.hpp"
 #include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImuFrontend.hpp"
 
 namespace dyno {
 

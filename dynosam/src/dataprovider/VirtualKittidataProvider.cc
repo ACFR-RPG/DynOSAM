@@ -35,8 +35,9 @@
 #include <fstream>
 #include <png++/png.hpp>  //libpng-dev
 
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/frontend/vision/VisionTools.hpp"  //for getObjectLabels
+#include "dynosam_common/utils/FileSystem.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
 
 namespace dyno {
 

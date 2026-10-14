@@ -31,13 +31,13 @@
 
 #include <functional>
 
+#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
-#include "dynosam_common/DynamicObjects.hpp"
-#include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_sensors/Camera.hpp"
-#include "dynosam_sensors/Feature.hpp"
 #include "dynosam_sensors/ImageContainer.hpp"
 #include "dynosam_sensors/UndistortRectifier.hpp"
 

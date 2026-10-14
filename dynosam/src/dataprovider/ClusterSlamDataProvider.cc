@@ -35,13 +35,13 @@
 #include <fstream>
 #include <png++/png.hpp>  //libpng-dev
 
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
 #include "dynosam/frontend/vision/StereoMatcher.hpp"
-#include "dynosam/frontend/vision/VisionTools.hpp"  //for getObjectLabels
 #include "dynosam_common/Algorithms.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
 #include "dynosam_sensors/StereoCamera.hpp"
 
 namespace dyno {
@@ -452,7 +452,7 @@ class ClusterSlamAllLoader {
                                      FrameId frame_id,
                                      cv::Mat& relabelled_mask) const {
     const GroundTruthInputPacket& gt_packet = getGtPacket(frame_id);
-    ObjectIds object_ids = vision_tools::getObjectLabels(instance_mask);
+    ObjectIds object_ids = getObjectLabels(instance_mask);
     const size_t n = object_ids.size();
 
     instance_mask.copyTo(relabelled_mask);
@@ -495,7 +495,7 @@ class ClusterSlamAllLoader {
       const cv::Mat object_mask = relabelled_mask == object_id;
 
       cv::Rect bb;
-      if (!vision_tools::findObjectBoundingBox(instance_mask, object_id, bb)) {
+      if (!findObjectBoundingBox(instance_mask, object_id, bb)) {
         VLOG(10) << "No bb could be found for detected object " << object_id
                  << " at frame " << frame_id
                  << ". Skipping association and removing object from mask";
@@ -555,8 +555,7 @@ class ClusterSlamAllLoader {
       // relabelled_mask.setTo(cv::Scalar(assigned_object_id), object_mask);
     }
 
-    vision_tools::relabelMasks(instance_mask, relabelled_mask, old_labels,
-                               new_labels);
+    relabelMasks(instance_mask, relabelled_mask, old_labels, new_labels);
   }
 
   void setGroundTruthPacket(GroundTruthPacketMap& ground_truth_packets) {

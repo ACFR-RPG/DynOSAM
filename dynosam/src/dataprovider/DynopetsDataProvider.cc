@@ -1,6 +1,8 @@
 #include "dynosam/dataprovider/DynopetsDataProvider.hpp"
 
 #include "dynosam_common/utils/CsvParser.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
 
 namespace dyno {
 

@@ -143,4 +143,14 @@ void FrontendDisplayRos::tryPublishGroundTruth(
       ground_truth_dyno_state);
 }
 
+Frontend2DisplayRos::Frontend2DisplayRos(
+    const CanonicalSensorRig::ConstPtr& sensor_rig,
+    rclcpp::Node::SharedPtr node, rclcpp::Node::SharedPtr ground_truth_node)
+    : FrontendDisplayRos(sensor_rig, node, ground_truth_node) {}
+
+void Frontend2DisplayRos::spinOnce(
+    const RealtimeOutput::ConstPtr& frontend_output) {
+  FrontendDisplayRos::spinOnce(frontend_output);
+}
+
 }  // namespace dyno

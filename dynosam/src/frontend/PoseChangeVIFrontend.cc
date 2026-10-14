@@ -254,7 +254,15 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   }
   group.wait();
 
+  // tracking state information
+  ViTrackingState vi_tracking_state;
+  vi_tracking_state.frame_id = frame_id_k;
+  // TODO: quality etc
+
+  DoTrackingStates do_tracking_states;
+
   if (vo_success) {
+    vi_tracking_state.is_keyframe = vi_estimator->isKeyframe(frame_id_k);
     // prune keyframes
     vi_estimator->pruneKeyframes(5, 3);
   }
@@ -267,6 +275,14 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
     if (!doo_solve_success[i]) {
       continue;
     }
+
+    DOGraph::Ptr doo_estimator = landmarks_W_.getDynamicObjectMap(object_id);
+
+    DoTrackingState do_tracking_state;
+    do_tracking_state.frame_id = frame_id_k;
+    do_tracking_state.object_id = object_id;
+    do_tracking_state.keyframe_type = doo_estimator->isKeyframe(frame_id_k);
+    do_tracking_states[object_id] = do_tracking_state;
 
     const PoseWithMotionTrajectory& trajectory = *doo_solve_trajectories[i];
     if (trajectory.size() > 1) {
@@ -296,6 +312,8 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
+  realtime_output->state.vi_tracking_state = vi_tracking_state;
+  realtime_output->state.do_tracking_states = do_tracking_states;
 
   StatusLandmarkVector& points_W_used = realtime_output->state.static_map;
 
@@ -398,8 +416,8 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
     return;
   }
 
-  if (!vi_tracking_state_.is_initalized) {
-    vi_tracking_state_.is_initalized = true;
+  if (!vi_tracking_condition_.is_initalized) {
+    vi_tracking_condition_.is_initalized = true;
     LOG(INFO) << "Initialized VI Map!";
   }
 
@@ -592,7 +610,7 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
               ++count;
             }
 
-            auto m_W_result = vision_tools::triangulateSafe<GtsamCamera>(
+            auto m_W_result = dyno::triangulateSafe<GtsamCamera>(
                 camera_set, measurements, triangulation_params, true);
 
             // LOG(INFO) << "i=" << tracked_id << " " << count;
@@ -650,6 +668,8 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   vo_trajectory.insert(frame_id, timestamp, X_W);
 
   if (estimator->keyFrames().size() > 2) {
+    utils::ChronoTimingStats timer_t(this->moduleName() +
+                                     ".solve.vo.refine_map");
     std::vector<FrameId> frames_affected;
     if (should_be_keyframe) {
       // optimize with structure
@@ -667,8 +687,8 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
 
   // for safety write the best available value back into
   // TODO: which is actually the one in the estimator...
-  std::lock_guard<std::mutex> lock(context.vo_mutex);
-  *context.vo = X_W;
+  // std::lock_guard<std::mutex> lock(context.vo_mutex);
+  // *context.vo = X_W;
 
   success = true;
 }
@@ -778,13 +798,49 @@ void PoseChangeVIFrontendFAST::solveObjectOdometryByThread(
                                   ReferenceFrame::GLOBAL, frame_id_j,
                                   frame_id_i);
 
-  auto traj_it = doo_trajectory.find(frame_id_j);
-  if (traj_it != doo_trajectory.end()) {
-    const auto& L_W_km1 = traj_it->data.pose;
+  // TODO: add measurements for the tracked ones!
+  do_frame.fill(local_geometry, features);
+  // StereoMeasurementStatusVector stereo_measurements;
+  // stereo_measurements.reserve(adapter.numMatches());
+  // // add measurements for keypoints that were tracked and already initalised
+  // // this will help with the BA to get intermediate frame measurements
+  // for (size_t idx = 0; idx < adapter.numMatches(); idx++) {
+  //   TrackletId id = adapter.trackletId(idx);
+  //   if (adapter.isInlier(idx) && estimator->landmarkExists(id)) {
+  //     auto stereo_measurement =
+  //         StereoMeasurement::FromSigmas(do_frame.stereoPointById(id),
+  //         sigmas);
+
+  //     stereo_measurements.push_back(
+  //         StereoMeasurementStatus(stereo_measurement, frame_id, timestamp,
+  //         id,
+  //                                 object_id, ReferenceFrame::LOCAL));
+  //   }
+  // }
+
+  if (estimator.numStates() > 0) {
+    LOG(INFO) << "j=" << object_id << " solved k=" << frame_id_i
+              << " last state k=" << estimator.currentFrameId();
+  }
+  // check if we can initalise from the previous frame
+  if (estimator.stateExists(frame_id_j)) {
+    const PoseWithMotion& state_km1 = estimator.getState(frame_id_j);
+    const auto& L_W_km1 = state_km1.pose;
     gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1);
-    doo_trajectory.insert(frame_id_i, timestamp_i,
-                          PoseWithMotion{L_W_k, H_W_km1_k});
+
+    PoseWithMotion state_i{L_W_k, H_W_km1_k};
+    doo_trajectory.insert(frame_id_i, timestamp_i, state_i);
+
+    estimator.setState(frame_id_i, state_i);
+
+    // well tracked continuously: could be retracked continuously or newly
+    // tracked
+
   } else {
+    // HERE we start a new reference frame (as long as we have good tracks!)
+    // to ensure we have no-overlapping tracks seems worth removing all
+    // landmarks and trying to re-initalise using current tracks
+
     // TODO: only the case the object is not in the previous frame!
     // TODO: NOTE: ref may not be the previous frame! We shold carry the
     // reference camera pose too
@@ -795,21 +851,28 @@ void PoseChangeVIFrontendFAST::solveObjectOdometryByThread(
         X_km1 * computeCentroid(adapter.referenceLandmarks());
     gtsam::Pose3 L_W_km1_centroid(gtsam::Rot3::Identity(), t_W_km1_centroid);
 
-    LOG(INFO) << "Inserted traj j=" << object_id << " " << frame_id_j << " -> "
-              << frame_id_i;
+    // for testing!
+    // mark as anchor keyframe
+    estimator.setKeyframe(frame_id_j, DoKeyframeType::AnchorKeyFrame);
+    // we check only for frame k in the main object loop where k==i and
+    // therefore j is never considered
+    estimator.setKeyframe(frame_id_i, DoKeyframeType::AnchorKeyFrame);
 
     gtsam::Pose3 L_W_k = H_W_km1_k->compose(L_W_km1_centroid);
     Motion3ReferenceFrame H_W_km1_km1(
         gtsam::Pose3::Identity(), MotionRepresentationStyle::F2F,
         ReferenceFrame::GLOBAL, frame_id_j, frame_id_j);
-    // TODO: timestep is wrong!
-    doo_trajectory.insert(frame_id_j, timestamp_j,
-                          PoseWithMotion{L_W_km1_centroid, H_W_km1_km1});
-    doo_trajectory.insert(frame_id_i, timestamp_i,
-                          PoseWithMotion{L_W_k, H_W_km1_k});
+
+    PoseWithMotion state_j{L_W_km1_centroid, H_W_km1_km1};
+    PoseWithMotion state_i{L_W_k, H_W_km1_k};
+
+    doo_trajectory.insert(frame_id_j, timestamp_j, state_j);
+    doo_trajectory.insert(frame_id_i, timestamp_i, state_i);
+
+    estimator.setState(frame_id_j, state_j);
+    estimator.setState(frame_id_i, state_i);
   }
 
-  do_frame.fill(local_geometry, features);
   success = 1;
 }
 
@@ -863,14 +926,14 @@ bool PoseChangeVIFrontendFAST::solve3d2dRansac(
 // compare against existing landmarks in the estimator which implies matches and
 // good initalisation
 bool PoseChangeVIFrontendFAST::shouldBeViKeyFrame(
-    const LocalBAGraph& vi_estimator, const ViFrame& frame) const {
+    const LocalVIOGraph& vi_estimator, const ViFrame& frame) const {
   utils::ChronoTimingStats timer_t(this->moduleName() + ".vi_kf_selection");
   if (frame.frame_id < 4) {
     // just starting, so yes, we need this as a new keyframe
     return true;
   }
 
-  if (!vi_tracking_state_.is_initalized) return false;
+  if (!vi_tracking_condition_.is_initalized) return false;
 
   // TODO: not initalised!
   const auto& camera_params = camera_->getParams();
@@ -970,6 +1033,9 @@ bool PoseChangeVIFrontendFAST::shouldBeViKeyFrame(
     return true;
   }
 }
+
+bool PoseChangeVIFrontendFAST::shouldBeDoKeyFrame(const DOGraph& do_estimator,
+                                                  const DoFrame& frame) const {}
 
 double PoseChangeVIFrontendFAST::computeRansacThreshold(
     const double repr_error) const {
@@ -1379,6 +1445,13 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     map_->updateObservations(static_measurements);
   }
 
+  // convert keyframe infos to tracking state
+  ViTrackingState vi_tracking_state;
+  vi_tracking_state.frame_id = frame_id_k;
+  vi_tracking_state.is_keyframe = ego_motion_keyframe;
+
+  DoTrackingStates do_tracking_states;
+
   // lets test make all OKF's are also camera keyframes
   // THIS IS IMPORTANT!!
   if (ego_motion_keyframe || any_object_keyframes) {
@@ -1422,6 +1495,12 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       CHECK(map_->isObjectKeyFrame(H_W_KF_k.to(), object_id));
       CHECK(map_->isObjectKeyFrame(H_W_KF_k.from(), object_id));
 
+      DoTrackingState do_tracking_state;
+      do_tracking_state.frame_id = frame_id_k;
+      do_tracking_state.object_id = object_id;
+      do_tracking_state.keyframe_type = info.keyframe_status;
+      do_tracking_states[object_id] = do_tracking_state;
+
       // record keyframe info for each object
       KeyframeInfo::MotionPair object_kf_info{object_id, H_W_KF_k.from(),
                                               H_W_KF_k.to()};
@@ -1445,7 +1524,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   if (ego_motion_keyframe || num_object_keyframes > 0) {
     keyframe_infos_.insert2(frame_id_k, pc_input->keyframe_info);
   }
-  realtime_output->state.keyframe_infos = keyframe_infos_;
+
+  // realtime_output->state.keyframe_infos = keyframe_infos_;
+  realtime_output->state.vi_tracking_state = vi_tracking_state;
+  realtime_output->state.do_tracking_states = do_tracking_states;
 
   SharedModuleStates* shared_module_states = map_->getSharedModuleStates();
   shared_module_states->current_frontend_frame = frame_id_k;

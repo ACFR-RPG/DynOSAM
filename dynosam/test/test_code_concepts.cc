@@ -66,8 +66,8 @@
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_sensors/ImageTypes.hpp"
 
@@ -2147,9 +2147,9 @@ TEST(CodeConcepts, testModifyOptionalString) {
   EXPECT_EQ(input, "udpated");
 }
 
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/frontend/anms/NonMaximumSuppression.h"
-#include "dynosam/frontend/anms/anms/anms.h"
+#include "dynosam_common/anms/NonMaximumSuppression.h"
+#include "dynosam_common/anms/anms/anms.h"
+#include "dynosam_processing/DataReaderUtils.hpp"
 #include "internal/helpers.hpp"
 
 TEST(CodeConcepts, dynamicObjectSampling) {

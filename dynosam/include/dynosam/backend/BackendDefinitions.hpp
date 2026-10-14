@@ -41,9 +41,9 @@
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam_common/Exceptions.hpp"
-#include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_core/EstimationLogger.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
 #include "dynosam_opt/Symbols.hpp"
 #include "dynosam_sensors/Camera.hpp"  //for calibration type
 

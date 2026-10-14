@@ -1,7 +1,7 @@
 #include "dynosam_nn/YoloV8CudaUtils.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
 #include "dynosam_nn/CudaUtils.hpp"
-#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
 
 
 #include <cuda_runtime.h>

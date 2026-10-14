@@ -925,13 +925,13 @@ TEST(ObjectBoundingBoxes, Profile) {
   std::vector<cv::Rect> boxes;
   // Warm up.
   for (int i = 0; i < 100; ++i) {
-    vision_tools::getObjectBoundingBoxes(object_mask, object_ids, boxes);
+    getObjectBoundingBoxes(object_mask, object_ids, boxes);
   }
 
   const auto start = std::chrono::steady_clock::now();
 
   for (int i = 0; i < iterations; ++i) {
-    vision_tools::getObjectBoundingBoxes(object_mask, object_ids, boxes);
+    getObjectBoundingBoxes(object_mask, object_ids, boxes);
   }
 
   const auto end = std::chrono::steady_clock::now();

@@ -65,8 +65,11 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
   // void solveVisualOdometryBundle()
 
   // compare to last keyframe?
-  bool shouldBeViKeyFrame(const LocalBAGraph& vi_estimator,
+  bool shouldBeViKeyFrame(const LocalVIOGraph& vi_estimator,
                           const ViFrame& frame) const;
+
+  bool shouldBeDoKeyFrame(const DOGraph& do_estimator,
+                          const DoFrame& frame) const;
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
@@ -106,13 +109,13 @@ class PoseChangeVIFrontendFAST : public VIFrontend {
     double quality{0.0};
   };
 
-  struct ViTrackingState {
+  /// @brief Internal state of the ViFrontend
+  struct ViTrackingCondition {
     bool tracking_lost{false};
     bool is_initalized{false};
   };
-  ViTrackingState vi_tracking_state_;
+  ViTrackingCondition vi_tracking_condition_;
 
-  std::set<FrameId> keyframes_;
   // only matched measurements are included which were used for estimation!
   // Landmarks stored in estimation reference frame!
   // Camera in W and objects in O!

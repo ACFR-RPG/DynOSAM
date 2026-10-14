@@ -28,17 +28,17 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/DatasetProvider.hpp"
-#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DatasetReader.hpp"
+#include "dynosam_sensors/VIFrontendInput.hpp"
 
 namespace dyno {
 
 // depth, motion masks, and NO gt, and right rgb image (for stereo!!)
 using ProjectAriaDatasetProvider =
-    DynoDatasetProvider<cv::Mat, cv::Mat, std::optional<cv::Mat>>;
+    DatasetReader<cv::Mat, cv::Mat, std::optional<cv::Mat>>;
 
 /**
  * @brief Data loader for the PREPROCESSED Project ARIA for MP testing team

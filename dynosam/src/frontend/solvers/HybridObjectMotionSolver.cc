@@ -3,7 +3,7 @@
 #include <gflags/gflags.h>
 
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"  // just for tracklet mananger
-#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
 
 DEFINE_int32(hybrid_motion_solver, 0,
              "Which solver to use. 0: EIF, 1: Smart Smoother, 2: Full "
@@ -189,7 +189,7 @@ void HybridObjectMotionSolver::solve(Frame::Ptr frame_k, Frame::Ptr frame_km1,
           // PC-info object has the correct tracking status
           // object_statuses_.setStatus(obj_id, frame_id_k,
           // ObjectTrackingStatus::Lost);
-          // appendPoseChangeInfo(obj_id,ObjectKeyFrameStatus::RegularKeyFrame);
+          // appendPoseChangeInfo(obj_id,DoKeyframeType::RegularKeyFrame);
         }
       }
 
@@ -337,14 +337,14 @@ bool HybridObjectMotionSolver::solveImpl(
 
   const gtsam::Pose3 H_W_km1_k_pnp = X_W_k * G_W_inv;
 
-  ObjectKeyFrameStatus keyframe_status{ObjectKeyFrameStatus::NonKeyFrame};
+  DoKeyframeType keyframe_status{DoKeyframeType::NonKeyFrame};
   PoseInitalisationMethod pose_init_method{
       PoseInitalisationMethod::NonKeyFrame};
 
   bool requires_new_keyframe = false;
   if (is_new) {
     createAndInsertFilter(object_id, frame_km1, inlier_tracklets);
-    // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+    // keyframe_status = DoKeyframeType::AnchorKeyFrame;
     // requires_new_keyframe = true;
     // TODO: retracked OR map error is really big!
   } else if (object_retracked) {
@@ -381,7 +381,7 @@ bool HybridObjectMotionSolver::solveImpl(
     const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
     num_kfs_per_object_.at(object_id) = 0;
 
-    keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+    keyframe_status = DoKeyframeType::AnchorKeyFrame;
   } else {
     // auto solver = threadSafeFilterAccess(object_id);
   }
@@ -433,14 +433,14 @@ bool HybridObjectMotionSolver::solveImpl(
     if (requires_new_keyframe) {
       CHECK_EQ(smoother->frameId(), frame_id_k)
           << "j=" << object_id << " k=" << smoother->frameId();
-      keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
+      keyframe_status = DoKeyframeType::RegularKeyFrame;
 
       const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
       const int num_kf = num_kfs_per_object_.at(object_id);
       // ie. is first keyframe
       if (num_kf == 0) {
         LOG(INFO) << "j=" << object_id << " made anchor frame as is first KF";
-        keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+        keyframe_status = DoKeyframeType::AnchorKeyFrame;
       }
       // initalise with previous track
       pose_init_method = PoseInitalisationMethod::Previous;
@@ -451,9 +451,9 @@ bool HybridObjectMotionSolver::solveImpl(
   // LOG(INFO) << "j=" << object_id << " repr error: " << repr_error;
 
   // always add motion at k not k-1?
-  // if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
+  // if (keyframe_status != DoKeyframeType::NonKeyFrame) {
   if (requires_new_keyframe) {
-    CHECK(keyframe_status != ObjectKeyFrameStatus::NonKeyFrame);
+    CHECK(keyframe_status != DoKeyframeType::NonKeyFrame);
     CHECK(pose_init_method != PoseInitalisationMethod::NonKeyFrame);
     /// mmmm if we keyframe at this frame
     // then the estimated motion is from km-1 to k
@@ -499,7 +499,7 @@ bool HybridObjectMotionSolver::solveImpl(
 }
 
 ObjectPoseChangeInfo& HybridObjectMotionSolver::appendPoseChangeInfo(
-    ObjectId object_id, ObjectKeyFrameStatus keyframe_status) {
+    ObjectId object_id, DoKeyframeType keyframe_status) {
   auto solver = threadSafeFilterAccess(object_id);
   CHECK_NOTNULL(solver);
 

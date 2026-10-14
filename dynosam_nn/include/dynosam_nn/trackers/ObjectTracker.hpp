@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
 #include "dynosam_nn/trackers/byte_tracker/ByteTracker.hpp"
 
 namespace dyno {

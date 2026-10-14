@@ -11,11 +11,13 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(dynosam_common REQUIRED)
+find_package(dynosam_cv REQUIRED)
 
 # setup targets
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
+  ${dynosam_cv_INCLUDE_DIRS}
 )
 
 # build library
@@ -27,9 +29,9 @@ add_library(${PROJECT_NAME} SHARED
     src/StereoCamera.cc
     src/RGBDCamera.cc
     src/UndistortRectifier.cc
-    src/Feature.cc
     src/SensorRig.cc
     src/ImuParams.cc
+    src/ImuFrontend.cc
 
 )
 
@@ -37,6 +39,7 @@ add_library(${PROJECT_NAME} SHARED
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   dynosam_common::dynosam_common
+  dynosam_cv::dynosam_cv
 )
 
 

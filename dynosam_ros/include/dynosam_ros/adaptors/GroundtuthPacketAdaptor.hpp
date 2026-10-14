@@ -1,4 +1,4 @@
-// #include <dynosam_common/GroundTruthPacket.hpp>
+// #include <dynosam_core/GroundTruthPacket.hpp>
 
 // #include "dynamic_slam_interfaces/msg/groundtruth_packet.hpp"
 // #include "dynosam_ros/RosUtils.hpp"

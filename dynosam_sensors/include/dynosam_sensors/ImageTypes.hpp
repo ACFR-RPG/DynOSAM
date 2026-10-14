@@ -39,8 +39,8 @@
 
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/Tuple.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 
 namespace dyno {
 

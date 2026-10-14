@@ -35,7 +35,7 @@
 #include <eigen3/Eigen/Dense>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/frontend/anms/NonMaximumSuppression.h"
+#include "dynosam_common/anms/NonMaximumSuppression.h"
 
 namespace dyno {
 

@@ -7,9 +7,9 @@
 
 #include <opencv2/core/cuda.hpp>
 
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_nn/CudaUtils.hpp"
 #include "dynosam_nn/YoloV8CudaUtils.hpp"
 #include "dynosam_nn/trackers/ObjectTracker.hpp"

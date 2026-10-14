@@ -38,6 +38,7 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {
@@ -443,7 +444,7 @@ void Frame::constructDynamicObservations() {
   object_observations_.clear();
   // assumes that the mask gets updated with the tracking label
   const ObjectIds instance_labels =
-      vision_tools::getObjectLabels(image_container_.objectMotionMask());
+      getObjectLabels(image_container_.objectMotionMask());
 
   auto inlier_iterator = dynamic_features_.usableIterator();
   for (const Feature::Ptr& dynamic_feature : inlier_iterator) {
@@ -476,7 +477,7 @@ void Frame::constructDynamicObservations() {
   for (auto& object_observation_pair : object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
     SingleDetectionResult& obs = object_observation_pair.second;
-    vision_tools::findObjectBoundingBox(mask, object_id, obs.bounding_box);
+    findObjectBoundingBox(mask, object_id, obs.bounding_box);
   }
 }
 

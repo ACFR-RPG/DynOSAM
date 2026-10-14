@@ -33,11 +33,11 @@
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/ModuleBase.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_core/DynoState.hpp"
 #include "dynosam_opt/Map.hpp"
 
 namespace dyno {

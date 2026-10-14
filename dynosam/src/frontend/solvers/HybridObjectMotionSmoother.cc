@@ -4,6 +4,7 @@
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
@@ -938,7 +939,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     CHECK(feature);
 
     auto [stereo_keypoint_status, stereo_measurement] =
-        rgbd_camera_->getStereo(feature);
+        vision_tools::getStereo(feature, rgbd_camera_);
     if (!stereo_keypoint_status) {
       continue;
     }
@@ -1880,7 +1881,7 @@ HybridObjectMotionSmartSmoother::updateFromInitialMotionImpl(
     //   is_new = true;
     // }
     const auto [stereo_keypoint_status, stereo_measurement] =
-        rgbd_camera_->getStereo(feature);
+        vision_tools::getStereo(feature, rgbd_camera_);
     if (!stereo_keypoint_status) {
       continue;
     }
@@ -2198,7 +2199,7 @@ HybridObjectMotionFullSmoother::updateFromInitialMotionImpl(
     const gtsam::Symbol m_key(PointSymbol(tracklet_id));
 
     auto [stereo_keypoint_status, stereo_measurement] =
-        rgbd_camera_->getStereo(feature);
+        vision_tools::getStereo(feature, rgbd_camera_);
 
     if (!stereo_keypoint_status) {
       continue;

@@ -67,38 +67,57 @@ Baseline RGBDCamera::baseline() const {
   return getParams().depthParams().virtual_baseline;
 }
 
-bool RGBDCamera::projectRight(Feature::Ptr feature) const {
-  CHECK(feature);
-  if (feature->hasDepth()) {
-    double uL = feature->keypoint()(0);
-    double v = feature->keypoint()(1);
-    double uR = rightKeypoint(feature->depth(), uL);
-
-    // out of image bounds
-    if (uR < 0.0 || uR > this->getParams().ImageWidth()) {
-      return false;
-    }
-
-    feature->rightKeypoint(Keypoint(uR, v));
-    return true;
-  }
-  return false;
-}
-
-std::pair<bool, gtsam::StereoPoint2> RGBDCamera::getStereo(
-    Feature::Ptr feature, const bool force_recalculation) {
-  gtsam::StereoPoint2 stereo_point;
-  // if no right feature or recalculation flag is true
-  if (!feature->hasRightKeypoint() || force_recalculation) {
-    // update the right keypoint of feature
-    if (!this->projectRight(feature)) {
-      return {false, stereo_point};
-    }
+bool RGBDCamera::safeProjectRight(double depth, const Keypoint& left_keypoint,
+                                  Keypoint& right_keypoint) const {
+  if (depth < 0) {
+    return false;
   }
 
-  CHECK(feature->stereoPoint(stereo_point));
-  return {true, stereo_point};
+  const double uL = left_keypoint(0);
+  const double v = left_keypoint(1);
+  const double uR = rightKeypoint(depth, uL);
+
+  // out of image bounds
+  if (uR < 0.0 || uR > this->getParams().ImageWidth()) {
+    return false;
+  }
+
+  right_keypoint = Keypoint(uR, v);
+  return true;
 }
+
+// bool RGBDCamera::projectRight(Feature::Ptr feature) const {
+//   CHECK(feature);
+//   if (feature->hasDepth()) {
+//     double uL = feature->keypoint()(0);
+//     double v = feature->keypoint()(1);
+//     double uR = rightKeypoint(feature->depth(), uL);
+
+//     // out of image bounds
+//     if (uR < 0.0 || uR > this->getParams().ImageWidth()) {
+//       return false;
+//     }
+
+//     feature->rightKeypoint(Keypoint(uR, v));
+//     return true;
+//   }
+//   return false;
+// }
+
+// std::pair<bool, gtsam::StereoPoint2> RGBDCamera::getStereo(
+//     Feature::Ptr feature, const bool force_recalculation) {
+//   gtsam::StereoPoint2 stereo_point;
+//   // if no right feature or recalculation flag is true
+//   if (!feature->hasRightKeypoint() || force_recalculation) {
+//     // update the right keypoint of feature
+//     if (!this->projectRight(feature)) {
+//       return {false, stereo_point};
+//     }
+//   }
+
+//   CHECK(feature->stereoPoint(stereo_point));
+//   return {true, stereo_point};
+// }
 
 double RGBDCamera::fxb() const { return fx_b_; }
 

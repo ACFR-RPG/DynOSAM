@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dynosam/dataprovider/DataProvider.hpp>
+#include <dynosam_processing/DataReader.hpp>
 #include <mutex>
 
 #include "cv_bridge/cv_bridge.hpp"
@@ -26,7 +26,7 @@ typedef sensor_msgs::msg::Image::ConstSharedPtr ImageMsgPtr;
  * Heavily inspiried by the OKVIS2 implementation:
  * https://github.com/ethz-mrl/okvis2/blob/main/okvis_ros2/include/okvis/ros2/Subscriber.hpp
  */
-class Subscriber : public DataProvider {
+class Subscriber : public DataReader {
  public:
   DYNO_POINTER_TYPEDEFS(Subscriber)
 

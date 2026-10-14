@@ -45,7 +45,7 @@ DEFINE_bool(use_opencv_display, true,
 namespace dyno {
 
 DynoPipelineManager::DynoPipelineManager(
-    const DynoParams& params, DataProvider::Ptr data_provider,
+    const DynoParams& params, DataReader::Ptr data_provider,
     FrontendDisplay::Ptr frontend_display, BackendDisplay::Ptr backend_display,
     BackendModuleFactory::Ptr factory, const ExternalHooks::Ptr external_hooks)
     : params_(params),
@@ -100,7 +100,7 @@ DynoPipelineManager::DynoPipelineManager(
 
   // preprocessing
   data_interface_->registerImageContainerPreprocessor(
-      std::bind(&dyno::DataProvider::imageContainerPreprocessor,
+      std::bind(&dyno::DataReader::imageContainerPreprocessor,
                 data_provider_.get(), std::placeholders::_1));
 
   // push data from the data interface to the frontend module

@@ -31,17 +31,17 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>  //for gt packet seralize tests
 
-#include "dynosam/frontend/VIFrontendInput.hpp"
+#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 #include "dynosam_common/Exceptions.hpp"
-#include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/JsonUtils.hpp"
 #include "dynosam_common/utils/Statistics.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/utils/Variant.hpp"
-#include "dynosam_sensors/Feature.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
+#include "dynosam_sensors/VIFrontendInput.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
 

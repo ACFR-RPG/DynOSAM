@@ -30,10 +30,11 @@
 
 #include "dynosam/dataprovider/TartanAirShibuya.hpp"
 
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
 #include "dynosam_sensors/CameraParams.hpp"
 
 namespace dyno {

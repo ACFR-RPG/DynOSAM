@@ -40,7 +40,6 @@
 #include <string>
 
 #include "dynosam_common/Exceptions.hpp"
-#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/Macros.hpp"
 
 namespace dyno {
@@ -50,7 +49,10 @@ class YamlParser {
   DYNO_POINTER_TYPEDEFS(YamlParser)
 
   YamlParser(const std::string& filepath) : fs_(), filepath_(filepath) {
-    utils::throwExceptionIfPathInvalid(filepath_);
+    namespace fs = std::filesystem;
+    if (!fs::exists(filepath_)) {
+      throw std::runtime_error("Path does not exist: " + filepath_);
+    }
     openFile(filepath, &fs_);
   }
   ~YamlParser() { closeFile(&fs_); }

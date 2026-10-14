@@ -32,9 +32,9 @@
 
 #include <gtsam/base/FastMap.h>
 
-#include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam_common/utils/Macros.hpp"
 #include "dynosam_common/utils/Spinner.hpp"
+#include "dynosam_processing/PipelineBase.hpp"
 
 namespace dyno {
 

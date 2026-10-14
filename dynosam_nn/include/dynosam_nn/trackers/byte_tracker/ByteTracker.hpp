@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
 #include "dynosam_nn/trackers/byte_tracker/STrack.hpp"
 #include "dynosam_nn/trackers/byte_tracker/lapjv.hpp"
 

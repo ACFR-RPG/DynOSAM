@@ -38,10 +38,10 @@
 
 #include "dynosam_common/Cuda.hpp"
 #include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
-#include "dynosam_common/utils/Tuple.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno {
@@ -221,7 +221,7 @@ class ImageContainer {
 
   FrameId frame_id_;
   Timestamp timestamp_;
-  gtsam::FastMap<std::string, KeyImagePair> images_;
+  dyno::FastUnorderedMap<std::string, KeyImagePair> images_;
 
  public:
   DYNO_POINTER_TYPEDEFS(ImageContainer)

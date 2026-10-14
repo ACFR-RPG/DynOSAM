@@ -32,11 +32,11 @@
 
 #include <nlohmann/json.hpp>
 
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/utils/CsvParser.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
 
 namespace dyno {
 
@@ -118,7 +118,7 @@ class ProjectAriaAllLoader {
     utils::loadMask(instance_masks_image_paths_.at(idx), mask);
     CHECK(!mask.empty());
 
-    ObjectIds labels = vision_tools::getObjectLabels(mask);
+    ObjectIds labels = getObjectLabels(mask);
     const ObjectIds& old_labels = labels;
     ObjectIds new_labels;
     for (ObjectId old_label : labels) {
@@ -131,7 +131,7 @@ class ProjectAriaAllLoader {
     }
 
     cv::Mat relabelled_mask;
-    vision_tools::relabelMasks(mask, relabelled_mask, old_labels, new_labels);
+    relabelMasks(mask, relabelled_mask, old_labels, new_labels);
 
     return relabelled_mask;
   }

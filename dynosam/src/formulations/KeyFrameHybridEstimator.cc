@@ -262,7 +262,7 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
 
         // TODO: currently intermediate frame nodes will not exist!!
 
-        if (kf_data.keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
+        if (kf_data.keyframe_status == DoKeyframeType::AnchorKeyFrame) {
           // CHECK_EQ(H_W_akf_k_refined.from(), akf_id);
 
           // check that the per-frame motions start from the same pose as the
@@ -285,8 +285,7 @@ MultiObjectTrajectories HybridFormulationKeyFrame::refinePerFrameMotionsPGO(
           // LOG(INFO) << "Adding pose prior at KF pose " << akf_id
           //           << " graph error: " << graph.error(values);
 
-        } else if (kf_data.keyframe_status ==
-                   ObjectKeyFrameStatus::RegularKeyFrame) {
+        } else if (kf_data.keyframe_status == DoKeyframeType::RegularKeyFrame) {
         } else {
           throw DynosamException("keyframe status cannot be NonKeyFrame!");
         }
@@ -846,7 +845,7 @@ void HybridFormulationKeyFrame::addObjects(
     // in this case k is the current but will now also be the latest KF
     // const Motion3ReferenceFrame& H_W_RKF_k_frontend = object_info.H_W_KF_k;
     Motion3ReferenceFrame H_W_RKF_k = object_info.H_W_KF_k;
-    const ObjectKeyFrameStatus keyframe_status = object_info.keyframe_status;
+    const DoKeyframeType keyframe_status = object_info.keyframe_status;
 
     // TODO: for now (only when solved in parallel_run=False)
     //  convert motion from frontend reference frame to backend reference frame
@@ -911,7 +910,7 @@ void HybridFormulationKeyFrame::addObjects(
               << object_info.initial_object_points.size()
               << " new lmks=" << num_new_lmks;
 
-    if (keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
+    if (keyframe_status == DoKeyframeType::AnchorKeyFrame) {
       key_frame_data_.startNewActiveRange(object_id, H_W_RKF_k.from(),
                                           L_Wbackend_KF);
       LOG(INFO) << "Making Anchor KF for NEW object "
@@ -927,7 +926,7 @@ void HybridFormulationKeyFrame::addObjects(
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
       initial_H_W_AKF_k_.insert22(object_id, H_W_RKF_k.to(), H_W_RKF_k);
     } else {
-      CHECK_EQ(keyframe_status, ObjectKeyFrameStatus::RegularKeyFrame);
+      CHECK_EQ(keyframe_status, DoKeyframeType::RegularKeyFrame);
 
       const KeyFrameRange::ConstPtr last_frontend_range =
           front_end_keyframes_.find(object_id, to_frame_id);

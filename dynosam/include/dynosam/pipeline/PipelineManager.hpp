@@ -32,15 +32,15 @@
 
 #include "dynosam/backend/BackendModuleFactory.hpp"
 // TODO : try and delete
-#include "dynosam/dataprovider/DataInterfacePipeline.hpp"
-#include "dynosam/dataprovider/DataProvider.hpp"
 #include "dynosam/frontend/VIFrontend.hpp"
-#include "dynosam/pipeline/PipelineHooks.hpp"
-#include "dynosam/pipeline/PipelineModuleProcessor.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Spinner.hpp"
+#include "dynosam_processing/DataInterfacePipeline.hpp"
+#include "dynosam_processing/DataReader.hpp"
+#include "dynosam_processing/PipelineHooks.hpp"
+#include "dynosam_processing/PipelineModuleProcessor.hpp"
 
 namespace dyno {
 
@@ -56,7 +56,7 @@ class DynoPipelineManager {
   DYNO_POINTER_TYPEDEFS(DynoPipelineManager)
 
   // why are some unique and some shared?? silly silly
-  DynoPipelineManager(const DynoParams& params, DataProvider::Ptr data_loader,
+  DynoPipelineManager(const DynoParams& params, DataReader::Ptr data_loader,
                       FrontendDisplay::Ptr frontend_display,
                       BackendDisplay::Ptr backend_display,
                       BackendModuleFactory::Ptr factory,
@@ -122,7 +122,7 @@ class DynoPipelineManager {
 
   // Data-provider pointers
   DataInterfacePipeline::UniquePtr data_interface_;
-  DataProvider::Ptr data_provider_;
+  DataReader::Ptr data_provider_;
 
   // Display and Viz
   BackendModuleDisplay::Ptr external_backend_display_;

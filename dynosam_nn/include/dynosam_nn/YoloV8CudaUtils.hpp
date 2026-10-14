@@ -3,7 +3,7 @@
 #include <opencv4/opencv2/core/cuda.hpp>
 #include <opencv4/opencv2/core/types.hpp>
 
-#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
 
 namespace dyno {
 namespace internal {

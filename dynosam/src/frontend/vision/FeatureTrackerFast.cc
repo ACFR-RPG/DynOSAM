@@ -2071,11 +2071,10 @@ FeatureTrackerFast::ObjectDetectionImpl::detectionViaObjectMask(
     const ImageContainer& image_container) const {
   const cv::Mat object_masks = image_container.objectMotionMask();
 
-  ObjectIds object_ids = vision_tools::getObjectLabels(object_masks);
+  ObjectIds object_ids = getObjectLabels(object_masks);
 
   std::vector<cv::Rect> bounding_boxes;
-  vision_tools::getObjectBoundingBoxes(object_masks, object_ids,
-                                       bounding_boxes);
+  getObjectBoundingBoxes(object_masks, object_ids, bounding_boxes);
 
   CHECK_EQ(object_ids.size(), bounding_boxes.size());
 
@@ -2650,9 +2649,9 @@ FeatureTrackerFast::trackGfftBatched(const cv::Mat& mono,
     static constexpr double kEMaxIters = 100;
     // should is basically equivalent to the 2d2d RANSAC problem
     // in opengv, depending on which exact method isused
-    cv::Mat inlier_mask = vision_tools::findEssential(
-        good_tracks.previous_points, good_tracks.points, K, kThresholdE,
-        kEMaxIters);
+    cv::Mat inlier_mask =
+        findEssential(good_tracks.previous_points, good_tracks.points, K,
+                      kThresholdE, kEMaxIters);
 
     FeatureBlockContainer::FeatureData verified_tracks;
     verified_tracks.reserve(num_good_points);

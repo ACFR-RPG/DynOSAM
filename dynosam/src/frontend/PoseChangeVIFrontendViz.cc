@@ -1,6 +1,7 @@
 #include "dynosam/frontend/PoseChangeVIFrontendViz.hpp"
 
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_core/DynoState.hpp"
 
 namespace dyno {
 

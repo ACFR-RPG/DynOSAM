@@ -1,8 +1,8 @@
 #pragma once
 
+#include "dynosam/frontend/MotionKeyFrame.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"  //ImageTracksParams
 #include "dynosam/frontend/vision/Frame.hpp"
-#include "dynosam_common/MotionKeyFrame.hpp"
 #include "dynosam_common/Types.hpp"
 
 namespace dyno {

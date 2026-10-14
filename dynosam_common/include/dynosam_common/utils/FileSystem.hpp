@@ -1,29 +1,13 @@
 #pragma once
 
 #include <filesystem>
-#include <opencv4/opencv2/opencv.hpp>
+#include <functional>
+#include <vector>
 
 namespace dyno {
 namespace utils {
 
-void throwExceptionIfPathInvalid(const std::string& image_path);
-
-void loadRGB(const std::string& image_path, cv::Mat& img);
-
-// CV_32F (float)
-void loadFlow(const std::string& image_path, cv::Mat& img);
-
-// CV_64F (double)
-void loadDepth(const std::string& image_path, cv::Mat& img);
-
-// CV_32SC1
-// this is old kitti style and loads from a .txt file (which is why we need the
-// size)
-void loadSemanticMask(const std::string& image_path, const cv::Size& size,
-                      cv::Mat& mask);
-
-// CV_32SC1
-void loadMask(const std::string& image_path, cv::Mat& mask);
+void throwExceptionIfPathInvalid(const std::string& path);
 
 /**
  * @brief Returns a ORDERED vector of all files in the given directory.

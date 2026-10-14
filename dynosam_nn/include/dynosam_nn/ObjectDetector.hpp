@@ -2,8 +2,8 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_core/DynamicObjects.hpp"
 #include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno {

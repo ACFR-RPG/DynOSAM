@@ -32,7 +32,7 @@
 
 #include <dynosam/visualizer/VisualizerPipelines.hpp>
 
-#include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
 #include "dynosam_ros/displays/DSDCommonRos.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "image_transport/image_transport.hpp"
@@ -45,9 +45,10 @@ class FrontendDisplayRos : public FrontendDisplay {
   FrontendDisplayRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
                      rclcpp::Node::SharedPtr node,
                      rclcpp::Node::SharedPtr ground_truth_node = nullptr);
-  ~FrontendDisplayRos() = default;
+  virtual ~FrontendDisplayRos() = default;
 
-  void spinOnce(const RealtimeOutput::ConstPtr& frontend_output) override;
+  virtual void spinOnce(
+      const RealtimeOutput::ConstPtr& frontend_output) override;
 
  private:
   void tryPublishDebugImagery(const RealtimeOutput::ConstPtr& frontend_output);
@@ -72,6 +73,16 @@ class FrontendDisplayRos : public FrontendDisplay {
       dense_dynamic_cloud_pub_;
 
   std::optional<GroundTruthPublishers> ground_truth_publishers_;
+};
+
+// new frontend display for dynosam2...
+class Frontend2DisplayRos : public FrontendDisplayRos {
+ public:
+  Frontend2DisplayRos(const CanonicalSensorRig::ConstPtr& sensor_rig,
+                      rclcpp::Node::SharedPtr node,
+                      rclcpp::Node::SharedPtr ground_truth_node = nullptr);
+
+  void spinOnce(const RealtimeOutput::ConstPtr& frontend_output) override;
 };
 
 }  // namespace dyno

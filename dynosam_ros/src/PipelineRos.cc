@@ -35,9 +35,9 @@
 
 #include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/dataprovider/DataProviderFactory.hpp"
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/pipeline/PipelineHooks.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
+#include "dynosam_processing/PipelineHooks.hpp"
 #include "dynosam_ros/BackendDisplayPolicyRos.hpp"
 #include "dynosam_ros/CameraSystem.hpp"
 #include "dynosam_ros/PipelineRos-impl.hpp"
@@ -69,12 +69,12 @@ void DynosamNodeImpl::init() {
 
   const bool is_online =
       ros::Parameter::Builder(node_ptr, "online", false)
-          .description("If the online DataProvider should be used")
+          .description("If the online DataReader should be used")
           .finish()
           .get<bool>();
 
   // dyno params may additionally get modified with the online data provider
-  dyno::DataProvider::Ptr data_provider =
+  dyno::DataReader::Ptr data_provider =
       createDataProvider(dyno_params, is_online);
 
   bool publish_diagnostics =
@@ -91,7 +91,10 @@ void DynosamNodeImpl::init() {
   }
 
   const auto sensor_rig = data_provider->sensorRig();
-  auto frontend_display = std::make_shared<dyno::FrontendDisplayRos>(
+  // auto frontend_display = std::make_shared<dyno::FrontendDisplayRos>(
+  //     sensor_rig, node_ptr->create_sub_node("frontend"),
+  //     node_ptr->create_sub_node("ground_truth"));
+  auto frontend_display = std::make_shared<dyno::Frontend2DisplayRos>(
       sensor_rig, node_ptr->create_sub_node("frontend"),
       node_ptr->create_sub_node("ground_truth"));
   auto backend_display = std::make_shared<dyno::BackendDisplayRos>(
@@ -177,7 +180,7 @@ DynosamNodeImpl::~DynosamNodeImpl() {
   if (pipeline) pipeline.reset(nullptr);
 }
 
-dyno::DataProvider::Ptr DynosamNodeImpl::createDataProvider(
+dyno::DataReader::Ptr DynosamNodeImpl::createDataProvider(
     DynoParams& dyno_params, bool is_online) {
   if (is_online) {
     RCLCPP_INFO_STREAM(dynosam_node.get_logger(),
@@ -188,7 +191,7 @@ dyno::DataProvider::Ptr DynosamNodeImpl::createDataProvider(
   }
 }
 
-dyno::DataProvider::Ptr DynosamNodeImpl::createOnlineDataProvider(
+dyno::DataReader::Ptr DynosamNodeImpl::createOnlineDataProvider(
     DynoParams& dyno_params) {
   auto mode =
       ros::Parameter::Builder(&dynosam_node, "input_image_mode",
@@ -223,7 +226,7 @@ dyno::DataProvider::Ptr DynosamNodeImpl::createOnlineDataProvider(
   return subscriber;
 }
 
-dyno::DataProvider::Ptr DynosamNodeImpl::createDatasetDataProvider(
+dyno::DataReader::Ptr DynosamNodeImpl::createDatasetDataProvider(
     const DynoParams& dyno_params) {
   auto params_path = getParamsPath();
   auto dataset_path = getDatasetPath();
@@ -231,7 +234,7 @@ dyno::DataProvider::Ptr DynosamNodeImpl::createDatasetDataProvider(
   RCLCPP_INFO_STREAM(dynosam_node.get_logger(),
                      "Loading dataset from: " << dataset_path);
 
-  dyno::DataProvider::Ptr data_loader = dyno::DataProviderFactory::Create(
+  dyno::DataReader::Ptr data_loader = dyno::DataProviderFactory::Create(
       dataset_path, params_path,
       static_cast<dyno::DatasetType>(dyno_params.dataProviderType()));
   RCLCPP_INFO_STREAM(dynosam_node.get_logger(), "Constructed data loader");

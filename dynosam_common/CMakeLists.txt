@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 project(dynosam_common)
 
+
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
 
@@ -17,8 +18,15 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Must be set **before** find_package(PCL)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
+
+include(FetchContent)
+
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Determine the processor part of the triplet
@@ -37,6 +45,12 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         set(ARCHITECTURE_INCLUDE_PATH "/usr/include/${ARCH_TRIPLET}")
         message("Architecture-specific include path: ${ARCHITECTURE_INCLUDE_PATH}")
     endif()
+endif()
+
+include(VerifyGtsamConfig)
+option(DYNO_VERIFY_GTSAM_CONFIG "Check that GTSAM was compiled with the right options" ON)
+if (DYNO_VERIFY_GTSAM_CONFIG)
+    verify_gtsam_config()
 endif()
 
 # on some systems it seems that openmpi install path is wrong (or the find_package macro is wrong...)
@@ -85,18 +99,14 @@ include_directories(
 # build library
 add_library(${PROJECT_NAME} SHARED
     src/Types.cc
-    src/GroundTruthPacket.cc
-    src/StructuredContainers.cc
-    src/DynamicObjects.cc
-    src/PointCloudProcess.cc
+
     src/Algorithms.cc
     src/SensorModels.cc
     src/Trajectories.cc
-    src/DynoState.cc
-    src/MotionKeyFrame.cc
     src/Transforms.cc
+    src/StructuredContainers.cc
 
-    src/utils/OpenCVUtils.cc
+    src/utils/FileSystem.cc
     src/utils/GtsamUtils.cc
     src/utils/Spinner.cc
     src/utils/Statistics.cc
@@ -104,11 +114,13 @@ add_library(${PROJECT_NAME} SHARED
     src/utils/Metrics.cc
     src/utils/CsvParser.cc
     src/utils/Histogram.cc
-    src/utils/FileSystem.cc
 
     src/logger/Logger.cc
 
     src/viz/Colour.cc
+
+    src/anms/NonMaximumSupression.cc
+    src/anms/anms.cc
 
 )
 
@@ -232,7 +244,6 @@ if(BUILD_TESTING)
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
     test/test_trajectories.cc
-    test/test_ground_truth.cc
 )
 
 target_include_directories(${PROJECT_NAME}_test

@@ -7,8 +7,8 @@
 
 #include <dynosam_common/Transforms.hpp>
 
-#include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 
 namespace dyno {
@@ -241,6 +241,118 @@ Marker DisplayCommon::poseToCameraFrustrum(
   addLine(P4, P3);
   addLine(P4, P1);
   addLine(P3, P2);
+
+  return marker;
+}
+
+Marker DisplayCommon::makeObjectPoseArrow(const gtsam::Pose3& T_WR,
+                                          const Timestamp timestamp,
+                                          const std::string& frame_id,
+                                          const Color& colour, int marker_id,
+                                          double scale, double line_width) {
+  Marker marker;
+  marker.header.frame_id = frame_id;
+  marker.header.stamp = ros::toRosTime(timestamp);
+  marker.ns = "object_pose_arrows";
+  marker.id = marker_id;
+  marker.type = Marker::LINE_LIST;
+  marker.action = Marker::ADD;
+
+  marker.pose.orientation.w = 1.0;
+  marker.pose.position.x = 0.0;
+  marker.pose.position.y = 0.0;
+  marker.pose.position.z = 0.0;
+
+  marker.scale.x = line_width;
+
+  std_msgs::msg::ColorRGBA colour_msg;
+  convert(colour, colour_msg);
+  marker.color = colour_msg;
+  marker.color.a = 1.0f;
+
+  // Arrow geometry dimensions, expressed in the object's local frame.
+  constexpr double kRearHalfWidth = 0.035;
+  constexpr double kFrontHalfWidth = 0.12;
+  constexpr double kRearX = 0.0;
+  constexpr double kFrontX = 0.28;
+  constexpr double kTipX = 0.48;
+  constexpr double kArrowheadHalfWidth = 0.085;
+
+  const double rear_half_width = kRearHalfWidth * scale;
+  const double front_half_width = kFrontHalfWidth * scale;
+  const double rear_x = kRearX * scale;
+  const double front_x = kFrontX * scale;
+  const double tip_x = kTipX * scale;
+  const double arrowhead_half_width = kArrowheadHalfWidth * scale;
+
+  using Point3 = gtsam::Point3;
+  // Ring vertices are ordered around the local X axis.
+  const std::array<Point3, 4> rear_ring = {
+      Point3(rear_x, -rear_half_width, -rear_half_width),
+      Point3(rear_x, rear_half_width, -rear_half_width),
+      Point3(rear_x, rear_half_width, rear_half_width),
+      Point3(rear_x, -rear_half_width, rear_half_width)};
+
+  const std::array<Point3, 4> front_ring = {
+      Point3(front_x, -front_half_width, -front_half_width),
+      Point3(front_x, front_half_width, -front_half_width),
+      Point3(front_x, front_half_width, front_half_width),
+      Point3(front_x, -front_half_width, front_half_width)};
+
+  // Wireframe arrowhead: its base is near the front ring, and its tip
+  // extends along local +X.
+  const Point3 arrow_tip(tip_x, 0.0, 0.0);
+
+  const Point3 arrow_base_left(front_x, -arrowhead_half_width, 0.0);
+
+  const Point3 arrow_base_right(front_x, arrowhead_half_width, 0.0);
+
+  const Point3 arrow_base_top(front_x, 0.0, arrowhead_half_width);
+
+  const Point3 arrow_base_bottom(front_x, 0.0, -arrowhead_half_width);
+
+  auto addLine = [&](const Point3& p_local, const Point3& q_local) {
+    const Point3 p_world = T_WR.transformFrom(p_local);
+    const Point3 q_world = T_WR.transformFrom(q_local);
+
+    geometry_msgs::msg::Point p;
+    p.x = p_world.x();
+    p.y = p_world.y();
+    p.z = p_world.z();
+
+    geometry_msgs::msg::Point q;
+    q.x = q_world.x();
+    q.y = q_world.y();
+    q.z = q_world.z();
+
+    marker.points.push_back(p);
+    marker.points.push_back(q);
+  };
+
+  // Rear and front rings.
+  for (std::size_t i = 0; i < 4; ++i) {
+    const std::size_t j = (i + 1) % 4;
+
+    addLine(rear_ring[i], rear_ring[j]);
+    addLine(front_ring[i], front_ring[j]);
+  }
+
+  // Connecting edges create the expanding wireframe body.
+  for (std::size_t i = 0; i < 4; ++i) {
+    addLine(rear_ring[i], front_ring[i]);
+  }
+
+  // Four arrowhead edges converge on the tip.
+  addLine(arrow_base_left, arrow_tip);
+  addLine(arrow_base_right, arrow_tip);
+  addLine(arrow_base_top, arrow_tip);
+  addLine(arrow_base_bottom, arrow_tip);
+
+  // Close the wireframe arrowhead base.
+  addLine(arrow_base_left, arrow_base_top);
+  addLine(arrow_base_top, arrow_base_right);
+  addLine(arrow_base_right, arrow_base_bottom);
+  addLine(arrow_base_bottom, arrow_base_left);
 
   return marker;
 }

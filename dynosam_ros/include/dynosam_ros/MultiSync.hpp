@@ -2,9 +2,9 @@
 
 #include <type_traits>
 
-#include "dynosam/dataprovider/DataProvider.hpp"  // for ImageContainerCallback
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Tuple.hpp"
+#include "dynosam_processing/DataReader.hpp"  // for ImageContainerCallback
 #include "message_filters/subscriber.hpp"
 #include "message_filters/sync_policies/exact_time.hpp"
 #include "message_filters/synchronizer.hpp"

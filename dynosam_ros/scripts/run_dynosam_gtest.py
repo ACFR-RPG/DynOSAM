@@ -89,6 +89,14 @@ def run_tests_for_package(package_name, unknown_args):
     for exec in executables:
         run_executable(exec, unknown_args)
 
+def find_dyno_packages():
+    from ament_index_python.packages import get_packages_with_prefixes
+    # Returns a dict where keys are package names and values are their install prefixes
+    packages = get_packages_with_prefixes()
+
+    for package_name, prefix_path in packages.items():
+        print(f"Package: {package_name} -> {prefix_path}")
+
 possible_packages = ["dynosam", "dynosam_ros", "dynosam_sensors", "dynosam_common", "dynosam_opt"]
 
 

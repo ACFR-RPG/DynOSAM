@@ -28,19 +28,19 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/DatasetProvider.hpp"
-#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DatasetReader.hpp"
 #include "dynosam_sensors/ImuMeasurements.hpp"
+#include "dynosam_sensors/VIFrontendInput.hpp"
 
 namespace dyno {
 
 // depth, motion masks, gt
 using ViodeProvider =
-    DynoDatasetProvider<cv::Mat, cv::Mat, GroundTruthInputPacket,
-                        std::optional<ImuMeasurements>, std::optional<cv::Mat>>;
+    DatasetReader<cv::Mat, cv::Mat, GroundTruthInputPacket,
+                  std::optional<ImuMeasurements>, std::optional<cv::Mat>>;
 
 /**
  * @brief

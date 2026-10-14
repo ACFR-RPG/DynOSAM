@@ -1,17 +1,18 @@
 #pragma once
 
-#include "dynosam/frontend/VIFrontendInput.hpp"
-#include "dynosam/frontend/imu/ImuFrontend.hpp"
 #include "dynosam/frontend/solvers/OpticalFlowAndPoseSolver.hpp"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
 #include "dynosam/frontend/vision/FeatureTracker.hpp"
+#include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/ModuleBase.hpp"
-#include "dynosam_common/RealtimeOutput.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/utils/Variant.hpp"
+#include "dynosam_core/DynoState.hpp"
+#include "dynosam_core/RealtimeOutput.hpp"
+#include "dynosam_sensors/ImuFrontend.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
+#include "dynosam_sensors/VIFrontendInput.hpp"
 
 namespace dyno {
 
@@ -189,7 +190,8 @@ class VIFrontend : public Frontend {
       // no right keypoint and has rgbd camera and has depth, project
       // keypoint into right camera
       else if (rgbd_camera_ && f->hasDepth()) {
-        bool right_projection_result = rgbd_camera_->projectRight(f);
+        const auto [right_projection_result, _] =
+            vision_tools::getStereo(f, rgbd_camera_);
         if (!right_projection_result) {
           // TODO: for now mark as outlier and ignore point
           f->markOutlier();

@@ -13,10 +13,10 @@
 #include <opengv/sac_problems/relative_pose/CentralRelativePoseSacProblem.hpp>
 
 #include "dynosam/frontend/FrontendParams.hpp"
+#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
 #include "dynosam_sensors/Camera.hpp"
-#include "dynosam_sensors/Feature.hpp"
 
 namespace dyno {
 
@@ -530,17 +530,18 @@ class LandmarkMap {
   TrackletIds ids_;
 };
 
-// from here onwards we operate in the land of doubles
-// as all the geometric solvers operate using gtsam/egien double types!
-// these must be separately synchronized/maintaied with the
-// FeatureBlockContainer
-// TODO: better name again is FeatureGeometry as this contains the referecnes to
-// the
-// feature container index. Therefor all other contains need to refer back to
-// this when something in the current container updates. Previous feature
-// containers should never need to be updated!
-// could carry object ids here as well? but the point of the frame geometry
-// is that it captures one object!
+// Intermediate FrameGeometry struct containing left/right/depth values
+// and is updated by the frontend during processing (ie depth refinement)
+//  from here onwards we operate in the land of doubles
+//  as all the geometric solvers operate using gtsam/egien double types!
+//  these must be separately synchronized/maintaied with the
+//  FeatureBlockContainer
+//  TODO: better name again is FeatureGeometry as this contains the referecnes
+//  to the feature container index. Therefor all other contains need to refer
+//  back to this when something in the current container updates. Previous
+//  feature containers should never need to be updated! could carry object ids
+//  here as well? but the point of the frame geometry is that it captures one
+//  object!
 struct FrameGeometry {
   // note the use of double here
   // points in the camera frame
@@ -724,6 +725,15 @@ class OpenGVCentralAbsolutePoseAdaptor
   gtsam::Point3Vector bearings_local_;
 };
 
+/**
+ * @brief All (valid) stereo measurements taken for a single frame.
+ * Constructed from the intermediate FrameGeometry which represents
+ * all raw left keypoints (and depth) measurements prior to
+ * construction of the local geometry (ie the 3D point map).
+ * The final 3D geometry is then used to generate a Frame
+ *
+ *
+ */
 class FrameFast {
  public:
   TrackletIds ids;
@@ -968,6 +978,31 @@ class StereoBaMap : public Map<StereoBaNodeTypes> {
   }
 };
 
+template <typename STATE>
+class States {
+ public:
+  typedef STATE State;
+
+  // TODO: remove state if not valid
+
+  size_t numStates() const noexcept { return states_.size(); }
+
+  bool stateExists(FrameId frame_id) const { return states_.exists(frame_id); }
+  FrameId currentFrameId() const { return states_.rbegin()->first; }
+
+  FrameId frameIdbyAge(size_t age) const {
+    auto iter = states_.rbegin();
+    // TODO: and iter != end?
+    for (size_t k = 0; k < age; k++) {
+      iter++;
+    }
+    return iter->first;
+  }
+
+ protected:
+  gtsam::FastMap<FrameId, State> states_;
+};
+
 // valid states for the estimator (ie we have solved for this state!)
 class LocalBAGraph : public LandmarkMap {
  public:
@@ -996,50 +1031,25 @@ class LocalBAGraph : public LandmarkMap {
   }
 
   const StereoBaMap& getObservations() const { return *observations_; }
-  const std::set<FrameId>& keyFrames() const { return keyframes_; }
-
-  // currently no removal of keyframe
-  bool setKeyframe(FrameId id, bool is_keyframe) {
-    CHECK(is_keyframe);
-    keyframes_.insert(id);
-    return true;
-  }
-
-  bool stateExists(FrameId frame_id) const { return states_.exists(frame_id); }
-
-  // TODO: remove state if not valid
-
-  FrameId frameIdbyAge(size_t age) const {
-    auto iter = states_.rbegin();
-    for (size_t k = 0; k < age; k++) {
-      iter++;
-    }
-    return iter->first;
-  }
-
-  FrameId currentFrameId() const { return states_.rbegin()->first; }
-  FrameId currentKeyframeId() const { return *keyframes_.rbegin(); }
 
   bool computeCovisibilities();
   int covisibilities(FrameId frame_i, FrameId frame_j) const;
 
  protected:
-  struct State {
-    gtsam::Pose3 pose;
-  };
-
-  // single representative data is stored here
-  gtsam::FastMap<FrameId, State> states_;
-
   StereoBaMap::Ptr observations_;
-  std::set<FrameId> keyframes_;
 
   bool covisibilities_computed_{false};
   Covisibilities covisibilities_;
   std::set<FrameId> visible_frames_;
 };
 
-class LocalVIOGraph : public LocalBAGraph {
+// state for the LocalVIOGraph
+struct VioGraphState {
+  gtsam::Pose3 pose;
+  bool is_keyframe{false};
+};
+
+class LocalVIOGraph : public LocalBAGraph, public States<VioGraphState> {
  public:
   DYNO_POINTER_TYPEDEFS(LocalVIOGraph)
   LocalVIOGraph(Camera::Ptr camera);
@@ -1067,15 +1077,83 @@ class LocalVIOGraph : public LocalBAGraph {
   // should actually be 'prune keyframes'!
   bool pruneKeyframes(size_t num_keyframes, size_t num_motion_frames);
 
+  const std::set<FrameId>& keyFrames() const { return keyframes_; }
+
+  // currently no removal of keyframe
+  bool setKeyframe(FrameId id, bool is_keyframe) {
+    CHECK(is_keyframe);
+    keyframes_.insert(id);
+
+    // state should exist!
+    states_.at(id).is_keyframe = true;
+    return true;
+  }
+
+  // only active keyframes? what about all keyframes?
+  bool isKeyframe(FrameId id) const {
+    auto it = states_.find(id);
+    if (it == states_.end()) {
+      return false;
+    }
+
+    return it->second.is_keyframe;
+  }
+
  private:
   Camera::CalibrationType::shared_ptr K_;
   StereoCalibPtr K_stereo_;
+
+  //! Active keyframes used for selection and bundle adjustmement!
+  std::set<FrameId> keyframes_;
+};
+
+// state for the LocalVIOGraph
+// remember this is a motion from a frame to a frame
+struct DOGraphState {
+  // pose and relative motion (H_W_km1_k)
+  PoseWithMotion state;
+  DoKeyframeType keyframe_status{DoKeyframeType::NonKeyFrame};
 };
 
 // dynamic object graph
-class DOGraph : public LocalBAGraph {
+// TODO: should be called DOEstimator? Maybe? its the local estimator at least!
+class DOGraph : public LocalBAGraph, public States<DOGraphState> {
  public:
   DYNO_POINTER_TYPEDEFS(DOGraph)
+
+  void setState(FrameId frame_id, const PoseWithMotion& state) {
+    states_[frame_id].state = state;
+  }
+
+  const PoseWithMotion& getState(FrameId frame_id) const {
+    return states_.at(frame_id).state;
+  }
+
+  // currently no removal of keyframe
+  bool setKeyframe(FrameId id, DoKeyframeType status) {
+    // not this!
+    keyframes_.insert(id);
+
+    // state should exist!
+    // TODo: revert!
+    states_[id].keyframe_status = status;
+    return true;
+  }
+
+  // only active keyframes? what about all keyframes?
+  DoKeyframeType isKeyframe(FrameId id) const {
+    // booo bad function: doesnt even exist!
+    auto it = states_.find(id);
+    if (it == states_.end()) {
+      return DoKeyframeType::NonKeyFrame;
+    }
+
+    return it->second.keyframe_status;
+  }
+
+ private:
+  //! Active keyframes used for selection and bundle adjustmement!
+  std::set<FrameId> keyframes_;
 };
 
 class MultiBAGraph {

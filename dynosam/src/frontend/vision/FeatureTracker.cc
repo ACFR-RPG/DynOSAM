@@ -38,12 +38,12 @@
 #include <mutex>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/frontend/anms/NonMaximumSuppression.h"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_common/anms/NonMaximumSuppression.h"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
@@ -623,10 +623,9 @@ void FeatureTracker::DynamicTrackerImpl::trackFromPreviousFrame(
     std::vector<cv::Point2f> verified_current_j, verified_previous_j;
     TrackletIds verified_tracklets_j;
 
-    vision_tools::outlierRejectHomography(
-        tracklet_vectors.previous, tracklet_vectors.current,
-        tracklet_vectors.tracklets, verified_previous_j, verified_current_j,
-        verified_tracklets_j);
+    outlierRejectHomography(tracklet_vectors.previous, tracklet_vectors.current,
+                            tracklet_vectors.tracklets, verified_previous_j,
+                            verified_current_j, verified_tracklets_j);
 
     verified_current.insert(verified_current.begin(),
                             verified_current_j.begin(),
@@ -1046,8 +1045,8 @@ bool FeatureTracker::DynamicTrackerImpl::trackRetroactively(
   }
 
   std::vector<cv::Point2f> verified_current_j, verified_previous_j;
-  vision_tools::outlierRejectHomography(
-      good_previous_j, good_current_j, verified_previous_j, verified_current_j);
+  outlierRejectHomography(good_previous_j, good_current_j, verified_previous_j,
+                          verified_current_j);
 
   // similar logic again: ignore retroatice detections if not enough backwards
   // matches

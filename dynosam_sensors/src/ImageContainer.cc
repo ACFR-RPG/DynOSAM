@@ -33,7 +33,7 @@
 #include <exception>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 
 namespace dyno {
 

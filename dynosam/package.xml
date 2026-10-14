@@ -17,6 +17,7 @@
  <depend>dynosam_sensors</depend>
  <depend>dynosam_opt</depend>
  <depend>dynosam_nn</depend>
+ <depend> dynosam_processing</depend>
 
 
   <depend>rclcpp</depend>

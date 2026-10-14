@@ -3,7 +3,7 @@
 #include <gtsam/geometry/triangulation.h>
 
 #include "dynosam/formulations/VIOFormulation.hpp"
-#include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_cv/CvUtils.hpp"
 
 namespace dyno {
 
@@ -306,7 +306,7 @@ class StereoProjectionUpdater : public VIOUpdaterImpl<MAP> {
       // triangulation_params.useLOST = true;
       triangulation_params.noiseModel = model;
       // triangulate with lost
-      auto triangulation_result = vision_tools::triangulateSafe<GtsamCamera>(
+      auto triangulation_result = dyno::triangulateSafe<GtsamCamera>(
           camera_set, measurements, triangulation_params, true);
 
       if (triangulation_result) {

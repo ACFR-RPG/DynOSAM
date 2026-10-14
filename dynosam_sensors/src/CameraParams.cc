@@ -35,9 +35,9 @@
 #include <memory>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_common/utils/GtsamUtils.hpp"   //for cv equals
-#include "dynosam_common/utils/Numerical.hpp"    //for equals
-#include "dynosam_common/utils/OpenCVUtils.hpp"  //for cv equals
+#include "dynosam_common/utils/GtsamUtils.hpp"  //for cv equals
+#include "dynosam_common/utils/Numerical.hpp"   //for equals
+#include "dynosam_cv/CvUtils.hpp"               //for cv equals
 
 namespace dyno {
 

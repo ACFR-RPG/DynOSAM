@@ -3,6 +3,8 @@
 #include <glog/logging.h>
 #include <pcl/common/centroid.h>
 
+#include "dynosam_core/PointCloudProcess.hpp"
+
 namespace dyno {
 
 bool Accessor::hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,

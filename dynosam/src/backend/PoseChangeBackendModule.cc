@@ -2,7 +2,7 @@
 
 #include <gtsam/nonlinear/ISAM2Params.h>
 
-#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
 #include "dynosam_opt/Symbols.hpp"

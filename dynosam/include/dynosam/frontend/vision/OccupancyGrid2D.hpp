@@ -32,8 +32,8 @@
 
 #include <glog/logging.h>
 
+#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_sensors/Feature.hpp"
 namespace dyno {
 /// We divide the image into a grid of cells and try to find maximally one
 /// feature per cell. This is to ensure good distribution of features in the

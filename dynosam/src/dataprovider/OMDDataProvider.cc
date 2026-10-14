@@ -34,14 +34,14 @@
 
 #include <filesystem>
 
-#include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/frontend/vision/VisionTools.hpp"  //for getObjectLabels
-#include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
 #include "dynosam_common/Algorithms.hpp"
 #include "dynosam_common/utils/CsvParser.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_processing/DataReaderUtils.hpp"
+#include "dynosam_processing/ThreadSafeTemporalBuffer.hpp"
 
 namespace dyno {
 
@@ -812,7 +812,7 @@ namespace dyno {
 //         const GroundTruthInputPacket& gt_packet = getGtPacket(frame_id);
 //         const ObjectIds gt_object_ids = gt_packet.getObjectIds();
 
-//         ObjectIds object_ids = vision_tools::getObjectLabels(instance_mask);
+//         ObjectIds object_ids = getObjectLabels(instance_mask);
 //         const size_t n = object_ids.size();
 
 //         instance_mask.copyTo(relabelled_mask);
@@ -918,7 +918,7 @@ namespace dyno {
 //             object_mask);
 //         }
 
-//         vision_tools::relabelMasks(instance_mask, relabelled_mask,
+//         relabelMasks(instance_mask, relabelled_mask,
 //         old_labels, new_labels);
 //         // LOG(INFO) << "Done";
 
