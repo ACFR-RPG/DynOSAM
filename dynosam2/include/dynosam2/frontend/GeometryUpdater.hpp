@@ -2,6 +2,9 @@
 
 #include "dynosam2/frontend/FeatureBlockContainer.hpp"
 #include "dynosam2/frontend/Frame.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno2 {
 
@@ -66,25 +69,23 @@ class GeometryUpdater {
   //  by the sigma size)
   //  in OKVIS this is done with size0 / f0 * 0.125; where size0 is the keypoint
   //  size however we dont have this
-  inline bool checkTwoViewGeometry(const gtsam::Point3& point_left,
+  inline bool checkTwoViewGeometry(const gtsam::Point3& point,
                                    const gtsam::Point2& left_kp,
                                    const gtsam::Point2& right_kp,
                                    double max_reprojection_error = 2.0,
                                    double keypoint_sigma = 1.0) {
     // Reject points that are too close to either camera.
     constexpr double min_depth = 0.2;
-    if (!point_left.allFinite() || point_left.z() <= min_depth) {
+    if (!point.allFinite() || point.z() <= min_depth) {
       return false;
     }
 
     // // Left-camera reprojection.
     const double u_left =
-        compute_bearing_.fx_ * point_left.x() / point_left.z() +
-        compute_bearing_.cx_;
+        compute_bearing_.fx_ * point.x() / point.z() + compute_bearing_.cx_;
 
     const double v_left =
-        compute_bearing_.fy_ * point_left.y() / point_left.z() +
-        compute_bearing_.cv_;
+        compute_bearing_.fy_ * point.y() / point.z() + compute_bearing_.cy_;
 
     const double reprojection_error_left =
         std::hypot(u_left - left_kp.x(), v_left - left_kp.y());
@@ -98,16 +99,17 @@ class GeometryUpdater {
     const Eigen::Vector3d ray_left = compute_bearing_(left_kp);
     const Eigen::Vector3d ray_right = compute_bearing_(right_kp);
 
-    const double cos_parallax = std::clamp(
-        ray_left.dot(ray_right) / (ray_left.norm() * ray_right.norm()), -1.0,
-        1.0);
+    const double parallax = ray_left.dot(ray_right);
 
-    const double sigma = keypoint_sigma_px / compute_bearing_.fx_;
+    const double sigma = keypoint_sigma / compute_bearing_.fx_;
 
     // Reject insufficient parallax (rays are too nearly parallel).
-    if (!std::isfinite(cos_parallax) || cos_parallax > std::cos(6.0 * sigma)) {
+    // this basically implies the minimum disparity is 6 * keypoint_sigma
+    if (!std::isfinite(parallax) || parallax > std::cos(6.0 * sigma)) {
       return false;
     }
+
+    return true;
   }
 
   // assume all are part of the same object and t
