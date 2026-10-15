@@ -155,6 +155,13 @@ PRIVATE
   CUDA::cudart
 )
 
+ament_export_dependencies(
+  dynosam_common
+  dynosam_sensors
+  dynosam_core
+  dynosam_cv
+)
+
 # Enable separable compilation for CUDA (optional but recommended)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     CUDA_SEPARABLE_COMPILATION ON

@@ -6,6 +6,7 @@
 #include "dynosam_common/Types.hpp"
 
 namespace dyno {
+// TODO: MotionTrackingQuality vs FeatureTrackingQuality
 
 /// @brief Simple enum to denote the tracking quality (from OKVIS2!)
 enum class TrackingQuality {
@@ -30,9 +31,11 @@ struct DoTrackingState {
   FrameId frame_id;
   ObjectId object_id;
   DoKeyframeType keyframe_type{DoKeyframeType::NonKeyFrame};
-};
 
-typedef std::unordered_map<ObjectId, DoTrackingState> DoTrackingStates;
+  bool isKeyframe() const {
+    return keyframe_type != DoKeyframeType::NonKeyFrame;
+  }
+};
 
 struct DynoStateTrajectories {
   // trajectories
@@ -58,7 +61,7 @@ struct DynoState : public DynoStateTrajectories {
   StatusLandmarkVector dynamic_map;
 
   ViTrackingState vi_tracking_state;
-  DoTrackingStates do_tracking_states;
+  std::vector<DoTrackingState> do_tracking_states;
 };
 
 }  // namespace dyno

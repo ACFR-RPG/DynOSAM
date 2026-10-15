@@ -83,7 +83,7 @@ class DynoStatePublisher {
  private:
   void publishObjects(FrameId frame_id,
                       const MultiObjectTrajectories& object_trajectories,
-                      const KeyFrameInfoMap& keyframe_infos);
+                      const std::vector<DoTrackingState>& do_tracking_states);
 
   ObjectOdometry constructObjectOdometry(
       ObjectId object_id, FrameId frame_id,
@@ -152,7 +152,65 @@ class DynoStatePublisher {
   MarkerArrayPub::SharedPtr camera_wireframe_pub_;
   MarkerArrayPub::SharedPtr object_wireframe_pub_;
 
-  //! Settings
+  struct ViTrackingStatesRecord {
+    // All key frames to display
+    // must be ordered so we can show only the last N states
+    std::set<FrameId> keyframes;
+    // All vi states
+    dyno::FastUnorderedMap<FrameId, ViTrackingState> temporal_tracking_states;
+
+    void update(const ViTrackingState& update) {
+      temporal_tracking_states[update.frame_id] = update;
+      if (update.is_keyframe) {
+        keyframes.insert(update.frame_id);
+      }
+    }
+
+    std::optional<ViTrackingState> maybeTrackingState(FrameId frame_id) const {
+      auto it = temporal_tracking_states.find(frame_id);
+      if (it == temporal_tracking_states.end()) {
+        return std::optional<ViTrackingState>{};
+      } else {
+        return it->second;
+      }
+    }
+  };
+
+  // record per object
+  struct DoTrackingStatesRecord {
+    /// @brief Update for a  the record of temporal tracking states for a frame
+    /// k and insert to the list of keyframes if the update is a keyframe
+    /// @param update const DoTrackingState& object update for a frame k
+    void update(const DoTrackingState& update) {
+      temporal_tracking_states[update.frame_id] = update;
+      if (update.isKeyframe()) {
+        keyframes.insert(update.frame_id);
+      }
+    }
+
+    DoKeyframeType getKeyframeType(FrameId frame_id) const {
+      return temporal_tracking_states.at(frame_id).keyframe_type;
+    }
+
+    // All key frames to display
+    std::set<FrameId> keyframes;
+    // All do states per object
+    dyno::FastUnorderedMap<FrameId, DoTrackingState> temporal_tracking_states;
+  };
+
+  // All object tracking states
+  struct AllDoTrackingStatesRecord {
+    dyno::FastUnorderedMap<ObjectId, DoTrackingStatesRecord> objects;
+
+    void update(const std::vector<DoTrackingState>& updates) {
+      for (const DoTrackingState& do_tracking_state : updates) {
+        objects[do_tracking_state.object_id].update(do_tracking_state);
+      }
+    }
+  };
+
+  ViTrackingStatesRecord vi_tracking_states_record_;
+  AllDoTrackingStatesRecord do_tracking_states_records_;
 };
 
 }  // namespace dyno

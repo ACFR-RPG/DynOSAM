@@ -1,5 +1,7 @@
 #include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 
+#include <gtsam/nonlinear/DoglegOptimizer.h>
+
 #include "dynosam/factors/FixedStereoFactor.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
@@ -1649,13 +1651,12 @@ void LocalVIOGraph::optimize(FrameId frame_id,
 
   build_t.stop();
 
-  gtsam::LevenbergMarquardtParams opt_params;
-  // gtsam::GaussNewtonParams opt_params;
-  // for speed
+  // Dog leg is just way faster for will defined problems
+  gtsam::DoglegParams opt_params;
   opt_params.setMaxIterations(2);
 
-  dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
-      graph, values, opt_params);
+  dyno::NonlinearOptimizer<gtsam::DoglegOptimizer> solver(graph, values,
+                                                          opt_params);
 
   NonlinearOptimizerSummary summary;
   NonlinearOptimizerOptions options;

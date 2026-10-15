@@ -259,7 +259,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
   vi_tracking_state.frame_id = frame_id_k;
   // TODO: quality etc
 
-  DoTrackingStates do_tracking_states;
+  std::vector<DoTrackingState> do_tracking_states;
 
   if (vo_success) {
     vi_tracking_state.is_keyframe = vi_estimator->isKeyframe(frame_id_k);
@@ -282,7 +282,7 @@ PoseChangeVIFrontendFAST::SpinReturn PoseChangeVIFrontendFAST::nominalSpin(
     do_tracking_state.frame_id = frame_id_k;
     do_tracking_state.object_id = object_id;
     do_tracking_state.keyframe_type = doo_estimator->isKeyframe(frame_id_k);
-    do_tracking_states[object_id] = do_tracking_state;
+    do_tracking_states.push_back(do_tracking_state);
 
     const PoseWithMotionTrajectory& trajectory = *doo_solve_trajectories[i];
     if (trajectory.size() > 1) {
@@ -1450,7 +1450,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   vi_tracking_state.frame_id = frame_id_k;
   vi_tracking_state.is_keyframe = ego_motion_keyframe;
 
-  DoTrackingStates do_tracking_states;
+  std::vector<DoTrackingState> do_tracking_states;
 
   // lets test make all OKF's are also camera keyframes
   // THIS IS IMPORTANT!!
@@ -1499,7 +1499,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       do_tracking_state.frame_id = frame_id_k;
       do_tracking_state.object_id = object_id;
       do_tracking_state.keyframe_type = info.keyframe_status;
-      do_tracking_states[object_id] = do_tracking_state;
+      do_tracking_states.push_back(do_tracking_state);
 
       // record keyframe info for each object
       KeyframeInfo::MotionPair object_kf_info{object_id, H_W_KF_k.from(),

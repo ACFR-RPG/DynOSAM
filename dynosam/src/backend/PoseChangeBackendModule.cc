@@ -222,7 +222,7 @@ void PoseChangeVIBackendModule::prepareArgumentsForUpdate(
   // (j=0) in the same data-structure and compure the index's independantly
   int kf_index = 0;
   for (const auto& ckf : all_ckfs) {
-    const FrameObjectPair key{ckf->frameId(), 0};
+    const TemporalObjectIdentifier key{ckf->frameId(), 0};
     frame_to_frameIndex.insert2(key, kf_index);
     kf_index++;
   }
@@ -233,7 +233,7 @@ void PoseChangeVIBackendModule::prepareArgumentsForUpdate(
 
     for (const auto& okf : oks_j) {
       int& count_j = per_object_count.at(object_id);
-      const FrameObjectPair key{okf->frameId(), object_id};
+      const TemporalObjectIdentifier key{okf->frameId(), object_id};
       frame_to_frameIndex.insert2(key, count_j);
       count_j++;
     }
@@ -275,7 +275,7 @@ void PoseChangeVIBackendModule::prepareArgumentsForUpdate(
         entry->new_static_fg_input.factors;
 
     if (kf_info.camera_keyframe) {
-      const FrameObjectPair frame_object_pair{frame_id_k, 0};
+      const TemporalObjectIdentifier frame_object_pair{frame_id_k, 0};
       // mark and ego-state poses to be marginalized based on their keyframe
       // index
       for (const auto& key_value : new_static_values) {
@@ -324,7 +324,7 @@ void PoseChangeVIBackendModule::prepareArgumentsForUpdate(
       if (reconstructMotionInfo(key, object_id, frame_id)) {
         // if key is an object motion then frame_id will correspond with the to
         // motion for this value
-        const FrameObjectPair frame_object_pair{frame_id, object_id};
+        const TemporalObjectIdentifier frame_object_pair{frame_id, object_id};
         CHECK(frame_to_frameIndex.exists(frame_object_pair));
         int okf_index = frame_to_frameIndex.at(frame_object_pair);
         involved_kf_indices_per_object.at(object_id).emplace(key, okf_index);

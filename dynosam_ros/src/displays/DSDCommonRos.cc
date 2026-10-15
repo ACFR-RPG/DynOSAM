@@ -76,6 +76,9 @@ void DynoStatePublisher::publish(const DynoState& state) {
     sendTransform(X_WR, header, reference_frames.base_frame);
   }
 
+  // update tracking states
+  vi_tracking_states_record_.update(state.vi_tracking_state);
+
   if (options_.publish_wireframe_cameras) {
     MarkerArray marker_array;
 
@@ -94,12 +97,7 @@ void DynoStatePublisher::publish(const DynoState& state) {
 
     if (camera_trajectory.size() >= 2) {
       // find last N keyframes
-      std::set<FrameId> ckf_ids;
-      for (const auto& [frame_id, kf_info] : state.keyframe_infos) {
-        if (kf_info.camera_keyframe) {
-          ckf_ids.insert(frame_id);
-        }
-      }
+      std::set<FrameId> ckf_ids = vi_tracking_states_record_.keyframes;
       // erase current frame (if exists) as we have already displayed
       ckf_ids.erase(frame_id);
 
@@ -136,13 +134,16 @@ void DynoStatePublisher::publish(const DynoState& state) {
   DisplayCommon::publishPointCloud(dynamic_points_pub_, state.dynamic_map,
                                    reference_frames.odom_frame, T_RC);
 
-  publishObjects(frame_id, state.object_trajectories, state.keyframe_infos);
+  publishObjects(frame_id, state.object_trajectories, state.do_tracking_states);
 }
 
 void DynoStatePublisher::publishObjects(
     FrameId frame_id, const MultiObjectTrajectories& object_trajectories,
-    const KeyFrameInfoMap& keyframe_infos) {
+    const std::vector<DoTrackingState>& do_tracking_states) {
   MultiObjectTrajectories object_trajectories_k = object_trajectories;
+
+  // update tracking states
+  do_tracking_states_records_.update(do_tracking_states);
 
   if (object_trajectories_k.empty()) {
     return;
@@ -222,36 +223,12 @@ void DynoStatePublisher::publishObjects(
 
     multi_object_odom_paths.paths.push_back(path_per_segment);
 
-    // ---------------------------------------------------------------
-    // Object keyframe visualisation.
-    // ---------------------------------------------------------------
+    auto kf_it = do_tracking_states_records_.objects.find(object_id);
+    // weird case where we have object in the trajectory but not in the record!
+    CHECK(kf_it != do_tracking_states_records_.objects.end());
 
-    // Map each object keyframe's destination frame to its status.
-    // If a frame has multiple entries, an anchor takes precedence.
-    std::map<FrameId, DoKeyframeType> object_keyframes;
-
-    for (const auto& [info_frame_id, kf_info] : keyframe_infos) {
-      for (const auto& motion_pair : kf_info.object_keyframes) {
-        if (motion_pair.object_id != object_id) {
-          continue;
-        }
-
-        if (motion_pair.status != DoKeyframeType::AnchorKeyFrame &&
-            motion_pair.status != DoKeyframeType::RegularKeyFrame) {
-          continue;
-        }
-
-        const FrameId object_frame_id = motion_pair.to_motion;
-
-        auto [it, inserted] =
-            object_keyframes.emplace(object_frame_id, motion_pair.status);
-
-        if (!inserted && motion_pair.status == DoKeyframeType::AnchorKeyFrame) {
-          it->second = DoKeyframeType::AnchorKeyFrame;
-        }
-      }
-    }
-
+    const DoTrackingStatesRecord& record = kf_it->second;
+    std::set<FrameId> object_keyframes = record.keyframes;
     // The current frame's object pose is not drawn as an additional
     // historical keyframe marker.
     object_keyframes.erase(frame_id);
@@ -261,9 +238,9 @@ void DynoStatePublisher::publishObjects(
                         ? std::prev(object_keyframes.end(), kShowLastNKeyframes)
                         : object_keyframes.begin();
 
-    for (auto it = start_it; it != object_keyframes.end(); ++it) {
-      const FrameId object_frame_id = it->first;
-      const DoKeyframeType status = it->second;
+    for (auto it0 = start_it; it0 != object_keyframes.end(); ++it0) {
+      const FrameId object_frame_id = *it0;
+      const DoKeyframeType status = record.getKeyframeType(object_frame_id);
 
       // A keyframe may exist in the metadata even when its trajectory
       // entry is no longer available.

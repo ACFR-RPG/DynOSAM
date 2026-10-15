@@ -36,6 +36,7 @@
 #include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/dataprovider/DataProviderFactory.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_processing/DataReaderUtils.hpp"
 #include "dynosam_processing/PipelineHooks.hpp"
 #include "dynosam_ros/BackendDisplayPolicyRos.hpp"

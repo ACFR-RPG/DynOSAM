@@ -43,14 +43,21 @@ add_library(${PROJECT_NAME} SHARED
 
 )
 
-
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-  dynosam_common::dynosam_common
-  dynosam_sensors::dynosam_sensors
-  dynosam_cv::dynosam_cv
-  dynosam_core::dynosam_core
+    dynosam_common::dynosam_common
+    dynosam_sensors::dynosam_sensors
+    dynosam_cv::dynosam_cv
+    dynosam_core::dynosam_core
 )
+
+
+# ament_export_dependencies(
+#   dynosam_common
+#   dynosam_sensors
+#   dynosam_cv
+#   dynosam_core
+# )
 
 
 target_include_directories(${PROJECT_NAME}

@@ -32,7 +32,7 @@ using KeyFrameInfoMap = gtsam::FastMap<FrameId, KeyframeInfo>;
 
 /// @brief Per object mapping of frame id to keyframe index (ie frame k (for
 /// object j) is the Nth keyframe)
-using FrameKeyframeIndexMapping = gtsam::FastMap<FrameObjectPair, int>;
+using FrameKeyframeIndexMapping = gtsam::FastMap<TemporalObjectIdentifier, int>;
 
 /** Data parsed from the backend to the frontend when an update is complete */
 struct PoseChangeUpdateComplete {

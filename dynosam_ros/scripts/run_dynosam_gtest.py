@@ -94,13 +94,17 @@ def find_dyno_packages():
     # Returns a dict where keys are package names and values are their install prefixes
     packages = get_packages_with_prefixes()
 
-    for package_name, prefix_path in packages.items():
-        print(f"Package: {package_name} -> {prefix_path}")
-
-possible_packages = ["dynosam", "dynosam_ros", "dynosam_sensors", "dynosam_common", "dynosam_opt"]
+    dyno_packages = [
+        package_name
+        for package_name in packages
+        if package_name.startswith("dynosam")
+    ]
+    return dyno_packages
 
 
 if __name__ == "__main__":
+    possible_packages = find_dyno_packages()
+
     parser = argparse.ArgumentParser(
         description="""Utility to run gtests for dynosam C++ packages.
         Additional args (anything besides --package, ie any gflags) are passed to gtest.\n
@@ -118,7 +122,13 @@ if __name__ == "__main__":
     args, unknown_args = parser.parse_known_args()
 
     if args.package == "all":
-        pass
+        print("All dynosam packages selected")
+        for package in possible_packages:
+            try:
+                print(f"Running tests for {package}")
+                run_tests_for_package(package, unknown_args)
+            except ValueError:
+                print(f"Test unable to run for package {package}")
     else:
         # check valid package
         if args.package not in possible_packages:

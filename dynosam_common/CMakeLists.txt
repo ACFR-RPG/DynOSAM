@@ -165,25 +165,27 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 
-ament_export_libraries(${PROJECT_NAME}
-  glog
-  gflags
-  opengv
-  Boost::boost
-  config_utilities::config_utilities
-  nlohmann_json::nlohmann_json
-  gtsam
-  gtsam_unstable
-  # gtsamDebug
-  ${OpenCV_LIBRARIES}
-  ${PCL_LIBRARIES}
-  png
-  TBB::tbb
-  TBB::tbbmalloc
-)
+# ament_export_libraries(${PROJECT_NAME}
+#   glog
+#   gflags
+#   opengv
+#   Boost::boost
+#   config_utilities::config_utilities
+#   nlohmann_json::nlohmann_json
+#   gtsam
+#   gtsam_unstable
+#   # gtsamDebug
+#   ${OpenCV_LIBRARIES}
+#   ${PCL_LIBRARIES}
+#   png
+#   TBB::tbb
+#   TBB::tbbmalloc
+# )
 
 
 set(DYNO_EXPORT_DEPS
+  glog
+  gflags
   rclcpp
   std_msgs
   sensor_msgs
