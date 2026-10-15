@@ -34,12 +34,16 @@
 
 #include <opencv2/calib3d.hpp>
 
-#include "dynosam/frontend/vision/StereoMatchingParams.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_sensors/StereoCamera.hpp"
+#include "dynosam_sensors/StereoMatchingParams.hpp"
 
 namespace dyno {
 
+/**
+ * @brief Simple class stereo matcher (SGBM) using functionality from OpenCV
+ *
+ */
 class StereoMatcher {
  public:
   DYNO_POINTER_TYPEDEFS(StereoMatcher)

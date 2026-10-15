@@ -207,15 +207,6 @@ install(TARGETS
 
 
 
-
-
-    # Install Python executables
-install(PROGRAMS
-scripts/run_dynosam_gtest.py
-DESTINATION lib/${PROJECT_NAME}
-)
-
-
 if(BUILD_TESTING)
   # find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_gmock REQUIRED)

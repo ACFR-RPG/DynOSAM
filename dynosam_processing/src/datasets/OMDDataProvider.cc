@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/OMDDataProvider.hpp"
+#include "dynosam_processing/datasets/OMDDataProvider.hpp"
 
 #include <glog/logging.h>
 

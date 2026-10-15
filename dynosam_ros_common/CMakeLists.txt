@@ -172,10 +172,10 @@ ament_python_install_package(${PROJECT_NAME})
 
 
 # # Install Python executables
-# install(PROGRAMS
-# scripts/run_dynosam_gtest.py
-# DESTINATION lib/${PROJECT_NAME}
-# )
+install(PROGRAMS
+scripts/run_dynosam_gtest.py
+DESTINATION lib/${PROJECT_NAME}
+)
 
 
 if(BUILD_TESTING)

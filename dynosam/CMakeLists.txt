@@ -49,15 +49,6 @@ include_directories(
 
 # build library
 add_library(${PROJECT_NAME} SHARED
-  src/dataprovider/DataProviderFactory.cc
-  src/dataprovider/VirtualKittidataProvider.cc
-  src/dataprovider/ClusterSlamDataProvider.cc
-  src/dataprovider/OMDDataProvider.cc
-  src/dataprovider/ProjectAriaDataProvider.cc
-  src/dataprovider/TartanAirShibuya.cc
-  src/dataprovider/ViodeDataProvider.cc
-  src/dataprovider/DynopetsDataProvider.cc
-
   src/frontend/solvers/PnPRansac.cc
   src/frontend/solvers/HybridObjectMotionSRIF.cc
   src/frontend/solvers/ObjectMotionSolver.cc
@@ -80,7 +71,6 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/vision/FeatureTracker.cc
   src/frontend/vision/FeatureTrackerFast.cc
   src/frontend/vision/VisionTools.cc
-  src/frontend/vision/StereoMatcher.cc
   src/frontend/vision/StaticFeatureTracker.cc
   src/frontend/vision/TrackerParams.cc
   src/frontend/vision/FeatureTrackerBase.cc

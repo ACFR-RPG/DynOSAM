@@ -40,6 +40,15 @@ add_library(${PROJECT_NAME} SHARED
   src/DataInterfacePipeline.cc
   src/ThreadSafeImuBuffer.cc
 
+  src/datasets/DataProviderFactory.cc
+  src/datasets/VirtualKittidataProvider.cc
+  src/datasets/ClusterSlamDataProvider.cc
+  src/datasets/OMDDataProvider.cc
+  src/datasets/ProjectAriaDataProvider.cc
+  src/datasets/TartanAirShibuya.cc
+  src/datasets/ViodeDataProvider.cc
+  src/datasets/DynopetsDataProvider.cc
+
 
 )
 

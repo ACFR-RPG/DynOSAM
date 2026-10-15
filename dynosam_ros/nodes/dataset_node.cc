@@ -33,11 +33,11 @@
 #include <glog/logging.h>
 
 #include <dynosam/common/Camera.hpp>
-#include <dynosam/dataprovider/KittiDataProvider.hpp>
-#include <dynosam/dataprovider/OMDDataProvider.hpp>
 #include <dynosam/frontend/vision/FeatureTracker.hpp>
 #include <dynosam/frontend/vision/VisionTools.hpp>
 #include <dynosam/utils/OpenCVUtils.hpp>
+#include <dynosam_processing/datasets/KittiDataProvider.hpp>
+#include <dynosam_processing/datasets/OMDDataProvider.hpp>
 
 #include "dynosam_ros/Utils.hpp"
 #include "image_transport/image_transport.hpp"

@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/ProjectAriaDataProvider.hpp"
+#include "dynosam_processing/datasets/ProjectAriaDataProvider.hpp"
 
 #include <nlohmann/json.hpp>
 

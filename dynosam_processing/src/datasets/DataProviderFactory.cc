@@ -28,20 +28,20 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/DataProviderFactory.hpp"
+#include "dynosam_processing/datasets/DataProviderFactory.hpp"
 
 #include <glog/logging.h>
 
-#include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
-#include "dynosam/dataprovider/DynopetsDataProvider.hpp"
-#include "dynosam/dataprovider/KittiDataProvider.hpp"
-#include "dynosam/dataprovider/OMDDataProvider.hpp"
-#include "dynosam/dataprovider/ProjectAriaDataProvider.hpp"
-#include "dynosam/dataprovider/TartanAirShibuya.hpp"
-#include "dynosam/dataprovider/ViodeDataProvider.hpp"
-#include "dynosam/dataprovider/VirtualKittiDataProvider.hpp"
 #include "dynosam_common/utils/YamlParser.hpp"
 #include "dynosam_processing/DataReader.hpp"
+#include "dynosam_processing/datasets/ClusterSlamDataProvider.hpp"
+#include "dynosam_processing/datasets/DynopetsDataProvider.hpp"
+#include "dynosam_processing/datasets/KittiDataProvider.hpp"
+#include "dynosam_processing/datasets/OMDDataProvider.hpp"
+#include "dynosam_processing/datasets/ProjectAriaDataProvider.hpp"
+#include "dynosam_processing/datasets/TartanAirShibuya.hpp"
+#include "dynosam_processing/datasets/ViodeDataProvider.hpp"
+#include "dynosam_processing/datasets/VirtualKittiDataProvider.hpp"
 
 DEFINE_int32(starting_frame, -1,
              "Starting frame of the dataset. If -1 use the default which is "

@@ -28,14 +28,13 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
+#include "dynosam_processing/datasets/ClusterSlamDataProvider.hpp"
 
 #include <glog/logging.h>
 
 #include <fstream>
 #include <png++/png.hpp>  //libpng-dev
 
-#include "dynosam/frontend/vision/StereoMatcher.hpp"
 #include "dynosam_common/Algorithms.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
@@ -43,6 +42,7 @@
 #include "dynosam_cv/CvUtils.hpp"
 #include "dynosam_processing/DataReaderUtils.hpp"
 #include "dynosam_sensors/StereoCamera.hpp"
+#include "dynosam_sensors/StereoMatcher.hpp"
 
 namespace dyno {
 

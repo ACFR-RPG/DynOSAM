@@ -35,11 +35,6 @@
 #include <opencv2/cudaimgproc.hpp>
 #include <png++/png.hpp>
 
-#include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
-#include "dynosam/dataprovider/KittiDataProvider.hpp"
-#include "dynosam/dataprovider/TartanAirShibuya.hpp"
-#include "dynosam/dataprovider/ViodeDataProvider.hpp"
-#include "dynosam/dataprovider/VirtualKittiDataProvider.hpp"
 #include "dynosam/frontend/vision/FeatureTracker.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/OccupancyGrid2D.hpp"
@@ -47,6 +42,11 @@
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_nn/PyObjectDetector.hpp"
+#include "dynosam_processing/datasets/ClusterSlamDataProvider.hpp"
+#include "dynosam_processing/datasets/KittiDataProvider.hpp"
+#include "dynosam_processing/datasets/TartanAirShibuya.hpp"
+#include "dynosam_processing/datasets/ViodeDataProvider.hpp"
+#include "dynosam_processing/datasets/VirtualKittiDataProvider.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/ImageContainer.hpp"
 
@@ -56,11 +56,11 @@ DEFINE_string(
     params_path, "dynosam/params",
     "Path to the folder containing the yaml files with the VIO parameters.");
 
-#include "dynosam/dataprovider/DynopetsDataProvider.hpp"
-#include "dynosam/dataprovider/KittiDataProvider.hpp"
-#include "dynosam/dataprovider/OMDDataProvider.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerFast.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_processing/datasets/DynopetsDataProvider.hpp"
+#include "dynosam_processing/datasets/KittiDataProvider.hpp"
+#include "dynosam_processing/datasets/OMDDataProvider.hpp"
 
 /**
  * TODO:

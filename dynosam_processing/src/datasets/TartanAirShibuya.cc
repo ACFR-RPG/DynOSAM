@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/TartanAirShibuya.hpp"
+#include "dynosam_processing/datasets/TartanAirShibuya.hpp"
 
 #include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"

@@ -1,4 +1,4 @@
-#include "dynosam/dataprovider/DynopetsDataProvider.hpp"
+#include "dynosam_processing/datasets/DynopetsDataProvider.hpp"
 
 #include "dynosam_common/utils/CsvParser.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"

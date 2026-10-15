@@ -28,9 +28,8 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/ViodeDataProvider.hpp"
+#include "dynosam_processing/datasets/ViodeDataProvider.hpp"
 
-#include "dynosam/frontend/vision/StereoMatcher.hpp"
 #include "dynosam_common/utils/CsvParser.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
@@ -40,6 +39,7 @@
 #include "dynosam_processing/ThreadSafeImuBuffer.hpp"
 #include "dynosam_processing/ThreadSafeTemporalBuffer.hpp"
 #include "dynosam_sensors/CameraParams.hpp"
+#include "dynosam_sensors/StereoMatcher.hpp"
 
 namespace dyno {
 

@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/dataprovider/VirtualKittiDataProvider.hpp"
+#include "dynosam_processing/datasets/VirtualKittiDataProvider.hpp"
 
 #include <glog/logging.h>
 

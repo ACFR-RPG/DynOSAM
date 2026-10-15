@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/frontend/vision/StereoMatcher.hpp"
+#include "dynosam_sensors/StereoMatcher.hpp"
 
 #include "dynosam_sensors/ImageTypes.hpp"  //for depth image
 

@@ -32,6 +32,7 @@ add_library(${PROJECT_NAME} SHARED
     src/SensorRig.cc
     src/ImuParams.cc
     src/ImuFrontend.cc
+    src/StereoMatcher.cc
 
 )
 

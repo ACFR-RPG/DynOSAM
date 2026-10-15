@@ -32,7 +32,7 @@
 #include <gtsam/geometry/Pose3.h>
 
 #include <dynosam/common/GroundTruthPacket.hpp>
-#include <dynosam/dataprovider/KittiDataProvider.hpp>
+#include <dynosam_processing/datasets/KittiDataProvider.hpp>
 #include <fstream>
 #include <iostream>
 #include <opencv4/opencv2/core.hpp>
