@@ -3,7 +3,6 @@
 #include <gtsam/linear/NoiseModel.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
 
-#include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
@@ -11,6 +10,7 @@
 #include "dynosam_opt/IncrementalOptimization.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
 #include "dynosam_opt/Symbols.hpp"
+#include "dynosam_opt/factors/HybridFormulationFactors.hpp"
 
 namespace dyno {
 

@@ -42,6 +42,10 @@ target_link_libraries(${PROJECT_NAME}
   dynosam_cv::dynosam_cv
 )
 
+ament_export_dependencies(
+  dynosam_common
+  dynosam_cv
+)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

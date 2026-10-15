@@ -9,7 +9,7 @@
 
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_core/PointCloudProcess.hpp"
-#include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros_common/RosUtils.hpp"
 
 namespace dyno {
 

@@ -38,66 +38,102 @@ namespace dyno {
 
 template <typename INPUT, typename OUTPUT>
 PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
+  // using ReturnCode = PipelineBase::ReturnCode;
+
+  // if (isShutdown()) {
+  //   return ReturnCode::IS_SHUTDOWN;
+  // }
+
+  // // taking adds a considerable overhead...
+  // auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
+  //   // utils::ChronoTimingStats timing = timing_names_.inputPacketTimer();
+  //   InputConstSharedPtr input = nullptr;
+  //   is_thread_working_ = false;
+  //   input = getInputPacket();
+  //   is_thread_working_ = true;
+  //   return input;
+  // };
+
+  // auto processWrapped = [&](InputConstSharedPtr input) ->
+  // OutputConstSharedPtr {
+  //   // utils::ChronoTimingStats timing = timing_names_.processTimer();
+  //   OutputConstSharedPtr output = nullptr;
+  //   output = process(input);
+  //   return output;
+  // };
+
+  // auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
+  //   // Received a valid output, send to output queue
+  //   // utils::ChronoTimingStats timing = timing_names_.outputTiming();
+  //   const bool push_packet_result = pushOutputPacket(output);
+  //   return push_packet_result;
+  // };
+
+  // ReturnCode return_code;
+  // // utils::ChronoTimingStats timing_stats(moduleName());
+
+  // InputConstSharedPtr input = getInputPacketWrapped();
+
+  // if (input) {
+  //   // Transfer the ownership of input to the actual pipeline module.
+  //   // From this point on, you cannot use input, since process owns it.
+  //   OutputConstSharedPtr output = processWrapped(input);
+
+  //   if (output) {
+  //     if (!pushOutputPacketWrapped(output)) {
+  //       LOG_EVERY_N(WARNING, 100)
+  //           << "Module: " << this->moduleName() << " - Output push failed.";
+  //       is_thread_working_ = false;
+  //       return_code = ReturnCode::OUTPUT_PUSH_FAILURE;
+  //     } else {
+  //       emitProcessCallbacks(input, output);
+  //       is_thread_working_ = false;
+  //       return_code = ReturnCode::SUCCESS;
+  //     }
+  //   } else {
+  //     return_code = ReturnCode::PROCESSING_FAILURE;
+  //     is_thread_working_ = false;
+  //   }
+  // } else {
+  //   is_thread_working_ = false;
+  //   return_code = ReturnCode::GET_PACKET_FAILURE;
+  // }
+
+  // return return_code;
   using ReturnCode = PipelineBase::ReturnCode;
 
   if (isShutdown()) {
     return ReturnCode::IS_SHUTDOWN;
   }
 
-  auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
-    utils::ChronoTimingStats timing = timing_names_.inputPacketTimer();
-    InputConstSharedPtr input = nullptr;
+  is_thread_working_ = false;
+  InputConstSharedPtr input = getInputPacket();
+  is_thread_working_ = true;
+
+  if (!input) {
     is_thread_working_ = false;
-    input = getInputPacket();
-    is_thread_working_ = true;
-    return input;
-  };
-
-  auto processWrapped = [&](InputConstSharedPtr input) -> OutputConstSharedPtr {
-    utils::ChronoTimingStats timing = timing_names_.processTimer();
-    OutputConstSharedPtr output = nullptr;
-    output = process(input);
-    return output;
-  };
-
-  auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
-    // Received a valid output, send to output queue
-    utils::ChronoTimingStats timing = timing_names_.outputTiming();
-    const bool push_packet_result = pushOutputPacket(output);
-    return push_packet_result;
-  };
-
-  ReturnCode return_code;
-  utils::ChronoTimingStats timing_stats(moduleName());
-
-  InputConstSharedPtr input = getInputPacketWrapped();
-
-  if (input) {
-    // Transfer the ownership of input to the actual pipeline module.
-    // From this point on, you cannot use input, since process owns it.
-    OutputConstSharedPtr output = processWrapped(input);
-
-    if (output) {
-      if (!pushOutputPacketWrapped(output)) {
-        LOG_EVERY_N(WARNING, 100)
-            << "Module: " << this->moduleName() << " - Output push failed.";
-        is_thread_working_ = false;
-        return_code = ReturnCode::OUTPUT_PUSH_FAILURE;
-      } else {
-        emitProcessCallbacks(input, output);
-        is_thread_working_ = false;
-        return_code = ReturnCode::SUCCESS;
-      }
-    } else {
-      return_code = ReturnCode::PROCESSING_FAILURE;
-      is_thread_working_ = false;
-    }
-  } else {
-    is_thread_working_ = false;
-    return_code = ReturnCode::GET_PACKET_FAILURE;
+    return ReturnCode::GET_PACKET_FAILURE;
   }
 
-  return return_code;
+  OutputConstSharedPtr output = process(input);
+
+  if (!output) {
+    is_thread_working_ = false;
+    return ReturnCode::PROCESSING_FAILURE;
+  }
+
+  if (!pushOutputPacket(output)) {
+    LOG_EVERY_N(WARNING, 100)
+        << "Module: " << this->moduleName() << " - Output push failed.";
+
+    is_thread_working_ = false;
+    return ReturnCode::OUTPUT_PUSH_FAILURE;
+  }
+
+  emitProcessCallbacks(input, output);
+
+  is_thread_working_ = false;
+  return ReturnCode::SUCCESS;
 }
 
 template <typename INPUT, typename OUTPUT>

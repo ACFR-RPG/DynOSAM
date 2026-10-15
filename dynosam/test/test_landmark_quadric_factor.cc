@@ -31,7 +31,7 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
-#include "dynosam/factors/LandmarkQuadricFactor.hpp"
+#include "dynosam_opt/factors/LandmarkQuadricFactor.hpp"
 
 using namespace dyno;
 

@@ -2,7 +2,7 @@
 
 #include "cv_bridge/cv_bridge.hpp"
 #include "dynosam/frontend/vision/FeatureTracker.hpp"
-#include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros_common/RosUtils.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/ImageContainer.hpp"
 #include "image_transport/image_transport.hpp"

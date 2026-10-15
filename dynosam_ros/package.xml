@@ -12,7 +12,7 @@
 
  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>rclcpp</depend>
+  <!-- <depend>rclcpp</depend>
   <depend>dynosam</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
@@ -28,7 +28,8 @@
   <depend>message_filters</depend>
   <depend>tf2_geometry_msgs</depend>
   <depend>tf2_msgs</depend>
-  <depend>rclpy</depend>
+  <depend>rclpy</depend> -->
+  <depend>dynosam_ros_common</depend>
 
   <depend>rclcpp_components</depend>
 

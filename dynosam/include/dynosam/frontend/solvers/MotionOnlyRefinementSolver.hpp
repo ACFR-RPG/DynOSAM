@@ -5,13 +5,13 @@
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 #include <gtsam/slam/ProjectionFactor.h>
 
-#include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/Symbols.hpp"
+#include "dynosam_opt/factors/LandmarkMotionTernaryFactor.hpp"
 
 namespace dyno {
 

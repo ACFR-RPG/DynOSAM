@@ -5,8 +5,8 @@
 #include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_core/DynamicObjects.hpp"
-#include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
+#include "dynosam_ros_common/RosUtils.hpp"
 
 namespace dyno {
 

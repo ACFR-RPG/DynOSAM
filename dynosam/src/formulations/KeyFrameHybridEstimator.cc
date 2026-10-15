@@ -1,7 +1,7 @@
 #include "dynosam/formulations/KeyFrameHybridEstimator.hpp"
 
-#include "dynosam/factors/MotionBetweenFactor.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
+#include "dynosam_opt/factors/MotionBetweenFactor.hpp"
 
 namespace dyno {
 

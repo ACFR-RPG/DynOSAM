@@ -2,9 +2,9 @@
 
 #include <gtsam/nonlinear/DoglegOptimizer.h>
 
-#include "dynosam/factors/FixedStereoFactor.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
+#include "dynosam_opt/factors/FixedStereoFactor.hpp"
 
 namespace dyno {
 

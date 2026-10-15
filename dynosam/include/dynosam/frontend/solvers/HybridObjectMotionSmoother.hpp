@@ -8,7 +8,6 @@
 #include <nlohmann/json.hpp>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/frontend/solvers/HybridObjectMotionSolver-Impl.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Trajectories.hpp"
@@ -19,6 +18,7 @@
 #include "dynosam_opt/IncrementalOptimization.hpp"
 #include "dynosam_opt/Map.hpp"
 #include "dynosam_opt/Symbols.hpp"
+#include "dynosam_opt/factors/HybridFormulationFactors.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno {

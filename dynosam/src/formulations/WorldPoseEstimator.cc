@@ -31,8 +31,8 @@
 #include "dynosam/formulations/WorldPoseEstimator.hpp"
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
-#include "dynosam/factors/LandmarkPoseSmoothingFactor.hpp"
+#include "dynosam_opt/factors/LandmarkMotionPoseFactor.hpp"
+#include "dynosam_opt/factors/LandmarkPoseSmoothingFactor.hpp"
 
 namespace dyno {
 

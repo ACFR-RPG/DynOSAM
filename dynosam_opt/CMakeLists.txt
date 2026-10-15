@@ -18,11 +18,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(dynosam_common REQUIRED)
+find_package(dynosam_sensors REQUIRED)
 
 # setup targets
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
+  ${dynosam_sensors_INCLUDE_DIRS}
 )
 
 # build library
@@ -36,8 +38,15 @@ add_library(${PROJECT_NAME} SHARED
     src/ISAM2Clique.cc
     src/ISAM2Params.cc
     src/IncrementalOptimization.cc
-    src/TimeBudgetOptimizationCallback.cc
+    src/NonlinearOptimizer.cc
     src/StateQuery.cc
+
+    src/factors/LandmarkMotionTernaryFactor.cc
+    src/factors/Pose3FlowProjectionFactor.cc
+    src/factors/ObjectKinematicFactor.cc
+    src/factors/LandmarkMotionPoseFactor.cc
+    src/factors/LandmarkPoseSmoothingFactor.cc
+    src/factors/HybridFormulationFactors.cc
 
 )
 
@@ -45,6 +54,7 @@ add_library(${PROJECT_NAME} SHARED
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   dynosam_common::dynosam_common
+  dynosam_sensors::dynosam_sensors
 )
 
 
@@ -84,6 +94,11 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
+    test/test_hybrid_motion.cc
+    test/test_map.cc
+    test/test_factors.cc
+
+
 )
 
 target_include_directories(${PROJECT_NAME}_test

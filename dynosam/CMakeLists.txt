@@ -104,12 +104,6 @@ add_library(${PROJECT_NAME} SHARED
   src/formulations/KeyFrameHybridMap.cc
   src/formulations/VIOFormulation.cc
 
-  src/factors/LandmarkMotionTernaryFactor.cc
-  src/factors/Pose3FlowProjectionFactor.cc
-  src/factors/ObjectKinematicFactor.cc
-  src/factors/LandmarkMotionPoseFactor.cc
-  src/factors/LandmarkPoseSmoothingFactor.cc
-  src/factors/HybridFormulationFactors.cc
 
   src/pipeline/PipelineManager.cc
   src/pipeline/PipelineParams.cc
@@ -264,11 +258,9 @@ if(BUILD_TESTING)
     test/test_dynamic_point_symbol.cc
     test/internal/tmp_file.cc
     test/internal/simulator.cc
-    test/test_hybrid_motion.cc
     test/test_kf_map.cc
     # test/test_landmark_quadric_factor.cc
     test/test_tools.cc
-    test/test_map.cc
     test/test_histogram.cc
     test/test_structured_containers.cc
     # test/test_triangulation.cc
@@ -277,10 +269,8 @@ if(BUILD_TESTING)
     test/test_rgbd_backend.cc
     test/test_algorithms.cc
     test/test_viz.cc
-    test/test_factors.cc
     test/test_numerical.cc
     test/test_params.cc
-    test/test_optimizations.cc
     test/test_camera_tracking_factors.cc
 )
 

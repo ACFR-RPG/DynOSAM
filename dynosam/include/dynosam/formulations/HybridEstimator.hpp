@@ -37,12 +37,12 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/formulations/VIOFormulation.hpp"
 #include "dynosam/frontend/MotionKeyFrame.hpp"
 #include "dynosam_common/StructuredContainers.hpp"  //for FrameRange
 #include "dynosam_common/Types.hpp"                 //only needed for factors
 #include "dynosam_opt/Map.hpp"
+#include "dynosam_opt/factors/HybridFormulationFactors.hpp"
 
 namespace dyno {
 

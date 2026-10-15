@@ -3,8 +3,8 @@
 #include "dynosam/pipeline/PipelineManager.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_processing/DataReader.hpp"
-#include "dynosam_ros/Diagnostics.hpp"
 #include "dynosam_ros/PipelineRos.hpp"
+#include "dynosam_ros_common/Diagnostics.hpp"
 
 namespace dyno {
 

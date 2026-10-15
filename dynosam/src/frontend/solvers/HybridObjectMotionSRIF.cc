@@ -1,9 +1,9 @@
 #include "dynosam/frontend/solvers/HybridObjectMotionSRIF.hpp"
 
-#include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt/factors/HybridFormulationFactors.hpp"
 
 namespace dyno {
 

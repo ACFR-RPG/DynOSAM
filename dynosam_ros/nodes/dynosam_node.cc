@@ -32,7 +32,7 @@
 #include <glog/logging.h>
 
 #include "dynosam_ros/PipelineRos.hpp"
-#include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros_common/RosUtils.hpp"
 #include "rclcpp/executor.hpp"
 #include "rclcpp/rclcpp.hpp"
 

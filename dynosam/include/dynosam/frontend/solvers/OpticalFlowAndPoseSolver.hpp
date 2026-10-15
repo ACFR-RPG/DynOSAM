@@ -5,7 +5,6 @@
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 
-#include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Types.hpp"
@@ -13,7 +12,7 @@
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
 #include "dynosam_opt/Symbols.hpp"
-#include "dynosam_opt/TimeBudgetOptimizationCallback.hpp"
+#include "dynosam_opt/factors/Pose3FlowProjectionFactor.h"
 
 namespace dyno {
 

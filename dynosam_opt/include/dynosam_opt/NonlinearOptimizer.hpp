@@ -59,39 +59,29 @@ enum TerminationType {
   USER_FAILURE
 };
 
-template <>
-inline std::string to_string(const TerminationType& termination_type) {
-  std::string str = "";
-  switch (termination_type) {
-    case TerminationType::CONVERGENCE: {
-      str = "CONVERGENCE";
-      break;
-    }
-    case TerminationType::NO_CONVERGENCE: {
-      str = "NO_CONVERGENCE";
-      break;
-    }
-    case TerminationType::FAILURE: {
-      str = "FAILURE";
-      break;
-    }
-    case TerminationType::USER_SUCCESS: {
-      str = "USER_SUCCESS";
-      break;
-    }
-    case TerminationType::USER_FAILURE: {
-      str = "USER_FAILURE";
-      break;
-    }
-  }
-  return str;
-}
-
 class IterationCallback {
  public:
   DYNO_POINTER_TYPEDEFS(IterationCallback)
   virtual ~IterationCallback() = default;
   virtual CallbackReturnType operator()(const IterationSummary& summary) = 0;
+};
+
+// Implemented from
+// https://github.dev/ethz-mrl/okvis2/blob/main/okvis_ceres/include/okvis/ceres/CeresIterationCallback.hpp
+class TimeBudgetOptimizationCallback : public IterationCallback {
+ public:
+  DYNO_POINTER_TYPEDEFS(TimeBudgetOptimizationCallback)
+  TimeBudgetOptimizationCallback(Timestamp time_limit, int minimum_iterations);
+
+  CallbackReturnType operator()(const IterationSummary& summary) override;
+
+  void setTimeLimit(Timestamp time_limit);
+  void setMinimumIterations(int minimum_iterations);
+
+ private:
+  //! Limit in seconds
+  Timestamp time_limit_;
+  int minimum_iterations_;
 };
 
 struct NonlinearOptimizerOptions {
@@ -185,9 +175,36 @@ class NonlinearOptimizer : public SOLVER {
     factors.saveGraph(file_name, keyFormatter);
   }
 
+  // bool setOptimisationTimeLimit(Timestamp time_limit, int minimum_iterations)
+  // {
+  //   if(time_budget_callback_ != nullptr) {
+  //     if(time_limit < 0.0) {
+  //       const gtsam::NonlinearOptimizerParams& params = this->_params();
+  //       const size_t max_iterations = params.maxIterations
+  //       // no time limit => set minimum iterations to maximum iterations
+  //       time_budget_callback_->setMinimumIterations(max_iterations);
+  //       return true;
+  //     }
+  //     else {
+  //       time_budget_callback_->setTimeLimit(time_limit);
+  //       time_budget_callback_->setMinimumIterations(minimum_iterations);
+  //       return true;
+  //     }
+  //   }
+  //   else if(time_limit > 0) {
+  //     time_budget_callback_ =
+  //     std::make_unique<TimeBudgetOptimizationCallback>(
+  //       time_limit, minimum_iterations
+  //     );
+
+  //   }
+  // }
+
  private:
   // Make deafult optimize safe function
   using Solver::optimizeSafely;
+
+  TimeBudgetOptimizationCallback::UniquePtr time_budget_callback_{nullptr};
 
   virtual const gtsam::Values& optimize() override {
     NonlinearOptimizerSummary summary;

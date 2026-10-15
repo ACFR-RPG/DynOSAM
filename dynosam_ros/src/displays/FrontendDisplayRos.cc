@@ -31,7 +31,7 @@
 #include "dynosam_ros/displays/FrontendDisplayRos.hpp"
 
 #include "cv_bridge/cv_bridge.hpp"
-#include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros_common/RosUtils.hpp"
 #include "rclcpp/qos.hpp"
 
 namespace dyno {

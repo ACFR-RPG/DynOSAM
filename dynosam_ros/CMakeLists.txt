@@ -2,61 +2,62 @@ cmake_minimum_required(VERSION 3.11)
 
 project(dynosam_ros)
 
-# set(CMAKE_C_FLAGS "-std=gnu11 -Wall -Wextra -O3 -march=sandybridge -flto")
-set(CMAKE_C_FLAGS "-Wall -Wextra")
+set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
+    -O3
+  )
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
+find_package(dynosam_ros_common)
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(visualization_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(tf2_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(image_transport REQUIRED)
-find_package(pcl_conversions REQUIRED)
-find_package(cv_bridge REQUIRED)
-find_package(eigen3_cmake_module REQUIRED)
-find_package(Eigen3 REQUIRED)
-find_package(dynosam REQUIRED)
-find_package(PCL REQUIRED conversions surface)
-find_package(rclpy REQUIRED)
-find_package(message_filters REQUIRED)
-find_package(diagnostic_updater REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
-find_package(dynamic_slam_interfaces REQUIRED)
-find_package(rclcpp_components REQUIRED)
+# find_package(ament_cmake REQUIRED)
+# find_package(rclcpp REQUIRED)
+# find_package(std_msgs REQUIRED)
+# find_package(sensor_msgs REQUIRED)
+# find_package(visualization_msgs REQUIRED)
+# find_package(nav_msgs REQUIRED)
+# find_package(tf2_ros REQUIRED)
+# find_package(tf2_msgs REQUIRED)
+# find_package(geometry_msgs REQUIRED)
+# find_package(image_transport REQUIRED)
+# find_package(pcl_conversions REQUIRED)
+# find_package(cv_bridge REQUIRED)
+# find_package(eigen3_cmake_module REQUIRED)
+# find_package(Eigen3 REQUIRED)
+# find_package(dynosam REQUIRED)
+# find_package(PCL REQUIRED conversions surface)
+# find_package(rclpy REQUIRED)
+# find_package(message_filters REQUIRED)
+# find_package(diagnostic_updater REQUIRED)
+# find_package(tf2_geometry_msgs REQUIRED)
+# find_package(dynamic_slam_interfaces REQUIRED)
+# find_package(rclcpp_components REQUIRED)
 
 
 # setup targets
 include_directories(
   include
-  ${rclcpp_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIRS}
-  ${PCL_INCLUDE_DIRS}
-  ${dynosam_INCLUDE_DIRS}
-  ${pcl_conversions_INCLUDE_DIRS}
+  ${dynosam_ros_common_INCLUDE_DIRS}
+  # ${rclcpp_INCLUDE_DIRS}
+  # ${EIGEN3_INCLUDE_DIRS}
+  # ${PCL_INCLUDE_DIRS}
+  # ${dynosam_INCLUDE_DIRS}
+  # ${pcl_conversions_INCLUDE_DIRS}
 )
 
 
 set(SRC_FILES
   src/PipelineRos.cc
-  src/RosUtils.cc
-  src/RosConversions.cc
-  src/Diagnostics.cc
-  src/CameraSystem.cc
-  src/Subscriber.cc
-
   src/displays/DisplaysCommon.cc
   src/displays/DSDCommonRos.cc
   src/displays/FrontendDisplayRos.cc
@@ -66,55 +67,55 @@ set(SRC_FILES
 
 )
 
-set(LINK_LIBS
-  ${geometry_msgs_TARGETS}
-  ${nav_msgs_TARGETS}
-  ${sensor_msgs_TARGETS}
-  ${std_msgs_TARGETS}
-  ${visualization_msgs_TARGETS}
-  ${PCL_LIBRARIES}
-  cv_bridge::cv_bridge
-  dynamic_slam_interfaces::dynamic_slam_interfaces_library
-  dynosam::dynosam
-  image_transport::image_transport
-  message_filters::message_filters
-  rclcpp::rclcpp
-  sensor_msgs::sensor_msgs_library
-  tf2_ros::static_transform_broadcaster_node
-  tf2_ros::tf2_ros
-  diagnostic_updater::diagnostic_updater
-  tf2_geometry_msgs::tf2_geometry_msgs
-  tf2::tf2
-)
+# set(LINK_LIBS
+#   ${geometry_msgs_TARGETS}
+#   ${nav_msgs_TARGETS}
+#   ${sensor_msgs_TARGETS}
+#   ${std_msgs_TARGETS}
+#   ${visualization_msgs_TARGETS}
+#   ${PCL_LIBRARIES}
+#   cv_bridge::cv_bridge
+#   dynamic_slam_interfaces::dynamic_slam_interfaces_library
+#   dynosam::dynosam
+#   image_transport::image_transport
+#   message_filters::message_filters
+#   rclcpp::rclcpp
+#   sensor_msgs::sensor_msgs_library
+#   tf2_ros::static_transform_broadcaster_node
+#   tf2_ros::tf2_ros
+#   diagnostic_updater::diagnostic_updater
+#   tf2_geometry_msgs::tf2_geometry_msgs
+#   tf2::tf2
+# )
 
-# conditionally compile for message filters
-# as the API changes between Jazzy and Kilted
-# in Jazzy the version is 4 and Kilted is 7
-# also for some reason in the kilted version we need pcl_conversions
-# in the link librariers but in Jazzy we dont
-if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
-message(
-  "message filters version detected > 7. Assumuing ROS Kilted is used. "
-  " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
-add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
-# add pcl conversions lib
-list(APPEND LINK_LIBS pcl_conversions::pcl_conversions)
-else()
-message(
-  "message filters version detected < 7. Assumuing at least ROS Jazzy is used."
-  " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=0")
-add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=0)
-endif()
+# # conditionally compile for message filters
+# # as the API changes between Jazzy and Kilted
+# # in Jazzy the version is 4 and Kilted is 7
+# # also for some reason in the kilted version we need pcl_conversions
+# # in the link librariers but in Jazzy we dont
+# if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
+# message(
+#   "message filters version detected > 7. Assumuing ROS Kilted is used. "
+#   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
+# add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
+# # add pcl conversions lib
+# list(APPEND LINK_LIBS pcl_conversions::pcl_conversions)
+# else()
+# message(
+#   "message filters version detected < 7. Assumuing at least ROS Jazzy is used."
+#   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=0")
+# add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=0)
+# endif()
 
-set(TARGET_EXPORT_DEPS
-  rclcpp
-  std_msgs
-  sensor_msgs
-  dynosam
-  nav_msgs
-  message_filters
-  dynamic_slam_interfaces
-)
+# set(TARGET_EXPORT_DEPS
+#   rclcpp
+#   std_msgs
+#   sensor_msgs
+#   dynosam
+#   nav_msgs
+#   message_filters
+#   dynamic_slam_interfaces
+# )
 
 
 # build library
@@ -126,6 +127,7 @@ target_link_libraries(${PROJECT_NAME}
   gflags
   rclcpp_components::component
   rclcpp_components::component_manager
+  dynosam_ros_common::dynosam_ros_common
 )
 
 ament_export_libraries(${PROJECT_NAME}
@@ -227,10 +229,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
-    test/test_ros_utils.cc
-    test/test_adaptors.cc
-    test/test_online_dataprovider_ros.cc
-    test/test_camera_system.cc
 )
 
 target_include_directories(${PROJECT_NAME}_test
