@@ -43,7 +43,7 @@ FeatureTracker::Result FeatureTracker::track(
     const std::optional<gtsam::Rot3>& R_km1_k) {
   dyno::utils::ChronoTimingStats feature_track_t("feature_tracker.track");
   dyno::utils::ChronoTimingStats object_detect_t(
-      "feature_tracker.object_detect");
+      "feature_tracker.track.object_detect");
   const auto [object_detection_result, update_object_mask] =
       object_detection_impl_.detectAndTrack(image_container);
   object_detect_t.stop();
@@ -112,8 +112,11 @@ FeatureTracker::Result FeatureTracker::track(
 
     // buildOpticalFlowPyramid(prev_mono_, prev_mono_pyr_);
   } else {
+    dyno::utils::ChronoTimingStats previous_t("feature_tracker.track.previous");
+    dyno::utils::ChronoTimingStats sparse_t("feature_tracker.track.sparse");
     auto [tracked_features, tracking_stats] =
         sparseFeatureTrack(current_mono, object_masks);
+    sparse_t.stop();
 
     // fill out binary segmentation mask map to be used as detection mask
     gtsam::FastMap<ObjectId, cv::Mat> binary_detection_masks;
@@ -138,6 +141,8 @@ FeatureTracker::Result FeatureTracker::track(
     const int scaled_border_thickness =
         std::round(kReferenceBorderThickness * std::sqrt(image_scale));
 
+    dyno::utils::ChronoTimingStats make_masks_t(
+        "feature_tracker.track.make_masks");
     cv::Mat object_masks_binary = object_masks > 0;
     // to ensure the validatiy of the mask we will do some dilation
     // to both fill holes and to expant the object masks so we dont
@@ -150,8 +155,11 @@ FeatureTracker::Result FeatureTracker::track(
     cv::Mat static_mask;
     cv::bitwise_not(object_masks_binary, static_mask);
     binary_detection_masks[background_label] = static_mask;
+    make_masks_t.stop();
 
-    std::set<ObjectId> object_needs_detection;
+    dyno::utils::ChronoTimingStats needs_detection_t(
+        "feature_tracker.track.needs_detection");
+    std::unordered_set<ObjectId> object_needs_detection;
     for (const auto& object_view : tracked_features.objectViews()) {
       const auto j = object_view.objectId();
       const auto& tracking_stats_j = tracking_stats[j];
@@ -208,6 +216,7 @@ FeatureTracker::Result FeatureTracker::track(
         VLOG(20) << "Good tracks for object " << j;
       }
     }
+    needs_detection_t.stop();
 
     GfttDetector::Params feature_detection_params;
     feature_detection_params.quality_level = 0.01;
@@ -238,12 +247,12 @@ FeatureTracker::Result FeatureTracker::track(
     }
 
     if (!objects_ids_for_detection.empty()) {
-      utils::ChronoTimingStats detect_t("fast_tracker.detect");
+      utils::ChronoTimingStats detect_t("feature_tracker.track.re_detect");
       // TODO: still need to handle tracklet ids!
       FeatureBlockContainer detected_features = feature_detector_.calc(
           current_mono, object_masks, feature_detection_params);
-      detect_t.stop();
       previous_features_ = tracked_features.merge(detected_features);
+      detect_t.stop();
 
     } else {
       previous_features_ = tracked_features;
@@ -260,7 +269,7 @@ FeatureTracker::Result FeatureTracker::track(
   // always set previous object mask
   prev_object_mask_ = object_masks;
 
-  return {object_detection_result, previous_features_};
+  return {object_detection_result, &previous_features_};
 }
 
 FeatureTracker::ObjectDetectionImpl::ObjectDetectionImpl(
@@ -811,62 +820,91 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
     tracks_per_object[object_id].errors.push_back(error[i]);
   }
 
-  // LOG(INFO) << "Optical flow: flow bad: " << flow_bad_count
-  //           << " bounds bad: " << bounds_bad_count
-  //           << " total: " << flow_result.size();
-
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       verified_tracks_per_object;
 
+  dyno::utils::ChronoTimingStats lkt_outliers_t("feature_tracker.lkt_outliers");
+
   const cv::Mat K = camera_->getParams().getCameraMatrix();
+
+  static constexpr double kThresholdE = 1.0;
+  static constexpr double kEMaxIters = 100;
+
+  // Build a stable list of objects to process. This also updates the tracking
+  // statistics serially, avoiding concurrent writes to tracking_stats.
+  struct ObjectTracks {
+    ObjectId object_id;
+    const FeatureBlockContainer::FeatureData* tracks;
+  };
+
+  std::vector<ObjectTracks> objects_to_process;
+  objects_to_process.reserve(tracks_per_object.size());
+
   for (const auto& [object_id, good_tracks] : tracks_per_object) {
-    auto num_good_points = good_tracks.size();
+    tracking_stats[object_id].tracked_after_flow = good_tracks.size();
 
-    tracking_stats[object_id].tracked_after_flow = num_good_points;
-    // static constexpr double kHomographyReprThreshold = 5.0;
-    // // limit the number of iterations for speed
-    // static constexpr double kHomographyMaxIters = 500;
-    // cv::Mat inlier_mask = vision_tools::findHomography(
-    //     good_tracks.previous_points, good_tracks.points);
-    //     kHomographyReprThreshold, kHomographyMaxIters);
+    objects_to_process.push_back({object_id, &good_tracks});
+  }
 
-    static constexpr double kThresholdE = 1.0;
-    static constexpr double kEMaxIters = 100;
-    // should is basically equivalent to the 2d2d RANSAC problem
-    // in opengv, depending on which exact method isused
-    cv::Mat inlier_mask =
-        dyno::findEssential(good_tracks.previous_points, good_tracks.points, K,
-                            kThresholdE, kEMaxIters);
+  // Each task writes to its own result slot. We construct the final map
+  // serially after all tasks complete, avoiding concurrent map insertions.
+  std::vector<FeatureBlockContainer::FeatureData> verified_tracks(
+      objects_to_process.size());
 
-    FeatureBlockContainer::FeatureData verified_tracks;
-    verified_tracks.reserve(num_good_points);
+  tbb::task_group tasks;
 
-    for (int i = 0; i < inlier_mask.rows; ++i) {
-      if (inlier_mask.at<uchar>(i)) {
-        verified_tracks.points.push_back(good_tracks.points[i]);
-        verified_tracks.previous_points.push_back(
-            good_tracks.previous_points[i]);
-        verified_tracks.ids.push_back(good_tracks.ids[i]);
-        verified_tracks.age.push_back(good_tracks.age[i]);
-        verified_tracks.errors.push_back(good_tracks.errors[i]);
-        verified_tracks.inlier.push_back(good_tracks.inlier[i]);
+  for (size_t idx = 0; idx < objects_to_process.size(); ++idx) {
+    tasks.run([&, idx]() {
+      const auto& [object_id, good_tracks] = objects_to_process[idx];
+
+      const size_t num_good_points = good_tracks->size();
+
+      const cv::Mat inlier_mask =
+          dyno::findEssential(good_tracks->previous_points, good_tracks->points,
+                              K, kThresholdE, kEMaxIters);
+
+      FeatureBlockContainer::FeatureData verified;
+      verified.reserve(num_good_points);
+
+      for (int i = 0; i < inlier_mask.rows; ++i) {
+        if (inlier_mask.at<uchar>(i)) {
+          verified.points.push_back(good_tracks->points[i]);
+          verified.previous_points.push_back(good_tracks->previous_points[i]);
+          verified.ids.push_back(good_tracks->ids[i]);
+          verified.age.push_back(good_tracks->age[i]);
+          verified.errors.push_back(good_tracks->errors[i]);
+          verified.inlier.push_back(good_tracks->inlier[i]);
+        }
       }
-    }
 
-    VLOG(30) << "j= " << object_id << "inlier/outlier "
-             << verified_tracks.size() << "/" << num_good_points;
-    // if we actually have any tracks
-    // this will remove any objects with no tracks!
-    if (verified_tracks.size() > 0) {
-      // LOG(INFO) << "j= " << object_id << "inlier/outlier "
-      //           << verified_tracks.size() << "/" << num_good_points;
-      verified_tracks_per_object[object_id] = verified_tracks;
-      tracking_stats[object_id].tracked_after_or = verified_tracks.size();
+      VLOG(30) << "j=" << object_id << " inlier/outlier " << verified.size()
+               << "/" << num_good_points;
+
+      // Each task exclusively owns this result slot.
+      verified_tracks[idx] = std::move(verified);
+    });
+  }
+
+  tasks.wait();
+  lkt_outliers_t.stop();
+
+  // Assemble the final map and update tracking statistics serially.
+  for (size_t idx = 0; idx < objects_to_process.size(); ++idx) {
+    const ObjectId object_id = objects_to_process[idx].object_id;
+    auto& verified = verified_tracks[idx];
+
+    // Exclude objects with no remaining inlier tracks.
+    if (!verified.empty()) {
+      tracking_stats[object_id].tracked_after_or = verified.size();
+
+      verified_tracks_per_object.emplace(object_id, std::move(verified));
     }
   }
 
   FeatureBlockContainer tracked_features(verified_tracks_per_object);
+
   LOG(INFO) << "Tracked: " << tracked_features.debugInfoString();
+
   return {tracked_features, tracking_stats};
 }
 
@@ -953,25 +991,24 @@ void FeatureTracker::fillDetectionParam(
 
 size_t FeatureTracker::getMinFeatureDistance(ObjectId object_id) const {
   return object_id > background_label
-             ? parameters_.static_tracks.min_distance_btw_tracked_and_detected
-             : parameters_.dynamic_tracks.min_distance_btw_tracked_and_detected;
+             ? parameters_.dynamic_tracks.min_distance_btw_tracked_and_detected
+             : parameters_.static_tracks.min_distance_btw_tracked_and_detected;
 }
 size_t FeatureTracker::getMaxDetectionCorners(ObjectId object_id) const {
   return object_id > background_label
-             ? parameters_.static_tracks.max_nr_kepoints_extaction
-             : parameters_.dynamic_tracks.max_nr_kepoints_extaction;
+             ? parameters_.dynamic_tracks.max_nr_kepoints_extaction
+             : parameters_.static_tracks.max_nr_kepoints_extaction;
 }
 
 size_t FeatureTracker::getMaxTrackingCorners(ObjectId object_id) const {
   return object_id > background_label
-             ? parameters_.static_tracks.max_nr_desired_tracks
-             : parameters_.dynamic_tracks.max_nr_desired_tracks;
+             ? parameters_.dynamic_tracks.max_nr_desired_tracks
+             : parameters_.static_tracks.max_nr_desired_tracks;
 }
 
 size_t FeatureTracker::getMinAllowableTracks(ObjectId object_id) const {
-  return object_id > background_label
-             ? parameters_.static_tracks.min_nr_tracks
-             : parameters_.dynamic_tracks.min_nr_tracks;
+  return object_id > background_label ? parameters_.dynamic_tracks.min_nr_tracks
+                                      : parameters_.static_tracks.min_nr_tracks;
 }
 
 }  // namespace dyno2

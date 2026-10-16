@@ -24,10 +24,7 @@ struct Dynosam2Node::Impl {
 
  private:
   bool loadParameters(PipelineParameters& parameters);
-
-  dyno::DataReader::Ptr createDatasetDataProvider(
-      dyno::DatasetType dataset_type);
-  dyno::DataReader::Ptr createOnlineDataProvider();
+  dyno::DataReader::Ptr createDataReader(PipelineParameters& parameters);
 
  private:
   rclcpp::Node& node_;

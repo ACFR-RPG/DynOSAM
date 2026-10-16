@@ -55,6 +55,7 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/GeometryUpdater.cc
   src/frontend/MatchingAdaptor.cc
   src/frontend/FlowRefinement.cc
+  src/frontend/Frontend.cc
 
   src/common/Types.cc
   src/common/DynamicSlamInterface.cc

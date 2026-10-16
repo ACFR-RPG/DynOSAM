@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dynosam_common/Types.hpp"
+#include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/CameraParams.hpp"
 #include "dynosam_sensors/ImuParams.hpp"
 
@@ -33,6 +34,13 @@ class CanonicalSensorRig {
   virtual bool imuEnabled() const = 0;
 
   virtual std::string toString() const;
+
+  /**
+   * @brief Return a new Camera made from the canonical params
+   *
+   * @return Camera::Ptr
+   */
+  Camera::Ptr cannonicalCamera() const;
 
   /**
    * @brief Get the ImuCalibration.

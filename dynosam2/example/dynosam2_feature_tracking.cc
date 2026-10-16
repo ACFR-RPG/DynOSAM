@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
         const WrappedRGBMono wrapped_rgb = container->rgb();
         const cv::Mat rgb = wrapped_rgb.image();
-        cv::imshow("Fast Track", tracking_result.featues.draw(rgb, true));
+        cv::imshow("Fast Track", tracking_result.featues->draw(rgb, true));
 
         cv::waitKey(1);
       });

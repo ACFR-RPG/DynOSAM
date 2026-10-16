@@ -40,6 +40,10 @@ std::string CanonicalSensorRig::toString() const {
   return ss.str();
 }
 
+Camera::Ptr CanonicalSensorRig::cannonicalCamera() const {
+  return std::make_shared<Camera>(getCanonicalParams());
+}
+
 ImuCalibration CanonicalSensorRig::getImuParams() const {
   return ImuCalibration{};
 }

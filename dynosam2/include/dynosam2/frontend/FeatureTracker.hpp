@@ -24,7 +24,8 @@ class FeatureTracker {
 
   struct Result {
     ObjectDetectionResult object_detection;
-    FeatureBlockContainer& featues;
+    // Points to data stored in the tracker itself
+    FeatureBlockContainer* featues;
   };
 
   FeatureTracker(const FrontendParameters& parameters, Camera::Ptr camera);

@@ -11,6 +11,11 @@
 
 namespace dyno2 {
 
+/* Check dyno params match the sensor configuration and update the params if
+ * needed*/
+static bool reconfigure(const SensorMode& sensor_mode,
+                        PipelineParameters& parameters);
+
 static std::string getFilePathFromParams(rclcpp::Node* node,
                                          const std::string& param_name,
                                          const std::string& description) {
@@ -38,33 +43,14 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   PipelineParameters system_paramters;
   loadParameters(system_paramters);
 
-  dyno::ros::Parameter is_online_param =
-      dyno::ros::Parameter::Builder(node_ptr, "online", false)
-          .description("If the online DataReader should be used")
-          .finish();
-
-  if (is_online_param.get<bool>()) {
-    data_reader_ = createOnlineDataProvider();
-  } else {
-    LOG(FATAL) << "TODO";
-    RCLCPP_INFO_STREAM(node_ptr->get_logger(),
-                       "Update time external hook created. This will publish "
-                       "internal dynosam timestamp's to /clock!");
-    rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr clock_pub =
-        node_ptr->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
-    // hooks->update_time = [clock_pub](dyno::Timestamp timestamp) -> void {
-    //   auto msg = rosgraph_msgs::msg::Clock();
-    //   msg.clock = dyno::ros::toRosTime(timestamp);
-    //   CHECK_NOTNULL(clock_pub)->publish(msg);
-    // };
-  }
+  data_reader_ = createDataReader(system_paramters);
   CHECK_NOTNULL(data_reader_);
-
-  // setup slam
-  slam_ = std::make_shared<DynamicSlam>(system_paramters);
 
   auto sensor_rig = data_reader_->sensorRig();
   CHECK_NOTNULL(sensor_rig);
+
+  //   / setup slam
+  slam_ = std::make_shared<DynamicSlam>(system_paramters, sensor_rig);
 
   constexpr static bool kRunParallel = true;
 
@@ -189,7 +175,7 @@ Dynosam2Node::Impl::~Impl() {
   if (data_interface_spinner_) data_interface_spinner_->shutdown();
   if (pipeline_spinner_) pipeline_spinner_->shutdown();
   if (viz_spinner_) viz_spinner_->shutdown();
-  // stop diagnostic updater before pipeline as all the pipeline owns
+  //  stop diagnostic updater before pipeline as all the pipeline owns
   //  the memory for all diagnostics tasks which are only stored in the
   //  updater with references/raw pointers
   if (diagnostics_updater_) diagnostics_updater_.reset(nullptr);
@@ -208,41 +194,91 @@ bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
   return true;
 }
 
-dyno::DataReader::Ptr Dynosam2Node::Impl::createDatasetDataProvider(
-    dyno::DatasetType dataset_type) {
-  std::string dataset_path(
-      getFilePathFromParams(&node_, "dataset_path", "Path to dataset folder"));
-}
-dyno::DataReader::Ptr Dynosam2Node::Impl::createOnlineDataProvider() {
-  auto mode_param =
-      dyno::ros::Parameter::Builder(&node_, "input_image_mode",
-                                    "rgb+aligned_depth")
-          .description(
-              "Specify sensor and camera stream modes (ie. rgb+aligned_depth, "
-              "+stereo, +imu etc.)")
+dyno::DataReader::Ptr Dynosam2Node::Impl::createDataReader(
+    PipelineParameters& parameters) {
+  dyno::ros::Parameter is_online_param =
+      dyno::ros::Parameter::Builder(&node_, "online", false)
+          .description("If the online DataReader should be used")
           .finish();
 
-  dyno::SensorMode sensor_mode(mode_param.get<std::string>());
+  if (is_online_param.get<bool>()) {
+    auto mode_param = dyno::ros::Parameter::Builder(&node_, "input_image_mode",
+                                                    "rgb+aligned_depth")
+                          .description(
+                              "Specify sensor and camera stream modes (ie. "
+                              "rgb+aligned_depth, "
+                              "+stereo, +imu etc.)")
+                          .finish();
 
-  dyno::LoadingSourceParams loading_sources;
-  loading_sources.params_folder = params_path_;
-  loading_sources.cameras_from_ros = true;
+    dyno::SensorMode sensor_mode(mode_param.get<std::string>());
+    reconfigure(sensor_mode, parameters);
 
-  dyno::SensorSystem::Ptr sensor_system = std::make_shared<dyno::SensorSystem>(
-      node_.create_sub_node("dataprovider"), sensor_mode.depthRigType(),
-      loading_sources);
+    dyno::LoadingSourceParams loading_sources;
+    loading_sources.params_folder = params_path_;
+    loading_sources.cameras_from_ros = true;
 
-  for (const auto& configs : sensor_mode.configs()) {
-    sensor_system->addCamera(configs);
+    dyno::SensorSystem::Ptr sensor_system =
+        std::make_shared<dyno::SensorSystem>(
+            node_.create_sub_node("dataprovider"), sensor_mode.depthRigType(),
+            loading_sources);
+
+    for (const auto& configs : sensor_mode.configs()) {
+      sensor_system->addCamera(configs);
+    }
+
+    sensor_system->enableImu(sensor_mode.useImu());
+    sensor_system->finalise();
+
+    // do better with the subnodes
+    auto subscriber = std::make_shared<dyno::Subscriber>(
+        sensor_system, node_.create_sub_node("images"));
+    return subscriber;
+  } else {
+    std::string dataset_path(getFilePathFromParams(&node_, "dataset_path",
+                                                   "Path to dataset folder"));
+    LOG(FATAL) << "TODO";
+    // RCLCPP_INFO_STREAM(node_ptr->get_logger(),
+    //                    "Update time external hook created. This will publish
+    //                    " "internal dynosam timestamp's to /clock!");
+    // rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr clock_pub =
+    //     node_ptr->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
+    // hooks->update_time = [clock_pub](dyno::Timestamp timestamp) -> void {
+    //   auto msg = rosgraph_msgs::msg::Clock();
+    //   msg.clock = dyno::ros::toRosTime(timestamp);
+    //   CHECK_NOTNULL(clock_pub)->publish(msg);
+    // };
+    return nullptr;
   }
+}
 
-  sensor_system->enableImu(sensor_mode.useImu());
-  sensor_system->finalise();
+// reconfigure any parameters for online mode
+bool reconfigure(const SensorMode& sensor_mode,
+                 PipelineParameters& parameters) {
+  bool any_changed = false;
+  auto& frontend = parameters.frontend;
+  // if (frontend.prefer_provided_optical_flow &&
+  //     !sensor_mode.hasStreamType(StreamConfig::Types::OpticalFlow)) {
+  //   LOG(WARNING) << "Sensor mode:" << sensor_mode.rawSensorMode()
+  //                << " does not include optical flow "
+  //                << " but prefer_provided_optical_flow=true! DynoParams will
+  //                "
+  //                   "be reconfigured";
+  //   frontend.prefer_provided_optical_flow = false;
+  //   any_changed = true;
+  // }
 
-  // do better with the subnodes
-  auto subscriber = std::make_shared<dyno::Subscriber>(
-      sensor_system, node_.create_sub_node("images"));
-  return subscriber;
+  if (frontend.prefer_provided_object_detection &&
+      !sensor_mode.hasStreamType(StreamConfig::Types::Mask)) {
+    LOG(WARNING) << "Sensor mode:" << sensor_mode.rawSensorMode()
+                 << " does not include object mask "
+                 << " but prefer_provided_object_detection=true! DynoParams "
+                    "will be reconfigured!\n"
+                 << " NOTE: ground truth object id's may now no longer match "
+                    "the tracked id's from Dynosam!!!";
+    frontend.prefer_provided_object_detection = false;
+    any_changed = true;
+  }
+  return any_changed;
 }
 
 Dynosam2Node::Dynosam2Node(const rclcpp::NodeOptions& options)
