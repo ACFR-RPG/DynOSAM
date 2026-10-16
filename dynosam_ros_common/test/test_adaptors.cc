@@ -32,15 +32,24 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <dynosam/test/helpers.hpp>
-
 #include "dynosam_ros_common/adaptors/CameraParamsAdaptor.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 
 using namespace dyno;
 
+static dyno::CameraParams makeDefaultCameraParams() {
+  dyno::CameraParams::IntrinsicsCoeffs intrinsics(4);
+  dyno::CameraParams::DistortionCoeffs distortion(4);
+  intrinsics.at(0) = 554.256;  // fx
+  intrinsics.at(1) = 554.256;  // fy
+  intrinsics.at(2) = 640 / 2;  // u0
+  intrinsics.at(3) = 480 / 2;  // v0
+  return dyno::CameraParams(intrinsics, distortion, cv::Size(640, 480),
+                            "radtan");
+}
+
 TEST(CameraParamsAdaptor, testToROS) {
-  CameraParams dyno_params = dyno_testing::makeDefaultCameraParams();
+  CameraParams dyno_params = makeDefaultCameraParams();
 
   sensor_msgs::msg::CameraInfo camera_info;
 

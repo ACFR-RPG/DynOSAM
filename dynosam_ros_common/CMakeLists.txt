@@ -33,7 +33,6 @@ find_package(pcl_conversions REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(dynosam REQUIRED)
 find_package(PCL REQUIRED conversions surface)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
@@ -42,6 +41,10 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(dynamic_slam_interfaces REQUIRED)
 find_package(rclcpp_components REQUIRED)
 
+find_package(dynosam_sensors REQUIRED)
+find_package(dynosam_processing REQUIRED)
+
+
 
 # setup targets
 include_directories(
@@ -49,8 +52,8 @@ include_directories(
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
-  ${dynosam_INCLUDE_DIRS}
   ${pcl_conversions_INCLUDE_DIRS}
+  ${dynosam_sensors_INCLUDE_DIRS}
 )
 
 
@@ -71,10 +74,11 @@ set(LINK_LIBS
   ${PCL_LIBRARIES}
   cv_bridge::cv_bridge
   dynamic_slam_interfaces::dynamic_slam_interfaces_library
-  dynosam::dynosam
   image_transport::image_transport
   message_filters::message_filters
   rclcpp::rclcpp
+  dynosam_sensors::dynosam_sensors
+  dynosam_processing::dynosam_processing
   sensor_msgs::sensor_msgs_library
   tf2_ros::static_transform_broadcaster_node
   tf2_ros::tf2_ros
@@ -90,6 +94,8 @@ set(TARGET_EXPORT_DEPS
   dynosam
   tf2_ros
   nav_msgs
+  dynosam_sensors
+  dynosam_processing
   diagnostic_updater
   message_filters
   tf2_geometry_msgs

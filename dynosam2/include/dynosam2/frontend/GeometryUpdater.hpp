@@ -2,48 +2,12 @@
 
 #include "dynosam2/frontend/FeatureBlockContainer.hpp"
 #include "dynosam2/frontend/Frame.hpp"
+#include "dynosam2/frontend/Utils.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/ImageContainer.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno2 {
-
-/* @brief Super fast implementation of K^{-1} * kp, returning normalized bearing
- * vector. Basic benchmarking shows at least a 7x speed up over the raw eigen
- * version: (K_inv * gtsam::Vector3(kp(0), kp(1), 1.0)).normzlied().
- *
- * Implementation takes advantage of the structure of the K matrix.
- *
- * @param fx
- * @param fy
- * @param cx
- * @param cy
- * @param kp
- * @return gtsam::Vector3
- */
-inline gtsam::Vector3 bearingOptimized(double fx, double fy, double cx,
-                                       double cy, const gtsam::Point2& kp) {
-  const double nx = (kp.x() - cx) / fx;
-  const double ny = (kp.y() - cy) / fy;
-
-  const double inv_norm = 1.0 / std::sqrt(nx * nx + ny * ny + 1.0);
-
-  return gtsam::Vector3(nx * inv_norm, ny * inv_norm, inv_norm);
-}
-
-struct ComputeBearing {
-  const double fx_, fy_, cx_, cy_;
-
-  ComputeBearing(const CameraParams& params)
-      : fx_(params.fx()),
-        fy_(params.fy()),
-        cx_(params.cu()),
-        cy_(params.cv()) {}
-
-  inline gtsam::Vector3 operator()(const gtsam::Point2& kp) const {
-    return bearingOptimized(fx_, fy_, cx_, cy_, kp);
-  }
-};
 
 class GeometryUpdater {
  public:
@@ -53,16 +17,15 @@ class GeometryUpdater {
   GeometryUpdater(Camera::Ptr camera, const ImageContainer& images,
                   FeatureBlockContainer& features);
 
-  // TODO: return outliers and mark features separately!
-  void calcPoints(FeatureBlockGeometryMap& point_map);
-  void updateGeometry(FeatureBlockGeometry& local_geometry);
+  void calcPoints(FeatureBlockGeometryMap& feature_block_geometries);
+  void updateGeometry(FeatureBlockGeometry& feature_block_geometry);
 
  private:
-  void calcPointsRGBD(FeatureBlockGeometryMap& point_map);
-  void calcPointsStereo(FeatureBlockGeometryMap& point_map);
+  void calcPointsRGBD(FeatureBlockGeometryMap& feature_block_geometries);
+  void calcPointsStereo(FeatureBlockGeometryMap& feature_block_geometries);
 
-  void updateGeometryRGBD(FeatureBlockGeometry& local_geometry);
-  void updateGeometryStereo(FeatureBlockGeometry& local_geometry);
+  void updateGeometryRGBD(FeatureBlockGeometry& feature_block_geometry);
+  void updateGeometryStereo(FeatureBlockGeometry& feature_block_geometry);
 
   // NOTE: keypoint sigma approximates the angular uncertainty
   //  of the pixel measurement (ie the ray can be anyway along the cone created

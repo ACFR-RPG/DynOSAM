@@ -53,6 +53,10 @@
 
 namespace dyno {
 
+/* Check dyno params match the sensor configuration and update the params if
+ * needed*/
+static bool reconfigure(const SensorMode& sensor_mode, DynoParams& dyno_params);
+
 DynosamNodeImpl::DynosamNodeImpl(rclcpp::Node& node) : dynosam_node(node) {}
 
 void DynosamNodeImpl::init() {
@@ -204,7 +208,7 @@ dyno::DataReader::Ptr DynosamNodeImpl::createOnlineDataProvider(
           .get<std::string>();
 
   SensorMode sensor_mode(mode);
-  sensor_mode.reconfigure(dyno_params);
+  reconfigure(sensor_mode, dyno_params);
 
   LoadingSourceParams loading_sources;
   loading_sources.params_folder = getParamsPath();
@@ -264,6 +268,33 @@ std::string DynosamNodeImpl::getParamsPath() {
   return safeGetFilePath("params_path", "dynosam/params/",
                          "Path to the folder containing the yaml "
                          "files with the Dynosam parameters.");
+}
+
+bool reconfigure(const SensorMode& sensor_mode, DynoParams& dyno_params) {
+  bool any_changed = false;
+  auto& tracker_params = dyno_params.frontend_params_.tracker_params;
+  if (tracker_params.prefer_provided_optical_flow &&
+      !sensor_mode.hasStreamType(StreamConfig::Types::OpticalFlow)) {
+    LOG(WARNING) << "Sensor mode:" << sensor_mode.rawSensorMode()
+                 << " does not include optical flow "
+                 << " but prefer_provided_optical_flow=true! DynoParams will "
+                    "be reconfigured";
+    tracker_params.prefer_provided_optical_flow = false;
+    any_changed = true;
+  }
+
+  if (tracker_params.prefer_provided_object_detection &&
+      !sensor_mode.hasStreamType(StreamConfig::Types::Mask)) {
+    LOG(WARNING) << "Sensor mode:" << sensor_mode.rawSensorMode()
+                 << " does not include object mask "
+                 << " but prefer_provided_object_detection=true! DynoParams "
+                    "will be reconfigured!\n"
+                 << " NOTE: ground truth object id's may now no longer match "
+                    "the tracked id's from Dynosam!!!";
+    tracker_params.prefer_provided_object_detection = false;
+    any_changed = true;
+  }
+  return any_changed;
 }
 
 DynosamNode::DynosamNode(const rclcpp::NodeOptions& options)

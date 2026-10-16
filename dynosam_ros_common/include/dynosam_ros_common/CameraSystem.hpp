@@ -7,7 +7,6 @@
 #include <variant>
 #include <vector>
 
-#include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/ImuParams.hpp"
 #include "dynosam_sensors/SensorRig.hpp"
@@ -75,9 +74,8 @@ class SensorMode {
   bool useImu() const;
   DepthRigType depthRigType() const;
 
-  /* Check dyno params match the sensor configuration and update the params if
-   * needed*/
-  bool reconfigure(DynoParams& dyno_params) const;
+  bool hasStreamType(StreamConfig::Types type) const;
+  const std::string& rawSensorMode() const { return raw_sensor_mode_; }
 
  private:
   void parse(const std::string& sensor_mode);

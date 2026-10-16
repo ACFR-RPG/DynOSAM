@@ -34,31 +34,10 @@
 #include "dynosam_core/DynoState.hpp"
 #include "dynosam_core/GroundTruthPacket.hpp"
 #include "dynosam_core/RealtimeOutput.hpp"
+#include "dynosam_processing/ImageViewer.hpp"
 #include "dynosam_processing/PipelineBase.hpp"
 
 namespace dyno {
-
-struct ImageToDisplay {
-  ImageToDisplay() = default;
-  ImageToDisplay(const std::string& name, const cv::Mat& image)
-      // clone necessary?
-      : name_(name), image_(image.clone()) {}
-
-  std::string name_;
-  cv::Mat image_;
-};
-using ImageDisplayQueue = ThreadsafeQueue<ImageToDisplay>;
-
-class OpenCVImageDisplayQueue {
- public:
-  OpenCVImageDisplayQueue(ImageDisplayQueue* display_queue, bool parallel_run);
-
-  void process();
-
- private:
-  ImageDisplayQueue* display_queue_;
-  bool parallel_run_;
-};
 
 template <typename TYPE>
 class DisplayBase {

@@ -53,6 +53,14 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/SparseFlow.cc
   src/frontend/FeatureTracker.cc
   src/frontend/GeometryUpdater.cc
+  src/frontend/MatchingAdaptor.cc
+  src/frontend/FlowRefinement.cc
+
+  src/common/Types.cc
+  src/common/DynamicSlamInterface.cc
+
+  src/DynamicSlam.cc
+  src/DynamicSlamVisualizer.cc
 )
 
 
@@ -123,11 +131,11 @@ install(
   RUNTIME DESTINATION bin
 )
 
-## This is VERY IMPORTANT so that dynosam_ros can find the params folder using ament indexing!!
-# install(DIRECTORY
-#   params
-#   DESTINATION share/${PROJECT_NAME}
-# )
+## This is VERY IMPORTANT so that dynosam2_ros can find the params folder using ament indexing!!
+install(DIRECTORY
+  params
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 

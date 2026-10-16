@@ -19,6 +19,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 find_package(dynosam_ros_common)
+find_package(dynosam REQUIRED)
+
 
 # find_package(ament_cmake REQUIRED)
 # find_package(rclcpp REQUIRED)
@@ -48,11 +50,7 @@ find_package(dynosam_ros_common)
 include_directories(
   include
   ${dynosam_ros_common_INCLUDE_DIRS}
-  # ${rclcpp_INCLUDE_DIRS}
-  # ${EIGEN3_INCLUDE_DIRS}
-  # ${PCL_INCLUDE_DIRS}
-  # ${dynosam_INCLUDE_DIRS}
-  # ${pcl_conversions_INCLUDE_DIRS}
+  ${dynosam_INCLUDE_DIRS}
 )
 
 
@@ -128,6 +126,7 @@ target_link_libraries(${PROJECT_NAME}
   rclcpp_components::component
   rclcpp_components::component_manager
   dynosam_ros_common::dynosam_ros_common
+  dynosam::dynosam
 )
 
 ament_export_libraries(${PROJECT_NAME}
@@ -178,9 +177,6 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
-
-#install python scripts/modules
-ament_python_install_package(${PROJECT_NAME})
 
 #####exec test#########
 add_executable(dynosam_node nodes/dynosam_node.cc)

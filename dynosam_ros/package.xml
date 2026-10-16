@@ -30,6 +30,7 @@
   <depend>tf2_msgs</depend>
   <depend>rclpy</depend> -->
   <depend>dynosam_ros_common</depend>
+  <depend>dynosam</depend>
 
   <depend>rclcpp_components</depend>
 

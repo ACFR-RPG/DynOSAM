@@ -58,34 +58,10 @@ const std::vector<StreamConfig>& SensorMode::configs() const {
 }
 
 bool SensorMode::useImu() const { return use_imu_; }
-
 DepthRigType SensorMode::depthRigType() const { return depth_rig_type_; }
 
-bool SensorMode::reconfigure(DynoParams& dyno_params) const {
-  bool any_changed = false;
-  auto& tracker_params = dyno_params.frontend_params_.tracker_params;
-  if (tracker_params.prefer_provided_optical_flow &&
-      !hasStreamType(configs(), StreamConfig::Types::OpticalFlow)) {
-    LOG(WARNING) << "Sensor mode:" << raw_sensor_mode_
-                 << " does not include optical flow "
-                 << " but prefer_provided_optical_flow=true! DynoParams will "
-                    "be reconfigured";
-    tracker_params.prefer_provided_optical_flow = false;
-    any_changed = true;
-  }
-
-  if (tracker_params.prefer_provided_object_detection &&
-      !hasStreamType(configs(), StreamConfig::Types::Mask)) {
-    LOG(WARNING) << "Sensor mode:" << raw_sensor_mode_
-                 << " does not include object mask "
-                 << " but prefer_provided_object_detection=true! DynoParams "
-                    "will be reconfigured!\n"
-                 << " NOTE: ground truth object id's may now no longer match "
-                    "the tracked id's from Dynosam!!!";
-    tracker_params.prefer_provided_object_detection = false;
-    any_changed = true;
-  }
-  return any_changed;
+bool SensorMode::hasStreamType(StreamConfig::Types type) const {
+  return dyno::hasStreamType(configs(), type);
 }
 
 void SensorMode::parse(const std::string& sensor_mode) {

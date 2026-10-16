@@ -9,7 +9,7 @@ from launch_ros.descriptions import ComposableNode
 from launch.actions import DeclareLaunchArgument, SetLaunchConfiguration
 
 
-from dynosam_ros.dynosam_node import DynosamNode
+from dynosam_ros_common.dynosam_node import DynosamNode
 
 import os
 import yaml

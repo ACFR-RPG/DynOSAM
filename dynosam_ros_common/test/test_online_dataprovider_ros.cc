@@ -33,7 +33,6 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
-#include <dynosam/test/helpers.hpp>
 
 #include "dynosam_ros_common/MultiSync.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"

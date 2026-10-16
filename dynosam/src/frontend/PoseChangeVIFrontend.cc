@@ -370,6 +370,7 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
   LOG(INFO) << "Solving using ref pose: " << previous_frame_id;
   CHECK(estimator->poseExists(previous_frame_id));
 
+  utils::ChronoTimingStats match_t(this->moduleName() + ".solve.match");
   LandmarkMap previous_landmarks_C;
   // build local geometry from previous frame and use with PnP initially
   // this just seems WAY more stabls
@@ -387,6 +388,7 @@ void PoseChangeVIFrontendFAST::solveVisualOdometryByThread(
       camera_, local_geometry, previous_landmarks_C, features);
   size_t num_matches = adapter_previous.getNumberCorrespondences();
   LOG(INFO) << "Solving VO RANSAC with n matches:" << num_matches;
+  match_t.stop();
 
   // solve relative motion
   CHECK(context.vo);

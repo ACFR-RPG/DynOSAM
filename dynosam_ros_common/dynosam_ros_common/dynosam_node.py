@@ -8,17 +8,7 @@ import launch.logging
 class DynosamNode(Node):
     """Custom Node that auto-builds gflags + dynamic args."""
 
-    DEFAULT_ROS_PACKGE = "dynosam_ros"
-    DEFAULT_EXECUTABLE_NAME = "dynosam_node"
-
     def __init__(self, **kwargs):
-
-        if "package" not in kwargs:
-            kwargs.update("package", DynosamNode.DEFAULT_ROS_PACKGE)
-
-        if "executable" not in kwargs:
-            kwargs.update("executable", DynosamNode.DEFAULT_EXECUTABLE_NAME)
-
         self._dyno_kwargs = kwargs
         super().__init__(**kwargs)
         self._logger = launch.logging.get_logger("dynosam_launch.DynoSAMNode")
@@ -60,7 +50,6 @@ class DynosamNode(Node):
         # add non-ROS args from CLI
         # should come from the LaunchContext
         all_argv = copy.deepcopy(context.argv)
-        self._logger.info(f"All argv {all_argv}")
         non_ros_argv = rclpy.utilities.remove_ros_args(all_argv)
         if non_ros_argv:
             self._logger.info(f"Appending extra non-ROS argv: {non_ros_argv}")
@@ -69,7 +58,6 @@ class DynosamNode(Node):
 
     def execute(self, context):
         actions = super().execute(context)
-        self._logger.info("IN context")
         """Called by the LaunchService when this node is executed."""
         # Compute dynamic arguments
         gflags_args = self._get_dynamic_gflags(context)

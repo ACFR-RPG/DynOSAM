@@ -98,8 +98,6 @@ add_library(${PROJECT_NAME} SHARED
   src/pipeline/PipelineManager.cc
   src/pipeline/PipelineParams.cc
   src/pipeline/PipelineSpinner.cc
-
-  src/visualizer/VisualizerPipelines.cc
 )
 
 

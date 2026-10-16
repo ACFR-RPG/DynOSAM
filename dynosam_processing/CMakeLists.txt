@@ -39,6 +39,7 @@ add_library(${PROJECT_NAME} SHARED
   src/DatasetReader.cc
   src/DataInterfacePipeline.cc
   src/ThreadSafeImuBuffer.cc
+  src/ImageViewer.cc
 
   src/datasets/DataProviderFactory.cc
   src/datasets/VirtualKittidataProvider.cc
@@ -61,12 +62,14 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 
-# ament_export_dependencies(
-#   dynosam_common
-#   dynosam_sensors
-#   dynosam_cv
-#   dynosam_core
-# )
+ament_export_dependencies(
+  dynosam_common
+  dynosam_sensors
+  dynosam_cv
+  dynosam_core
+)
+
+
 
 
 target_include_directories(${PROJECT_NAME}

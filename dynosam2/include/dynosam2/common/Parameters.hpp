@@ -4,6 +4,8 @@
 
 namespace dyno2 {
 
+struct EstimationParameters {};
+
 struct FrontendParameters {
   bool prefer_provided_object_detection{true};
   std::string detection_model{"yolov8n-seg.pt"};
@@ -23,6 +25,14 @@ struct FrontendParameters {
   //  since we dont want to try and re-detect ALL the time if the object is too
   //  small to even get 300 features (this)
   Tracker dynamic_tracks{350, 300, 10, 3};
+
+  // struct GeometricSolve {
+  //   bool refine_with_flow{true};
+  //   bool use_robust_loss{true};
+  // };
+
+  // GeometricSolve static_geometric_solve;
+  // GeometricSolve dynamic_geometric_solve;
 };
 
 struct PipelineParameters {

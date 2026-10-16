@@ -40,7 +40,7 @@
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
 DEFINE_bool(use_opencv_display, true,
-            "If true, the OpenCVImageDisplayQueue will be processed");
+            "If true, the ImageDisplayer will be processed");
 
 namespace dyno {
 
@@ -50,7 +50,7 @@ DynoPipelineManager::DynoPipelineManager(
     BackendModuleFactory::Ptr factory, const ExternalHooks::Ptr external_hooks)
     : params_(params),
       data_provider_(std::move(data_provider)),
-      displayer_(&display_queue_, params.parallelRun())
+      displayer_(&display_queue_)
 
 {
   LOG(INFO) << "Starting DynoPipelineManager";
@@ -177,7 +177,7 @@ bool DynoPipelineManager::spin() {
 
 bool DynoPipelineManager::spinViz() {
   if (FLAGS_use_opencv_display) {
-    displayer_.process();
+    displayer_.displayFromQueue();
   }
   return true;
 }

@@ -7,6 +7,7 @@
 #include "dynosam2/common/Parameters.hpp"
 #include "dynosam2/frontend/FeatureBlockContainer.hpp"
 #include "dynosam2/frontend/SparseFlow.hpp"
+#include "dynosam2/frontend/Utils.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_core/DynamicObjects.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
@@ -16,21 +17,6 @@
 using namespace dyno;
 
 namespace dyno2 {
-
-inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
-  const int x = cvRound(point.x);
-  const int y = cvRound(point.y);
-  return x >= 0 && x < cols && y >= 0 && y < rows;
-}
-
-inline bool checkBoundsAndLabel(const cv::Point2f& point,
-                                const cv::Mat& object_masks,
-                                ObjectId expected_id, int rows, int cols) {
-  const int x = cvRound(point.x);
-  const int y = cvRound(point.y);
-  return x >= 0 && x < cols && y >= 0 && y < rows &&
-         object_masks.at<ObjectId>(y, x) == expected_id;
-}
 
 class FeatureTracker {
  public:
@@ -134,6 +120,13 @@ class FeatureTracker {
   std::pair<FeatureBlockContainer, FlowTrackingStatsMap> sparseFeatureTrack(
       const cv::Mat& mono, const cv::Mat& object_mask);
 
+  // R_previous_curr is a rotation from previous to current (ie p_curr = R *
+  // p_previous)
+  bool predictKeypointsGivenRotation(
+      const std::vector<cv::Point2f>& previous_pts,
+      const gtsam::Rot3& R_previous_curr,
+      std::vector<cv::Point2f>& predicted_pts_curr) const;
+
   void fillDetectionParam(ObjectId object_id, const cv::Mat& mask,
                           const cv::Rect& bounding_box, int current_tracks,
                           GfttDetector::Param& detection_param) const;
@@ -165,6 +158,10 @@ class FeatureTracker {
   ObjectDetectionImpl object_detection_impl_;
   //! Sparse LK tracker
   OpticalFlowLK optical_flow_impl_;
+
+  // Cached camera matrices
+  cv::Matx33f K_cv_;
+  cv::Matx33f K_inv_cv_;
 
   ObjectDetectionEngine::Ptr object_detection_engine_;
   std::vector<cv::Mat> curr_mono_pyr_;

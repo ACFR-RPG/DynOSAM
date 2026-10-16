@@ -20,28 +20,28 @@ def validate_path(path: str):
     return path
 
 #NOTE: very helpful answers on ROS2 launch files: https://answers.ros.org/question/382000/ros2-makes-launch-files-crazy-too-soon-to-be-migrating/#:~:text=#!/usr/bin/env,condition=UnlessCondition(use_gui)%0A%20%20%20%20)%0A%0A%20%20])
-def get_default_dynosam_params_path():
+def get_default_dynosam_params_path(package):
     #shoudl really be dynosam/<dataset>/example.flags like Kimera but we leave verbose for now
-    dynosam_share_dir = get_package_share_directory('dynosam')
+    dynosam_share_dir = get_package_share_directory(package)
 
     logger = _get_utils_logger()
-    logger.info("Loading default dynosam params folder path which is expected to be in the share directory of the dynosam package")
+    logger.info(f"Loading default params folder path which is expected to be in the share directory of the {package} package")
 
     if not os.path.exists(dynosam_share_dir):
         raise FileNotFoundError(
-            "dynosam package share directory does not exist at path {}".format(dynosam_share_dir)
+            "Package share directory does not exist at path {}".format(dynosam_share_dir)
         )
 
     #check params folder has been correctly exported
     share_folders = os.listdir(dynosam_share_dir)
     if "params" not in share_folders:
         raise FileNotFoundError(
-            "dynosam package share directory exists but 'params' folder does not exist at {}. "
+            f"dynosam package share directory exists but 'params' folder does not exist at {package}. "
             "Has the params folder been exported in the dynosam CMakeLists.txt like:\n"
             "\'install(DIRECTORY\n"
             "\tparams\n"
-            "\tDESTINATION share/${PROJECT_NAME}\n"
-            ")\'?".format(dynosam_share_dir)
+            "\tDESTINATION share/${{PROJECT_NAME}}\n"
+            ")\'?"
         )
 
     return os.path.join(
