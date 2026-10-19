@@ -2,15 +2,31 @@
 
 #include "dynosam2/common/StateEstimate.hpp"
 #include "dynosam_common/ModuleBase.hpp"
+#include "dynosam_common/Trajectories.hpp"
+#include "dynosam_common/Types.hpp"
 #include "dynosam_processing/ImageViewer.hpp"
 #include "dynosam_processing/ThreadSafeQueue.hpp"
 #include "dynosam_sensors/VIFrontendInput.hpp"
 
 namespace dyno2 {
 
+struct UpdatedStates {
+  std::vector<dyno::FrameId> vo;
+  std::vector<dyno::TemporalObjectIdentifier> objects;
+};
+
 /// @brief Realtime publishing data struct.
 struct PublicationData {
   DYNO_POINTER_TYPEDEFS(PublicationData)
+
+  dyno::FrameId frame_id;
+  dyno::Timestamp timestamp;
+
+  // TODO: add seen objects! becuase we might upate objects via FULL BA but we
+  // dont want to draw their trajectoties!
+  UpdatedStates updated_states;
+  //! Seen objects with motion this frame
+  std::vector<dyno::ObjectId> observed_objects;
 };
 
 class DynamicSlamInterface

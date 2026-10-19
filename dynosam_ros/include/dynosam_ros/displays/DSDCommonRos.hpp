@@ -123,11 +123,11 @@ class DynoStatePublisher {
    * @param child_frame_link const std::string&
    */
   template <typename T>
-  void sendTransform(const T& pose, const Timestamp& timestamp,
+  void sendTransform(const T& pose, const dyno::Timestamp& timestamp,
                      const std::string& frame_link,
                      const std::string& child_frame_link) {
     std_msgs::msg::Header header;
-    header.stamp = ros::toRosTime(timestamp);
+    header.stamp = dyno::ros::toRosTime(timestamp);
     header.frame_id = frame_link;
 
     sendTransform(pose, header, child_frame_link);

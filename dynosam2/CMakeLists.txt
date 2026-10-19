@@ -60,6 +60,11 @@ add_library(${PROJECT_NAME} SHARED
   src/common/Types.cc
   src/common/DynamicSlamInterface.cc
 
+  src/estimator/BaGraph.cc
+  src/estimator/VioGraph.cc
+  src/estimator/DoGraph.cc
+  src/estimator/SlamBackend.cc
+
   src/DynamicSlam.cc
   src/DynamicSlamVisualizer.cc
 )

@@ -163,6 +163,7 @@ def run(parsed_args, unknown_args):
     run_pipeline = parsed_args["run_pipeline"]
     run_analysis = parsed_args["run_analysis"]
     launch_file = parsed_args["launch_file"]
+    package = parsed_args["package"]
 
     launch_arguments={'dataset_path': datset_path}
 
@@ -175,7 +176,7 @@ def run(parsed_args, unknown_args):
     log.info(f"Running launch using dynosam_ros launch file {launch_file}")
 
     dynosam_launch_file = os.path.join(
-            get_package_share_directory('dynosam_ros'), 'launch', launch_file)
+            get_package_share_directory(package), 'launch', launch_file)
 
     output_folder_path = os.path.join(output_path, name)
     create_full_path_if_not_exists(output_folder_path)

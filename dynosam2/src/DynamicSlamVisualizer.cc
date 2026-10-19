@@ -2,6 +2,12 @@
 
 namespace dyno2 {
 
+DynamicSlamVisualizer::DynamicSlamVisualizer(
+    dyno::CanonicalSensorRig::Ptr sensor_rig, const SlamBackend* estimator)
+    : sensor_rig_(sensor_rig),
+      estimator_(CHECK_NOTNULL(estimator)),
+      T_RC_(sensor_rig_->getCanonicalExtrinsics()) {}
+
 void DynamicSlamVisualizer::setDisplayQueue(
     dyno::ImageDisplayQueue* display_queue) {
   image_displayer_ = std::make_unique<dyno::ImageDisplayer>(display_queue);

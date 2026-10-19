@@ -44,6 +44,7 @@ struct DynoStateTrajectories {
 };
 
 // really this is just Dyno1State!
+// TODO: move to dynosam(1)!
 struct DynoState : public DynoStateTrajectories {
   DYNO_POINTER_TYPEDEFS(DynoState)
 

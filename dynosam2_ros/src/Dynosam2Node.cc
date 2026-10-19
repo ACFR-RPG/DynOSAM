@@ -1,13 +1,18 @@
 #include "dynosam2_ros/Dynosam2Node.hpp"
 
+#include <gflags/gflags.h>
+
 #include "dynosam2_ros/Dynosam2Node-impl.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/Statistics.hpp"
-#include "dynosam_processing/PipelineHooks.hpp"
 #include "dynosam_ros_common/CameraSystem.hpp"
 #include "dynosam_ros_common/RosUtils.hpp"
 #include "dynosam_ros_common/Subscriber.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
+
+DEFINE_int32(
+    data_provider_type, 0,
+    "Which data provider (loader) to use. Associated with specific datasets");
 
 namespace dyno2 {
 
@@ -43,7 +48,8 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   PipelineParameters system_paramters;
   loadParameters(system_paramters);
 
-  data_reader_ = createDataReader(system_paramters);
+  bool is_online;
+  data_reader_ = createDataReader(system_paramters, &is_online);
   CHECK_NOTNULL(data_reader_);
 
   auto sensor_rig = data_reader_->sensorRig();
@@ -88,6 +94,17 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   // push data to SLAM pipeline
   data_interface_->registerOutputQueue(&input_queue_);
 
+  if (!is_online) {
+    rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr clock_pub =
+        node_.create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
+    data_interface_->registerPreQueueContainerCallback(
+        [clock_pub](const ImageContainer::Ptr image_container) -> void {
+          auto msg = rosgraph_msgs::msg::Clock();
+          msg.clock = dyno::ros::toRosTime(image_container->timestamp());
+          CHECK_NOTNULL(clock_pub)->publish(msg);
+        });
+  }
+
   pipeline_ = std::make_unique<DynamicSlamPipeline>("dynosam2-pipeline",
                                                     &input_queue_, slam_);
 
@@ -95,7 +112,11 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   // send to viz
   // pipeline_->registerOutputQueue(&output_queue_);
 
-  viz_ = std::make_shared<DynamicSlamVisualizerRos>(&publication_queue_);
+  const SlamBackend& estimator = slam_->getEstimator();
+  auto viz_node = node_.create_sub_node("output");
+  viz_ = std::make_shared<DynamicSlamVisualizerRos>(
+      viz_node, sensor_rig, &estimator, &publication_queue_);
+
   viz_->parallelRun(kRunParallel);
   // enable image displayer
   viz_->setDisplayQueue(&display_queue_);
@@ -195,11 +216,13 @@ bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
 }
 
 dyno::DataReader::Ptr Dynosam2Node::Impl::createDataReader(
-    PipelineParameters& parameters) {
+    PipelineParameters& parameters, bool* is_online) {
   dyno::ros::Parameter is_online_param =
       dyno::ros::Parameter::Builder(&node_, "online", false)
           .description("If the online DataReader should be used")
           .finish();
+
+  if (is_online) *is_online = is_online_param.get<bool>();
 
   if (is_online_param.get<bool>()) {
     auto mode_param = dyno::ros::Parameter::Builder(&node_, "input_image_mode",
@@ -236,18 +259,14 @@ dyno::DataReader::Ptr Dynosam2Node::Impl::createDataReader(
   } else {
     std::string dataset_path(getFilePathFromParams(&node_, "dataset_path",
                                                    "Path to dataset folder"));
-    LOG(FATAL) << "TODO";
-    // RCLCPP_INFO_STREAM(node_ptr->get_logger(),
-    //                    "Update time external hook created. This will publish
-    //                    " "internal dynosam timestamp's to /clock!");
-    // rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr clock_pub =
-    //     node_ptr->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
-    // hooks->update_time = [clock_pub](dyno::Timestamp timestamp) -> void {
-    //   auto msg = rosgraph_msgs::msg::Clock();
-    //   msg.clock = dyno::ros::toRosTime(timestamp);
-    //   CHECK_NOTNULL(clock_pub)->publish(msg);
-    // };
-    return nullptr;
+
+    RCLCPP_INFO_STREAM(node_.get_logger(),
+                       "Loading dataset from: " << dataset_path);
+
+    dyno::DataReader::Ptr data_loader = dyno::DataProviderFactory::Create(
+        dataset_path, params_path_,
+        static_cast<dyno::DatasetType>(FLAGS_data_provider_type));
+    return data_loader;
   }
 }
 

@@ -33,7 +33,10 @@ def run_sequnce(path, name, data_loader_num, backend_type, *args, **kwargs):
         "--v=30"
     ]
 
+
+
     parsed_args["launch_file"] = "dyno_sam_launch.py"
+    parsed_args["package"] = "dynosam_ros"
 
     if run_as_frontend:
         additional_args.extend([

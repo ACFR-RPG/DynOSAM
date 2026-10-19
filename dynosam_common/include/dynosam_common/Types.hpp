@@ -217,11 +217,12 @@ std::string type_name() {
 
 //! Expected label for the background in a semantic or motion mask
 constexpr static ObjectId background_label = 0u;
-
 // TODO: really should use this class a lot more but was only recently
 // introduced (~April 2026)
 //  ie in the object frame generic map raher than using nested maps!
 struct TemporalObjectIdentifier {
+  TemporalObjectIdentifier() : frame_id(0), object_id(background_label) {}
+
   TemporalObjectIdentifier(FrameId fi = 0, ObjectId oi = background_label)
       : frame_id(fi), object_id(oi) {}
 

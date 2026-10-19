@@ -33,6 +33,7 @@ include_directories(
 # build library
 add_library(${PROJECT_NAME} SHARED
   src/Dynosam2Node.cc
+  src/DynamicSlamVisualizerRos.cc
 )
 
 target_link_libraries(${PROJECT_NAME}

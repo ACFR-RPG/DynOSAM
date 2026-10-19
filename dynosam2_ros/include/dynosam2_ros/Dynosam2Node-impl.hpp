@@ -7,6 +7,7 @@
 #include "dynosam_common/utils/Spinner.hpp"
 #include "dynosam_processing/DataInterfacePipeline.hpp"
 #include "dynosam_processing/DataReader.hpp"
+#include "dynosam_processing/PipelineHooks.hpp"
 #include "dynosam_processing/PipelineModuleProcessor.hpp"
 #include "dynosam_processing/datasets/DataProviderFactory.hpp"
 #include "dynosam_ros_common/Diagnostics.hpp"
@@ -24,7 +25,8 @@ struct Dynosam2Node::Impl {
 
  private:
   bool loadParameters(PipelineParameters& parameters);
-  dyno::DataReader::Ptr createDataReader(PipelineParameters& parameters);
+  dyno::DataReader::Ptr createDataReader(PipelineParameters& parameters,
+                                         bool* is_online);
 
  private:
   rclcpp::Node& node_;
@@ -51,6 +53,8 @@ struct Dynosam2Node::Impl {
 
   dyno::ImageDisplayQueue display_queue_;
   PublicationDataQueue publication_queue_;
+
+  //   dyno::PipelineHooks hooks_;
 };
 
 }  // namespace dyno2

@@ -354,27 +354,23 @@ class KittiDataLoader : public DatasetReader<cv::Mat, cv::Mat, gtsam::Pose3,
                                              GroundTruthInputPacket> {
  public:
   struct Params {
-    MaskType mask_type = MaskType::MOTION;
-
     // needed for input dispartity to depth conversion
     // TODO: remove and hardocde per dataset!!
     double base_line = 387.5744;
-    double depth_scale_factor = 256.0;
+    // static Params fromYaml(const std::string& params_folder) {
+    //   YamlParser yaml_parser(params_folder + "DatasetParams.yaml");
 
-    static Params fromYaml(const std::string& params_folder) {
-      YamlParser yaml_parser(params_folder + "DatasetParams.yaml");
+    //   Params params;
 
-      Params params;
+    //   std::string mask_type;
+    //   yaml_parser.getYamlParam("mask_type", &mask_type);
+    //   params.mask_type = maskTypeFromString(mask_type);
 
-      std::string mask_type;
-      yaml_parser.getYamlParam("mask_type", &mask_type);
-      params.mask_type = maskTypeFromString(mask_type);
-
-      yaml_parser.getYamlParam("base_line", &params.base_line);
-      yaml_parser.getYamlParam("depth_scale_factor",
-                               &params.depth_scale_factor);
-      return params;
-    }
+    //   yaml_parser.getYamlParam("base_line", &params.base_line);
+    //   yaml_parser.getYamlParam("depth_scale_factor",
+    //                            &params.depth_scale_factor);
+    //   return params;
+    // }
   };
 
   /**
@@ -395,26 +391,28 @@ class KittiDataLoader : public DatasetReader<cv::Mat, cv::Mat, gtsam::Pose3,
    * @param dataset_path
    * @param params
    */
-  KittiDataLoader(const fs::path& dataset_path, const Params& params)
+  KittiDataLoader(const fs::path& dataset_path)
       : DatasetReader<cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket>(
             dataset_path),
-        params_(params) {
+        params_() {
     TimestampFile::Ptr timestamp_file = std::make_shared<TimestampFile>();
     RGBDataFolder::Ptr rgb_folder = std::make_shared<RGBDataFolder>();
 
     CHECK(timestamp_file);
     CHECK(rgb_folder);
 
-    SegMaskFolder::Ptr mask_folder = nullptr;
-    if (params.mask_type == MaskType::MOTION) {
-      mask_folder = std::make_shared<MotionSegMaskFolder>(rgb_folder);
-      LOG(INFO) << "Using MaskType::MOTION for loading mask";
-    } else if (params.mask_type == MaskType::SEMANTIC_INSTANCE) {
-      mask_folder = std::make_shared<InstantanceSegMaskFolder>(rgb_folder);
-      LOG(INFO) << "Using MaskType::SEMANTIC_INSTANCE for loading mask";
-    } else {
-      LOG(FATAL) << "Unknown MaskType for KittiDataLoader";
-    }
+    SegMaskFolder::Ptr mask_folder =
+        std::make_shared<MotionSegMaskFolder>(rgb_folder);
+    ;
+    // if (params.mask_type == MaskType::MOTION) {
+    //   mask_folder = std::make_shared<MotionSegMaskFolder>(rgb_folder);
+    //   LOG(INFO) << "Using MaskType::MOTION for loading mask";
+    // } else if (params.mask_type == MaskType::SEMANTIC_INSTANCE) {
+    //   mask_folder = std::make_shared<InstantanceSegMaskFolder>(rgb_folder);
+    //   LOG(INFO) << "Using MaskType::SEMANTIC_INSTANCE for loading mask";
+    // } else {
+    //   LOG(FATAL) << "Unknown MaskType for KittiDataLoader";
+    // }
     CHECK_NOTNULL(mask_folder);
 
     // KittiClassSegmentationDataFolder::Ptr pixel_level_semantics_folder =
@@ -490,7 +488,8 @@ class KittiDataLoader : public DatasetReader<cv::Mat, cv::Mat, gtsam::Pose3,
     }
 
     const auto& base_line = params_.base_line;
-    const auto& depth_scale_factor = params_.depth_scale_factor;
+
+    constexpr static double depth_scale_factor = 256.0;
 
     const cv::Mat& const_disparity = image_container->depth();
     cv::Mat depth;

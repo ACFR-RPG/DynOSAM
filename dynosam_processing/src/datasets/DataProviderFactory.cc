@@ -57,10 +57,7 @@ DataReader::Ptr DataProviderFactory::Create(
     DatasetType dataset_type) {
   if (dataset_type == DatasetType::KITTI) {
     LOG(INFO) << "Using KITTI dataset at path: " << dataset_folder_path;
-    KittiDataLoader::Params params =
-        KittiDataLoader::Params::fromYaml(params_path);
-    auto loader =
-        std::make_shared<KittiDataLoader>(dataset_folder_path, params);
+    auto loader = std::make_shared<KittiDataLoader>(dataset_folder_path);
 
     loader->setStartingFrame(FLAGS_starting_frame);
     loader->setEndingFrame(FLAGS_ending_frame);

@@ -325,6 +325,9 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
                             gtsam::Pose3& pose_out) {
   dyno::utils::ChronoTimingStats timer("flow_refine.refine");
 
+  const dyno::WrappedRGBMono wrapped_rgb = images_.rgb();
+  const cv::Mat canvas = wrapped_rgb.image().clone();
+
   ImplOptimizer::Inputs impl_inputs;
 
   // takes a few milliseconds to build...
@@ -358,6 +361,8 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
 
     const gtsam::Point2& curr_kp = adaptor_.keypoint(i);
     const gtsam::Point2 initial_flow = curr_kp - ref_kp;
+
+    // cv::circle(canvas, utils::, 4, color)
 
     matching_index.push_back(i);
     ref_kps.push_back(ref_kp);
