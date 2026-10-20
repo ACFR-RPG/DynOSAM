@@ -9,6 +9,32 @@
 
 namespace dyno2 {
 
+struct PoseVelocity {
+  Eigen::Vector3d linear;   // World-frame linear velocity [m/s]
+  Eigen::Vector3d angular;  // Angular velocity [rad/s]
+};
+
+inline PoseVelocity computeBodyVelocity(const gtsam::Pose3& T_WB_prev,
+                                        const gtsam::Pose3& T_WB_curr,
+                                        double dt) {
+  if (dt <= 0.0) {
+    throw std::invalid_argument("dt must be positive");
+  }
+
+  // Linear velocity in the world frame.
+  const Eigen::Vector3d linear =
+      (T_WB_curr.translation() - T_WB_prev.translation()) / dt;
+
+  // Relative rotation.
+  const gtsam::Rot3 R_delta =
+      T_WB_prev.rotation().between(T_WB_curr.rotation());
+
+  // Rotation vector: axis multiplied by angle.
+  const Eigen::Vector3d angular = gtsam::Rot3::Logmap(R_delta) / dt;
+
+  return {linear, angular};
+}
+
 inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
   const int x = cvRound(point.x);
   const int y = cvRound(point.y);

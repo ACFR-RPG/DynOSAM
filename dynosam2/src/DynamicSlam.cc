@@ -57,7 +57,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
     // TODO: add measurements!
-    vio_estimator.initaliseStates(frame_id, StereoMeasurementStatusVector{},
+    vio_estimator.initaliseStates(frame_id, timestamp,
+                                  StereoMeasurementStatusVector{},
                                   gtsam::Pose3::Identity());
     first_frame_ = false;
 

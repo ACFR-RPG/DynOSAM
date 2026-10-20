@@ -14,12 +14,14 @@ namespace dyno2 {
 struct VioGraphState {
   // Viostate!
   gtsam::Pose3 pose_W;
-  gtsam::Vector3 velocity_W;
+  //! Velocity in body frame of the sensor
+  gtsam::Vector3 velocity_B;
   // IMU link
   bool is_keyframe{false};
+  dyno::Timestamp timestamp{0.0};
 
   inline gtsam::NavState navState() const {
-    return gtsam::NavState{pose_W, velocity_W};
+    return gtsam::NavState{pose_W, pose_W.rotation().rotate(velocity_B)};
   }
 };
 
@@ -33,7 +35,7 @@ class VioGraph : public BaGraphStates<VioGraphState> {
 
   // oh eyah becasue all VO states
   // will be used for BA at some point!
-  void initaliseStates(dyno::FrameId frame_id,
+  void initaliseStates(dyno::FrameId frame_id, dyno::Timestamp timestamp,
                        const dyno::StereoMeasurementStatusVector& measurements,
                        const gtsam::Pose3& pose);
 

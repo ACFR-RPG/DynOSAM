@@ -172,7 +172,9 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
     }
   }
 
-  estimator.initaliseStates(frame_id, stereo_measurements, X_W);
+  // TODO: if sensor_rig has IMU
+  //  propogate velocity using estimation or IMU!
+  estimator.initaliseStates(frame_id, timestamp, stereo_measurements, X_W);
 
   std::set<dyno::FrameId> frames_updated_set;
   frames_updated_set.insert(frame_id);

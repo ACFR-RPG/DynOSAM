@@ -21,13 +21,14 @@ VioGraph::VioGraph(dyno::Camera::Ptr camera) {
 }
 
 void VioGraph::initaliseStates(
-    dyno::FrameId frame_id,
+    dyno::FrameId frame_id, dyno::Timestamp timestamp,
     const dyno::StereoMeasurementStatusVector& measurements,
     const gtsam::Pose3& pose) {
   this->addMeasurements(measurements);
 
   // last state?
   VioGraphState& state = this->state(frame_id);
+  state.timestamp = timestamp;
   state.pose_W = pose;
 
   // velocity
