@@ -171,6 +171,15 @@ struct Color : RGBA<uint8_t> {
   Color blend(const Color& other, float weight = 0.5f) const;
 
   /**
+   * @brief Adjust the brightness of this colour.
+   *
+   * @param factor Brightness scale in [0, 1].
+   *               0.0 produces black, 1.0 preserves the original brightness.
+   * @return A new colour with adjusted brightness.
+   */
+  Color brightness(float factor) const;
+
+  /**
    * @brief Merge another color into this one.
    * @param other The other color to merge.
    * @param weight The weight of the other color [0,1].

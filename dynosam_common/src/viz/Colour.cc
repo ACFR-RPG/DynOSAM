@@ -68,6 +68,15 @@ Color Color::blend(const Color& other, float weight) const {
                static_cast<uint8_t>(a * (1.0f - weight) + other.a * weight));
 }
 
+Color Color::brightness(float factor) const {
+  CHECK_GE(factor, 0.0f);
+  CHECK_LE(factor, 1.0f);
+
+  return Color(static_cast<uint8_t>(r * factor),
+               static_cast<uint8_t>(g * factor),
+               static_cast<uint8_t>(b * factor), a);
+}
+
 Color Color::random() { return Color(dis(gen), dis(gen), dis(gen), dis(gen)); }
 
 std::array<float, 3> rgbFromChromaHue(float chroma, float hue) {

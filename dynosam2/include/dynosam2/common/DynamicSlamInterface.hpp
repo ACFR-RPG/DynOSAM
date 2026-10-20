@@ -4,6 +4,7 @@
 #include "dynosam_common/ModuleBase.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/DynoState.hpp"
 #include "dynosam_processing/ImageViewer.hpp"
 #include "dynosam_processing/ThreadSafeQueue.hpp"
 #include "dynosam_sensors/VIFrontendInput.hpp"
@@ -22,11 +23,17 @@ struct PublicationData {
   dyno::FrameId frame_id;
   dyno::Timestamp timestamp;
 
-  // TODO: add seen objects! becuase we might upate objects via FULL BA but we
-  // dont want to draw their trajectoties!
+  PublicationData(dyno::FrameId fi, dyno::Timestamp t)
+      : frame_id(fi), timestamp(t) {}
+  PublicationData() {}
+
+  // tracking state information
+  dyno::ViTrackingState vi_tracking_state;
+  //! This also indicates well-tracked/observed objects!
+  std::vector<dyno::DoTrackingState> do_tracking_states;
+
+  // TODO: draw links between affected objects: covisible!
   UpdatedStates updated_states;
-  //! Seen objects with motion this frame
-  std::vector<dyno::ObjectId> observed_objects;
 };
 
 class DynamicSlamInterface

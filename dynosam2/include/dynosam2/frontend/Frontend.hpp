@@ -53,14 +53,25 @@ class Frontend {
     return vi_tracking_condition_.is_initalized;
   }
 
-  // void solve(VioGraphEstimator& estimator, FeatureBlockContainer& features,
-  //            const ImageContainer& container, UpdatedStates& updated_states,
-  //            ObjectIds& solved_objects);
-
  private:
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,
                        int max_iterations = 50) const;
+
+  bool shouldBeViKeyFrame(const VioGraphEstimator& estimator,
+                          const ViFrame& frame, const ViFrames& frames) const;
+
+  struct ObjectKeyframeMetrics {
+    static void computeCovariance(const std::vector<Eigen::Vector2d>& pts,
+                                  Eigen::Matrix2d& cov, Eigen::Vector2d& mean);
+
+    static double computeCoverage(
+        const std::vector<Eigen::Vector2d>& pts_ref,
+        const std::vector<Eigen::Vector2d>& pts_target, double radius = 10.0);
+  };
+
+  bool shouldBeDoKeyFrame(const DoGraphEstimator& estimator,
+                          const DoFrame& frame, const DoFrames& frames) const;
 
  private:
   FrontendParameters parameters_;

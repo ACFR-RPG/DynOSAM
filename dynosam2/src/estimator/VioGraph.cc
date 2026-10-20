@@ -50,6 +50,43 @@ const std::set<dyno::FrameId>& VioGraph::keyFrames() const {
 bool VioGraph::poseExists(dyno::FrameId frame_id) const {
   return stateExists(frame_id);
 }
+
+bool VioGraph::getLandmark(dyno::TrackletId id, MapPoint& map_point) const {
+  auto it = LandmarkMap::find(id);
+  if (it == LandmarkMap::end()) {
+    return false;
+  }
+
+  const dyno::Landmark& lmk = LandmarkMap::landmarkAt(it->second);
+  map_point = MapPoint{lmk, dyno::background_label, id};
+  return true;
+}
+
+size_t VioGraph::getLandmarks(MapPointVector& map_points) const {
+  if (LandmarkMap::isContiguous()) {
+    const size_t n = LandmarkMap::size();
+    map_points = MapPointVector(LandmarkMap::size());
+    for (size_t i = 0; i < n; i++) {
+      const auto [id, lmk] = LandmarkMap::at(i);
+      map_points[i] = MapPoint{lmk, dyno::background_label, id};
+    }
+  } else {
+    const size_t n = LandmarkMap::size();
+    map_points = MapPointVector();
+    map_points.reserve(n);
+
+    // walk over valid indices
+    for (auto it = LandmarkMap::begin(); it != LandmarkMap::end(); it++) {
+      Index valid_index = it->second;
+      const auto [id, lmk] = LandmarkMap::at(valid_index);
+      map_points.push_back(MapPoint{lmk, dyno::background_label, id});
+    }
+  }
+  return map_points.size();
+}
+
+size_t VioGraph::getLandmarks(MapPoints& map_points) const { return 0; }
+
 bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
   // we do this until we fix speed with covisiblity and growing checks as we
   // hae to remove observations to do that!
@@ -136,7 +173,6 @@ bool VioGraph::isKeyframe(dyno::FrameId id) const {
   if (it == states_.end()) {
     return false;
   }
-
   return it->second.is_keyframe;
 }
 
@@ -262,8 +298,6 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   gtsam::Values values;
   gtsam::NonlinearFactorGraph graph;
 
-  graph.print("BA");
-
   dyno::TrackletIds tracklets_with_update;
   dyno::FrameIds poses_with_update;
 
@@ -295,7 +329,7 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
       const auto lmk_node = observations_->getLandmark(tracklet_id);
       CHECK(lmk_node);
 
-      const dyno::Landmark lmk = getLandmark(tracklet_id);
+      const dyno::Landmark lmk = LandmarkMap::getLandmark(tracklet_id);
 
       auto [measurement, model] = lmk_node->getMeasurement(frame_id);
       model = dyno::factor_graph_tools::robustifyHuber(0.01, model);
@@ -370,6 +404,9 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
 
     frames_affected.push_back(frame_id);
   }
+
+  LOG(INFO) << "Frames affected in VIO refinement: "
+            << dyno::container_to_string(frames_affected);
 
   for (dyno::TrackletId id : tracklets_with_update) {
     gtsam::Symbol lmk_sym('l', id);

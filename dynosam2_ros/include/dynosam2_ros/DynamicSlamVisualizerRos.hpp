@@ -61,6 +61,9 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
 
  private:
   void publishEstimatorUpdate(const PublicationData& publication_data) override;
+  void publishVisualOdometry(const PublicationData& publication_data);
+  void publishObjects(const PublicationData& publication_data);
+  void publishMap(const PublicationData& publication_data);
 
   /**
    * @brief Publishes a pose like object as a transform.
@@ -125,6 +128,12 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
 
   ObjectOdometryPub::SharedPtr object_odom_publisher_;
   MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher_;
+  MarkerArrayPub::SharedPtr object_keyframes_publisher_;
+
+  using PointCloud2 = sensor_msgs::msg::PointCloud2;
+  using PointCloud2Pub = rclcpp::Publisher<sensor_msgs::msg::PointCloud2>;
+
+  PointCloud2Pub::SharedPtr map_publisher_;
 
   //! TF broadcaster for the odometry.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

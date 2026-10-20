@@ -18,7 +18,9 @@ bool LandmarkMap::landmarkExists(dyno::TrackletId tracklet_id) const {
 }
 const dyno::Landmark& LandmarkMap::getLandmark(
     dyno::TrackletId tracklet_id) const {
-  return landmarks_[landmark_indices_.at(tracklet_id)];
+  auto it = find(tracklet_id);
+  CHECK(it != end()) << tracklet_id << " is missing!";
+  return landmarks_[it->second];
 }
 
 bool LandmarkMap::setLandmark(dyno::TrackletId tracklet_id,

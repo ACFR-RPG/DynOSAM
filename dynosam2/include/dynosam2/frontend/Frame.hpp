@@ -86,6 +86,14 @@ struct Frame {
     keypoint = utils::gtsamPointToCv<float>(measurements[index].point2());
   }
 
+  inline void getPointByIndex(Index index, gtsam::Point3& point) const {
+    point = lmks_C.at(local_indices.at(index));
+  }
+
+  inline dyno::Keypoint keypointById(TrackletId id) const {
+    return measurements.at(local_indices.at(id)).point2();
+  }
+
   inline const gtsam::StereoPoint2& stereoPointById(TrackletId id) const {
     return measurements.at(local_indices.at(id));
   }

@@ -99,7 +99,7 @@ class BaGraph {
   bool computeCovisibilities();
   int covisibilities(dyno::FrameId frame_i, dyno::FrameId frame_j) const;
 
- protected:
+  // all measurements should exists for states?
   inline void addMeasurements(
       const dyno::StereoMeasurementStatusVector& measurements) {
     covisibilities_computed_ = false;

@@ -31,8 +31,23 @@ class SlamBackend {
   const gtsam::Pose3& getVioPose(dyno::FrameId frame_id) const;
   const gtsam::Pose3& getDooPose(dyno::TemporalObjectIdentifier id) const;
 
+  bool isCameraKeyframe(dyno::FrameId frame_id) const;
+
+  bool isObjectKeyframe(dyno::TemporalObjectIdentifier id,
+                        dyno::DoKeyframeType& keyframe_type) const;
+
   const dyno::PoseWithMotion& getDooEntry(
       dyno::TemporalObjectIdentifier id) const;
+
+  // get all landmarks for all objects
+  size_t getLandmarks(MapPointVector& map_points) const;
+
+  /// @brief Get static landmarks and object landmarks for requesed objects
+  /// @param map_points
+  /// @param objects
+  /// @return
+  size_t getLandmarks(MapPointVector& map_points,
+                      const dyno::ObjectIds& objects) const;
 
   // all VoStates should have a timestamp?
 

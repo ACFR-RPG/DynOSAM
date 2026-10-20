@@ -49,10 +49,12 @@ class DynamicSlamVisualizer {
  protected:
   dyno::CanonicalSensorRig::Ptr sensor_rig_{nullptr};
   const SlamBackend* estimator_{nullptr};
-  dyno::ImageDisplayer::UniquePtr image_displayer_{nullptr};
-
   //! Cached extrinsics transform (camera -> robot frame)
   gtsam::Pose3 T_RC_;
+  //! ROS style frame ids for output frames
+  dyno::ReferenceFrames reference_frames_;
+
+  dyno::ImageDisplayer::UniquePtr image_displayer_{nullptr};
 
   // keep the camera in robot coordinate frame, not estimated (camera) frame
   dyno::PoseTrajectory camera_trajectory_;

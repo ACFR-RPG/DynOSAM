@@ -78,6 +78,54 @@ fs::path ensurePcdExtension(const std::string& input) {
   return p;
 }
 
+void point3ToCloud(const gtsam::Point3Vector& points,
+                   pcl::PointCloud<pcl::PointXYZ>& cloud_out) {
+  cloud_out.reserve(points.size());
+  for (const auto& pt : points) {
+    pcl::PointXYZ point_xyz;
+    convert(pt, point_xyz);
+    cloud_out.push_back(point_xyz);
+  }
+}
+
+void statisticalOutlierRemoval(const gtsam::Point3Vector& points,
+                               std::vector<size_t>& inlier_indices) {
+  auto cloud = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+  point3ToCloud(points, *cloud);
+
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(
+      new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+  sor.setInputCloud(cloud);
+  sor.setMeanK(50);             // Number of neighbors to analyze
+  sor.setStddevMulThresh(1.0);  // Threshold based on std dev
+  sor.filter(*cloud_filtered);
+
+  // Indices of outliers in the original input cloud.
+  const auto removed_indices = sor.getRemovedIndices();
+
+  inlier_indices.clear();
+  inlier_indices.reserve(cloud->size() -
+                         (removed_indices ? removed_indices->size() : 0));
+
+  // Build the complement of the removed indices.
+  std::vector<bool> is_outlier(points.size(), false);
+
+  if (removed_indices) {
+    for (const int idx : *removed_indices) {
+      if (idx >= 0 && static_cast<std::size_t>(idx) < points.size()) {
+        is_outlier[static_cast<std::size_t>(idx)] = true;
+      }
+    }
+  }
+
+  for (std::size_t i = 0; i < points.size(); ++i) {
+    if (!is_outlier[i]) {
+      inlier_indices.push_back(i);
+    }
+  }
+}
+
 void saveAsPointCloud(const StatusLandmarkVector& landmarks,
                       const std::string& filepath) {
   pcl::PointCloud<pcl::PointXYZRGB> object_map_cloud;
@@ -101,7 +149,7 @@ ObjectBBX findAABBFromCloud(
   // axis aligned bounding box
   pcl::MomentOfInertiaEstimation<pcl::PointXYZRGB> bbx_extractor;
   bbx_extractor.setInputCloud(
-      pcl::make_shared<pcl::PointCloud<pcl::PointXYZRGB> >(filtered_cloud));
+      pcl::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>(filtered_cloud));
   bbx_extractor.compute();
 
   pcl::PointXYZRGB min_point_AABB;

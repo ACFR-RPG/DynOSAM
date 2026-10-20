@@ -47,6 +47,10 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   void setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose);
   const gtsam::Pose3& getPose(dyno::FrameId frame_id) const;
 
+  bool getLandmark(dyno::TrackletId id, MapPoint& map_point) const;
+  size_t getLandmarks(MapPointVector& map_points) const;
+  size_t getLandmarks(MapPoints& map_points) const;
+
   bool poseExists(dyno::FrameId frame_id) const;
   // currently no removal of keyframe
   bool setKeyframe(dyno::FrameId id, bool is_keyframe);

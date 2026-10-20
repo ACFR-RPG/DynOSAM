@@ -128,11 +128,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   std::vector<std::vector<FrameId>> updated_object_frames(num_objects);
 
-  PublicationData::Ptr publication_data = std::make_shared<PublicationData>();
-  publication_data->frame_id = frame_id;
-  publication_data->timestamp = timestamp;
-
-  auto& updated_vo_states = publication_data->updated_states.vo;
+  PublicationData::Ptr publication_data =
+      std::make_shared<PublicationData>(frame_id, timestamp);
+  std::vector<dyno::FrameId>& updated_vo_states =
+      publication_data->updated_states.vo;
 
   tbb::task_group group;
   group.run([&] {
@@ -163,8 +162,22 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   std::vector<dyno::TemporalObjectIdentifier>& objects_with_update =
       publication_data->updated_states.objects;
-  std::vector<dyno::ObjectId>& observed_objects =
-      publication_data->observed_objects;
+
+  // tracking state information
+  dyno::ViTrackingState& vi_tracking_state =
+      publication_data->vi_tracking_state;
+  vi_tracking_state.frame_id = frame_id;
+  // TODO: quality etc
+
+  std::vector<dyno::DoTrackingState>& do_tracking_states =
+      publication_data->do_tracking_states;
+
+  if (vo_success) {
+    VioGraphEstimator& estimator = estimator_.vioEstimator();
+    vi_tracking_state.is_keyframe = estimator.isKeyframe(frame_id);
+    // prune keyframes
+    estimator.pruneKeyframes(5, 3);
+  }
 
   for (size_t i = 0; i < num_objects; i++) {
     const ObjectId object_id = object_ids[i];
@@ -174,11 +187,19 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       continue;
     }
 
+    const ObjectContext object_context = object_contexts[i];
+    const DoGraphEstimator& estimator = *object_context.estimator;
+
     const std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
     for (FrameId k0 : updated_frames) {
       objects_with_update.emplace_back(k0, object_id);
     }
-    observed_objects.push_back(object_id);
+
+    do_tracking_states.emplace_back();
+    do_tracking_states.back().frame_id = frame_id;
+    do_tracking_states.back().object_id = object_id;
+    do_tracking_states.back().keyframe_type =
+        estimator.keyframeStatus(frame_id);
   }
 
   // dyno::ImageContainer::Ptr image_container = input->image_container_;

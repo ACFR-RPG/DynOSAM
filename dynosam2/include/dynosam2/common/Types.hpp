@@ -46,6 +46,8 @@ class LandmarkMap {
   const dyno::Landmark& landmarkAt(Index index) const {
     return landmarks_[index];
   }
+  const gtsam::Point3Vector& landmarks() const { return landmarks_; }
+  const dyno::TrackletIds& ids() const { return ids_; }
 
   inline TrackletIndices::const_iterator find(dyno::TrackletId id) const {
     return landmark_indices_.find(id);
@@ -72,7 +74,7 @@ class LandmarkMap {
    * @return true
    * @return false
    */
-  inline bool isContiguous() { return is_contiguous_; }
+  inline bool isContiguous() const { return is_contiguous_; }
 
   /**
    * @brief Reduce the memory allocation to only the existing landmarks
@@ -100,5 +102,15 @@ class LandmarkMap {
   //! in landmark_indices_)
   bool is_contiguous_{true};
 };
+
+struct MapPoint {
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  gtsam::Point3 p_W;
+  dyno::ObjectId object_id;
+  dyno::TrackletId id;
+};
+
+typedef dyno::AlignedVector<MapPoint> MapPointVector;
+typedef dyno::AlignedMap<dyno::TrackletId, MapPoint> MapPoints;
 
 }  // namespace dyno2

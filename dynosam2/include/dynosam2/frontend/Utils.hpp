@@ -1,5 +1,7 @@
 #pragma once
 
+#include <pcl/point_types.h>
+
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam_common/Types.hpp"
