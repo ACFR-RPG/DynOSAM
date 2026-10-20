@@ -54,27 +54,6 @@ class ImageSegmenterNode : public rclcpp::Node {
 
       // if (model_) model_->infer(frame);
       auto result = engine_->process(frame);
-      //   yolov11_->preprocess(resized);
-
-      // // Perform inference
-      // yolov11_->infer();
-
-      // // Postprocess to get detections
-      // std::vector<Detection> detections;
-      // yolov11_->postprocess(detections);
-
-      // // Draw detections on the frame
-      // yolov11_->draw(resized, detections);
-
-      // // Display the frame (optional)
-      // cv::imshow("Inference", resized);
-
-      // // Print image info
-      // RCLCPP_INFO(this->get_logger(), "Received image %dx%d", resized.cols,
-      //             resized.rows);
-      // auto r = engine_->process(resized);
-
-      // LOG(INFO) << result;
 
       // // // // Optional: visualize (disable in headless mode)
       cv::imshow("View", result.colouredMask());

@@ -91,7 +91,6 @@ set(TARGET_EXPORT_DEPS
   rclcpp
   std_msgs
   sensor_msgs
-  dynosam
   tf2_ros
   nav_msgs
   dynosam_sensors

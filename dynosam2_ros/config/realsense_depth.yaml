@@ -1,0 +1,33 @@
+enable_color: true
+rgb_camera.color_profile: "640x480x15"
+rgb_camera.color_format: "BGR8"
+rgb_camera.enable_auto_exposure: true
+
+enable_depth: true
+depth_module.depth_profile: "640x480x15"
+depth_module.enable_auto_exposure: true
+
+enable_infra1: false
+enable_infra2: false
+# enable_infra1: true
+# enable_infra2: true
+# depth_module.infra_profile: "640x480x30"
+
+align_depth.enable: true
+
+enable_sync: true
+pointcloud.enable: false
+
+# Disable filters that add latency
+decimation_filter.enable: False
+spatial_filter.enable: False
+temporal_filter.enable: False
+hole_filling_filter.enable: False
+
+
+enable_gyro: true
+gyro_fps: 200
+enable_accel: true
+accel_fps: 200
+unite_imu_method: 2
+# enable_motion: true
