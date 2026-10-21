@@ -9,14 +9,9 @@
 
 namespace dyno2 {
 
-struct PoseVelocity {
-  Eigen::Vector3d linear;   // World-frame linear velocity [m/s]
-  Eigen::Vector3d angular;  // Angular velocity [rad/s]
-};
-
-inline PoseVelocity computeBodyVelocity(const gtsam::Pose3& T_WB_prev,
-                                        const gtsam::Pose3& T_WB_curr,
-                                        double dt) {
+inline Velocity3 computeWorldVelocity(const gtsam::Pose3& T_WB_prev,
+                                      const gtsam::Pose3& T_WB_curr,
+                                      double dt) {
   if (dt <= 0.0) {
     throw std::invalid_argument("dt must be positive");
   }
@@ -32,7 +27,30 @@ inline PoseVelocity computeBodyVelocity(const gtsam::Pose3& T_WB_prev,
   // Rotation vector: axis multiplied by angle.
   const Eigen::Vector3d angular = gtsam::Rot3::Logmap(R_delta) / dt;
 
-  return {linear, angular};
+  // return linear and angular velocities in the world frame
+  return {linear, T_WB_curr.rotation().rotate(angular)};
+}
+
+inline gtsam::Pose3 predictPoseConstantVelocity(const gtsam::Pose3& pose,
+                                                const Velocity3& velocity_W,
+                                                double dt) {
+  if (dt < 0.0) {
+    throw std::invalid_argument("Prediction horizon must be non-negative");
+  }
+
+  // Constant world-frame linear velocity.
+  const Eigen::Vector3d predicted_translation =
+      pose.translation() + velocity_W.linear * dt;
+
+  // Constant world-frame angular velocity.
+  const Eigen::Vector3d rotation_vector = velocity_W.angular * dt;
+  const gtsam::Rot3 delta_rotation = gtsam::Rot3::Expmap(rotation_vector);
+
+  // Left-compose because angular velocity is expressed in the world frame.
+  const gtsam::Rot3 predicted_rotation =
+      delta_rotation.compose(pose.rotation());
+
+  return gtsam::Pose3(predicted_rotation, predicted_translation);
 }
 
 inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
@@ -43,11 +61,12 @@ inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
 
 inline bool checkBoundsAndLabel(const cv::Point2f& point,
                                 const cv::Mat& object_masks,
-                                ObjectId expected_id, int rows, int cols) {
+                                dyno::ObjectId expected_id, int rows,
+                                int cols) {
   const int x = cvRound(point.x);
   const int y = cvRound(point.y);
   return x >= 0 && x < cols && y >= 0 && y < rows &&
-         object_masks.at<ObjectId>(y, x) == expected_id;
+         object_masks.at<dyno::ObjectId>(y, x) == expected_id;
 }
 
 /* @brief Super fast implementation of K^{-1} * kp, returning normalized bearing
@@ -76,7 +95,7 @@ inline gtsam::Vector3 bearingOptimized(double fx, double fy, double cx,
 struct ComputeBearing {
   const double fx_, fy_, cx_, cy_;
 
-  ComputeBearing(const CameraParams& params)
+  ComputeBearing(const dyno::CameraParams& params)
       : fx_(params.fx()),
         fy_(params.fy()),
         cx_(params.cu()),

@@ -106,13 +106,24 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
 
     // propogate use constant velocity model
     // or IMU!
+    const VioGraphState& vio_state_previous =
+        estimator.getVioState(previous_frame_id);
+    const dyno::Timestamp dt = timestamp - vio_state_previous.timestamp;
+    gtsam::Pose3 predicted_pose = predictPoseConstantVelocity(
+        vio_state_previous.pose_W, vio_state_previous.velocity_W, dt);
+    estimator.initaliseStates(frame_id, timestamp,
+                              StereoMeasurementStatusVector{}, predicted_pose);
+
+    // still have to fill frame
+    frame.frame_id = frame_id;
+    frame.timestamp = timestamp;
+    frame.fill(geometry, features);
 
     success = false;
     // alert awaiting threads
     async_context.vo_cv.notify_all();
 
-    LOG(WARNING) << "3D2D RANSAC failed for VO!";
-    // TODO: still fill VI frame?
+    LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id;
     return;
   }
 
@@ -137,17 +148,6 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   GeometryUpdater(camera_, image_container, features).updateGeometry(geometry);
 
   gtsam::Pose3 X_W = X_W_km1 * T_ij;
-  // NOTE: this is not the best available value!
-  LOG(INFO) << "Solved VO k= " << frame_id;
-  {
-    std::lock_guard<std::mutex> lock(async_context.vo_mutex);
-    *async_context.vo = X_W;
-    async_context.vo_ready = true;
-    CHECK(async_context.vo_valid);
-  }
-  // alert awaiting threads
-  async_context.vo_cv.notify_all();
-
   frame.frame_id = frame_id;
   frame.timestamp = timestamp;
   frame.fill(geometry, features);
@@ -175,6 +175,17 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   // TODO: if sensor_rig has IMU
   //  propogate velocity using estimation or IMU!
   estimator.initaliseStates(frame_id, timestamp, stereo_measurements, X_W);
+
+  // alert waiting threads AFTER we initalise states as they may need the pose!
+  LOG(INFO) << "Solved VO k= " << frame_id;
+  {
+    std::lock_guard<std::mutex> lock(async_context.vo_mutex);
+    *async_context.vo = X_W;
+    async_context.vo_ready = true;
+    CHECK(async_context.vo_valid);
+  }
+  // alert awaiting threads
+  async_context.vo_cv.notify_all();
 
   std::set<dyno::FrameId> frames_updated_set;
   frames_updated_set.insert(frame_id);
@@ -467,6 +478,7 @@ void Frontend::solveObjectOdometry(
               << " last state k=" << estimator.currentFrameId();
   }
 
+  std::unordered_set<dyno::TrackletId> added_measurements_i;
   if (!estimator.stateExists(frame_id_i)) {
     gtsam::Point3 t_W_i_centroid =
         X_W_i * dyno::computeCentroid(reference_lmks);
@@ -484,14 +496,17 @@ void Frontend::solveObjectOdometry(
         stereo_measurements.push_back(
             StereoMeasurementStatus(stereo_measurement, frame_id_i, timestamp_i,
                                     id, object_id, ReferenceFrame::LOCAL));
+
+        added_measurements_i.insert(id);
       }
     }
-
+    LOG(INFO) << "obj j=" << object_id << " made Anchor KF " << frame_id_i;
     estimator.initalizeNewAnchorFrame(frame_id_i, stereo_measurements,
                                       L_W_i_centroid);
     frames_updated.push_back(frame_id_i);
   }
 
+  std::unordered_set<dyno::TrackletId> added_measurements_j;
   StereoMeasurementStatusVector stereo_measurements;
   stereo_measurements.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
@@ -505,6 +520,8 @@ void Frontend::solveObjectOdometry(
       stereo_measurements.push_back(
           StereoMeasurementStatus(stereo_measurement, frame_id_j, timestamp_j,
                                   id, object_id, ReferenceFrame::LOCAL));
+
+      added_measurements_j.insert(id);
     }
   }
 
@@ -520,6 +537,8 @@ void Frontend::solveObjectOdometry(
     // it
     estimator.setRegularKeyframe(frame_id_j);
 
+    const StereoBaMap& observations = estimator.getObservations();
+
     // TODO: before adding points do radial outlier rejection
     // TODO: then mark those ones as outliers
     //  and remove measurements
@@ -528,14 +547,42 @@ void Frontend::solveObjectOdometry(
     const dyno::Motion3ReferenceFrame& H_W_anchor_i =
         estimator.keyframeMotion(frame_id_i);
 
+    StereoMeasurementStatusVector stereo_measurements;
+    stereo_measurements.reserve(2.0 * adapter.getNumberCorrespondences());
+
     for (size_t i = 0; i < reference_ids.size(); i++) {
       const dyno::TrackletId id = reference_ids[i];
-      const gtsam::Point3& m_C = reference_lmks[i];
-      const Landmark m_L = dyno::HybridObjectMotion::projectToObject3(
-          X_W_i, H_W_anchor_i, L_W_anchor, m_C);
-      estimator.setLandmark(id, m_L);
+      if (!estimator.landmarkExists(id)) {
+        const gtsam::Point3& m_C = reference_lmks[i];
+        const Landmark m_L = dyno::HybridObjectMotion::projectToObject3(
+            X_W_i, H_W_anchor_i, L_W_anchor, m_C);
+        estimator.setLandmark(id, m_L);
+      }
+
+      // previous and current measurement
+      // avoid adding dupliated
+      if (!added_measurements_i.count(id)) {
+        auto stereo_measurement_i = StereoMeasurement::FromSigmas(
+            ref_object_frame.stereoPointById(id), sigmas);
+        stereo_measurements.push_back(StereoMeasurementStatus(
+            stereo_measurement_i, frame_id_i, timestamp_i, id, object_id,
+            ReferenceFrame::LOCAL));
+      }
+
+      if (!added_measurements_j.count(id)) {
+        auto stereo_measurement_j =
+            StereoMeasurement::FromSigmas(frame.stereoPointById(id), sigmas);
+        stereo_measurements.push_back(StereoMeasurementStatus(
+            stereo_measurement_j, frame_id_j, timestamp_j, id, object_id,
+            ReferenceFrame::LOCAL));
+      }
+      // check we have measurements of this!
+      // CHECK_GT(observations.numMeasurements(id), 0);
     }
   }
+
+  std::vector<dyno::FrameId> affected_in_opt;
+  estimator.optimize(frame_id_j, vo_estimator, affected_in_opt, 1);
 
   frames_updated.push_back(frame_id_j);
   success = true;

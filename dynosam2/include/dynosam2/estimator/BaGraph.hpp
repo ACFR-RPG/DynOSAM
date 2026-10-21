@@ -4,11 +4,7 @@
 #include "dynosam_common/SensorModels.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_opt/Map.hpp"
-
-// the realtime and full graph will have different (well subsets of)
-// measurements
-//  becuase the realtime one will be keyframes + recent frames but only per
-//  object while the full graph is only keyframes but of all objects
+#include "dynosam_opt/NonlinearOptimizer.hpp"
 
 namespace dyno2 {
 
@@ -68,6 +64,23 @@ class States {
     return states_.at(frame_id);
   }
 
+  bool stateByAge(dyno::FrameId frame_id, size_t age, State*& state) {
+    auto it = states_.find(frame_id);
+    if (it == states_.end()) {
+      return false;
+    }
+
+    for (size_t i = 0; i < age; ++i) {
+      if (it == states_.begin()) {
+        return false;
+      }
+      --it;
+    }
+
+    state = &it->second;
+    return true;
+  }
+
  protected:
   gtsam::FastMap<dyno::FrameId, State> states_;
 };
@@ -122,5 +135,18 @@ struct BaGraphStates : public BaGraph,
                        public LandmarkMap {
   BaGraphStates() = default;
 };
+
+// class BaOptInterface {
+// public:
+//   BaOptInterface() = default;
+
+// protected:
+//   bool optimize(gtsam::Values& optimised_values, const gtsam::Values& values,
+//   const gtsam::NonlinearFactorGraph& graph);
+
+// protected:
+//   dyno::NonlinearOptimizerOptions options_;
+
+// };
 
 }  // namespace dyno2

@@ -922,6 +922,7 @@ bool FeatureTracker::predictKeypointsGivenRotation(
     predicted_pts_curr = previous_pts;
     return true;
   }
+  return false;
 
   // // R is a relative rotation which takes a vector from the last frame to
   // // the current frame.

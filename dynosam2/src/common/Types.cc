@@ -13,6 +13,13 @@ void LandmarkMap::reserve(size_t N) {
   landmark_indices_.reserve(N);
 }
 
+void LandmarkMap::clear() {
+  landmarks_.clear();
+  ids_.clear();
+  landmark_indices_.clear();
+  is_contiguous_ = true;
+}
+
 bool LandmarkMap::landmarkExists(dyno::TrackletId tracklet_id) const {
   return landmark_indices_.find(tracklet_id) != landmark_indices_.end();
 }

@@ -391,6 +391,16 @@ class LandmarkNodeInterface
     return this->template at(tracklet_id);
   }
 
+  size_t numMeasurements(TrackletId tracklet_id) const {
+    auto it = this->nodes_.find(tracklet_id);
+    if (it == this->nodes_.end()) {
+      return 0;
+    }
+
+    const auto& lmk_node = it->second;
+    return lmk_node->numObservations();
+  }
+
   const SharedNodeMap& getLandmarks() const {
     return this->template getNodes();
   }

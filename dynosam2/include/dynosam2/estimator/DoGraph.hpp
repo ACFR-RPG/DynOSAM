@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dynosam2/estimator/BaGraph.hpp"
+#include "dynosam2/estimator/VioGraph.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_core/DynoState.hpp"
 #include "dynosam_sensors/Camera.hpp"
@@ -72,6 +73,7 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   }
 
   const gtsam::Pose3& anchorPose(dyno::FrameId frame_id) const;
+  const gtsam::Pose3& getPose(dyno::FrameId frame_id) const;
 
  protected:
   dyno::ObjectId object_id_;
@@ -89,7 +91,7 @@ class DoGraphEstimator : public DoGraph {
       : DoGraph(camera, object_id) {}
   virtual ~DoGraphEstimator() = default;
 
-  void optimize(dyno::FrameId frame_id,
+  void optimize(dyno::FrameId frame_id, const VioGraph& vi_graph,
                 std::vector<dyno::FrameId>& frames_affected,
                 size_t keyframes_to_include = 1, bool only_states = false);
 };

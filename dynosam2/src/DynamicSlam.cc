@@ -21,7 +21,7 @@ DynamicSlam::~DynamicSlam() {}
 StateEstimate::Ptr DynamicSlam::spinOnce(
     dyno::VIFrontendInput::ConstPtr input) {
   LOG(INFO) << "DynamicSlam::spinOnce " << input->getFrameId();
-  dyno::utils::ChronoTimingStats spin_t("spin");
+  dyno::utils::ChronoTimingStats spin_t("slam.spin");
 
   const dyno::FrameId frame_id = input->getFrameId();
   const dyno::Timestamp timestamp = input->getTimestamp();
@@ -30,8 +30,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   FeatureBlockContainer* features_ptr{nullptr};
   dyno::ObjectDetectionResult object_detection;
 
+  dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
   frontend_.detectAndTrack(features_ptr, object_detection, image_container);
   CHECK_NOTNULL(features_ptr);
+  detect_t.stop();
   FeatureBlockContainer& features = *features_ptr;
 
   FeatureBlockGeometryMap geometries;
@@ -134,6 +136,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   std::vector<dyno::FrameId>& updated_vo_states =
       publication_data->updated_states.vo;
 
+  dyno::utils::ChronoTimingStats solve_t("slam.solve");
   tbb::task_group group;
   group.run([&] {
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
@@ -160,6 +163,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   }
 
   group.wait();
+  solve_t.stop();
 
   std::vector<dyno::TemporalObjectIdentifier>& objects_with_update =
       publication_data->updated_states.objects;

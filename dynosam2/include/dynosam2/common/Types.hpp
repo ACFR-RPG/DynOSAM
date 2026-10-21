@@ -13,6 +13,13 @@ typedef std::pair<Index, Index> IndexMatch;
 typedef std::vector<IndexMatch> IndexMatches;
 typedef std::unordered_map<Index, Index> IndexMapping;
 
+struct Velocity3 {
+  // Linear velocity [m/s]
+  Eigen::Vector3d linear;
+  // Angular velocity [rad/s]
+  Eigen::Vector3d angular;
+};
+
 class LandmarkMap {
  public:
   typedef std::unordered_map<dyno::TrackletId, Index> TrackletIndices;
@@ -28,6 +35,7 @@ class LandmarkMap {
   // some 'dont exist'
   inline size_t size() const noexcept { return landmarks_.size(); }
   void reserve(size_t N);
+  void clear();
 
   bool landmarkExists(dyno::TrackletId tracklet_id) const;
   const dyno::Landmark& getLandmark(dyno::TrackletId tracklet_id) const;
