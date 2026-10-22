@@ -70,7 +70,7 @@ class Frontend {
                        int max_iterations = 50) const;
 
   bool shouldBeViKeyFrame(const VioGraphEstimator& estimator,
-                          const ViFrame& frame, const ViFrames& frames) const;
+                          ViFrame::Ptr frame) const;
 
   struct ObjectKeyframeMetrics {
     static void computeCovariance(const std::vector<Eigen::Vector2d>& pts,

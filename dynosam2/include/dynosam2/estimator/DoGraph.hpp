@@ -2,6 +2,7 @@
 
 #include "dynosam2/estimator/BaGraph.hpp"
 #include "dynosam2/estimator/VioGraph.hpp"
+#include "dynosam2/frontend/Frame.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_core/DynoState.hpp"
 #include "dynosam_sensors/Camera.hpp"
@@ -82,6 +83,10 @@ class DoGraph : public BaGraphStates<DOGraphState> {
 
   //! Keyframes since the last anchor keyframe
   std::set<dyno::FrameId> active_keyframes_;
+
+  //! All do frames added so far. We will prune them alongside the active
+  //! keyframes
+  dyno::FastUnorderedMap<dyno::FrameId, DoFrame::Ptr> frames_;
 };
 
 class DoGraphEstimator : public DoGraph {

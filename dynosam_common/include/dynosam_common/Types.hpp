@@ -248,23 +248,32 @@ struct TemporalObjectIdentifier {
   }
 };
 
-struct TrackletFramePair {
-  TrackletId tracklet_id;
-  FrameId frame_id;
+struct KeypointIdentifier {
+  FrameId frame;
+  TrackletId id;
+  ObjectId object;
 
-  bool operator==(const TrackletFramePair& other) const {
-    return tracklet_id == other.tracklet_id && frame_id == other.frame_id;
+  KeypointIdentifier(FrameId fi = 0, TrackletId ti = 0, ObjectId o = 0)
+      : frame(fi), id(ti), object(o) {}
+
+  inline FrameId frameId() const { return frame; }
+  inline TrackletId trackletId() const { return id; }
+  inline ObjectId objectId() const { return object; }
+
+  bool operator==(const KeypointIdentifier& other) const {
+    return id == other.id && frame == other.frame && object == other.object;
   }
 
-  bool operator<(const TrackletFramePair& other) const {
-    return std::tie(tracklet_id, frame_id) <
-           std::tie(other.tracklet_id, other.frame_id);
+  bool operator<(const KeypointIdentifier& other) const {
+    return std::tie(id, frame, object) <
+           std::tie(other.id, other.frame, other.object);
   }
 
   friend std::ostream& operator<<(std::ostream& os,
-                                  const TrackletFramePair& t) {
-    os << "[frame id: " << t.frame_id << " ";
-    os << "tracklet id: " << t.tracklet_id << "]";
+                                  const KeypointIdentifier& t) {
+    os << "[ frame id: " << t.frame << " ";
+    os << "tracklet id: " << t.id << " ";
+    os << "object id: " << t.object << " ]";
     return os;
   }
 };

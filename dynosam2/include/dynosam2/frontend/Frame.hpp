@@ -127,10 +127,14 @@ struct Frame {
 
 // TODO: move into estimator classes like OKVIS! make shared pointer and fill in
 // frontend!
-struct ViFrame : public Frame {};
+struct ViFrame : public Frame {
+  DYNO_POINTER_TYPEDEFS(ViFrame)
+};
 
 struct DoFrame : public ViFrame {
   ObjectId object_id;
+
+  DYNO_POINTER_TYPEDEFS(DoFrame)
 };
 
 typedef dyno::FastUnorderedMap<FrameId, ViFrame> ViFrames;

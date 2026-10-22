@@ -4,6 +4,7 @@
 #include <gtsam/navigation/NavState.h>
 
 #include "dynosam2/estimator/BaGraph.hpp"
+#include "dynosam2/frontend/Frame.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
 #include "dynosam_sensors/Camera.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
@@ -34,15 +35,43 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   VioGraph(dyno::Camera::Ptr camera);
   virtual ~VioGraph() = default;
 
+  // TODo: make BaGrapj::addMeasurements(the MeasurementStatusVector version)
+  // private
+  //  only allow measurements via kp identifier!
+
   // oh eyah becasue all VO states
   // will be used for BA at some point!
-  void initaliseStates(dyno::FrameId frame_id, dyno::Timestamp timestamp,
-                       const dyno::StereoMeasurementStatusVector& measurements,
-                       const gtsam::Pose3& pose);
+  // void initaliseStates(dyno::FrameId frame_id, dyno::Timestamp timestamp,
+  //                      const dyno::StereoMeasurementStatusVector&
+  //                      measurements, const gtsam::Pose3& pose);
 
-  void initaliseStates(dyno::FrameId frame_id, dyno::Timestamp timestamp,
-                       const dyno::StereoMeasurementStatusVector& measurements,
-                       const gtsam::Pose3& pose, const Velocity3& velocity_W);
+  // void initaliseStates(dyno::FrameId frame_id, dyno::Timestamp timestamp,
+  //                      const dyno::StereoMeasurementStatusVector&
+  //                      measurements, const gtsam::Pose3& pose, const
+  //                      Velocity3& velocity_W);
+
+  void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose);
+  void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
+                       const Velocity3& velocity_W);
+
+  // adds a measurement that exists in the ViFrame to the measurement graph,
+  // indicating that it will be considered for BA!
+  void addMeasurement(ViFrame::Ptr frame, dyno::TrackletId id);
+  void addMeasurement(dyno::KeypointIdentifier id);
+  void addMeasurements(const std::vector<dyno::KeypointIdentifier>& ids);
+  // this is faster if all observations are for the same frame
+  void addMeasurements(ViFrame::Ptr frame,
+                       const std::vector<dyno::TrackletId>& ids);
+
+  size_t numFrames() const { return frames_.size(); }
+
+  ViFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
+    auto it = frames_.find(frame_id);
+    if (it == frames_.end()) {
+      return nullptr;
+    }
+    return it->second;
+  }
 
   // overriwite state
   // TODO: why not use the map nodes to store the states
@@ -79,12 +108,25 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   bool pruneKeyframes(size_t num_keyframes, size_t num_motion_frames);
 
  private:
-  VioGraphState& initaliseStatesWithPose(
-      dyno::FrameId frame_id, dyno::Timestamp timestamp,
-      const dyno::StereoMeasurementStatusVector& measurements,
-      const gtsam::Pose3& pose);
+  // VioGraphState& initaliseStatesWithPose(
+  //     dyno::FrameId frame_id, dyno::Timestamp timestamp,
+  //     const dyno::StereoMeasurementStatusVector& measurements,
+  //     const gtsam::Pose3& pose);
+  VioGraphState& initaliseStatesWithPose(ViFrame::Ptr frame,
+                                         const gtsam::Pose3& pose);
 
   void setStateVelocityFromPose(VioGraphState& current_state);
+
+  StereoMeasurementStatus createStereoMeaurement(const ViFrame::Ptr& frame,
+                                                 dyno::TrackletId id) const {
+    // debug check frame has measurement!?
+    // TODO: observation model robust?
+    StereoMeasurement stereo_measurement(frame->stereoPointById(id),
+                                         observation_model_);
+    return StereoMeasurementStatus(stereo_measurement, frame->frame_id,
+                                   frame->timestamp, id, 0,
+                                   ReferenceFrame::LOCAL);
+  }
 
  protected:
   dyno::Camera::CalibrationType::shared_ptr K_;
@@ -92,6 +134,14 @@ class VioGraph : public BaGraphStates<VioGraphState> {
 
   //! Active keyframes used for selection and bundle adjustmement!
   std::set<dyno::FrameId> keyframes_;
+
+  //! All vi frames added so far. We will prune them alongside the active
+  //! keyframes
+  dyno::FastUnorderedMap<dyno::FrameId, ViFrame::Ptr> frames_;
+
+  gtsam::SharedGaussian observation_model_;
+
+  using BaGraphStates::addMeasurements;
 };
 
 class VioGraphEstimator : public VioGraph {

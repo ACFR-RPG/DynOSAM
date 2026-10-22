@@ -46,22 +46,30 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         DoFrame& do_frame = do_frames_[object_id][frame_id];
         do_frame.object_id = object_id;
         frame_ptr = &do_frame;
+        CHECK_NOTNULL(frame_ptr);
+        frame_ptr->frame_id = frame_id;
+        frame_ptr->timestamp = timestamp;
+        frame_ptr->fill(geometry, features);
       } else {
-        ViFrame& vi_frame = vi_frames_[frame_id];
-        frame_ptr = &vi_frame;
+        // ViFrame& vi_frame = vi_frames_[frame_id];
+        // frame_ptr = &vi_frame;
+        ViFrame::Ptr vi_frame = std::make_shared<ViFrame>();
+        vi_frame->frame_id = frame_id;
+        vi_frame->timestamp = timestamp;
+        // TODO: hack!
+        vi_frame->fill(geometry, features);
+
+        VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+        // TODO: add measurements!
+        vio_estimator.initaliseStates(vi_frame, gtsam::Pose3::Identity());
       }
 
-      CHECK_NOTNULL(frame_ptr);
-      frame_ptr->frame_id = frame_id;
-      frame_ptr->timestamp = timestamp;
-      frame_ptr->fill(geometry, features);
+      // CHECK_NOTNULL(frame_ptr);
+      // frame_ptr->frame_id = frame_id;
+      // frame_ptr->timestamp = timestamp;
+      // frame_ptr->fill(geometry, features);
     }
 
-    VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-    // TODO: add measurements!
-    vio_estimator.initaliseStates(frame_id, timestamp,
-                                  StereoMeasurementStatusVector{},
-                                  gtsam::Pose3::Identity());
     first_frame_ = false;
 
     PublicationData::Ptr publication_data = std::make_shared<PublicationData>();
