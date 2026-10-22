@@ -125,6 +125,8 @@ struct Frame {
   }
 };
 
+// TODO: move into estimator classes like OKVIS! make shared pointer and fill in
+// frontend!
 struct ViFrame : public Frame {};
 
 struct DoFrame : public ViFrame {

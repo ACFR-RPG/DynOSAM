@@ -53,6 +53,24 @@ inline gtsam::Pose3 predictPoseConstantVelocity(const gtsam::Pose3& pose,
   return gtsam::Pose3(predicted_rotation, predicted_translation);
 }
 
+inline void logPoseValidity(const std::string& name, const gtsam::Pose3& pose,
+                            const double tol = 1e-6) {
+  const Eigen::Matrix3d R = pose.rotation().matrix();
+
+  const double orthogonality_error =
+      (R.transpose() * R - Eigen::Matrix3d::Identity()).norm();
+
+  const double determinant = R.determinant();
+
+  LOG(INFO) << name << "\nR:\n"
+            << R << "\nt: " << pose.translation().transpose()
+            << "\northogonality error: " << orthogonality_error
+            << "\ndeterminant: " << determinant;
+
+  // CHECK_LT(orthogonality_error, tol);
+  // CHECK_NEAR(determinant, 1.0, tol);
+}
+
 inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
   const int x = cvRound(point.x);
   const int y = cvRound(point.y);

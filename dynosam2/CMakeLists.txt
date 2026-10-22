@@ -171,6 +171,7 @@ if(BUILD_TESTING)
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
     test/test_feature_block_container.cc
+    test/test_concepts.cc
 )
 
   target_include_directories(${PROJECT_NAME}_test

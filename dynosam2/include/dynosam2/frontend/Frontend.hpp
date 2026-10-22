@@ -54,6 +54,17 @@ class Frontend {
   }
 
  private:
+  /**
+   * @brief Initalise new points in the estimator by triangulation
+   *
+   * @param estimator
+   * @param frames
+   * @param frame
+   * @return size_t
+   */
+  size_t matchToVioMap(VioGraphEstimator& estimator, const ViFrames& frames,
+                       ViFrame& frame);
+
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,
                        int max_iterations = 50) const;

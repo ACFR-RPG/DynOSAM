@@ -42,6 +42,17 @@ inline gtsam::Pose3 changeBasis(const gtsam::Pose3& target_frame,
   return target_frame * source_frame * target_frame.inverse();
 }
 
+/**
+ * @brief Return the pose with a normalized rotation component ensuring it is
+ * valid in SO(3)
+ *
+ * @param pose
+ * @return gtsam::Pose3
+ */
+inline gtsam::Pose3 normalizeRotation(const gtsam::Pose3 pose) {
+  return gtsam::Pose3(pose.rotation().normalized(), pose.translation());
+}
+
 // should be of type double and of size 3xN
 template <typename Derived>
 inline void transformTo(const gtsam::Pose3& T_ij,

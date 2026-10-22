@@ -2,6 +2,8 @@
 
 #include <gtsam/nonlinear/DoglegOptimizer.h>
 
+#include "dynosam2/frontend/Utils.hpp"
+#include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
@@ -64,39 +66,26 @@ void DoGraph::initalizeStatesPropogate(
 
   // TODO: add links between motions!
   const gtsam::Pose3 H_W_ij_pose = X_W_j * G_i_ij * X_W_i.inverse();
+
   const dyno::Motion3ReferenceFrame H_W_ij(
       H_W_ij_pose, dyno::MotionRepresentationStyle::F2F,
       dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
 
-  // gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.state.pose);
+  gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.state.pose);
 
-  // DOGraphState& state = this->state(frame_j);
-  // state.state.pose = L_W_j;
-  // state.state.motion = H_W_ij;
-  // // propogate using the frame-to-frame motion to construct a motion chain
-  // // from the anchor frame to the current frame
-  // gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
-  // state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-  //     H_W_KF_k, dyno::MotionRepresentationStyle::KF,
-  //     dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
-
-  const gtsam::Pose3 L_W_A = anchorPose(last_state.H_W_KF_k.from());
-
-  // propogate using the frame-to-frame motion to construct a motion chain
-  // from the anchor frame to the current frame
-  gtsam::Pose3 H_W_A_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
-  gtsam::Pose3 L_W_j = H_W_A_k * L_W_A;
-
+  // in effect we dont use A_KF for anything except when we compute it for
+  // optimisation store everything as pose!
+  CHECK(!stateExists(frame_j));
   DOGraphState& state = this->state(frame_j);
   state.state.pose = L_W_j;
   state.state.motion = H_W_ij;
-  state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-      H_W_A_k, dyno::MotionRepresentationStyle::KF,
-      dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
+  // propogate using the frame-to-frame motion to construct a motion chain
+  // from the anchor frame to the current frame
+  gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
 
-  // LOG(INFO) << H_W_ij_pose;
-  // LOG(INFO) << L_W_j;
-  // LOG(INFO) << state.H_W_KF_k;
+  state.H_W_KF_k = dyno::Motion3ReferenceFrame(
+      H_W_KF_k, dyno::MotionRepresentationStyle::KF,
+      dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
 }
 
 void DoGraph::setRegularKeyframe(dyno::FrameId frame_id) {
@@ -176,6 +165,14 @@ const gtsam::Pose3& DoGraph::anchorPose(dyno::FrameId frame_id) const {
 
 const gtsam::Pose3& DoGraph::getPose(dyno::FrameId frame_id) const {
   return states_.at(frame_id).state.pose;
+}
+
+bool isValidRotation(const gtsam::Pose3& pose, double tolerance = 1e-6) {
+  const auto& R = pose.rotation().matrix();
+
+  return R.allFinite() &&
+         (R.transpose() * R - Eigen::Matrix3d::Identity()).norm() < tolerance &&
+         std::abs(R.determinant() - 1.0) < tolerance;
 }
 
 void DoGraphEstimator::optimize(dyno::FrameId frame_id,
@@ -328,30 +325,20 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
   std::unordered_map<dyno::FrameId, gtsam::Pose3> initial_motions;
   std::unordered_map<dyno::FrameId, gtsam::Pose3> X_W_k_poses;
   // Anchor -> Base motion in W frame
-  const dyno::Motion3ReferenceFrame H_W_A_B_r = states_.at(base).H_W_KF_k;
-  // CHECK_EQ(H_W_A_B.to(), base);
+  const dyno::Motion3ReferenceFrame H_W_A_B = states_.at(base).H_W_KF_k;
+  CHECK_EQ(H_W_A_B.to(), base);
   // the anchor frame and base pose will not move during the optimisation
-  const dyno::FrameId anchor_frame = H_W_A_B_r.from();
+  const dyno::FrameId anchor_frame = H_W_A_B.from();
   // anchor pose
   const gtsam::Pose3 L_W_A = getPose(anchor_frame);
-  LOG(INFO) << "L_W_A: " << L_W_A;
   const gtsam::Pose3 L_W_B = getPose(base);
-  LOG(INFO) << "L_W_B: " << L_W_B;
 
   // 'inverse': Base -> Anchor motion in W frame, needed for computing Base ->
-  // Motion in W const gtsam::Pose3 H_W_B_A = L_W_B * ( L_W_A.inverse() *
-  // H_W_A_B.estimate() *  L_W_A).inverse() * L_W_B.inverse(); Transform from
-  // the base-frame motion representation back to the original anchor-frame
-  // motion representation.
+  // Motion in W
+  // const gtsam::Pose3 H_W_B_A = L_W_B * ( L_W_A.inverse() * H_W_A_B.estimate()
+  // *  L_W_A).inverse() * L_W_B.inverse(); Transform from the base-frame motion
+  // representation back to the original anchor-frame motion representation.
   const gtsam::Pose3 H_W_B_A = L_W_A * L_W_B.inverse();
-  // compute motion from poses instead? DEBUG TESTING
-  // TODO: this changes behaviour but does not fix poblem
-  // definitely somehow in our looping computation there
-  // is a bug!
-  // TODO: check that all motions and poses are self consistent
-  // maybe if we only store poses and compute motions we can save ourselves?
-  const gtsam::Pose3 H_W_A_B = L_W_B * L_W_A.inverse();
-
   // for each frame to try build an initial motion w.r.t base
   for (dyno::FrameId k0 : frames_to_use) {
     // the full motion from the anchor frame to k0
@@ -360,9 +347,35 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
     CHECK_EQ(anchor_frame, H_W_A_k.from());
     CHECK_EQ(k0, H_W_A_k.to());
 
-    // convert into base from motion: base -> k motion in W frame
-    //  this is the motion we are estimating for!
-    const gtsam::Pose3 H_W_B_k = H_W_A_k.estimate() * H_W_B_A;
+    if (!isValidRotation(H_W_A_k)) {
+      LOG(ERROR) << "Invalid H_W_A_k at frame " << k0;
+    }
+
+    /**
+     * After lots of debugging it was found that there is some numerical
+     * issues in doing a round trip reference frame transform (ie. transforming
+     * into some local frame, doing a delta update in the local frame, and then
+     * returning to the original frame) when the intermediate update is used
+     * recursively to update the coordinate frame. The result is that we get
+     * some blow up of orthogonality error in the rotation matrix of some
+     * motion, which is then compounded when we initalise the new pose L <- H *
+     * L. We did some Gtests with the help of Chat-GPT to show that when
+     * maintaining two evolving poses, repeatedly computing their relative
+     * transform, reconstructing an updated pose, and feeding the result back
+     * into the next iteration somewhat reconstructs this error. Doing the
+     * update in the lie-algebra helps prevent this numerical drift but in the
+     * case of motions (where everthing is applied on the left) this appears to
+     * help less? Instead we just ensure that our composed (transformed) motion
+     * is also a valid SO(3). We apply the correction here becuase extensive
+     * debugging showed that this is the first place we start seeing errors in
+     * the orthogonality of the pose.
+     */
+    const gtsam::Pose3 H_W_B_k =
+        dyno::normalizeRotation(H_W_A_k.estimate() * H_W_B_A);
+    if (!isValidRotation(H_W_B_k)) {
+      LOG(ERROR) << "Invalid H_W_B_k at frame " << k0;
+    }
+
     initial_motions[k0] = H_W_B_k;
     X_W_k_poses[k0] = vi_graph.getPose(k0);
   }
@@ -413,9 +426,6 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
 
   VLOG(5) << ss.str();
 
-  // LOG(INFO) << "Composed Base motion: " << initial_motions[base];
-  // // keyframe motion
-  // LOG(INFO) << "Original motion:" << H_W_A_B;
   LOG(INFO) << "Motions effected: " << dyno::container_to_string(frames_to_use);
   // add prior on base frame
   const gtsam::Symbol base_motion_sym('H', base);
@@ -444,6 +454,8 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
   gtsam::DoglegParams opt_params;
   opt_params.setMaxIterations(10);
 
+  graph.print("DO ");
+
   dyno::NonlinearOptimizer<gtsam::DoglegOptimizer> solver(graph, values,
                                                           opt_params);
 
@@ -452,7 +464,7 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
   dyno::NonlinearOptimizerOptions options;
   dyno::utils::ChronoTimingStats solve_t("do_graph.opt.solve");
   gtsam::Values optimised_values = values;
-  // { CHECK(solver.solve(optimised_values, options, &summary)); }
+  { CHECK(solver.solve(optimised_values, options, &summary)); }
   solve_t.stop();
 
   VLOG(10) << "DO Initial error: " << summary.initial_error << " final error "
@@ -461,67 +473,33 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
            << " #iterations= " << summary.numIterations();
 
   frames_affected = frames_to_use;
-  LOG(INFO) << "base: " << base;
   for (dyno::FrameId k0 : frames_to_use) {
     // do not update anchor pose! Or i guess base frame?
     if (k0 == anchor_frame || k0 == base) {
       continue;
     }
 
-    const gtsam::Pose3 H_W_B_k =
-        optimised_values.at<gtsam::Pose3>(gtsam::Symbol('H', k0));
-    LOG(INFO) << "H_W_B_k " << H_W_B_k;
-    LOG(INFO) << "H_W_B_k initial " << initial_motions[k0];
-    LOG(INFO) << "H_W_A_B " << H_W_A_B;
-    // Recover the original anchor-relative motion representation.
-    // const gtsam::Pose3 H_W_A_k =
-    //     H_W_B_k * L_W_B * L_W_A.inverse();
-    const gtsam::Pose3 H_W_A_k = H_W_B_k * H_W_A_B;
-    // Recover the pose from both representations.
-    const gtsam::Pose3 L_W_k_from_base = H_W_B_k * L_W_B;
-
-    const gtsam::Pose3 L_W_k_from_anchor = H_W_A_k * L_W_A;
-
-    // Verify that both representations recover the same pose.
-    const gtsam::Pose3 pose_error = L_W_k_from_base.between(L_W_k_from_anchor);
-
-    // LOG(INFO) << "L_W_A: " << L_W_A;
-    // LOG(INFO) << "L_W_B: " << L_W_B;
-    // // LOG(INFO) << "H_W_B_k: " << H_W_B_k;
-    // LOG(INFO) << "H_W_A_k: " << H_W_A_k;
-    // LOG(INFO) << "L_W_k_from_base: " << L_W_k_from_base;
-
-    // LOG(INFO) << "Frame " << k0
-    //           << " pose error: "
-    //           << pose_error.translation().norm()
-    //           << " m, "
-    //           << gtsam::Rot3::Logmap(pose_error.rotation()).norm()
-    //           << " rad";
-
     // TODO: update H_W_km1_k
     DOGraphState& state = states_.at(k0);
-    // NOW UPDATING THIS WHEN WE COMPUTE H_W_A_B FROM POSES BREAKS
-    // BUT SETTING THE MOTION WORKS?
-    state.state.pose = L_W_k_from_anchor;
+    const gtsam::Pose3 H_W_KF_k_old = state.H_W_KF_k;
 
-    LOG(INFO) << "Current L " << state.state.pose;
-    LOG(INFO) << "New L " << L_W_k_from_base;
+    const gtsam::Pose3 H_W_B_k_refined =
+        optimised_values.at<gtsam::Pose3>(gtsam::Symbol('H', k0));
+    const gtsam::Pose3 L_W_k_refined = H_W_B_k_refined * L_W_B;
+    const gtsam::Pose3 H_W_A_k_refined = H_W_B_k_refined * H_W_A_B.estimate();
 
-    LOG(INFO) << "Current H " << std::setprecision(9)
-              << state.H_W_KF_k.estimate();
-    LOG(INFO) << "New H: " << std::setprecision(9) << H_W_A_k;
+    state.state.pose = L_W_k_refined;
+    state.H_W_KF_k.estimate_ = H_W_A_k_refined;
 
-    // IF WE COMPUTE H_W_A_B FROM POSES WE CAN SET THE MOTION
-    // NO PROBLEM. Unclear yet what this tells us!?
-    state.H_W_KF_k.estimate() = H_W_A_k;
     CHECK_EQ(state.H_W_KF_k.from(), anchor_frame);
     CHECK_EQ(state.H_W_KF_k.to(), k0);
+    // break;
   }
 
   for (dyno::TrackletId id : tracklets_with_update) {
     gtsam::Point3 lmk =
         optimised_values.at<gtsam::Point3>(gtsam::Symbol('l', id));
-    // setLandmark(id, lmk);
+    setLandmark(id, lmk);
   }
 }
 
