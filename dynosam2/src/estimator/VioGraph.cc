@@ -19,7 +19,6 @@ VioGraph::VioGraph(dyno::Camera::Ptr camera) {
   CHECK_NOTNULL(K_stereo_);
 
   K_ = camera->getGtsamCalibration();
-  observation_model_ = gtsam::noiseModel::Isotropic::Sigma(3, 2.0);
 }
 
 void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose) {
@@ -45,45 +44,6 @@ VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
   state.pose_W = pose;
 
   return state;
-}
-
-void VioGraph::addMeasurement(ViFrame::Ptr frame, dyno::TrackletId id) {
-  BaGraph::addMeasurements(
-      StereoMeasurementStatusVector{createStereoMeaurement(frame, id)});
-}
-
-void VioGraph::addMeasurement(dyno::KeypointIdentifier id) {
-  const dyno::FrameId frame_id = id.frameId();
-  const dyno::TrackletId tracklet_id = id.trackletId();
-  const dyno::ObjectId object_id = id.objectId();
-  CHECK_EQ(object_id, dyno::background_label);
-
-  const ViFrame::Ptr frame = getFramePtr(frame_id);
-  CHECK_NOTNULL(frame);
-
-  addMeasurement(frame, tracklet_id);
-}
-void VioGraph::addMeasurements(
-    const std::vector<dyno::KeypointIdentifier>& ids) {
-  // takes a long time since we have to do lots of lookups!
-  for (const auto& id : ids) {
-    addMeasurement(id);
-  }
-}
-
-void VioGraph::addMeasurements(ViFrame::Ptr frame,
-                               const std::vector<dyno::TrackletId>& ids) {
-  // much faster since we already have the frame!
-  StereoMeasurementStatusVector measurements;
-  dyno::utils::ChronoTimingStats add_m_t2("vio_graph.create_m");
-  measurements.reserve(ids.size());
-  for (dyno::TrackletId id : ids) {
-    measurements.push_back(createStereoMeaurement(frame, id));
-  }
-  add_m_t2.stop();
-
-  dyno::utils::ChronoTimingStats add_m_t1("vio_graph.add_m");
-  BaGraph::addMeasurements(measurements);
 }
 
 // void VioGraph::initaliseStates(
@@ -217,6 +177,8 @@ bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
     keyframes.insert(*it);
     ++added_kfs;
   }
+
+  // TODO: prune frames_ to not hold into memory!
 
   keyframes_ = keyframes;
   return true;

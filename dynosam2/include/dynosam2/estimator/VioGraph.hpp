@@ -54,23 +54,8 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
                        const Velocity3& velocity_W);
 
-  // adds a measurement that exists in the ViFrame to the measurement graph,
-  // indicating that it will be considered for BA!
-  void addMeasurement(ViFrame::Ptr frame, dyno::TrackletId id);
-  void addMeasurement(dyno::KeypointIdentifier id);
-  void addMeasurements(const std::vector<dyno::KeypointIdentifier>& ids);
-  // this is faster if all observations are for the same frame
-  void addMeasurements(ViFrame::Ptr frame,
-                       const std::vector<dyno::TrackletId>& ids);
-
-  size_t numFrames() const { return frames_.size(); }
-
-  ViFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
-    auto it = frames_.find(frame_id);
-    if (it == frames_.end()) {
-      return nullptr;
-    }
-    return it->second;
+  inline ViFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
+    return this->getFrameAs<ViFrame>(frame_id);
   }
 
   // overriwite state
@@ -135,13 +120,7 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   //! Active keyframes used for selection and bundle adjustmement!
   std::set<dyno::FrameId> keyframes_;
 
-  //! All vi frames added so far. We will prune them alongside the active
-  //! keyframes
-  dyno::FastUnorderedMap<dyno::FrameId, ViFrame::Ptr> frames_;
-
   gtsam::SharedGaussian observation_model_;
-
-  using BaGraphStates::addMeasurements;
 };
 
 class VioGraphEstimator : public VioGraph {

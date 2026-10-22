@@ -14,7 +14,11 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
       sensor_rig_(sensor_rig),
       camera_(sensor_rig->cannonicalCamera()),
       frontend_(parameters.frontend, camera_),
-      estimator_(camera_) {}
+      estimator_(camera_)
+
+{
+  // TODO: set some params for frontend!
+}
 
 DynamicSlam::~DynamicSlam() {}
 
@@ -53,9 +57,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       } else {
         // ViFrame& vi_frame = vi_frames_[frame_id];
         // frame_ptr = &vi_frame;
-        ViFrame::Ptr vi_frame = std::make_shared<ViFrame>();
-        vi_frame->frame_id = frame_id;
-        vi_frame->timestamp = timestamp;
+        ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
         // TODO: hack!
         vi_frame->fill(geometry, features);
 
@@ -63,11 +65,6 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         // TODO: add measurements!
         vio_estimator.initaliseStates(vi_frame, gtsam::Pose3::Identity());
       }
-
-      // CHECK_NOTNULL(frame_ptr);
-      // frame_ptr->frame_id = frame_id;
-      // frame_ptr->timestamp = timestamp;
-      // frame_ptr->fill(geometry, features);
     }
 
     first_frame_ = false;
@@ -123,10 +120,6 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   CHECK(vo_geometry);
 
   bool vo_success{false};
-  // allocate new vi_frame before thead
-  ViFrame& vi_frame = vi_frames_[frame_id];
-  vi_frame.frame_id = frame_id;
-  vi_frame.timestamp = timestamp;
 
   gtsam::Pose3 X_W_k;
   AyncVO async_context;
@@ -149,8 +142,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   group.run([&] {
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
     frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
-                                  vi_frame, async_context, updated_vo_states,
-                                  vo_success, vi_frames_, image_container);
+                                  async_context, updated_vo_states, vo_success,
+                                  image_container);
   });
 
   const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();

@@ -36,10 +36,9 @@ class Frontend {
 
   void solveVisualOdometry(VioGraphEstimator& estimator,
                            FeatureBlockContainer& features,
-                           FeatureBlockGeometry& geometry, ViFrame& frame,
+                           FeatureBlockGeometry& geometry,
                            AyncVO& async_context,
                            std::vector<FrameId>& frames_updated, bool& success,
-                           const ViFrames& frames,
                            const ImageContainer& image_container);
 
   void solveObjectOdometry(

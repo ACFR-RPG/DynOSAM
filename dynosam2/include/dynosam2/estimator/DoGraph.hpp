@@ -31,6 +31,9 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id);
   virtual ~DoGraph() = default;
 
+  // TODO: for now
+  using BaGraphStates::addMeasurements;
+
   // I think should just be initalize from motion H_W_km_1
   // and then we initally propogate!
   // // should be measurements for this frame

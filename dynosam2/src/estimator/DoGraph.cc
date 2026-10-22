@@ -27,7 +27,7 @@ void DoGraph::initalizeNewAnchorFrame(
     dyno::FrameId frame_id,
     const dyno::StereoMeasurementStatusVector& measurements,
     const gtsam::Pose3 L) {
-  this->addMeasurements(measurements);
+  this->addStereoMeasurements(measurements);
 
   // update anchor point we are estimating relative to!
   DOGraphState& state = this->state(frame_id);
@@ -56,7 +56,7 @@ void DoGraph::initalizeStatesPropogate(
     const dyno::StereoMeasurementStatusVector& measurements,
     const dyno::Motion3ReferenceFrame& G_i_ij, const gtsam::Pose3 X_W_j,
     const gtsam::Pose3 X_W_i) {
-  this->addMeasurements(measurements);
+  this->addStereoMeasurements(measurements);
 
   // state i
   const DOGraphState& last_state = lastState();

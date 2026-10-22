@@ -2,7 +2,36 @@
 
 #include <gtsam/nonlinear/DoglegOptimizer.h>
 
-// namespace dyno2 {
+namespace dyno2 {
+
+void BaGraph::addMeasurement(Frame::Ptr frame, dyno::TrackletId id) {
+  addStereoMeasurements(
+      dyno::StereoMeasurementStatusVector{createStereoMeasurement(frame, id)});
+}
+void BaGraph::addMeasurement(dyno::KeypointIdentifier id) {
+  const dyno::FrameId frame_id = id.frameId();
+  const dyno::TrackletId tracklet_id = id.trackletId();
+
+  const Frame::Ptr frame = getFrame(frame_id);
+  CHECK_NOTNULL(frame);
+  addMeasurement(frame, tracklet_id);
+}
+void BaGraph::addMeasurements(
+    const std::vector<dyno::KeypointIdentifier>& ids) {
+  // takes a long time since we have to do lots of lookups!
+  for (const auto& id : ids) {
+    addMeasurement(id);
+  }
+}
+void BaGraph::addMeasurements(Frame::Ptr frame,
+                              const std::vector<dyno::TrackletId>& ids) {
+  StereoMeasurementStatusVector measurements;
+  measurements.reserve(ids.size());
+  for (dyno::TrackletId id : ids) {
+    measurements.push_back(createStereoMeasurement(frame, id));
+  }
+  addStereoMeasurements(measurements);
+}
 
 // bool BaOptInterface::optimize(gtsam::Values& optimised_values, const
 // gtsam::Values& values, const gtsam::NonlinearFactorGraph& graph) {
@@ -26,4 +55,4 @@
 
 // }
 
-// }
+}  // namespace dyno2

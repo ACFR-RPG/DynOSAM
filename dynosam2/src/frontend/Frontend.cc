@@ -49,22 +49,15 @@ void Frontend::detectAndTrack(FeatureBlockContainer*& features_out,
 
 void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
                                    FeatureBlockContainer& features,
-                                   FeatureBlockGeometry& geometry, ViFrame&,
+                                   FeatureBlockGeometry& geometry,
                                    AyncVO& async_context,
                                    std::vector<FrameId>& frames_updated,
-                                   bool& success, const ViFrames&,
+                                   bool& success,
                                    const ImageContainer& image_container) {
   dyno::utils::ChronoTimingStats vo_t("frontend.vo");
 
   const FrameId frame_id = image_container.frameId();
   const Timestamp timestamp = image_container.timestamp();
-
-  // if(estimator.numViFrames() == 0) {
-  //   ViFrame::Ptr vi_frame = std::make_shared<ViFrame>();
-  //   vi_frame->frame_id = frame_id;
-  //   vi_frame->timestamp = timestamp;
-  //   vi_frame->fill(geometry, features);
-  // }
 
   // previous frame as the refernece fmrae
   // the estimator does not yet have a solution for the current frame
@@ -117,9 +110,7 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
       async_context.vo_ready = true;
     }
 
-    ViFrame::Ptr vi_frame = std::make_shared<ViFrame>();
-    vi_frame->frame_id = frame_id;
-    vi_frame->timestamp = timestamp;
+    ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
     vi_frame->fill(geometry, features);
 
     // propogate use constant velocity model
@@ -133,11 +124,6 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
     //                           StereoMeasurementStatusVector{},
     //                           predicted_pose);
     estimator.initaliseStates(vi_frame, predicted_pose);
-
-    // // still have to fill frame
-    // frame.frame_id = frame_id;
-    // frame.timestamp = timestamp;
-    // frame.fill(geometry, features);
 
     success = false;
     // alert awaiting threads
@@ -171,45 +157,27 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   // frame.frame_id = frame_id;
   // frame.timestamp = timestamp;
   // frame.fill(geometry, features);
-  ViFrame::Ptr vi_frame = std::make_shared<ViFrame>();
-  vi_frame->frame_id = frame_id;
-  vi_frame->timestamp = timestamp;
+  ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
   vi_frame->fill(geometry, features);
   estimator.initaliseStates(vi_frame, X_W);
 
   // initalise estimator with new state (eventually maybe from VIO?)
   // we now have an initial pose
-  gtsam::Vector3 sigmas;
-  sigmas << 2, 2, 2;
-  StereoMeasurementStatusVector stereo_measurements;
   std::vector<dyno::TrackletId> observation_ids;
-  stereo_measurements.reserve(adapter.getNumberCorrespondences());
   observation_ids.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
   // this will help with the BA to get intermediate frame measurements
   for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
     TrackletId id = adapter.trackletId(idx);
     if (adapter.isInlier(idx) && estimator.landmarkExists(id)) {
-      // auto stereo_measurement =
-      //     StereoMeasurement::FromSigmas(frame.stereoPointById(id), sigmas);
-
-      // stereo_measurements.push_back(
-      //     StereoMeasurementStatus(stereo_measurement, frame_id, timestamp,
-      //     id,
-      //                             0, ReferenceFrame::LOCAL));
-      // observations.push_back(dyno::KeypointIdentifier{frame_id, id, 0});
       observation_ids.push_back(id);
     }
   }
-  dyno::utils::ChronoTimingStats add_m_t1("frontend.vo.add1");
   // all measurements are for the same frame use this function call which runs a
   // bit faster!
   estimator.addMeasurements(vi_frame, observation_ids);
-  add_m_t1.stop();
 
   // TODO: if sensor_rig has IMU
-  //  propogate velocity using estimation or IMU!
-  // estimator.initaliseStates(frame_id, timestamp, stereo_measurements, X_W);
 
   // alert waiting threads AFTER we initalise states as they may need the pose!
   LOG(INFO) << "Solved VO k= " << frame_id;
@@ -346,9 +314,6 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
           }
         });
 
-    StereoMeasurementStatusVector stereo_measurements;
-    stereo_measurements.reserve(match_infos.size());
-
     std::vector<dyno::KeypointIdentifier> observations;
     observations.reserve(match_infos.size());
 
@@ -373,12 +338,6 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
 
         // check we havent already added this measurement
         if (!estimator.hasObservation(k0, match_info.id)) {
-          // auto stereo_measurement = StereoMeasurement::FromSigmas(
-          //     vi_frame.stereoPointById(match_info.id), sigmas);
-
-          // stereo_measurements.push_back(StereoMeasurementStatus(
-          //     stereo_measurement, k0, vi_frame.timestamp, match_info.id, 0,
-          //     ReferenceFrame::LOCAL));
           observations.push_back(
               dyno::KeypointIdentifier{k0, match_info.id, 0});
         }

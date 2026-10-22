@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dynosam2/common/Types.hpp"
+#include "dynosam2/frontend/Frame.hpp"
 #include "dynosam_common/SensorModels.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_opt/Map.hpp"
@@ -94,9 +95,18 @@ class BaGraph {
   using Covisibilities =
       dyno::FastUnorderedMap<dyno::FrameId, FrameCovisibilities>;
 
-  BaGraph() : observations_(StereoBaMap::create()) {}
+  BaGraph() : observations_(StereoBaMap::create()) { setMeasurementSigma(2.0); }
   virtual ~BaGraph() = default;
 
+  /**
+   * @brief Observation in the BA graph, which (maybe) will included in the
+   * local BA problem
+   *
+   * @param frame_id
+   * @param tracklet_id
+   * @return true
+   * @return false
+   */
   bool hasObservation(dyno::FrameId frame_id,
                       dyno::TrackletId tracklet_id) const {
     // way faster to lookup by tracklet id
@@ -109,23 +119,91 @@ class BaGraph {
 
   const StereoBaMap& getObservations() const { return *observations_; }
 
+  // Measurement frames, not frames in the BaMeasurementGraph
+  size_t numFrames() const { return frames_.size(); }
+
+  void setMeasurementSigma(double sigma) {
+    observation_model_ = gtsam::noiseModel::Isotropic::Sigma(3, sigma);
+  }
+
+  // adds a measurement that exists in the Frame to the measurement graph,
+  // indicating that it will be considered for BA!
+  void addMeasurement(Frame::Ptr frame, dyno::TrackletId id);
+  void addMeasurement(dyno::KeypointIdentifier id);
+  void addMeasurements(const std::vector<dyno::KeypointIdentifier>& ids);
+  // this is faster if all observations are for the same frame
+  void addMeasurements(Frame::Ptr frame,
+                       const std::vector<dyno::TrackletId>& ids);
+
   bool computeCovisibilities();
   int covisibilities(dyno::FrameId frame_i, dyno::FrameId frame_j) const;
 
-  // all measurements should exists for states?
-  inline void addMeasurements(
+ protected:
+  inline Frame::Ptr getFrame(dyno::FrameId frame_id) const {
+    auto it = frames_.find(frame_id);
+    if (it == frames_.end()) {
+      return nullptr;
+    }
+    return it->second;
+  }
+
+  template <typename FRAME>
+  std::shared_ptr<FRAME> getFrameAs(dyno::FrameId frame_id) const {
+    Frame::Ptr frame = this->getFrame(frame_id);
+    return std::static_pointer_cast<FRAME>(frame);
+  }
+
+  inline void addStereoMeasurements(
       const dyno::StereoMeasurementStatusVector& measurements) {
     covisibilities_computed_ = false;
     observations_->updateObservations(measurements);
   }
 
+  inline StereoMeasurementStatus createStereoMeasurement(
+      const Frame::Ptr& frame, dyno::TrackletId id) const {
+    // debug check frame has measurement!?
+    // TODO: observation model robust?
+    StereoMeasurement stereo_measurement(frame->stereoPointById(id),
+                                         observation_model_);
+    return StereoMeasurementStatus(stereo_measurement, frame->frame_id,
+                                   frame->timestamp, id, frame->object_id,
+                                   ReferenceFrame::LOCAL);
+  }
+
  protected:
+  //! Represents measurements that have been accepted into the BA problem
+  //! Not all keypoint observations, these are stored in Frame::Ptr
   StereoBaMap::Ptr observations_;
 
   bool covisibilities_computed_{false};
   Covisibilities covisibilities_;
   std::set<dyno::FrameId> visible_frames_;
+
+  //! Observation model used when constructing measurements
+  gtsam::SharedGaussian observation_model_;
+  //! All frames added so far. Holds all keypoints.
+  dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
 };
+
+// class BaOptInterface {
+// public:
+//   BaOptInterface() = default;
+
+// protected:
+//   void init(const gtsam::Values& values, const gtsam::NonlinearFactorGraph&
+//   graph, int max_iterations = 5); NonlinearOptimizerSummary
+//   optimize(gtsam::Values& optimised_values);
+
+//   bool setOptimisationTimeLimit(double time_limit_s, int min_iterations);
+
+// protected:
+//   dyno::NonlinearOptimizerOptions options_;
+
+// private:
+//   std::unique_ptr<dyno::TimeBudgetOptimizationCallback> callback_{nullptr};
+//   gtsam::NonlinearFactorGraph graph_;
+//   gtsam::Values values_;
+// };
 
 /// @brief Convenience struct to hold all observations and states together
 /// @tparam STATE
@@ -135,18 +213,5 @@ struct BaGraphStates : public BaGraph,
                        public LandmarkMap {
   BaGraphStates() = default;
 };
-
-// class BaOptInterface {
-// public:
-//   BaOptInterface() = default;
-
-// protected:
-//   bool optimize(gtsam::Values& optimised_values, const gtsam::Values& values,
-//   const gtsam::NonlinearFactorGraph& graph);
-
-// protected:
-//   dyno::NonlinearOptimizerOptions options_;
-
-// };
 
 }  // namespace dyno2
