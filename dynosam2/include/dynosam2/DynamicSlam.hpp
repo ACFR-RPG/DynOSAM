@@ -33,9 +33,6 @@ class DynamicSlam : public DynamicSlamInterface {
   Frontend frontend_;
   SlamBackend estimator_;
 
-  //! All Dyamic Object Frames with detections
-  std::unordered_map<ObjectId, DoFrames> do_frames_;
-
   bool first_frame_{true};
 };
 

@@ -43,26 +43,26 @@ class Frontend {
 
   void solveObjectOdometry(
       ObjectId object_id, const VioGraphEstimator& vo_estimator,
-      const ImageContainer& image_container, const DoFrames& frames,
-      DoGraphEstimator& estimator, FeatureBlockContainer& features,
-      FeatureBlockGeometry& geometry, DoFrame& frame, AyncVO& async_context,
-      std::vector<FrameId>& frames_updated, uchar& success);
+      const ImageContainer& image_container, DoGraphEstimator& estimator,
+      FeatureBlockContainer& features, FeatureBlockGeometry& geometry,
+      AyncVO& async_context, std::vector<FrameId>& frames_updated,
+      uchar& success);
 
   inline bool isVioInitalised() const {
     return vi_tracking_condition_.is_initalized;
   }
 
  private:
-  /**
-   * @brief Initalise new points in the estimator by triangulation
-   *
-   * @param estimator
-   * @param frames
-   * @param frame
-   * @return size_t
-   */
-  size_t matchToVioMap(VioGraphEstimator& estimator, const ViFrames& frames,
-                       ViFrame& frame);
+  // /**
+  //  * @brief Initalise new points in the estimator by triangulation
+  //  *
+  //  * @param estimator
+  //  * @param frames
+  //  * @param frame
+  //  * @return size_t
+  //  */
+  // size_t matchToVioMap(VioGraphEstimator& estimator, const ViFrames& frames,
+  //                      ViFrame& frame);
 
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,
@@ -81,7 +81,7 @@ class Frontend {
   };
 
   bool shouldBeDoKeyFrame(const DoGraphEstimator& estimator,
-                          const DoFrame& frame, const DoFrames& frames) const;
+                          DoFrame::Ptr frame) const;
 
  private:
   FrontendParameters parameters_;

@@ -3,6 +3,7 @@
 #include <gtsam/nonlinear/DoglegOptimizer.h>
 
 #include "dynosam2/frontend/Utils.hpp"
+#include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
@@ -23,12 +24,81 @@ DoGraph::DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
   K_ = camera->getGtsamCalibration();
 }
 
-void DoGraph::initalizeNewAnchorFrame(
-    dyno::FrameId frame_id,
-    const dyno::StereoMeasurementStatusVector& measurements,
-    const gtsam::Pose3 L) {
-  this->addStereoMeasurements(measurements);
+// void DoGraph::initalizeNewAnchorState(
+//     dyno::FrameId frame_id,
+//     const dyno::StereoMeasurementStatusVector& measurements,
+//     const gtsam::Pose3 L) {
+//   this->addStereoMeasurements(measurements);
 
+//   // update anchor point we are estimating relative to!
+//   DOGraphState& state = this->state(frame_id);
+//   state.state.motion = dyno::Motion3ReferenceFrame(
+//       gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::F2F,
+//       dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
+//   state.state.pose = L;
+//   state.keyframe_status = dyno::DoKeyframeType::AnchorKeyFrame;
+//   state.H_W_KF_k = dyno::Motion3ReferenceFrame(
+//       gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::KF,
+//       dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
+
+//   // reset active keyframes so there is no overlap in the estimator
+//   // and forces new keyframes at the start
+//   active_keyframes_.clear();
+//   active_keyframes_.insert(frame_id);
+
+//   // clear the map
+//   // what about when we synchronize from the backend?
+//   LandmarkMap::clear();
+// }
+
+// // J is current frame
+// void DoGraph::initalizeStatesPropogate(
+//     dyno::FrameId frame_j,
+//     const dyno::StereoMeasurementStatusVector& measurements,
+//     const dyno::Motion3ReferenceFrame& G_i_ij, const gtsam::Pose3 X_W_j,
+//     const gtsam::Pose3 X_W_i) {
+//   this->addStereoMeasurements(measurements);
+
+//   // state i
+//   const DOGraphState& last_state = lastState();
+//   const dyno::FrameId frame_i = last_state.state.motion.to();
+//   CHECK_EQ(frame_i, G_i_ij.from());
+//   CHECK_EQ(frame_i, last_state.H_W_KF_k.to());
+
+//   // TODO: add links between motions!
+//   const gtsam::Pose3 H_W_ij_pose = X_W_j * G_i_ij * X_W_i.inverse();
+
+//   const dyno::Motion3ReferenceFrame H_W_ij(
+//       H_W_ij_pose, dyno::MotionRepresentationStyle::F2F,
+//       dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
+
+//   gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.state.pose);
+
+//   // in effect we dont use A_KF for anything except when we compute it for
+//   // optimisation store everything as pose!
+//   CHECK(!stateExists(frame_j));
+//   DOGraphState& state = this->state(frame_j);
+//   state.state.pose = L_W_j;
+//   state.state.motion = H_W_ij;
+//   // propogate using the frame-to-frame motion to construct a motion chain
+//   // from the anchor frame to the current frame
+//   gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
+
+//   state.H_W_KF_k = dyno::Motion3ReferenceFrame(
+//       H_W_KF_k, dyno::MotionRepresentationStyle::KF,
+//       dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
+// }
+
+FrameId DoGraph::initaliseFrame(DoFrame::Ptr frame) {
+  const dyno::FrameId frame_id = frame->getFrameId();
+  CHECK(!frames_.exists(frame_id));
+  frames_[frame_id] = frame;
+  return frame_id;
+}
+
+void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
+                                      const gtsam::Pose3 L) {
+  const dyno::FrameId frame_id = maybeInitaliseFrame(do_frame);
   // update anchor point we are estimating relative to!
   DOGraphState& state = this->state(frame_id);
   state.state.motion = dyno::Motion3ReferenceFrame(
@@ -52,12 +122,9 @@ void DoGraph::initalizeNewAnchorFrame(
 
 // J is current frame
 void DoGraph::initalizeStatesPropogate(
-    dyno::FrameId frame_j,
-    const dyno::StereoMeasurementStatusVector& measurements,
-    const dyno::Motion3ReferenceFrame& G_i_ij, const gtsam::Pose3 X_W_j,
-    const gtsam::Pose3 X_W_i) {
-  this->addStereoMeasurements(measurements);
-
+    DoFrame::Ptr do_frame_j, const dyno::Motion3ReferenceFrame& G_i_ij,
+    const gtsam::Pose3 X_W_j, const gtsam::Pose3 X_W_i) {
+  const dyno::FrameId frame_j = initaliseFrame(do_frame_j);
   // state i
   const DOGraphState& last_state = lastState();
   const dyno::FrameId frame_i = last_state.state.motion.to();
@@ -167,6 +234,23 @@ const gtsam::Pose3& DoGraph::getPose(dyno::FrameId frame_id) const {
   return states_.at(frame_id).state.pose;
 }
 
+FrameId DoGraph::maybeInitaliseFrame(DoFrame::Ptr frame) {
+  const dyno::FrameId frame_id = frame->getFrameId();
+  auto it = frames_.find(frame_id);
+  if (it == frames_.end()) {
+    frames_[frame_id] = frame;
+  } else {
+    // incoming is not the same (by pointer!) as the stored one!
+    if (frame != it->second) {
+      DYNO_THROW_MSG(dyno::DynosamException)
+          << "Attempt to add DoFrame at " << frame_id
+          << " but existing frame and incoming frame do not match!";
+      throw;
+    }
+  }
+  return frame_id;
+}
+
 bool isValidRotation(const gtsam::Pose3& pose, double tolerance = 1e-6) {
   const auto& R = pose.rotation().matrix();
 
@@ -206,6 +290,8 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
   std::set<dyno::FrameId> frames_to_try = keyframes_to_use;
   const dyno::FrameId first_kf = *keyframes_to_use.begin();
   frames_to_try.insert(frame_id);
+  // TODO: dont run if frames < 1 (ie frame_id - 1 overlfloaf when frame_id ==
+  // 0)
 
   if (frame_id - 1 >= first_kf) {
     frames_to_try.insert(frame_id - 1);

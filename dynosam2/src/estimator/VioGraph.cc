@@ -34,7 +34,7 @@ void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
 
 VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
                                                  const gtsam::Pose3& pose) {
-  const dyno::FrameId frame_id = frame->frame_id;
+  const dyno::FrameId frame_id = frame->getFrameId();
   CHECK(!frames_.exists(frame_id));
   frames_[frame_id] = frame;
 

@@ -4,6 +4,10 @@
 
 namespace dyno2 {
 
+BaGraph::BaGraph() : observations_(StereoBaMap::create()) {
+  setMeasurementSigma(2.0);
+}
+
 void BaGraph::addMeasurement(Frame::Ptr frame, dyno::TrackletId id) {
   addStereoMeasurements(
       dyno::StereoMeasurementStatusVector{createStereoMeasurement(frame, id)});

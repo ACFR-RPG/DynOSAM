@@ -102,25 +102,12 @@ class VioGraph : public BaGraphStates<VioGraphState> {
 
   void setStateVelocityFromPose(VioGraphState& current_state);
 
-  StereoMeasurementStatus createStereoMeaurement(const ViFrame::Ptr& frame,
-                                                 dyno::TrackletId id) const {
-    // debug check frame has measurement!?
-    // TODO: observation model robust?
-    StereoMeasurement stereo_measurement(frame->stereoPointById(id),
-                                         observation_model_);
-    return StereoMeasurementStatus(stereo_measurement, frame->frame_id,
-                                   frame->timestamp, id, 0,
-                                   ReferenceFrame::LOCAL);
-  }
-
  protected:
   dyno::Camera::CalibrationType::shared_ptr K_;
   dyno::StereoCalibPtr K_stereo_;
 
   //! Active keyframes used for selection and bundle adjustmement!
   std::set<dyno::FrameId> keyframes_;
-
-  gtsam::SharedGaussian observation_model_;
 };
 
 class VioGraphEstimator : public VioGraph {

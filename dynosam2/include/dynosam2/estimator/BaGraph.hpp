@@ -95,26 +95,23 @@ class BaGraph {
   using Covisibilities =
       dyno::FastUnorderedMap<dyno::FrameId, FrameCovisibilities>;
 
-  BaGraph() : observations_(StereoBaMap::create()) { setMeasurementSigma(2.0); }
+  BaGraph();
   virtual ~BaGraph() = default;
 
   /**
-   * @brief Observation in the BA graph, which (maybe) will included in the
-   * local BA problem
+   * @brief If an observation has been turned into a measurement for the BA
+   * graph, which (maybe) will included in the local BA problem
    *
    * @param frame_id
    * @param tracklet_id
    * @return true
    * @return false
    */
-  bool hasObservation(dyno::FrameId frame_id,
+  bool hasMeasurement(dyno::FrameId frame_id,
                       dyno::TrackletId tracklet_id) const {
     // way faster to lookup by tracklet id
     auto lmk_node = observations_->getLandmark(tracklet_id);
-    if (!lmk_node) {
-      return false;
-    }
-    return lmk_node->seenAtFrame(frame_id);
+    return lmk_node ? lmk_node->seenAtFrame(frame_id) : false;
   }
 
   const StereoBaMap& getObservations() const { return *observations_; }
@@ -123,7 +120,12 @@ class BaGraph {
   size_t numFrames() const { return frames_.size(); }
 
   void setMeasurementSigma(double sigma) {
-    observation_model_ = gtsam::noiseModel::Isotropic::Sigma(3, sigma);
+    CHECK_GT(sigma, 0);
+    measurement_model_ = gtsam::noiseModel::Isotropic::Sigma(3, sigma);
+  }
+
+  gtsam::SharedGaussian getMeasurementModel() const {
+    return measurement_model_;
   }
 
   // adds a measurement that exists in the Frame to the measurement graph,
@@ -164,7 +166,7 @@ class BaGraph {
     // debug check frame has measurement!?
     // TODO: observation model robust?
     StereoMeasurement stereo_measurement(frame->stereoPointById(id),
-                                         observation_model_);
+                                         measurement_model_);
     return StereoMeasurementStatus(stereo_measurement, frame->frame_id,
                                    frame->timestamp, id, frame->object_id,
                                    ReferenceFrame::LOCAL);
@@ -179,8 +181,8 @@ class BaGraph {
   Covisibilities covisibilities_;
   std::set<dyno::FrameId> visible_frames_;
 
-  //! Observation model used when constructing measurements
-  gtsam::SharedGaussian observation_model_;
+  //! Measurement model used when constructing measurements
+  gtsam::SharedGaussian measurement_model_;
   //! All frames added so far. Holds all keypoints.
   dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
 };
