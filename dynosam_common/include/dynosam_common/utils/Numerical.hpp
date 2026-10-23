@@ -45,7 +45,7 @@ namespace dyno {
 //! Hash(a, b) != Hash(b, a)
 //! Used for hashing pixel positions of vertices of the mesh 2d.
 template <class T1, class T2>
-size_t hashPair(const std::pair<T1, T2>& p) {
+size_t hashPair(const std::pair<T1, T2>& p) noexcept {
   // note: used to use boost::hash_combine
   const auto h1 = std::hash<T1>{}(p.first);
   const auto h2 = std::hash<T2>{}(p.second);
@@ -56,7 +56,7 @@ size_t hashPair(const std::pair<T1, T2>& p) {
 //! If you want order invariance just sort your values before accessing/checking
 //! Used for hashing faces in a mesh.
 template <class T1, class T2, class T3>
-size_t hashTriplet(const T1& p1, const T2& p2, const T3& p3) {
+size_t hashTriplet(const T1& p1, const T2& p2, const T3& p3) noexcept {
   // return ((std::hash<T1>()(p1) ^ (std::hash<T2>()(p2) << 1)) >> 1) ^
   //        (std::hash<T3>()(p3) << 1);
   static constexpr size_t sl = 17191;

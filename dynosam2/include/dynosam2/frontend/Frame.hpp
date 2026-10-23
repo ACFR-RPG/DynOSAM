@@ -81,6 +81,9 @@ struct Frame {
   inline FrameId getFrameId() const { return frame_id; }
   inline Timestamp getTimestamp() const { return timestamp; }
   inline ObjectId getObjectId() const { return object_id; }
+  inline dyno::TemporalObjectIdentifier temporalObjectId() const {
+    return dyno::TemporalObjectIdentifier(frame_id, object_id);
+  }
 
   size_t numKeypoints() const noexcept { return ids.size(); }
 

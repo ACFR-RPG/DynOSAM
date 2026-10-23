@@ -120,10 +120,8 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
     const dyno::Timestamp dt = timestamp - vio_state_previous.timestamp;
     gtsam::Pose3 predicted_pose = predictPoseConstantVelocity(
         vio_state_previous.pose_W, vio_state_previous.velocity_W, dt);
-    // estimator.initaliseStates(frame_id, timestamp,
-    //                           StereoMeasurementStatusVector{},
-    //                           predicted_pose);
-    estimator.initaliseStates(vi_frame, predicted_pose);
+    estimator.initaliseStates(vi_frame, predicted_pose,
+                              vio_state_previous.velocity_W);
 
     success = false;
     // alert awaiting threads
@@ -154,9 +152,6 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   GeometryUpdater(camera_, image_container, features).updateGeometry(geometry);
 
   gtsam::Pose3 X_W = X_W_km1 * T_ij;
-  // frame.frame_id = frame_id;
-  // frame.timestamp = timestamp;
-  // frame.fill(geometry, features);
   ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
   vi_frame->fill(geometry, features);
   estimator.initaliseStates(vi_frame, X_W);
@@ -199,151 +194,9 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   //  full SLAM will use Keyframe MAP which represents the full SLAM problem!
   //  this is just maybe the local problem
   if (should_be_keyframe) {
-    const size_t num_threads =
-        std::max(1u, std::thread::hardware_concurrency());
-    const size_t num_tracklets = vi_frame->ids.size();
-    const size_t chunk_size = (num_tracklets + num_threads - 1) / num_threads;
-
-    using GtsamCamera = Camera::CameraImpl;
-    gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(2, 3.0);
-
-    gtsam::TriangulationParameters triangulation_params;
-    triangulation_params.noiseModel = model;
-    // set maximum average reprojection threshold
-    triangulation_params.dynamicOutlierRejectionThreshold = 4.0;
-
-    std::set<dyno::FrameId> all_frames = estimator.keyFrames();
-    std::vector<FrameId> query_frames_for_triangulation(all_frames.begin(),
-                                                        all_frames.end());
-
-    std::shared_ptr<dyno::RGBDCamera> rgbd_camera =
-        camera_->safeGetRGBDCamera();
-    StereoCalibPtr K_stereo = rgbd_camera->getFakeStereoCalib();
-    CHECK_NOTNULL(K_stereo);
-    const gtsam::Cal3_S2& mono_cal = K_stereo->calibration();
-    const gtsam::Pose3 left_Pose_right = gtsam::Pose3(
-        gtsam::Rot3(), gtsam::Point3(K_stereo->baseline(), 0.0, 0.0));
-
-    dyno::utils::ChronoTimingStats triangulate_t("frontend.vo.triangulate");
-    AlignedVector<MatchInfo> match_infos(num_tracklets);
-    std::vector<dyno::FrameIds> matching_frames(num_tracklets);
-
-    auto prepareStereoMeasurements =
-        [&left_Pose_right, &mono_cal](
-            dyno::TrackletId id, gtsam::CameraSet<GtsamCamera>& camera_set,
-            gtsam::Point2Vector& measurements, const ViFrame& frame_k,
-            const gtsam::Pose3& X_W_k) -> bool {
-      if (!frame_k.observedLandmark(id)) {
-        return false;
-      }
-
-      const gtsam::Pose3& left_pose = X_W_k;
-      const GtsamCamera left_camera_i(left_pose, mono_cal);
-
-      const gtsam::Pose3 rightPose = left_pose.compose(left_Pose_right);
-      const GtsamCamera right_camera_i(rightPose, mono_cal);
-
-      const gtsam::StereoPoint2& z = frame_k.stereoPointById(id);
-      camera_set.push_back(left_camera_i);
-      measurements.push_back(z.point2());
-      if (!std::isnan(z.uR())) {  // if right point is valid
-        camera_set.push_back(right_camera_i);
-        measurements.push_back(z.right());
-      }
-
-      return true;
-    };
-
-    tbb::parallel_for(
-        tbb::blocked_range<size_t>(0, num_tracklets, chunk_size),
-        [&](const tbb::blocked_range<size_t>& range) {
-          for (size_t i = range.begin(); i != range.end(); ++i) {
-            const dyno::TrackletId tracklet_id = vi_frame->ids[i];
-
-            if (estimator.landmarkExists(tracklet_id)) {
-              continue;
-            }
-
-            gtsam::CameraSet<GtsamCamera> camera_set;
-            gtsam::Point2Vector measurements;
-            // frames used for triangulation
-            FrameIds used_frames;
-
-            size_t count{0};
-            // Search all candidate frames for this tracklet.
-            for (const auto other_frame_id : query_frames_for_triangulation) {
-              // CHECK(frames.exists(other_frame_id));
-              CHECK(estimator.poseExists(other_frame_id));
-
-              // const ViFrame& other_vi_frame = frames.at(other_frame_id);
-              const ViFrame::Ptr other_vi_frame_ptr =
-                  estimator.getFramePtr(other_frame_id);
-              CHECK_NOTNULL(other_vi_frame_ptr);
-              const ViFrame& other_vi_frame = *other_vi_frame_ptr;
-
-              const gtsam::Pose3& X_W_other = estimator.getPose(other_frame_id);
-
-              // add measurements for all keyframes
-              if (prepareStereoMeasurements(tracklet_id, camera_set,
-                                            measurements, other_vi_frame,
-                                            X_W_other)) {
-                ++count;
-                used_frames.push_back(other_frame_id);
-              }
-            }
-
-            // add measurements for current frame
-            if (prepareStereoMeasurements(tracklet_id, camera_set, measurements,
-                                          *vi_frame, X_W)) {
-              used_frames.push_back(vi_frame->frame_id);
-              ++count;
-            }
-
-            auto m_W_result = dyno::triangulateSafe<GtsamCamera>(
-                camera_set, measurements, triangulation_params, true);
-
-            // LOG(INFO) << "i=" << tracked_id << " " << count;
-            // LOG(INFO) << m_W_result;
-
-            // TODO: add extra checks
-            if (m_W_result) {
-              gtsam::Point3 m_W = *m_W_result;
-              match_infos[i] = MatchInfo{m_W, tracklet_id, true, 0.0};
-              matching_frames[i] = used_frames;
-            }
-          }
-        });
-
-    std::vector<dyno::KeypointIdentifier> observations;
-    observations.reserve(match_infos.size());
-
-    size_t init_triangulation{0};
-    for (size_t i = 0; i < match_infos.size(); i++) {
-      const MatchInfo& match_info = match_infos[i];
-      if (!match_info.is_valid) {
-        continue;
-      }
-
-      CHECK(!estimator.landmarkExists(match_info.id));
-      estimator.setLandmark(match_info.id, match_info.m_W);
-      init_triangulation++;
-
-      // keyframes used for triangulation
-      const dyno::FrameIds& matched_frames = matching_frames[i];
-      for (dyno::FrameId k0 : matched_frames) {
-        // check we havent already added this measurement
-        if (!estimator.hasMeasurement(k0, match_info.id)) {
-          observations.push_back(
-              dyno::KeypointIdentifier{k0, match_info.id, 0});
-        }
-      }
-    }
-
-    dyno::utils::ChronoTimingStats add_m_t2("frontend.vo.add2");
-    estimator.addMeasurements(observations);
-    add_m_t2.stop();
-    triangulate_t.stop();
-
+    // initlaise new points in the map by attempting to triangulate points
+    // at all active keyframes
+    const size_t init_triangulation = matchToVioMap(estimator, vi_frame);
     LOG(INFO) << "Init triangulation: " << init_triangulation;
     estimator.setKeyframe(frame_id, true);
   }
@@ -380,8 +233,6 @@ void Frontend::solveObjectOdometry(
   const Timestamp timestamp = image_container.timestamp();
   const FrameId previous_frame_id = frame_id - 1u;
 
-  LandmarkMap previous_landmarks_C;
-
   DoFrame::Ptr do_frame_i = estimator.getFramePtr(previous_frame_id);
   // for now reeject if not in previous frame
   if (!do_frame_i) {
@@ -393,7 +244,9 @@ void Frontend::solveObjectOdometry(
     return;
   }
 
-  for (size_t i = 0; i < do_frame_i->ids.size(); i++) {
+  LandmarkMap previous_landmarks_C;
+  previous_landmarks_C.reserve(do_frame_i->numKeypoints());
+  for (size_t i = 0; i < do_frame_i->numKeypoints(); i++) {
     // all previous landmarks or just ones in map?
     previous_landmarks_C.setLandmark(do_frame_i->ids[i], do_frame_i->lmks_C[i]);
   }
@@ -534,8 +387,6 @@ void Frontend::solveObjectOdometry(
     // transform a point in camera frame to a point in object frame
     const gtsam::Pose3 T_LC_i = L_W_i.inverse() * X_W_i;
 
-    // StereoMeasurementStatusVector stereo_measurements;
-    // stereo_measurements.reserve(2.0 * adapter.getNumberCorrespondences());
     std::vector<dyno::TrackletId> measurements_j;
     std::vector<dyno::TrackletId> measurements_i;
 
@@ -583,9 +434,9 @@ struct StereoMeasurementFiller {
       : left_Pose_right(Extrinsics(camera)), mono_cal(Calibration(camera)) {}
 
   bool fill(dyno::TrackletId id, gtsam::CameraSet<GtsamCamera>& camera_set,
-            gtsam::Point2Vector& measurements, const ViFrame& frame_k,
+            gtsam::Point2Vector& measurements, const ViFrame::Ptr& frame_k,
             const gtsam::Pose3& X_W_k) const {
-    if (!frame_k.observedLandmark(id)) {
+    if (!frame_k->observedLandmark(id)) {
       return false;
     }
 
@@ -595,7 +446,7 @@ struct StereoMeasurementFiller {
     const gtsam::Pose3 rightPose = left_pose.compose(left_Pose_right);
     const GtsamCamera right_camera_i(rightPose, mono_cal);
 
-    const gtsam::StereoPoint2& z = frame_k.stereoPointById(id);
+    const gtsam::StereoPoint2& z = frame_k->stereoPointById(id);
     camera_set.push_back(left_camera_i);
     measurements.push_back(z.point2());
 
@@ -624,128 +475,114 @@ struct StereoMeasurementFiller {
   }
 };
 
-// size_t Frontend::matchToVioMap(VioGraphEstimator& estimator,
-//                                const ViFrames& frames, ViFrame& frame) {
-//   const size_t num_threads = std::max(1u,
-//   std::thread::hardware_concurrency()); const size_t num_tracklets =
-//   frame.ids.size(); const size_t chunk_size = (num_tracklets + num_threads -
-//   1) / num_threads; const dyno::FrameId frame_id = frame.frame_id;
+size_t Frontend::matchToVioMap(VioGraphEstimator& estimator,
+                               ViFrame::Ptr frame) {
+  const size_t num_threads = std::max(1u, std::thread::hardware_concurrency());
+  const size_t num_tracklets = frame->numKeypoints();
+  const size_t chunk_size = (num_tracklets + num_threads - 1) / num_threads;
+  const dyno::FrameId frame_id = frame->getFrameId();
 
-//   using GtsamCamera = dyno::Camera::CameraImpl;
-//   gtsam::SharedNoiseModel model =
-//   gtsam::noiseModel::Isotropic::Sigma(2, 2.0);
+  using GtsamCamera = dyno::Camera::CameraImpl;
+  gtsam::SharedNoiseModel model = gtsam::noiseModel::Isotropic::Sigma(2, 2.0);
 
-//   gtsam::TriangulationParameters triangulation_params;
-//   triangulation_params.noiseModel = model;
-//   // set maximum average reprojection threshold
-//   triangulation_params.dynamicOutlierRejectionThreshold = 2.0;
+  gtsam::TriangulationParameters triangulation_params;
+  triangulation_params.noiseModel = model;
+  // set maximum average reprojection threshold
+  triangulation_params.dynamicOutlierRejectionThreshold = 2.0;
 
-//   // get active keyframes
-//   const std::set<dyno::FrameId> all_frames = estimator.keyFrames();
-//   std::vector<FrameId> query_frames_for_triangulation(all_frames.begin(),
-//                                                       all_frames.end());
+  // get active keyframes
+  const std::set<dyno::FrameId> all_frames = estimator.keyFrames();
+  std::vector<FrameId> query_frames_for_triangulation(all_frames.begin(),
+                                                      all_frames.end());
 
-//   const StereoMeasurementFiller stereo_measurement_filler(camera_);
+  const StereoMeasurementFiller stereo_measurement_filler(camera_);
 
-//   dyno::utils::ChronoTimingStats triangulate_t("frontend.vo.triangulate");
-//   AlignedVector<MatchInfo> match_infos(num_tracklets);
-//   std::vector<dyno::FrameIds> matching_frames(num_tracklets);
+  dyno::utils::ChronoTimingStats triangulate_t("frontend.vo.triangulate");
+  AlignedVector<MatchInfo> match_infos(num_tracklets);
+  std::vector<dyno::FrameIds> matching_frames(num_tracklets);
 
-//   tbb::parallel_for(
-//       tbb::blocked_range<size_t>(0, num_tracklets, chunk_size),
-//       [&](const tbb::blocked_range<size_t>& range) {
-//         for (size_t i = range.begin(); i != range.end(); ++i) {
-//           const dyno::TrackletId tracklet_id = frame.ids[i];
+  tbb::parallel_for(
+      tbb::blocked_range<size_t>(0, num_tracklets, chunk_size),
+      [&](const tbb::blocked_range<size_t>& range) {
+        const std::vector<TrackletId>& ids = frame->ids;
+        for (size_t i = range.begin(); i != range.end(); ++i) {
+          const dyno::TrackletId tracklet_id = ids[i];
 
-//           if (estimator.landmarkExists(tracklet_id)) {
-//             continue;
-//           }
+          if (estimator.landmarkExists(tracklet_id)) {
+            continue;
+          }
 
-//           gtsam::CameraSet<GtsamCamera> camera_set;
-//           gtsam::Point2Vector measurements;
-//           // frames used for triangulation
-//           FrameIds used_frames;
+          gtsam::CameraSet<GtsamCamera> camera_set;
+          gtsam::Point2Vector measurements;
+          // frames used for triangulation
+          FrameIds used_frames;
 
-//           size_t count{0};
-//           // Search all candidate frames for this tracklet.
-//           for (const auto other_frame_id : query_frames_for_triangulation) {
-//             CHECK(frames.exists(other_frame_id));
-//             CHECK(estimator.poseExists(other_frame_id));
+          // Search all candidate frames for this tracklet.
+          for (const auto other_frame_id : query_frames_for_triangulation) {
+            CHECK(estimator.poseExists(other_frame_id));
 
-//             const ViFrame& other_vi_frame = frames.at(other_frame_id);
-//             const gtsam::Pose3& X_W_other =
-//             estimator.getPose(other_frame_id);
+            const ViFrame::Ptr& other_vi_frame =
+                estimator.getFramePtr(other_frame_id);
+            CHECK_NOTNULL(other_vi_frame);
 
-//             // add measurements for all keyframes
-//             if (stereo_measurement_filler.fill(tracklet_id, camera_set,
-//                                                measurements, other_vi_frame,
-//                                                X_W_other)) {
-//               ++count;
-//               used_frames.push_back(other_frame_id);
-//             }
-//           }
+            const gtsam::Pose3& X_W_other = estimator.getPose(other_frame_id);
 
-//           // add measurements for current frame
-//           if (stereo_measurement_filler.fill(tracklet_id, camera_set,
-//                                              measurements, frame,
-//                                              estimator.getPose(frame_id))) {
-//             used_frames.push_back(frame.frame_id);
-//             ++count;
-//           }
+            // add measurements for all keyframes
+            if (stereo_measurement_filler.fill(tracklet_id, camera_set,
+                                               measurements, other_vi_frame,
+                                               X_W_other)) {
+              used_frames.push_back(other_frame_id);
+            }
+          }
 
-//           auto m_W_result = dyno::triangulateSafe<GtsamCamera>(
-//               camera_set, measurements, triangulation_params, true);
+          // add measurements for current frame
+          if (stereo_measurement_filler.fill(tracklet_id, camera_set,
+                                             measurements, frame,
+                                             estimator.getPose(frame_id))) {
+            used_frames.push_back(frame->getFrameId());
+          }
 
-//           // LOG(INFO) << "i=" << tracked_id << " " << count;
-//           // LOG(INFO) << m_W_result;
+          auto m_W_result = dyno::triangulateSafe<GtsamCamera>(
+              camera_set, measurements, triangulation_params, true);
 
-//           // TODO: add extra checks
-//           if (m_W_result) {
-//             gtsam::Point3 m_W = *m_W_result;
-//             match_infos[i] = MatchInfo{m_W, tracklet_id, true, 0.0};
-//             matching_frames[i] = used_frames;
-//           }
-//         }
-//       });
+          // LOG(INFO) << "i=" << tracked_id << " " << count;
+          // LOG(INFO) << m_W_result;
 
-//   StereoMeasurementStatusVector stereo_measurements;
-//   stereo_measurements.reserve(match_infos.size());
+          // TODO: add extra checks
+          if (m_W_result) {
+            gtsam::Point3 m_W = *m_W_result;
+            match_infos[i] = MatchInfo{m_W, tracklet_id, true, 0.0};
+            matching_frames[i] = used_frames;
+          }
+        }
+      });
 
-//   size_t init_triangulation{0};
-//   for (size_t i = 0; i < match_infos.size(); i++) {
-//     const MatchInfo& match_info = match_infos[i];
-//     if (!match_info.is_valid) {
-//       continue;
-//     }
+  std::vector<dyno::KeypointIdentifier> observations;
+  observations.reserve(match_infos.size());
 
-//     CHECK(!estimator.landmarkExists(match_info.id));
-//     estimator.setLandmark(match_info.id, match_info.m_W);
-//     init_triangulation++;
+  for (size_t i = 0; i < match_infos.size(); i++) {
+    const MatchInfo& match_info = match_infos[i];
+    if (!match_info.is_valid) {
+      continue;
+    }
 
-//     // keyframes used for triangulation
-//     const dyno::FrameIds& matched_frames = matching_frames[i];
-//     for (dyno::FrameId k0 : matched_frames) {
-//       CHECK(frames.exists(k0));
-//       const ViFrame& vi_frame = frames.at(k0);
-//       CHECK_EQ(vi_frame.frame_id, k0);
+    CHECK(!estimator.landmarkExists(match_info.id));
+    estimator.setLandmark(match_info.id, match_info.m_W);
 
-//       // check we havent already added this measurement
-//       if (!estimator.hasObservation(k0, match_info.id)) {
-//         // auto stereo_measurement = StereoMeasurement::FromSigmas(
-//         //     vi_frame.stereoPointById(match_info.id), sigmas);
+    // keyframes used for triangulation
+    const dyno::FrameIds& matched_frames = matching_frames[i];
+    for (dyno::FrameId k0 : matched_frames) {
+      // check we havent already added this measurement
+      if (!estimator.hasMeasurement(k0, match_info.id)) {
+        observations.push_back(dyno::KeypointIdentifier{k0, match_info.id, 0});
+      }
+    }
+  }
+  estimator.addMeasurements(observations);
+  triangulate_t.stop();
 
-//         // stereo_measurements.push_back(StereoMeasurementStatus(
-//         //     stereo_measurement, k0, vi_frame.timestamp, match_info.id, 0,
-//         //     ReferenceFrame::LOCAL));
-//       }
-//     }
-//   }
-
-//   estimator.addMeasurements(stereo_measurements);
-//   triangulate_t.stop();
-
-//   return stereo_measurements.size();
-// }
+  return observations.size();
+}
 
 bool Frontend::solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                                FrameAbsoluteAdaptor& adaptor,
@@ -851,8 +688,6 @@ bool Frontend::shouldBeViKeyFrame(const VioGraphEstimator& estimator,
     cv::Mat matches = cv::Mat::zeros(rows, cols, CV_8UC1);
     cv::Mat detections = cv::Mat::zeros(rows, cols, CV_8UC1);
 
-    // CHECK(frames.exists(other_frame_id));
-    // const ViFrame& other_frame = frames.at(other_frame_id);
     ViFrame::Ptr other_frame = estimator.getFramePtr(other_frame_id);
     CHECK_NOTNULL(other_frame);
 
@@ -891,7 +726,6 @@ bool Frontend::shouldBeViKeyFrame(const VioGraphEstimator& estimator,
     return false;
   }
 
-  LOG(INFO) << overlap;
   const double overlap_thresh = 0.55;  // spatial redundancy
   if (overlap > overlap_thresh
       /*&& double(numMatches)/double(numKeypoints) > 0.35*/) {

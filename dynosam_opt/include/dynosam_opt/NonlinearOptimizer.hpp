@@ -87,7 +87,7 @@ class TimeBudgetOptimizationCallback : public IterationCallback {
 struct NonlinearOptimizerOptions {
   bool throw_exception_if_failure = false;
 
-  std::vector<IterationCallback::UniquePtr> callbacks;
+  std::vector<IterationCallback*> callbacks;
 };
 
 struct NonlinearOptimizerSummary {
@@ -174,31 +174,6 @@ class NonlinearOptimizer : public SOLVER {
     const auto& factors = this->graph();
     factors.saveGraph(file_name, keyFormatter);
   }
-
-  // bool setOptimisationTimeLimit(Timestamp time_limit, int minimum_iterations)
-  // {
-  //   if(time_budget_callback_ != nullptr) {
-  //     if(time_limit < 0.0) {
-  //       const gtsam::NonlinearOptimizerParams& params = this->_params();
-  //       const size_t max_iterations = params.maxIterations
-  //       // no time limit => set minimum iterations to maximum iterations
-  //       time_budget_callback_->setMinimumIterations(max_iterations);
-  //       return true;
-  //     }
-  //     else {
-  //       time_budget_callback_->setTimeLimit(time_limit);
-  //       time_budget_callback_->setMinimumIterations(minimum_iterations);
-  //       return true;
-  //     }
-  //   }
-  //   else if(time_limit > 0) {
-  //     time_budget_callback_ =
-  //     std::make_unique<TimeBudgetOptimizationCallback>(
-  //       time_limit, minimum_iterations
-  //     );
-
-  //   }
-  // }
 
  private:
   // Make deafult optimize safe function
@@ -297,7 +272,9 @@ class NonlinearOptimizer : public SOLVER {
     int i = 0;
     while (status == CallbackReturnType::USER_SOLVER_CONTINUE &&
            i < options.callbacks.size()) {
-      status = (*options.callbacks[i])(iteration_summary);
+      if (options.callbacks[i]) {
+        status = (*options.callbacks[i])(iteration_summary);
+      }
       ++i;
     }
 

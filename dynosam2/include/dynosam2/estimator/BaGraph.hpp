@@ -114,6 +114,10 @@ class BaGraph {
     return lmk_node ? lmk_node->seenAtFrame(frame_id) : false;
   }
 
+  inline bool hasMeasurement(const dyno::KeypointIdentifier& kpi) const {
+    return this->hasMeasurement(kpi.frameId(), kpi.trackletId());
+  }
+
   const StereoBaMap& getObservations() const { return *observations_; }
 
   // Measurement frames, not frames in the BaMeasurementGraph
@@ -141,8 +145,8 @@ class BaGraph {
   int covisibilities(dyno::FrameId frame_i, dyno::FrameId frame_j) const;
 
  protected:
-  inline Frame::Ptr getFrame(dyno::FrameId frame_id) const {
-    auto it = frames_.find(frame_id);
+  inline Frame::Ptr getFrame(dyno::FrameId id) const {
+    auto it = frames_.find(id);
     if (it == frames_.end()) {
       return nullptr;
     }
@@ -150,8 +154,8 @@ class BaGraph {
   }
 
   template <typename FRAME>
-  std::shared_ptr<FRAME> getFrameAs(dyno::FrameId frame_id) const {
-    Frame::Ptr frame = this->getFrame(frame_id);
+  std::shared_ptr<FRAME> getFrameAs(dyno::FrameId id) const {
+    Frame::Ptr frame = this->getFrame(id);
     return std::static_pointer_cast<FRAME>(frame);
   }
 
@@ -167,9 +171,9 @@ class BaGraph {
     // TODO: observation model robust?
     StereoMeasurement stereo_measurement(frame->stereoPointById(id),
                                          measurement_model_);
-    return StereoMeasurementStatus(stereo_measurement, frame->frame_id,
-                                   frame->timestamp, id, frame->object_id,
-                                   ReferenceFrame::LOCAL);
+    return StereoMeasurementStatus(stereo_measurement, frame->getFrameId(),
+                                   frame->getTimestamp(), id,
+                                   frame->getObjectId(), ReferenceFrame::LOCAL);
   }
 
  protected:
@@ -184,28 +188,41 @@ class BaGraph {
   //! Measurement model used when constructing measurements
   gtsam::SharedGaussian measurement_model_;
   //! All frames added so far. Holds all keypoints.
+  //! We use a TemporalObjectIdentifier rather than a frame_id so we can use
+  //! this same structure to hold ViFrames and DoFrames
+  // dyno::FastUnorderedMap<dyno::TemporalObjectIdentifier, Frame::Ptr> frames_;
   dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
 };
 
-// class BaOptInterface {
-// public:
-//   BaOptInterface() = default;
+class BaProblemInterface {
+ public:
+  BaProblemInterface() = default;
 
-// protected:
-//   void init(const gtsam::Values& values, const gtsam::NonlinearFactorGraph&
-//   graph, int max_iterations = 5); NonlinearOptimizerSummary
-//   optimize(gtsam::Values& optimised_values);
+ protected:
+  // NOTE: max iterations will only be used if setOptimisationTimeLimit has not
+  // been set, otherwise the time-budget will be used
+  NonlinearOptimizerSummary optimize(gtsam::Values& optimised_values,
+                                     int max_iterations,
+                                     bool verbose = false) const;
 
-//   bool setOptimisationTimeLimit(double time_limit_s, int min_iterations);
+  // must perform at least min_iterations regardless of time budget
+  bool setOptimisationTimeLimit(double time_limit_s, int min_iterations);
+  bool isTimeLimitSet() const;
+  void removeOptimisationTimeLimit();
 
-// protected:
-//   dyno::NonlinearOptimizerOptions options_;
+  gtsam::NonlinearFactorGraph& getProblemGraph() { return graph_; }
+  gtsam::Values& getProblemValues() { return values_; }
 
-// private:
-//   std::unique_ptr<dyno::TimeBudgetOptimizationCallback> callback_{nullptr};
-//   gtsam::NonlinearFactorGraph graph_;
-//   gtsam::Values values_;
-// };
+  void resetProblem();
+
+ protected:
+  dyno::NonlinearOptimizerOptions options_;
+
+ private:
+  std::unique_ptr<dyno::TimeBudgetOptimizationCallback> callback_{nullptr};
+  gtsam::NonlinearFactorGraph graph_;
+  gtsam::Values values_;
+};
 
 /// @brief Convenience struct to hold all observations and states together
 /// @tparam STATE

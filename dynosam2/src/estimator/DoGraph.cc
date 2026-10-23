@@ -24,71 +24,6 @@ DoGraph::DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
   K_ = camera->getGtsamCalibration();
 }
 
-// void DoGraph::initalizeNewAnchorState(
-//     dyno::FrameId frame_id,
-//     const dyno::StereoMeasurementStatusVector& measurements,
-//     const gtsam::Pose3 L) {
-//   this->addStereoMeasurements(measurements);
-
-//   // update anchor point we are estimating relative to!
-//   DOGraphState& state = this->state(frame_id);
-//   state.state.motion = dyno::Motion3ReferenceFrame(
-//       gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::F2F,
-//       dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
-//   state.state.pose = L;
-//   state.keyframe_status = dyno::DoKeyframeType::AnchorKeyFrame;
-//   state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-//       gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::KF,
-//       dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
-
-//   // reset active keyframes so there is no overlap in the estimator
-//   // and forces new keyframes at the start
-//   active_keyframes_.clear();
-//   active_keyframes_.insert(frame_id);
-
-//   // clear the map
-//   // what about when we synchronize from the backend?
-//   LandmarkMap::clear();
-// }
-
-// // J is current frame
-// void DoGraph::initalizeStatesPropogate(
-//     dyno::FrameId frame_j,
-//     const dyno::StereoMeasurementStatusVector& measurements,
-//     const dyno::Motion3ReferenceFrame& G_i_ij, const gtsam::Pose3 X_W_j,
-//     const gtsam::Pose3 X_W_i) {
-//   this->addStereoMeasurements(measurements);
-
-//   // state i
-//   const DOGraphState& last_state = lastState();
-//   const dyno::FrameId frame_i = last_state.state.motion.to();
-//   CHECK_EQ(frame_i, G_i_ij.from());
-//   CHECK_EQ(frame_i, last_state.H_W_KF_k.to());
-
-//   // TODO: add links between motions!
-//   const gtsam::Pose3 H_W_ij_pose = X_W_j * G_i_ij * X_W_i.inverse();
-
-//   const dyno::Motion3ReferenceFrame H_W_ij(
-//       H_W_ij_pose, dyno::MotionRepresentationStyle::F2F,
-//       dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
-
-//   gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.state.pose);
-
-//   // in effect we dont use A_KF for anything except when we compute it for
-//   // optimisation store everything as pose!
-//   CHECK(!stateExists(frame_j));
-//   DOGraphState& state = this->state(frame_j);
-//   state.state.pose = L_W_j;
-//   state.state.motion = H_W_ij;
-//   // propogate using the frame-to-frame motion to construct a motion chain
-//   // from the anchor frame to the current frame
-//   gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
-
-//   state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-//       H_W_KF_k, dyno::MotionRepresentationStyle::KF,
-//       dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
-// }
-
 FrameId DoGraph::initaliseFrame(DoFrame::Ptr frame) {
   const dyno::FrameId frame_id = frame->getFrameId();
   CHECK(!frames_.exists(frame_id));
@@ -262,7 +197,7 @@ bool isValidRotation(const gtsam::Pose3& pose, double tolerance = 1e-6) {
 void DoGraphEstimator::optimize(dyno::FrameId frame_id,
                                 const VioGraph& vi_graph,
                                 std::vector<dyno::FrameId>& frames_affected,
-                                size_t keyframes_to_include, bool only_states) {
+                                size_t keyframes_to_include) {
   if (active_keyframes_.empty()) {
     VLOG(10) << "Cannot optimize for Dynamic object: no active keyframes!";
     return;
@@ -456,6 +391,7 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
      * debugging showed that this is the first place we start seeing errors in
      * the orthogonality of the pose.
      */
+    // TODO: could probably do a correct tangent update using the Adjoint
     const gtsam::Pose3 H_W_B_k =
         dyno::normalizeRotation(H_W_A_k.estimate() * H_W_B_A);
     if (!isValidRotation(H_W_B_k)) {
@@ -466,8 +402,8 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
     X_W_k_poses[k0] = vi_graph.getPose(k0);
   }
 
-  gtsam::Values values;
-  gtsam::NonlinearFactorGraph graph;
+  gtsam::Values& values = this->getProblemValues();
+  gtsam::NonlinearFactorGraph& graph = this->getProblemGraph();
 
   dyno::TrackletIds tracklets_with_update;
 
@@ -504,6 +440,7 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
         tracklets_with_update.push_back(tracklet_id);
       }
 
+      // cache factors!
       graph.emplace_shared<dyno::StereoHybridMotionFactor2>(
           measurement, L_W_B, X_W_k, model, K_stereo_, motion_sym, lmk_sym,
           false);
@@ -526,32 +463,23 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
   if (values.exists(head_sym) && values.exists(head_m1_sym) &&
       values.exists(head_m2_sym)) {
     LOG(INFO) << "Adding smoothing factor";
-    // TODO: params
     gtsam::Vector6 sigmas;
     sigmas << 0.2, 0.2, 0.2, 0.1, 0.1, 0.1;
+    // TODO: cache!
     gtsam::SharedNoiseModel model =
         gtsam::noiseModel::Isotropic::Sigmas(sigmas);
     graph.emplace_shared<dyno::HybridSmoothingFactor>(head_m2_sym, head_m1_sym,
                                                       head_sym, L_W_B, model);
   }
+  build_t.stop();
 
-  // TODO: do the time based options: usually with DO
-  //  we have many less points so we can afford to do more iterations...
-  gtsam::DoglegParams opt_params;
-  opt_params.setMaxIterations(10);
-
-  graph.print("DO ");
-
-  dyno::NonlinearOptimizer<gtsam::DoglegOptimizer> solver(graph, values,
-                                                          opt_params);
-
-  dyno::NonlinearOptimizerSummary summary;
-  // TODO: move to common interface!
-  dyno::NonlinearOptimizerOptions options;
+  gtsam::Values optimised_values;
   dyno::utils::ChronoTimingStats solve_t("do_graph.opt.solve");
-  gtsam::Values optimised_values = values;
-  { CHECK(solver.solve(optimised_values, options, &summary)); }
+  dyno::NonlinearOptimizerSummary summary =
+      BaProblemInterface::optimize(optimised_values, 10);
   solve_t.stop();
+
+  resetProblem();
 
   VLOG(10) << "DO Initial error: " << summary.initial_error << " final error "
            << summary.final_error << " time[s] "

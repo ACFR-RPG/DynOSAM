@@ -231,11 +231,11 @@ struct TemporalObjectIdentifier {
 
   bool isBackground() const { return object_id == background_label; }
 
-  bool operator==(const TemporalObjectIdentifier& other) const {
+  bool operator==(const TemporalObjectIdentifier& other) const noexcept {
     return object_id == other.object_id && frame_id == other.frame_id;
   }
 
-  bool operator<(const TemporalObjectIdentifier& other) const {
+  bool operator<(const TemporalObjectIdentifier& other) const noexcept {
     return std::tie(object_id, frame_id) <
            std::tie(other.object_id, other.frame_id);
   }
@@ -256,15 +256,20 @@ struct KeypointIdentifier {
   KeypointIdentifier(FrameId fi = 0, TrackletId ti = 0, ObjectId o = 0)
       : frame(fi), id(ti), object(o) {}
 
-  inline FrameId frameId() const { return frame; }
-  inline TrackletId trackletId() const { return id; }
-  inline ObjectId objectId() const { return object; }
+  inline FrameId frameId() const noexcept { return frame; }
+  inline TrackletId trackletId() const noexcept { return id; }
+  inline ObjectId objectId() const noexcept { return object; }
 
-  bool operator==(const KeypointIdentifier& other) const {
+  inline dyno::TemporalObjectIdentifier temoralObjectIdentifier()
+      const noexcept {
+    return dyno::TemporalObjectIdentifier(frame, object);
+  }
+
+  bool operator==(const KeypointIdentifier& other) const noexcept {
     return id == other.id && frame == other.frame && object == other.object;
   }
 
-  bool operator<(const KeypointIdentifier& other) const {
+  bool operator<(const KeypointIdentifier& other) const noexcept {
     return std::tie(id, frame, object) <
            std::tie(other.id, other.frame, other.object);
   }

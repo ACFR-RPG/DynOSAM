@@ -104,9 +104,9 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   bool vo_success{false};
 
+  // setup context to write visual odometry into this alue
   gtsam::Pose3 X_W_k;
   AyncVO async_context;
-  // setup context to write visual odometry into this alue
   async_context.vo = &X_W_k;
   CHECK_NOTNULL(async_context.vo);
 
@@ -139,17 +139,15 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       uchar& solve_success = do_solve_success.at(i);
 
       std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
-
       frontend_.solveObjectOdometry(object_id, vio_estimator, image_container,
                                     *object_context.estimator, features,
                                     *object_context.geometry, async_context,
                                     updated_frames, solve_success);
     });
   }
-  doo_t.stop();
-
   group.wait();
   solve_t.stop();
+  doo_t.stop();
 
   std::vector<dyno::TemporalObjectIdentifier>& objects_with_update =
       publication_data->updated_states.objects;
@@ -193,14 +191,12 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         estimator.keyframeStatus(frame_id);
   }
 
-  // dyno::ImageContainer::Ptr image_container = input->image_container_;
   const dyno::WrappedRGBMono wrapped_rgb = image_container.rgb();
   const cv::Mat rgb = wrapped_rgb.image();
 
   features.reduceToInliersInplace();
 
   pushImageToDisplayQueue("rgb", features.draw(rgb, true));
-
   pushPublicationDataToQueue(publication_data);
 
   return nullptr;

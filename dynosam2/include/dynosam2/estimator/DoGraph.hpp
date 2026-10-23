@@ -31,22 +31,6 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id);
   virtual ~DoGraph() = default;
 
-  // TODO: for now
-  using BaGraphStates::addMeasurements;
-
-  //   // resets active keyframes!
-  //   void initalizeNewAnchorState(
-  //       dyno::FrameId frame_id,
-  //       const dyno::StereoMeasurementStatusVector& measurements,
-  //       const gtsam::Pose3 L);
-
-  //   // where j is current frame frame
-  //   void initalizeStatesPropogate(
-  //       dyno::FrameId frame_j,
-  //       const dyno::StereoMeasurementStatusVector& measurements,
-  //       const dyno::Motion3ReferenceFrame& G_i_ij, const gtsam::Pose3 X_W_j,
-  //       const gtsam::Pose3 X_W_i);
-
   // initalise of frame without state - this is the case as we need at least two
   // frames
   // before createing a state!
@@ -61,6 +45,8 @@ class DoGraph : public BaGraphStates<DOGraphState> {
                                 const gtsam::Pose3 X_W_i);
 
   inline DoFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
+    // return this->getFrameAs<DoFrame>(dyno::TemporalObjectIdentifier{frame_id,
+    // object_id_});
     return this->getFrameAs<DoFrame>(frame_id);
   }
 
@@ -102,7 +88,7 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   std::set<dyno::FrameId> active_keyframes_;
 };
 
-class DoGraphEstimator : public DoGraph {
+class DoGraphEstimator : public DoGraph, public BaProblemInterface {
  public:
   DYNO_POINTER_TYPEDEFS(DoGraphEstimator)
   DoGraphEstimator(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
@@ -111,7 +97,7 @@ class DoGraphEstimator : public DoGraph {
 
   void optimize(dyno::FrameId frame_id, const VioGraph& vi_graph,
                 std::vector<dyno::FrameId>& frames_affected,
-                size_t keyframes_to_include = 1, bool only_states = false);
+                size_t keyframes_to_include = 1);
 };
 
 }  // namespace dyno2
