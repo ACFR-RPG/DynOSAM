@@ -74,11 +74,11 @@ class ImageSegmenterNode : public rclcpp::Node {
       //             resized.rows);
       // auto r = engine_->process(resized);
 
-      // LOG(INFO) << result;
+      LOG(INFO) << result;
 
       // // // // Optional: visualize (disable in headless mode)
-      cv::imshow("View", result.colouredMask());
-      cv::waitKey(1);
+      // cv::imshow("View", result.colouredMask());
+      // cv::waitKey(1);
 
     } catch (const cv_bridge::Exception& e) {
       RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());

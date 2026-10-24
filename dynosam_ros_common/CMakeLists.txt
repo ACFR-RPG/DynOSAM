@@ -91,10 +91,10 @@ set(TARGET_EXPORT_DEPS
   rclcpp
   std_msgs
   sensor_msgs
-  dynosam
   tf2_ros
   nav_msgs
   dynosam_sensors
+  pcl_conversions
   dynosam_processing
   diagnostic_updater
   message_filters
@@ -119,7 +119,6 @@ message(
 add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
 # add pcl conversions lib
 list(APPEND LINK_LIBS pcl_conversions::pcl_conversions)
-list(APPEND TARGET_EXPORT_DEPS pcl_conversions)
 else()
 message(
   "message filters version detected < 7. Assumuing at least ROS Jazzy is used."

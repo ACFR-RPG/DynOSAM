@@ -140,7 +140,9 @@ RUN cd opencv/build && \
       make -j$(nproc) install
 
 RUN git clone https://github.com/MIT-SPARK/config_utilities.git
-RUN cd config_utilities/config_utilities && mkdir build && \
+RUN cd config_utilities/config_utilities && \
+      git checkout tags/v2.0.0 && \
+       mkdir build && \
       cd build && \
       cmake .. && make -j$(nproc) install
 
@@ -166,7 +168,7 @@ RUN cd opengv && \
 RUN cd opengv/build && \
       cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=/usr/local \
-      .. && make -j$(nproc) install
+      .. && make -j2 install
 
 
 RUN echo 'export RMW_IMPLEMENTATION=rmw_zenoh_cpp' >> ~/.bashrc

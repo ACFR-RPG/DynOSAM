@@ -3,7 +3,7 @@
 #include <opencv4/opencv2/core/cuda.hpp>
 #include <opencv4/opencv2/core/types.hpp>
 
-#include "dynosam_core/DynamicObjects.hpp"
+// #include "dynosam_core/DynamicObjects.hpp"
 
 namespace dyno {
 namespace internal {
@@ -83,19 +83,19 @@ int YoloOutputToDetections(const float* d_model_output,
                            int* d_count_buffer, int* h_count_buffer,
                            void* stream = nullptr);
 
-void YoloDetectionsToObjects(
-    const YoloDetectionGpuMatDevice& wrappers,
-    const cv::cuda::GpuMat& d_prototype_masks,
-    const cv::Rect& prototype_crop_rect,  // Pre-calculated crop area
-    const AlignedYoloDetection* h_detection, const cv::Size& required_size,
-    const cv::Size& original_size, const std::string& label, const int mask_h,
-    const int mask_w, cv::cuda::Stream stream,
-    dyno::ObjectDetection& detection);
+// void YoloDetectionsToObjects(
+//     const YoloDetectionGpuMatDevice& wrappers,
+//     const cv::cuda::GpuMat& d_prototype_masks,
+//     const cv::Rect& prototype_crop_rect,  // Pre-calculated crop area
+//     const AlignedYoloDetection* h_detection, const cv::Size& required_size,
+//     const cv::Size& original_size, const std::string& label, const int mask_h,
+//     const int mask_w, cv::cuda::Stream stream,
+//     dyno::ObjectDetection& detection);
 
-void letterBoxToBlobGPU(const cv::Mat& image, float* d_input_data,
-                        int targetChannels, const cv::Size& targetSize,
-                        cv::Size& actualSize, bool dynamicShape = false,
-                        cudaStream_t stream = 0);
+// void letterBoxToBlobGPU(const cv::Mat& image, float* d_input_data,
+//                         int targetChannels, const cv::Size& targetSize,
+//                         cv::Size& actualSize, bool dynamicShape = false,
+//                         cudaStream_t stream = 0);
 
 }  // namespace internal
 }  // namespace dyno

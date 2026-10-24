@@ -6,6 +6,8 @@
 #include <cuda_runtime_api.h>
 
 #include <opencv2/core/cuda.hpp>
+#include <opencv2/core/cuda_stream_accessor.hpp>
+
 
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
@@ -109,6 +111,8 @@ struct YoloV8ObjectDetector::Impl {
   // // Device (GPU) detection count
   // int* d_counter_;
 
+  cudaEvent_t inference_done_event_{};
+
   // Device (GPU) detection buffer
   AlignedYoloDetection* d_indir_buffer_;
   // Host (CPU) detection buffer
@@ -163,6 +167,10 @@ struct YoloV8ObjectDetector::Impl {
     cudaHostGetDevicePointer(&d_indir_counter_, h_indir_counter_, 0);
 
     *h_indir_counter_ = 0;
+
+    cudaEventCreateWithFlags(
+        &inference_done_event_,
+        cudaEventDisableTiming);
   }
 
   ~Impl() {
@@ -172,6 +180,11 @@ struct YoloV8ObjectDetector::Impl {
 
     if (h_indir_counter_) {
       cudaFreeHost(h_indir_counter_);
+    }
+
+    if (inference_done_event_) {
+        cudaEventDestroy(inference_done_event_);
+        inference_done_event_ = nullptr;
     }
   }
 
@@ -293,6 +306,14 @@ struct YoloV8ObjectDetector::Impl {
 
     // Download into pinned memory.
     auto proto_stream = stream_pool_.getCvStream();
+    // Extract the native CUDA stream handle from OpenCV's wrapper.
+    cudaStream_t proto_cuda_stream =
+        cv::cuda::StreamAccessor::getStream(proto_stream);
+
+    cudaStreamWaitEvent(
+      proto_cuda_stream,
+      inference_done_event_,
+      0);
     proto_d.download(proto_host_, proto_stream);
 
     // Obtain a cv::Mat header over the pinned buffer.
@@ -309,6 +330,11 @@ struct YoloV8ObjectDetector::Impl {
         "yolov8_detection.post_process.compute_detections", 5);
 
     auto detection_stream = stream_pool_.getCudaStream();
+    cudaStreamWaitEvent(
+      detection_stream,
+      inference_done_event_,
+      0);    
+
     int count = internal::YoloOutputToDetections(
         d_output0,  // The raw GPU pointer from TensorRT/ONNX
         config,
@@ -722,7 +748,9 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
       LOG(ERROR) << "initializing inference failed!";
       return ObjectDetectionResult{};
     }
-    cudaStreamSynchronize(stream_);
+    // cudaStreamSynchronize(stream_);
+    cudaEventRecord(impl_->inference_done_event_, stream_);
+
   }
 
   const auto output0_dims = context_->getTensorShape(output0_info.name.c_str());
