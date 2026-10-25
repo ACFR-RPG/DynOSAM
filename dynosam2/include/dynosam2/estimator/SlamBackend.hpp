@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "dynosam2/estimator/DoGraph.hpp"
+#include "dynosam2/estimator/FullGraph.hpp"
 #include "dynosam2/estimator/VioGraph.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_sensors/Camera.hpp"
@@ -56,6 +57,7 @@ class SlamBackend {
   //! Local realtime vio estimator and holder of all valid states
   VioGraphEstimator vio_estimator_;
   std::unordered_map<dyno::ObjectId, DoGraphEstimator> object_estimators_;
+  FullGraph full_estimator_;
 };
 
 };  // namespace dyno2

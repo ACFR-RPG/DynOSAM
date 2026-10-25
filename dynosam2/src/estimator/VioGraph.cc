@@ -3,6 +3,7 @@
 #include <gtsam/nonlinear/DoglegOptimizer.h>
 #include <gtsam/slam/StereoFactor.h>
 
+#include "dynosam2/frontend/Utils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
@@ -20,28 +21,69 @@ VioGraph::VioGraph(dyno::Camera::Ptr camera) {
   K_ = camera->getGtsamCalibration();
 }
 
-void VioGraph::initaliseStates(
-    dyno::FrameId frame_id, dyno::Timestamp timestamp,
-    const dyno::StereoMeasurementStatusVector& measurements,
-    const gtsam::Pose3& pose) {
-  this->addMeasurements(measurements);
+void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose) {
+  VioGraphState& state = initaliseStatesWithPose(frame, pose);
+  setStateVelocityFromPose(state);
+}
 
-  // last state?
+void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
+                               const Velocity3& velocity_W) {
+  VioGraphState& state = initaliseStatesWithPose(frame, pose);
+  state.velocity_W = velocity_W;
+}
+
+VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
+                                                 const gtsam::Pose3& pose) {
+  const dyno::FrameId frame_id = frame->getFrameId();
+  CHECK(!frames_.exists(frame_id));
+  frames_[frame_id] = frame;
+
   VioGraphState& state = this->state(frame_id);
-  state.timestamp = timestamp;
+  state.timestamp = frame->timestamp;
+  state.frame_id = frame_id;
   state.pose_W = pose;
 
-  // velocity
-  // imu
-  // keyframes
+  return state;
 }
 
 void VioGraph::setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose) {
   this->state(frame_id).pose_W = pose;
 }
 
+void VioGraph::setVelocity(dyno::FrameId frame_id,
+                           const Velocity3& velocity_W) {
+  this->state(frame_id).velocity_W = velocity_W;
+}
+
+void VioGraph::setVelocityFromPose(dyno::FrameId frame_id) {
+  VioGraphState& current_state = this->state(frame_id);
+  setStateVelocityFromPose(current_state);
+}
+
+void VioGraph::setStateVelocityFromPose(VioGraphState& current_state) {
+  VioGraphState* previous_state{nullptr};
+  if (!stateByAge(current_state.frame_id, 1, previous_state)) {
+    // no previous state, so hopefully velocity is zero?
+    return;
+  }
+
+  CHECK_NOTNULL(previous_state);
+  const dyno::Timestamp dt =
+      current_state.timestamp - previous_state->timestamp;
+  current_state.velocity_W =
+      computeWorldVelocity(previous_state->pose_W, current_state.pose_W, dt);
+}
+
+const VioGraphState& VioGraph::getVioState(dyno::FrameId frame_id) const {
+  return this->state(frame_id);
+}
+
 const gtsam::Pose3& VioGraph::getPose(dyno::FrameId frame_id) const {
   return this->state(frame_id).pose_W;
+}
+
+const Velocity3& VioGraph::getVelocity(dyno::FrameId frame_id) const {
+  return this->state(frame_id).velocity_W;
 }
 
 const std::set<dyno::FrameId>& VioGraph::keyFrames() const {
@@ -102,6 +144,8 @@ bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
     keyframes.insert(*it);
     ++added_kfs;
   }
+
+  // TODO: prune frames_ to not hold into memory!
 
   keyframes_ = keyframes;
   return true;
@@ -295,9 +339,10 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   // ---------------------------------------------------------------------------
   // 2. Build the factor graph.
   // ---------------------------------------------------------------------------
+  resetProblem();
 
-  gtsam::Values values;
-  gtsam::NonlinearFactorGraph graph;
+  gtsam::Values& values = getProblemValues();
+  gtsam::NonlinearFactorGraph& graph = getProblemGraph();
 
   dyno::TrackletIds tracklets_with_update;
   dyno::FrameIds poses_with_update;
@@ -308,6 +353,11 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   using GenericStereoFactor =
       gtsam::GenericStereoFactor<gtsam::Pose3, dyno::Landmark>;
 
+  std::stringstream ss;
+  ss << "VIO factor graph: ";
+
+  size_t frames_used{0};
+  // very important frames_to_try  is in order!
   for (dyno::FrameId frame_id : frames_to_try) {
     auto selected_it = selected_tracklets_by_frame.find(frame_id);
 
@@ -323,8 +373,10 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
     // Each frame appears once in frames_to_try.
     values.insert(pose_sym, getPose(frame_id));
     poses_with_update.push_back(frame_id);
+    ++frames_used;
 
     const auto& selected_tracklets = selected_it->second;
+    ss << "k= " << frame_id << " with n=" << selected_tracklets.size();
 
     for (dyno::TrackletId tracklet_id : selected_tracklets) {
       const auto lmk_node = observations_->getLandmark(tracklet_id);
@@ -348,19 +400,26 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
           tracklets_with_update.push_back(tracklet_id);
         }
 
+        // TODO: cache?
         graph.emplace_shared<GenericStereoFactor>(measurement, model, pose_sym,
                                                   lmk_sym, K_stereo_);
       }
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // 3. Anchor the first requested pose.
-  // ---------------------------------------------------------------------------
+  VLOG(5) << ss.str();
+
+  // this handles the weirdly specific case that we only have 2 frames
+  // with covisibilities (which either occurs right at the start or when we have
+  // massive occlusion and we loose all tracks)
+  // and since we only track by optical flow (no cross frame matching sadly)
+  // we have very minimal constraints
+  if (frames_used < 3) {
+    return;
+  }
 
   if (!frames_to_try.empty()) {
     const dyno::FrameId anchor_frame = frames_to_try.front();
-
     CHECK(poseExists(anchor_frame)) << anchor_frame;
 
     const gtsam::Symbol anchor_sym('x', anchor_frame);
@@ -377,20 +436,13 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
 
   build_t.stop();
 
-  // Dog leg is just way faster for will defined problems
-  gtsam::DoglegParams opt_params;
-  opt_params.setMaxIterations(2);
-
-  dyno::NonlinearOptimizer<gtsam::DoglegOptimizer> solver(graph, values,
-                                                          opt_params);
-
-  dyno::NonlinearOptimizerSummary summary;
-  dyno::utils::ChronoTimingStats solve_t("vio_graph.opt.solve");
-  gtsam::Values optimised_values = values;
-  { CHECK(solver.solve(optimised_values, options_, &summary)); }
+  gtsam::Values optimised_values;
+  dyno::utils::ChronoTimingStats solve_t("vo_graph.opt.solve");
+  dyno::NonlinearOptimizerSummary summary =
+      BaProblemInterface::optimize(optimised_values, 2);
   solve_t.stop();
 
-  VLOG(10) << "Initial error: " << summary.initial_error << " final error "
+  VLOG(10) << "VO Initial error: " << summary.initial_error << " final error "
            << summary.final_error << " time[s] "
            << summary.cumulative_time_in_seconds
            << " #iterations= " << summary.numIterations();
@@ -398,10 +450,14 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   dyno::utils::ChronoTimingStats recover_t("vio_graph.opt.recover");
 
   frames_affected.reserve(poses_with_update.size());
+  // poses with update must be in order so the velocity update is correct
   for (dyno::FrameId frame_id : poses_with_update) {
     gtsam::Symbol pose_sym('x', frame_id);
     gtsam::Pose3 pose = optimised_values.at<gtsam::Pose3>(pose_sym);
     setPose(frame_id, pose);
+
+    // since we dont have IMU!
+    setVelocityFromPose(frame_id);
 
     frames_affected.push_back(frame_id);
   }

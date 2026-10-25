@@ -34,8 +34,10 @@
 #include <gflags/gflags.h>
 
 #include <string>
+#include <unordered_set>
 
 #include "dynosam_common/Flags.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
 
 // common glags used in multiple modules
 DEFINE_bool(init_object_pose_from_gt, false,
@@ -96,3 +98,21 @@ std::string demangle(const char* name) {
 }
 
 }  // namespace dyno
+
+namespace std {
+
+template <>
+struct hash<dyno::KeypointIdentifier> {
+  std::size_t operator()(const dyno::KeypointIdentifier& id) const {
+    return dyno::hashTriplet(id.frameId(), id.trackletId(), id.objectId());
+  }
+};
+
+template <>
+struct hash<dyno::TemporalObjectIdentifier> {
+  std::size_t operator()(const dyno::TemporalObjectIdentifier& id) const {
+    return dyno::hashPair(std::make_pair(id.frame_id, id.object_id));
+  }
+};
+
+}  // namespace std

@@ -463,7 +463,7 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
   gtsam::FastMap<FrameId, HybridSmoothingFactor::shared_ptr> smoothing_factors_;
 
   // // FactorMap<BatchStereoHybridMotionFactor3::shared_ptr> mo_factor_map_;
-  // gtsam::FastMap<StereoHybridMotionFactor3::shared_ptr, TrackletFramePair>
+  // gtsam::FastMap<StereoHybridMotionFactor3::shared_ptr, KeypointIdentifier>
   //     mo_factor_to_tracklet_id_;
 
   // gtsam::FastMap<TrackletId, FrameIds> trackletid_to_frame_ids_;

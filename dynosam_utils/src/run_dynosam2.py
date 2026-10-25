@@ -39,8 +39,8 @@ def run_omd():
     run_sequnce("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test_omd", omd_dataset)
 
 def run_kitti():
-    run_sequnce("/root/data/vdo_slam/kitti/kitti/0004/", "test_kitti", kitti_dataset)
+    run_sequnce("/root/data/vdo_slam/kitti/kitti/0020/", "test_kitti", kitti_dataset)
 
 
 if __name__ == '__main__':
-    run_omd()
+    run_kitti()

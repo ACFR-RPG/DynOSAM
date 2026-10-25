@@ -14,14 +14,18 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
       sensor_rig_(sensor_rig),
       camera_(sensor_rig->cannonicalCamera()),
       frontend_(parameters.frontend, camera_),
-      estimator_(camera_) {}
+      estimator_(camera_)
+
+{
+  // TODO: set some params for frontend!
+}
 
 DynamicSlam::~DynamicSlam() {}
 
 StateEstimate::Ptr DynamicSlam::spinOnce(
     dyno::VIFrontendInput::ConstPtr input) {
   LOG(INFO) << "DynamicSlam::spinOnce " << input->getFrameId();
-  dyno::utils::ChronoTimingStats spin_t("spin");
+  dyno::utils::ChronoTimingStats spin_t("slam.spin");
 
   const dyno::FrameId frame_id = input->getFrameId();
   const dyno::Timestamp timestamp = input->getTimestamp();
@@ -30,8 +34,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   FeatureBlockContainer* features_ptr{nullptr};
   dyno::ObjectDetectionResult object_detection;
 
+  dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
   frontend_.detectAndTrack(features_ptr, object_detection, image_container);
   CHECK_NOTNULL(features_ptr);
+  detect_t.stop();
   FeatureBlockContainer& features = *features_ptr;
 
   FeatureBlockGeometryMap geometries;
@@ -39,27 +45,21 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   if (first_frame_) {
     for (const auto& [object_id, geometry] : geometries) {
-      Frame* frame_ptr{nullptr};
       if (object_id > background_label) {
-        DoFrame& do_frame = do_frames_[object_id][frame_id];
-        do_frame.object_id = object_id;
-        frame_ptr = &do_frame;
+        DoFrame::Ptr frame =
+            std::make_shared<DoFrame>(frame_id, timestamp, object_id);
+        frame->fill(geometry, features);
+        estimator_.allocateDoEstimator(object_id).initaliseFrame(frame);
       } else {
-        ViFrame& vi_frame = vi_frames_[frame_id];
-        frame_ptr = &vi_frame;
-      }
+        ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
+        vi_frame->fill(geometry, features);
 
-      CHECK_NOTNULL(frame_ptr);
-      frame_ptr->frame_id = frame_id;
-      frame_ptr->timestamp = timestamp;
-      frame_ptr->fill(geometry, features);
+        VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+        // TODO: add measurements!
+        vio_estimator.initaliseStates(vi_frame, gtsam::Pose3::Identity());
+      }
     }
 
-    VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-    // TODO: add measurements!
-    vio_estimator.initaliseStates(frame_id, timestamp,
-                                  StereoMeasurementStatusVector{},
-                                  gtsam::Pose3::Identity());
     first_frame_ = false;
 
     PublicationData::Ptr publication_data = std::make_shared<PublicationData>();
@@ -73,15 +73,12 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   struct ObjectContext {
     FeatureBlockGeometry* geometry;
-    DoFrames* frames;
     DoGraphEstimator* estimator;
   };
 
   std::vector<ObjectContext> object_contexts;
   // only include object ids here
   std::vector<ObjectId> object_ids;
-  // new do frames that will be filled by each Doo solve
-  std::vector<DoFrame*> do_frames;
 
   FeatureBlockGeometry* vo_geometry{nullptr};
   // make sure we have solvers for detected objects
@@ -94,17 +91,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       }
       ObjectContext context;
       context.geometry = CHECK_NOTNULL(&geometry);
-      context.frames = CHECK_NOTNULL(&do_frames_[object_id]);
       context.estimator = CHECK_NOTNULL(&estimator_.doEstimator(object_id));
       object_contexts.push_back(context);
-
-      DoFrame& do_frame = (*context.frames)[frame_id];
-      do_frame.frame_id = frame_id;
-      do_frame.timestamp = timestamp;
-      do_frame.object_id = object_id;
-      do_frames.push_back(&do_frame);
-
       object_ids.push_back(object_id);
+
     } else if (object_id == background_label) {
       vo_geometry = &geometry;
     }
@@ -113,14 +103,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   CHECK(vo_geometry);
 
   bool vo_success{false};
-  // allocate new vi_frame before thead
-  ViFrame& vi_frame = vi_frames_[frame_id];
-  vi_frame.frame_id = frame_id;
-  vi_frame.timestamp = timestamp;
 
+  // setup context to write visual odometry into this alue
   gtsam::Pose3 X_W_k;
   AyncVO async_context;
-  // setup context to write visual odometry into this alue
   async_context.vo = &X_W_k;
   CHECK_NOTNULL(async_context.vo);
 
@@ -134,32 +120,34 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   std::vector<dyno::FrameId>& updated_vo_states =
       publication_data->updated_states.vo;
 
+  dyno::utils::ChronoTimingStats solve_t("slam.solve");
   tbb::task_group group;
   group.run([&] {
+    dyno::utils::ChronoTimingStats vo_t("slam.vo");
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
     frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
-                                  vi_frame, async_context, updated_vo_states,
-                                  vo_success, vi_frames_, image_container);
+                                  async_context, updated_vo_states, vo_success,
+                                  image_container);
   });
 
   const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+  dyno::utils::ChronoTimingStats doo_t("slam.doo");
   for (size_t i = 0; i < num_objects; i++) {
     group.run([&, i] {
       ObjectId object_id = object_ids[i];
       ObjectContext object_context = object_contexts[i];
       uchar& solve_success = do_solve_success.at(i);
-      DoFrame& do_frame = *do_frames.at(i);
 
       std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
-
-      frontend_.solveObjectOdometry(
-          object_id, vio_estimator, image_container, *object_context.frames,
-          *object_context.estimator, features, *object_context.geometry,
-          do_frame, async_context, updated_frames, solve_success);
+      frontend_.solveObjectOdometry(object_id, vio_estimator, image_container,
+                                    *object_context.estimator, features,
+                                    *object_context.geometry, async_context,
+                                    updated_frames, solve_success);
     });
   }
-
   group.wait();
+  solve_t.stop();
+  doo_t.stop();
 
   std::vector<dyno::TemporalObjectIdentifier>& objects_with_update =
       publication_data->updated_states.objects;
@@ -203,14 +191,12 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         estimator.keyframeStatus(frame_id);
   }
 
-  // dyno::ImageContainer::Ptr image_container = input->image_container_;
   const dyno::WrappedRGBMono wrapped_rgb = image_container.rgb();
   const cv::Mat rgb = wrapped_rgb.image();
 
   features.reduceToInliersInplace();
 
   pushImageToDisplayQueue("rgb", features.draw(rgb, true));
-
   pushPublicationDataToQueue(publication_data);
 
   return nullptr;

@@ -36,30 +36,39 @@ class Frontend {
 
   void solveVisualOdometry(VioGraphEstimator& estimator,
                            FeatureBlockContainer& features,
-                           FeatureBlockGeometry& geometry, ViFrame& frame,
+                           FeatureBlockGeometry& geometry,
                            AyncVO& async_context,
                            std::vector<FrameId>& frames_updated, bool& success,
-                           const ViFrames& frames,
                            const ImageContainer& image_container);
 
   void solveObjectOdometry(
       ObjectId object_id, const VioGraphEstimator& vo_estimator,
-      const ImageContainer& image_container, const DoFrames& frames,
-      DoGraphEstimator& estimator, FeatureBlockContainer& features,
-      FeatureBlockGeometry& geometry, DoFrame& frame, AyncVO& async_context,
-      std::vector<FrameId>& frames_updated, uchar& success);
+      const ImageContainer& image_container, DoGraphEstimator& estimator,
+      FeatureBlockContainer& features, FeatureBlockGeometry& geometry,
+      AyncVO& async_context, std::vector<FrameId>& frames_updated,
+      uchar& success);
 
   inline bool isVioInitalised() const {
     return vi_tracking_condition_.is_initalized;
   }
 
  private:
+  /**
+   * @brief Initalise new points in the estimator by triangulation
+   *
+   * @param estimator
+   * @param frames
+   * @param frame
+   * @return size_t
+   */
+  size_t matchToVioMap(VioGraphEstimator& estimator, ViFrame::Ptr frame);
+
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,
                        int max_iterations = 50) const;
 
   bool shouldBeViKeyFrame(const VioGraphEstimator& estimator,
-                          const ViFrame& frame, const ViFrames& frames) const;
+                          ViFrame::Ptr frame) const;
 
   struct ObjectKeyframeMetrics {
     static void computeCovariance(const std::vector<Eigen::Vector2d>& pts,
@@ -71,7 +80,7 @@ class Frontend {
   };
 
   bool shouldBeDoKeyFrame(const DoGraphEstimator& estimator,
-                          const DoFrame& frame, const DoFrames& frames) const;
+                          DoFrame::Ptr frame) const;
 
  private:
   FrontendParameters parameters_;

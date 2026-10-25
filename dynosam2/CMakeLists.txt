@@ -59,10 +59,12 @@ add_library(${PROJECT_NAME} SHARED
 
   src/common/Types.cc
   src/common/DynamicSlamInterface.cc
+  src/common/Parameters.cc
 
   src/estimator/BaGraph.cc
   src/estimator/VioGraph.cc
   src/estimator/DoGraph.cc
+  src/estimator/FullGraph.cc
   src/estimator/SlamBackend.cc
 
   src/DynamicSlam.cc
@@ -171,6 +173,7 @@ if(BUILD_TESTING)
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
     test/test_feature_block_container.cc
+    test/test_concepts.cc
 )
 
   target_include_directories(${PROJECT_NAME}_test

@@ -62,6 +62,8 @@ typedef dyno::FastUnorderedMap<ObjectId, FeatureBlockGeometry>
  *
  */
 struct Frame {
+  DYNO_POINTER_TYPEDEFS(Frame)
+
   TrackletIds ids;
   gtsam::Point3Vector lmks_C;
   std::vector<gtsam::StereoPoint2> measurements;
@@ -69,6 +71,19 @@ struct Frame {
 
   FrameId frame_id;
   Timestamp timestamp;
+  ObjectId object_id;
+
+  // Probavly make protected?
+  Frame(FrameId fi = 0, Timestamp ts = 0, ObjectId o = 0)
+      : frame_id(fi), timestamp(ts), object_id(o) {}
+  virtual ~Frame() = default;
+
+  inline FrameId getFrameId() const { return frame_id; }
+  inline Timestamp getTimestamp() const { return timestamp; }
+  inline ObjectId getObjectId() const { return object_id; }
+  inline dyno::TemporalObjectIdentifier temporalObjectId() const {
+    return dyno::TemporalObjectIdentifier(frame_id, object_id);
+  }
 
   size_t numKeypoints() const noexcept { return ids.size(); }
 
@@ -125,13 +140,14 @@ struct Frame {
   }
 };
 
-struct ViFrame : public Frame {};
-
-struct DoFrame : public ViFrame {
-  ObjectId object_id;
+struct ViFrame : public Frame {
+  DYNO_POINTER_TYPEDEFS(ViFrame)
+  ViFrame(FrameId fi, Timestamp ts) : Frame(fi, ts, dyno::background_label) {}
 };
 
-typedef dyno::FastUnorderedMap<FrameId, ViFrame> ViFrames;
-typedef dyno::FastUnorderedMap<FrameId, DoFrame> DoFrames;
+struct DoFrame : public Frame {
+  DYNO_POINTER_TYPEDEFS(DoFrame)
+  DoFrame(FrameId fi, Timestamp ts, ObjectId o) : Frame(fi, ts, o) {}
+};
 
 }  // namespace dyno2
