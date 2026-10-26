@@ -1,20 +1,18 @@
 #include "dynosam_nn/YoloV8CudaUtils.hpp"
-#include "dynosam_nn/YoloV8ObjectDetector.hpp"
-#include "dynosam_nn/CudaUtils.hpp"
-
+#include "dynosam_nn/YoloV8Definitions.hpp"
 
 #include <cuda_runtime.h>
-#include <cstdio>
-#include <stdio.h>
+// #include <cstdio>
+// #include <stdio.h>
 
-#include <opencv4/opencv2/core/cuda.hpp>
-#include <opencv4/opencv2/cudawarping.hpp>
-#include <opencv4/opencv2/cudaimgproc.hpp>
-#include <opencv4/opencv2/cudaarithm.hpp>
+// #include <opencv4/opencv2/core/cuda.hpp>
+// #include <opencv4/opencv2/cudawarping.hpp>
+// #include <opencv4/opencv2/cudaimgproc.hpp>
+// #include <opencv4/opencv2/cudaarithm.hpp>
 
-#include <opencv4/opencv2/opencv.hpp>
+// #include <opencv4/opencv2/opencv.hpp>
 
-#include <glog/logging.h>
+// #include <glog/logging.h>
 
 // __global__ void letterBoxToBlobKernel(const uchar* __restrict__ srcData,
 //                                       int srcH, int srcW, int srcStep, int srcChannels,
@@ -114,9 +112,9 @@ __global__ void YOLO_PostProcess_Kernel(
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-    static constexpr int N =  dyno::YoloV8ModelInfo::Constants::MaxDetections;
-    static constexpr int BoxOffset =  dyno::YoloV8ModelInfo::Constants::BoxOffset;
-    static constexpr int ClassConfOffset =  dyno::YoloV8ModelInfo::Constants::ClassConfOffset;
+    static constexpr int N =  dyno::YoloV8Constants::MaxDetections;
+    static constexpr int BoxOffset =  dyno::YoloV8Constants::BoxOffset;
+    static constexpr int ClassConfOffset =  dyno::YoloV8Constants::ClassConfOffset;
 
     if (i >= N) return;
 
@@ -158,103 +156,103 @@ __global__ void YOLO_PostProcess_Kernel(
     }
 }
 
-// Custom kernal to perform binary thresholding with a float mat as input and unsigned char
-// mat as output. This is different from the opencv implementation which requires converting the
-// float mat before thresholding which takes up most of the computation
-__global__ void binaryThreshold(
-    cv::cuda::PtrStepSz<const float> in,
-    cv::cuda::PtrStepSz<unsigned char> out,
-    float thresh,
-    unsigned char maxval
-) {
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
+// // Custom kernal to perform binary thresholding with a float mat as input and unsigned char
+// // mat as output. This is different from the opencv implementation which requires converting the
+// // float mat before thresholding which takes up most of the computation
+// __global__ void binaryThreshold(
+//     cv::cuda::PtrStepSz<const float> in,
+//     cv::cuda::PtrStepSz<unsigned char> out,
+//     float thresh,
+//     unsigned char maxval
+// ) {
+//     int x = blockIdx.x * blockDim.x + threadIdx.x;
+//     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
-    if (x < in.cols && y < in.rows) {
-        out(y, x) = (in(y, x) > thresh) ? maxval : 0;
-    }
-}
+//     if (x < in.cols && y < in.rows) {
+//         out(y, x) = (in(y, x) > thresh) ? maxval : 0;
+//     }
+// }
 
 
-__device__ __forceinline__ float sigmoidf(float x)
-{
-    return 1.0f / (1.0f + __expf(-x));
-}
+// __device__ __forceinline__ float sigmoidf(float x)
+// {
+//     return 1.0f / (1.0f + __expf(-x));
+// }
 
 // Kernel to perform linear combination and sigmoid for ALL detections
-__global__ void YOLO_Mask_Combination_Kernel(
-    cv::cuda::PtrStepSz<const float> d_mask_coeffs, // N detections x 32 coeffs
-    cv::cuda::PtrStepSz<const float> d_prototypes,  // 32*H*W linear array
-    cv::cuda::PtrStepSz<float> d_output_masks,      // N detections x H*W output
-    int N_Detections,
-    int mask_h,
-    int mask_w)
-{
-    // Map thread indices: x/y for the pixel
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-    // int det_idx = blockIdx.z;
+// __global__ void YOLO_Mask_Combination_Kernel(
+//     cv::cuda::PtrStepSz<const float> d_mask_coeffs, // N detections x 32 coeffs
+//     cv::cuda::PtrStepSz<const float> d_prototypes,  // 32*H*W linear array
+//     cv::cuda::PtrStepSz<float> d_output_masks,      // N detections x H*W output
+//     int N_Detections,
+//     int mask_h,
+//     int mask_w)
+// {
+//     // Map thread indices: x/y for the pixel
+//     int x = blockIdx.x * blockDim.x + threadIdx.x;
+//     int y = blockIdx.y * blockDim.y + threadIdx.y;
+//     // int det_idx = blockIdx.z;
 
-    // if (det_idx >= N_Detections || x >= Mask_W || y >= Mask_H) return;
+//     // if (det_idx >= N_Detections || x >= Mask_W || y >= Mask_H) return;
 
-    float pixel_sum = 0.0f;
-    if (y >= mask_h || x >= mask_w) return;
+//     float pixel_sum = 0.0f;
+//     if (y >= mask_h || x >= mask_w) return;
 
-    float acc = 0.f;
-    const int stride = mask_h * mask_w;   // elements per mask
-    const int idx    = y * mask_w + x;    // pixel index inside one mask
+//     float acc = 0.f;
+//     const int stride = mask_h * mask_w;   // elements per mask
+//     const int idx    = y * mask_w + x;    // pixel index inside one mask
 
-    #pragma unroll
-    for (int m = 0; m < 32; ++m) {
-        float v = d_prototypes.ptr(m * mask_h)[y * mask_w + x];  // read-only
-        acc += d_mask_coeffs[m] * v;
-    }
+//     #pragma unroll
+//     for (int m = 0; m < 32; ++m) {
+//         float v = d_prototypes.ptr(m * mask_h)[y * mask_w + x];  // read-only
+//         acc += d_mask_coeffs[m] * v;
+//     }
 
-    d_output_masks(y, x) = sigmoidf(acc);
-}
+//     d_output_masks(y, x) = sigmoidf(acc);
+// }
 
-template <typename T>
-    T clamp(const T& val, const T& low, const T& high) {
-    return std::max(low, std::min(val, high));
-}
+// template <typename T>
+//     T clamp(const T& val, const T& low, const T& high) {
+//     return std::max(low, std::min(val, high));
+// }
 
-inline cv::Rect scaleCoords(const cv::Size& required_shape,
-                              const cv::Rect& coords,
-                              const cv::Size& originalShape,
-                              bool p_Clip = true) {
-    float gain =
-        std::min((float)required_shape.height / (float)originalShape.height,
-                 (float)required_shape.width / (float)originalShape.width);
+// inline cv::Rect scaleCoords(const cv::Size& required_shape,
+//                               const cv::Rect& coords,
+//                               const cv::Size& originalShape,
+//                               bool p_Clip = true) {
+//     float gain =
+//         std::min((float)required_shape.height / (float)originalShape.height,
+//                  (float)required_shape.width / (float)originalShape.width);
 
-    int pad_w = static_cast<int>(std::round(
-        ((float)required_shape.width - (float)originalShape.width * gain) /
-        2.f));
-    int pad_h = static_cast<int>(std::round(
-        ((float)required_shape.height - (float)originalShape.height * gain) /
-        2.f));
+//     int pad_w = static_cast<int>(std::round(
+//         ((float)required_shape.width - (float)originalShape.width * gain) /
+//         2.f));
+//     int pad_h = static_cast<int>(std::round(
+//         ((float)required_shape.height - (float)originalShape.height * gain) /
+//         2.f));
 
-    cv::Rect ret;
-    ret.x =
-        static_cast<int>(std::round(((float)coords.x - (float)pad_w) / gain));
-    ret.y =
-        static_cast<int>(std::round(((float)coords.y - (float)pad_h) / gain));
-    ret.width = static_cast<int>(std::round((float)coords.width / gain));
-    ret.height = static_cast<int>(std::round((float)coords.height / gain));
+//     cv::Rect ret;
+//     ret.x =
+//         static_cast<int>(std::round(((float)coords.x - (float)pad_w) / gain));
+//     ret.y =
+//         static_cast<int>(std::round(((float)coords.y - (float)pad_h) / gain));
+//     ret.width = static_cast<int>(std::round((float)coords.width / gain));
+//     ret.height = static_cast<int>(std::round((float)coords.height / gain));
 
-    if (p_Clip) {
-      ret.x = clamp(ret.x, 0, originalShape.width);
-      ret.y = clamp(ret.y, 0, originalShape.height);
-      ret.width = clamp(ret.width, 0, originalShape.width - ret.x);
-      ret.height = clamp(ret.height, 0, originalShape.height - ret.y);
-    }
+//     if (p_Clip) {
+//       ret.x = clamp(ret.x, 0, originalShape.width);
+//       ret.y = clamp(ret.y, 0, originalShape.height);
+//       ret.width = clamp(ret.width, 0, originalShape.width - ret.x);
+//       ret.height = clamp(ret.height, 0, originalShape.height - ret.y);
+//     }
 
-    return ret;
-  }
+//     return ret;
+//   }
 
 namespace dyno {
 namespace internal {
 
-// // Wrapper implementation to setup grid/block sizes
+// Wrapper implementation to setup grid/block sizes
 // void launchLetterBoxKernel(const uchar* d_src, int srcH, int srcW, int srcStep, int srcChannels,
 //                            float* d_blob, int dstH, int dstW, int newH, int newW,
 //                            int padTop, int padLeft, float scaleX, float scaleY, cudaStream_t stream) {
@@ -338,7 +336,7 @@ int YoloOutputToDetections(
 
     // 2. Launch Kernel
     static constexpr int threads = 256;
-    static constexpr auto num_boxes = dyno::YoloV8ModelInfo::Constants::MaxDetections;
+    static constexpr auto num_boxes = dyno::YoloV8Constants::MaxDetections;
     const int blocks = (num_boxes + threads - 1) / threads;
 
     YOLO_PostProcess_Kernel<<<blocks, threads, 0, stream>>>(
@@ -351,7 +349,7 @@ int YoloOutputToDetections(
     );
 
     cudaError_t err = cudaGetLastError();
-    CUDA_CHECK(err);
+    // CUDA_CHECK(err);
 
     // cudaDeviceSynchronize();
     cudaStreamSynchronize(stream);

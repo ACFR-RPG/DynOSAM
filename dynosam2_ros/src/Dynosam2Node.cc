@@ -152,7 +152,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
     }
 
     // do cv display
-    viz_->displayImages();
+    // viz_->displayImages();
   };
 
   // so that all process is encapsulated within this class we use a timer

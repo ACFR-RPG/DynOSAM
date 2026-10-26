@@ -5,7 +5,6 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from dynosam_ros_common.launch_utils import get_default_dynosam_params_path
 from ament_index_python.packages import get_package_share_directory
-import xacro
 
 import os
 

@@ -134,4 +134,4 @@ if "$USE_NVIDIA"; then
 fi
 
 # FOR NOW?
-xhost +local:`docker inspect --format='{{ .Config.Hostname }}' $CONTAINER_NAME`
+# xhost +local:`docker inspect --format='{{ .Config.Hostname }}' $CONTAINER_NAME`
