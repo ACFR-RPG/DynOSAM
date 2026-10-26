@@ -63,9 +63,8 @@ bool SmartOpenCvDisplayer::isGuiAvailable() {
   }
 }
 
-SmartOpenCvDisplayer::SmartOpenCvDisplayer()
-    : is_gui_available_(isGuiAvailable()) {
-  if (is_gui_available_) {
+SmartOpenCvDisplayer::SmartOpenCvDisplayer() : can_display_(isGuiAvailable()) {
+  if (can_display_) {
     LOG(INFO) << "OpenCV gui available";
   } else {
     LOG(INFO) << "OpenCV gui not available: CV image display will be skipped!";

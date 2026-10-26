@@ -27,6 +27,15 @@ class ImageDisplay {
   virtual void display(const std::vector<ImageToDisplay>& images) = 0;
 };
 
+/**
+ * @brief  An non threaded image pipeline class that pulls a batch of images
+ * from the provided ImageDisplayQueue and sends them to any added
+ * ImageDisplay's.
+ *
+ * We pull all images that are available in the queue upon displayFromQueue
+ * since many images might have been added since the last call.
+ *
+ */
 class ImageBatchDisplayer {
  public:
   DYNO_POINTER_TYPEDEFS(ImageBatchDisplayer)
@@ -62,13 +71,13 @@ class SmartOpenCvDisplayer : public ImageDisplay {
   SmartOpenCvDisplayer();
   void display(const std::vector<ImageToDisplay>& images) override;
 
-  inline bool isDisplayAvailable() const { return is_gui_available_; }
+  inline bool isDisplayAvailable() const { return can_display_; }
 
  private:
   static bool isGuiAvailable();
 
  private:
-  const bool is_gui_available_;
+  const bool can_display_;
 };
 
 }  // namespace dyno

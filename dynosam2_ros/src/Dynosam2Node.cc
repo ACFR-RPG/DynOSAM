@@ -35,6 +35,16 @@ static std::string getFilePathFromParams(rclcpp::Node* node,
   return path;
 }
 
+/// @brief
+/// @tparam T Derived PipelineBase class
+/// @param ptr
+/// @return
+template <typename T>
+static dyno::Spinner::UniquePtr makePipelineSpinner(std::unique_ptr<T>& ptr) {
+  return std::make_unique<dyno::Spinner>(std::bind(&T::spin, ptr.get()),
+                                         ptr->moduleName() + "-spinner");
+}
+
 static const auto params_path_message =
     "Path to folder containing dynosam2.yaml file or a direct path to a .yaml "
     "file";
@@ -67,7 +77,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
 
   VLOG(10) << "Sensor Rig: " << *sensor_rig;
   data_interface_ =
-      std::make_shared<dyno::DataInterfacePipeline>(sensor_rig, kRunParallel);
+      std::make_unique<dyno::DataInterfacePipeline>(sensor_rig, kRunParallel);
 
   data_reader_->registerImageContainerCallback(
       std::bind(&dyno::DataInterfacePipeline::fillImageContainerQueue,
@@ -119,7 +129,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
 
   const SlamBackend& estimator = slam_->getEstimator();
   auto viz_node = node_.create_sub_node("output");
-  viz_ = std::make_shared<DynamicSlamVisualizerRos>(
+  viz_ = std::make_unique<DynamicSlamVisualizerRos>(
       viz_node, sensor_rig, &estimator, &publication_queue_);
 
   dyno::ImageDisplayQueue* display_queue = &display_queue_;
@@ -132,25 +142,17 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   auto ros_image_displayer = std::make_shared<RosImageDisplayer>(viz_node);
   // matches name currently in DynamicSLAM
   // eventually maybe the DynamicSlamVisualizerRos will draw some images too?
-  ros_image_displayer->setupImageTopic("Tracks");
+  ros_image_displayer->setupImageTopic("Tracks", "visual_tracks");
   viz_->addImageDisplay(ros_image_displayer);
 
   // connect pipeline to viz
   slam_->setPublicationQueue(&publication_queue_);
   slam_->setImageDisplayQueue(display_queue);
 
-  viz_spinner_ = std::make_unique<dyno::Spinner>(
-      std::bind(&DynamicSlamVisualizerRos::spin, viz_.get()),
-      "viz-pipeline-spinner");
-
   // launch spinners
-  data_interface_spinner_ = std::make_unique<dyno::Spinner>(
-      std::bind(&dyno::DataInterfacePipeline::spin, data_interface_.get()),
-      "data-interface-spinner");
-
-  pipeline_spinner_ = std::make_unique<dyno::Spinner>(
-      std::bind(&DynamicSlamPipeline::spin, pipeline_.get()),
-      "slam-pipeline-spinner");
+  viz_spinner_ = makePipelineSpinner(viz_);
+  data_interface_spinner_ = makePipelineSpinner(data_interface_);
+  pipeline_spinner_ = makePipelineSpinner(pipeline_);
 
   auto spinOnce = [&]() -> void {
     // spin while there is work to do!
@@ -161,6 +163,9 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
     }
 
     // do display
+    // even if nothing is connected to the display queue, this will ensure
+    // memory does not grow as we will try and pull images from the display
+    // queue
     viz_->displayImages();
   };
 

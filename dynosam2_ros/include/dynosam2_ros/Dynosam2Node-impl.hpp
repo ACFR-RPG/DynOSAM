@@ -37,7 +37,7 @@ struct Dynosam2Node::Impl {
   dyno::DynoDiagnosticsTaskManager::UniquePtr diagnostics_updater_;
 
   dyno::DataReader::Ptr data_reader_{nullptr};
-  dyno::DataInterfacePipeline::Ptr data_interface_{nullptr};
+  dyno::DataInterfacePipeline::UniquePtr data_interface_{nullptr};
 
   DynamicSlamPipeline::InputQueue input_queue_;
   // DynamicSlamPipeline::OutputQueue output_queue_;
@@ -45,7 +45,7 @@ struct Dynosam2Node::Impl {
 
   DynamicSlam::Ptr slam_;
   // Viz and pipeline!
-  DynamicSlamVisualizerRos::Ptr viz_;
+  DynamicSlamVisualizerRos::UniquePtr viz_;
 
   dyno::Spinner::UniquePtr data_interface_spinner_;
   dyno::Spinner::UniquePtr pipeline_spinner_;

@@ -1,6 +1,7 @@
 #include "dynosam_ros_common/Subscriber.hpp"
 
 #include "cv_bridge/cv_bridge.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 
@@ -52,6 +53,8 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
                 "imu_single_input_callback_ is not registered!");
             return;
           }
+          // TODO: is this going to add substantial delay?
+          dyno::TimingStats t("subscriber.imu");
           imu_single_input_callback_(imu);
         },
         imu_sub_options);
@@ -139,6 +142,8 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
 
   const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
   images_received_.at(stream_index)[toNSec(timestamp)] = msg;
+
+  dyno::TimingStats t("subscriber.image");
 
   // try sync
   std::lock_guard<std::mutex> lock(time_mutex_);

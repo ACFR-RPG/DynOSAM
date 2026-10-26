@@ -25,11 +25,16 @@ static Marker poseToObjectArrow(const gtsam::Pose3& T_WR,
                                 const double line_width = 0.1,
                                 const std::string& ns = "object_frustum");
 
-void RosImageDisplayer::setupImageTopic(const std::string& name) {
+void RosImageDisplayer::setupImageTopic(const std::string& name,
+                                        const std::string& remapping) {
   image_transports_[name] = std::shared_ptr<image_transport::ImageTransport>(
       new image_transport::ImageTransport(node_));
 
-  pub_images_[name] = image_transports_.at(name)->advertise(name, 1);
+  std::string topic = name;
+  if (!remapping.empty()) {
+    topic = remapping;
+  }
+  pub_images_[name] = image_transports_.at(name)->advertise(topic, 1);
   LOG(INFO) << "Setting up image topic to display on name: " << name;
 }
 
@@ -52,31 +57,25 @@ DynamicSlamVisualizerRos::DynamicSlamVisualizerRos(
     rclcpp::Node::SharedPtr node, dyno::CanonicalSensorRig::Ptr sensor_rig,
     const SlamBackend* estimator, InputQueue* input_queue)
     : DynamicSlamVisualizerRosBase(sensor_rig, estimator, input_queue),
-      node_(node) {
-  auto odom_qos =
-      dyno::ros::addQosParameter(*node, "SYSTEM_DEFAULT", "odometry_qos");
-  vo_publisher_ =
-      node_->create_publisher<nav_msgs::msg::Odometry>("odometry", odom_qos);
-  vo_path_publisher_ =
-      node_->create_publisher<nav_msgs::msg::Path>("odometry_path", odom_qos);
-
-  vo_keyframes_publisher_ =
-      node_->create_publisher<MarkerArray>("keyframes", odom_qos);
-
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*node_);
-
-  object_odom_publisher_ =
-      node->create_publisher<ObjectOdometry>("object_odometry", odom_qos);
-  multi_object_odom_path_publisher_ =
-      node->create_publisher<MultiObjectOdometryPath>("object_odometry_path",
-                                                      odom_qos);
-
-  object_keyframes_publisher_ =
-      node_->create_publisher<MarkerArray>("object_keyframes", odom_qos);
-
-  map_publisher_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
-      "map", dyno::ros::addQosParameter(*node, "SENSOR_DATA", "map_qos"));
-}
+      node_(node),
+      odom_qos_(
+          dyno::ros::addQosParameter(*node, "SYSTEM_DEFAULT", "odometry_qos")),
+      map_qos_(dyno::ros::addQosParameter(*node, "SENSOR_DATA", "map_qos")),
+      vo_publisher_(node->create_publisher<nav_msgs::msg::Odometry>("odometry",
+                                                                    odom_qos_)),
+      vo_path_publisher_(node->create_publisher<nav_msgs::msg::Path>(
+          "odometry_path", odom_qos_)),
+      vo_keyframes_publisher_(
+          node->create_publisher<MarkerArray>("keyframes", odom_qos_)),
+      object_odom_publisher_(
+          node->create_publisher<ObjectOdometry>("object_odometry", odom_qos_)),
+      multi_object_odom_path_publisher_(
+          node->create_publisher<MultiObjectOdometryPath>(
+              "object_odometry_path", odom_qos_)),
+      object_keyframes_publisher_(
+          node->create_publisher<MarkerArray>("object_keyframes", odom_qos_)),
+      map_publisher_(node->create_publisher<PointCloud2>("map", map_qos_)),
+      tf_broadcaster_(std::make_unique<tf2_ros::TransformBroadcaster>(*node)) {}
 
 void DynamicSlamVisualizerRos::publishEstimatorUpdate(
     const PublicationData& publication_data) {
