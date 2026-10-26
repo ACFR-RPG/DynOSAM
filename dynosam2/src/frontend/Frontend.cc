@@ -40,7 +40,7 @@ Frontend::Frontend(const FrontendParameters& parameters,
 
 void Frontend::detectAndTrack(FeatureBlockContainer*& features_out,
                               dyno::ObjectDetectionResult& object_detection_out,
-                              ImageContainer& container_in_out) {
+                              dyno::ImageContainer::Ptr container_in_out) {
   auto tracking_result = feature_tracker_.track(container_in_out);
   features_out = tracking_result.featues;
   CHECK_NOTNULL(features_out);

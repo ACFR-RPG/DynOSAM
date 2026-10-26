@@ -29,7 +29,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Map
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -121,7 +121,7 @@ Visualization Manager:
           Enabled: true
           Name: VO Keyframes
           Namespaces:
-            camera_frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -153,7 +153,7 @@ Visualization Manager:
           Enabled: true
           Name: Object Keyframes
           Namespaces:
-            object_frustum: true
+            {}
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -313,4 +313,4 @@ Window Geometry:
     collapsed: false
   Width: 1848
   X: 0
-  Y: 103
+  Y: 64

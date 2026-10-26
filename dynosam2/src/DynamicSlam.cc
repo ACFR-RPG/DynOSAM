@@ -30,7 +30,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   const dyno::FrameId frame_id = input->getFrameId();
   const dyno::Timestamp timestamp = input->getTimestamp();
 
-  dyno::ImageContainer& image_container = *input->image_container_;
+  dyno::ImageContainer::Ptr image_container = input->image_container_;
   FeatureBlockContainer* features_ptr{nullptr};
   dyno::ObjectDetectionResult object_detection;
 
@@ -41,7 +41,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   FeatureBlockContainer& features = *features_ptr;
 
   FeatureBlockGeometryMap geometries;
-  GeometryUpdater(camera_, image_container, features).calcPoints(geometries);
+  GeometryUpdater(camera_, *image_container, features).calcPoints(geometries);
 
   if (first_frame_) {
     for (const auto& [object_id, geometry] : geometries) {
@@ -127,7 +127,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
     frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
                                   async_context, updated_vo_states, vo_success,
-                                  image_container);
+                                  *image_container);
   });
 
   const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
@@ -139,7 +139,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       uchar& solve_success = do_solve_success.at(i);
 
       std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
-      frontend_.solveObjectOdometry(object_id, vio_estimator, image_container,
+      frontend_.solveObjectOdometry(object_id, vio_estimator, *image_container,
                                     *object_context.estimator, features,
                                     *object_context.geometry, async_context,
                                     updated_frames, solve_success);
@@ -191,7 +191,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         estimator.keyframeStatus(frame_id);
   }
 
-  const dyno::WrappedRGBMono wrapped_rgb = image_container.rgb();
+  const dyno::WrappedRGBMono wrapped_rgb = image_container->rgb();
   const cv::Mat rgb = wrapped_rgb.image();
 
   features.reduceToInliersInplace();

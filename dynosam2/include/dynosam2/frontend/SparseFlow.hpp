@@ -1,26 +1,30 @@
 #pragma once
 
+#include <opencv2/cudaoptflow.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
 
 #include "dynosam_cv/CvUtils.hpp"
+#include "dynosam_sensors/ImageTypes.hpp"
 
 namespace dyno2 {
 
-struct OpticalFlowLK {
+class OpticalFlowLKBase {
+ public:
   static constexpr float kMaxErr = 20.0f;
 
   const cv::Size win_size;
   const int max_level;
   const cv::TermCriteria criteria;
 
-  OpticalFlowLK(int iterations)
+  OpticalFlowLKBase(int iterations)
       : win_size(24, 24),
         max_level(4),
         criteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, iterations,
                  0.01) {}
 
-  OpticalFlowLK() : OpticalFlowLK(50) {}
+  OpticalFlowLKBase() : OpticalFlowLKBase(50) {}
+  virtual ~OpticalFlowLKBase() = default;
 
   struct ImplResult {
     std::vector<uchar> status;
@@ -67,9 +71,112 @@ struct OpticalFlowLK {
     }
   };
 
-  Result operator()(const std::vector<cv::Mat>& prev_pyr,
-                    const std::vector<cv::Mat>& next_pyr,
-                    const std::vector<cv::Point2f>& prev_points) const;
+  inline Result operator()(const dyno::WrappedRGBMono& prev_img,
+                           const dyno::WrappedRGBMono& next_img,
+                           const std::vector<cv::Point2f>& prev_points) const {
+    return this->compute(prev_img, next_img, prev_points);
+  }
+
+ protected:
+  virtual Result compute(const dyno::WrappedRGBMono& prev_img,
+                         const dyno::WrappedRGBMono& next_img,
+                         const std::vector<cv::Point2f>& prev_points) const = 0;
+
+  // Result operator()(const std::vector<cv::Mat>& prev_pyr,
+  //                   const std::vector<cv::Mat>& next_pyr,
+  //                   const std::vector<cv::Point2f>& prev_points) const;
+};
+
+class OpticalFlowLK_CPU : public OpticalFlowLKBase {
+ public:
+  typedef OpticalFlowLK_CPU::Result Result;
+  OpticalFlowLK_CPU(int iterations) : OpticalFlowLKBase(iterations) {}
+
+ private:
+  Result compute(const dyno::WrappedRGBMono& prev_img,
+                 const dyno::WrappedRGBMono& next_img,
+                 const std::vector<cv::Point2f>& prev_points) const override;
+};
+
+class OpticalFlowLK_GPU : public OpticalFlowLKBase {
+ public:
+  typedef OpticalFlowLK_CPU::Result Result;
+  OpticalFlowLK_GPU(int iterations);
+
+ private:
+  Result compute(const dyno::WrappedRGBMono& prev_img,
+                 const dyno::WrappedRGBMono& next_img,
+                 const std::vector<cv::Point2f>& prev_points) const override;
+
+  //  // Ensure that a pinned host buffer has sufficient capacity.
+  // static void ensureHostCapacity(
+  //     cv::cuda::HostMem& buffer,
+  //     int rows,
+  //     int cols,
+  //     int type);
+
+  // // Ensure that a device buffer has the required dimensions and type.
+  // static void ensureDeviceCapacity(
+  //     cv::cuda::GpuMat& buffer,
+  //     int rows,
+  //     int cols,
+  //     int type);
+
+  static void ensureBuffer(cv::cuda::GpuMat& buffer, int rows, int cols,
+                           int type);
+
+ private:
+  cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> impl_;
+
+  // A single stream orders uploads, computation, and downloads.
+  mutable cv::cuda::Stream stream_;
+
+  // // Pinned host image buffers.
+  // mutable cv::cuda::HostMem h_prev_img_;
+  // mutable cv::cuda::HostMem h_next_img_;
+
+  // // Pinned host point buffers.
+  // mutable cv::cuda::HostMem h_prev_points_;
+  // mutable cv::cuda::HostMem h_forward_points_;
+  // mutable cv::cuda::HostMem h_reverse_points_;
+
+  // // Pinned host status and error buffers.
+  // mutable cv::cuda::HostMem h_forward_status_;
+  // mutable cv::cuda::HostMem h_forward_error_;
+  // mutable cv::cuda::HostMem h_reverse_status_;
+  // mutable cv::cuda::HostMem h_reverse_error_;
+
+  // // Reusable device image buffers.
+  // mutable cv::cuda::GpuMat d_prev_img_;
+  // mutable cv::cuda::GpuMat d_next_img_;
+
+  // // Reusable device point buffers.
+  // mutable cv::cuda::GpuMat d_prev_points_;
+  // mutable cv::cuda::GpuMat d_forward_points_;
+  // mutable cv::cuda::GpuMat d_reverse_points_;
+
+  // // Reusable device status and error buffers.
+  // mutable cv::cuda::GpuMat d_forward_status_;
+  // mutable cv::cuda::GpuMat d_forward_error_;
+  // mutable cv::cuda::GpuMat d_reverse_status_;
+  // mutable cv::cuda::GpuMat d_reverse_error_;
+
+  //  mutable cv::cuda::Stream stream_;
+
+  // Reusable GPU image buffers.
+  mutable cv::cuda::GpuMat d_prev_img_;
+  mutable cv::cuda::GpuMat d_next_img_;
+
+  // Reusable GPU point buffers.
+  mutable cv::cuda::GpuMat d_prev_points_;
+  mutable cv::cuda::GpuMat d_forward_points_;
+  mutable cv::cuda::GpuMat d_reverse_points_;
+
+  // Reusable GPU status and error buffers.
+  mutable cv::cuda::GpuMat d_forward_status_;
+  mutable cv::cuda::GpuMat d_forward_error_;
+  mutable cv::cuda::GpuMat d_reverse_status_;
+  mutable cv::cuda::GpuMat d_reverse_error_;
 };
 
 }  // namespace dyno2

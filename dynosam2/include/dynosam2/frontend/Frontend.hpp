@@ -32,7 +32,7 @@ class Frontend {
 
   void detectAndTrack(FeatureBlockContainer*& features_out,
                       dyno::ObjectDetectionResult& object_detection_out,
-                      ImageContainer& container_in_out);
+                      dyno::ImageContainer::Ptr container_in_out);
 
   void solveVisualOdometry(VioGraphEstimator& estimator,
                            FeatureBlockContainer& features,

@@ -379,24 +379,26 @@ bool GeometryUpdater::computeStereoMatching(
     return false;
   }
 
-  OpticalFlowLK optical_flow(30);
+  OpticalFlowLK_CPU optical_flow(30);
 
-  const WrappedRGBMono wrapped_left = images_.rgb();
-  const WrappedRGBMono wrapped_right = images_.rightRgb();
+  const WrappedRGBMono& wrapped_left = images_.rgb();
+  const WrappedRGBMono& wrapped_right = images_.rightRgb();
 
   const int rows = wrapped_left.image().rows;
   const int cols = wrapped_left.image().cols;
 
-  // the image wrapper will cache the image pyramid!
-  const ImagePyramid left_image_pyr = wrapped_left.computeImagePyramid(
-      optical_flow.win_size, optical_flow.max_level);
+  // // the image wrapper will cache the image pyramid!
+  // const ImagePyramid left_image_pyr = wrapped_left.computeImagePyramid(
+  //     optical_flow.win_size, optical_flow.max_level);
 
-  const ImagePyramid right_image_pyr = wrapped_right.computeImagePyramid(
-      optical_flow.win_size, optical_flow.max_level);
+  // const ImagePyramid right_image_pyr = wrapped_right.computeImagePyramid(
+  //     optical_flow.win_size, optical_flow.max_level);
 
   // track left to right
-  OpticalFlowLK::Result flow_result =
-      optical_flow(left_image_pyr.levels, right_image_pyr.levels, left_kps);
+  // OpticalFlowLK_CPU::Result flow_result =
+  //     optical_flow(left_image_pyr.levels, right_image_pyr.levels, left_kps);
+  OpticalFlowLK_CPU::Result flow_result =
+      optical_flow(wrapped_left, wrapped_right, left_kps);
 
   const size_t num_flows = flow_result.size();
   CHECK_EQ(num_flows, left_kps.size());

@@ -39,22 +39,21 @@ FeatureTracker::FeatureTracker(const FrontendParameters& parameters,
 }
 
 FeatureTracker::Result FeatureTracker::track(
-    ImageContainer& image_container,
+    ImageContainer::Ptr image_container,
     const std::optional<gtsam::Rot3>& R_km1_k) {
-  dyno::utils::ChronoTimingStats feature_track_t("feature_tracker.track");
-  dyno::utils::ChronoTimingStats object_detect_t(
-      "feature_tracker.track.object_detect");
+  dyno::utils::ChronoTimingStats feature_track_t("ft.all");
+  dyno::utils::ChronoTimingStats object_detect_t("ft.object_detect");
   const auto [object_detection_result, update_object_mask] =
-      object_detection_impl_.detectAndTrack(image_container);
+      object_detection_impl_.detectAndTrack(*image_container);
   object_detect_t.stop();
 
   // update image container with motion mask
   const cv::Mat object_masks = object_detection_result.labelled_mask;
   if (update_object_mask) {
-    image_container.objectMotionMask(object_masks);
+    image_container->objectMotionMask(object_masks);
   }
 
-  const WrappedRGBMono wrapped_rgb = image_container.rgb();
+  const WrappedRGBMono wrapped_rgb = image_container->rgb();
   const cv::Mat rgb = wrapped_rgb.image();
   // build the image pyramid from the wrapped image
   // this allows us to cache the computation of the pyramid within the
@@ -63,7 +62,7 @@ FeatureTracker::Result FeatureTracker::track(
   const ImagePyramid image_pyramid = wrapped_rgb.computeImagePyramid(
       optical_flow_impl_.win_size, optical_flow_impl_.max_level);
   const cv::Mat current_mono = image_pyramid.mono;
-  curr_mono_pyr_ = image_pyramid.levels;
+  // curr_mono_pyr_ = image_pyramid.levels;
 
   ObjectIds object_ids = object_detection_result.objectIds();
 
@@ -77,12 +76,13 @@ FeatureTracker::Result FeatureTracker::track(
     return rect;
   };
 
-  if (prev_mono_.empty()) {
+  if (previous_container_ == nullptr) {
     // fill out initial gfft params
     GfttDetector::Params feature_detection_params(object_ids.size() + 1);
     feature_detection_params.quality_level = 0.01;
 
     for (size_t i = 0; i < object_ids.size(); i++) {
+      LOG(INFO) << "here";
       const auto object_id = object_ids[i];
       const auto& object_detection = object_detection_result.detections[i];
       // sanity check that object_ids and object_detection_result are stored in
@@ -107,16 +107,17 @@ FeatureTracker::Result FeatureTracker::track(
     FeatureBlockContainer detected_features = feature_detector_.calc(
         current_mono, object_masks, feature_detection_params);
 
-    prev_mono_ = current_mono;
+    // prev_mono_ = current_mono;
     previous_features_ = detected_features;
+    // previous_img_ = wrapped_rgb;
+    previous_container_ = image_container;
 
     // buildOpticalFlowPyramid(prev_mono_, prev_mono_pyr_);
   } else {
-    dyno::utils::ChronoTimingStats previous_t("feature_tracker.track.previous");
-    dyno::utils::ChronoTimingStats sparse_t("feature_tracker.track.sparse");
+    // auto [tracked_features, tracking_stats] =
+    //     sparseFeatureTrack(current_mono, object_masks);
     auto [tracked_features, tracking_stats] =
-        sparseFeatureTrack(current_mono, object_masks);
-    sparse_t.stop();
+        sparseFeatureTrack(image_container);
 
     // fill out binary segmentation mask map to be used as detection mask
     gtsam::FastMap<ObjectId, cv::Mat> binary_detection_masks;
@@ -141,8 +142,7 @@ FeatureTracker::Result FeatureTracker::track(
     const int scaled_border_thickness =
         std::round(kReferenceBorderThickness * std::sqrt(image_scale));
 
-    dyno::utils::ChronoTimingStats make_masks_t(
-        "feature_tracker.track.make_masks");
+    dyno::utils::ChronoTimingStats make_masks_t("ft.make_masks");
     cv::Mat object_masks_binary = object_masks > 0;
     // to ensure the validatiy of the mask we will do some dilation
     // to both fill holes and to expant the object masks so we dont
@@ -157,8 +157,7 @@ FeatureTracker::Result FeatureTracker::track(
     binary_detection_masks[background_label] = static_mask;
     make_masks_t.stop();
 
-    dyno::utils::ChronoTimingStats needs_detection_t(
-        "feature_tracker.track.needs_detection");
+    dyno::utils::ChronoTimingStats needs_detection_t("ft.needs_detection");
     std::unordered_set<ObjectId> object_needs_detection;
     for (const auto& object_view : tracked_features.objectViews()) {
       const auto j = object_view.objectId();
@@ -247,7 +246,7 @@ FeatureTracker::Result FeatureTracker::track(
     }
 
     if (!objects_ids_for_detection.empty()) {
-      utils::ChronoTimingStats detect_t("feature_tracker.track.re_detect");
+      utils::ChronoTimingStats detect_t("ft.re_detect");
       // TODO: still need to handle tracklet ids!
       FeatureBlockContainer detected_features = feature_detector_.calc(
           current_mono, object_masks, feature_detection_params);
@@ -260,11 +259,13 @@ FeatureTracker::Result FeatureTracker::track(
     // cv::imshow("batch Tracks", viz);
   }
 
-  prev_mono_ = current_mono;
-  // move data from current to previous
-  // this prevents shallow copying such that updating the current pyramid
-  // will update the previous pyramid
-  prev_mono_pyr_ = std::move(curr_mono_pyr_);
+  // prev_mono_ = current_mono;
+  // previous_img_ = wrapped_rgb;
+  // // move data from current to previous
+  // // this prevents shallow copying such that updating the current pyramid
+  // // will update the previous pyramid
+  // prev_mono_pyr_ = std::move(curr_mono_pyr_);
+  previous_container_ = image_container;
 
   // always set previous object mask
   prev_object_mask_ = object_masks;
@@ -395,14 +396,14 @@ struct CornerResponses {
 
 FeatureBlockContainer FeatureTracker::GfttDetector::calc(
     const cv::Mat& mono, const cv::Mat& object_mask, const Params& params) {
-  dyno::utils::ChronoTimingStats r("feature_tracker.detector");
+  dyno::utils::ChronoTimingStats r("ft.detector");
   CV_Assert(mono.type() == CV_8UC1 || mono.type() == CV_32FC1);
 
   if (params.empty()) {
     return {};
   }
 
-  utils::ChronoTimingStats t1("feature_tracker.corner_min_eigen");
+  utils::ChronoTimingStats t1("ft.corner_min_eigen");
   // If your camera/image pipeline can write directly into mono_,
   // this copy can be eliminated entirely.
   mono.copyTo(mono_);
@@ -422,7 +423,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   t1.stop();
 
   // Find the global maximum corner score across the entire image
-  dyno::utils::ChronoTimingStats tmin("feature_tracker.minMaxLoc");
+  dyno::utils::ChronoTimingStats tmin("ft.minMaxLoc");
   double maxVal = 0;
   cv::minMaxLoc(eig_, nullptr, &maxVal);
   tmin.stop();
@@ -448,7 +449,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
       cv::MORPH_RECT,
       cv::Size(2 * boundary_distance + 1, 2 * boundary_distance + 1));
 
-  dyno::utils::ChronoTimingStats t3("feature_tracker.masks_loop");
+  dyno::utils::ChronoTimingStats t3("ft.masks_loop");
   tbb::task_group task_group;
   for (size_t m = 0; m < params.size(); m++) {
     task_group.run([&, m] {
@@ -679,7 +680,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   task_group.wait();
   t3.stop();
 
-  dyno::utils::ChronoTimingStats t_terms("feature_tracker.make_blocks");
+  dyno::utils::ChronoTimingStats t_terms("ft.make_blocks");
   std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms(
       params.size());
   for (size_t i = 0; i < params.size(); i++) {
@@ -710,7 +711,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   FeatureBlockContainer feature_blocks(terms);
   t_terms.stop();
 
-  dyno::utils::ChronoTimingStats t4("feature_tracker.sub_pixe_refine");
+  dyno::utils::ChronoTimingStats t4("ft.sub_pixe_refine");
 
   if (feature_blocks.size() == 0) {
     return feature_blocks;
@@ -754,16 +755,23 @@ TrackletIds FeatureTracker::GfttDetector::getNewIdsByChunk(size_t N) {
   return tracklet_ids;
 }
 
+// std::pair<FeatureBlockContainer, FeatureTracker::FlowTrackingStatsMap>
+// FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
+//                                    const cv::Mat& object_mask) {
 std::pair<FeatureBlockContainer, FeatureTracker::FlowTrackingStatsMap>
-FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
-                                   const cv::Mat& object_mask) {
-  dyno::utils::ChronoTimingStats timer("feature_tracker.track_gfft");
+FeatureTracker::sparseFeatureTrack(
+    const dyno::ImageContainer::Ptr& image_container) {
+  dyno::utils::ChronoTimingStats timer("ft.sparse_ft");
 
-  CHECK(!prev_mono_.empty());
-  CV_Assert(prev_mono_.type() == CV_8UC1 && mono.type() == CV_8UC1);
+  CHECK_NOTNULL(previous_container_);
+  // CHECK(!prev_mono_.empty());
+  // CV_Assert(prev_mono_.type() == CV_8UC1 && mono.type() == CV_8UC1);
+  const cv::Mat& img = image_container->rgb();
+  // ensure this is the same one that created in ft::calc!
+  const cv::Mat& object_mask = image_container->objectMotionMask();
 
-  const int rows = mono.rows;
-  const int cols = mono.cols;
+  const int rows = img.rows;
+  const int cols = img.cols;
 
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       tracks_per_object;
@@ -782,8 +790,18 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
              << " n=" << num_points;
   }
 
-  OpticalFlowLK::Result flow_result = optical_flow_impl_(
-      prev_mono_pyr_, curr_mono_pyr_, previous_features_.points);
+  // OpticalFlowLK_CPU::Result flow_result = optical_flow_impl_(
+  //     prev_mono_pyr_, curr_mono_pyr_, previous_features_.points);
+
+  const WrappedRGBMono& previous_img = previous_container_->rgb();
+  const WrappedRGBMono& current_img = image_container->rgb();
+
+  // OpticalFlowLK_CPU::Result flow_result = optical_flow_impl_(
+  //     previous_img, current_img, previous_features_.points);
+  dyno::utils::ChronoTimingStats lkt_t("ft.sparse_ft.lkt");
+  auto flow_result =
+      optical_flow_impl_(previous_img, current_img, previous_features_.points);
+  lkt_t.stop();
 
   const std::vector<cv::Point2f>& predicted_points =
       flow_result.predictedPoints();
@@ -823,9 +841,7 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       verified_tracks_per_object;
 
-  dyno::utils::ChronoTimingStats lkt_outliers_t("feature_tracker.lkt_outliers");
-
-  const cv::Mat K = camera_->getParams().getCameraMatrix();
+  dyno::utils::ChronoTimingStats lkt_outliers_t("ft.sparse_ft.outliers");
 
   static constexpr double kThresholdE = 1.0;
   static constexpr double kEMaxIters = 100;
@@ -861,9 +877,9 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
 
       const cv::Mat inlier_mask =
           dyno::findEssential(good_tracks->previous_points, good_tracks->points,
-                              K, kThresholdE, kEMaxIters);
+                              cv::Mat(K_cv_), kThresholdE, kEMaxIters);
 
-      FeatureBlockContainer::FeatureData verified;
+      FeatureBlockContainer::FeatureData& verified = verified_tracks[idx];
       verified.reserve(num_good_points);
 
       for (int i = 0; i < inlier_mask.rows; ++i) {
@@ -881,7 +897,7 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
                << "/" << num_good_points;
 
       // Each task exclusively owns this result slot.
-      verified_tracks[idx] = std::move(verified);
+      // verified_tracks[idx] = std::move(verified);
     });
   }
 

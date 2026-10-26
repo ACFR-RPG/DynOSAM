@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
       [&](ImageContainer::Ptr container) -> void {
         LOG(INFO) << container->frameId() << " " << container->timestamp();
 
-        auto tracking_result = tracker.track(*container);
+        auto tracking_result = tracker.track(container);
 
         const WrappedRGBMono wrapped_rgb = container->rgb();
         const cv::Mat rgb = wrapped_rgb.image();

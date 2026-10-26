@@ -1,7 +1,6 @@
 #include "dynosam_nn/YoloV8CudaUtils.hpp"
 #include "dynosam_nn/YoloV8ObjectDetector.hpp"
 #include "dynosam_nn/CudaUtils.hpp"
-#include "dynosam_core/DynamicObjects.hpp"
 
 
 #include <cuda_runtime.h>
@@ -17,90 +16,90 @@
 
 #include <glog/logging.h>
 
-__global__ void letterBoxToBlobKernel(const uchar* __restrict__ srcData,
-                                      int srcH, int srcW, int srcStep, int srcChannels,
-                                      float* __restrict__ dstBlob,
-                                      int dstH, int dstW,
-                                      int newH, int newW,
-                                      int padTop, int padLeft,
-                                      float scaleX, float scaleY) {
-    // 2D grid mapping to the destination blob coordinates
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
+// __global__ void letterBoxToBlobKernel(const uchar* __restrict__ srcData,
+//                                       int srcH, int srcW, int srcStep, int srcChannels,
+//                                       float* __restrict__ dstBlob,
+//                                       int dstH, int dstW,
+//                                       int newH, int newW,
+//                                       int padTop, int padLeft,
+//                                       float scaleX, float scaleY) {
+//     // 2D grid mapping to the destination blob coordinates
+//     int x = blockIdx.x * blockDim.x + threadIdx.x;
+//     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
-    if (x >= dstW || y >= dstH) return;
+//     if (x >= dstW || y >= dstH) return;
 
-    int planeSize = dstH * dstW;
-    constexpr float padNorm = 114.0f / 255.0f;
-    constexpr float scale255 = 1.0f / 255.0f;
+//     int planeSize = dstH * dstW;
+//     constexpr float padNorm = 114.0f / 255.0f;
+//     constexpr float scale255 = 1.0f / 255.0f;
 
-    // Check if current thread falls inside the padded image area
-    if (y >= padTop && y < (padTop + newH) && x >= padLeft && x < (padLeft + newW)) {
-        // Map destination coordinates back to source image coordinates (Bilinear interpolation)
-        int srcY_resized = y - padTop;
-        int srcX_resized = x - padLeft;
+//     // Check if current thread falls inside the padded image area
+//     if (y >= padTop && y < (padTop + newH) && x >= padLeft && x < (padLeft + newW)) {
+//         // Map destination coordinates back to source image coordinates (Bilinear interpolation)
+//         int srcY_resized = y - padTop;
+//         int srcX_resized = x - padLeft;
 
-        // Bilinear interpolation coordinates
-        float src_fX = srcX_resized * scaleX;
-        float src_fY = srcY_resized * scaleY;
+//         // Bilinear interpolation coordinates
+//         float src_fX = srcX_resized * scaleX;
+//         float src_fY = srcY_resized * scaleY;
 
-        int x1 = __float2int_rd(src_fX);
-        int y1 = __float2int_rd(src_fY);
-        int x2 = min(x1 + 1, srcW - 1);
-        int y2 = min(y1 + 1, srcH - 1);
+//         int x1 = __float2int_rd(src_fX);
+//         int y1 = __float2int_rd(src_fY);
+//         int x2 = min(x1 + 1, srcW - 1);
+//         int y2 = min(y1 + 1, srcH - 1);
 
-        float fx2 = src_fX - x1;
-        float fx1 = 1.0f - fx2;
-        float fy2 = src_fY - y1;
-        float fy1 = 1.0f - fy2;
+//         float fx2 = src_fX - x1;
+//         float fx1 = 1.0f - fx2;
+//         float fy2 = src_fY - y1;
+//         float fy1 = 1.0f - fy2;
 
-        int dstIdx = y * dstW + x;
+//         int dstIdx = y * dstW + x;
 
-        if (srcChannels == 3) {
-            // Pointers to the source rows
-            const uchar* row1 = srcData + y1 * srcStep;
-            const uchar* row2 = srcData + y2 * srcStep;
+//         if (srcChannels == 3) {
+//             // Pointers to the source rows
+//             const uchar* row1 = srcData + y1 * srcStep;
+//             const uchar* row2 = srcData + y2 * srcStep;
 
-            // Fetch the 4 neighboring pixels for B, G, R
-            float b11 = row1[x1 * 3 + 0], b12 = row1[x2 * 3 + 0];
-            float b21 = row2[x1 * 3 + 0], b22 = row2[x2 * 3 + 0];
+//             // Fetch the 4 neighboring pixels for B, G, R
+//             float b11 = row1[x1 * 3 + 0], b12 = row1[x2 * 3 + 0];
+//             float b21 = row2[x1 * 3 + 0], b22 = row2[x2 * 3 + 0];
 
-            float g11 = row1[x1 * 3 + 1], g12 = row1[x2 * 3 + 1];
-            float g21 = row2[x1 * 3 + 1], g22 = row2[x2 * 3 + 1];
+//             float g11 = row1[x1 * 3 + 1], g12 = row1[x2 * 3 + 1];
+//             float g21 = row2[x1 * 3 + 1], g22 = row2[x2 * 3 + 1];
 
-            float r11 = row1[x1 * 3 + 2], r12 = row1[x2 * 3 + 2];
-            float r21 = row2[x1 * 3 + 2], r22 = row2[x2 * 3 + 2];
+//             float r11 = row1[x1 * 3 + 2], r12 = row1[x2 * 3 + 2];
+//             float r21 = row2[x1 * 3 + 2], r22 = row2[x2 * 3 + 2];
 
-            // Interpolate
-            float b = (b11 * fx1 + b12 * fx2) * fy1 + (b21 * fx1 + b22 * fx2) * fy2;
-            float g = (g11 * fx1 + g12 * fx2) * fy1 + (g21 * fx1 + g22 * fx2) * fy2;
-            float r = (r11 * fx1 + r12 * fx2) * fy1 + (r21 * fx1 + r22 * fx2) * fy2;
+//             // Interpolate
+//             float b = (b11 * fx1 + b12 * fx2) * fy1 + (b21 * fx1 + b22 * fx2) * fy2;
+//             float g = (g11 * fx1 + g12 * fx2) * fy1 + (g21 * fx1 + g22 * fx2) * fy2;
+//             float r = (r11 * fx1 + r12 * fx2) * fy1 + (r21 * fx1 + r22 * fx2) * fy2;
 
-            // Write out to Planar CHW format (BGR -> RGB conversion)
-            dstBlob[dstIdx]               = r * scale255; // Red channel plane
-            dstBlob[dstIdx + planeSize]     = g * scale255; // Green channel plane
-            dstBlob[dstIdx + 2 * planeSize] = b * scale255; // Blue channel plane
-        } else {
-            // Single channel grayscale path
-            const uchar* row1 = srcData + y1 * srcStep;
-            const uchar* row2 = srcData + y2 * srcStep;
+//             // Write out to Planar CHW format (BGR -> RGB conversion)
+//             dstBlob[dstIdx]               = r * scale255; // Red channel plane
+//             dstBlob[dstIdx + planeSize]     = g * scale255; // Green channel plane
+//             dstBlob[dstIdx + 2 * planeSize] = b * scale255; // Blue channel plane
+//         } else {
+//             // Single channel grayscale path
+//             const uchar* row1 = srcData + y1 * srcStep;
+//             const uchar* row2 = srcData + y2 * srcStep;
 
-            float val11 = row1[x1], val12 = row1[x2];
-            float val21 = row2[x1], val22 = row2[x2];
+//             float val11 = row1[x1], val12 = row1[x2];
+//             float val21 = row2[x1], val22 = row2[x2];
 
-            float val = (val11 * fx1 + val12 * fx2) * fy1 + (val21 * fx1 + val22 * fx2) * fy2;
-            dstBlob[dstIdx] = val * scale255;
-        }
-    } else {
-        // We are in the padding area
-        int dstIdx = y * dstW + x;
-        dstBlob[dstIdx] = padNorm;
-        if (srcChannels == 3) {
-            dstBlob[dstIdx + planeSize]     = padNorm;
-            dstBlob[dstIdx + 2 * planeSize] = padNorm;
-        }
-    }
-}
+//             float val = (val11 * fx1 + val12 * fx2) * fy1 + (val21 * fx1 + val22 * fx2) * fy2;
+//             dstBlob[dstIdx] = val * scale255;
+//         }
+//     } else {
+//         // We are in the padding area
+//         int dstIdx = y * dstW + x;
+//         dstBlob[dstIdx] = padNorm;
+//         if (srcChannels == 3) {
+//             dstBlob[dstIdx + planeSize]     = padNorm;
+//             dstBlob[dstIdx + 2 * planeSize] = padNorm;
+//         }
+//     }
+// }
 
 
 // --- Device Kernel ---
@@ -255,19 +254,19 @@ inline cv::Rect scaleCoords(const cv::Size& required_shape,
 namespace dyno {
 namespace internal {
 
-// Wrapper implementation to setup grid/block sizes
-void launchLetterBoxKernel(const uchar* d_src, int srcH, int srcW, int srcStep, int srcChannels,
-                           float* d_blob, int dstH, int dstW, int newH, int newW,
-                           int padTop, int padLeft, float scaleX, float scaleY, cudaStream_t stream) {
-    dim3 block(16, 16);
-    dim3 grid((dstW + block.x - 1) / block.x, (dstH + block.y - 1) / block.y);
+// // Wrapper implementation to setup grid/block sizes
+// void launchLetterBoxKernel(const uchar* d_src, int srcH, int srcW, int srcStep, int srcChannels,
+//                            float* d_blob, int dstH, int dstW, int newH, int newW,
+//                            int padTop, int padLeft, float scaleX, float scaleY, cudaStream_t stream) {
+//     dim3 block(16, 16);
+//     dim3 grid((dstW + block.x - 1) / block.x, (dstH + block.y - 1) / block.y);
 
-    letterBoxToBlobKernel<<<grid, block, 0, stream>>>(
-        d_src, srcH, srcW, srcStep, srcChannels,
-        d_blob, dstH, dstW, newH, newW,
-        padTop, padLeft, scaleX, scaleY
-    );
-}
+//     letterBoxToBlobKernel<<<grid, block, 0, stream>>>(
+//         d_src, srcH, srcW, srcStep, srcChannels,
+//         d_blob, dstH, dstW, newH, newW,
+//         padTop, padLeft, scaleX, scaleY
+//     );
+// }
 
 // void letterBoxToBlobGPU(const cv::Mat& image, DeviceMemory<uchar>& d_image_cache, float* d_processed,
 //                                  int targetChannels, const cv::Size& targetSize,
@@ -360,149 +359,149 @@ int YoloOutputToDetections(
     return *h_count_buffer;
 }
 
-void YoloDetectionsToObjects(
-    const YoloDetectionGpuMatDevice& wrappers,
-    const cv::cuda::GpuMat& d_prototype_masks,
-    const cv::Rect& prototype_crop_rect, // Pre-calculated crop area
-    const AlignedYoloDetection* h_detection,
-    const cv::Size& required_size,
-    const cv::Size& original_size,
-    const std::string& label,
-    const int mask_h,
-    const int mask_w,
-    cv::cuda::Stream stream,
-    dyno::ObjectDetection& detection)
-{
-    // --- 1. Launch Mask Combination Kernel (Run once for all detections) ---
-    // Kernel launch configuration for 160x160 mask for N_Detections
-    // dim3 block(16, 16);
-    //32 and 8 is the default transform policy for opencv
-    dim3 block(32, 8);
-    dim3 grid(
-        (mask_w + block.x - 1) / block.x,
-        (mask_h + block.y - 1) / block.y
-    );
+// void YoloDetectionsToObjects(
+//     const YoloDetectionGpuMatDevice& wrappers,
+//     const cv::cuda::GpuMat& d_prototype_masks,
+//     const cv::Rect& prototype_crop_rect, // Pre-calculated crop area
+//     const AlignedYoloDetection* h_detection,
+//     const cv::Size& required_size,
+//     const cv::Size& original_size,
+//     const std::string& label,
+//     const int mask_h,
+//     const int mask_w,
+//     cv::cuda::Stream stream,
+//     dyno::ObjectDetection& detection)
+// {
+//     // --- 1. Launch Mask Combination Kernel (Run once for all detections) ---
+//     // Kernel launch configuration for 160x160 mask for N_Detections
+//     // dim3 block(16, 16);
+//     //32 and 8 is the default transform policy for opencv
+//     dim3 block(32, 8);
+//     dim3 grid(
+//         (mask_w + block.x - 1) / block.x,
+//         (mask_h + block.y - 1) / block.y
+//     );
 
-    cudaStream_t c_stream = (cudaStream_t)stream.cudaPtr();
+//     cudaStream_t c_stream = (cudaStream_t)stream.cudaPtr();
 
-    cv::cuda::GpuMat d_combined_masks;
-    d_combined_masks.create(
-        mask_h,                         // rows: Treat as a flattened 1D array
-        mask_w,    // cols: Total number of float pixels
-        CV_32FC1                   // type: Output of sigmoid is a float (0.0 to 1.0)
-    );
-    // Assuming d_prototypes is a linear array, not pitched.
-    dyno::GpuTimingStats mask_combination_kernel(
-        "yolov8_detection.post_process.combination_kernel", c_stream, 5);
-    YOLO_Mask_Combination_Kernel<<<grid, block, 0, c_stream>>>(
-        wrappers.mask_coeffs,
-        d_prototype_masks, // Assuming d_prototype_masks contains 32*H*W linear floats
-        d_combined_masks,  // The N x mask_h x mask_w combined float mask buffer
-        1, mask_h, mask_w
-    );
-    mask_combination_kernel.stop();
-
-
-     dyno::GpuTimingStats timing_detections(
-        "yolov8_detection.post_process.cv_processing", stream, 5);
-    // --- 2. Sequential Post-Processing (Loop over detections, using cv::cuda) ---
-    static cv::cuda::GpuMat d_final_masks_full_res;
-    d_final_masks_full_res.create(original_size, CV_8UC1);
-
-    // --- A. Define ROI wrappers for the combined mask ---
-    // Create a wrapper for the i-th 160x160 mask plane
-    cv::cuda::GpuMat d_combined_mask_plane = d_combined_masks;
-    // --- B. Crop to Letterbox Area (GPU Sub-Region) ---
-    cv::cuda::GpuMat d_cropped_mask =
-        d_combined_mask_plane(prototype_crop_rect);
-
-    // --- C. Resize to Original Dimensions (GPU) ---
-    static cv::cuda::GpuMat d_resized_mask;
-    d_resized_mask.create(original_size, CV_32FC1);
-    cv::cuda::resize(d_cropped_mask, d_resized_mask, original_size,
-                        0, 0, cv::INTER_LINEAR, stream);
-
-    // // --- D. Threshold and Convert to Binary (GPU) ---
-    // // stream?
-    static cv::cuda::GpuMat d_binary_mask;
-    d_binary_mask.create(original_size, CV_8UC1);
-    // cv::cuda::threshold(d_resized_mask, d_binary_mask, 0.5, 255.0,
-    //                     cv::THRESH_BINARY, stream);
-    dim3 full_size_grid(
-        (original_size.width + block.x - 1) / block.x,
-        (original_size.height + block.y - 1) / block.y
-    );
-
-    // custom binary thresholding function that is faster than opencv
-    binaryThreshold<<<full_size_grid, block, 0, c_stream>>>(d_resized_mask, d_binary_mask, 0.5, 255);
-
-    // // Convert to 8-bit unsigned integer (CV_8UC1)
-    // d_binary_mask.convertTo(d_binary_mask, CV_8UC1);
-
-    // --- E. Final Crop/Copy to Bounding Box (GPU) ---
-    // The final mask is only valid inside the detection box.
-
-    // 1. Download bounding box data (Smallest possible transfer)
-    // cudaDeviceSynchronize();
-
-    cv::Mat box_data; // x, y, w, h
-    cv::cuda::GpuMat box_row = wrappers.boxes.row(0);
-    box_row.download(box_data, stream);
-
-    // stream.waitForCompletion();
+//     cv::cuda::GpuMat d_combined_masks;
+//     d_combined_masks.create(
+//         mask_h,                         // rows: Treat as a flattened 1D array
+//         mask_w,    // cols: Total number of float pixels
+//         CV_32FC1                   // type: Output of sigmoid is a float (0.0 to 1.0)
+//     );
+//     // Assuming d_prototypes is a linear array, not pitched.
+//     dyno::GpuTimingStats mask_combination_kernel(
+//         "yolov8_detection.post_process.combination_kernel", c_stream, 5);
+//     YOLO_Mask_Combination_Kernel<<<grid, block, 0, c_stream>>>(
+//         wrappers.mask_coeffs,
+//         d_prototype_masks, // Assuming d_prototype_masks contains 32*H*W linear floats
+//         d_combined_masks,  // The N x mask_h x mask_w combined float mask buffer
+//         1, mask_h, mask_w
+//     );
+//     mask_combination_kernel.stop();
 
 
-    const float bb_x = box_data.at<float>(0);
-    const float bb_y = box_data.at<float>(1);
-    const float bb_w = box_data.at<float>(2);
-    const float bb_h = box_data.at<float>(3);
-    const cv::Rect box(
-        static_cast<int>(std::round(bb_x - bb_w / 2.0f)),
-        static_cast<int>(std::round(bb_y - bb_h / 2.0f)),
-        static_cast<int>(std::round(bb_w)),
-        static_cast<int>(std::round(bb_h))
-    );
+//      dyno::GpuTimingStats timing_detections(
+//         "yolov8_detection.post_process.cv_processing", stream, 5);
+//     // --- 2. Sequential Post-Processing (Loop over detections, using cv::cuda) ---
+//     static cv::cuda::GpuMat d_final_masks_full_res;
+//     d_final_masks_full_res.create(original_size, CV_8UC1);
 
-    // LOG(INFO) << bb_x << " " << bb_y << " " << bb_w << " " << bb_h;
+//     // --- A. Define ROI wrappers for the combined mask ---
+//     // Create a wrapper for the i-th 160x160 mask plane
+//     cv::cuda::GpuMat d_combined_mask_plane = d_combined_masks;
+//     // --- B. Crop to Letterbox Area (GPU Sub-Region) ---
+//     cv::cuda::GpuMat d_cropped_mask =
+//         d_combined_mask_plane(prototype_crop_rect);
 
-    // 2. Calculate final ROI on CPU
-    cv::Rect bounding_box = scaleCoords(required_size, box,
-            original_size, true); // Assuming this CPU helper exists
+//     // --- C. Resize to Original Dimensions (GPU) ---
+//     static cv::cuda::GpuMat d_resized_mask;
+//     d_resized_mask.create(original_size, CV_32FC1);
+//     cv::cuda::resize(d_cropped_mask, d_resized_mask, original_size,
+//                         0, 0, cv::INTER_LINEAR, stream);
 
-    cv::Rect roi = bounding_box;
-    roi &= cv::Rect(0, 0, original_size.width, original_size.height);
+//     // // --- D. Threshold and Convert to Binary (GPU) ---
+//     // // stream?
+//     static cv::cuda::GpuMat d_binary_mask;
+//     d_binary_mask.create(original_size, CV_8UC1);
+//     // cv::cuda::threshold(d_resized_mask, d_binary_mask, 0.5, 255.0,
+//     //                     cv::THRESH_BINARY, stream);
+//     dim3 full_size_grid(
+//         (original_size.width + block.x - 1) / block.x,
+//         (original_size.height + block.y - 1) / block.y
+//     );
 
-    // // 3. Clear the output mask buffer and copy the binary mask into the ROI
-    d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
+//     // custom binary thresholding function that is faster than opencv
+//     binaryThreshold<<<full_size_grid, block, 0, c_stream>>>(d_resized_mask, d_binary_mask, 0.5, 255);
 
-    if (roi.area() > 0) {
-        // Copy the relevant ROI data from the binary mask into the final
-        // mask's ROI. The full binary mask is HxW, so we sub-region both.
-        d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
-    }
+//     // // Convert to 8-bit unsigned integer (CV_8UC1)
+//     // d_binary_mask.convertTo(d_binary_mask, CV_8UC1);
 
-    // // --- F. Final Download (Minimal Transfer) ---
-    // // Download only the final result and metadata for ObjectDetection struct
-    // //TODO: pinned memory!!
-    //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
-    // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
-    // static cv::cuda::HostMem h_mem(cv::cuda::HostMem::PAGE_LOCKED);
-    // h_mem.create(original_size, CV_8U);
-    // cv::cuda::HostMem h_mem;
-    cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
-    d_final_masks_full_res.download(final_cpu_mask, stream);
-    // d_final_masks_full_res.download(h_mem, stream);
-    stream.waitForCompletion();
+//     // --- E. Final Crop/Copy to Bounding Box (GPU) ---
+//     // The final mask is only valid inside the detection box.
 
-    // // should synchronize!?
-    // cv::Mat final_cpu_mask = h_mem.createMatHeader();
+//     // 1. Download bounding box data (Smallest possible transfer)
+//     // cudaDeviceSynchronize();
 
-    const float confidence = h_detection->confidence;
-    const int class_id = static_cast<int>(h_detection->class_id);
+//     cv::Mat box_data; // x, y, w, h
+//     cv::cuda::GpuMat box_row = wrappers.boxes.row(0);
+//     box_row.download(box_data, stream);
 
-    detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
+//     // stream.waitForCompletion();
 
-}
+
+//     const float bb_x = box_data.at<float>(0);
+//     const float bb_y = box_data.at<float>(1);
+//     const float bb_w = box_data.at<float>(2);
+//     const float bb_h = box_data.at<float>(3);
+//     const cv::Rect box(
+//         static_cast<int>(std::round(bb_x - bb_w / 2.0f)),
+//         static_cast<int>(std::round(bb_y - bb_h / 2.0f)),
+//         static_cast<int>(std::round(bb_w)),
+//         static_cast<int>(std::round(bb_h))
+//     );
+
+//     // LOG(INFO) << bb_x << " " << bb_y << " " << bb_w << " " << bb_h;
+
+//     // 2. Calculate final ROI on CPU
+//     cv::Rect bounding_box = scaleCoords(required_size, box,
+//             original_size, true); // Assuming this CPU helper exists
+
+//     cv::Rect roi = bounding_box;
+//     roi &= cv::Rect(0, 0, original_size.width, original_size.height);
+
+//     // // 3. Clear the output mask buffer and copy the binary mask into the ROI
+//     d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
+
+//     if (roi.area() > 0) {
+//         // Copy the relevant ROI data from the binary mask into the final
+//         // mask's ROI. The full binary mask is HxW, so we sub-region both.
+//         d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
+//     }
+
+//     // // --- F. Final Download (Minimal Transfer) ---
+//     // // Download only the final result and metadata for ObjectDetection struct
+//     // //TODO: pinned memory!!
+//     //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
+//     // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
+//     // static cv::cuda::HostMem h_mem(cv::cuda::HostMem::PAGE_LOCKED);
+//     // h_mem.create(original_size, CV_8U);
+//     // cv::cuda::HostMem h_mem;
+//     cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
+//     d_final_masks_full_res.download(final_cpu_mask, stream);
+//     // d_final_masks_full_res.download(h_mem, stream);
+//     stream.waitForCompletion();
+
+//     // // should synchronize!?
+//     // cv::Mat final_cpu_mask = h_mem.createMatHeader();
+
+//     const float confidence = h_detection->confidence;
+//     const int class_id = static_cast<int>(h_detection->class_id);
+
+//     detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
+
+// }
 
 } //internal
 } //dyno
