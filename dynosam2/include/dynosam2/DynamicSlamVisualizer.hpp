@@ -27,7 +27,12 @@ class DynamicSlamVisualizer {
   /// @param display_queue
   void setDisplayQueue(dyno::ImageDisplayQueue* display_queue);
 
-  /// @brief Draw images from the image displayer (if set) using OpenCV
+  /// @brief Adds an image display to the ImageBatchDisplayer. Must be called
+  /// after setDisplayQueue.
+  /// @param display
+  void addImageDisplay(dyno::ImageDisplay::Ptr display);
+
+  /// @brief Draw images from the image displayer (if set).
   void displayImages();
 
  protected:
@@ -54,7 +59,7 @@ class DynamicSlamVisualizer {
   //! ROS style frame ids for output frames
   dyno::ReferenceFrames reference_frames_;
 
-  dyno::ImageDisplayer::UniquePtr image_displayer_{nullptr};
+  dyno::ImageBatchDisplayer::UniquePtr image_displayer_{nullptr};
 
   // keep the camera in robot coordinate frame, not estimated (camera) frame
   dyno::PoseTrajectory camera_trajectory_;

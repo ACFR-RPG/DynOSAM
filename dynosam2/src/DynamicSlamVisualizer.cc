@@ -11,7 +11,16 @@ DynamicSlamVisualizer::DynamicSlamVisualizer(
 
 void DynamicSlamVisualizer::setDisplayQueue(
     dyno::ImageDisplayQueue* display_queue) {
-  image_displayer_ = std::make_unique<dyno::ImageDisplayer>(display_queue);
+  image_displayer_ = std::make_unique<dyno::ImageBatchDisplayer>(display_queue);
+}
+
+void DynamicSlamVisualizer::addImageDisplay(dyno::ImageDisplay::Ptr display) {
+  if (image_displayer_) {
+    image_displayer_->addDisplay(display);
+  } else {
+    LOG(WARNING) << "Attempting to add ImageDisplay to DynamicSlamVisualizer, "
+                    "but setDisplayQueue has not been called!";
+  }
 }
 
 void DynamicSlamVisualizer::displayImages() {

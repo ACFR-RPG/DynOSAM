@@ -2,6 +2,7 @@
 
 #include <pcl/common/transforms.h>
 
+#include "cv_bridge/cv_bridge.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_ros_common/RosUtils.hpp"
 
@@ -23,6 +24,29 @@ static Marker poseToObjectArrow(const gtsam::Pose3& T_WR,
                                 const double scale = 0.15,
                                 const double line_width = 0.1,
                                 const std::string& ns = "object_frustum");
+
+void RosImageDisplayer::setupImageTopic(const std::string& name) {
+  image_transports_[name] = std::shared_ptr<image_transport::ImageTransport>(
+      new image_transport::ImageTransport(node_));
+
+  pub_images_[name] = image_transports_.at(name)->advertise(name, 1);
+  LOG(INFO) << "Setting up image topic to display on name: " << name;
+}
+
+void RosImageDisplayer::display(const std::vector<ImageToDisplay>& images) {
+  for (const auto& image_to_display : images) {
+    const std::string& name = image_to_display.name_;
+    const auto& it = pub_images_.find(name);
+    // only display those we have setup topics for?
+    if (it != pub_images_.end()) {
+      sensor_msgs::msg::Image::SharedPtr msg =
+          cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8",
+                             image_to_display.image_)
+              .toImageMsg();
+      it->second.publish(msg);
+    }
+  }
+}
 
 DynamicSlamVisualizerRos::DynamicSlamVisualizerRos(
     rclcpp::Node::SharedPtr node, dyno::CanonicalSensorRig::Ptr sensor_rig,

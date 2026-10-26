@@ -162,9 +162,8 @@ class FeatureTracker {
   GfttDetector feature_detector_;
   ObjectDetectionImpl object_detection_impl_;
   //! Sparse LK tracker
-  OpticalFlowLK_CPU optical_flow_impl_;
-
-  // OpticalFlowLK_GPU optical_flow_impl_;
+  // OpticalFlowLK_CPU optical_flow_impl_;
+  OpticalFlowLK_GPU optical_flow_impl_;
 
   // Cached camera matrices
   cv::Matx33f K_cv_;

@@ -10,9 +10,11 @@
 #include "dynosam2/DynamicSlamVisualizer.hpp"
 #include "dynosam2/common/DynamicSlamInterface.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_processing/ImageViewer.hpp"
 #include "dynosam_processing/PipelineBase.hpp"
 #include "dynosam_ros_common/RosUtils.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+#include "image_transport/image_transport.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -50,6 +52,23 @@ class DynamicSlamVisualizerRosBase : public DynamicSlamVisualizer,
 
 using MarkerArray = visualization_msgs::msg::MarkerArray;
 using Marker = visualization_msgs::msg::Marker;
+
+/// @brief Displays images coming from the ImageDisplayQueue to ROS
+class RosImageDisplayer : public ImageDisplay {
+ public:
+  RosImageDisplayer(rclcpp::Node::SharedPtr node) : node_(node) {}
+  void display(const std::vector<ImageToDisplay>& images) override;
+
+  // We will only publish topics we have a name for?
+  void setupImageTopic(const std::string& name);
+
+ private:
+  rclcpp::Node::SharedPtr node_;
+  std::unordered_map<std::string,
+                     std::shared_ptr<image_transport::ImageTransport>>
+      image_transports_;
+  std::unordered_map<std::string, image_transport::Publisher> pub_images_;
+};
 
 class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
  public:

@@ -122,13 +122,22 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   viz_ = std::make_shared<DynamicSlamVisualizerRos>(
       viz_node, sensor_rig, &estimator, &publication_queue_);
 
+  dyno::ImageDisplayQueue* display_queue = &display_queue_;
   viz_->parallelRun(kRunParallel);
   // enable image displayer
-  viz_->setDisplayQueue(&display_queue_);
+  viz_->setDisplayQueue(display_queue);
+  viz_->addImageDisplay(std::make_shared<SmartOpenCvDisplayer>());
+
+  // ROS image displayer that will use images pulled from the display_queue
+  auto ros_image_displayer = std::make_shared<RosImageDisplayer>(viz_node);
+  // matches name currently in DynamicSLAM
+  // eventually maybe the DynamicSlamVisualizerRos will draw some images too?
+  ros_image_displayer->setupImageTopic("Tracks");
+  viz_->addImageDisplay(ros_image_displayer);
 
   // connect pipeline to viz
   slam_->setPublicationQueue(&publication_queue_);
-  slam_->setImageDisplayQueue(&display_queue_);
+  slam_->setImageDisplayQueue(display_queue);
 
   viz_spinner_ = std::make_unique<dyno::Spinner>(
       std::bind(&DynamicSlamVisualizerRos::spin, viz_.get()),
@@ -151,8 +160,8 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
       context->shutdown("Dynosam2 pipeline has finished processing all data");
     }
 
-    // do cv display
-    // viz_->displayImages();
+    // do display
+    viz_->displayImages();
   };
 
   // so that all process is encapsulated within this class we use a timer

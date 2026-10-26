@@ -196,7 +196,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   features.reduceToInliersInplace();
 
-  pushImageToDisplayQueue("rgb", features.draw(rgb, true));
+  pushImageToDisplayQueue("Tracks", features.draw(rgb, true));
   pushPublicationDataToQueue(publication_data);
 
   return nullptr;
