@@ -866,6 +866,17 @@ class LandmarkNodeBase {
     return getMeasurement(frame);
   }
 
+  bool getMeasurement(FrameId frame_id, M& m) const {
+    const auto frames = asDerived().getSeenFrames();
+    auto it = frames.find(frame_id);
+    if (it == frames.end()) {
+      return false;
+    }
+
+    m = measurements_.at(*it);
+    return true;
+  }
+
   const Frames& getSeenFrames() const { return frames_; }
   Frames& getSeenFrames() { return frames_; }
 

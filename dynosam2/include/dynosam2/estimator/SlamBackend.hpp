@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <unordered_map>
 
 #include "dynosam2/estimator/DoGraph.hpp"
@@ -52,12 +53,26 @@ class SlamBackend {
 
   // all VoStates should have a timestamp?
 
+  // add to full problem!
+  void addStaticMeasurements(
+      const std::vector<KeypointIdentifier>& vo_measurements) {
+    full_estimator_.addStaticMeasurements(vio_estimator_, vo_measurements);
+  }
+
+  inline bool needsFullGraphOptimisation() const {
+    return needs_full_graph_opt_;
+  }
+
  private:
   dyno::Camera::Ptr camera_;
   //! Local realtime vio estimator and holder of all valid states
   VioGraphEstimator vio_estimator_;
-  std::unordered_map<dyno::ObjectId, DoGraphEstimator> object_estimators_;
   FullGraph full_estimator_;
+  std::unordered_map<dyno::ObjectId, DoGraphEstimator> object_estimators_;
+
+  std::atomic_bool is_running_full_opt_;
+  // TODO: needs sync...
+  std::atomic_bool needs_full_graph_opt_;
 };
 
 };  // namespace dyno2

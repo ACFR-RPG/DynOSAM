@@ -120,14 +120,16 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   std::vector<dyno::FrameId>& updated_vo_states =
       publication_data->updated_states.vo;
 
+  // vector of keypoints which had measurements added to the bundle adjustment
+  std::vector<KeypointIdentifier> vo_measurements_added;
   dyno::utils::ChronoTimingStats solve_t("slam.solve");
   tbb::task_group group;
   group.run([&] {
     dyno::utils::ChronoTimingStats vo_t("slam.vo");
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-    frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
-                                  async_context, updated_vo_states, vo_success,
-                                  *image_container);
+    frontend_.solveVisualOdometry(
+        vio_estimator, features, *vo_geometry, async_context, updated_vo_states,
+        vo_measurements_added, vo_success, *image_container);
   });
 
   const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
@@ -162,10 +164,20 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       publication_data->do_tracking_states;
 
   if (vo_success) {
-    VioGraphEstimator& estimator = estimator_.vioEstimator();
-    vi_tracking_state.is_keyframe = estimator.isKeyframe(frame_id);
-    // prune keyframes
-    estimator.pruneKeyframes(5, 3);
+    // VioGraphEstimator& estimator = estimator_.vioEstimator();
+    // vi_tracking_state.is_keyframe = estimator.isKeyframe(frame_id);
+    // // prune keyframes
+    // estimator.pruneKeyframes(5, 3);
+  }
+
+  VioGraphEstimator& estimator = estimator_.vioEstimator();
+  vi_tracking_state.is_keyframe = estimator.isKeyframe(frame_id);
+  // prune keyframes
+  estimator.pruneKeyframes(5, 3);
+
+  if (vi_tracking_state.is_keyframe) {
+    // add to full problem!
+    estimator_.addStaticMeasurements(vo_measurements_added);
   }
 
   for (size_t i = 0; i < num_objects; i++) {

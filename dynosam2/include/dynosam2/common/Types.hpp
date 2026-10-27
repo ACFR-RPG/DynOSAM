@@ -20,6 +20,11 @@ struct Velocity3 {
   Eigen::Vector3d angular;
 };
 
+struct UpdatedStates {
+  std::vector<dyno::FrameId> vo;
+  std::vector<dyno::TemporalObjectIdentifier> objects;
+};
+
 class LandmarkMap {
  public:
   typedef std::unordered_map<dyno::TrackletId, Index> TrackletIndices;

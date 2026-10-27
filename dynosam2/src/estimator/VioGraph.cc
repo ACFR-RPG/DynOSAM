@@ -34,10 +34,11 @@ void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
 
 VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
                                                  const gtsam::Pose3& pose) {
-  const dyno::FrameId frame_id = frame->getFrameId();
-  CHECK(!frames_.exists(frame_id));
-  frames_[frame_id] = frame;
+  const dyno::TemporalObjectIdentifier id = frame->temporalObjectId();
+  CHECK(!frames_.exists(id));
+  frames_[id] = frame;
 
+  const dyno::FrameId frame_id = id.frame_id;
   VioGraphState& state = this->state(frame_id);
   state.timestamp = frame->timestamp;
   state.frame_id = frame_id;

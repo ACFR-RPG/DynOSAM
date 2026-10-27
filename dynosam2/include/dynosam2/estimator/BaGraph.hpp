@@ -118,6 +118,16 @@ class BaGraph {
     return this->hasMeasurement(kpi.frameId(), kpi.trackletId());
   }
 
+  inline bool getMeasurement(const dyno::KeypointIdentifier& kpi,
+                             StereoMeasurement& measurement) const {
+    auto lmk_node = observations_->getLandmark(kpi.trackletId());
+    if (!lmk_node) {
+      return false;
+    }
+
+    return lmk_node->getMeasurement(kpi.frameId(), measurement);
+  }
+
   const StereoBaMap& getObservations() const { return *observations_; }
 
   // Measurement frames, not frames in the BaMeasurementGraph
@@ -145,7 +155,7 @@ class BaGraph {
   int covisibilities(dyno::FrameId frame_i, dyno::FrameId frame_j) const;
 
  protected:
-  inline Frame::Ptr getFrame(dyno::FrameId id) const {
+  inline Frame::Ptr getFrame(dyno::TemporalObjectIdentifier id) const {
     auto it = frames_.find(id);
     if (it == frames_.end()) {
       return nullptr;
@@ -154,7 +164,7 @@ class BaGraph {
   }
 
   template <typename FRAME>
-  std::shared_ptr<FRAME> getFrameAs(dyno::FrameId id) const {
+  std::shared_ptr<FRAME> getFrameAs(dyno::TemporalObjectIdentifier id) const {
     Frame::Ptr frame = this->getFrame(id);
     return std::static_pointer_cast<FRAME>(frame);
   }
@@ -190,8 +200,8 @@ class BaGraph {
   //! All frames added so far. Holds all keypoints.
   //! We use a TemporalObjectIdentifier rather than a frame_id so we can use
   //! this same structure to hold ViFrames and DoFrames
-  // dyno::FastUnorderedMap<dyno::TemporalObjectIdentifier, Frame::Ptr> frames_;
-  dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
+  dyno::FastUnorderedMap<dyno::TemporalObjectIdentifier, Frame::Ptr> frames_;
+  // dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
 };
 
 class BaProblemInterface {

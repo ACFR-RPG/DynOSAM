@@ -3,7 +3,12 @@
 namespace dyno2 {
 
 SlamBackend::SlamBackend(dyno::Camera::Ptr camera)
-    : camera_(camera), vio_estimator_(camera), object_estimators_() {}
+    : camera_(camera),
+      vio_estimator_(camera),
+      full_estimator_(camera_),
+      object_estimators_(),
+      is_running_full_opt_(false),
+      needs_full_graph_opt_(false) {}
 
 DoGraphEstimator& SlamBackend::allocateDoEstimator(dyno::ObjectId object_id) {
   CHECK(!hasObjectEstimator(object_id));

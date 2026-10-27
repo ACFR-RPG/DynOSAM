@@ -175,6 +175,7 @@ if(BUILD_TESTING)
     test/test_feature_block_container.cc
     test/test_optical_flow_benchmark.cc
     test/test_concepts.cc
+    test/test_types.cc
 )
 
   target_include_directories(${PROJECT_NAME}_test

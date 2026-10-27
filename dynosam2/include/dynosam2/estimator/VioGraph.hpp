@@ -35,14 +35,17 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   VioGraph(dyno::Camera::Ptr camera);
   virtual ~VioGraph() = default;
 
+  // get landmark in estimated reference frame not map frame
+  using LandmarkMap::getLandmark;
+
   void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose);
   void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
                        const Velocity3& velocity_W);
 
   inline ViFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
-    // return this->getFrameAs<ViFrame>(dyno::TemporalObjectIdentifier{frame_id,
-    // dyno::background_label});
-    return this->getFrameAs<ViFrame>(frame_id);
+    return this->getFrameAs<ViFrame>(
+        dyno::TemporalObjectIdentifier{frame_id, dyno::background_label});
+    // return this->getFrameAs<ViFrame>(frame_id);
   }
 
   void setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose);

@@ -38,7 +38,9 @@ class Frontend {
                            FeatureBlockContainer& features,
                            FeatureBlockGeometry& geometry,
                            AyncVO& async_context,
-                           std::vector<FrameId>& frames_updated, bool& success,
+                           std::vector<FrameId>& frames_updated,
+                           std::vector<KeypointIdentifier>& new_measurements,
+                           bool& success,
                            const ImageContainer& image_container);
 
   void solveObjectOdometry(
@@ -58,10 +60,12 @@ class Frontend {
    *
    * @param estimator
    * @param frames
-   * @param frame
+   * @param frame'
+   * @param new_measurements
    * @return size_t
    */
-  size_t matchToVioMap(VioGraphEstimator& estimator, ViFrame::Ptr frame);
+  size_t matchToVioMap(VioGraphEstimator& estimator, ViFrame::Ptr frame,
+                       std::vector<KeypointIdentifier>& new_measurements);
 
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,

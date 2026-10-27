@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dynosam2/common/StateEstimate.hpp"
+#include "dynosam2/common/Types.hpp"
 #include "dynosam_common/ModuleBase.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
@@ -10,11 +11,6 @@
 #include "dynosam_sensors/VIFrontendInput.hpp"
 
 namespace dyno2 {
-
-struct UpdatedStates {
-  std::vector<dyno::FrameId> vo;
-  std::vector<dyno::TemporalObjectIdentifier> objects;
-};
 
 /// @brief Realtime publishing data struct.
 struct PublicationData {

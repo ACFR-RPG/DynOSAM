@@ -45,9 +45,9 @@ class DoGraph : public BaGraphStates<DOGraphState> {
                                 const gtsam::Pose3 X_W_i);
 
   inline DoFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
-    // return this->getFrameAs<DoFrame>(dyno::TemporalObjectIdentifier{frame_id,
-    // object_id_});
-    return this->getFrameAs<DoFrame>(frame_id);
+    return this->getFrameAs<DoFrame>(
+        dyno::TemporalObjectIdentifier{frame_id, object_id_});
+    // return this->getFrameAs<DoFrame>(frame_id);
   }
 
   void setRegularKeyframe(dyno::FrameId frame_id);

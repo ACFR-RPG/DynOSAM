@@ -47,13 +47,12 @@ void Frontend::detectAndTrack(FeatureBlockContainer*& features_out,
   object_detection_out = tracking_result.object_detection;
 }
 
-void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
-                                   FeatureBlockContainer& features,
-                                   FeatureBlockGeometry& geometry,
-                                   AyncVO& async_context,
-                                   std::vector<FrameId>& frames_updated,
-                                   bool& success,
-                                   const ImageContainer& image_container) {
+void Frontend::solveVisualOdometry(
+    VioGraphEstimator& estimator, FeatureBlockContainer& features,
+    FeatureBlockGeometry& geometry, AyncVO& async_context,
+    std::vector<FrameId>& frames_updated,
+    std::vector<KeypointIdentifier>& new_measurements, bool& success,
+    const ImageContainer& image_container) {
   dyno::utils::ChronoTimingStats vo_t("frontend.vo");
 
   const FrameId frame_id = image_container.frameId();
@@ -160,12 +159,14 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   // we now have an initial pose
   std::vector<dyno::TrackletId> observation_ids;
   observation_ids.reserve(adapter.getNumberCorrespondences());
+  new_measurements.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
   // this will help with the BA to get intermediate frame measurements
   for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
     TrackletId id = adapter.trackletId(idx);
     if (adapter.isInlier(idx) && estimator.landmarkExists(id)) {
       observation_ids.push_back(id);
+      new_measurements.emplace_back(frame_id, id, dyno::background_label);
     }
   }
   // all measurements are for the same frame use this function call which runs a
@@ -196,7 +197,8 @@ void Frontend::solveVisualOdometry(VioGraphEstimator& estimator,
   if (should_be_keyframe) {
     // initlaise new points in the map by attempting to triangulate points
     // at all active keyframes
-    const size_t init_triangulation = matchToVioMap(estimator, vi_frame);
+    const size_t init_triangulation =
+        matchToVioMap(estimator, vi_frame, new_measurements);
     LOG(INFO) << "Init triangulation: " << init_triangulation;
     estimator.setKeyframe(frame_id, true);
   }
@@ -475,8 +477,9 @@ struct StereoMeasurementFiller {
   }
 };
 
-size_t Frontend::matchToVioMap(VioGraphEstimator& estimator,
-                               ViFrame::Ptr frame) {
+size_t Frontend::matchToVioMap(
+    VioGraphEstimator& estimator, ViFrame::Ptr frame,
+    std::vector<KeypointIdentifier>& new_measurements) {
   const size_t num_threads = std::max(1u, std::thread::hardware_concurrency());
   const size_t num_tracklets = frame->numKeypoints();
   const size_t chunk_size = (num_tracklets + num_threads - 1) / num_threads;
@@ -579,6 +582,8 @@ size_t Frontend::matchToVioMap(VioGraphEstimator& estimator,
     }
   }
   estimator.addMeasurements(observations);
+  new_measurements.insert(new_measurements.begin(), observations.begin(),
+                          observations.end());
   triangulate_t.stop();
 
   return observations.size();

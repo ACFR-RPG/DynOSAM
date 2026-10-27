@@ -25,10 +25,10 @@ DoGraph::DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
 }
 
 FrameId DoGraph::initaliseFrame(DoFrame::Ptr frame) {
-  const dyno::FrameId frame_id = frame->getFrameId();
-  CHECK(!frames_.exists(frame_id));
-  frames_[frame_id] = frame;
-  return frame_id;
+  const dyno::TemporalObjectIdentifier id = frame->temporalObjectId();
+  CHECK(!frames_.exists(id));
+  frames_[id] = frame;
+  return id.frame_id;
 }
 
 void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,

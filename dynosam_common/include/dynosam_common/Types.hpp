@@ -46,6 +46,7 @@
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Flags.hpp"  //for common glags DECLARATIONS
 #include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
 
 /** \mainpage C++ API documentation
  *  DynoSAM is a C++ library for Dynamic Visual SLAM.
@@ -947,6 +948,21 @@ template <typename T>
 struct underlying_type<dyno::Flags<T>> {
   using type = typename dyno::Flags<T>::Storage;
 };
+
+template <>
+struct hash<dyno::KeypointIdentifier> {
+  std::size_t operator()(const dyno::KeypointIdentifier& id) const {
+    return dyno::hashTriplet(id.frameId(), id.trackletId(), id.objectId());
+  }
+};
+
+template <>
+struct hash<dyno::TemporalObjectIdentifier> {
+  std::size_t operator()(const dyno::TemporalObjectIdentifier& id) const {
+    return dyno::hashPair(std::make_pair(id.frame_id, id.object_id));
+  }
+};
+
 }  // namespace std
 
 #include "dynosam_common/SensorModels.hpp"
