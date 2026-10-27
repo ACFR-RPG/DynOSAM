@@ -54,7 +54,7 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
             return;
           }
           // TODO: is this going to add substantial delay?
-          dyno::TimingStats t("subscriber.imu");
+          dyno::utils::ChronoTimingStats t("subscriber.imu");
           imu_single_input_callback_(imu);
         },
         imu_sub_options);
@@ -143,10 +143,10 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
   const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
   images_received_.at(stream_index)[toNSec(timestamp)] = msg;
 
-  dyno::TimingStats t("subscriber.image");
+  dyno::utils::ChronoTimingStats t("subscriber.image_cb");
 
   // try sync
-  std::lock_guard<std::mutex> lock(time_mutex_);
+  // std::lock_guard<std::mutex> lock(time_mutex_);
   std::set<uint64_t> all_times;
   const int num_streams = images_received_.size();
   for (int i = 0; i < num_streams; ++i) {
@@ -203,6 +203,8 @@ bool Subscriber::addImages(Timestamp timestamp,
   if (!image_container_callback_) {
     return false;
   }
+
+  dyno::utils::ChronoTimingStats t("subscriber.add_images");
 
   std::map<size_t, cv::Mat> images;
   for (const auto& [i, msg] : image_msgs) {

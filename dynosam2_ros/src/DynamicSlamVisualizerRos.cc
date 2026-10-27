@@ -46,7 +46,7 @@ void RosImageDisplayer::display(const std::vector<ImageToDisplay>& images) {
     if (it != pub_images_.end()) {
       sensor_msgs::msg::Image::SharedPtr msg =
           cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8",
-                             image_to_display.image_)
+                             image_to_display.image_.clone())
               .toImageMsg();
       it->second.publish(msg);
     }

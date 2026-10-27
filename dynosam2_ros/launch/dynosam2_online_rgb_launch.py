@@ -49,6 +49,7 @@ def generate_launch_description():
                     {"base_frame": "camera_link"},
                     {"odom_frame": "odom"},
                     {"depth_scale": 0.001},
+                    # {"depth_scale": 1.0},
                     {"v": LaunchConfiguration("v")}
                 ],
                 remappings=[

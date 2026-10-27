@@ -27,6 +27,10 @@ class GeometryUpdater {
   void updateGeometryRGBD(FeatureBlockGeometry& feature_block_geometry);
   void updateGeometryStereo(FeatureBlockGeometry& feature_block_geometry);
 
+  inline bool checkRGBDGeometry(const double depth) const {
+    return std::isfinite(depth) && depth > 0.0;
+  }
+
   // NOTE: keypoint sigma approximates the angular uncertainty
   //  of the pixel measurement (ie the ray can be anyway along the cone created
   //  by the sigma size)
@@ -36,7 +40,7 @@ class GeometryUpdater {
                                    const gtsam::Point2& left_kp,
                                    const gtsam::Point2& right_kp,
                                    double max_reprojection_error = 2.0,
-                                   double keypoint_sigma = 1.0) {
+                                   double keypoint_sigma = 1.0) const {
     // Reject points that are too close to either camera.
     constexpr double min_depth = 0.2;
     if (!point.allFinite() || point.z() <= min_depth) {

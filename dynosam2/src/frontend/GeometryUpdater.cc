@@ -91,6 +91,11 @@ void GeometryUpdater::calcPointsRGBD(
 
       const Depth depth = depth_img.at<Depth>(kp_cv);
 
+      if (!checkRGBDGeometry(depth)) {
+        inliers[i] = 0;
+        continue;
+      }
+
       const gtsam::Point2 left_kp = utils::cvPointToGtsam(kp_cv);
       const gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
 
@@ -263,6 +268,11 @@ void GeometryUpdater::updateGeometryRGBD(
     const gtsam::Point2 left_kp = feature_block_geometry.left_kps[i];
     const Depth depth =
         depth_img.at<Depth>(utils::gtsamPointToCv<float>(left_kp));
+
+    if (!checkRGBDGeometry(depth)) {
+      features_.inlier[i] = 0;
+      continue;
+    }
 
     const gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
 
