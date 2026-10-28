@@ -17,5 +17,5 @@ struct KeypointIdentifierHash {
 
 TEST(BaGraph, test) {
   // std::unordered_map<dyno::KeypointIdentifier, int> frames;
-  dyno::FastUnorderedMap<dyno::TemporalObjectIdentifier, Frame::Ptr> frames;
+  dyno::FastUnorderedMap<dyno::TemporalObjectId, Frame::Ptr> frames;
 }

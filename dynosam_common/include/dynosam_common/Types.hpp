@@ -221,28 +221,50 @@ constexpr static ObjectId background_label = 0u;
 // TODO: really should use this class a lot more but was only recently
 // introduced (~April 2026)
 //  ie in the object frame generic map raher than using nested maps!
-struct TemporalObjectIdentifier {
-  TemporalObjectIdentifier() : frame_id(0), object_id(background_label) {}
-
-  TemporalObjectIdentifier(FrameId fi = 0, ObjectId oi = background_label)
-      : frame_id(fi), object_id(oi) {}
-
+struct TemporalObjectId {
   FrameId frame_id;
   ObjectId object_id;
 
+  TemporalObjectId() : frame_id(0), object_id(background_label) {}
+
+  explicit TemporalObjectId(FrameId fi = 0, ObjectId oi = background_label)
+      : frame_id(fi), object_id(oi) {}
+
+  inline FrameId frameId() const noexcept { return frame_id; }
+  inline ObjectId objectId() const noexcept { return object_id; }
+
   bool isBackground() const { return object_id == background_label; }
 
-  bool operator==(const TemporalObjectIdentifier& other) const noexcept {
+  bool operator==(const TemporalObjectId& other) const noexcept {
     return object_id == other.object_id && frame_id == other.frame_id;
   }
 
-  bool operator<(const TemporalObjectIdentifier& other) const noexcept {
-    return std::tie(object_id, frame_id) <
-           std::tie(other.object_id, other.frame_id);
+  /// @brief Comparator that orders primarily by frame id
+  struct FrameOrderedComparator {
+    bool operator()(const TemporalObjectId& a,
+                    const TemporalObjectId& b) const noexcept {
+      return std::tie(a.frame_id, a.object_id) <
+             std::tie(b.frame_id, b.object_id);
+    }
+  };
+
+  /// @brief Comparator that orders primarily by object id
+  struct ObjectOrderedComparator {
+    bool operator()(const TemporalObjectId& a,
+                    const TemporalObjectId& b) const noexcept {
+      return std::tie(a.object_id, a.frame_id) <
+             std::tie(b.object_id, b.frame_id);
+    }
+  };
+
+  /// @brief Frame ordered comparison
+  /// @param other
+  /// @return
+  bool operator<(const TemporalObjectId& other) const noexcept {
+    return FrameOrderedComparator()(*this, other);
   }
 
-  friend std::ostream& operator<<(std::ostream& os,
-                                  const TemporalObjectIdentifier& t) {
+  friend std::ostream& operator<<(std::ostream& os, const TemporalObjectId& t) {
     os << "[frame id: " << t.frame_id << " ";
     os << "object id: " << t.object_id << "]";
     return os;
@@ -254,16 +276,15 @@ struct KeypointIdentifier {
   TrackletId id;
   ObjectId object;
 
-  KeypointIdentifier(FrameId fi = 0, TrackletId ti = 0, ObjectId o = 0)
+  explicit KeypointIdentifier(FrameId fi = 0, TrackletId ti = 0, ObjectId o = 0)
       : frame(fi), id(ti), object(o) {}
 
   inline FrameId frameId() const noexcept { return frame; }
   inline TrackletId trackletId() const noexcept { return id; }
   inline ObjectId objectId() const noexcept { return object; }
 
-  inline dyno::TemporalObjectIdentifier temoralObjectIdentifier()
-      const noexcept {
-    return dyno::TemporalObjectIdentifier(frame, object);
+  inline dyno::TemporalObjectId temoralObjectIdentifier() const noexcept {
+    return dyno::TemporalObjectId(frame, object);
   }
 
   bool operator==(const KeypointIdentifier& other) const noexcept {
@@ -957,8 +978,8 @@ struct hash<dyno::KeypointIdentifier> {
 };
 
 template <>
-struct hash<dyno::TemporalObjectIdentifier> {
-  std::size_t operator()(const dyno::TemporalObjectIdentifier& id) const {
+struct hash<dyno::TemporalObjectId> {
+  std::size_t operator()(const dyno::TemporalObjectId& id) const {
     return dyno::hashPair(std::make_pair(id.frame_id, id.object_id));
   }
 };

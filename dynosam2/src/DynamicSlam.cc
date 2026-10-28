@@ -151,7 +151,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   solve_t.stop();
   doo_t.stop();
 
-  std::vector<dyno::TemporalObjectIdentifier>& objects_with_update =
+  std::vector<dyno::TemporalObjectId>& objects_with_update =
       publication_data->updated_states.objects;
 
   // tracking state information
@@ -177,7 +177,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   if (vi_tracking_state.is_keyframe) {
     // add to full problem!
-    estimator_.addStaticMeasurements(vo_measurements_added);
+    // estimator_.addStaticMeasurements(vo_measurements_added);
   }
 
   for (size_t i = 0; i < num_objects; i++) {
@@ -202,6 +202,17 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     do_tracking_states.back().keyframe_type =
         estimator.keyframeStatus(frame_id);
   }
+
+  // if(estimator_.needsFullGraphOptimisation()) {
+  //   LOG(INFO) << "Starting full graph optimisation";
+  //   estimator_.startFullGraphOptimisation();
+  // }
+
+  // if(estimator_.updateAvaialbleFromFullGraph()) {
+  //   LOG(INFO) << "Update availanble from full graph!";
+  //   UpdatedStates involved_states;
+  //   estimator_.synchroniseRealtimeAndFullGraph(involved_states);
+  // }
 
   const dyno::WrappedRGBMono wrapped_rgb = image_container->rgb();
   const cv::Mat rgb = wrapped_rgb.image();

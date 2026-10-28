@@ -433,7 +433,8 @@ struct StereoMeasurementFiller {
   using GtsamCamera = dyno::Camera::CameraImpl;
 
   StereoMeasurementFiller(const dyno::Camera::Ptr& camera)
-      : left_Pose_right(Extrinsics(camera)), mono_cal(Calibration(camera)) {}
+      : left_Pose_right(dyno::RGBDCamera::StereoExtrinsics(camera)),
+        mono_cal(dyno::Camera::Calibration(camera)) {}
 
   bool fill(dyno::TrackletId id, gtsam::CameraSet<GtsamCamera>& camera_set,
             gtsam::Point2Vector& measurements, const ViFrame::Ptr& frame_k,
@@ -458,22 +459,6 @@ struct StereoMeasurementFiller {
     }
 
     return true;
-  }
-
-  static gtsam::Pose3 Extrinsics(const dyno::Camera::Ptr& camera) {
-    std::shared_ptr<dyno::RGBDCamera> rgbd_camera = camera->safeGetRGBDCamera();
-    StereoCalibPtr K_stereo = rgbd_camera->getFakeStereoCalib();
-    CHECK_NOTNULL(K_stereo);
-    return gtsam::Pose3(gtsam::Rot3(),
-                        gtsam::Point3(K_stereo->baseline(), 0.0, 0.0));
-  }
-
-  static gtsam::Cal3_S2 Calibration(const dyno::Camera::Ptr& camera) {
-    std::shared_ptr<dyno::RGBDCamera> rgbd_camera = camera->safeGetRGBDCamera();
-    StereoCalibPtr K_stereo = rgbd_camera->getFakeStereoCalib();
-    CHECK_NOTNULL(K_stereo);
-    const gtsam::Cal3_S2& mono_cal = K_stereo->calibration();
-    return mono_cal;
   }
 };
 

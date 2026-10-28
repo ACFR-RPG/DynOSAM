@@ -15,17 +15,10 @@
 namespace dyno2 {
 
 DoGraph::DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
-    : object_id_(object_id) {
-  std::shared_ptr<dyno::RGBDCamera> rgbd_camera =
-      CHECK_NOTNULL(camera->safeGetRGBDCamera());
-  K_stereo_ = rgbd_camera->getFakeStereoCalib();
-  CHECK_NOTNULL(K_stereo_);
-
-  K_ = camera->getGtsamCalibration();
-}
+    : Base(camera), object_id_(object_id) {}
 
 FrameId DoGraph::initaliseFrame(DoFrame::Ptr frame) {
-  const dyno::TemporalObjectIdentifier id = frame->temporalObjectId();
+  const dyno::TemporalObjectId id = frame->temporalObjectId();
   CHECK(!frames_.exists(id));
   frames_[id] = frame;
   return id.frame_id;
@@ -36,10 +29,11 @@ void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
   const dyno::FrameId frame_id = maybeInitaliseFrame(do_frame);
   // update anchor point we are estimating relative to!
   DOGraphState& state = this->state(frame_id);
-  state.state.motion = dyno::Motion3ReferenceFrame(
+  state.timestamp = do_frame->timestamp;
+  state.H_W_km1_k = dyno::Motion3ReferenceFrame(
       gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::F2F,
       dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
-  state.state.pose = L;
+  state.L_W_k = L;
   state.keyframe_status = dyno::DoKeyframeType::AnchorKeyFrame;
   state.H_W_KF_k = dyno::Motion3ReferenceFrame(
       gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::KF,
@@ -62,7 +56,7 @@ void DoGraph::initalizeStatesPropogate(
   const dyno::FrameId frame_j = initaliseFrame(do_frame_j);
   // state i
   const DOGraphState& last_state = lastState();
-  const dyno::FrameId frame_i = last_state.state.motion.to();
+  const dyno::FrameId frame_i = last_state.frameId();
   CHECK_EQ(frame_i, G_i_ij.from());
   CHECK_EQ(frame_i, last_state.H_W_KF_k.to());
 
@@ -73,14 +67,15 @@ void DoGraph::initalizeStatesPropogate(
       H_W_ij_pose, dyno::MotionRepresentationStyle::F2F,
       dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
 
-  gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.state.pose);
+  gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.L_W_k);
 
   // in effect we dont use A_KF for anything except when we compute it for
   // optimisation store everything as pose!
   CHECK(!stateExists(frame_j));
   DOGraphState& state = this->state(frame_j);
-  state.state.pose = L_W_j;
-  state.state.motion = H_W_ij;
+  state.timestamp = do_frame_j->timestamp;
+  state.L_W_k = L_W_j;
+  state.H_W_km1_k = H_W_ij;
   // propogate using the frame-to-frame motion to construct a motion chain
   // from the anchor frame to the current frame
   gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
@@ -112,7 +107,7 @@ bool DoGraph::getLandmark(dyno::TrackletId id, dyno::FrameId frame_id,
   }
 
   const dyno::Landmark& lmk_L = LandmarkMap::landmarkAt(it->second);
-  const gtsam::Pose3 L_W_k = getPoseWithMotion(frame_id).pose;
+  const gtsam::Pose3 L_W_k = getPose(frame_id);
   const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
 
   map_point = MapPoint{lmk_W_k, object_id_, id};
@@ -121,7 +116,7 @@ bool DoGraph::getLandmark(dyno::TrackletId id, dyno::FrameId frame_id,
 
 size_t DoGraph::getLandmarks(dyno::FrameId frame_id,
                              MapPointVector& map_points) const {
-  const gtsam::Pose3 L_W_k = getPoseWithMotion(frame_id).pose;
+  const gtsam::Pose3 L_W_k = getPose(frame_id);
   if (LandmarkMap::isContiguous()) {
     const size_t n = LandmarkMap::size();
     map_points = MapPointVector(LandmarkMap::size());
@@ -146,11 +141,6 @@ size_t DoGraph::getLandmarks(dyno::FrameId frame_id,
   return map_points.size();
 }
 
-const dyno::PoseWithMotion& DoGraph::getPoseWithMotion(
-    dyno::FrameId frame_id) const {
-  return states_.at(frame_id).state;
-}
-
 const dyno::Motion3ReferenceFrame& DoGraph::keyframeMotion(
     dyno::FrameId frame_id) const {
   return states_.at(frame_id).H_W_KF_k;
@@ -161,29 +151,64 @@ dyno::DoKeyframeType DoGraph::keyframeStatus(dyno::FrameId frame_id) const {
 }
 
 const gtsam::Pose3& DoGraph::anchorPose(dyno::FrameId frame_id) const {
-  const dyno::FrameId anchor = states_.at(frame_id).H_W_KF_k.from();
-  return states_.at(anchor).state.pose;
+  const dyno::FrameId anchor = states_.at(frame_id).anchorFrameId();
+  return getPose(anchor);
 }
 
 const gtsam::Pose3& DoGraph::getPose(dyno::FrameId frame_id) const {
-  return states_.at(frame_id).state.pose;
+  return states_.at(frame_id).L_W_k;
+}
+
+const dyno::Motion3ReferenceFrame& DoGraph::getMotion(
+    dyno::FrameId frame_id) const {
+  return states_.at(frame_id).H_W_km1_k;
+}
+
+const Velocity3& DoGraph::getVelocity(dyno::FrameId frame_id) const {
+  return states_.at(frame_id).velocity_W;
 }
 
 FrameId DoGraph::maybeInitaliseFrame(DoFrame::Ptr frame) {
-  const dyno::FrameId frame_id = frame->getFrameId();
-  auto it = frames_.find(frame_id);
+  const dyno::TemporalObjectId toi = frame->temporalObjectId();
+
+  if (toi.objectId() != object_id_) {
+    DYNO_THROW_MSG(dyno::DynosamException)
+        << "Attempt to add DoFrame at " << toi
+        << " but existing object id and incoming frame do not match!";
+    throw;
+  }
+
+  auto it = frames_.find(toi);
   if (it == frames_.end()) {
-    frames_[frame_id] = frame;
+    frames_[toi] = frame;
   } else {
     // incoming is not the same (by pointer!) as the stored one!
     if (frame != it->second) {
       DYNO_THROW_MSG(dyno::DynosamException)
-          << "Attempt to add DoFrame at " << frame_id
+          << "Attempt to add DoFrame at " << toi
           << " but existing frame and incoming frame do not match!";
       throw;
     }
   }
-  return frame_id;
+  return toi.frameId();
+}
+
+void DoGraph::setStateMotionAndVelocityFromPose(DOGraphState& current_state) {
+  DOGraphState* previous_state{nullptr};
+  if (!stateByAge(current_state.frameId(), 1, previous_state)) {
+    // no previous state, so hopefully velocity is zero?
+    return;
+  }
+
+  CHECK_NOTNULL(previous_state);
+  CHECK_EQ(previous_state->frameId(), current_state.H_W_km1_k.from());
+  current_state.H_W_km1_k.estimate() =
+      current_state.L_W_k * previous_state->L_W_k.inverse();
+
+  const dyno::Timestamp dt =
+      current_state.timestamp - previous_state->timestamp;
+  current_state.velocity_W =
+      computeWorldVelocity(previous_state->L_W_k, current_state.L_W_k, dt);
 }
 
 bool isValidRotation(const gtsam::Pose3& pose, double tolerance = 1e-6) {
@@ -502,7 +527,7 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
     const gtsam::Pose3 L_W_k_refined = H_W_B_k_refined * L_W_B;
     const gtsam::Pose3 H_W_A_k_refined = H_W_B_k_refined * H_W_A_B.estimate();
 
-    state.state.pose = L_W_k_refined;
+    state.L_W_k = L_W_k_refined;
     state.H_W_KF_k.estimate_ = H_W_A_k_refined;
 
     CHECK_EQ(state.H_W_KF_k.from(), anchor_frame);

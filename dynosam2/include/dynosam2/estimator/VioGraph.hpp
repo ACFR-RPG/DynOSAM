@@ -29,6 +29,7 @@ struct VioGraphState {
 
 class VioGraph : public BaGraphStates<VioGraphState> {
  public:
+  typedef BaGraphStates<VioGraphState> Base;
   typedef VioGraphState State;
 
   DYNO_POINTER_TYPEDEFS(VioGraph)
@@ -44,7 +45,7 @@ class VioGraph : public BaGraphStates<VioGraphState> {
 
   inline ViFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
     return this->getFrameAs<ViFrame>(
-        dyno::TemporalObjectIdentifier{frame_id, dyno::background_label});
+        dyno::TemporalObjectId{frame_id, dyno::background_label});
     // return this->getFrameAs<ViFrame>(frame_id);
   }
 
@@ -87,9 +88,6 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   void setStateVelocityFromPose(VioGraphState& current_state);
 
  protected:
-  dyno::Camera::CalibrationType::shared_ptr K_;
-  dyno::StereoCalibPtr K_stereo_;
-
   //! Active keyframes used for selection and bundle adjustmement!
   std::set<dyno::FrameId> keyframes_;
 };

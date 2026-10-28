@@ -5,6 +5,12 @@
 
 namespace dyno2 {
 
+UpdatedStates& UpdatedStates::merge(const UpdatedStates other) {
+  vo.insert(vo.begin(), other.vo.begin(), other.vo.end());
+  objects.insert(objects.begin(), other.objects.begin(), other.objects.end());
+  return *this;
+}
+
 LandmarkMap::LandmarkMap(size_t N) { reserve(N); }
 
 void LandmarkMap::reserve(size_t N) {

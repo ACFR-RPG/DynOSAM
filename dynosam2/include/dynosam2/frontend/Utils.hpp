@@ -28,7 +28,7 @@ inline Velocity3 computeWorldVelocity(const gtsam::Pose3& T_WB_prev,
   const Eigen::Vector3d angular = gtsam::Rot3::Logmap(R_delta) / dt;
 
   // return linear and angular velocities in the world frame
-  return {linear, T_WB_curr.rotation().rotate(angular)};
+  return {linear, T_WB_prev.rotation().rotate(angular)};
 }
 
 inline gtsam::Pose3 predictPoseConstantVelocity(const gtsam::Pose3& pose,

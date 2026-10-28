@@ -22,7 +22,9 @@ struct Velocity3 {
 
 struct UpdatedStates {
   std::vector<dyno::FrameId> vo;
-  std::vector<dyno::TemporalObjectIdentifier> objects;
+  std::vector<dyno::TemporalObjectId> objects;
+
+  UpdatedStates& merge(const UpdatedStates other);
 };
 
 class LandmarkMap {

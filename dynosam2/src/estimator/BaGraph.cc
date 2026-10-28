@@ -4,7 +4,10 @@
 
 namespace dyno2 {
 
-BaGraph::BaGraph() : observations_(StereoBaMap::create()) {
+BaGraph::BaGraph(dyno::Camera::Ptr camera)
+    : camera_(camera),
+      K_stereo_(dyno::RGBDCamera::Calibration(camera)),
+      observations_(StereoBaMap::create()) {
   setMeasurementSigma(2.0);
 }
 
@@ -13,7 +16,7 @@ void BaGraph::addMeasurement(Frame::Ptr frame, dyno::TrackletId id) {
       dyno::StereoMeasurementStatusVector{createStereoMeasurement(frame, id)});
 }
 void BaGraph::addMeasurement(dyno::KeypointIdentifier id) {
-  const Frame::Ptr frame = getFrame(id.frameId());
+  const Frame::Ptr frame = getFrame(id.temoralObjectIdentifier());
   CHECK_NOTNULL(frame);
   addMeasurement(frame, id.trackletId());
 }

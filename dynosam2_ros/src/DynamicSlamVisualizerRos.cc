@@ -187,10 +187,11 @@ void DynamicSlamVisualizerRos::publishObjects(
   // and we should make a set of object trajectories that holds them
   // instead of calculating the velocity every time like we do in the old
   // publishObjects function!
-  for (dyno::TemporalObjectIdentifier updated_state :
+  for (dyno::TemporalObjectId updated_state :
        publication_data.updated_states.objects) {
-    dyno::PoseWithMotion L_W_R =
-        cameraToRobotFrame(estimator_->getDooEntry(updated_state));
+    dyno::PoseWithMotion L_W_R = cameraToRobotFrame(
+        dyno::PoseWithMotion{estimator_->getDooPose(updated_state),
+                             estimator_->getDooMotion(updated_state)});
 
     // // bit of a hack but we can get the timestamps from the camera
     // trajectory?
@@ -277,7 +278,7 @@ void DynamicSlamVisualizerRos::publishObjects(
         // fill object keyframes;
         dyno::DoKeyframeType keyframe_status;
         if (estimator_->isObjectKeyframe(
-                dyno::TemporalObjectIdentifier{frame_id_k, object_id},
+                dyno::TemporalObjectId{frame_id_k, object_id},
                 keyframe_status)) {
           object_keyframes.insert(
               ObjectKeyframe{frame_id_k, keyframe_status, L_W_k});

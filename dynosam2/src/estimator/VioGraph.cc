@@ -12,14 +12,7 @@
 
 namespace dyno2 {
 
-VioGraph::VioGraph(dyno::Camera::Ptr camera) {
-  std::shared_ptr<dyno::RGBDCamera> rgbd_camera =
-      CHECK_NOTNULL(camera->safeGetRGBDCamera());
-  K_stereo_ = rgbd_camera->getFakeStereoCalib();
-  CHECK_NOTNULL(K_stereo_);
-
-  K_ = camera->getGtsamCalibration();
-}
+VioGraph::VioGraph(dyno::Camera::Ptr camera) : Base(camera) {}
 
 void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose) {
   VioGraphState& state = initaliseStatesWithPose(frame, pose);
@@ -34,7 +27,7 @@ void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
 
 VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
                                                  const gtsam::Pose3& pose) {
-  const dyno::TemporalObjectIdentifier id = frame->temporalObjectId();
+  const dyno::TemporalObjectId id = frame->temporalObjectId();
   CHECK(!frames_.exists(id));
   frames_[id] = frame;
 

@@ -6,6 +6,8 @@
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_opt/Map.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno2 {
 
@@ -95,7 +97,7 @@ class BaGraph {
   using Covisibilities =
       dyno::FastUnorderedMap<dyno::FrameId, FrameCovisibilities>;
 
-  BaGraph();
+  BaGraph(dyno::Camera::Ptr camera);
   virtual ~BaGraph() = default;
 
   /**
@@ -128,9 +130,13 @@ class BaGraph {
     return lmk_node->getMeasurement(kpi.frameId(), measurement);
   }
 
-  const StereoBaMap& getObservations() const { return *observations_; }
-
-  // Measurement frames, not frames in the BaMeasurementGraph
+  /**
+   * @brief Returns number of measurement frames (ie dyno2::Frame)
+   *
+   * NOTE: this is not the number of FrameNodes stored in the BA graph.
+   *
+   * @return size_t
+   */
   size_t numFrames() const { return frames_.size(); }
 
   void setMeasurementSigma(double sigma) {
@@ -155,7 +161,7 @@ class BaGraph {
   int covisibilities(dyno::FrameId frame_i, dyno::FrameId frame_j) const;
 
  protected:
-  inline Frame::Ptr getFrame(dyno::TemporalObjectIdentifier id) const {
+  inline Frame::Ptr getFrame(dyno::TemporalObjectId id) const {
     auto it = frames_.find(id);
     if (it == frames_.end()) {
       return nullptr;
@@ -164,7 +170,7 @@ class BaGraph {
   }
 
   template <typename FRAME>
-  std::shared_ptr<FRAME> getFrameAs(dyno::TemporalObjectIdentifier id) const {
+  std::shared_ptr<FRAME> getFrameAs(dyno::TemporalObjectId id) const {
     Frame::Ptr frame = this->getFrame(id);
     return std::static_pointer_cast<FRAME>(frame);
   }
@@ -187,6 +193,8 @@ class BaGraph {
   }
 
  protected:
+  dyno::Camera::Ptr camera_;
+  dyno::StereoCalibPtr K_stereo_;
   //! Represents measurements that have been accepted into the BA problem
   //! Not all keypoint observations, these are stored in Frame::Ptr
   StereoBaMap::Ptr observations_;
@@ -198,9 +206,9 @@ class BaGraph {
   //! Measurement model used when constructing measurements
   gtsam::SharedGaussian measurement_model_;
   //! All frames added so far. Holds all keypoints.
-  //! We use a TemporalObjectIdentifier rather than a frame_id so we can use
+  //! We use a TemporalObjectId rather than a frame_id so we can use
   //! this same structure to hold ViFrames and DoFrames
-  dyno::FastUnorderedMap<dyno::TemporalObjectIdentifier, Frame::Ptr> frames_;
+  dyno::FastUnorderedMap<dyno::TemporalObjectId, Frame::Ptr> frames_;
   // dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
 };
 
@@ -240,7 +248,8 @@ template <typename STATE>
 struct BaGraphStates : public BaGraph,
                        public States<STATE>,
                        public LandmarkMap {
-  BaGraphStates() = default;
+  BaGraphStates(dyno::Camera::Ptr camera)
+      : BaGraph(camera), States<STATE>(), LandmarkMap() {}
 };
 
 }  // namespace dyno2

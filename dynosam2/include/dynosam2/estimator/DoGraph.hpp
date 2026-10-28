@@ -13,23 +13,39 @@ namespace dyno2 {
 // remember this is a motion from a frame to a frame
 // TODO: hold factors so we dont need to rebuild them!?
 struct DOGraphState {
-  // pose and relative motion (H_W_km1_k)
-  // instead hold velocity and H_W and Pose?
-  dyno::PoseWithMotion state;
-  dyno::DoKeyframeType keyframe_status{dyno::DoKeyframeType::NonKeyFrame};
-
+  dyno::Timestamp timestamp{0.0};
+  //! Object pose
+  gtsam::Pose3 L_W_k;
+  //! Object motion in W from k-1 to k
+  dyno::Motion3ReferenceFrame H_W_km1_k;
+  //! Velocity in world frame
+  Velocity3 velocity_W;
   // motion from anchor frame to current frame
   // this matches what is estimated by the full system
   dyno::Motion3ReferenceFrame H_W_KF_k;
+  dyno::DoKeyframeType keyframe_status{dyno::DoKeyframeType::NonKeyFrame};
+
+  /// @brief The current frame id, equivalent to the "to" frame of the contained
+  /// motion(s)
+  /// @return
+  inline dyno::FrameId frameId() const {
+    CHECK_EQ(H_W_KF_k.to(), H_W_KF_k.to());
+    return H_W_KF_k.to();
+  }
+
+  inline dyno::FrameId anchorFrameId() const { return H_W_KF_k.from(); }
 };
 
 class DoGraph : public BaGraphStates<DOGraphState> {
  public:
+  typedef BaGraphStates<DOGraphState> Base;
   typedef DOGraphState State;
 
   DYNO_POINTER_TYPEDEFS(DoGraph)
   DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id);
   virtual ~DoGraph() = default;
+
+  inline dyno::ObjectId objectId() const noexcept { return object_id_; }
 
   // initalise of frame without state - this is the case as we need at least two
   // frames
@@ -46,7 +62,7 @@ class DoGraph : public BaGraphStates<DOGraphState> {
 
   inline DoFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
     return this->getFrameAs<DoFrame>(
-        dyno::TemporalObjectIdentifier{frame_id, object_id_});
+        dyno::TemporalObjectId{frame_id, object_id_});
     // return this->getFrameAs<DoFrame>(frame_id);
   }
 
@@ -56,10 +72,6 @@ class DoGraph : public BaGraphStates<DOGraphState> {
                    MapPoint& map_point) const;
   size_t getLandmarks(dyno::FrameId frame_id, MapPointVector& map_points) const;
 
-  // I think we may in future want only pose + velocity?
-  // for object odometry we want H_W_km1_k,  Vel_L_km_k, L_W_k
-  // so maybe we want pose with motion + velocity?
-  const dyno::PoseWithMotion& getPoseWithMotion(dyno::FrameId frame_id) const;
   const dyno::Motion3ReferenceFrame& keyframeMotion(
       dyno::FrameId frame_id) const;
 
@@ -72,6 +84,16 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   const gtsam::Pose3& anchorPose(dyno::FrameId frame_id) const;
   const gtsam::Pose3& getPose(dyno::FrameId frame_id) const;
 
+  /// @brief Get the object motion in W from k-1 to k.
+  /// @param frame_id
+  /// @return
+  const dyno::Motion3ReferenceFrame& getMotion(dyno::FrameId frame_id) const;
+
+  /// @brief Get velocity in the world frame
+  /// @param frame_id
+  /// @return
+  const Velocity3& getVelocity(dyno::FrameId frame_id) const;
+
  protected:
   /** Adds a frame if it does not exist, otherwise checks that the incoming
    * frame is the same as the existing one.
@@ -80,10 +102,13 @@ class DoGraph : public BaGraphStates<DOGraphState> {
    */
   FrameId maybeInitaliseFrame(DoFrame::Ptr frame);
 
-  dyno::ObjectId object_id_;
-  dyno::Camera::CalibrationType::shared_ptr K_;
-  dyno::StereoCalibPtr K_stereo_;
+  /// @brief Sets the state's motion (H_W_km1_k) and velocity given the state's
+  /// current pose the and the previous state's pose
+  /// @param current_state
+  void setStateMotionAndVelocityFromPose(DOGraphState& current_state);
 
+ protected:
+  dyno::ObjectId object_id_;
   //! Keyframes since the last anchor keyframe
   std::set<dyno::FrameId> active_keyframes_;
 };

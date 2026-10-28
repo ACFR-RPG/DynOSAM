@@ -31,15 +31,29 @@ class SlamBackend {
   bool hasObjectEstimator(dyno::ObjectId object_id) const;
 
   const gtsam::Pose3& getVioPose(dyno::FrameId frame_id) const;
-  const gtsam::Pose3& getDooPose(dyno::TemporalObjectIdentifier id) const;
+
+  /// @brief Get the object pose in W
+  /// @param id
+  /// @return
+  const gtsam::Pose3& getDooPose(dyno::TemporalObjectId id) const;
+
+  /// @brief Get the motion for object j in W from k-1 to k.
+  /// @param id
+  /// @return
+  const dyno::Motion3ReferenceFrame& getDooMotion(
+      dyno::TemporalObjectId id) const;
+
+  /// @brief Get the velocity in W for object j
+  /// @param id
+  /// @return
+  const Velocity3& getDooVelocity(dyno::TemporalObjectId id) const;
 
   bool isCameraKeyframe(dyno::FrameId frame_id) const;
 
-  bool isObjectKeyframe(dyno::TemporalObjectIdentifier id,
+  bool isObjectKeyframe(dyno::TemporalObjectId id,
                         dyno::DoKeyframeType& keyframe_type) const;
 
-  const dyno::PoseWithMotion& getDooEntry(
-      dyno::TemporalObjectIdentifier id) const;
+  const dyno::PoseWithMotion& getDooEntry(dyno::TemporalObjectId id) const;
 
   // get all landmarks for all objects
   size_t getLandmarks(MapPointVector& map_points) const;
@@ -60,8 +74,21 @@ class SlamBackend {
   }
 
   inline bool needsFullGraphOptimisation() const {
-    return needs_full_graph_opt_;
+    return full_estimator_.needsFullGraphOptimisation() &&
+           full_estimator_.vioKeyframes().size() > 3;
   }
+
+  inline bool isRunningFullGraphOptimisation() const {
+    return full_estimator_.isRunningFullGraphOptimisation();
+  }
+
+  inline bool updateAvaialbleFromFullGraph() const {
+    return full_estimator_.isUpdateAvailable();
+  }
+
+  void startFullGraphOptimisation() { full_estimator_.optimize(); }
+
+  bool synchroniseRealtimeAndFullGraph(UpdatedStates& involved_states);
 
  private:
   dyno::Camera::Ptr camera_;
@@ -69,10 +96,6 @@ class SlamBackend {
   VioGraphEstimator vio_estimator_;
   FullGraph full_estimator_;
   std::unordered_map<dyno::ObjectId, DoGraphEstimator> object_estimators_;
-
-  std::atomic_bool is_running_full_opt_;
-  // TODO: needs sync...
-  std::atomic_bool needs_full_graph_opt_;
 };
 
 };  // namespace dyno2

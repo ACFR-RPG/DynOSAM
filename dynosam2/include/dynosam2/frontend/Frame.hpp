@@ -81,8 +81,8 @@ struct Frame {
   inline FrameId getFrameId() const { return frame_id; }
   inline Timestamp getTimestamp() const { return timestamp; }
   inline ObjectId getObjectId() const { return object_id; }
-  inline dyno::TemporalObjectIdentifier temporalObjectId() const {
-    return dyno::TemporalObjectIdentifier(frame_id, object_id);
+  inline dyno::TemporalObjectId temporalObjectId() const {
+    return dyno::TemporalObjectId(frame_id, object_id);
   }
 
   size_t numKeypoints() const noexcept { return ids.size(); }
@@ -143,11 +143,15 @@ struct Frame {
 struct ViFrame : public Frame {
   DYNO_POINTER_TYPEDEFS(ViFrame)
   ViFrame(FrameId fi, Timestamp ts) : Frame(fi, ts, dyno::background_label) {}
+
+  // TODO: contain IMU + T_ij measurement
 };
 
 struct DoFrame : public Frame {
   DYNO_POINTER_TYPEDEFS(DoFrame)
   DoFrame(FrameId fi, Timestamp ts, ObjectId o) : Frame(fi, ts, o) {}
+
+  // contain G_i_ij/T_i_ij measurement!
 };
 
 }  // namespace dyno2
