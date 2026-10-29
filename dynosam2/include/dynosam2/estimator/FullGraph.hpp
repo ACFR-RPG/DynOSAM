@@ -15,10 +15,29 @@
 namespace dyno2 {
 
 struct FullGraphState {
-  // std::optional<
+  typedef std::unordered_map<dyno::ObjectId, DOGraphState> DOGraphStateMap;
+
+  std::optional<VioGraphState> vio_state{std::nullopt};
+  std::optional<DOGraphStateMap> do_graph_states{std::nullopt};
 };
 
 typedef std::unordered_map<dyno::ObjectId, DoGraph*> DoGraphPtrMap;
+
+template <typename STATE>
+class KeyframeStates : public States<STATE> {
+ public:
+  using Base = States<STATE>;
+
+  using Base::lastState;
+  using Base::state;
+  using Base::stateByAge;
+
+  auto begin() { return this->states_.begin(); }
+  auto end() { return this->states_.end(); }
+
+  auto begin() const { return this->states_.begin(); }
+  auto end() const { return this->states_.end(); }
+};
 
 // TODO: this probably doesn't even need both the frames internally (which are
 // usually used to build the measurements) or the map since we solve
@@ -51,10 +70,6 @@ class FullGraph : public States<FullGraphState>, public LandmarkMap {
     return has_update_ && !is_running_full_opt_;
   }
 
-  /// @brief All VIO (key) frames involved in the optimisation
-  /// @return
-  const std::set<dyno::FrameId>& vioKeyframes() const { return vio_keyframes_; }
-
   bool synchronise(VioGraph* vio_graph, const DoGraphPtrMap& do_graphs,
                    UpdatedStates& involved_states);
 
@@ -66,10 +81,13 @@ class FullGraph : public States<FullGraphState>, public LandmarkMap {
   /// update
   struct IncrementalUpdate {
     // States that are involved in this bundle
-    UpdatedStates involved_states;
+    UpdatedStates new_states;
     gtsam::NonlinearFactorGraph new_factors;
     gtsam::Values new_values;
   };
+
+  bool getVioState(const dyno::FrameId fid, VioGraphState*& state);
+  // bool getDoState(const dyno::TemporalObjectId& tid, DOGraphState*& state);
 
  private:
   // NOTE: we take the update by COPY so we can continue modify the (next)
@@ -86,13 +104,12 @@ class FullGraph : public States<FullGraphState>, public LandmarkMap {
   // call to optimize
   IncrementalUpdate update_;
   //! States involved each time optimize was called
-  std::vector<UpdatedStates> involved_states_;
-  //! Index to the involved_states indicating which states have an update
-  //! There may be multiple if we run multiple optimisations without consuming
-  //! an update Clearned once the update is consumed
-  std::vector<size_t> involved_states_to_sync_;
+  // std::vector<UpdatedStates> involved_states_;
 
-  std::set<dyno::FrameId> vio_keyframes_;
+  //! Quick look up for Vio states (ie keyframes) that have been optimised
+  //! Pointer to valid VioGraphState held in FullGraphState of the same frame
+  typedef KeyframeStates<VioGraphState*> VioGraphStates;
+  VioGraphStates vio_states_;
 
   std::thread full_graph_opt_thread_;
 };

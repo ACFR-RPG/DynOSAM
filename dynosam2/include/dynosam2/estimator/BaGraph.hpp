@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gtsam/nonlinear/NonlinearFactor.h>
+
 #include "dynosam2/common/Types.hpp"
 #include "dynosam2/frontend/Frame.hpp"
 #include "dynosam_common/SensorModels.hpp"
@@ -49,6 +51,7 @@ class States {
     return states_.exists(frame_id);
   }
   dyno::FrameId currentFrameId() const { return states_.rbegin()->first; }
+  dyno::FrameId firstFrameId() const { return states_.begin()->first; }
 
   dyno::FrameId frameIdbyAge(size_t age) const {
     CHECK_LT(age, states_.size()) << "Age exceeds available states";
@@ -59,7 +62,6 @@ class States {
 
  protected:
   State& lastState() { return states_.rbegin()->second; }
-
   const State& lastState() const { return states_.rbegin()->second; }
 
   State& state(dyno::FrameId frame_id) { return states_[frame_id]; }
@@ -215,13 +217,31 @@ class BaGraph {
 class BaProblemInterface {
  public:
   BaProblemInterface() = default;
-
- protected:
   // NOTE: max iterations will only be used if setOptimisationTimeLimit has not
   // been set, otherwise the time-budget will be used
   NonlinearOptimizerSummary optimize(gtsam::Values& optimised_values,
                                      int max_iterations,
                                      bool verbose = false) const;
+
+  void addFactor(gtsam::NonlinearFactor::shared_ptr factor);
+
+  template <class DerivedFactor>
+  void addFactor(const boost::shared_ptr<DerivedFactor>& factor) {
+    graph_.push_back<DerivedFactor>(factor);
+  }
+
+  void insert(gtsam::Key j, const gtsam::Value& val);
+
+  template <typename ValueType>
+  inline void insert(gtsam::Key j, const ValueType& val) {
+    values_.insert<ValueType>(j, val);
+  }
+
+  template <typename T>
+  void addPrior(gtsam::Key key, const T& prior,
+                const gtsam::SharedNoiseModel& model) {
+    graph_.addPrior(key, prior, model);
+  }
 
   // must perform at least min_iterations regardless of time budget
   bool setOptimisationTimeLimit(double time_limit_s, int min_iterations);

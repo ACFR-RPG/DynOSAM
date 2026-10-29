@@ -94,11 +94,11 @@ void Frontend::solveVisualOdometry(
   // solve relative motion
   CHECK(async_context.vo);
   // relative motion from previous frame (j) to current frame (i)
-  gtsam::Pose3 T_ij;
+  gtsam::Pose3 T_ij_pnp;
   std::vector<bool> inliers;
   dyno::utils::ChronoTimingStats ransac_t("frontend.vo.ransac");
-  async_context.vo_valid =
-      solve3d2dRansac(T_ij, inliers, adapter, vio_ransac_threshold_3d_2d_, 100);
+  async_context.vo_valid = solve3d2dRansac(T_ij_pnp, inliers, adapter,
+                                           vio_ransac_threshold_3d_2d_, 100);
   ransac_t.stop();
 
   if (!async_context.vo_valid) {
@@ -117,8 +117,15 @@ void Frontend::solveVisualOdometry(
     const VioGraphState& vio_state_previous =
         estimator.getVioState(previous_frame_id);
     const dyno::Timestamp dt = timestamp - vio_state_previous.timestamp;
+    const gtsam::Pose3& previous_pose_W = vio_state_previous.pose_W;
     gtsam::Pose3 predicted_pose = predictPoseConstantVelocity(
-        vio_state_previous.pose_W, vio_state_previous.velocity_W, dt);
+        previous_pose_W, vio_state_previous.velocity_W, dt);
+
+    vi_frame->setRelativePose(Motion3ReferenceFrame(
+        previous_pose_W.inverse() * predicted_pose,
+        MotionRepresentationStyle::F2F, ReferenceFrame::LOCAL,
+        vio_state_previous.frame_id, vi_frame->getFrameId()));
+
     estimator.initaliseStates(vi_frame, predicted_pose,
                               vio_state_previous.velocity_W);
 
@@ -128,11 +135,6 @@ void Frontend::solveVisualOdometry(
 
     LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id;
     return;
-  }
-
-  if (!vi_tracking_condition_.is_initalized) {
-    vi_tracking_condition_.is_initalized = true;
-    LOG(INFO) << "Initialized VI Map!";
   }
 
   CHECK_EQ(inliers.size(), num_matches);
@@ -146,15 +148,20 @@ void Frontend::solveVisualOdometry(
   }
 
   // refine with flow
-  FlowRefinement(camera_, image_container, adapter).refine(T_ij, T_ij);
+
+  dyno::Pose3Measurement T_ij;
+  FlowRefinement(camera_, image_container, adapter).refine(T_ij_pnp, T_ij);
   // update geometry
   GeometryUpdater(camera_, image_container, features).updateGeometry(geometry);
 
-  gtsam::Pose3 X_W = X_W_km1 * T_ij;
+  gtsam::Pose3 X_W = X_W_km1 * T_ij.measurement();
   ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
   vi_frame->fill(geometry, features);
-  estimator.initaliseStates(vi_frame, X_W);
+  vi_frame->setRelativePose(Motion3ReferenceFrame(
+      T_ij.measurement(), MotionRepresentationStyle::F2F, ReferenceFrame::LOCAL,
+      previous_frame_id, vi_frame->getFrameId()));
 
+  estimator.initaliseStates(vi_frame, X_W);
   // initalise estimator with new state (eventually maybe from VIO?)
   // we now have an initial pose
   std::vector<dyno::TrackletId> observation_ids;
@@ -173,6 +180,18 @@ void Frontend::solveVisualOdometry(
   // bit faster!
   estimator.addMeasurements(vi_frame, observation_ids);
 
+  std::set<dyno::FrameId> frames_updated_set;
+  frames_updated_set.insert(frame_id);
+
+  if (!vi_tracking_condition_.is_initalized) {
+    // as this is the first initalised frame, now also add the previous
+    // measurements
+    estimator.addMeasurements(vi_frame_previous_ptr, observation_ids);
+    vi_tracking_condition_.is_initalized = true;
+    LOG(INFO) << "Initialized VI Map!";
+    frames_updated_set.insert(vi_frame_previous_ptr->getFrameId());
+  }
+
   // TODO: if sensor_rig has IMU
 
   // alert waiting threads AFTER we initalise states as they may need the pose!
@@ -186,9 +205,6 @@ void Frontend::solveVisualOdometry(
   // alert awaiting threads
   async_context.vo_cv.notify_all();
 
-  std::set<dyno::FrameId> frames_updated_set;
-  frames_updated_set.insert(frame_id);
-
   const bool should_be_keyframe = shouldBeViKeyFrame(estimator, vi_frame);
   // TODO: must bound keyframes (only for estimator and covisibility checking)
   //  somehow this must be different from full SLAM and trajectory output!
@@ -199,7 +215,8 @@ void Frontend::solveVisualOdometry(
     // at all active keyframes
     const size_t init_triangulation =
         matchToVioMap(estimator, vi_frame, new_measurements);
-    LOG(INFO) << "Init triangulation: " << init_triangulation;
+    // LOG(INFO) << "Init triangulation: " << init_triangulation;
+    LOG(INFO) << "Made VIO keyframe k=" << frame_id;
     estimator.setKeyframe(frame_id, true);
   }
 
@@ -258,9 +275,9 @@ void Frontend::solveObjectOdometry(
   size_t num_matches = adapter.getNumberCorrespondences();
   LOG(INFO) << "Solving doo j= " << object_id << " # matches= " << num_matches;
 
-  gtsam::Pose3 G_i_ij_inv;
+  gtsam::Pose3 G_i_ij_inv_pnp;
   std::vector<bool> inliers;
-  bool ransac_success = solve3d2dRansac(G_i_ij_inv, inliers, adapter,
+  bool ransac_success = solve3d2dRansac(G_i_ij_inv_pnp, inliers, adapter,
                                         do_ransac_threshold_3d_2d_, 100);
 
   if (!ransac_success) {
@@ -292,8 +309,9 @@ void Frontend::solveObjectOdometry(
   }
 
   // refine with flow
+  dyno::Pose3Measurement G_i_ij_inv;
   FlowRefinement(camera_, image_container, adapter)
-      .refine(G_i_ij_inv, G_i_ij_inv);
+      .refine(G_i_ij_inv_pnp, G_i_ij_inv);
   // update geometry
   GeometryUpdater(camera_, image_container, features).updateGeometry(geometry);
 
@@ -321,8 +339,14 @@ void Frontend::solveObjectOdometry(
   const gtsam::Pose3 X_W_j = *async_context.vo;
   // reltive motion of object in the camera frame i, from i to j
   // without accounting for the additional camera motion between i and j
+  const gtsam::Matrix66 Adj_G_i_ij_inv = G_i_ij_inv.measurement().AdjointMap();
+  gtsam::Pose3 G_i_ij_pose = G_i_ij_inv.measurement().inverse();
+  // run covariance through adjoint
+  const gtsam::Matrix66 G_i_ij_cov =
+      Adj_G_i_ij_inv * G_i_ij_inv.covariance() * Adj_G_i_ij_inv.transpose();
+
   dyno::Motion3ReferenceFrame G_i_ij(
-      G_i_ij_inv.inverse(), dyno::MotionRepresentationStyle::F2F,
+      G_i_ij_pose, dyno::MotionRepresentationStyle::F2F,
       dyno::ReferenceFrame::GLOBAL, frame_id_i, frame_id_j);
 
   // TODO: add measurements for the tracked ones!
@@ -330,7 +354,7 @@ void Frontend::solveObjectOdometry(
       std::make_shared<DoFrame>(frame_id_j, timestamp_j, object_id);
   do_frame_j->fill(geometry, features);
 
-  std::set<dyno::FrameId> frames_updated_set;
+  std::unordered_set<dyno::FrameId> frames_updated_set;
 
   if (estimator.numStates() > 0) {
     LOG(INFO) << "j=" << object_id << " solved k=" << frame_id_j
@@ -422,7 +446,6 @@ void Frontend::solveObjectOdometry(
   frames_updated_set.insert(affected_in_opt.begin(), affected_in_opt.end());
   frames_updated = std::vector<dyno::FrameId>(frames_updated_set.begin(),
                                               frames_updated_set.end());
-
   success = true;
 }
 

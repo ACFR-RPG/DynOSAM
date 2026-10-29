@@ -63,16 +63,26 @@ class GeometryUpdater {
     }
 
     // Calculate the parallax angle between the two viewing rays.
+    gtsam::Pose3 T_LR = dyno::RGBDCamera::StereoExtrinsics(camera_);
+    // gtsam::Point3 point_R = T_LR.inverse() * point;
+    // gtsam::Point2 right_kp_projected;
+    // camera_->project(point_R, &right_kp_projected);
+
     const Eigen::Vector3d ray_left = compute_bearing_(left_kp);
-    const Eigen::Vector3d ray_right = compute_bearing_(right_kp);
+    Eigen::Vector3d point_left = (point.z() / ray_left(2)) * ray_left;
+    Eigen::Vector3d direction_right = point_left - T_LR.translation();
+    direction_right.normalize();
 
-    const double parallax = ray_left.dot(ray_right);
+    const Eigen::Vector3d direction_left = ray_left;
 
-    const double sigma = keypoint_sigma / compute_bearing_.fx_;
+    const double focal_length =
+        0.5 * (compute_bearing_.fx_ + compute_bearing_.fy_);
+    const double sigma = keypoint_sigma / focal_length;
+    const double parallax = direction_left.dot(direction_right);
 
     // Reject insufficient parallax (rays are too nearly parallel).
-    // this basically implies the minimum disparity is 6 * keypoint_sigma
-    if (!std::isfinite(parallax) || parallax > std::cos(6.0 * sigma)) {
+    // this basically implies the minimum disparity is keypoint_sigma
+    if (!std::isfinite(parallax) || parallax > std::cos(sigma)) {
       return false;
     }
 

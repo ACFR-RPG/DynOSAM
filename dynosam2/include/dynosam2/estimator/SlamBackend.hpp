@@ -74,8 +74,7 @@ class SlamBackend {
   }
 
   inline bool needsFullGraphOptimisation() const {
-    return full_estimator_.needsFullGraphOptimisation() &&
-           full_estimator_.vioKeyframes().size() > 3;
+    return full_estimator_.needsFullGraphOptimisation();
   }
 
   inline bool isRunningFullGraphOptimisation() const {

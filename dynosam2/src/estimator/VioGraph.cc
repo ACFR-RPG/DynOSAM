@@ -445,15 +445,17 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
 
   frames_affected.reserve(poses_with_update.size());
   // poses with update must be in order so the velocity update is correct
-  for (dyno::FrameId frame_id : poses_with_update) {
-    gtsam::Symbol pose_sym('x', frame_id);
-    gtsam::Pose3 pose = optimised_values.at<gtsam::Pose3>(pose_sym);
-    setPose(frame_id, pose);
+  for (dyno::FrameId k0 : poses_with_update) {
+    VLOG(15) << "Updating local VIO BA k=" << k0;
+    gtsam::Symbol pose_sym('x', k0);
+    gtsam::Pose3 pose_j = optimised_values.at<gtsam::Pose3>(pose_sym);
 
+    CHECK(stateExists(k0));
+    setPose(k0, pose_j);
     // since we dont have IMU!
-    setVelocityFromPose(frame_id);
+    setVelocityFromPose(k0);
 
-    frames_affected.push_back(frame_id);
+    frames_affected.push_back(k0);
   }
 
   LOG(INFO) << "Frames affected in VIO refinement: "

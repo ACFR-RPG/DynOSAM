@@ -53,6 +53,7 @@ struct FlowRefinement::ImplOptimizer {
 
   struct Result {
     gtsam::Pose3 pose;
+    gtsam::Matrix66 covariance;
     gtsam::Point2Vector flows;
     // TODO: inliers!
 
@@ -110,6 +111,7 @@ struct FlowRefinement::ImplOptimizer {
 
     gtsam::Point2Vector& refined_flows = result.flows;
     gtsam::Pose3& refined_pose = result.pose;
+    gtsam::Matrix66& covariance = result.covariance;
 
     std::vector<Pose3FlowProjectionResidual2> factors;
     factors.reserve(num_measurements);
@@ -263,6 +265,7 @@ struct FlowRefinement::ImplOptimizer {
 
       // solve reduced system
       const gtsam::Vector6 dx = H.ldlt().solve(-b);
+      covariance = H.inverse();
       // update pose
       refined_pose = refined_pose.retract(dx);
 
@@ -322,7 +325,7 @@ FlowRefinement::FlowRefinement(const Camera::Ptr camera,
 FlowRefinement::~FlowRefinement() = default;
 
 void FlowRefinement::refine(const gtsam::Pose3& pose_in,
-                            gtsam::Pose3& pose_out) {
+                            dyno::Pose3Measurement& pose_out) {
   dyno::utils::ChronoTimingStats timer("flow_refine.refine");
 
   const dyno::WrappedRGBMono wrapped_rgb = images_.rgb();
@@ -405,7 +408,7 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
     }
   }
 
-  pose_out = result.pose;
+  pose_out = dyno::Pose3Measurement(result.pose, result.covariance);
 
   // VLOG(10) << "Initial error: " << result.error_before << " final error "
   //          << result.error_after << " time[ms] "

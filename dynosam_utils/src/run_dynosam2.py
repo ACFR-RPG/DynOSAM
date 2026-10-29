@@ -41,6 +41,10 @@ def run_omd():
 def run_kitti():
     run_sequnce("/root/data/vdo_slam/kitti/kitti/0020/", "test_kitti", kitti_dataset)
 
+def run_viodes():
+    # run_sequnce("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
+    run_sequnce("/root/data/VIODE/city_day/high","test_viode", viode)
 
 if __name__ == '__main__':
-    run_kitti()
+    # run_viodes()
+    run_viodes()

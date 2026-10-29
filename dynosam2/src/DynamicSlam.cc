@@ -55,8 +55,11 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         vi_frame->fill(geometry, features);
 
         VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-        // TODO: add measurements!
         vio_estimator.initaliseStates(vi_frame, gtsam::Pose3::Identity());
+        // first frame must be keyframe
+        // measurements SHOULD get added in the solveVisualOdometry step
+        // after outlier rejection
+        vio_estimator.setKeyframe(frame_id, true);
       }
     }
 
@@ -191,7 +194,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     const ObjectContext object_context = object_contexts[i];
     const DoGraphEstimator& estimator = *object_context.estimator;
 
-    const std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
+    const auto& updated_frames = updated_object_frames.at(i);
     for (FrameId k0 : updated_frames) {
       objects_with_update.emplace_back(k0, object_id);
     }
@@ -210,8 +213,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   // if(estimator_.updateAvaialbleFromFullGraph()) {
   //   LOG(INFO) << "Update availanble from full graph!";
-  //   UpdatedStates involved_states;
-  //   estimator_.synchroniseRealtimeAndFullGraph(involved_states);
+  //   PublicationData::Ptr publication_data =
+  //     std::make_shared<PublicationData>(frame_id, timestamp);
+  //   estimator_.synchroniseRealtimeAndFullGraph(publication_data->updated_states);
+  //   pushPublicationDataToQueue(publication_data);
   // }
 
   const dyno::WrappedRGBMono wrapped_rgb = image_container->rgb();

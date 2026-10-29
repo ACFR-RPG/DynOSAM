@@ -53,6 +53,14 @@ NonlinearOptimizerSummary BaProblemInterface::optimize(
   return summary;
 }
 
+void BaProblemInterface::addFactor(gtsam::NonlinearFactor::shared_ptr factor) {
+  graph_ += factor;
+}
+
+void BaProblemInterface::insert(gtsam::Key j, const gtsam::Value& val) {
+  values_.insert(j, val);
+}
+
 bool BaProblemInterface::setOptimisationTimeLimit(double time_limit_s,
                                                   int min_iterations) {
   if (callback_ != nullptr) {

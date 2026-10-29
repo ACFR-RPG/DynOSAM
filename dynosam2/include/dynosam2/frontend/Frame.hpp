@@ -140,14 +140,22 @@ struct Frame {
   }
 };
 
-struct ViFrame : public Frame {
+class ViFrame : public Frame {
+ public:
   DYNO_POINTER_TYPEDEFS(ViFrame)
   ViFrame(FrameId fi, Timestamp ts) : Frame(fi, ts, dyno::background_label) {}
 
   // TODO: contain IMU + T_ij measurement
+  const Motion3ReferenceFrame& getRelativePose() const { return T_ij_; }
+  void setRelativePose(const Motion3ReferenceFrame& T_ij);
+
+ private:
+  //! Measured relative camera moition
+  Motion3ReferenceFrame T_ij_;
 };
 
-struct DoFrame : public Frame {
+class DoFrame : public Frame {
+ public:
   DYNO_POINTER_TYPEDEFS(DoFrame)
   DoFrame(FrameId fi, Timestamp ts, ObjectId o) : Frame(fi, ts, o) {}
 

@@ -105,7 +105,7 @@ void DynamicSlamVisualizerRos::publishVisualOdometry(
   const gtsam::Pose3 X_WR_k =
       cameraToRobotFrame(estimator_->getVioPose(frame_id));
 
-  camera_trajectory_.insert(frame_id, timestamp, X_WR_k);
+  camera_trajectory_.insertOrUpdate(frame_id, timestamp, X_WR_k);
   // first upate internal trajectory
   for (dyno::FrameId updated_state : publication_data.updated_states.vo) {
     gtsam::Pose3 X_W_C = estimator_->getVioPose(updated_state);
