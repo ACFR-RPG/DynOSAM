@@ -30,8 +30,6 @@ class FeatureTracker {
 
   FeatureTracker(const FrontendParameters& parameters, Camera::Ptr camera);
 
-  // Result track(ImageContainer& image_container,
-  //              const std::optional<gtsam::Rot3>& R_km1_k = {});
   Result track(ImageContainer::Ptr image_container,
                const std::optional<gtsam::Rot3>& R_km1_k = {});
 
@@ -119,9 +117,6 @@ class FeatureTracker {
     }
   };
   using FlowTrackingStatsMap = gtsam::FastMap<ObjectId, FlowTrackingStats>;
-
-  // std::pair<FeatureBlockContainer, FlowTrackingStatsMap> sparseFeatureTrack(
-  //     const cv::Mat& mono, const cv::Mat& object_mask);
   std::pair<FeatureBlockContainer, FlowTrackingStatsMap> sparseFeatureTrack(
       const dyno::ImageContainer::Ptr& image_container);
 
@@ -169,16 +164,9 @@ class FeatureTracker {
   cv::Matx33f K_cv_;
   cv::Matx33f K_inv_cv_;
 
-  // TODO: keep previos image container ptr!!
   dyno::ImageContainer::Ptr previous_container_;
 
   ObjectDetectionEngine::Ptr object_detection_engine_;
-  // std::vector<cv::Mat> curr_mono_pyr_;
-  // cv::Mat prev_mono_;
-  // // hmmm needs to be pointer or reference so we maintain the cache...?
-  // dyno::WrappedRGBMono previous_img_;
-  // //! Image pyramid for the previous mono frame
-  // std::vector<cv::Mat> prev_mono_pyr_;
   gtsam::FastMap<ObjectId, cv::Mat> previous_object_detection_masks_;
   //! Object mask for the previous frame
   cv::Mat prev_object_mask_;

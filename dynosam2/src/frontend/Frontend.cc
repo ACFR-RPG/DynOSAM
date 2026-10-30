@@ -13,8 +13,8 @@
 #include "dynosam2/frontend/GeometryUpdater.hpp"
 #include "dynosam2/frontend/MatchingAdaptor.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_cv/CvUtils.hpp"
-#include "dynosam_opt/factors/HybridFormulationFactors.hpp"
 
 namespace dyno2 {
 
@@ -32,8 +32,7 @@ static double computeOpenGvRansacThreshold(const double repr_error,
 
 Frontend::Frontend(const FrontendParameters& parameters,
                    dyno::Camera::Ptr camera)
-    : parameters_(parameters),
-      camera_(camera),
+    : camera_(camera),
       feature_tracker_(parameters, camera),
       vio_ransac_threshold_3d_2d_(computeOpenGvRansacThreshold(2.0, camera)),
       do_ransac_threshold_3d_2d_(computeOpenGvRansacThreshold(2.0, camera)) {}
@@ -122,8 +121,7 @@ void Frontend::solveVisualOdometry(
         previous_pose_W, vio_state_previous.velocity_W, dt);
 
     vi_frame->setRelativePose(Motion3ReferenceFrame(
-        previous_pose_W.inverse() * predicted_pose,
-        MotionRepresentationStyle::F2F, ReferenceFrame::LOCAL,
+        previous_pose_W.inverse() * predicted_pose, ReferenceFrame::LOCAL,
         vio_state_previous.frame_id, vi_frame->getFrameId()));
 
     estimator.initaliseStates(vi_frame, predicted_pose,
@@ -157,9 +155,9 @@ void Frontend::solveVisualOdometry(
   gtsam::Pose3 X_W = X_W_km1 * T_ij.measurement();
   ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
   vi_frame->fill(geometry, features);
-  vi_frame->setRelativePose(Motion3ReferenceFrame(
-      T_ij.measurement(), MotionRepresentationStyle::F2F, ReferenceFrame::LOCAL,
-      previous_frame_id, vi_frame->getFrameId()));
+  vi_frame->setRelativePose(
+      Motion3ReferenceFrame(T_ij.measurement(), ReferenceFrame::LOCAL,
+                            previous_frame_id, vi_frame->getFrameId()));
 
   estimator.initaliseStates(vi_frame, X_W);
   // initalise estimator with new state (eventually maybe from VIO?)
@@ -244,10 +242,10 @@ void Frontend::solveVisualOdometry(
 
 void Frontend::solveObjectOdometry(
     ObjectId object_id, const VioGraphEstimator& vo_estimator,
-    const ImageContainer& image_container, DoGraphEstimator& estimator,
-    FeatureBlockContainer& features, FeatureBlockGeometry& geometry,
-    AyncVO& async_context, std::vector<FrameId>& frames_updated,
-    uchar& success) {
+    const EstimationParameters& params, const ImageContainer& image_container,
+    DoGraphEstimator& estimator, FeatureBlockContainer& features,
+    FeatureBlockGeometry& geometry, AyncVO& async_context,
+    std::vector<FrameId>& frames_updated, uchar& success) {
   const FrameId frame_id = image_container.frameId();
   const Timestamp timestamp = image_container.timestamp();
   const FrameId previous_frame_id = frame_id - 1u;
@@ -291,10 +289,6 @@ void Frontend::solveObjectOdometry(
     return;
   }
 
-  gtsam::Point3Vector reference_lmks;
-  dyno::TrackletIds reference_ids;
-  reference_lmks.reserve(num_matches);
-  reference_ids.reserve(num_matches);
   CHECK_EQ(inliers.size(), num_matches);
   for (size_t k = 0; k < num_matches; k++) {
     TrackletId i = adapter.trackletId(k);
@@ -302,9 +296,6 @@ void Frontend::solveObjectOdometry(
       Index fc_index = geometry.getFeatureContainerIndex(i);
       CHECK_EQ(features.ids[fc_index], i);
       features.inlier[fc_index] = 0;
-    } else {
-      reference_lmks.push_back(adapter.getPoint(k));
-      reference_ids.push_back(i);
     }
   }
 
@@ -345,11 +336,9 @@ void Frontend::solveObjectOdometry(
   const gtsam::Matrix66 G_i_ij_cov =
       Adj_G_i_ij_inv * G_i_ij_inv.covariance() * Adj_G_i_ij_inv.transpose();
 
-  dyno::Motion3ReferenceFrame G_i_ij(
-      G_i_ij_pose, dyno::MotionRepresentationStyle::F2F,
-      dyno::ReferenceFrame::GLOBAL, frame_id_i, frame_id_j);
+  dyno::Motion3ReferenceFrame G_i_ij(G_i_ij_pose, dyno::ReferenceFrame::GLOBAL,
+                                     frame_id_i, frame_id_j);
 
-  // TODO: add measurements for the tracked ones!
   DoFrame::Ptr do_frame_j =
       std::make_shared<DoFrame>(frame_id_j, timestamp_j, object_id);
   do_frame_j->fill(geometry, features);
@@ -362,19 +351,55 @@ void Frontend::solveObjectOdometry(
   }
 
   if (!estimator.stateExists(frame_id_i)) {
-    gtsam::Point3 t_W_i_centroid =
-        X_W_i * dyno::computeCentroid(reference_lmks);
-    gtsam::Pose3 L_W_i_centroid(gtsam::Rot3::Identity(), t_W_i_centroid);
+    TrackletIds measurements_i;
+    gtsam::Point3Vector reference_lmks;
+    TrackletIds reference_lmk_ids;
 
-    std::vector<dyno::TrackletId> measurements_i;
-    measurements_i.reserve(adapter.getNumberCorrespondences());
-    for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
+    const size_t num_matches = adapter.getNumberCorrespondences();
+    measurements_i.reserve(num_matches);
+    reference_lmks.reserve(num_matches);
+    reference_lmk_ids.reserve(num_matches);
+    for (size_t idx = 0; idx < num_matches; idx++) {
       TrackletId id = adapter.trackletId(idx);
-      if (adapter.isInlier(idx) && do_frame_i->observedLandmark(id) &&
-          estimator.landmarkExists(id)) {
+      if (!adapter.isInlier(idx)) {
+        continue;
+      }
+      if (do_frame_i->observedLandmark(id) && estimator.landmarkExists(id)) {
         measurements_i.push_back(id);
       }
+
+      reference_lmks.push_back(adapter.getPoint(idx));
+      reference_lmk_ids.push_back(id);
     }
+
+    // We didnt get enough tracks to init this object
+    if (reference_lmks.size() < 3) {
+      // CANNOT INIT!
+    }
+
+    // construct the object reference frame from the centroid of the object
+    // apply some basic statistical outlier rejection to avoid skewing the
+    // centroid as much as possible!
+    std::vector<uint8_t> point_status;
+    dyno::statisticalOutlierRemoval(reference_lmks, point_status);
+
+    gtsam::Point3Vector reference_lmks_inliers;
+    reference_lmks_inliers.reserve(point_status.size());
+    for (size_t i = 0; i < point_status.size(); i++) {
+      if (point_status[i]) {
+        reference_lmks_inliers.push_back(reference_lmks[i]);
+      } else {
+        // mark as outlier
+        Index fc_index =
+            geometry.getFeatureContainerIndex(reference_lmk_ids[i]);
+        features.inlier[fc_index] = 0;
+      }
+    }
+
+    gtsam::Point3 t_W_i_centroid =
+        X_W_i * dyno::computeCentroid(reference_lmks_inliers);
+    gtsam::Pose3 L_W_i_centroid(gtsam::Rot3::Identity(), t_W_i_centroid);
+
     LOG(INFO) << "obj j=" << object_id << " made Anchor KF " << frame_id_i;
     estimator.initalizeNewAnchorState(do_frame_i, L_W_i_centroid);
     estimator.addMeasurements(do_frame_i, measurements_i);
@@ -416,13 +441,20 @@ void Frontend::solveObjectOdometry(
     std::vector<dyno::TrackletId> measurements_j;
     std::vector<dyno::TrackletId> measurements_i;
 
-    measurements_j.reserve(reference_ids.size());
-    measurements_i.reserve(reference_ids.size());
+    const size_t num_matches = adapter.getNumberCorrespondences();
+    measurements_j.reserve(num_matches);
+    measurements_i.reserve(num_matches);
 
-    for (size_t i = 0; i < reference_ids.size(); i++) {
-      const dyno::TrackletId id = reference_ids[i];
+    // add all measurements (that have not yet been added) to the BA
+    // problem as this is a new keyframe!
+    for (size_t idx = 0; idx < num_matches; idx++) {
+      TrackletId id = adapter.trackletId(idx);
+      if (!adapter.isInlier(idx)) {
+        continue;
+      }
+
       if (!estimator.landmarkExists(id)) {
-        const gtsam::Point3& m_C = reference_lmks[i];
+        const gtsam::Point3& m_C = adapter.getPoint(idx);
         const gtsam::Point3& m_L = T_LC_i * m_C;
         estimator.setLandmark(id, m_L);
       }
@@ -441,7 +473,8 @@ void Frontend::solveObjectOdometry(
   }
 
   std::vector<dyno::FrameId> affected_in_opt;
-  estimator.optimize(frame_id_j, vo_estimator, affected_in_opt, 1);
+  estimator.optimize(frame_id_j, vo_estimator, affected_in_opt,
+                     params.num_dynamic_keyframes);
 
   frames_updated_set.insert(affected_in_opt.begin(), affected_in_opt.end());
   frames_updated = std::vector<dyno::FrameId>(frames_updated_set.begin(),

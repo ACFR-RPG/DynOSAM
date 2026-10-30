@@ -12,11 +12,9 @@ GeometryUpdater::GeometryUpdater(Camera::Ptr camera,
     : camera_(camera),
       images_(images),
       features_(features),
-      compute_bearing_(camera_->getParams()) {
-  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
-  CHECK(rgbd_camera);
-  baseline_ = rgbd_camera->baseline();
-
+      compute_bearing_(camera_->getParams()),
+      baseline_(dyno::RGBDCamera::Baseline(camera_)),
+      T_LR_(dyno::RGBDCamera::StereoExtrinsics(camera_)) {
   if (!std::isfinite(compute_bearing_.fx_) ||
       !std::isfinite(compute_bearing_.fy_) || compute_bearing_.fx_ <= 0.0 ||
       compute_bearing_.fy_ <= 0.0 || !std::isfinite(baseline_) ||

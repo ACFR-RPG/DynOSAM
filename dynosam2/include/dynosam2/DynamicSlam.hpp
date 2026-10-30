@@ -26,6 +26,14 @@ class DynamicSlam : public DynamicSlamInterface {
   StateEstimate::Ptr spinOnce(dyno::VIFrontendInput::ConstPtr input) override;
 
  private:
+  /// @brief Initialise pose from IMU measurements (assuming non-accelerating).
+  /// @param imu_measurements
+  /// @param T_WC
+  /// @return
+  bool initPoseImu(const dyno::ImuMeasurements& imu_measurements,
+                   gtsam::Pose3& T_WC) const;
+
+ private:
   PipelineParameters parameters_;
   CanonicalSensorRig::Ptr sensor_rig_;
   dyno::Camera::Ptr camera_;

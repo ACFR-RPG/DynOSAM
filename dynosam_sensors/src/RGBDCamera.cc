@@ -63,7 +63,7 @@ double RGBDCamera::depthFromDisparity(double disparity) const {
   return fx_b_ / disparity;
 }
 
-Baseline RGBDCamera::baseline() const {
+double RGBDCamera::baseline() const {
   return getParams().depthParams().virtual_baseline;
 }
 
@@ -140,8 +140,12 @@ StereoCalibPtr RGBDCamera::Calibration(const dyno::Camera::Ptr& camera) {
   return K_stereo;
 }
 
-gtsam::Cal3_S2 MonoCalibration(const dyno::Camera::Ptr& camera) {
+gtsam::Cal3_S2 RGBDCamera::MonoCalibration(const dyno::Camera::Ptr& camera) {
   return Camera::Calibration(camera);
+}
+
+double RGBDCamera::Baseline(const dyno::Camera::Ptr& camera) {
+  return camera->getRGBDCamera().baseline();
 }
 
 }  // namespace dyno

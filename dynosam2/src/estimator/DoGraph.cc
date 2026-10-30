@@ -30,14 +30,14 @@ void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
   // update anchor point we are estimating relative to!
   DOGraphState& state = this->state(frame_id);
   state.timestamp = do_frame->timestamp;
-  state.H_W_km1_k = dyno::Motion3ReferenceFrame(
-      gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::F2F,
-      dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
+  state.H_W_km1_k = dyno::Motion3ReferenceFrame(gtsam::Pose3::Identity(),
+                                                dyno::ReferenceFrame::GLOBAL,
+                                                frame_id, frame_id);
   state.L_W_k = L;
   state.keyframe_status = dyno::DoKeyframeType::AnchorKeyFrame;
-  state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-      gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::KF,
-      dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
+  state.H_W_KF_k = dyno::Motion3ReferenceFrame(gtsam::Pose3::Identity(),
+                                               dyno::ReferenceFrame::GLOBAL,
+                                               frame_id, frame_id);
 
   // reset active keyframes so there is no overlap in the estimator
   // and forces new keyframes at the start
@@ -64,8 +64,7 @@ void DoGraph::initalizeStatesPropogate(
   const gtsam::Pose3 H_W_ij_pose = X_W_j * G_i_ij * X_W_i.inverse();
 
   const dyno::Motion3ReferenceFrame H_W_ij(
-      H_W_ij_pose, dyno::MotionRepresentationStyle::F2F,
-      dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
+      H_W_ij_pose, dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
 
   gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.L_W_k);
 
@@ -80,9 +79,9 @@ void DoGraph::initalizeStatesPropogate(
   // from the anchor frame to the current frame
   gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
 
-  state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-      H_W_KF_k, dyno::MotionRepresentationStyle::KF,
-      dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
+  state.H_W_KF_k =
+      dyno::Motion3ReferenceFrame(H_W_KF_k, dyno::ReferenceFrame::GLOBAL,
+                                  last_state.H_W_KF_k.from(), frame_j);
 }
 
 void DoGraph::setRegularKeyframe(dyno::FrameId frame_id) {

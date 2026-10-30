@@ -197,7 +197,7 @@ void StereoCamera::computeRectificationParameters(
   LOG(INFO) << Q;
 }
 
-void StereoCamera::calculateBaseLine(Baseline& base_line, const cv::Mat& Q) {
+void StereoCamera::calculateBaseLine(double& base_line, const cv::Mat& Q) {
   // Calc baseline (see L.2700 and L.2616 in
   // https://github.com/opencv/opencv/blob/master/modules/calib3d/src/calibration.cpp
   // NOTE: OpenCV pose convention is the opposite, therefore the missing -1.0

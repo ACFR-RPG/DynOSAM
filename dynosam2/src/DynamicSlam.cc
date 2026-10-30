@@ -4,6 +4,7 @@
 #include <tbb/task_group.h>
 
 #include "dynosam2/frontend/GeometryUpdater.hpp"
+#include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno2 {
@@ -88,7 +89,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   // what if we have not solved for the geometries (ie VO with no features but
   // we have IMU?)
   for (auto& [object_id, geometry] : geometries) {
-    if (object_id > background_label) {
+    if (object_id > background_label &&
+        parameters_.debug.estimate_dynamic_objects) {
       if (!estimator_.hasObjectEstimator(object_id)) {
         estimator_.allocateDoEstimator(object_id);
       }
@@ -144,10 +146,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       uchar& solve_success = do_solve_success.at(i);
 
       std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
-      frontend_.solveObjectOdometry(object_id, vio_estimator, *image_container,
-                                    *object_context.estimator, features,
-                                    *object_context.geometry, async_context,
-                                    updated_frames, solve_success);
+      frontend_.solveObjectOdometry(
+          object_id, vio_estimator, parameters_.estimator, *image_container,
+          *object_context.estimator, features, *object_context.geometry,
+          async_context, updated_frames, solve_success);
     });
   }
   group.wait();
@@ -176,10 +178,13 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   VioGraphEstimator& estimator = estimator_.vioEstimator();
   vi_tracking_state.is_keyframe = estimator.isKeyframe(frame_id);
   // prune keyframes
-  estimator.pruneKeyframes(5, 3);
+  estimator.pruneKeyframes(parameters_.estimator.num_static_keyframes, 3);
 
   if (vi_tracking_state.is_keyframe) {
     // add to full problem!
+    // TODO: but due to the matchToMap we can add measurements on keyframes
+    // when the current frame is NOT a keyframe
+    // and therefore will miss these measurements!
     // estimator_.addStaticMeasurements(vo_measurements_added);
   }
 
@@ -228,6 +233,44 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   pushPublicationDataToQueue(publication_data);
 
   return nullptr;
+}
+
+bool DynamicSlam::initPoseImu(const dyno::ImuMeasurements& imu_measurements,
+                              gtsam::Pose3& T_WC) const {
+  gtsam::Pose3 T_WI = gtsam::Pose3::Identity();
+
+  const dyno::ImuAccGyrs& acc_gyrs = imu_measurements.acc_gyr_;
+  const size_t size = acc_gyrs.cols();
+
+  if (size == 0) {
+    return false;
+  }
+
+  // acceleration vector
+  Eigen::Vector3d acc_I = Eigen::Vector3d::Zero();
+  for (size_t i = 0; i < size; i++) {
+    acc_I += acc_gyrs.col(i).head<3>();
+  }
+
+  acc_I /= double(size);
+  Eigen::Vector3d e_acc = acc_I.normalized();
+
+  // align with ez_W:
+  Eigen::Vector3d ez_W(0.0, 0.0, 1.0);
+  Eigen::Matrix<double, 6, 1> poseIncrement;
+  poseIncrement.head<3>() = Eigen::Vector3d::Zero();
+  poseIncrement.tail<3>() = ez_W.cross(e_acc).normalized();
+  double angle = std::acos(ez_W.transpose() * e_acc);
+  poseIncrement.tail<3>() *= angle;
+
+  T_WI = T_WI * gtsam::Pose3::Expmap(poseIncrement);
+
+  // IMU to Camera transform
+  const gtsam::Pose3& T_CI = sensor_rig_->getImuParams().T_CI;
+  // TODO: this might actually be changeBasis (I think it is!)
+  T_WC = T_WI * T_CI.inverse();
+
+  return true;
 }
 
 }  // namespace dyno2

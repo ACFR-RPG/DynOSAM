@@ -155,7 +155,7 @@ using BbxPerObject = gtsam::FastMap<ObjectId, ObjectBBX>;
 void point3ToCloud(const gtsam::Point3Vector& points,
                    pcl::PointCloud<pcl::PointXYZ>& cloud_out);
 void statisticalOutlierRemoval(const gtsam::Point3Vector& points,
-                               std::vector<size_t>& inlier_indices);
+                               std::vector<uint8_t>& point_status);
 
 /**
  * @brief This function goes through the input 3D landmarks and group them into

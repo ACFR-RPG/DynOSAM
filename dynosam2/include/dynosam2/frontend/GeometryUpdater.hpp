@@ -62,17 +62,10 @@ class GeometryUpdater {
       return false;
     }
 
-    // Calculate the parallax angle between the two viewing rays.
-    gtsam::Pose3 T_LR = dyno::RGBDCamera::StereoExtrinsics(camera_);
-    // gtsam::Point3 point_R = T_LR.inverse() * point;
-    // gtsam::Point2 right_kp_projected;
-    // camera_->project(point_R, &right_kp_projected);
-
     const Eigen::Vector3d ray_left = compute_bearing_(left_kp);
-    Eigen::Vector3d point_left = (point.z() / ray_left(2)) * ray_left;
-    Eigen::Vector3d direction_right = point_left - T_LR.translation();
-    direction_right.normalize();
-
+    const Eigen::Vector3d point_left = (point.z() / ray_left(2)) * ray_left;
+    const Eigen::Vector3d direction_right =
+        (point_left - T_LR_.translation()).normalized();
     const Eigen::Vector3d direction_left = ray_left;
 
     const double focal_length =
@@ -104,6 +97,8 @@ class GeometryUpdater {
   // cached camera paramters
   ComputeBearing compute_bearing_;
   double baseline_;
+  //! Transform from right to left stereo camera
+  gtsam::Pose3 T_LR_;
 };
 
 }  // namespace dyno2

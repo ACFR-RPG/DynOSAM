@@ -104,7 +104,7 @@ class RGBDCamera : public Camera {
   //     Feature::Ptr feature, const bool force_recalculation = false);
 
   double fxb() const;
-  Baseline baseline() const;
+  double baseline() const;
 
   /**
    * @brief Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline
@@ -137,6 +137,14 @@ class RGBDCamera : public Camera {
    * @return gtsam::Cal3_S2
    */
   static gtsam::Cal3_S2 MonoCalibration(const dyno::Camera::Ptr& camera);
+
+  /**
+   * @brief Get the calibrated baseline of the stereo camera.
+   *
+   * @param camera
+   * @return double
+   */
+  static double Baseline(const dyno::Camera::Ptr& camera);
 
  private:
   double fx_b_;

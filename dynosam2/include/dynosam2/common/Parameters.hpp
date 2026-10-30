@@ -6,24 +6,31 @@
 
 namespace dyno2 {
 
+/// @brief These are loaded from FLAG files of the same name instead of yaml
+/// files!
+struct DebugParams {
+  bool use_fullgraph;
+  bool estimate_dynamic_objects;
+
+  DebugParams();
+};
+
 struct EstimationParameters {
   //! Number of keyframes in the optimisation window
-  int num_static_keyframes;
+  int num_static_keyframes{5};
   //! Number of previous dynamic keyframes to the BA window too
-  int num_dynamic_keyframes;
-  bool enforce_realtime;
+  int num_dynamic_keyframes{1};
+  bool enforce_realtime{false};
   //! Minimum number of iterations that is always performed
-  int realtime_static_min_iterations;
-  //! Maximum number of iterations that is always performed, less time-budget
-  //! exceeded
-  int realtime_static_max_iterations;
+  int realtime_static_min_iterations{2};
+  //! Maximum number of iterations, even if not converged
+  int realtime_static_max_iterations{10};
   //! Minimum number of iterations that is always performed
-  int realtime_dynamic_min_iterations;
-  //! Maximum number of iterations that is always performed, less time-budget
-  //! exceeded
-  int realtime_dynamic_max_iterations;
+  int realtime_dynamic_min_iterations{3};
+  //! Maximum number of iterations, even if not converged
+  int realtime_dynamic_max_iterations{10};
   //! Time budget for realtime opimisation (seconds)
-  double realtime_time_limit;
+  double realtime_time_limit{0.03};
 };
 
 struct FrontendParameters {
@@ -53,8 +60,12 @@ struct FrontendParameters {
 struct PipelineParameters {
   FrontendParameters frontend;
   EstimationParameters estimator;
+  DebugParams debug;
+
+  void loadFromYaml(const std::string& file_path);
 };
 
+void declare_config(FrontendParameters& config);
 void declare_config(EstimationParameters& config);
 void declare_config(PipelineParameters& config);
 

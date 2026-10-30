@@ -116,9 +116,6 @@ using Keypoint = gtsam::Point2;
 using Keypoints = gtsam::Point2Vector;  //! Vector of 2D keypoints using gtsam's
                                         //! definition for allocation
 
-//! For RGBD/StereoCamera
-using Baseline = double;
-
 using KeypointCV = cv::KeyPoint;
 using KeypointsCV = std::vector<KeypointCV>;
 
@@ -415,6 +412,15 @@ class MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
     validate();
   }
 
+  /// @brief Constructor overload where we infer the style
+  /// @param estimate
+  /// @param frame
+  /// @param from
+  /// @param to
+  MotionReferenceFrame(ConstEstimate& estimate, ReferenceFrame frame,
+                       FrameId from, FrameId to)
+      : MotionReferenceFrame(estimate, inferStyle(from, to), frame, from, to) {}
+
   friend std::ostream& operator<<(std::ostream& os, const This& t) {
     os << static_cast<const Base&>(t);
     os << "from: " << t.from() << "\n";
@@ -455,6 +461,14 @@ class MotionReferenceFrame : public HeavyReferenceFrameValue<E> {
                "incompatible: "
             << *this;
       }
+    }
+  }
+
+  static Style inferStyle(FrameId from, FrameId to) {
+    if (to == from || to == from - 1) {
+      return Style::F2F;
+    } else {
+      return Style::KF;
     }
   }
 };

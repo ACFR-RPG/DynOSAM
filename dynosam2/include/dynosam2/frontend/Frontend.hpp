@@ -10,6 +10,7 @@
 #include "dynosam2/frontend/MatchingAdaptor.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
 
 namespace dyno2 {
 
@@ -45,10 +46,10 @@ class Frontend {
 
   void solveObjectOdometry(
       ObjectId object_id, const VioGraphEstimator& vo_estimator,
-      const ImageContainer& image_container, DoGraphEstimator& estimator,
-      FeatureBlockContainer& features, FeatureBlockGeometry& geometry,
-      AyncVO& async_context, std::vector<FrameId>& frames_updated,
-      uchar& success);
+      const EstimationParameters& params, const ImageContainer& image_container,
+      DoGraphEstimator& estimator, FeatureBlockContainer& features,
+      FeatureBlockGeometry& geometry, AyncVO& async_context,
+      std::vector<FrameId>& frames_updated, uchar& success);
 
   inline bool isVioInitalised() const {
     return vi_tracking_condition_.is_initalized;
@@ -87,7 +88,6 @@ class Frontend {
                           DoFrame::Ptr frame) const;
 
  private:
-  FrontendParameters parameters_;
   dyno::Camera::Ptr camera_;
   FeatureTracker feature_tracker_;
   double vio_ransac_threshold_3d_2d_;

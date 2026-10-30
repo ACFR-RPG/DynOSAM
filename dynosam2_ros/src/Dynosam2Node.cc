@@ -1,6 +1,5 @@
 #include "dynosam2_ros/Dynosam2Node.hpp"
 
-#include <config_utilities/parsing/yaml.h>
 #include <gflags/gflags.h>
 
 #include "dynosam2_ros/Dynosam2Node-impl.hpp"
@@ -271,7 +270,7 @@ bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
   RCLCPP_INFO_STREAM(node_.get_logger(),
                      "Loading Dynosam2 params from file: " << config_file_path);
 
-  parameters = config::fromYamlFile<PipelineParameters>(config_file_path);
+  parameters.loadFromYaml(config_file_path);
   return true;
 }
 

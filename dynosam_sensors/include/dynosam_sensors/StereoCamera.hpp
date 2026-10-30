@@ -88,7 +88,7 @@ class StereoCamera {
 
   inline cv::Rect getROI2() const { return ROI2_; }
 
-  inline Baseline getBaseline() const { return stereo_baseline_; }
+  inline double getBaseline() const { return stereo_baseline_; }
 
   void undistortRectifyImages(cv::Mat& rectify_left, cv::Mat& rectify_right,
                               const cv::Mat& left, const cv::Mat& right) const;
@@ -123,7 +123,7 @@ class StereoCamera {
       const cv::Size& new_image_size, cv::Mat& R1, cv::Mat& R2, cv::Mat& P1,
       cv::Mat& P2, cv::Mat& Q, cv::Rect& ROI1, cv::Rect& ROI2);
 
-  static void calculateBaseLine(Baseline& base_line, const cv::Mat& Q);
+  static void calculateBaseLine(double& base_line, const cv::Mat& Q);
 
  private:
   Camera::ConstPtr original_left_camera_;
@@ -162,7 +162,7 @@ class StereoCamera {
   //! Pose of the right rectificed camera w.r.t to the robot pose
   gtsam::Pose3 T_R_camR_rect_;
   //! Stereo baseline
-  Baseline stereo_baseline_;
+  double stereo_baseline_;
 
   CameraParams canonical_camera_params_;
 };
