@@ -24,24 +24,24 @@ int main(int argc, char* argv[]) {
   auto camera = std::make_shared<dyno::Camera>(loader.getCameraParams());
   LOG(INFO) << "Made camera";
 
-  // dyno2::FrontendParameters frontend;
-  // frontend.prefer_provided_object_detection = true;
-  // dyno2::FeatureTracker tracker(frontend, camera);
+  dyno2::FrontendParameters frontend;
+  frontend.prefer_provided_object_detection = true;
+  dyno2::FeatureTracker tracker(frontend, camera);
 
-  // loader.registerImageContainerCallback(
-  //     [&](ImageContainer::Ptr container) -> void {
-  //       LOG(INFO) << container->frameId() << " " << container->timestamp();
+  loader.registerImageContainerCallback(
+      [&](ImageContainer::Ptr container) -> void {
+        LOG(INFO) << container->frameId() << " " << container->timestamp();
 
-  //       auto tracking_result = tracker.track(container);
+        auto tracking_result = tracker.track(container);
 
-  //       const WrappedRGBMono wrapped_rgb = container->rgb();
-  //       const cv::Mat rgb = wrapped_rgb.image();
-  //       cv::imshow("Fast Track", tracking_result.featues->draw(rgb, true));
+        const WrappedRGBMono wrapped_rgb = container->rgb();
+        const cv::Mat rgb = wrapped_rgb.image();
+        cv::imshow("Fast Track", tracking_result.featues->draw(rgb, true));
 
-  //       cv::waitKey(1);
-  //     });
+        cv::waitKey(1);
+      });
 
-  // while (loader.spin()) {
-  //   LOG(INFO) << dyno::utils::Statistics::Print();
-  // }
+  while (loader.spin()) {
+    LOG(INFO) << dyno::utils::Statistics::Print();
+  }
 }

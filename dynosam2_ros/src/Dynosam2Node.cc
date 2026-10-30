@@ -180,7 +180,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   // NOTE: MUST be MutuallyExclusive to prevent execution in parallel to itself
   spin_timer_group_ = node_ptr->create_callback_group(
       rclcpp::CallbackGroupType::MutuallyExclusive);
-  spin_timer_ = node_ptr->create_wall_timer(std::chrono::milliseconds(30),
+  spin_timer_ = node_ptr->create_wall_timer(std::chrono::milliseconds(20),
                                             spinOnce, spin_timer_group_);
 
   // dyno::ros::Parameter publish_diagnostics_param =
@@ -207,6 +207,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
 }
 
 Dynosam2Node::Impl::~Impl() {
+  if (data_reader_) data_reader_->shutdown();
   if (data_interface_) data_interface_->shutdown();
   if (pipeline_) pipeline_->shutdown();
   if (viz_) viz_->shutdown();

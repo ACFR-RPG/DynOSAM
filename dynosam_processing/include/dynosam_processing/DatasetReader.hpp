@@ -44,6 +44,7 @@
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/utils/Tuple.hpp"
 #include "dynosam_processing/DataReader.hpp"
+#include "dynosam_processing/ThreadSafeQueue.hpp"
 
 namespace dyno {
 
@@ -637,11 +638,11 @@ class Dataset : public _DynoDatasetConstructor<Timestamp, cv::Mat, cv::Mat,
   }
   const std::string getDatasetPath() const { return dataset_path_; }
 
-  bool processSingle(size_t frame_id) {
+ protected:
+  DynoDataTypesTuple processSingle(size_t frame_id) {
     // TODO: change to check with isProviderValid!!
     if (!dataset_) {
-      LOG(ERROR) << "Dataset not loaded with setLoaders()! Skipping processing";
-      return false;
+      throw std::runtime_error("Dataset not loaded with setLoaders()!");
     }
     if (frame_id >= getDatasetSize()) {
       throw std::runtime_error("Failure when processing a single frame_id!");
@@ -686,16 +687,16 @@ class Dataset : public _DynoDatasetConstructor<Timestamp, cv::Mat, cv::Mat,
     // this is a bit annoting as we will have to copy everything over
     // get default data
     DynoDataTypesTuple loaded_data = std::tuple_cat(default_data, extra_data);
-
-    if (this->data_input_callback_) {
-      auto construct_input_func = [&](auto&&... args) {
-        return this->data_input_callback_(frame_id, args...);
-      };
-      return std::apply(construct_input_func, loaded_data);
-    } else {
-      LOG(WARNING) << "Data input callback not set with Dataset::setCallback!";
-      return false;
-    }
+    return loaded_data;
+    // if (this->data_input_callback_) {
+    //   auto construct_input_func = [&](auto&&... args) {
+    //     return this->data_input_callback_(frame_id, args...);
+    //   };
+    //   return std::apply(construct_input_func, loaded_data);
+    // } else {
+    //   LOG(WARNING) << "Data input callback not set with
+    //   Dataset::setCallback!"; return false;
+    // }
   }
 
   // //TODO: set start and end idx?
@@ -791,6 +792,7 @@ class DatasetReader : public Dataset<DataTypes...>, public DataReader {
     setEndingFrameFromRequested();
   }
 
+  // TODO: I think wont work anymore since we do the processing asynchronously!
   /**
    * @brief Resets the dataset to the "start", such that the next call to spin
    * will begin the dataset again from the starting frame id. The
@@ -812,26 +814,57 @@ class DatasetReader : public Dataset<DataTypes...>, public DataReader {
   // constructor level anyway!
   virtual int datasetSize() const override { return (int)ending_frame_id_; }
 
+  virtual void shutdown() override {
+    shutdown_.store(true, std::memory_order_relaxed);
+    continue_processing_.store(false, std::memory_order_relaxed);
+    preloaded_data_queue.shutdown();
+    loading_cv_.notify_all();
+
+    if (data_loading_thread_.joinable()) {
+      data_loading_thread_.join();
+    }
+  }
+
   virtual bool spin() override {
     if (!isProviderValid()) {
       LOG(ERROR) << "Cannot spin as provider is invalid";
+      continue_processing_ = false;
       return false;
     }
 
     if (active_frame_id_ >= ending_frame_id_) {
       LOG_FIRST_N(INFO, 1) << "Finished dataset";
       emitOnFinishCallbacks();
+      continue_processing_ = false;
       return false;
     }
 
-    utils::ChronoTimingStats dataset_spin_timer("dataset_spin");
-    if (!BaseDynoDataset::processSingle(active_frame_id_)) {
-      LOG(INFO) << "Processing single frame failed at frame id "
-                << active_frame_id_;
+    if (is_first_spin_) {
+      beginBackgroundProcessing();
+      is_first_spin_ = false;
+    }
+
+    DynoData loaded_data{};
+    // // may return false when shutdown?
+    if (!preloaded_data_queue.popBlocking(loaded_data)) {
       return false;
     }
 
-    active_frame_id_++;
+    const auto new_frame_id = loaded_data.frame_id;
+    active_frame_id_.store(new_frame_id, std::memory_order_relaxed);
+    loading_cv_.notify_one();
+
+    if (this->data_input_callback_) {
+      auto construct_input_func = [&](auto&&... args) {
+        return this->data_input_callback_(new_frame_id, args...);
+      };
+      return std::apply(construct_input_func, loaded_data.data);
+    } else {
+      LOG(WARNING) << "Data input callback not set with Dataset::setCallback!";
+      return false;
+    }
+
+    // active_frame_id_++;
     return true;
   }
 
@@ -894,10 +927,55 @@ class DatasetReader : public Dataset<DataTypes...>, public DataReader {
     ending_frame_id_ = ending_frame;
   }
 
+  void beginBackgroundProcessing() {
+    static constexpr size_t N = 30;
+    LOG(INFO) << "Starting background dataset loading...";
+    data_loading_thread_ = std::thread([this] {
+      auto should_continue = [this]() {
+        return !shutdown_.load(std::memory_order_relaxed) &&
+               continue_processing_.load(std::memory_order_relaxed) &&
+               current_loaded_.load(std::memory_order_relaxed) <
+                   ending_frame_id_.load(std::memory_order_relaxed);
+      };
+
+      while (should_continue()) {
+        const size_t loaded = current_loaded_.load(std::memory_order_relaxed);
+
+        const size_t active = active_frame_id_.load(std::memory_order_relaxed);
+
+        if (loaded >= active && (loaded - active) < N) {
+          for (size_t i = 0; i < 2 * N && should_continue(); ++i) {
+            const size_t frame_id =
+                current_loaded_.fetch_add(1, std::memory_order_relaxed);
+
+            auto data = BaseDynoDataset::processSingle(frame_id);
+            preloaded_data_queue.push(DynoData(data, frame_id));
+            // Process and enqueue data...
+          }
+        } else {
+          std::unique_lock<std::mutex> lock(loading_mutex_);
+          loading_cv_.wait(lock, [this, &should_continue]() {
+            const size_t loaded =
+                current_loaded_.load(std::memory_order_relaxed);
+
+            const size_t active =
+                active_frame_id_.load(std::memory_order_relaxed);
+
+            return !should_continue() ||
+                   (loaded >= active && (loaded - active) < N);
+          });
+        }
+      }
+
+      LOG(INFO) << "Finished background dataset loading";
+      preloaded_data_queue.shutdown();
+    });
+  }
+
  private:
-  size_t active_frame_id_ = 0u;
-  size_t ending_frame_id_ =
-      0u;  // Start at 0, but this will be set upon the first call to spin()
+  std::atomic<size_t> active_frame_id_ = 0u;
+  // Start at 0, but this will be set upon the first call to spin()
+  std::atomic<size_t> ending_frame_id_ = 0u;
 
   int requested_starting_frame_id_{-1};
   int requested_ending_frame_id_{-1};
@@ -905,6 +983,23 @@ class DatasetReader : public Dataset<DataTypes...>, public DataReader {
   bool is_first_spin_{true};
 
   using BaseDynoDataset::getDatasetSize;
+  using DynoDataTypesTuple = typename BaseDynoDataset::DynoDataTypesTuple;
+
+  struct DynoData {
+    DynoDataTypesTuple data;
+    size_t frame_id;
+    DynoData(DynoDataTypesTuple d, size_t fid) : data(d), frame_id(fid) {}
+    DynoData() {}
+  };
+
+  ThreadsafeQueue<DynoData> preloaded_data_queue;
+  std::thread data_loading_thread_;
+
+  static constexpr size_t LoadingN = 10;
+  std::atomic<size_t> current_loaded_{0u};
+  std::atomic_bool continue_processing_{true};
+  std::mutex loading_mutex_;
+  std::condition_variable loading_cv_;
 };
 
 }  // namespace dyno
