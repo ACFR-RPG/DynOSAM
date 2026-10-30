@@ -32,6 +32,7 @@
 
 #include <gtsam/base/FastMap.h>
 
+#include <boost/unordered/unordered_flat_set.hpp>
 #include <memory>
 #include <unordered_set>
 
@@ -95,15 +96,23 @@ struct NodeStructures {
       return a->getId() < b->getId();
     }
 
+    bool operator()(const Node& a, const Node& b) const {
+      return a.getId() < b.getId();
+    }
+
     bool operator()(const SharedNode& a, KeyType id) const {
       return a->getId() < id;
     }
     bool operator()(KeyType id, const SharedNode& a) const {
       return id < a->getId();
     }
+
+    bool operator()(const Node& a, KeyType id) const { return a.getId() < id; }
+    bool operator()(KeyType id, const Node& a) const { return id < a.getId(); }
   };
 
   /** Define a specalist node set that also has some specific functionality */
+  // TODO: could look at using boost::flat_set since we access data so often!
   class SharedNodeSet : public dyno::FastSet<SharedNode, Compare> {
    public:
     typedef dyno::FastSet<SharedNode, Compare> Base;
@@ -142,6 +151,8 @@ struct NodeStructures {
    *
    * Additionally allows O(1) access to the set of (unordered) keys since these
    * are stored sepately upon insertion.
+   *
+   * TODO: likely depricte in favour of UnorderedSharedNodeSet
    *
    */
   class SharedNodeVector {
@@ -213,11 +224,147 @@ struct NodeStructures {
     std::vector<KeyType> keys_;
   };
 
+  struct Hash {
+    using is_transparent = void;
+
+    inline std::size_t operator()(const SharedNode& node) const noexcept {
+      return std::hash<KeyType>{}(NodeTraits::getKey(node));
+    }
+
+    inline std::size_t operator()(const Node& node) const noexcept {
+      return std::hash<KeyType>{}(NodeTraits::getKey(node));
+    }
+
+    inline std::size_t operator()(const KeyType& key) const noexcept {
+      return std::hash<KeyType>{}(key);
+    }
+  };
+
+  struct Equals {
+    using is_transparent = void;
+
+    inline bool operator()(const SharedNode& lhs,
+                           const SharedNode& rhs) const noexcept {
+      return NodeTraits::getKey(lhs) == NodeTraits::getKey(rhs);
+    }
+
+    inline bool operator()(const SharedNode& a,
+                           const KeyType& id) const noexcept {
+      return NodeTraits::getKey(a) == id;
+    }
+    inline bool operator()(const KeyType& id, const SharedNode& a) const {
+      return id == NodeTraits::getKey(a);
+    }
+
+    inline bool operator()(const Node& lhs, const Node& rhs) const noexcept {
+      return NodeTraits::getKey(lhs) == NodeTraits::getKey(rhs);
+    }
+
+    inline bool operator()(const Node& a, const KeyType& id) const noexcept {
+      return NodeTraits::getKey(a) == id;
+    }
+    inline bool operator()(const KeyType& id, const Node& a) const {
+      return id == NodeTraits::getKey(a);
+    }
+  };
+
+  /**
+   * @brief An unordered set of SharedNodes that enables hetrogenous lookup
+   * (ie look up by Key not Node).
+   * As we are in c++17 the std::unordered_set does not support this and we do
+   * not yet have access to any std flat set implementations (which are faster
+   * in iteration as they avoid bucket lookups!)
+   *
+   * The overall performance of unordered_flat_set is much better than that of
+   * boost::unordered_set or other implementations of std::unordered_set.
+   *
+   * See details in:
+   * https://www.boost.org/doc/libs/latest/libs/unordered/doc/html/unordered/reference/unordered_flat_set.html
+   *
+   */
+  class UnorderedSharedNodeSet {
+   public:
+    UnorderedSharedNodeSet() = default;
+    ~UnorderedSharedNodeSet() = default;
+
+    template <class CONTAINER>
+    explicit UnorderedSharedNodeSet(const CONTAINER& container) {
+      reserve(std::size(container));
+      for (const auto& value : container) {
+        insert(value);
+      }
+    }
+
+    explicit UnorderedSharedNodeSet(
+        std::initializer_list<SharedNode> container) {
+      reserve(std::size(container));
+      for (const auto& value : container) {
+        insert(value);
+      }
+    }
+
+    bool operator==(const UnorderedSharedNodeSet& rhs) const noexcept {
+      return data_ == rhs.data_;
+    }
+
+    bool operator!=(const UnorderedSharedNodeSet& rhs) const noexcept {
+      return !(*this == rhs);
+    }
+
+    inline bool empty() const noexcept { return data_.empty(); }
+    inline auto size() const noexcept { return data_.size(); }
+    inline bool exists(const KeyType& key) const { return data_.count(key); }
+
+    inline void reserve(size_t n) { data_.reserve(n); }
+
+    bool insert(const SharedNode& value) {
+      const auto [_, success] = data_.insert(value);
+      return success;
+    }
+
+    bool erase(KeyType key) { return data_.erase(key); }
+
+    template <typename NODE>
+    bool erase(const NODE& node) {
+      return data_.erase(NodeTraits::getKey(node));
+    }
+
+    // const SharedNode& operator[](size_t i) const noexcept { return data_[i];
+    // } SharedNode& operator[](size_t i) noexcept { return data_[i]; }
+
+    inline auto find(const KeyType& key) const { return data_.find(key); }
+
+    inline const SharedNode& front() const { return data_.front(); }
+    inline const SharedNode& back() const { return data_.back(); }
+
+    auto begin() const noexcept { return data_.begin(); }
+    auto end() const noexcept { return data_.end(); }
+
+    /* Reurn all keys for the nodes stored. With the undordered version we can
+     * do this in O(1)! */
+    // const std::vector<KeyType>& collectKeys() const { return keys_; }
+
+    std::vector<KeyType> collectKeys() const {
+      std::vector<KeyType> keys;
+      keys.reserve(size());
+      for (const auto& node : data_) {
+        keys.push_back(KeyGetter{}(node));
+      }
+      return keys;
+    }
+
+   private:
+    using ImplVector = boost::unordered_flat_set<SharedNode, Hash, Equals>;
+    ImplVector data_;
+  };
+
  public:
   /* Define the type of container that each node will use based on if it should
    * be ordered or not!*/
+  // using SharedNodes =
+  //     std::conditional_t<isOrdered, SharedNodeSet, SharedNodeVector>;
   using SharedNodes =
-      std::conditional_t<isOrdered, SharedNodeSet, SharedNodeVector>;
+      std::conditional_t<isOrdered, SharedNodeSet, UnorderedSharedNodeSet>;
 
   /* Define the type of container that each MapInterface will use based on if it
    * should be ordered or not!*/
@@ -581,6 +728,9 @@ class ObjectNodeBase {
 };
 
 template <typename NodeTypes>
+class LandmarkNodeBase;
+
+template <typename NodeTypes>
 class FrameNodeBase {
  public:
   using M = typename NodeTypes::Measurement;
@@ -706,6 +856,7 @@ class FrameNodeBase {
   }
 
  private:
+  friend class LandmarkNodeBase<NodeTypes>;
   /** Construct a vector of LandmarkMeasurementPair from a set of input
    * Landmarks using this frame for measurements
    */
@@ -751,6 +902,8 @@ class LandmarkNodeBase {
 
  private:
   typedef FrameNodeTraits<FrameNode> FrameNodeTraitsT;
+  typedef ObjectNodeTraits<ObjectNode> ObjectNodeTraitsT;
+  typedef typename ObjectNodeTraitsT::SharedNode SharedObject;
 
   typedef NodeStructures<FrameNodeTraitsT> FrameNodeStructuresT;
 
@@ -812,6 +965,63 @@ class LandmarkNodeBase {
     frames_.insert(frame_node);
     measurements_.insert2(frame_node, measurement);
     CHECK_EQ(frames_.size(), measurements_.size());
+  }
+
+  bool remove(SharedFrame frame) { return remove(frame->frameId()); }
+
+  /**
+   * @brief Removes a measurement of this landmark at frame k.
+   *
+   * This modifies both the SharedFrame that observes this landmark
+   * and potentially the Object associated with this frame.
+   *
+   *
+   * @param frame_id
+   * @return true
+   * @return false
+   */
+  bool remove(FrameId frame_id) {
+    bool was_removed{false};
+    // first delete from internal frames (ie all measurements)
+    // as this is also likely to be the derived frames
+    SharedFrame frame{nullptr};
+    auto it = frames_.find(frame_id);
+    if (it != frames_.end()) {
+      frame = *it;
+      frames_.erase(it);
+      measurements_.erase(frame);
+      CHECK_EQ(frames_.size(), measurements_.size());
+
+      // if no more observations of this landmark, remove from the object
+      if (frames_.empty() && !isStatic()) {
+        auto obj_it = frame->objects_.find(objectId());
+        CHECK(obj_it != frame->objects_.end());
+        // must do this before calling deleteThisFromFrame which may
+        // remove the object from the SharedFrame::objects_ list if there are no
+        // more measurements of that object in that frame
+        SharedObject object = *obj_it;
+        object->landmarks().erase(asDerived());
+      }
+      // delete all referecnes for this landmark in frame
+      deleteThisFromFrame(frame);
+      was_removed = true;
+    }
+
+    Frames& frames = asDerived().getSeenFrames();
+    auto it_derived = frames.find(frame_id);
+    if (it_derived != frames.end()) {
+      // if it was removed from the total list of observations
+      // it must also be removed here (that is we cannot have a frame
+      // in the derived set that is not also in total set)
+      CHECK(was_removed);
+      SharedFrame frame_derived = *it_derived;
+      // they must be the same frame!
+      CHECK_EQ(frame_derived, frame);
+      // firstly erase it from the set of frames
+      frames.erase(it_derived);
+    }
+
+    return was_removed;
   }
 
   /**
@@ -927,6 +1137,30 @@ class LandmarkNodeBase {
 
  protected:
  private:
+  void deleteThisFromFrame(SharedFrame frame) {
+    Derived& this_node = asDerived();
+
+    if (isStatic()) {
+      CHECK(frame->static_landmarks_.erase(this_node));
+      return;
+    }
+
+    CHECK(frame->dynamic_landmarks_.erase(this_node));
+
+    const ObjectId oid = objectId();
+
+    auto it = frame->dynamic_landmarks_j_.find(oid);
+    CHECK(it != frame->dynamic_landmarks_j_.end());
+
+    auto& landmarks = it->second;
+    CHECK(landmarks.erase(this_node));
+
+    if (landmarks.empty()) {
+      frame->dynamic_landmarks_j_.erase(it);
+      frame->objects_.erase(oid);
+    }
+  }
+
   const Derived& asDerived() const {
     return static_cast<const Derived&>(*this);
   }
