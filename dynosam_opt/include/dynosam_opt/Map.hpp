@@ -374,6 +374,9 @@ struct NodeStructures {
 };
 
 template <typename NodeTraits>
+class Map;
+
+template <typename NodeTraits>
 class MapInterfaceBase {
  public:
   typedef NodeTraits NodeTraitsT;
@@ -402,8 +405,15 @@ class MapInterfaceBase {
   bool exists(KeyType key) const { return nodes_.exists(key); }
 
   const SharedNode& at(KeyType key) const { return nodes_.at(key); }
-
   SharedNode& at(KeyType key) { return nodes_.at(key); }
+
+  // use erasure carefully (really only exposes for the map class)
+  // erasing only deleted the pointer in the interface, it does not
+  // remove its connections in the map!
+  bool erase(SharedNode node) {
+    return nodes_.erase(NodeTraitsT::getKey(node));
+  }
+  bool erase(KeyType key) { return nodes_.erase(key); }
 
   size_t size() const { return nodes_.size(); }
   bool empty() const { return nodes_.empty(); }
@@ -552,6 +562,8 @@ class LandmarkNodeInterface
     return this->template getNodes();
   }
   SharedNodeMap& getLandmarks() { return this->template getNodes(); }
+
+ protected:
 };
 
 template <typename ObjectNode>
@@ -1173,9 +1185,6 @@ class LandmarkNodeBase {
 
   Frames frames_;
   Measurements measurements_;
-
-  // bool inlier_{true};
-  // bool in_optimisation
 };
 
 template <typename NodeTypes>
@@ -1364,6 +1373,41 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
 
   std::shared_ptr<ObjectNodeInterfaceT> asObjectInterface() {
     return std::dynamic_pointer_cast<ObjectNodeInterfaceT>(this->getPtr());
+  }
+
+  /**
+   * @brief Removes a landmark from the graph and all associated measurements
+   *
+   * @param tid
+   * @param observing_frames
+   * @return true
+   * @return false
+   */
+  bool removeLandmark(TrackletId tid, FrameIds* observing_frames = nullptr) {
+    auto interface = this->asLandmarkInterface();
+    SharedLandmarkNodeT lmk_node = interface->getLandmark(tid);
+    if (!lmk_node) {
+      return false;
+    }
+
+    // a slightly cheap way of collecting all underlying frames (derived or not)
+    // is to cast down to the base class and call the function directly!
+    LandmarkNodeBase<NodeTypes>& base_lmk_node =
+        static_cast<LandmarkNodeBase<NodeTypes>&>(*lmk_node);
+    // take a copy as the interal structure will get modified
+    auto seen_frames = base_lmk_node.getSeenFrames();
+    if (observing_frames) {
+      observing_frames->clear();
+      observing_frames->reserve(seen_frames.size());
+    }
+
+    for (const auto& frame : seen_frames) {
+      CHECK(base_lmk_node.remove(frame));
+      if (observing_frames) observing_frames->push_back(frame->getId());
+    }
+
+    interface->erase(lmk_node);
+    return true;
   }
 
   template <typename DERIVEDSTATUS>

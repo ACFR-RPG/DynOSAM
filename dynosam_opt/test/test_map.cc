@@ -1046,6 +1046,204 @@ TEST(Map, removeDynamicLandmarkDoesNotAffectOtherObjects) {
   EXPECT_EQ(frame0->dynamicLandmarks().collectKeys(), TrackletIds({1}));
 }
 
+TEST(Map, removeLandmarkRemovesAllObservationsAndObjectAssociation) {
+  Map2d::Ptr map = Map2d::create();
+  StatusKeypointVector measurements;
+
+  // Tracklet 0 belongs to object 1 and is observed in frames 0 and 1.
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 0));
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 1));
+
+  map->updateObservations(measurements);
+
+  auto landmark = map->getLandmark(0);
+  auto object = map->getObject(1);
+  auto frame0 = map->getFrame(0);
+  auto frame1 = map->getFrame(1);
+
+  ASSERT_NE(landmark, nullptr);
+  ASSERT_NE(object, nullptr);
+  ASSERT_NE(frame0, nullptr);
+  ASSERT_NE(frame1, nullptr);
+
+  // Sanity check before removal.
+  EXPECT_EQ(landmark->numObservations(), 2u);
+  EXPECT_EQ(object->trackletIds(), TrackletIds({0}));
+  EXPECT_EQ(object->getSeenFrameIds(), FrameIds({0, 1}));
+  EXPECT_TRUE(frame0->objectObserved(1));
+  EXPECT_TRUE(frame1->objectObserved(1));
+
+  // Remove the entire landmark.
+  FrameIds observing_frames;
+  EXPECT_TRUE(map->removeLandmark(0, &observing_frames));
+
+  // The observing frames should be reported.
+  EXPECT_EQ(observing_frames, FrameIds({0, 1}));
+
+  // The landmark should no longer exist in the map.
+  EXPECT_FALSE(map->landmarkExists(0));
+  EXPECT_EQ(map->getLandmark(0), nullptr);
+
+  // The landmark itself should have no remaining observations.
+  EXPECT_EQ(landmark->numObservations(), 0u);
+  EXPECT_TRUE(landmark->getSeenFrameIds().empty());
+
+  // Crucially, the landmark must also be removed from its associated object.
+  EXPECT_TRUE(object->landmarks().empty());
+  EXPECT_TRUE(object->trackletIds().empty());
+
+  // Since the object's seen frames are derived from its landmarks,
+  // it should no longer report any observed frames.
+  EXPECT_TRUE(object->getSeenFrames().empty());
+  EXPECT_TRUE(object->getSeenFrameIds().empty());
+
+  // Neither frame should retain the landmark or object association.
+  EXPECT_TRUE(frame0->dynamicLandmarks().empty());
+  EXPECT_TRUE(frame1->dynamicLandmarks().empty());
+
+  EXPECT_FALSE(frame0->objectObserved(1));
+  EXPECT_FALSE(frame1->objectObserved(1));
+
+  EXPECT_TRUE(frame0->objectsSeen().empty());
+  EXPECT_TRUE(frame1->objectsSeen().empty());
+}
+
+TEST(Map, removeLandmarkPreservesOtherLandmarksOfObject) {
+  Map2d::Ptr map = Map2d::create();
+  StatusKeypointVector measurements;
+
+  // Tracklet 0 belongs to object 1 and is observed in frames 0 and 1.
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 0));
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 1));
+
+  // Tracklet 1 belongs to the same object and is observed in frames 1 and 2.
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1, 1));
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1, 2));
+
+  map->updateObservations(measurements);
+
+  auto object = map->getObject(1);
+  ASSERT_NE(object, nullptr);
+
+  auto landmark0 = map->getLandmark(0);
+  auto landmark1 = map->getLandmark(1);
+
+  ASSERT_NE(landmark0, nullptr);
+  ASSERT_NE(landmark1, nullptr);
+
+  // Remove tracklet 0.
+  FrameIds observing_frames;
+  EXPECT_TRUE(map->removeLandmark(0, &observing_frames));
+
+  EXPECT_EQ(observing_frames, FrameIds({0, 1}));
+
+  // Tracklet 0 should be completely removed.
+  EXPECT_FALSE(map->landmarkExists(0));
+  EXPECT_EQ(landmark0->numObservations(), 0u);
+
+  // Tracklet 1 should remain associated with the object.
+  EXPECT_TRUE(map->landmarkExists(1));
+  EXPECT_EQ(object->trackletIds(), TrackletIds({1}));
+  EXPECT_EQ(object->landmarks().size(), 1u);
+
+  // The object should still be observed in frames 1 and 2,
+  // but no longer in frame 0.
+  EXPECT_EQ(object->getSeenFrameIds(), FrameIds({1, 2}));
+
+  auto frame0 = map->getFrame(0);
+  auto frame1 = map->getFrame(1);
+  auto frame2 = map->getFrame(2);
+
+  ASSERT_NE(frame0, nullptr);
+  ASSERT_NE(frame1, nullptr);
+  ASSERT_NE(frame2, nullptr);
+
+  EXPECT_FALSE(frame0->objectObserved(1));
+  EXPECT_TRUE(frame1->objectObserved(1));
+  EXPECT_TRUE(frame2->objectObserved(1));
+
+  EXPECT_TRUE(frame0->dynamicLandmarks().empty());
+  EXPECT_EQ(frame1->dynamicLandmarks().collectKeys(), TrackletIds({1}));
+  EXPECT_EQ(frame2->dynamicLandmarks().collectKeys(), TrackletIds({1}));
+
+  // The object should disappear from frame 0, but remain in frames 1 and 2.
+  EXPECT_TRUE(frame0->objectsSeen().empty());
+  EXPECT_TRUE(frame1->objectObserved(1));
+  EXPECT_TRUE(frame2->objectObserved(1));
+}
+
+TEST(Map, removeFinalLandmarkRemovesObjectFromAllFrames) {
+  Map2d::Ptr map = Map2d::create();
+  StatusKeypointVector measurements;
+
+  // Two landmarks belonging to the same object.
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 0));
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 1));
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(1, 1, 1));
+
+  map->updateObservations(measurements);
+
+  auto object = map->getObject(1);
+  ASSERT_NE(object, nullptr);
+
+  auto frame0 = map->getFrame(0);
+  auto frame1 = map->getFrame(1);
+
+  ASSERT_NE(frame0, nullptr);
+  ASSERT_NE(frame1, nullptr);
+
+  // Remove the first landmark. The object should still be observed in frame 1
+  // through the second landmark.
+  EXPECT_TRUE(map->removeLandmark(0));
+
+  EXPECT_EQ(object->trackletIds(), TrackletIds({1}));
+  EXPECT_EQ(object->getSeenFrameIds(), FrameIds({1}));
+
+  EXPECT_FALSE(frame0->objectObserved(1));
+  EXPECT_TRUE(frame1->objectObserved(1));
+
+  // Now remove the final landmark belonging to the object.
+  EXPECT_TRUE(map->removeLandmark(1));
+
+  EXPECT_FALSE(map->landmarkExists(1));
+
+  // No landmarks or observations should remain on the object.
+  EXPECT_TRUE(object->landmarks().empty());
+  EXPECT_TRUE(object->trackletIds().empty());
+  EXPECT_TRUE(object->getSeenFrames().empty());
+  EXPECT_TRUE(object->getSeenFrameIds().empty());
+
+  // Neither frame should retain the object association.
+  EXPECT_TRUE(frame0->objectsSeen().empty());
+  EXPECT_TRUE(frame1->objectsSeen().empty());
+
+  EXPECT_FALSE(frame0->objectObserved(1));
+  EXPECT_FALSE(frame1->objectObserved(1));
+
+  EXPECT_TRUE(frame0->dynamicLandmarks().empty());
+  EXPECT_TRUE(frame1->dynamicLandmarks().empty());
+}
+
+TEST(Map, removeNonexistentLandmark) {
+  Map2d::Ptr map = Map2d::create();
+  StatusKeypointVector measurements;
+
+  measurements.push_back(dyno_testing::makeStatusKeypointMeasurement(0, 1, 0));
+  map->updateObservations(measurements);
+
+  auto object = map->getObject(1);
+  ASSERT_NE(object, nullptr);
+
+  // Attempt to remove a landmark that does not exist.
+  EXPECT_FALSE(map->removeLandmark(42));
+
+  // Existing graph state should remain unchanged.
+  EXPECT_TRUE(map->landmarkExists(0));
+  EXPECT_EQ(object->trackletIds(), TrackletIds({0}));
+  EXPECT_EQ(object->getSeenFrameIds(), FrameIds({0}));
+  EXPECT_TRUE(map->getFrame(0)->objectObserved(1));
+}
+
 // TODO: bring back!!
 //  TEST(Map, testSimpleEstimateAccessWithPose) {
 //      Map2d::Ptr map = Map2d::create();
