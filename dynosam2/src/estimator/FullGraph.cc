@@ -77,6 +77,7 @@ void FullGraph::addStaticMeasurements(
       const dyno::Landmark& lmk = estimator.getLandmark(tid);
 
       update_.new_values.insert(lmk_sym, lmk);
+      update_.new_lmks.push_back(kpi);
       this->setLandmark(tid, lmk);
     }
 
@@ -201,9 +202,8 @@ bool FullGraph::synchronise(VioGraph* vio_graph, const DoGraphPtrMap& do_graphs,
 
   // update landmarks
   const LandmarkMap& landmark_map = static_cast<const LandmarkMap&>(*this);
-  for (const auto& [tid, idx] : landmark_map) {
-    const auto& lmk = landmark_map.landmarkAt(idx);
-    vio_graph->setLandmark(tid, lmk);
+  for (const auto& [tid, lmk_W] : landmark_map) {
+    vio_graph->setLandmark(tid, lmk_W);
   }
 
   has_update_ = false;
@@ -235,25 +235,6 @@ bool FullGraph::getVioState(const dyno::FrameId fid, VioGraphState*& state) {
   state = vio_states_.state(fid);
   return true;
 }
-// bool FullGraph::getDoState(const dyno::TemporalObjectId& tid, DOGraphState*&
-// state) {
-//   auto it = states_.find(tid.frameId());
-//   if(it == states_.end()) {
-//     return false;
-//   }
-
-//   FullGraphState& fgs = it->second;
-//   if(fgs.do_graph_states) {
-//     auto it = fgs.do_graph_states->find(tid.objectId());
-//     if(it == fgs.do_graph_states->end()) {
-//       return false;
-//     }
-
-//     state = &it->second;
-//     return true;
-//   }
-//   return false;
-// }
 
 void FullGraph::optimizeImpl(IncrementalUpdate update) {
   dyno::utils::ChronoTimingStats opt_t("full_graph.opt");
@@ -294,6 +275,12 @@ void FullGraph::optimizeImpl(IncrementalUpdate update) {
     LOG(INFO) << "Adding new VO state in full graph k=" << k0;
   }
 
+  for (const dyno::KeypointIdentifier& kpi : update.new_lmks) {
+    if (kpi.objectId() == dyno::background_label) {
+      vio_states_.lmks.push_back(kpi.trackletId());
+    }
+  }
+
   // update all states
   const gtsam::Values values = isam_->calculateBestEstimate();
   for (auto [k0, vio_state] : vio_states_) {
@@ -301,6 +288,15 @@ void FullGraph::optimizeImpl(IncrementalUpdate update) {
         values.at<gtsam::Pose3>(gtsam::Symbol('x', k0));
     // cannot upate velocity unless with IMU?
     vio_state->pose_W = X_W_k0_refined;
+  }
+
+  // update all static lmks that are in the graph
+  for (const dyno::TrackletId tid : vio_states_.lmks) {
+    gtsam::Point3 m_W_refined =
+        values.at<gtsam::Point3>(gtsam::Symbol('l', tid));
+    // check false to indicate that this landmark is not new!
+    // is, we 'assigned' not 'inserted
+    CHECK(!this->setLandmark(tid, m_W_refined));
   }
 
   is_running_full_opt_ = false;

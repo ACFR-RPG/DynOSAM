@@ -39,11 +39,6 @@ class KeyframeStates : public States<STATE> {
   auto end() const { return this->states_.end(); }
 };
 
-// TODO: this probably doesn't even need both the frames internally (which are
-// usually used to build the measurements) or the map since we solve
-// incrementally we should just be getting measurements directly from the
-// estimator's map and
-
 /**
  * @brief Solves the full Dynamic SLAM problem via incremental inference using
  * iSAM2
@@ -82,6 +77,7 @@ class FullGraph : public States<FullGraphState>, public LandmarkMap {
   struct IncrementalUpdate {
     // States that are involved in this bundle
     UpdatedStates new_states;
+    std::vector<KeypointIdentifier> new_lmks;
     gtsam::NonlinearFactorGraph new_factors;
     gtsam::Values new_values;
   };
@@ -103,12 +99,13 @@ class FullGraph : public States<FullGraphState>, public LandmarkMap {
   // Current incremental bundle that will be added to the optimizer upon next
   // call to optimize
   IncrementalUpdate update_;
-  //! States involved each time optimize was called
-  // std::vector<UpdatedStates> involved_states_;
 
   //! Quick look up for Vio states (ie keyframes) that have been optimised
   //! Pointer to valid VioGraphState held in FullGraphState of the same frame
-  typedef KeyframeStates<VioGraphState*> VioGraphStates;
+  //! and includes vector of static landmarks that have been optimised
+  struct VioGraphStates : public KeyframeStates<VioGraphState*> {
+    TrackletIds lmks;
+  };
   VioGraphStates vio_states_;
 
   std::thread full_graph_opt_thread_;

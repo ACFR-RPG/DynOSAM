@@ -88,41 +88,26 @@ bool VioGraph::poseExists(dyno::FrameId frame_id) const {
   return stateExists(frame_id);
 }
 
-bool VioGraph::getLandmark(dyno::TrackletId id, MapPoint& map_point) const {
-  auto it = LandmarkMap::find(id);
-  if (it == LandmarkMap::end()) {
+bool VioGraph::getMapPoint(dyno::TrackletId id, MapPoint& map_point) const {
+  dyno::Landmark lmk;
+  if (!this->getLandmark(id, lmk)) {
     return false;
   }
-
-  const dyno::Landmark& lmk = LandmarkMap::landmarkAt(it->second);
   map_point = MapPoint{lmk, dyno::background_label, id};
   return true;
 }
 
-size_t VioGraph::getLandmarks(MapPointVector& map_points) const {
-  if (LandmarkMap::isContiguous()) {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector(LandmarkMap::size());
-    for (size_t i = 0; i < n; i++) {
-      const auto [id, lmk] = LandmarkMap::at(i);
-      map_points[i] = MapPoint{lmk, dyno::background_label, id};
-    }
-  } else {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector();
-    map_points.reserve(n);
-
-    // walk over valid indices
-    for (auto it = LandmarkMap::begin(); it != LandmarkMap::end(); it++) {
-      Index valid_index = it->second;
-      const auto [id, lmk] = LandmarkMap::at(valid_index);
-      map_points.push_back(MapPoint{lmk, dyno::background_label, id});
-    }
+size_t VioGraph::getMapPoints(MapPointVector& map_points) const {
+  const LandmarkMap& landmark_map = this->asLandmarkMap();
+  const size_t n = landmark_map.numLandmarks();
+  map_points = MapPointVector(n);
+  for (const auto [id, lmk] : landmark_map) {
+    map_points.push_back(MapPoint{lmk, dyno::background_label, id});
   }
   return map_points.size();
 }
 
-size_t VioGraph::getLandmarks(MapPoints& map_points) const { return 0; }
+size_t VioGraph::getMapPoints(MapPoints& map_points) const { return 0; }
 
 bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
   // we do this until we fix speed with covisiblity and growing checks as we

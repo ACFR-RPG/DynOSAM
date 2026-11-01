@@ -270,6 +270,20 @@ struct BaGraphStates : public BaGraph,
                        public LandmarkMap {
   BaGraphStates(dyno::Camera::Ptr camera)
       : BaGraph(camera), States<STATE>(), LandmarkMap() {}
+
+  inline States<STATE>& asStates() {
+    return static_cast<States<STATE>&>(*this);
+  }
+  inline const States<STATE>& asStates() const {
+    return static_cast<const States<STATE>&>(*this);
+  }
+
+  inline LandmarkMap& asLandmarkMap() {
+    return static_cast<LandmarkMap&>(*this);
+  }
+  inline const LandmarkMap& asLandmarkMap() const {
+    return static_cast<const LandmarkMap&>(*this);
+  }
 };
 
 }  // namespace dyno2

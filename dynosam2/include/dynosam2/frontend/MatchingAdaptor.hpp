@@ -55,7 +55,7 @@ class FrameAbsoluteAdaptor : public opengv::absolute_pose::AbsoluteAdapterBase {
   }
 
   inline const gtsam::Point3& landmark(size_t i) const {
-    return reference_geometry_.landmarkAt(referenceIndex(i));
+    return reference_geometry_.getLandmark(this->trackletId(i));
   }
 
   /// @brief Direct access to the inlier via pointer access for match i
@@ -94,8 +94,7 @@ class FrameAbsoluteAdaptor : public opengv::absolute_pose::AbsoluteAdapterBase {
   }
 
  private:
-  inline Index localIndex(size_t i) const { return matches_.at(i).first; }
-  inline Index referenceIndex(size_t i) const { return matches_.at(i).second; }
+  inline Index localIndex(size_t i) const { return matches_.at(i); }
 
  private:
   FeatureBlockGeometry& local_geometry_;
@@ -108,7 +107,10 @@ class FrameAbsoluteAdaptor : public opengv::absolute_pose::AbsoluteAdapterBase {
 
   // ! Index of matches between local geometry <-> reference geometry
   // IndexMatches matches_;
-  std::unordered_map<Index, IndexMatch> matches_;
+  // std::unordered_map<Index, IndexMatch> matches_;
+
+  //! Index of matches in the local geometry
+  std::vector<Index> matches_;
 };
 
 }  // namespace dyno2

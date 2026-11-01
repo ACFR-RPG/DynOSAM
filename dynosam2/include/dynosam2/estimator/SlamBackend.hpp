@@ -56,13 +56,13 @@ class SlamBackend {
   const dyno::PoseWithMotion& getDooEntry(dyno::TemporalObjectId id) const;
 
   // get all landmarks for all objects
-  size_t getLandmarks(MapPointVector& map_points) const;
+  size_t getMapPoints(MapPointVector& map_points) const;
 
   /// @brief Get static landmarks and object landmarks for requesed objects
   /// @param map_points
   /// @param objects
   /// @return
-  size_t getLandmarks(MapPointVector& map_points,
+  size_t getMapPoints(MapPointVector& map_points,
                       const dyno::ObjectIds& objects) const;
 
   // all VoStates should have a timestamp?

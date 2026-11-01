@@ -67,9 +67,9 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   /// @return
   // const Velocity3& getBodyVelocity(dyno::FrameId frame_id) const;
 
-  bool getLandmark(dyno::TrackletId id, MapPoint& map_point) const;
-  size_t getLandmarks(MapPointVector& map_points) const;
-  size_t getLandmarks(MapPoints& map_points) const;
+  bool getMapPoint(dyno::TrackletId id, MapPoint& map_point) const;
+  size_t getMapPoints(MapPointVector& map_points) const;
+  size_t getMapPoints(MapPoints& map_points) const;
 
   bool poseExists(dyno::FrameId frame_id) const;
   // currently no removal of keyframe

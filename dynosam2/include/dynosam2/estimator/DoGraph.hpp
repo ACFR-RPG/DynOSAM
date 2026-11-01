@@ -68,9 +68,9 @@ class DoGraph : public BaGraphStates<DOGraphState> {
 
   void setRegularKeyframe(dyno::FrameId frame_id);
 
-  bool getLandmark(dyno::TrackletId id, dyno::FrameId frame_id,
+  bool getMapPoint(dyno::TrackletId id, dyno::FrameId frame_id,
                    MapPoint& map_point) const;
-  size_t getLandmarks(dyno::FrameId frame_id, MapPointVector& map_points) const;
+  size_t getMapPoints(dyno::FrameId frame_id, MapPointVector& map_points) const;
 
   const dyno::Motion3ReferenceFrame& keyframeMotion(
       dyno::FrameId frame_id) const;

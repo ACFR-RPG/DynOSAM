@@ -46,7 +46,7 @@ void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
 
   // clear the map
   // what about when we synchronize from the backend?
-  LandmarkMap::clear();
+  this->clearLandmarks();
 }
 
 // J is current frame
@@ -98,44 +98,28 @@ void DoGraph::setRegularKeyframe(dyno::FrameId frame_id) {
   state.keyframe_status = dyno::DoKeyframeType::RegularKeyFrame;
 }
 
-bool DoGraph::getLandmark(dyno::TrackletId id, dyno::FrameId frame_id,
+bool DoGraph::getMapPoint(dyno::TrackletId id, dyno::FrameId frame_id,
                           MapPoint& map_point) const {
-  auto it = LandmarkMap::find(id);
-  if (it == LandmarkMap::end()) {
+  dyno::Landmark lmk_L;
+  if (!this->getLandmark(id, lmk_L)) {
     return false;
   }
 
-  const dyno::Landmark& lmk_L = LandmarkMap::landmarkAt(it->second);
   const gtsam::Pose3 L_W_k = getPose(frame_id);
   const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
-
   map_point = MapPoint{lmk_W_k, object_id_, id};
   return true;
 }
 
-size_t DoGraph::getLandmarks(dyno::FrameId frame_id,
+size_t DoGraph::getMapPoints(dyno::FrameId frame_id,
                              MapPointVector& map_points) const {
-  const gtsam::Pose3 L_W_k = getPose(frame_id);
-  if (LandmarkMap::isContiguous()) {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector(LandmarkMap::size());
-    for (size_t i = 0; i < n; i++) {
-      const auto [id, lmk_L] = LandmarkMap::at(i);
-      const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
-      map_points[i] = MapPoint{lmk_W_k, object_id_, id};
-    }
-  } else {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector();
-    map_points.reserve(n);
-
-    // walk over valid indices
-    for (auto it = LandmarkMap::begin(); it != LandmarkMap::end(); it++) {
-      Index valid_index = it->second;
-      const auto [id, lmk_L] = LandmarkMap::at(valid_index);
-      const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
-      map_points.push_back(MapPoint{lmk_W_k, object_id_, id});
-    }
+  const gtsam::Pose3& L_W_k = getPose(frame_id);
+  const LandmarkMap& landmark_map = this->asLandmarkMap();
+  const size_t n = landmark_map.numLandmarks();
+  map_points = MapPointVector(n);
+  for (const auto& [id, lmk_L] : landmark_map) {
+    const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
+    map_points.push_back(MapPoint{lmk_W_k, object_id_, id});
   }
   return map_points.size();
 }

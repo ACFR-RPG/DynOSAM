@@ -262,7 +262,7 @@ void Frontend::solveObjectOdometry(
   }
 
   LandmarkMap previous_landmarks_C;
-  previous_landmarks_C.reserve(do_frame_i->numKeypoints());
+  previous_landmarks_C.reserveLandmarks(do_frame_i->numKeypoints());
   for (size_t i = 0; i < do_frame_i->numKeypoints(); i++) {
     // all previous landmarks or just ones in map?
     previous_landmarks_C.setLandmark(do_frame_i->ids[i], do_frame_i->lmks_C[i]);

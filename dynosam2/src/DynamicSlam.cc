@@ -180,12 +180,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   // prune keyframes
   estimator.pruneKeyframes(parameters_.estimator.num_static_keyframes, 3);
 
-  if (vi_tracking_state.is_keyframe) {
-    // add to full problem!
-    // TODO: but due to the matchToMap we can add measurements on keyframes
-    // when the current frame is NOT a keyframe
-    // and therefore will miss these measurements!
-    // estimator_.addStaticMeasurements(vo_measurements_added);
+  if (vi_tracking_state.is_keyframe && parameters_.debug.use_fullgraph) {
+    estimator_.addStaticMeasurements(vo_measurements_added);
   }
 
   for (size_t i = 0; i < num_objects; i++) {

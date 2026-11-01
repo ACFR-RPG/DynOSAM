@@ -331,7 +331,7 @@ void DynamicSlamVisualizerRos::publishMap(
 
   // get static and dynamic map points
   MapPointVector map_points;
-  estimator_->getLandmarks(map_points, object_tracked);
+  estimator_->getMapPoints(map_points, object_tracked);
   if (map_points.size() > 0) {
     pcl::PointCloud<pcl::PointXYZRGB> cloud;
     cloud.reserve(map_points.size());
