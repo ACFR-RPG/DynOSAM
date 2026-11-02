@@ -95,11 +95,15 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
                            const SlamBackend* estimator,
                            InputQueue* input_queue);
 
+  void setGroundTruth(const dyno::SharedGroundTruth& ground_truth,
+                      rclcpp::Node::SharedPtr ground_truth_node);
+
  private:
   void publishEstimatorUpdate(const PublicationData& publication_data) override;
   void publishVisualOdometry(const PublicationData& publication_data);
   void publishObjects(const PublicationData& publication_data);
   void publishMap(const PublicationData& publication_data);
+  void publishGroundtruth(const PublicationData& publication_data);
 
   /**
    * @brief Publishes a pose like object as a transform.
@@ -144,6 +148,10 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
   }
 
  private:
+  // Make ground truth version of this private
+  using DynamicSlamVisualizer::setGroundTruth;
+
+ private:
   rclcpp::Node::SharedPtr node_;
 
   const rclcpp::QoS odom_qos_;
@@ -161,6 +169,11 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
 
   //! TF broadcaster for the odometry.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
+  // Ground truth publishing
+  OdometryPub::SharedPtr gt_vo_publisher_;
+  PathPub::SharedPtr gt_vo_path_publisher_;
+  MultiObjectOdometryPathPub::SharedPtr gt_multi_object_odom_path_publisher_;
 };
 
 }  // namespace dyno2

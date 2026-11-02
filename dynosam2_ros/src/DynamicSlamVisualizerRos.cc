@@ -77,6 +77,22 @@ DynamicSlamVisualizerRos::DynamicSlamVisualizerRos(
       map_publisher_(node->create_publisher<PointCloud2>("map", map_qos_)),
       tf_broadcaster_(std::make_unique<tf2_ros::TransformBroadcaster>(*node)) {}
 
+void DynamicSlamVisualizerRos::setGroundTruth(
+    const dyno::SharedGroundTruth& ground_truth,
+    rclcpp::Node::SharedPtr ground_truth_node) {
+  DynamicSlamVisualizer::setGroundTruth(ground_truth);
+
+  gt_vo_publisher_ =
+      ground_truth_node->create_publisher<nav_msgs::msg::Odometry>("odometry",
+                                                                   odom_qos_);
+  gt_vo_path_publisher_ =
+      ground_truth_node->create_publisher<nav_msgs::msg::Path>("odometry_path",
+                                                               odom_qos_);
+  gt_multi_object_odom_path_publisher_ =
+      ground_truth_node->create_publisher<MultiObjectOdometryPath>(
+          "object_odometry_path", odom_qos_);
+}
+
 void DynamicSlamVisualizerRos::publishEstimatorUpdate(
     const PublicationData& publication_data) {
   CHECK_NOTNULL(estimator_);
@@ -84,6 +100,7 @@ void DynamicSlamVisualizerRos::publishEstimatorUpdate(
   publishVisualOdometry(publication_data);
   publishObjects(publication_data);
   publishMap(publication_data);
+  publishGroundtruth(publication_data);
 }
 
 void DynamicSlamVisualizerRos::publishVisualOdometry(
@@ -358,6 +375,49 @@ void DynamicSlamVisualizerRos::publishMap(
     pc2_msg.header.frame_id = reference_frames_.odom_frame;
     map_publisher_->publish(pc2_msg);
   }
+}
+
+void DynamicSlamVisualizerRos::publishGroundtruth(
+    const PublicationData& publication_data) {
+  // dont both if the internal shared ground truth is not connected to a
+  // publisher
+  if (!hasGroundtruth()) {
+    return;
+  }
+
+  const dyno::FrameId fid = publication_data.frame_id;
+  // update the internal trajectories
+  if (!updateGroundtruthTrajectories(fid)) {
+    return;
+  }
+
+  const dyno::Timestamp timestamp = publication_data.timestamp;
+  const auto timestamp_ros = dyno::ros::toRosTime(timestamp);
+  const auto reference_frames = sensor_rig_->getReferenceFrames();
+
+  // publish VO transform
+  std_msgs::msg::Header header;
+  header.stamp = timestamp_ros;
+  header.frame_id = reference_frames.odom_frame;
+  nav_msgs::msg::Odometry odom_msg;
+  dyno::ros::convertWithHeader(camera_trajectory_gt_.at(fid), odom_msg,
+                               timestamp, reference_frames.odom_frame,
+                               reference_frames.base_frame);
+  gt_vo_publisher_->publish(odom_msg);
+
+  // TODO: why are we reconstructing this each time!??
+  nav_msgs::msg::Path path;
+  for (const auto& entry_k : camera_trajectory_gt_.toVector()) {
+    geometry_msgs::msg::PoseStamped pose_stamped;
+    const dyno::Timestamp timestamp_k = entry_k.timestamp;
+    const gtsam::Pose3& odom = entry_k.data;
+    dyno::ros::convertWithHeader(odom, pose_stamped, timestamp_k,
+                                 reference_frames.odom_frame);
+    path.poses.push_back(pose_stamped);
+  }
+  path.header.stamp = timestamp_ros;
+  path.header.frame_id = reference_frames.odom_frame;
+  gt_vo_path_publisher_->publish(path);
 }
 
 Marker poseToCameraFrustrum(const gtsam::Pose3& T_WR,

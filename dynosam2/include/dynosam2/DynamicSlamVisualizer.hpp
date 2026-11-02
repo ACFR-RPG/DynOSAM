@@ -7,6 +7,7 @@
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Transforms.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_core/GroundTruthPacket.hpp"
 #include "dynosam_processing/ImageViewer.hpp"
 #include "dynosam_sensors/SensorRig.hpp"
 
@@ -35,6 +36,8 @@ class DynamicSlamVisualizer {
   /// @brief Draw images from the image displayer (if set).
   void displayImages();
 
+  void setGroundTruth(const dyno::SharedGroundTruth& ground_truth);
+
  protected:
   inline gtsam::Pose3 cameraToRobotFrame(const gtsam::Pose3& X_W_C) {
     return dyno::changeBasis(T_RC_, X_W_C);
@@ -51,6 +54,12 @@ class DynamicSlamVisualizer {
     return entry_W_R;
   }
 
+  bool getGroundtruthPacket(
+      FrameId fid, dyno::GroundTruthInputPacket& ground_truth_packet) const;
+  bool updateGroundtruthTrajectories(dyno::FrameId fid);
+
+  inline bool hasGroundtruth() const { return shared_ground_truth_.valid(); }
+
  protected:
   dyno::CanonicalSensorRig::Ptr sensor_rig_{nullptr};
   const SlamBackend* estimator_{nullptr};
@@ -60,10 +69,14 @@ class DynamicSlamVisualizer {
   dyno::ReferenceFrames reference_frames_;
 
   dyno::ImageBatchDisplayer::UniquePtr image_displayer_{nullptr};
+  dyno::SharedGroundTruth shared_ground_truth_;
 
   // keep the camera in robot coordinate frame, not estimated (camera) frame
   dyno::PoseTrajectory camera_trajectory_;
   dyno::MultiObjectTrajectories object_trajectories_;
+
+  dyno::PoseTrajectory camera_trajectory_gt_;
+  dyno::MultiObjectTrajectories object_trajectories_gt_;
 };
 
 }  // namespace dyno2

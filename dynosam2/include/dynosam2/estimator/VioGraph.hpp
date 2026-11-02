@@ -46,7 +46,6 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   inline ViFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
     return this->getFrameAs<ViFrame>(
         dyno::TemporalObjectId{frame_id, dyno::background_label});
-    // return this->getFrameAs<ViFrame>(frame_id);
   }
 
   void setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose);

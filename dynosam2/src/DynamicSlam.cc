@@ -207,18 +207,19 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         estimator.keyframeStatus(frame_id);
   }
 
-  // if(estimator_.needsFullGraphOptimisation()) {
-  //   LOG(INFO) << "Starting full graph optimisation";
-  //   estimator_.startFullGraphOptimisation();
-  // }
+  if (estimator_.needsFullGraphOptimisation()) {
+    LOG(INFO) << "Starting full graph optimisation";
+    estimator_.startFullGraphOptimisation();
+  }
 
-  // if(estimator_.updateAvaialbleFromFullGraph()) {
-  //   LOG(INFO) << "Update availanble from full graph!";
-  //   PublicationData::Ptr publication_data =
-  //     std::make_shared<PublicationData>(frame_id, timestamp);
-  //   estimator_.synchroniseRealtimeAndFullGraph(publication_data->updated_states);
-  //   pushPublicationDataToQueue(publication_data);
-  // }
+  if (estimator_.updateAvaialbleFromFullGraph()) {
+    LOG(INFO) << "Update availanble from full graph!";
+    PublicationData::Ptr publication_data =
+        std::make_shared<PublicationData>(frame_id, timestamp);
+    estimator_.synchroniseRealtimeAndFullGraph(
+        publication_data->updated_states);
+    pushPublicationDataToQueue(publication_data);
+  }
 
   const dyno::WrappedRGBMono wrapped_rgb = image_container->rgb();
   const cv::Mat rgb = wrapped_rgb.image();

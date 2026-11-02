@@ -8,6 +8,7 @@
 #include "dynosam2/frontend/FeatureBlockContainer.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_sensors/ImuMeasurements.hpp"
 
 using namespace dyno;
 
@@ -149,9 +150,14 @@ class ViFrame : public Frame {
   const Motion3ReferenceFrame& getRelativePose() const { return T_ij_; }
   void setRelativePose(const Motion3ReferenceFrame& T_ij);
 
+  void setImuMeasurements(const dyno::ImuMeasurements& imu);
+  bool hasImuMeasurements() const;
+
  private:
   //! Measured relative camera moition
   Motion3ReferenceFrame T_ij_;
+  //! Consequative measurements from previous frame i to current frame j
+  dyno::ImuMeasurements imu_measurements_;
 };
 
 class DoFrame : public Frame {

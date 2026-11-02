@@ -137,6 +137,9 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   viz_->setDisplayQueue(display_queue);
   viz_->addImageDisplay(std::make_shared<SmartOpenCvDisplayer>());
 
+  auto gt_node = node_.create_sub_node("ground_truth");
+  viz_->setGroundTruth(data_interface_->getSharedGroundTruth(), gt_node);
+
   // ROS image displayer that will use images pulled from the display_queue
   auto ros_image_displayer = std::make_shared<RosImageDisplayer>(viz_node);
   // matches name currently in DynamicSLAM

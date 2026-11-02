@@ -115,6 +115,8 @@ void FullGraph::addStaticMeasurements(
 bool FullGraph::synchronise(VioGraph* vio_graph, const DoGraphPtrMap& do_graphs,
                             UpdatedStates& involved_states) {
   // first get the involved frames
+  dyno::utils::ChronoTimingStats opt_t("full_graph.sync");
+
   if (vio_states_.numStates() == 0) {
     LOG(WARNING) << "No states to sync!";
     has_update_ = false;

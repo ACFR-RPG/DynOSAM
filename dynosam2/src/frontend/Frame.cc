@@ -7,4 +7,12 @@ void ViFrame::setRelativePose(const Motion3ReferenceFrame& T_ij) {
   T_ij_ = T_ij;
 }
 
+void ViFrame::setImuMeasurements(const dyno::ImuMeasurements& imu) {
+  imu_measurements_ = imu;
+}
+
+bool ViFrame::hasImuMeasurements() const {
+  return imu_measurements_.acc_gyr_.cols() > 0;
+}
+
 }  // namespace dyno2
