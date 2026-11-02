@@ -6,6 +6,7 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_core/DynoState.hpp"
 #include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno2 {
@@ -93,6 +94,10 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   /// @param frame_id
   /// @return
   const Velocity3& getVelocity(dyno::FrameId frame_id) const;
+
+  // TODo: and how to remove in the full graph as well?
+  size_t removeOutliersByDetection(const VioGraph& vio_graph,
+                                   const dyno::ImageContainer& image_container);
 
  protected:
   /** Adds a frame if it does not exist, otherwise checks that the incoming

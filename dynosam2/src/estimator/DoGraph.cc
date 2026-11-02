@@ -151,6 +151,68 @@ const Velocity3& DoGraph::getVelocity(dyno::FrameId frame_id) const {
   return states_.at(frame_id).velocity_W;
 }
 
+size_t DoGraph::removeOutliersByDetection(
+    const VioGraph& vio_graph, const dyno::ImageContainer& image_container) {
+  const dyno::FrameId fid = image_container.frameId();
+
+  const BoundsChecker bounds_checker(image_container.objectMotionMask());
+
+  const gtsam::Pose3 X_W_k_inv = vio_graph.getPose(fid).inverse();
+
+  // TODO: this does not really account for the fact that the object has a shape
+  // and we do NOT do ray tracing or anything
+  //  so bits of the previously observe object may not be outside the mask.
+  //  Therefore we only check against features seen in THIS frame
+  const auto frame_node = observations_->getFrame(fid);
+  if (!frame_node) {
+    // not entirely sure why this would happen!
+    return 0;
+  }
+  // get all observations for this node
+  // these are held as a vector of <lmk node, stereo measurement> pairs
+  const auto measurements = frame_node->dynamicMeasurements(object_id_);
+
+  size_t num_removed{0};
+  size_t num_map_points{0};
+  double repr_error{0.0};
+  for (const auto& [lmk_node, z] : measurements) {
+    const dyno::TrackletId tid = lmk_node->trackletId();
+
+    MapPoint map_point;
+    if (!getMapPoint(tid, fid, map_point)) {
+      // not yet in the map
+      continue;
+    }
+
+    const gtsam::Point3 p_C = X_W_k_inv * map_point.p_W;
+
+    gtsam::Point2 z_proj;
+    camera_->project(p_C, &z_proj);
+
+    const gtsam::Point2 z_measure = z.measurement().point2();
+    repr_error += (z_proj - z_measure).norm();
+    ++num_map_points;
+
+    // if outside the image OR outside the bounds of the object mask!
+    if (!bounds_checker(z_proj, object_id_)) {
+      // TODO: AND remove from landmark map!
+      observations_->removeLandmark(map_point.id);
+      ++num_removed;
+    }
+  }
+
+  if (num_map_points > 0) {
+    repr_error /= static_cast<double>(num_map_points);
+  }
+
+  // TODO: does not EVER seem to be occuring!?
+  // TODO:
+  VLOG(30) << "Removed " << num_removed << " map points from object "
+           << object_id_ << " with total repr " << repr_error;
+
+  return num_removed;
+}
+
 FrameId DoGraph::maybeInitaliseFrame(DoFrame::Ptr frame) {
   const dyno::TemporalObjectId toi = frame->temporalObjectId();
 

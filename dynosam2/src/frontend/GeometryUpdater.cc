@@ -395,6 +395,8 @@ bool GeometryUpdater::computeStereoMatching(
   const int rows = wrapped_left.image().rows;
   const int cols = wrapped_left.image().cols;
 
+  const BoundsChecker bounds_checker(cols, rows);
+
   // // the image wrapper will cache the image pyramid!
   // const ImagePyramid left_image_pyr = wrapped_left.computeImagePyramid(
   //     optical_flow.win_size, optical_flow.max_level);
@@ -427,7 +429,7 @@ bool GeometryUpdater::computeStereoMatching(
     }
 
     const cv::Point2f& predicted_pt = predicted_points[i];
-    if (!checkBounds(predicted_pt, rows, cols)) {
+    if (!bounds_checker(predicted_pt)) {
       continue;
     }
 

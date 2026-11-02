@@ -385,9 +385,7 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
   solve_t.stop();
 
   CHECK_EQ(matching_index.size(), result.flows.size());
-  const cv::Mat& object_masks = images_.objectMotionMask();
-  const int rows = object_masks.rows;
-  const int cols = object_masks.cols;
+  const BoundsChecker bounds_checker(images_.objectMotionMask());
 
   cv::Point2f pt;
   for (size_t i = 0; i < matching_index.size(); i++) {
@@ -403,7 +401,8 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
 
     // ensure updated keypoint is still within the object mask
     const ObjectId object_id = object_ids[i];
-    if (!checkBoundsAndLabel(pt, object_masks, object_id, rows, cols)) {
+    if (!bounds_checker(pt, object_id)) {
+      // mark as outlier
       *(inlier_ptrs[i]) = 0;
     }
   }

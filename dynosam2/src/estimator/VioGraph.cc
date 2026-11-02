@@ -42,6 +42,7 @@ VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
 }
 
 void VioGraph::setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose) {
+  const std::lock_guard<std::mutex> guard(mutex_);
   this->state(frame_id).pose_W = pose;
 }
 
@@ -74,6 +75,7 @@ const VioGraphState& VioGraph::getVioState(dyno::FrameId frame_id) const {
 }
 
 const gtsam::Pose3& VioGraph::getPose(dyno::FrameId frame_id) const {
+  const std::lock_guard<std::mutex> guard(mutex_);
   return this->state(frame_id).pose_W;
 }
 

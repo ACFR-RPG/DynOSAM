@@ -48,12 +48,18 @@ class VioGraph : public BaGraphStates<VioGraphState> {
         dyno::TemporalObjectId{frame_id, dyno::background_label});
   }
 
+  /// @brief Sets the camera pose X_W at k. Is thread safe.
+  /// @param frame_id
+  /// @param pose
   void setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose);
   void setVelocity(dyno::FrameId frame_id, const Velocity3& velocity_W);
   void setVelocityFromPose(dyno::FrameId frame_id);
 
   const VioGraphState& getVioState(dyno::FrameId frame_id) const;
 
+  /// @brief Get the camera pose X_W at k. Thread safe.
+  /// @param frame_id
+  /// @return
   const gtsam::Pose3& getPose(dyno::FrameId frame_id) const;
 
   /// @brief Get velocity in the world frame
@@ -89,6 +95,11 @@ class VioGraph : public BaGraphStates<VioGraphState> {
  protected:
   //! Active keyframes used for selection and bundle adjustmement!
   std::set<dyno::FrameId> keyframes_;
+  //! Mutex lock for the few functions that we expect to be accessed by thread
+  //! This is mostly the get/set camera pose function which is needed by the
+  //! DoGraph Otherwise we try and keep multi-thread access to a minimum for
+  //! safety and speed
+  mutable std::mutex mutex_;
 };
 
 class VioGraphEstimator : public VioGraph, public BaProblemInterface {

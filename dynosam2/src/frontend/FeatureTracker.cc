@@ -398,6 +398,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
     const cv::Mat& mono, const cv::Mat& object_mask, const Params& params) {
   dyno::utils::ChronoTimingStats r("ft.detector");
   CV_Assert(mono.type() == CV_8UC1 || mono.type() == CV_32FC1);
+  CV_Assert(mono.size() == object_mask.size());
 
   if (params.empty()) {
     return {};
@@ -725,8 +726,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   cv::cornerSubPix(mono, feature_blocks.points, window_size, zero_zone,
                    criteria);
 
-  const int rows = mono.rows;
-  const int cols = mono.cols;
+  const BoundsChecker bounds_checker(object_mask);
 
   // after subpix refinement points may shift such that they no longer lie
   // within the image bounds or on the same object
@@ -734,7 +734,11 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
     const auto& kp = feature_blocks.points[i];
 
     auto object_id = feature_blocks.object_ids[i];
-    if (!checkBoundsAndLabel(kp, object_mask, object_id, rows, cols)) {
+    // if (!checkBoundsAndLabel(kp, object_mask, object_id, rows, cols)) {
+    //   // mark as outlier
+    //   feature_blocks.inlier[i] = 0;
+    // }
+    if (!bounds_checker(kp, object_id)) {
       // mark as outlier
       feature_blocks.inlier[i] = 0;
     }
@@ -764,14 +768,8 @@ FeatureTracker::sparseFeatureTrack(
   dyno::utils::ChronoTimingStats timer("ft.sparse_ft");
 
   CHECK_NOTNULL(previous_container_);
-  // CHECK(!prev_mono_.empty());
-  // CV_Assert(prev_mono_.type() == CV_8UC1 && mono.type() == CV_8UC1);
-  const cv::Mat& img = image_container->rgb();
   // ensure this is the same one that created in ft::calc!
-  const cv::Mat& object_mask = image_container->objectMotionMask();
-
-  const int rows = img.rows;
-  const int cols = img.cols;
+  const BoundsChecker bounds_checker(image_container->objectMotionMask());
 
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       tracks_per_object;
@@ -819,8 +817,7 @@ FeatureTracker::sparseFeatureTrack(
     }
 
     auto object_id = previous_features_.object_ids[i];
-    if (!checkBoundsAndLabel(predicted_pt, object_mask, object_id, rows,
-                             cols)) {
+    if (!bounds_checker(predicted_pt, object_id)) {
       bounds_bad_count++;
       continue;
     }

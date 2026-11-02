@@ -476,6 +476,8 @@ void Frontend::solveObjectOdometry(
   estimator.optimize(frame_id_j, vo_estimator, affected_in_opt,
                      params.num_dynamic_keyframes);
 
+  // estimator.removeOutliersByDetection(vo_estimator, image_container);
+
   frames_updated_set.insert(affected_in_opt.begin(), affected_in_opt.end());
   frames_updated = std::vector<dyno::FrameId>(frames_updated_set.begin(),
                                               frames_updated_set.end());
