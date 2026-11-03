@@ -69,15 +69,9 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
   auto image_qos = rclcpp::SensorDataQoS()
                        .keep_last(static_cast<size_t>(queue_size))
                        .reliable();
-
-  const bool listen_to_ground_truth =
-      ros::Parameter::Builder(node_.get(), "enable_groundtruth_sub", false)
-          .description(
-              "If the subscriber should additionally listen to ground truth "
-              "data")
-          .finish()
-          .get<bool>();
-
+  // auto image_qos = rclcpp::SensorDataQoS()
+  //                      .keep_last(static_cast<size_t>(queue_size));
+  // auto image_qos = rclcpp::SensorDataQoS();
   // if (listen_to_ground_truth) {
   //   RCLCPP_INFO_STREAM(node_->get_logger(),
   //                      "Ground truth enabled. Subscribing...");

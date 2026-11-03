@@ -19,6 +19,12 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
 
 {
   // TODO: set some params for frontend!
+  if (parameters_.estimator.enforce_realtime) {
+    auto& vio_estimator = estimator_.vioEstimator();
+    vio_estimator.setOptimisationTimeLimit(
+        parameters_.estimator.realtime_time_limit,
+        parameters_.estimator.realtime_static_min_iterations);
+  }
 }
 
 DynamicSlam::~DynamicSlam() {}
@@ -50,7 +56,16 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         DoFrame::Ptr frame =
             std::make_shared<DoFrame>(frame_id, timestamp, object_id);
         frame->fill(geometry, features);
-        estimator_.allocateDoEstimator(object_id).initaliseFrame(frame);
+
+        auto& do_estimator = estimator_.allocateDoEstimator(object_id);
+        do_estimator.initaliseFrame(frame);
+
+        if (parameters_.estimator.enforce_realtime) {
+          do_estimator.setOptimisationTimeLimit(
+              parameters_.estimator.realtime_time_limit,
+              parameters_.estimator.realtime_dynamic_min_iterations);
+        }
+
       } else {
         ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
         vi_frame->fill(geometry, features);
@@ -92,7 +107,12 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     if (object_id > background_label &&
         parameters_.debug.estimate_dynamic_objects) {
       if (!estimator_.hasObjectEstimator(object_id)) {
-        estimator_.allocateDoEstimator(object_id);
+        auto& do_estimator = estimator_.allocateDoEstimator(object_id);
+        if (parameters_.estimator.enforce_realtime) {
+          do_estimator.setOptimisationTimeLimit(
+              parameters_.estimator.realtime_time_limit,
+              parameters_.estimator.realtime_dynamic_min_iterations);
+        }
       }
       ObjectContext context;
       context.geometry = CHECK_NOTNULL(&geometry);

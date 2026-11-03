@@ -40,7 +40,9 @@ void BaGraph::addMeasurements(Frame::Ptr frame,
 NonlinearOptimizerSummary BaProblemInterface::optimize(
     gtsam::Values& optimised_values, int max_iterations, bool verbose) const {
   gtsam::DoglegParams params;
-  params.setMaxIterations(max_iterations);
+
+  const int iterations = isTimeLimitSet() ? 100 : max_iterations;
+  params.setMaxIterations(iterations);
 
   dyno::NonlinearOptimizer<gtsam::DoglegOptimizer> solver(graph_, values_,
                                                           params);
