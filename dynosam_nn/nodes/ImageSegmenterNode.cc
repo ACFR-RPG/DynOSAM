@@ -47,7 +47,14 @@ class ImageSegmenterNode : public rclcpp::Node {
   void imageCallback(const sensor_msgs::msg::Image::ConstSharedPtr& msg) {
     try {
       // Convert to OpenCV image (BGR8)
-      cv::Mat frame = cv_bridge::toCvShare(msg, "bgr8")->image;
+      auto cvb_image = cv_bridge::toCvShare(msg);
+      cv::Mat frame = cvb_image->image;
+
+      // make sure we only have rgb (without the alpha!)
+      if (sensor_msgs::image_encodings::isColor(cvb_image->encoding) &&
+          sensor_msgs::image_encodings::hasAlpha(cvb_image->encoding)) {
+        cv::cvtColor(frame, frame, cv::COLOR_RGBA2RGB);
+      }
 
       // cv::Mat resized;
       // cv::resize(frame, resized, cv::Size(640, 640), 0, 0, cv::INTER_LINEAR);

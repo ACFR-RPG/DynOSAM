@@ -46,10 +46,10 @@ def generate_launch_description():
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},
                     {"input_image_mode": "rgb+aligned_depth"},
-                    {"base_frame": "camera_link"},
+                    {"base_frame": "zed_camera_link"},
                     {"odom_frame": "odom"},
-                    {"depth_scale": 0.001},
-                    # {"depth_scale": 1.0},
+                    # {"depth_scale": 0.001},
+                    {"depth_scale": 1.0},
                     {"v": LaunchConfiguration("v")}
                 ],
                 remappings=[
