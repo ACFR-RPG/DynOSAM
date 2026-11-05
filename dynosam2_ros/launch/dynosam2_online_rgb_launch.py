@@ -49,8 +49,8 @@ def generate_launch_description():
                     {"input_image_mode": "rgb+aligned_depth+imu"},
                     {"base_frame": "camera_link"},
                     {"odom_frame": "odom"},
-                    # {"depth_scale": 0.001},
-                    {"depth_scale": 1.0},
+                    {"depth_scale": 0.001},
+                    # {"depth_scale": 1.0},
                     {"v": LaunchConfiguration("v")}
                 ],
                 remappings=[

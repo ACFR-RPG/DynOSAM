@@ -37,6 +37,9 @@ struct VioMotionPropagation {
   Source source;
 };
 
+std::ostream& operator<<(std::ostream& os,
+                         const VioMotionPropagation::Source& source);
+
 class Frontend {
  public:
   DYNO_POINTER_TYPEDEFS(Frontend)
@@ -46,11 +49,11 @@ class Frontend {
 
   // prpogate IMU
 
+  // TODO: eventually R_k_km1 should become a full prediction for all objects!
   void detectAndTrack(FeatureBlockContainer*& features_out,
                       dyno::ObjectDetectionResult& object_detection_out,
                       dyno::ImageContainer::Ptr container_in_out,
-                      const dyno::ImuMeasurements& imu_measurements,
-                      const SlamBackend& estimator);
+                      const gtsam::Rot3& R_k_km1);
 
   void solveVisualOdometry(VioGraphEstimator& estimator,
                            FeatureBlockContainer& features,
@@ -60,6 +63,7 @@ class Frontend {
                            std::vector<KeypointIdentifier>& new_measurements,
                            bool& success, const ImageContainer& image_container,
                            const ImuMeasurements& imu_measurements);
+  //  const VioMotionPropagation& T_k_km1_propagated
 
   void solveObjectOdometry(
       ObjectId object_id, const VioGraphEstimator& vo_estimator,

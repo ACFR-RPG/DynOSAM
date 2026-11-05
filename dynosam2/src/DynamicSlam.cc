@@ -54,9 +54,35 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   const dyno::ImuMeasurements imu_measurements =
       input->imu_measurements.value_or(dyno::ImuMeasurements{});
 
+  // forward rotation prediction using either constant motion or IMU
+  // rottes from k-1 to k
+  gtsam::Rot3 R_k_km1;
+  const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+  if (vio_estimator.numStates() == 0) {
+    if (auto imu_params = vio_estimator.getImuConfig();
+        imu_params && imu_measurements.size() > 2) {
+      // NOTE: we can use dummy variables
+      ImuError::Ptr imu_error =
+          std::make_shared<ImuError>(imu_measurements, imu_params, 0, 1);
+      R_k_km1 = imu_error->deltaXij().rotation();
+      LOG(INFO) << "Provind tracker IMU camera rotation!";
+    } else {
+      R_k_km1 = gtsam::Rot3::Identity();
+    }
+  } else {
+    const VioMotionPropagation propagation = Frontend::predictFromMotion(
+        frame_id, timestamp, vio_estimator, imu_measurements);
+    if (!propagation.success) {
+      LOG(FATAL) << "No IMU data and could not "
+                    "successfully progate motion!";
+    }
+    VLOG(30) << "Done motion propogation with source: " << propagation.source;
+    R_k_km1 = propagation.relative_motion_error->deltaXij().rotation();
+  }
+
   dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
   frontend_.detectAndTrack(features_ptr, object_detection, image_container,
-                           imu_measurements, estimator_);
+                           R_k_km1);
   CHECK_NOTNULL(features_ptr);
   detect_t.stop();
   FeatureBlockContainer& features = *features_ptr;
@@ -179,6 +205,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
     // attempt motion propagation from last frame via constant motion model or
     // IMU!
+    // TODO: dont need to this here now as we did it before!!
     const VioMotionPropagation propagation = Frontend::predictFromMotion(
         frame_id, timestamp, vio_estimator, imu_measurements);
 
@@ -214,7 +241,6 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     });
   }
 
-  const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
   dyno::utils::ChronoTimingStats doo_t("slam.doo");
   for (size_t i = 0; i < num_objects; i++) {
     group.run([&, i] {

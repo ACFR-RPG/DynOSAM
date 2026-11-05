@@ -41,21 +41,9 @@ Frontend::Frontend(const FrontendParameters& parameters,
 void Frontend::detectAndTrack(FeatureBlockContainer*& features_out,
                               dyno::ObjectDetectionResult& object_detection_out,
                               dyno::ImageContainer::Ptr container_in_out,
-                              const dyno::ImuMeasurements& imu_measurements,
-                              const SlamBackend& estimator) {
-  const VioGraphEstimator& vio_estimator = estimator.vioEstimator();
-  // see if we can use the IMU get a rotation
-  std::optional<gtsam::Rot3> R_km1_k{};
-  if (auto imu_params = vio_estimator.getImuConfig();
-      imu_params && imu_measurements.size() > 2) {
-    // NOTE: we can use dummy variables
-    ImuError::Ptr imu_error =
-        std::make_shared<ImuError>(imu_measurements, imu_params, 0, 1);
-    R_km1_k.emplace(imu_error->deltaXij().rotation());
-    LOG(INFO) << "Provind tracker IMU camera rotation!";
-  }
-
-  auto tracking_result = feature_tracker_.track(container_in_out, R_km1_k);
+                              const gtsam::Rot3& R_k_km1) {
+  // TODO: I think track should take a real value R and not an optional!
+  auto tracking_result = feature_tracker_.track(container_in_out, R_k_km1);
   features_out = tracking_result.featues;
   CHECK_NOTNULL(features_out);
   object_detection_out = tracking_result.object_detection;
@@ -226,13 +214,13 @@ void Frontend::solveVisualOdometry(
   if (estimator.keyFrames().size() > 2) {
     utils::ChronoTimingStats timer_t("frontend.vo.refine_map");
     std::vector<FrameId> frames_affected;
-    // if (should_be_keyframe) {
-    //   // optimize with structure
-    //   estimator.optimize(frame_id, frames_affected, false);
-    // } else {
-    //   // optimize only states
-    //   estimator.optimize(frame_id, frames_affected, true);
-    // }
+    if (should_be_keyframe) {
+      // optimize with structure
+      estimator.optimize(frame_id, frames_affected, false);
+    } else {
+      // optimize only states
+      estimator.optimize(frame_id, frames_affected, true);
+    }
 
     for (FrameId frame_id : frames_affected) {
       frames_updated_set.insert(frame_id);
@@ -1044,6 +1032,15 @@ void AyncVO::markReadyAndValidAndNotify(const gtsam::Pose3& pose) {
     *vo = pose;
   }
   vo_cv.notify_all();
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const VioMotionPropagation::Source& source) {
+  static const std::unordered_map<VioMotionPropagation::Source, std::string>
+      map = {{VioMotionPropagation::Source::PRIOR_MOTION, "Prior Motion"},
+             {VioMotionPropagation::Source::IMU, "IMU"}};
+  os << map.at(source);
+  return os;
 }
 
 }  // namespace dyno2
