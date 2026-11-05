@@ -69,6 +69,7 @@ struct Frame {
   TrackletIds ids;
   gtsam::Point3Vector lmks_C;
   std::vector<gtsam::StereoPoint2> measurements;
+  std::vector<size_t> age;
   std::unordered_map<TrackletId, Index> local_indices;
 
   FrameId frame_id;
@@ -113,6 +114,7 @@ struct Frame {
     ids.reserve(n);
     lmks_C.reserve(n);
     measurements.reserve(n);
+    age.reserve(n);
   }
 
   inline void getKeypointByIndex(Index index, Keypoint& keypoint) const {
@@ -155,6 +157,7 @@ struct Frame {
 
       size_t index = numKeypoints();
       ids.push_back(id);
+      age.push_back(features.age[fc_index]);
       lmks_C.push_back(local_geometry.getLandmark(id));
       measurements.push_back(local_geometry.getStereoPoint(id));
       local_indices[id] = index;
@@ -167,12 +170,15 @@ class ViFrame : public Frame {
   DYNO_POINTER_TYPEDEFS(ViFrame)
   ViFrame(FrameId fi, Timestamp ts) : Frame(fi, ts, dyno::background_label) {}
 
+  // NOTE: this information sshould always get set and is additionally important
+  // as it infers which fid we the V(I)O is computed with reference to
   void setRelativePose(RelativePoseErrorBase::Ptr relative_pose);
   RelativePoseErrorBase::Ptr getRelativePose() const { return relative_pose_; }
 
  private:
   //! Relative pose T_ij coming either from insertial measurements or pseudo VO
-  //! measurement
+  //! measurement. Indicates the reference frame which we attempted to track
+  //! against
   RelativePoseErrorBase::Ptr relative_pose_;
 };
 
@@ -190,6 +196,13 @@ class DoFrame : public Frame {
    * @return false
    */
   bool getObjectMask(cv::Mat& mask) const;
+
+  // NOTE: similarly this also tells us which frame was used for the relative
+  // solve
+  void setRelativeMotion(const HeavyPose3Measurement& G_i_ij) {
+    G_i_ij_ = G_i_ij;
+  }
+  const HeavyPose3Measurement& getRelativeMotion() const { return G_i_ij_; }
 
  private:
   HeavyPose3Measurement G_i_ij_;

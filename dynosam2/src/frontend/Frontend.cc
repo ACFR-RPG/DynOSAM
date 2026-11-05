@@ -53,7 +53,8 @@ void Frontend::solveVisualOdometry(
     VioGraphEstimator& estimator, FeatureBlockContainer& features,
     FeatureBlockGeometry& geometry, AyncVO& async_context,
     std::vector<FrameId>& frames_updated,
-    std::vector<KeypointIdentifier>& new_measurements, bool& success,
+    std::vector<KeypointIdentifier>& new_measurements,
+    std::vector<TrackletId>& correspondences, bool& success,
     const ImageContainer& image_container,
     const VioMotionPropagation& T_k_km1_propagated) {
   dyno::utils::ChronoTimingStats vo_t("frontend.vo");
@@ -72,6 +73,8 @@ void Frontend::solveVisualOdometry(
       estimator.getFramePtr(previous_frame_id);
   CHECK_NOTNULL(vi_frame_previous_ptr);
   const ViFrame& vi_frame_previous = *vi_frame_previous_ptr;
+
+  CHECK_EQ(previous_frame_id, T_k_km1_propagated.relative_motion_error->from());
 
   // reference frame id
   // for now we expect this to be the k-1
@@ -167,13 +170,23 @@ void Frontend::solveVisualOdometry(
   std::vector<dyno::TrackletId> observation_ids;
   observation_ids.reserve(adapter.getNumberCorrespondences());
   new_measurements.reserve(adapter.getNumberCorrespondences());
+  correspondences.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
   // this will help with the BA to get intermediate frame measurements
   for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
     TrackletId id = adapter.trackletId(idx);
-    if (adapter.isInlier(idx) && estimator.landmarkExists(id)) {
-      observation_ids.push_back(id);
-      new_measurements.emplace_back(frame_id, id, dyno::background_label);
+    if (adapter.isInlier(idx)) {
+      // indicate point as well tracked
+      // may or may not be in the map!
+      correspondences.push_back(id);
+
+      // add new measurements to BA as these points are well tracked and we
+      // already
+      //  have this as a map poing
+      if (estimator.landmarkExists(id)) {
+        observation_ids.push_back(id);
+        new_measurements.emplace_back(frame_id, id, dyno::background_label);
+      }
     }
   }
   // all measurements are for the same frame use this function call which runs a
@@ -237,7 +250,8 @@ void Frontend::solveObjectOdometry(
     const EstimationParameters& params, const ImageContainer& image_container,
     DoGraphEstimator& estimator, FeatureBlockContainer& features,
     FeatureBlockGeometry& geometry, AyncVO& async_context,
-    std::vector<FrameId>& frames_updated, uchar& success) {
+    std::vector<FrameId>& frames_updated,
+    std::vector<TrackletId>& correspondences, uchar& success) {
   const FrameId frame_id = image_container.frameId();
   const Timestamp timestamp = image_container.timestamp();
   const FrameId previous_frame_id = frame_id - 1u;
@@ -323,17 +337,22 @@ void Frontend::solveObjectOdometry(
   // reltive motion of object in the camera frame i, from i to j
   // without accounting for the additional camera motion between i and j
   const gtsam::Matrix66 Adj_G_i_ij_inv = G_i_ij_inv.measurement().AdjointMap();
-  gtsam::Pose3 G_i_ij_pose = G_i_ij_inv.measurement().inverse();
+  const gtsam::Pose3 G_i_ij_pose = G_i_ij_inv.measurement().inverse();
+  const Motion3ReferenceFrame G_i_ij(G_i_ij_pose, dyno::ReferenceFrame::GLOBAL,
+                                     frame_id_i, frame_id_j);
   // run covariance through adjoint
   const gtsam::Matrix66 G_i_ij_cov =
       Adj_G_i_ij_inv * G_i_ij_inv.covariance() * Adj_G_i_ij_inv.transpose();
 
-  dyno::Motion3ReferenceFrame G_i_ij(G_i_ij_pose, dyno::ReferenceFrame::GLOBAL,
-                                     frame_id_i, frame_id_j);
+  const HeavyPose3Measurement G_i_ij_measurement(
+      dyno::Pose3Measurement(G_i_ij_pose, G_i_ij_cov),
+      dyno::ReferenceFrame::GLOBAL, frame_id_i, frame_id_j);
 
   DoFrame::Ptr do_frame_j =
       std::make_shared<DoFrame>(frame_id_j, timestamp_j, object_id);
   do_frame_j->fill(geometry, features);
+  // must be set when we have successful tracks
+  do_frame_j->setRelativeMotion(G_i_ij_measurement);
 
   std::unordered_set<dyno::FrameId> frames_updated_set;
 
@@ -418,12 +437,17 @@ void Frontend::solveObjectOdometry(
 
   std::vector<dyno::TrackletId> measurements_j;
   measurements_j.reserve(adapter.getNumberCorrespondences());
+  correspondences.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
   // this will help with the BA to get intermediate frame measurements
   for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
     TrackletId id = adapter.trackletId(idx);
-    if (adapter.isInlier(idx) && estimator.landmarkExists(id)) {
-      measurements_j.push_back(id);
+    if (adapter.isInlier(idx)) {
+      correspondences.push_back(id);
+
+      if (estimator.landmarkExists(id)) {
+        measurements_j.push_back(id);
+      }
     }
   }
 

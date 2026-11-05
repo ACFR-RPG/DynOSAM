@@ -46,10 +46,6 @@ class DynamicSlamInterface
   bool pushImageToDisplayQueue(const std::string& wname, const cv::Mat& image);
   bool pushPublicationDataToQueue(PublicationData::ConstPtr publication_data);
 
- private:
-  ThreadsafeQueue<PublicationData::ConstPtr>* publication_queue_{nullptr};
-  dyno::ImageDisplayQueue* image_display_queue_{nullptr};
-
  protected:
   virtual StateEstimate::Ptr spinOnce(
       dyno::VIFrontendInput::ConstPtr input) = 0;
@@ -65,6 +61,10 @@ class DynamicSlamInterface
   }
   void validateInput(
       const dyno::VIFrontendInput::ConstPtr& input) const override;
+
+ private:
+  ThreadsafeQueue<PublicationData::ConstPtr>* publication_queue_{nullptr};
+  dyno::ImageDisplayQueue* image_display_queue_{nullptr};
 };
 
 }  // namespace dyno2

@@ -187,6 +187,14 @@ struct Color : RGBA<uint8_t> {
   void merge(const Color& other, float weight = 0.5f);
 
   /**
+   * @brief Set the alpha value
+   *
+   * @param a Alpha value to set. Defaults to Color#max.
+   * @return Color&
+   */
+  Color& withAlpha(uint8_t a = max());
+
+  /**
    * @brief Hash function for colors to use colors as keys in maps, sets, etc.
    */
   struct Hash {

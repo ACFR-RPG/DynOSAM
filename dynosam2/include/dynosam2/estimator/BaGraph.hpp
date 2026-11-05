@@ -60,6 +60,16 @@ class States {
     return iter->first;
   }
 
+  /// @brief Get the state that is N (age) states before frame_id.
+  /// @param frame_id
+  /// @param age
+  /// @param state
+  /// @return
+  bool stateByAge(dyno::FrameId frame_id, size_t age,
+                  const State*& state) const {
+    return stateByAgeImpl(states_, frame_id, age, state);
+  }
+
  protected:
   State& lastState() { return states_.rbegin()->second; }
   const State& lastState() const { return states_.rbegin()->second; }
@@ -70,13 +80,20 @@ class States {
   }
 
   bool stateByAge(dyno::FrameId frame_id, size_t age, State*& state) {
-    auto it = states_.find(frame_id);
-    if (it == states_.end()) {
+    return stateByAgeImpl(states_, frame_id, age, state);
+  }
+
+ private:
+  template <typename StatesT, typename StatePtrT>
+  static bool stateByAgeImpl(StatesT& states, dyno::FrameId frame_id,
+                             size_t age, StatePtrT& state) {
+    auto it = states.find(frame_id);
+    if (it == states.end()) {
       return false;
     }
 
     for (size_t i = 0; i < age; ++i) {
-      if (it == states_.begin()) {
+      if (it == states.begin()) {
         return false;
       }
       --it;

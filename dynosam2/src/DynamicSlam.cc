@@ -17,13 +17,13 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
       imu_params_(
           dyno::ImuFrontend::makeCombinedParams(sensor_rig->getImuParams())),
       frontend_(parameters.frontend, camera_),
-      estimator_(camera_)
+      estimator_(camera_),
+      frontend_viz_(estimator_)
 
 {
   // TODO: set some params for frontend!
 
   auto& vio_estimator = estimator_.vioEstimator();
-
   if (sensor_rig_->imuEnabled()) {
     vio_estimator.addImu(imu_params_);
   }
@@ -33,9 +33,12 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
         parameters_.estimator.realtime_time_limit,
         parameters_.estimator.realtime_static_min_iterations);
   }
+
+  // start viz thread
+  frontend_viz_thread_ = std::thread(&DynamicSlam::visualisationLoop, this);
 }
 
-DynamicSlam::~DynamicSlam() {}
+DynamicSlam::~DynamicSlam() { shutdownThreads(); }
 
 StateEstimate::Ptr DynamicSlam::spinOnce(
     dyno::VIFrontendInput::ConstPtr input) {
@@ -180,11 +183,6 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     }
   }
 
-  const size_t num_objects = object_ids.size();
-  std::vector<uchar> do_solve_success(num_objects, 0);
-
-  std::vector<std::vector<FrameId>> updated_object_frames(num_objects);
-
   PublicationData::Ptr publication_data =
       std::make_shared<PublicationData>(frame_id, timestamp);
   std::vector<dyno::FrameId>& updated_vo_states =
@@ -234,18 +232,24 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     async_context.vo_valid = true;
   }
 
+  const size_t num_objects = object_ids.size();
+  std::vector<uchar> do_solve_success(num_objects, 0);
+  std::vector<std::vector<FrameId>> updated_object_frames(num_objects);
+  std::vector<std::vector<TrackletId>> object_correspondences(num_objects);
+
   // vector of keypoints which had measurements added to the bundle adjustment
   std::vector<KeypointIdentifier> vo_measurements_added;
+  std::vector<TrackletId> vo_correspondences;
   dyno::utils::ChronoTimingStats solve_t("slam.solve");
   tbb::task_group group;
   if (run_vo) {
     group.run([&] {
       dyno::utils::ChronoTimingStats vo_t("slam.vo");
       VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-      frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
-                                    async_context, updated_vo_states,
-                                    vo_measurements_added, vo_success,
-                                    *image_container, vio_propagation);
+      frontend_.solveVisualOdometry(
+          vio_estimator, features, *vo_geometry, async_context,
+          updated_vo_states, vo_measurements_added, vo_correspondences,
+          vo_success, *image_container, vio_propagation);
     });
   }
 
@@ -257,10 +261,11 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       uchar& solve_success = do_solve_success.at(i);
 
       std::vector<FrameId>& updated_frames = updated_object_frames.at(i);
+      std::vector<TrackletId>& correspondences = object_correspondences.at(i);
       frontend_.solveObjectOdometry(
           object_id, vio_estimator, parameters_.estimator, *image_container,
           *object_context.estimator, features, *object_context.geometry,
-          async_context, updated_frames, solve_success);
+          async_context, updated_frames, correspondences, solve_success);
     });
   }
   group.wait();
@@ -296,6 +301,14 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     estimator_.addStaticMeasurements(vo_measurements_added);
   }
 
+  FrontendViz::Data::Ptr visualization_data =
+      std::make_shared<FrontendViz::Data>();
+  visualization_data->images = image_container;
+  visualization_data->object_detection = object_detection;
+  visualization_data->vi_tracks.frame = estimator.getFramePtr(frame_id);
+  visualization_data->vi_tracks.correspondences = vo_correspondences;
+  visualization_data->vi_tracks.measurements = vo_measurements_added;
+
   for (size_t i = 0; i < num_objects; i++) {
     const ObjectId object_id = object_ids[i];
     LOG(INFO) << "j= " << object_id
@@ -317,6 +330,10 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     do_tracking_states.back().object_id = object_id;
     do_tracking_states.back().keyframe_type =
         estimator.keyframeStatus(frame_id);
+
+    auto& do_track_viz = visualization_data->do_tracks[object_id];
+    do_track_viz.frame = estimator.getFramePtr(frame_id);
+    do_track_viz.correspondences = object_correspondences.at(i);
   }
 
   if (estimator_.needsFullGraphOptimisation()) {
@@ -336,9 +353,11 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   const dyno::WrappedRGBMono wrapped_rgb = image_container->rgb();
   const cv::Mat rgb = wrapped_rgb.image();
 
+  frontend_viz_data_queue_.pushBlockingIfFull(visualization_data, 1);
+
   features.reduceToInliersInplace();
 
-  pushImageToDisplayQueue("Tracks", features.draw(rgb, true));
+  // pushImageToDisplayQueue("Tracks", features.draw(rgb, true));
   pushPublicationDataToQueue(publication_data);
 
   return nullptr;
@@ -380,6 +399,28 @@ bool DynamicSlam::initPoseImu(const dyno::ImuMeasurements& imu_measurements,
 
   T_WC = T_WI * T_CI.inverse();
   return true;
+}
+
+void DynamicSlam::shutdownThreads() {
+  is_shutdown_ = true;
+  // shutdown queues first
+  frontend_viz_data_queue_.shutdown();
+
+  // TODO: force asynchronous backend to also shutdown!
+
+  if (frontend_viz_thread_.joinable()) {
+    frontend_viz_thread_.join();
+  }
+}
+
+void DynamicSlam::visualisationLoop() {
+  while (!is_shutdown_) {
+    FrontendViz::Data::Ptr viz_data;
+    if (frontend_viz_data_queue_.popBlocking(viz_data)) {
+      cv::Mat viz = frontend_viz_.draw(viz_data);
+      pushImageToDisplayQueue("Tracks", viz);
+    }
+  }
 }
 
 }  // namespace dyno2

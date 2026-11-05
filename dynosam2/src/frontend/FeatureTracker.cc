@@ -36,6 +36,7 @@ FeatureTracker::FeatureTracker(const FrontendParameters& parameters,
     object_detection_engine_ =
         std::make_shared<dyno::YoloV8ObjectDetector>(model_config, yolo_config);
   }
+  setDilationKernel(camera->getParams().imageSize());
 }
 
 FeatureTracker::Result FeatureTracker::track(
@@ -112,10 +113,7 @@ FeatureTracker::Result FeatureTracker::track(
     // previous_img_ = wrapped_rgb;
     previous_container_ = image_container;
 
-    // buildOpticalFlowPyramid(prev_mono_, prev_mono_pyr_);
   } else {
-    // auto [tracked_features, tracking_stats] =
-    //     sparseFeatureTrack(current_mono, object_masks);
     auto [tracked_features, tracking_stats] =
         sparseFeatureTrack(image_container, R_k_km1);
 
@@ -131,17 +129,6 @@ FeatureTracker::Result FeatureTracker::track(
           object_detection.bounding_box;
     }
 
-    // const auto outer_thickness = 12;
-    static constexpr double kReferenceBorderThickness = 15.0;
-    static constexpr double kReferenceImageArea = 640.0 * 480.0;
-
-    const double image_scale = static_cast<double>(current_mono.cols) *
-                               static_cast<double>(current_mono.rows) /
-                               kReferenceImageArea;
-
-    const int scaled_border_thickness =
-        std::round(kReferenceBorderThickness * std::sqrt(image_scale));
-
     dyno::utils::ChronoTimingStats make_masks_t("ft.make_masks");
     cv::Mat object_masks_binary = object_masks > 0;
     // to ensure the validatiy of the mask we will do some dilation
@@ -149,9 +136,7 @@ FeatureTracker::Result FeatureTracker::track(
     // attempt to track anywhere near the objects
     // this is slightly conservative but is helpful in practice
     cv::dilate(object_masks_binary, object_masks_binary,
-               cv::getStructuringElement(
-                   cv::MORPH_RECT, cv::Size(2 * scaled_border_thickness + 1,
-                                            2 * scaled_border_thickness + 1)));
+               object_mask_dilate_kernel_);
     cv::Mat static_mask;
     cv::bitwise_not(object_masks_binary, static_mask);
     binary_detection_masks[background_label] = static_mask;
@@ -167,8 +152,6 @@ FeatureTracker::Result FeatureTracker::track(
       const auto num_tracked = object_view.size();
       const auto min_allowed_tracks = getMinAllowableTracks(j);
       const auto allowed_feature_distance = getMinFeatureDistance(j);
-
-      VLOG(20) << "Tracked features for j=" << j << " n=" << num_tracked;
 
       cv::Mat& binary_detection_mask_j = binary_detection_masks[j];
       auto object_points = object_view.points();
@@ -768,7 +751,7 @@ TrackletIds FeatureTracker::GfttDetector::getNewIdsByChunk(size_t N) {
 std::pair<FeatureBlockContainer, FeatureTracker::FlowTrackingStatsMap>
 FeatureTracker::sparseFeatureTrack(
     const dyno::ImageContainer::Ptr& image_container,
-    const std::optional<gtsam::Rot3>& R_k_km1) {
+    const std::optional<gtsam::Rot3>& maybe_R_k_km1) {
   dyno::utils::ChronoTimingStats timer("ft.sparse_ft");
 
   CHECK_NOTNULL(previous_container_);
@@ -806,11 +789,8 @@ FeatureTracker::sparseFeatureTrack(
   //  otherwise use constant motion model!
   dyno::utils::ChronoTimingStats lkt_t("ft.sparse_ft.lkt");
   std::vector<cv::Point2f> predicted;
-  if (R_k_km1) {
-    predictFromPreviousGivenRotation(R_k_km1.value(), predicted);
-  } else {
-    predicted = previous_features_.points;
-  }
+  const gtsam::Rot3 R_k_km1 = maybe_R_k_km1.value_or(gtsam::Rot3::Identity());
+  predictFromPreviousGivenRotation(predicted, R_k_km1);
   auto flow_result = optical_flow_impl_(previous_img, current_img,
                                         previous_features_.points, &predicted);
   lkt_t.stop();
@@ -936,8 +916,8 @@ FeatureTracker::sparseFeatureTrack(
 }
 
 bool FeatureTracker::predictFromPreviousGivenRotation(
-    const gtsam::Rot3& R_k_km1,
-    std::vector<cv::Point2f>& predicted_pts_curr) const {
+    std::vector<cv::Point2f>& predicted_pts_curr,
+    const gtsam::Rot3& R_k_km1) const {
   // Handle case when rotation is small: just copy prev_kps
   // Removed bcs even small rotations lead to huge optical flow at the borders
   // of the image.
@@ -1034,6 +1014,21 @@ size_t FeatureTracker::getMaxTrackingCorners(ObjectId object_id) const {
 size_t FeatureTracker::getMinAllowableTracks(ObjectId object_id) const {
   return object_id > background_label ? parameters_.dynamic_tracks.min_nr_tracks
                                       : parameters_.static_tracks.min_nr_tracks;
+}
+
+void FeatureTracker::setDilationKernel(const cv::Size& img_size) {
+  static constexpr double kReferenceBorderThickness = 15.0;
+  static constexpr double kReferenceImageArea = 640.0 * 480.0;
+
+  const double image_scale = static_cast<double>(img_size.width) *
+                             static_cast<double>(img_size.height) /
+                             kReferenceImageArea;
+
+  const int scaled_border_thickness =
+      std::round(kReferenceBorderThickness * std::sqrt(image_scale));
+  object_mask_dilate_kernel_ = cv::getStructuringElement(
+      cv::MORPH_RECT, cv::Size(2 * scaled_border_thickness + 1,
+                               2 * scaled_border_thickness + 1));
 }
 
 }  // namespace dyno2

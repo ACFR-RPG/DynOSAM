@@ -39,6 +39,37 @@ std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_int_distribution<uint8_t> dis(0, 255);
 
+std::array<float, 3> hsvFromRGB(uint8_t r, uint8_t g, uint8_t b) {
+  const float rf = r / 255.0f;
+  const float gf = g / 255.0f;
+  const float bf = b / 255.0f;
+
+  const float max_value = std::max({rf, gf, bf});
+  const float min_value = std::min({rf, gf, bf});
+  const float delta = max_value - min_value;
+
+  float hue = 0.0f;
+  const float saturation = max_value > 0.0f ? delta / max_value : 0.0f;
+  const float value = max_value;
+
+  if (delta > 0.0f) {
+    if (max_value == rf) {
+      hue = std::fmod((gf - bf) / delta, 6.0f);
+    } else if (max_value == gf) {
+      hue = (bf - rf) / delta + 2.0f;
+    } else {
+      hue = (rf - gf) / delta + 4.0f;
+    }
+
+    hue /= 6.0f;
+    if (hue < 0.0f) {
+      hue += 1.0f;
+    }
+  }
+
+  return {hue, saturation, value};
+}
+
 bool Color::operator==(const Color& other) const {
   return r == other.r && g == other.g && b == other.b && a == other.a;
 }
@@ -60,6 +91,11 @@ void Color::merge(const Color& other, float weight) {
   *this = blend(other, weight);
 }
 
+Color& Color::withAlpha(uint8_t a) {
+  this->a = a;
+  return *this;
+}
+
 Color Color::blend(const Color& other, float weight) const {
   weight = std::clamp(weight, 0.0f, 1.0f);
   return Color(static_cast<uint8_t>(r * (1.0f - weight) + other.r * weight),
@@ -72,6 +108,11 @@ Color Color::brightness(float factor) const {
   CHECK_GE(factor, 0.0f);
   CHECK_LE(factor, 1.0f);
 
+  // auto [hue, saturation, value] = hsvFromRGB(r, g, b);
+  // return fromHSV(hue, saturation, value * factor).withAlpha(a);
+
+  // NOTE: this is computationally faster than computing HSV every time
+  //  and results in (mostly) a similar effect!
   return Color(static_cast<uint8_t>(r * factor),
                static_cast<uint8_t>(g * factor),
                static_cast<uint8_t>(b * factor), a);

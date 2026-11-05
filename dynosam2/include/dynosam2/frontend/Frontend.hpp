@@ -61,6 +61,7 @@ class Frontend {
                            AyncVO& async_context,
                            std::vector<FrameId>& frames_updated,
                            std::vector<KeypointIdentifier>& new_measurements,
+                           std::vector<TrackletId>& correspondences,
                            bool& success, const ImageContainer& image_container,
                            const VioMotionPropagation& T_k_km1_propagated);
 
@@ -69,7 +70,8 @@ class Frontend {
       const EstimationParameters& params, const ImageContainer& image_container,
       DoGraphEstimator& estimator, FeatureBlockContainer& features,
       FeatureBlockGeometry& geometry, AyncVO& async_context,
-      std::vector<FrameId>& frames_updated, uchar& success);
+      std::vector<FrameId>& frames_updated,
+      std::vector<TrackletId>& correspondences, uchar& success);
 
   inline bool isVioInitalised() const {
     return vi_tracking_condition_.is_initalized;

@@ -4,8 +4,10 @@
 #include "dynosam2/common/Parameters.hpp"
 #include "dynosam2/estimator/SlamBackend.hpp"
 #include "dynosam2/frontend/Frontend.hpp"
+#include "dynosam2/frontend/FrontendViz.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_processing/ThreadSafeQueue.hpp"
 #include "dynosam_sensors/ImuFrontend.hpp"
 #include "dynosam_sensors/SensorRig.hpp"
 
@@ -34,6 +36,11 @@ class DynamicSlam : public DynamicSlamInterface {
   bool initPoseImu(const dyno::ImuMeasurements& imu_measurements,
                    gtsam::Pose3& T_WC) const;
 
+  void shutdownThreads();
+
+  /// @brief Performs FrontendViz processing in the background
+  void visualisationLoop();
+
  private:
   PipelineParameters parameters_;
   CanonicalSensorRig::Ptr sensor_rig_;
@@ -45,6 +52,14 @@ class DynamicSlam : public DynamicSlamInterface {
   SlamBackend estimator_;
 
   bool first_frame_{true};
+
+  /// @brief Viz responsible for matching/tracking drawing
+  FrontendViz frontend_viz_;
+  ThreadsafeQueue<FrontendViz::Data::Ptr> frontend_viz_data_queue_;
+  /// @brief Thread running the frontend viz thread
+  std::thread frontend_viz_thread_;
+
+  std::atomic_bool is_shutdown_{false};
 };
 
 }  // namespace dyno2

@@ -124,8 +124,8 @@ class FeatureTracker {
   // R_previous_curr is a rotation from previous to current (ie p_curr = R *
   // p_previous)
   bool predictFromPreviousGivenRotation(
-      const gtsam::Rot3& R_k_km1,
-      std::vector<cv::Point2f>& predicted_pts_curr) const;
+      std::vector<cv::Point2f>& predicted_pts_curr,
+      const gtsam::Rot3& maybe_R_k_km1) const;
 
   void fillDetectionParam(ObjectId object_id, const cv::Mat& mask,
                           const cv::Rect& bounding_box, int current_tracks,
@@ -149,6 +149,8 @@ class FeatureTracker {
   size_t getMaxDetectionCorners(ObjectId object_id) const;
   size_t getMaxTrackingCorners(ObjectId object_id) const;
   size_t getMinAllowableTracks(ObjectId object_id) const;
+
+  void setDilationKernel(const cv::Size& img_size);
 
  private:
   FrontendParameters parameters_;
@@ -174,6 +176,10 @@ class FeatureTracker {
 
   //! Set of previous (inlier) features to track against
   FeatureBlockContainer previous_features_;
+
+  //! Some structuring element used to dilate the object masks to fill any small
+  //! holes
+  cv::Mat object_mask_dilate_kernel_;
 };
 
 }  // namespace dyno2
