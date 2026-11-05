@@ -54,43 +54,17 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   const dyno::ImuMeasurements imu_measurements =
       input->imu_measurements.value_or(dyno::ImuMeasurements{});
 
-  // forward rotation prediction using either constant motion or IMU
-  // rottes from k-1 to k
-  gtsam::Rot3 R_k_km1;
-  const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-  if (vio_estimator.numStates() == 0) {
-    if (auto imu_params = vio_estimator.getImuConfig();
-        imu_params && imu_measurements.size() > 2) {
-      // NOTE: we can use dummy variables
-      ImuError::Ptr imu_error =
-          std::make_shared<ImuError>(imu_measurements, imu_params, 0, 1);
-      R_k_km1 = imu_error->deltaXij().rotation();
-      LOG(INFO) << "Provind tracker IMU camera rotation!";
-    } else {
-      R_k_km1 = gtsam::Rot3::Identity();
-    }
-  } else {
-    const VioMotionPropagation propagation = Frontend::predictFromMotion(
-        frame_id, timestamp, vio_estimator, imu_measurements);
-    if (!propagation.success) {
-      LOG(FATAL) << "No IMU data and could not "
-                    "successfully progate motion!";
-    }
-    VLOG(30) << "Done motion propogation with source: " << propagation.source;
-    R_k_km1 = propagation.relative_motion_error->deltaXij().rotation();
-  }
-
-  dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
-  frontend_.detectAndTrack(features_ptr, object_detection, image_container,
-                           R_k_km1);
-  CHECK_NOTNULL(features_ptr);
-  detect_t.stop();
-  FeatureBlockContainer& features = *features_ptr;
-
-  FeatureBlockGeometryMap geometries;
-  GeometryUpdater(camera_, *image_container, features).calcPoints(geometries);
-
   if (first_frame_) {
+    dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
+    frontend_.detectAndTrack(features_ptr, object_detection, image_container,
+                             gtsam::Rot3::Identity());
+    CHECK_NOTNULL(features_ptr);
+    detect_t.stop();
+    FeatureBlockContainer& features = *features_ptr;
+
+    FeatureBlockGeometryMap geometries;
+    GeometryUpdater(camera_, *image_container, features).calcPoints(geometries);
+
     for (const auto& [object_id, geometry] : geometries) {
       if (object_id > background_label) {
         DoFrame::Ptr frame =
@@ -145,6 +119,31 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
     return nullptr;
   }
+
+  VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+  // propogate the next pose from the most recent state using IMU or constant
+  // velocity
+  const VioMotionPropagation vio_propagation = Frontend::predictFromMotion(
+      frame_id, timestamp, vio_estimator, imu_measurements);
+  if (!vio_propagation.success) {
+    LOG(FATAL) << "No IMU data and could not "
+                  "successfully progate motion!";
+  }
+  VLOG(30) << "Done motion propogation with source: " << vio_propagation.source;
+  // forward rotation prediction using either constant motion or IMU
+  // rottes from k-1 to k
+  const gtsam::Rot3 R_k_km1 =
+      vio_propagation.relative_motion_error->deltaXij().rotation();
+
+  dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
+  frontend_.detectAndTrack(features_ptr, object_detection, image_container,
+                           R_k_km1);
+  CHECK_NOTNULL(features_ptr);
+  detect_t.stop();
+  FeatureBlockContainer& features = *features_ptr;
+
+  FeatureBlockGeometryMap geometries;
+  GeometryUpdater(camera_, *image_container, features).calcPoints(geometries);
 
   struct ObjectContext {
     FeatureBlockGeometry* geometry;
@@ -202,22 +201,31 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   // handle the case we have no VO geometry but we have IMU
   if (!vo_geometry) {
-    VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-    // attempt motion propagation from last frame via constant motion model or
-    // IMU!
-    // TODO: dont need to this here now as we did it before!!
-    const VioMotionPropagation propagation = Frontend::predictFromMotion(
-        frame_id, timestamp, vio_estimator, imu_measurements);
-
-    if (!propagation.success) {
-      LOG(FATAL) << "No visual featues for Visual tracking and could not "
-                    "successfully progate motion!";
-    }
-
     ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
-    vi_frame->setRelativePose(propagation.relative_motion_error);
+    vi_frame->setRelativePose(vio_propagation.relative_motion_error);
 
-    vio_estimator.initaliseStates(vi_frame, propagation.predicted_pv);
+    // TODO: in this failure case its probbaly better we dont add it as a state
+    //  but instead init it as a frame
+    //  1. This means that the logic in predictFromMotion which checks the last
+    //  valid state
+    //     will work because the last valid state was one we had correspondances
+    //     for
+    //  2. The logic is more sound beciase we should only have states poses we
+    //  have tracks for I guess we could get around this by changing it to like
+    //  "last optimized state" becuase we check for covisability but this
+    //  becomes rahter convoluted....
+    // TODO: NO! becuase we need all states for example so the IMU is always
+    // between the last image and the current image
+    //  I guess we could merge IMU error terms if we dont have a valid solve so
+    //  the last state is still the last state we had correspondences in! new
+    //  points should get created then as there will be 0% overlap with the last
+    //  keyframe! but basically if we dont add states for each frame we then
+    //  need to accumulate IMU error terms becuase ImuMeasurements should
+    //  correspond to k-1 to k Todo this we would then also need to propogate
+    //  using the RelativePoseError term which we could do, arguably.. in
+    //  practive we probably dont need to bother for the PhD and for the
+    //  datasets we will test.
+    vio_estimator.initaliseStates(vi_frame, vio_propagation.predicted_pv);
     run_vo = false;
     vo_success = true;
     // still try and solve for objects, just immedidately by pass the waiting on
@@ -237,7 +245,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
       frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
                                     async_context, updated_vo_states,
                                     vo_measurements_added, vo_success,
-                                    *image_container, imu_measurements);
+                                    *image_container, vio_propagation);
     });
   }
 

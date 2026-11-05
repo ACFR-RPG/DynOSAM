@@ -62,8 +62,7 @@ class Frontend {
                            std::vector<FrameId>& frames_updated,
                            std::vector<KeypointIdentifier>& new_measurements,
                            bool& success, const ImageContainer& image_container,
-                           const ImuMeasurements& imu_measurements);
-  //  const VioMotionPropagation& T_k_km1_propagated
+                           const VioMotionPropagation& T_k_km1_propagated);
 
   void solveObjectOdometry(
       ObjectId object_id, const VioGraphEstimator& vo_estimator,

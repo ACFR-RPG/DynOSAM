@@ -55,8 +55,10 @@ void Frontend::solveVisualOdometry(
     std::vector<FrameId>& frames_updated,
     std::vector<KeypointIdentifier>& new_measurements, bool& success,
     const ImageContainer& image_container,
-    const ImuMeasurements& imu_measurements) {
+    const VioMotionPropagation& T_k_km1_propagated) {
   dyno::utils::ChronoTimingStats vo_t("frontend.vo");
+
+  CHECK(T_k_km1_propagated.success);
 
   const FrameId frame_id = image_container.frameId();
   const Timestamp timestamp = image_container.timestamp();
@@ -105,30 +107,15 @@ void Frontend::solveVisualOdometry(
   ransac_t.stop();
 
   if (!ransac_success) {
-    // TODO: should actually do this propogation in Dynamic SLAM ANYWAY
-    //  as this may help with tracking using a constant velocity model
-    //  then we dont need to do prediction here and in detect & track
-    //  use this to init out state and then we can just update the state
-    //  here if we have successs!!
-    //  propogate with a constant motion or IMU driven motion model
-    const VioMotionPropagation propagation = Frontend::predictFromMotion(
-        frame_id, timestamp, estimator, imu_measurements);
-    if (!propagation.success) {
-      success = false;
-      LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id
-                   << " and unable to propogate motion!";
-      async_context.markReadyButInvalidAndNotify();
-      return;
-    }
-
     ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
     vi_frame->fill(geometry, features);
-    vi_frame->setRelativePose(propagation.relative_motion_error);
+    vi_frame->setRelativePose(T_k_km1_propagated.relative_motion_error);
 
-    estimator.initaliseStates(vi_frame, propagation.predicted_pv);
+    estimator.initaliseStates(vi_frame, T_k_km1_propagated.predicted_pv);
 
     success = true;
-    async_context.markReadyAndValidAndNotify(propagation.predicted_pv.pose);
+    async_context.markReadyAndValidAndNotify(
+        T_k_km1_propagated.predicted_pv.pose);
 
     LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id
                  << " but state propogated via motion!";
@@ -155,6 +142,18 @@ void Frontend::solveVisualOdometry(
   gtsam::Pose3 X_W = X_W_km1 * T_ij.measurement();
   ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
   vi_frame->fill(geometry, features);
+
+  // TODO: test!
+  //  if(T_k_km1_propagated.source == VioMotionPropagation::Source::IMU) {
+  //    CHECK_EQ(T_k_km1_propagated.relative_motion_error->to(), frame_id);
+  //    CHECK_EQ(T_k_km1_propagated.relative_motion_error->from(),
+  //    previous_frame_id);
+  //    vi_frame->setRelativePose(T_k_km1_propagated.relative_motion_error);
+  //  }
+  //  else {
+  //     vi_frame->setRelativePose(std::make_shared<RelativePoseError>(
+  //      T_ij, previous_frame_id, vi_frame->getFrameId()));
+  //  }
   vi_frame->setRelativePose(std::make_shared<RelativePoseError>(
       T_ij, previous_frame_id, vi_frame->getFrameId()));
 
@@ -503,6 +502,8 @@ VioMotionPropagation Frontend::predictFromMotion(
   const VioGraphState& vio_state_previous =
       estimator.getVioState(last_frame_id);
 
+  // TODO: but we add states even when we have no tracks so previous state
+  //  will likely always be the previous state!
   const dyno::Timestamp dt = timestamp - vio_state_previous.timestamp;
 
   VioMotionPropagation propagation;
