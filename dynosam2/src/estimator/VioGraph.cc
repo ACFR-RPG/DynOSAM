@@ -15,9 +15,19 @@ namespace dyno2 {
 
 VioGraph::VioGraph(dyno::Camera::Ptr camera) : Base(camera) {}
 
+void VioGraph::addImu(dyno::CombinedPIMParamPtr imu_config) {
+  CHECK_NOTNULL(imu_config);
+  imu_config_ = imu_config;
+}
+
 void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose) {
   VioGraphState& state = initaliseStatesWithPose(frame, pose);
   setStateVelocityFromPose(state);
+}
+
+void VioGraph::initaliseStates(ViFrame::Ptr frame,
+                               const PoseVelocity3& state_W) {
+  initaliseStates(frame, state_W.pose, state_W.velocity);
 }
 
 void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
@@ -127,9 +137,20 @@ bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
     ++added_kfs;
   }
 
-  // TODO: prune frames_ to not hold into memory!
+  // Obtain the keyframes that were pruned.
+  std::vector<dyno::FrameId> pruned_keyframes;
+  pruned_keyframes.reserve(keyframes_.size() - keyframes.size());
 
-  keyframes_ = keyframes;
+  std::set_difference(keyframes_.begin(), keyframes_.end(), keyframes.begin(),
+                      keyframes.end(), std::back_inserter(pruned_keyframes));
+
+  // release image memory. We only store images for keyframes
+  for (dyno::FrameId pruned_frame : pruned_keyframes) {
+    getFramePtr(pruned_frame)->releaseImages();
+  }
+
+  // Update keyframes.
+  keyframes_ = std::move(keyframes);
   return true;
 
   // missing tracking...
@@ -470,13 +491,17 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   for (dyno::FrameId k0 = anchor_frame; k0 <= head_frame; k0++) {
     if (k0 > anchor_frame) {
       const ViFrame::Ptr vi_frame_k0 = getFramePtr(k0);
-      const Motion3ReferenceFrame& T_ij = vi_frame_k0->getRelativePose();
-      const dyno::FrameId frame_i = T_ij.from();
+      // const Motion3ReferenceFrame& T_ij = vi_frame_k0->getRelativePose();
+      const RelativePoseErrorBase::Ptr rel_pose =
+          vi_frame_k0->getRelativePose();
+      CHECK(rel_pose);
+
+      const dyno::FrameId frame_i = rel_pose->from();
       // TODO: covariance from estimation!!
       smooth_traj_problem.addFactor(
           boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
               gtsam::Symbol('x', frame_i), gtsam::Symbol('x', k0),
-              static_cast<gtsam::Pose3>(T_ij), relative_noise_model));
+              rel_pose->deltaXij(), relative_noise_model));
     }
 
     const gtsam::Symbol sym('x', k0);

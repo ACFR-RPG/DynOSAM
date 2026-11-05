@@ -90,10 +90,11 @@ class SensorMode {
 
 /* Details on where to load paramters from */
 struct LoadingSourceParams {
-  //! Full path to dynosam params
-  std::string params_folder{};
-  //! If false, we load all camera params from CameraParams.yaml as found in
-  //! params_folder Else use camera info topics
+  //! Full path to file containing camera params
+  std::string camera_yaml_path{};
+  std::string imu_yaml_path{};
+  //! If false, we load all camera params from camera_yaml_path as found in
+  //! params_folder. Otherwise use camera info topics
   bool cameras_from_ros{true};
 };
 
@@ -204,9 +205,6 @@ class SensorSystem : public CanonicalSensorRig {
                                   const GeneralParams& general_params,
                                   CameraParams& cannonical_camera,
                                   CalibrateDepthRig& calibrate_depth_rig);
-
-  std::filesystem::path paramFilePath(const std::string& file,
-                                      bool check_exists = true) const;
 
  private:
   std::shared_ptr<rclcpp::Node> node_;

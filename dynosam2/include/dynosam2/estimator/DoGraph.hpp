@@ -3,6 +3,7 @@
 #include "dynosam2/estimator/BaGraph.hpp"
 #include "dynosam2/estimator/VioGraph.hpp"
 #include "dynosam2/frontend/Frame.hpp"
+#include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_core/DynoState.hpp"
 #include "dynosam_sensors/Camera.hpp"
@@ -53,7 +54,7 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   // before createing a state!
   FrameId initaliseFrame(DoFrame::Ptr frame);
 
-  void initalizeNewAnchorState(DoFrame::Ptr do_frame, const gtsam::Pose3 L);
+  void initalizeNewAnchorState(DoFrame::Ptr do_frame, const gtsam::Pose3& L);
 
   // where j is current frame frame
   void initalizeStatesPropogate(DoFrame::Ptr do_frame_j,
@@ -64,7 +65,6 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   inline DoFrame::Ptr getFramePtr(dyno::FrameId frame_id) const {
     return this->getFrameAs<DoFrame>(
         dyno::TemporalObjectId{frame_id, object_id_});
-    // return this->getFrameAs<DoFrame>(frame_id);
   }
 
   void setRegularKeyframe(dyno::FrameId frame_id);
@@ -116,6 +116,8 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   dyno::ObjectId object_id_;
   //! Keyframes since the last anchor keyframe
   std::set<dyno::FrameId> active_keyframes_;
+  //! Buffer containing the last N active keyframes
+  dyno::CircularBuffer<dyno::FrameId, 6> windowed_keyframes_;
 };
 
 class DoGraphEstimator : public DoGraph, public BaProblemInterface {

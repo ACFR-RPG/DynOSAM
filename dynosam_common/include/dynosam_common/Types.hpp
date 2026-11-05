@@ -380,7 +380,7 @@ struct HeavyReferenceFrameValue : public ReferenceFrameValue<E> {
     return Base::operator==(other) && from_ == other.from_ && to_ == other.to_;
   }
 
- private:
+ protected:
   FrameId from_{0};
   FrameId to_{0};
 };

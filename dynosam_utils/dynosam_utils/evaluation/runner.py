@@ -2,7 +2,7 @@ from launch import LaunchService, LaunchDescription  # noqa: E402
 from launch.actions import ExecuteProcess, TimerAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from dynosam_ros.launch_utils import get_default_dynosam_params_path
+from dynosam_ros_common.launch_utils import get_default_dynosam_params_path
 
 from ament_index_python.packages import get_package_share_directory
 

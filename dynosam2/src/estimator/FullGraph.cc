@@ -148,13 +148,17 @@ bool FullGraph::synchronise(VioGraph* vio_graph, const DoGraphPtrMap& do_graphs,
   for (dyno::FrameId k0 = first_optimied_vio; k0 <= last_optimised_vio; k0++) {
     if (k0 > first_optimied_vio) {
       const ViFrame::Ptr vi_frame_k0 = vio_graph->getFramePtr(k0);
-      const Motion3ReferenceFrame& T_ij = vi_frame_k0->getRelativePose();
-      const dyno::FrameId frame_i = T_ij.from();
+      // const Motion3ReferenceFrame& T_ij = vi_frame_k0->getRelativePose();
+      const RelativePoseErrorBase::Ptr rel_pose =
+          vi_frame_k0->getRelativePose();
+      CHECK(rel_pose);
+
+      const dyno::FrameId frame_i = rel_pose->from();
 
       // TODO: covariance from estimation!!
       problem.addFactor(boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
           gtsam::Symbol('x', frame_i), gtsam::Symbol('x', k0),
-          static_cast<gtsam::Pose3>(T_ij), relative_noise_model));
+          rel_pose->deltaXij(), relative_noise_model));
     }
 
     const gtsam::Symbol sym('x', k0);
@@ -190,11 +194,19 @@ bool FullGraph::synchronise(VioGraph* vio_graph, const DoGraphPtrMap& do_graphs,
   // propogate from last optimised frame using visual odometry
   for (dyno::FrameId k0 = last_optimised_vio + 1; k0 <= vio_head; k0++) {
     const ViFrame::Ptr vi_frame_j = vio_graph->getFramePtr(k0);
-    const Motion3ReferenceFrame& T_ij = vi_frame_j->getRelativePose();
-    dyno::FrameId frame_i = T_ij.from();
+    // TODO: compute original relative poses (not the measured relative pose)
+    //  since this could be IMU
+    //  and propogate using this
+    //  MUST do this before we update the poses < last_optimised_vio as the
+    //  first relatiuve pose pair will then be incorrect const
+    //  Motion3ReferenceFrame& T_ij = vi_frame_j->getRelativePose();
+    const RelativePoseErrorBase::Ptr rel_pose = vi_frame_j->getRelativePose();
+    CHECK_NOTNULL(rel_pose);
+
+    dyno::FrameId frame_i = rel_pose->from();
     const gtsam::Pose3& X_W_i = vio_graph->getPose(frame_i);
 
-    const gtsam::Pose3 X_W_k0 = X_W_i * T_ij;
+    const gtsam::Pose3 X_W_k0 = X_W_i * rel_pose->deltaXij();
     // update propogated pose
     vio_graph->setPose(k0, X_W_k0);
     // since we dont have IMU!

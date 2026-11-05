@@ -14,13 +14,21 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
     : parameters_(parameters),
       sensor_rig_(sensor_rig),
       camera_(sensor_rig->cannonicalCamera()),
+      imu_params_(
+          dyno::ImuFrontend::makeCombinedParams(sensor_rig->getImuParams())),
       frontend_(parameters.frontend, camera_),
       estimator_(camera_)
 
 {
   // TODO: set some params for frontend!
+
+  auto& vio_estimator = estimator_.vioEstimator();
+
+  if (sensor_rig_->imuEnabled()) {
+    vio_estimator.addImu(imu_params_);
+  }
+
   if (parameters_.estimator.enforce_realtime) {
-    auto& vio_estimator = estimator_.vioEstimator();
     vio_estimator.setOptimisationTimeLimit(
         parameters_.estimator.realtime_time_limit,
         parameters_.estimator.realtime_static_min_iterations);
@@ -50,6 +58,11 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   FeatureBlockGeometryMap geometries;
   GeometryUpdater(camera_, *image_container, features).calcPoints(geometries);
 
+  // If no messages are provided just init with an empty vector
+  // this is the equivalenent of having no measurements
+  const dyno::ImuMeasurements imu_measurements =
+      input->imu_measurements.value_or(dyno::ImuMeasurements{});
+
   if (first_frame_) {
     for (const auto& [object_id, geometry] : geometries) {
       if (object_id > background_label) {
@@ -70,8 +83,24 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
         vi_frame->fill(geometry, features);
 
+        // initial camera pose (opencv coordinate convention);
+        // NOT for dataset data as we assume that we are already algined to the
+        // world-frame with the ground truth
+        gtsam::Pose3 T_WS;
+        if (sensor_rig_->imuEnabled() && false) {
+          // align with the world frame (z-down) using accelerometer
+          // measurements
+          bool success = initPoseImu(imu_measurements, T_WS);
+          CHECK(success)
+              << "pose could not be initalized from imu measurements.";
+          LOG(INFO) << "Init from IMU measurement!";
+          (void)(success);
+        } else {
+          T_WS = gtsam::Pose3::Identity();
+        }
+
         VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-        vio_estimator.initaliseStates(vi_frame, gtsam::Pose3::Identity());
+        vio_estimator.initaliseStates(vi_frame, T_WS);
         // first frame must be keyframe
         // measurements SHOULD get added in the solveVisualOdometry step
         // after outlier rejection
@@ -125,16 +154,6 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     }
   }
 
-  CHECK(vo_geometry);
-
-  bool vo_success{false};
-
-  // setup context to write visual odometry into this alue
-  gtsam::Pose3 X_W_k;
-  AyncVO async_context;
-  async_context.vo = &X_W_k;
-  CHECK_NOTNULL(async_context.vo);
-
   const size_t num_objects = object_ids.size();
   std::vector<uchar> do_solve_success(num_objects, 0);
 
@@ -145,17 +164,54 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   std::vector<dyno::FrameId>& updated_vo_states =
       publication_data->updated_states.vo;
 
+  // setup context to write visual odometry into this alue
+  gtsam::Pose3 X_W_k;
+  AyncVO async_context;
+  async_context.vo = &X_W_k;
+  CHECK_NOTNULL(async_context.vo);
+
+  bool run_vo{true};
+  bool vo_success{false};
+
+  // handle the case we have no VO geometry but we have IMU
+  if (!vo_geometry) {
+    VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+    // attempt motion propagation from last frame via constant motion model or
+    // IMU!
+    const VioMotionPropagation propagation = Frontend::predictFromMotion(
+        frame_id, timestamp, vio_estimator, imu_measurements);
+
+    if (!propagation.success) {
+      LOG(FATAL) << "No visual featues for Visual tracking and could not "
+                    "successfully progate motion!";
+    }
+
+    ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
+    vi_frame->setRelativePose(propagation.relative_motion_error);
+
+    vio_estimator.initaliseStates(vi_frame, propagation.predicted_pv);
+    run_vo = false;
+    vo_success = true;
+    // still try and solve for objects, just immedidately by pass the waiting on
+    // the mutex since we have odometry by IMU propagation!
+    async_context.vo_ready = true;
+    async_context.vo_valid = true;
+  }
+
   // vector of keypoints which had measurements added to the bundle adjustment
   std::vector<KeypointIdentifier> vo_measurements_added;
   dyno::utils::ChronoTimingStats solve_t("slam.solve");
   tbb::task_group group;
-  group.run([&] {
-    dyno::utils::ChronoTimingStats vo_t("slam.vo");
-    VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
-    frontend_.solveVisualOdometry(
-        vio_estimator, features, *vo_geometry, async_context, updated_vo_states,
-        vo_measurements_added, vo_success, *image_container);
-  });
+  if (run_vo) {
+    group.run([&] {
+      dyno::utils::ChronoTimingStats vo_t("slam.vo");
+      VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
+      frontend_.solveVisualOdometry(vio_estimator, features, *vo_geometry,
+                                    async_context, updated_vo_states,
+                                    vo_measurements_added, vo_success,
+                                    *image_container, imu_measurements);
+    });
+  }
 
   const VioGraphEstimator& vio_estimator = estimator_.vioEstimator();
   dyno::utils::ChronoTimingStats doo_t("slam.doo");
@@ -188,7 +244,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   std::vector<dyno::DoTrackingState>& do_tracking_states =
       publication_data->do_tracking_states;
 
-  if (vo_success) {
+  if (!vo_success) {
+    LOG(FATAL) << "Could not produce a VO!";
     // VioGraphEstimator& estimator = estimator_.vioEstimator();
     // vi_tracking_state.is_keyframe = estimator.isKeyframe(frame_id);
     // // prune keyframes
@@ -254,15 +311,13 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
 bool DynamicSlam::initPoseImu(const dyno::ImuMeasurements& imu_measurements,
                               gtsam::Pose3& T_WC) const {
-  gtsam::Pose3 T_WI = gtsam::Pose3::Identity();
-
-  const dyno::ImuAccGyrs& acc_gyrs = imu_measurements.acc_gyr_;
-  const size_t size = acc_gyrs.cols();
+  const size_t size = imu_measurements.size();
 
   if (size == 0) {
     return false;
   }
 
+  const dyno::ImuAccGyrs& acc_gyrs = imu_measurements.acc_gyr_;
   // acceleration vector
   Eigen::Vector3d acc_I = Eigen::Vector3d::Zero();
   for (size_t i = 0; i < size; i++) {
@@ -271,22 +326,24 @@ bool DynamicSlam::initPoseImu(const dyno::ImuMeasurements& imu_measurements,
 
   acc_I /= double(size);
   Eigen::Vector3d e_acc = acc_I.normalized();
+  LOG(INFO) << e_acc;
 
-  // align with ez_W:
-  Eigen::Vector3d ez_W(0.0, 0.0, 1.0);
+  // align to OpenCV coordinate convention (ie z down!)
+  const Eigen::Vector3d ez_W(0.0, -1.0, 0.0);
+
+  gtsam::Pose3 T_WI = gtsam::Pose3::Identity();
   Eigen::Matrix<double, 6, 1> poseIncrement;
-  poseIncrement.head<3>() = Eigen::Vector3d::Zero();
-  poseIncrement.tail<3>() = ez_W.cross(e_acc).normalized();
+  poseIncrement.tail<3>() = Eigen::Vector3d::Zero();
+  poseIncrement.head<3>() = ez_W.cross(e_acc).normalized();
   double angle = std::acos(ez_W.transpose() * e_acc);
-  poseIncrement.tail<3>() *= angle;
+  poseIncrement.head<3>() *= angle;
 
-  T_WI = T_WI * gtsam::Pose3::Expmap(poseIncrement);
+  T_WI = T_WI.expmap(-poseIncrement);
 
-  // IMU to Camera transform
+  // This composes the aligned IMU pose with the camera-to-IMU transform.
   const gtsam::Pose3& T_CI = sensor_rig_->getImuParams().T_CI;
-  // TODO: this might actually be changeBasis (I think it is!)
-  T_WC = T_WI * T_CI.inverse();
 
+  T_WC = T_WI * T_CI.inverse();
   return true;
 }
 

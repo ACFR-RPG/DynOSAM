@@ -102,6 +102,38 @@ ImageContainer& ImageContainer::rightRgb(const cv::Mat& image) {
   return this->add<ImageType::RGBMono>(kRightRgb, image);
 }
 
+bool ImageContainer::rgb(const ImageContainer& other, const bool copy) {
+  return fromOther(kRGB, other, copy);
+}
+
+bool ImageContainer::depth(const ImageContainer& other, const bool copy) {
+  return fromOther(kDepth, other, copy);
+}
+bool ImageContainer::opticalFlow(const ImageContainer& other, const bool copy) {
+  return fromOther(kOPticalFlow, other, copy);
+}
+bool ImageContainer::objectMotionMask(const ImageContainer& other,
+                                      const bool copy) {
+  return fromOther(kObjectMask, other, copy);
+}
+bool ImageContainer::rightRgb(const ImageContainer& other, const bool copy) {
+  return fromOther(kRightRgb, other, copy);
+}
+
+ImageContainer::Ptr ImageContainer::CreateSubset(
+    const ImageContainer& other, const std::vector<std::string>& keys,
+    const bool copy) {
+  ImageContainer::Ptr container =
+      std::make_shared<ImageContainer>(other.frameId(), other.timestamp());
+  for (const auto& key : keys) {
+    if (!container->fromOther(key, other, copy)) {
+      throw DynosamException("Failed to create image subset: requested key '" +
+                             key + "' is not in provided  ImageContainer");
+    }
+  }
+  return container;
+}
+
 std::string ImageContainer::toString() const {
   std::stringstream ss;
   ss << "[ ";
@@ -117,6 +149,21 @@ std::ostream& operator<<(std::ostream& os,
                          const ImageContainer& image_container) {
   os << image_container.toString();
   return os;
+}
+
+bool ImageContainer::fromOther(const std::string& key,
+                               const ImageContainer& other, const bool copy) {
+  auto it = other.images_.find(key);
+  if (it == other.images_.end()) {
+    return false;
+  }
+
+  if (copy) {
+    images_.emplace(key, it->second.clone());
+  } else {
+    images_.emplace(key, it->second);
+  }
+  return true;
 }
 
 }  // namespace dyno

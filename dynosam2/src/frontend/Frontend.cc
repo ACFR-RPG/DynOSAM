@@ -51,7 +51,8 @@ void Frontend::solveVisualOdometry(
     FeatureBlockGeometry& geometry, AyncVO& async_context,
     std::vector<FrameId>& frames_updated,
     std::vector<KeypointIdentifier>& new_measurements, bool& success,
-    const ImageContainer& image_container) {
+    const ImageContainer& image_container,
+    const ImuMeasurements& imu_measurements) {
   dyno::utils::ChronoTimingStats vo_t("frontend.vo");
 
   const FrameId frame_id = image_container.frameId();
@@ -96,42 +97,33 @@ void Frontend::solveVisualOdometry(
   gtsam::Pose3 T_ij_pnp;
   std::vector<bool> inliers;
   dyno::utils::ChronoTimingStats ransac_t("frontend.vo.ransac");
-  async_context.vo_valid = solve3d2dRansac(T_ij_pnp, inliers, adapter,
-                                           vio_ransac_threshold_3d_2d_, 100);
+  const bool ransac_success = solve3d2dRansac(T_ij_pnp, inliers, adapter,
+                                              vio_ransac_threshold_3d_2d_, 100);
   ransac_t.stop();
 
-  if (!async_context.vo_valid) {
-    {
-      std::lock_guard<std::mutex> lock(async_context.vo_mutex);
-      // alert awaiting threads that the solve was complete even if it was
-      // invalid
-      async_context.vo_ready = true;
+  if (!ransac_success) {
+    // propogate with a constant motion or IMU driven motion model
+    const VioMotionPropagation propagation = Frontend::predictFromMotion(
+        frame_id, timestamp, estimator, imu_measurements);
+    if (!propagation.success) {
+      success = false;
+      LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id
+                   << " and unable to propogate motion!";
+      async_context.markReadyButInvalidAndNotify();
+      return;
     }
 
     ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
     vi_frame->fill(geometry, features);
+    vi_frame->setRelativePose(propagation.relative_motion_error);
 
-    // propogate use constant velocity model
-    // or IMU!
-    const VioGraphState& vio_state_previous =
-        estimator.getVioState(previous_frame_id);
-    const dyno::Timestamp dt = timestamp - vio_state_previous.timestamp;
-    const gtsam::Pose3& previous_pose_W = vio_state_previous.pose_W;
-    gtsam::Pose3 predicted_pose = predictPoseConstantVelocity(
-        previous_pose_W, vio_state_previous.velocity_W, dt);
+    estimator.initaliseStates(vi_frame, propagation.predicted_pv);
 
-    vi_frame->setRelativePose(Motion3ReferenceFrame(
-        previous_pose_W.inverse() * predicted_pose, ReferenceFrame::LOCAL,
-        vio_state_previous.frame_id, vi_frame->getFrameId()));
+    success = true;
+    async_context.markReadyAndValidAndNotify(propagation.predicted_pv.pose);
 
-    estimator.initaliseStates(vi_frame, predicted_pose,
-                              vio_state_previous.velocity_W);
-
-    success = false;
-    // alert awaiting threads
-    async_context.vo_cv.notify_all();
-
-    LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id;
+    LOG(WARNING) << "3D2D RANSAC failed for VO! k=" << frame_id
+                 << " but state propogated via motion!";
     return;
   }
 
@@ -155,11 +147,14 @@ void Frontend::solveVisualOdometry(
   gtsam::Pose3 X_W = X_W_km1 * T_ij.measurement();
   ViFrame::Ptr vi_frame = std::make_shared<ViFrame>(frame_id, timestamp);
   vi_frame->fill(geometry, features);
-  vi_frame->setRelativePose(
-      Motion3ReferenceFrame(T_ij.measurement(), ReferenceFrame::LOCAL,
-                            previous_frame_id, vi_frame->getFrameId()));
+  vi_frame->setRelativePose(std::make_shared<RelativePoseError>(
+      T_ij, previous_frame_id, vi_frame->getFrameId()));
 
   estimator.initaliseStates(vi_frame, X_W);
+
+  LOG(INFO) << "Solved VO k= " << frame_id;
+  async_context.markReadyAndValidAndNotify(X_W);
+
   // initalise estimator with new state (eventually maybe from VIO?)
   // we now have an initial pose
   std::vector<dyno::TrackletId> observation_ids;
@@ -193,22 +188,12 @@ void Frontend::solveVisualOdometry(
   // TODO: if sensor_rig has IMU
 
   // alert waiting threads AFTER we initalise states as they may need the pose!
-  LOG(INFO) << "Solved VO k= " << frame_id;
-  {
-    std::lock_guard<std::mutex> lock(async_context.vo_mutex);
-    *async_context.vo = X_W;
-    async_context.vo_ready = true;
-    CHECK(async_context.vo_valid);
-  }
-  // alert awaiting threads
-  async_context.vo_cv.notify_all();
 
   const bool should_be_keyframe = shouldBeViKeyFrame(estimator, vi_frame);
-  // TODO: must bound keyframes (only for estimator and covisibility checking)
-  //  somehow this must be different from full SLAM and trajectory output!
-  //  full SLAM will use Keyframe MAP which represents the full SLAM problem!
-  //  this is just maybe the local problem
   if (should_be_keyframe) {
+    // add images to frame. These will get released when the frame is pruned
+    // vi_frame->
+
     // initlaise new points in the map by attempting to triangulate points
     // at all active keyframes
     const size_t init_triangulation =
@@ -374,7 +359,9 @@ void Frontend::solveObjectOdometry(
 
     // We didnt get enough tracks to init this object
     if (reference_lmks.size() < 3) {
-      // CANNOT INIT!
+      VLOG(50) << "Cannot init object pose from centroid as not enough "
+                  "reference points!";
+      success = false;
     }
 
     // construct the object reference frame from the centroid of the object
@@ -396,11 +383,24 @@ void Frontend::solveObjectOdometry(
       }
     }
 
+    if (reference_lmks_inliers.size() < 3) {
+      VLOG(50) << "Cannot init object pose from centroid as not enough inlier "
+                  "points!";
+      success = false;
+    }
+
     gtsam::Point3 t_W_i_centroid =
         X_W_i * dyno::computeCentroid(reference_lmks_inliers);
     gtsam::Pose3 L_W_i_centroid(gtsam::Rot3::Identity(), t_W_i_centroid);
 
     LOG(INFO) << "obj j=" << object_id << " made Anchor KF " << frame_id_i;
+
+    // set images for this keyframe
+    // memory will be cleared from inside the estimator as new keyframes are
+    // added
+    // TODO: unfortunately we dont have access to image_container_i (previous)
+    // do_frame_i->setImages(image_container);
+
     estimator.initalizeNewAnchorState(do_frame_i, L_W_i_centroid);
     estimator.addMeasurements(do_frame_i, measurements_i);
     frames_updated_set.insert(frame_id_i);
@@ -426,8 +426,8 @@ void Frontend::solveObjectOdometry(
     LOG(INFO) << "obj j=" << object_id << " made new Regular KF";
     // if keyframe for now just initalise keyframe in object frame
 
-    // use points from reference frame as we will have had a chance to optimize
-    // it
+    // set images for this keyframe
+    // do_frame_j->setImages(image_container);
     estimator.setRegularKeyframe(frame_id_j);
 
     // TODO: before adding points do radial outlier rejection
@@ -476,12 +476,65 @@ void Frontend::solveObjectOdometry(
   estimator.optimize(frame_id_j, vo_estimator, affected_in_opt,
                      params.num_dynamic_keyframes);
 
-  // estimator.removeOutliersByDetection(vo_estimator, image_container);
+  estimator.removeOutliersByDetection(vo_estimator, image_container);
 
   frames_updated_set.insert(affected_in_opt.begin(), affected_in_opt.end());
   frames_updated = std::vector<dyno::FrameId>(frames_updated_set.begin(),
                                               frames_updated_set.end());
   success = true;
+}
+
+VioMotionPropagation Frontend::predictFromMotion(
+    const dyno::FrameId frame_id, const dyno::Timestamp timestamp,
+    const VioGraphEstimator& estimator, const ImuMeasurements& imu_measurements,
+    const dyno::Timestamp constant_motion_max_dt) {
+  const dyno::FrameId last_frame_id = estimator.currentFrameId();
+  const VioGraphState& vio_state_previous =
+      estimator.getVioState(last_frame_id);
+
+  const dyno::Timestamp dt = timestamp - vio_state_previous.timestamp;
+
+  VioMotionPropagation propagation;
+  propagation.success = false;
+  if (auto imu_params = estimator.getImuConfig()) {
+    ImuError::Ptr imu_error = std::make_shared<ImuError>(
+        imu_measurements, imu_params, last_frame_id, frame_id);
+    // TODO: IMU bias
+    const gtsam::NavState predicted_nav_state =
+        imu_error->predict(vio_state_previous.navState(), ImuError::Bias{});
+    propagation.predicted_pv.pose = predicted_nav_state.pose();
+    propagation.predicted_pv.velocity.linear = predicted_nav_state.velocity();
+    // TODO: leaving angular blank!
+    propagation.relative_motion_error = imu_error;
+    propagation.success = true;
+    propagation.source = VioMotionPropagation::Source::IMU;
+  } else if (dt < constant_motion_max_dt) {
+    // TODO: can only predict with constant velocity so bar back!
+    const gtsam::Pose3& previous_pose_W = vio_state_previous.pose_W;
+    gtsam::Pose3 X_W_k = predictPoseConstantVelocity(
+        previous_pose_W, vio_state_previous.velocity_W, dt);
+    propagation.predicted_pv.pose = X_W_k;
+    propagation.predicted_pv.velocity = vio_state_previous.velocity_W;
+
+    gtsam::Matrix66 sqrt_information;
+    sqrt_information.setIdentity();
+
+    const dyno::Timestamp sqrt_dt = sqrt(dt);
+    // fill rotation
+    sqrt_information.block<3, 3>(0, 0) *= 0.10 / sqrt_dt;
+    // fill translation
+    sqrt_information.block<3, 3>(3, 3) *= 1.0 / sqrt_dt;
+    const gtsam::Matrix66 cov =
+        (sqrt_information.transpose() * sqrt_information).inverse();
+
+    dyno::Pose3Measurement T_ij(previous_pose_W.inverse() * X_W_k, cov);
+    propagation.relative_motion_error =
+        std::make_shared<RelativePoseError>(T_ij, last_frame_id, frame_id);
+    propagation.success = true;
+    propagation.source = VioMotionPropagation::Source::PRIOR_MOTION;
+  }
+
+  return propagation;
 }
 
 struct StereoMeasurementFiller {
@@ -949,6 +1002,25 @@ bool Frontend::shouldBeDoKeyFrame(const DoGraphEstimator& estimator,
             << shape_score;
 
   return need_new_keyframe;
+}
+
+void AyncVO::markReadyButInvalidAndNotify() {
+  {
+    std::lock_guard<std::mutex> lock(vo_mutex);
+    vo_ready = true;
+    vo_valid = false;
+  }
+  vo_cv.notify_all();
+}
+
+void AyncVO::markReadyAndValidAndNotify(const gtsam::Pose3& pose) {
+  {
+    std::lock_guard<std::mutex> lock(vo_mutex);
+    vo_ready = true;
+    vo_valid = true;
+    *vo = pose;
+  }
+  vo_cv.notify_all();
 }
 
 }  // namespace dyno2

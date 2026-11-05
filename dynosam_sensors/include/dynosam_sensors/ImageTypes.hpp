@@ -90,7 +90,7 @@ struct ImagePyramid {
   ImagePyramid& operator=(const ImagePyramid& other);
   ImagePyramid(ImagePyramid&& other) noexcept;
   ImagePyramid& operator=(ImagePyramid&& other) noexcept;
-  ~ImagePyramid() = default;
+  ~ImagePyramid();
 
   void reserve(int max_level);
   void clear();

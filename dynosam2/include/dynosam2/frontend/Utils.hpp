@@ -66,7 +66,7 @@ inline void logPoseValidity(const std::string& name, const gtsam::Pose3& pose,
             << R << "\nt: " << pose.translation().transpose()
             << "\northogonality error: " << orthogonality_error
             << "\ndeterminant: " << determinant;
-
+  (void)(tol);
   // CHECK_LT(orthogonality_error, tol);
   // CHECK_NEAR(determinant, 1.0, tol);
 }

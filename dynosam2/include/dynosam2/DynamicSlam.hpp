@@ -6,6 +6,7 @@
 #include "dynosam2/frontend/Frontend.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_sensors/ImuFrontend.hpp"
 #include "dynosam_sensors/SensorRig.hpp"
 
 namespace dyno2 {
@@ -37,6 +38,8 @@ class DynamicSlam : public DynamicSlamInterface {
   PipelineParameters parameters_;
   CanonicalSensorRig::Ptr sensor_rig_;
   dyno::Camera::Ptr camera_;
+  //! Set even when not in IMU mode
+  dyno::CombinedPIMParamPtr imu_params_;
 
   Frontend frontend_;
   SlamBackend estimator_;

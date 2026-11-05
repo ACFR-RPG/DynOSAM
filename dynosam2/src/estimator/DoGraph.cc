@@ -19,13 +19,13 @@ DoGraph::DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
 
 FrameId DoGraph::initaliseFrame(DoFrame::Ptr frame) {
   const dyno::TemporalObjectId id = frame->temporalObjectId();
-  CHECK(!frames_.exists(id));
+  CHECK(!frames_.exists(id)) << id;
   frames_[id] = frame;
   return id.frame_id;
 }
 
 void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
-                                      const gtsam::Pose3 L) {
+                                      const gtsam::Pose3& L) {
   const dyno::FrameId frame_id = maybeInitaliseFrame(do_frame);
   // update anchor point we are estimating relative to!
   DOGraphState& state = this->state(frame_id);
@@ -39,10 +39,22 @@ void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
                                                dyno::ReferenceFrame::GLOBAL,
                                                frame_id, frame_id);
 
+  // release image data for active keyframes
+
   // reset active keyframes so there is no overlap in the estimator
   // and forces new keyframes at the start
   active_keyframes_.clear();
   active_keyframes_.insert(frame_id);
+
+  // clear image memory for this in windowed keyframe
+  // we should have already cleared the memory in older (active) keyframes
+  // by releasing memory everytime we set a new Regular keyframe
+  for (size_t k = 0; k < windowed_keyframes_.size(); k++) {
+    getFramePtr(windowed_keyframes_[k])->releaseImages();
+  }
+
+  windowed_keyframes_.clear();
+  windowed_keyframes_.push(frame_id);
 
   // clear the map
   // what about when we synchronize from the backend?
@@ -86,6 +98,11 @@ void DoGraph::initalizeStatesPropogate(
 
 void DoGraph::setRegularKeyframe(dyno::FrameId frame_id) {
   active_keyframes_.insert(frame_id);
+  auto maybe_removed = windowed_keyframes_.push(frame_id);
+  if (maybe_removed) {
+    // clear image memory
+    getFramePtr(maybe_removed.value())->releaseImages();
+  }
 
   DOGraphState& state = this->state(frame_id);
   // check that state is not an anchor keyframe
@@ -197,6 +214,7 @@ size_t DoGraph::removeOutliersByDetection(
     if (!bounds_checker(z_proj, object_id_)) {
       // TODO: AND remove from landmark map!
       observations_->removeLandmark(map_point.id);
+      this->removeLandmark(map_point.id);
       ++num_removed;
     }
   }

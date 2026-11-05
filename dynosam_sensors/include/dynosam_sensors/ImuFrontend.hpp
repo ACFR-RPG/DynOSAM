@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include <gtsam/navigation/CombinedImuFactor.h>
 #include <gtsam/navigation/ImuBias.h>
 #include <gtsam/navigation/ImuFactor.h>
 
@@ -37,14 +38,31 @@
 #include "dynosam_sensors/ImuMeasurements.hpp"
 #include "dynosam_sensors/ImuParams.hpp"
 
-// TODO: eventually replace with Kimera or otherwise
+namespace {
+template <typename R, typename... A>
+struct FunctionSignature;
+
+template <typename R, typename... A>
+struct FunctionSignature<auto(A...)->R> {
+  using ReturnType = R;
+  using ArgTuple = std::tuple<A...>;
+};
+}  // namespace
+
 namespace dyno {
+
+using CombinedPIMParams = gtsam::PreintegratedCombinedMeasurements::Params;
+using CombinedParamSignature =
+    ::FunctionSignature<decltype(CombinedPIMParams::MakeSharedD)>;
+using CombinedPIMParamPtr = CombinedParamSignature::ReturnType;
+
+//! Alias to the predefined GTSAM Preintegrated Imu Measurement (PIM)
+using Pim = gtsam::PreintegrationType;
+using PimPtr = std::shared_ptr<Pim>;
+using PimUniquePtr = std::unique_ptr<Pim>;
 
 class ImuFrontend {
  public:
-  using PimPtr = std::shared_ptr<gtsam::PreintegrationType>;
-  using PimUniquePtr = std::unique_ptr<gtsam::PreintegrationType>;
-
   DYNO_POINTER_TYPEDEFS(ImuFrontend)
 
   ImuFrontend(const ImuCalibration& imu_calib);
@@ -53,6 +71,9 @@ class ImuFrontend {
   ImuFrontend& operator=(ImuFrontend&&) noexcept = default;
 
   ImuFrontend(const ImuFrontend& other);
+
+  static CombinedPIMParamPtr makeCombinedParams(
+      const ImuCalibration& imu_calib);
 
   static void preintegrateImuMeasurements(
       gtsam::PreintegrationType& pim, const ImuMeasurements& imu_measurements);

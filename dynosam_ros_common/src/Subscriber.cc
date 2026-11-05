@@ -2,6 +2,7 @@
 
 #include "cv_bridge/cv_bridge.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "sensor_msgs/image_encodings.hpp"
 
 namespace dyno {
 
@@ -273,6 +274,36 @@ inline const cv::Mat Subscriber::convertRosImage<ImageType::Depth>(
       return depth64;
     }
 
+    RCLCPP_FATAL_STREAM(node_->get_logger(),
+                        image_traits<ImageType::Depth>::name()
+                            << " Image msg was of the wrong type (validate "
+                               "failed with exception "
+                            << exception.what() << "). "
+                            << "ROS encoding type used was "
+                            << cvb_image->encoding);
+
+    rclcpp::shutdown();
+    return cv::Mat();
+  }
+}
+
+template <>
+inline const cv::Mat Subscriber::convertRosImage<ImageType::RGBMono>(
+    const ImageMsgPtr& img_msg) const {
+  const cv_bridge::CvImageConstPtr cvb_image = readRosImage(img_msg);
+  cv::Mat img = cvb_image->image;
+
+  // make sure we only have rgb (without the alpha!)
+  if (sensor_msgs::image_encodings::isColor(cvb_image->encoding) &&
+      sensor_msgs::image_encodings::hasAlpha(cvb_image->encoding)) {
+    cv::cvtColor(img, img, cv::COLOR_RGBA2RGB);
+  }
+
+  try {
+    image_traits<ImageType::Depth>::validate(img);
+    return img;
+
+  } catch (const InvalidImageTypeException& exception) {
     RCLCPP_FATAL_STREAM(node_->get_logger(),
                         image_traits<ImageType::Depth>::name()
                             << " Image msg was of the wrong type (validate "

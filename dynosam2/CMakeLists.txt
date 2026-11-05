@@ -67,6 +67,7 @@ add_library(${PROJECT_NAME} SHARED
   src/estimator/DoGraph.cc
   src/estimator/FullGraph.cc
   src/estimator/SlamBackend.cc
+  src/estimator/ImuError.cc
 
   src/DynamicSlam.cc
   src/DynamicSlamVisualizer.cc

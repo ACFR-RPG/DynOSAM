@@ -5,10 +5,11 @@
 #include <gtsam/geometry/StereoPoint2.h>
 
 #include "dynosam2/common/Types.hpp"
+#include "dynosam2/estimator/ImuError.hpp"
 #include "dynosam2/frontend/FeatureBlockContainer.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_sensors/ImuMeasurements.hpp"
+#include "dynosam_sensors/ImageContainer.hpp"
 
 using namespace dyno;
 
@@ -74,6 +75,12 @@ struct Frame {
   Timestamp timestamp;
   ObjectId object_id;
 
+  //! Also keep an optional image container around
+  //! Must be careful to free memory when not needed
+  //! To limit memory requirements we only carry the RGB/left stereo + motion
+  //! mask images around
+  dyno::ImageContainer::Ptr image_container{nullptr};
+
   // Probavly make protected?
   Frame(FrameId fi = 0, Timestamp ts = 0, ObjectId o = 0)
       : frame_id(fi), timestamp(ts), object_id(o) {}
@@ -85,6 +92,20 @@ struct Frame {
   inline dyno::TemporalObjectId temporalObjectId() const {
     return dyno::TemporalObjectId(frame_id, object_id);
   }
+
+  /**
+   * @brief Set the RGB/left stereo and object motion mask images from another
+   * container.
+   *
+   * Note: this allocates a new dyno::ImageContainer and shallow-copies the
+   * ImageWrapper over from other to avoid copying the data.
+   *
+   * @param other const dyno::ImageContainer&
+   */
+  void setImages(const dyno::ImageContainer& other);
+
+  /// @brief Release image container memory (if allocated)
+  void releaseImages();
 
   size_t numKeypoints() const noexcept { return ids.size(); }
 
@@ -146,18 +167,13 @@ class ViFrame : public Frame {
   DYNO_POINTER_TYPEDEFS(ViFrame)
   ViFrame(FrameId fi, Timestamp ts) : Frame(fi, ts, dyno::background_label) {}
 
-  // TODO: contain IMU + T_ij measurement
-  const Motion3ReferenceFrame& getRelativePose() const { return T_ij_; }
-  void setRelativePose(const Motion3ReferenceFrame& T_ij);
-
-  void setImuMeasurements(const dyno::ImuMeasurements& imu);
-  bool hasImuMeasurements() const;
+  void setRelativePose(RelativePoseErrorBase::Ptr relative_pose);
+  RelativePoseErrorBase::Ptr getRelativePose() const { return relative_pose_; }
 
  private:
-  //! Measured relative camera moition
-  Motion3ReferenceFrame T_ij_;
-  //! Consequative measurements from previous frame i to current frame j
-  dyno::ImuMeasurements imu_measurements_;
+  //! Relative pose T_ij coming either from insertial measurements or pseudo VO
+  //! measurement
+  RelativePoseErrorBase::Ptr relative_pose_;
 };
 
 class DoFrame : public Frame {
@@ -165,7 +181,20 @@ class DoFrame : public Frame {
   DYNO_POINTER_TYPEDEFS(DoFrame)
   DoFrame(FrameId fi, Timestamp ts, ObjectId o) : Frame(fi, ts, o) {}
 
-  // contain G_i_ij/T_i_ij measurement!
+  /**
+   * @brief Get the isolated object mask (ie. a binary mask containing only
+   * pixels for this object) if available from the underlying image_container.
+   *
+   * @param mask
+   * @return true
+   * @return false
+   */
+  bool getObjectMask(cv::Mat& mask) const;
+
+ private:
+  HeavyPose3Measurement G_i_ij_;
+  //! Possible measurement of the object pose in the observing camera frame at k
+  std::optional<gtsam::Pose3> L_C_measurement_{};
 };
 
 }  // namespace dyno2

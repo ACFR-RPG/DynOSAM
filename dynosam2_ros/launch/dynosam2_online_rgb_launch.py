@@ -33,6 +33,7 @@ def generate_launch_description():
         DeclareLaunchArgument("camera_info_topic", default_value="/d455/color/camera_info"),
         DeclareLaunchArgument("rgb_cam_topic", default_value="/d455/color/image_raw"),
         DeclareLaunchArgument("depth_cam_topic", default_value="/d455/aligned_depth_to_color/image_raw"),
+        DeclareLaunchArgument("imu_topic", default_value="/d455/imu"),
         DeclareLaunchArgument("rescale_width", default_value="640", description="Image width to rescale to"),
         DeclareLaunchArgument("rescale_height", default_value="480", description="Image height to rescale to"),
         # robot_state_publisher_node,
@@ -45,7 +46,7 @@ def generate_launch_description():
                     {"rescale_width": LaunchConfiguration("rescale_width")},
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},
-                    {"input_image_mode": "rgb+aligned_depth"},
+                    {"input_image_mode": "rgb+aligned_depth+imu"},
                     {"base_frame": "camera_link"},
                     {"odom_frame": "odom"},
                     {"depth_scale": 0.001},
@@ -56,6 +57,7 @@ def generate_launch_description():
                     ("rgb/camera_info", LaunchConfiguration("camera_info_topic")),
                     ("rgb/image_raw",   LaunchConfiguration("rgb_cam_topic")),
                     ("depth/image_raw", LaunchConfiguration("depth_cam_topic")),
+                    ("imu", LaunchConfiguration("imu_topic"))
                 ]
             ),
         ])

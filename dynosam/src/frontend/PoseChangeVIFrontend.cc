@@ -2117,7 +2117,7 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
   for (; it != camera_trajectory.end(); ++it) {
     const auto frame_id = it->frame_id;
     const auto timestamp = it->timestamp;
-    LOG(INFO) << " Doing VO propogation to " << it->frame_id;
+    LOG(INFO) << " Doing VO propagation to " << it->frame_id;
 
     CHECK(rel_egopose_infos_.exists(frame_id));
     const auto& relative_ego_motion = rel_egopose_infos_.at(frame_id);

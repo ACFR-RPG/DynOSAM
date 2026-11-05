@@ -4,6 +4,7 @@
 
 #include "dynosam2/common/Parameters.hpp"
 #include "dynosam2/estimator/DoGraph.hpp"
+#include "dynosam2/estimator/ImuError.hpp"
 #include "dynosam2/estimator/VioGraph.hpp"
 #include "dynosam2/frontend/FeatureTracker.hpp"
 #include "dynosam2/frontend/Frame.hpp"
@@ -20,6 +21,19 @@ struct AyncVO {
   gtsam::Pose3* vo;
   bool vo_ready{false};
   bool vo_valid{false};
+
+  void markReadyButInvalidAndNotify();
+  void markReadyAndValidAndNotify(const gtsam::Pose3& pose);
+};
+
+/// @brief Helper struct for motion propagation
+struct VioMotionPropagation {
+  bool success{false};
+  PoseVelocity3 predicted_pv;
+  RelativePoseErrorBase::Ptr relative_motion_error;
+
+  enum Source { PRIOR_MOTION = 0, IMU = 1 };
+  Source source;
 };
 
 class Frontend {
@@ -41,8 +55,8 @@ class Frontend {
                            AyncVO& async_context,
                            std::vector<FrameId>& frames_updated,
                            std::vector<KeypointIdentifier>& new_measurements,
-                           bool& success,
-                           const ImageContainer& image_container);
+                           bool& success, const ImageContainer& image_container,
+                           const ImuMeasurements& imu_measurements);
 
   void solveObjectOdometry(
       ObjectId object_id, const VioGraphEstimator& vo_estimator,
@@ -54,6 +68,25 @@ class Frontend {
   inline bool isVioInitalised() const {
     return vi_tracking_condition_.is_initalized;
   }
+
+  /**
+   * @brief Attempt to the next pose (k) given the current motion.
+   * The motion may either come from IMU measurements (between the last state
+   * and the current state k) or a constant motion model will be applied.
+   *
+   * @param frame_id
+   * @param timestamp
+   * @param estimator
+   * @param imu_measurements
+   * @param constant_motion_max_dt dyno::Timestamp If using constant motion
+   * propagation, what is the maximum dt we accept to do the propagation
+   * @return VioMotionPropagation
+   */
+  static VioMotionPropagation predictFromMotion(
+      const dyno::FrameId frame_id, const dyno::Timestamp timestamp,
+      const VioGraphEstimator& estimator,
+      const ImuMeasurements& imu_measurements,
+      const dyno::Timestamp constant_motion_max_dt = 2);
 
  private:
   /**

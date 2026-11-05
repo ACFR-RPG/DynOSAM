@@ -408,11 +408,6 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
   }
 
   pose_out = dyno::Pose3Measurement(result.pose, result.covariance);
-
-  // VLOG(10) << "Initial error: " << result.error_before << " final error "
-  //          << result.error_after << " time[ms] "
-  //          << result.total_time_ms
-  //          << " #iterations= " << result.iterations;
 }
 
 }  // namespace dyno2

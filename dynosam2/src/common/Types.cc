@@ -33,6 +33,10 @@ bool LandmarkMap::setLandmark(dyno::TrackletId tracklet_id,
   return inserted;
 }
 
+bool LandmarkMap::removeLandmark(dyno::TrackletId tracklet_id) {
+  return data_.erase(tracklet_id) > 0;
+}
+
 }  // namespace dyno2
 
 // void reduce();

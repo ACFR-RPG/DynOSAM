@@ -341,6 +341,29 @@ class ImageContainer {
   ImageContainer& objectMotionMask(const cv::Mat& image);
   ImageContainer& rightRgb(const cv::Mat& image);
 
+  bool rgb(const ImageContainer& other, const bool copy = false);
+  bool depth(const ImageContainer& other, const bool copy = false);
+  bool opticalFlow(const ImageContainer& other, const bool copy = false);
+  bool objectMotionMask(const ImageContainer& other, const bool copy = false);
+  bool rightRgb(const ImageContainer& other, const bool copy = false);
+
+  /**
+   * @brief Create a new ImagContainer with a subset of images available in
+   * other.
+   *
+   * Copy determines if the underlying ImageBase is cloned or not.
+   *
+   * DynosamException is thrown if a requested key is not available.
+   *
+   * @param other
+   * @param keys
+   * @param copy
+   * @return ImageContainer::Ptr
+   */
+  static ImageContainer::Ptr CreateSubset(const ImageContainer& other,
+                                          const std::vector<std::string>& keys,
+                                          const bool copy = false);
+
   Timestamp timestamp() const { return timestamp_; }
   FrameId frameId() const { return frame_id_; }
 
@@ -348,6 +371,10 @@ class ImageContainer {
 
   friend std::ostream& operator<<(std::ostream& os,
                                   const ImageContainer& image_container);
+
+ private:
+  bool fromOther(const std::string& key, const ImageContainer& other,
+                 const bool copy);
 };
 
 // #ifdef DYNO_CUDA_OPENCV_ENABLED

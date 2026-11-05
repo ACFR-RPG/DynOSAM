@@ -176,7 +176,12 @@ void GeometryUpdater::calcPointsStereo(FeatureBlockGeometryMap& point_map) {
     // index in the left_kps/trackletids in which we have a match
     std::vector<size_t> matched_indexs;
     if (!computeStereoMatching(left_kps, matched_right_kps, matched_indexs)) {
-      LOG(INFO) << "Stereo matchinf failed!";
+      // TODO: maybe remark all as inlier so we sitll track these points in
+      // future
+      //  but we get no depth measurements by not filling out the
+      //  FeatureBlockGeometry
+      LOG(WARNING) << "Stereo matching failed j=" << object_id
+                   << ". No measurements for this frame";
       continue;
     }
 

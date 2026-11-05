@@ -7,6 +7,7 @@
 #include "dynosam2/frontend/Frame.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
 #include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/ImuFrontend.hpp"
 #include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno2 {
@@ -36,10 +37,16 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   VioGraph(dyno::Camera::Ptr camera);
   virtual ~VioGraph() = default;
 
+  // only set of IMU is to be used
+  void addImu(dyno::CombinedPIMParamPtr imu_config);
+  dyno::CombinedPIMParamPtr getImuConfig() const { return imu_config_; }
+  inline bool usingImu() const { return imu_config_ != nullptr; }
+
   // get landmark in estimated reference frame not map frame
   using LandmarkMap::getLandmark;
 
   void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose);
+  void initaliseStates(ViFrame::Ptr frame, const PoseVelocity3& state_W);
   void initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
                        const Velocity3& velocity_W);
 
@@ -93,6 +100,7 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   void setStateVelocityFromPose(VioGraphState& current_state);
 
  protected:
+  CombinedPIMParamPtr imu_config_{nullptr};
   //! Active keyframes used for selection and bundle adjustmement!
   std::set<dyno::FrameId> keyframes_;
   //! Mutex lock for the few functions that we expect to be accessed by thread
