@@ -36,7 +36,7 @@ Timestamp VisionImuPacket::timestamp() const { return timestamp_; }
 
 FrameId VisionImuPacket::frameId() const { return frame_id_; }
 
-ImuFrontend::PimPtr VisionImuPacket::pim() const { return pim_; }
+PimPtr VisionImuPacket::pim() const { return pim_; }
 
 Camera::ConstPtr VisionImuPacket::camera() const { return camera_; }
 
@@ -109,7 +109,7 @@ VisionImuPacket& VisionImuPacket::frameId(FrameId id) {
   return *this;
 }
 
-VisionImuPacket& VisionImuPacket::pim(const ImuFrontend::PimPtr& pim) {
+VisionImuPacket& VisionImuPacket::pim(const PimPtr& pim) {
   pim_ = pim;
   return *this;
 }

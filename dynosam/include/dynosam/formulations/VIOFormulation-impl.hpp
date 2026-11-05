@@ -167,7 +167,7 @@ template <typename MAP>
 gtsam::NavState VIOFormulation<MAP>::addStatesPropogate(
     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
     FrameId frame_id_k, Timestamp timestamp_k, const gtsam::Pose3& T_k_1_k,
-    const ImuFrontend::PimPtr& pim) {
+    const PimPtr& pim) {
   const FrameId from_frame = last_propogate_frame_;
   const FrameId to_frame = frame_id_k;
 
@@ -317,7 +317,7 @@ gtsam::NavState VIOFormulation<MAP>::predictAndAddFactorsVO(
 template <typename MAP>
 gtsam::NavState VIOFormulation<MAP>::predictAndAddFactorsIMU(
     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
-    FrameId frame_id_k, Timestamp timestamp_k, const ImuFrontend::PimPtr& pim) {
+    FrameId frame_id_k, Timestamp timestamp_k, const PimPtr& pim) {
   CHECK(isImuInitalized());
   CHECK(pim);
   const FrameId from_frame = last_propogate_frame_;

@@ -40,7 +40,7 @@ FeatureTracker::FeatureTracker(const FrontendParameters& parameters,
 
 FeatureTracker::Result FeatureTracker::track(
     ImageContainer::Ptr image_container,
-    const std::optional<gtsam::Rot3>& R_km1_k) {
+    const std::optional<gtsam::Rot3>& R_k_km1) {
   dyno::utils::ChronoTimingStats feature_track_t("ft.all");
   dyno::utils::ChronoTimingStats object_detect_t("ft.object_detect");
   const auto [object_detection_result, update_object_mask] =
@@ -117,7 +117,7 @@ FeatureTracker::Result FeatureTracker::track(
     // auto [tracked_features, tracking_stats] =
     //     sparseFeatureTrack(current_mono, object_masks);
     auto [tracked_features, tracking_stats] =
-        sparseFeatureTrack(image_container);
+        sparseFeatureTrack(image_container, R_k_km1);
 
     // fill out binary segmentation mask map to be used as detection mask
     gtsam::FastMap<ObjectId, cv::Mat> binary_detection_masks;
@@ -554,6 +554,9 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
 
       if (candidates.empty()) return;
 
+      // VLOG(30) << "Extracted " << candidates.size() << " candidates j=" <<
+      // param.object_id;
+
       // --------------------------------------------------------------
       // Sort strongest corners first.
       // --------------------------------------------------------------
@@ -764,7 +767,8 @@ TrackletIds FeatureTracker::GfttDetector::getNewIdsByChunk(size_t N) {
 //                                    const cv::Mat& object_mask) {
 std::pair<FeatureBlockContainer, FeatureTracker::FlowTrackingStatsMap>
 FeatureTracker::sparseFeatureTrack(
-    const dyno::ImageContainer::Ptr& image_container) {
+    const dyno::ImageContainer::Ptr& image_container,
+    const std::optional<gtsam::Rot3>& R_k_km1) {
   dyno::utils::ChronoTimingStats timer("ft.sparse_ft");
 
   CHECK_NOTNULL(previous_container_);
@@ -794,11 +798,21 @@ FeatureTracker::sparseFeatureTrack(
   const WrappedRGBMono& previous_img = previous_container_->rgb();
   const WrappedRGBMono& current_img = image_container->rgb();
 
-  // OpticalFlowLK_CPU::Result flow_result = optical_flow_impl_(
-  //     previous_img, current_img, previous_features_.points);
+  // TODO: how to parse rotation to flow tracker as this is only relevant for
+  // static points!
+  //  and therefore we cannot parse them as a single bundle
+  //  what if we "predict all points" with estimated motion and parse this as
+  //  the initial points guess!! do this always (regardless of if we have IMU)
+  //  otherwise use constant motion model!
   dyno::utils::ChronoTimingStats lkt_t("ft.sparse_ft.lkt");
-  auto flow_result =
-      optical_flow_impl_(previous_img, current_img, previous_features_.points);
+  std::vector<cv::Point2f> predicted;
+  if (R_k_km1) {
+    predictFromPreviousGivenRotation(R_k_km1.value(), predicted);
+  } else {
+    predicted = previous_features_.points;
+  }
+  auto flow_result = optical_flow_impl_(previous_img, current_img,
+                                        previous_features_.points, &predicted);
   lkt_t.stop();
 
   const std::vector<cv::Point2f>& predicted_points =
@@ -840,7 +854,7 @@ FeatureTracker::sparseFeatureTrack(
 
   dyno::utils::ChronoTimingStats lkt_outliers_t("ft.sparse_ft.outliers");
 
-  static constexpr double kThresholdE = 1.0;
+  static constexpr double kThresholdE = 2.0;
   static constexpr double kEMaxIters = 100;
 
   // Build a stable list of objects to process. This also updates the tracking
@@ -921,56 +935,53 @@ FeatureTracker::sparseFeatureTrack(
   return {tracked_features, tracking_stats};
 }
 
-bool FeatureTracker::predictKeypointsGivenRotation(
-    const std::vector<cv::Point2f>& previous_pts,
-    const gtsam::Rot3& R_previous_curr,
+bool FeatureTracker::predictFromPreviousGivenRotation(
+    const gtsam::Rot3& R_k_km1,
     std::vector<cv::Point2f>& predicted_pts_curr) const {
   // Handle case when rotation is small: just copy prev_kps
   // Removed bcs even small rotations lead to huge optical flow at the borders
   // of the image.
   // Keep because then you save a lot of computation.
   static constexpr double kSmallRotationTol = 1e-4;
-  if (std::abs(1.0 - std::abs(R_previous_curr.toQuaternion().w())) <
+  if (std::abs(1.0 - std::abs(R_k_km1.toQuaternion().w())) <
       kSmallRotationTol) {
-    predicted_pts_curr = previous_pts;
+    predicted_pts_curr = previous_features_.points;
     return true;
   }
-  return false;
 
   // // R is a relative rotation which takes a vector from the last frame to
   // // the current frame.
-  // const cv::Matx33f R =
-  // dyno::utils::gtsamMatrix3ToCvMat(R_previous_curr.matrix());
-  // // Get bearing vector for kpt, rotate knowing frame to frame rotation,
-  // // get keypoints again
-  // const cv::Matx33f H = K_cv_ * R * K_inv_cv_;
+  const cv::Matx33f R = dyno::utils::gtsamMatrix3ToCvMat(R_k_km1.matrix());
+  // Get bearing vector for kpt, rotate knowing frame to frame rotation,
+  // get keypoints again
+  const cv::Matx33f H = K_cv_ * R * K_inv_cv_;
 
-  // const size_t& n_kps = previous_pts.size();
-  // predicted_pts_curr.reserve(n_kps);
-  // for (size_t i = 0u; i < n_kps; ++i) {
-  //   // Create homogeneous keypoints.
-  //   const auto& prev_kpt = previous_pts[i];
-  //   cv::Vec3f p1(prev_kpt.x, prev_kpt.y, 1.0f);
+  const size_t& n_kps = previous_features_.size();
+  predicted_pts_curr.reserve(n_kps);
+  for (size_t i = 0u; i < n_kps; ++i) {
+    // Create homogeneous keypoints.
+    const auto& prev_kpt = previous_features_.points[i];
+    auto object_id = previous_features_.object_ids[i];
+    cv::Point2f new_kpt = prev_kpt;
+    // for now only apply rotation to static points!
+    if (object_id == background_label) {
+      cv::Vec3f p1(prev_kpt.x, prev_kpt.y, 1.0f);
 
-  //   cv::Vec3f p2 = H * p1;
+      cv::Vec3f p2 = H * p1;
 
-  //   // Project predicted bearing vectors to 2D again and re-homogenize.
-  //   cv::Point2f new_kpt;
-  //   if (p2[2] > 0.0f) {
-  //     new_kpt = cv::Point2f(p2[0] / p2[2], p2[1] / p2[2]);
-  //   } else {
-  //     LOG(WARNING) << "Landmark behind the camera:\n"
-  //                  << "- p1: " << p1 << '\n'
-  //                  << "- p2: " << p2;
-  //     new_kpt = prev_kpt;
-  //   }
-  //   // Check that keypoints remain inside the image boundaries!
-  //   if (isWithinShrunkenImage(new_kpt)) {
-  //     predicted_pts_curr.push_back(new_kpt);
-  //   } else {
-  //     // Otw copy-paste previous keypoint.
-  //     predicted_pts_curr.push_back(prev_kpt);
-  //   }
+      // Project predicted bearing vectors to 2D again and re-homogenize.
+      if (p2[2] > 0.0f) {
+        new_kpt = cv::Point2f(p2[0] / p2[2], p2[1] / p2[2]);
+      } else {
+        LOG(WARNING) << "Landmark behind the camera:\n"
+                     << "- p1: " << p1 << '\n'
+                     << "- p2: " << p2;
+      }
+    }
+
+    predicted_pts_curr.push_back(new_kpt);
+  }
+  return true;
 }
 
 void FeatureTracker::fillDetectionParam(

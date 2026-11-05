@@ -5,6 +5,7 @@
 #include "dynosam2/common/Parameters.hpp"
 #include "dynosam2/estimator/DoGraph.hpp"
 #include "dynosam2/estimator/ImuError.hpp"
+#include "dynosam2/estimator/SlamBackend.hpp"
 #include "dynosam2/estimator/VioGraph.hpp"
 #include "dynosam2/frontend/FeatureTracker.hpp"
 #include "dynosam2/frontend/Frame.hpp"
@@ -47,7 +48,9 @@ class Frontend {
 
   void detectAndTrack(FeatureBlockContainer*& features_out,
                       dyno::ObjectDetectionResult& object_detection_out,
-                      dyno::ImageContainer::Ptr container_in_out);
+                      dyno::ImageContainer::Ptr container_in_out,
+                      const dyno::ImuMeasurements& imu_measurements,
+                      const SlamBackend& estimator);
 
   void solveVisualOdometry(VioGraphEstimator& estimator,
                            FeatureBlockContainer& features,

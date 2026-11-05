@@ -31,7 +31,7 @@ class FeatureTracker {
   FeatureTracker(const FrontendParameters& parameters, Camera::Ptr camera);
 
   Result track(ImageContainer::Ptr image_container,
-               const std::optional<gtsam::Rot3>& R_km1_k = {});
+               const std::optional<gtsam::Rot3>& R_k_km1 = {});
 
  private:
   struct ObjectDetectionImpl {
@@ -118,13 +118,13 @@ class FeatureTracker {
   };
   using FlowTrackingStatsMap = gtsam::FastMap<ObjectId, FlowTrackingStats>;
   std::pair<FeatureBlockContainer, FlowTrackingStatsMap> sparseFeatureTrack(
-      const dyno::ImageContainer::Ptr& image_container);
+      const dyno::ImageContainer::Ptr& image_container,
+      const std::optional<gtsam::Rot3>& R_k_km1);
 
   // R_previous_curr is a rotation from previous to current (ie p_curr = R *
   // p_previous)
-  bool predictKeypointsGivenRotation(
-      const std::vector<cv::Point2f>& previous_pts,
-      const gtsam::Rot3& R_previous_curr,
+  bool predictFromPreviousGivenRotation(
+      const gtsam::Rot3& R_k_km1,
       std::vector<cv::Point2f>& predicted_pts_curr) const;
 
   void fillDetectionParam(ObjectId object_id, const cv::Mat& mask,
@@ -157,7 +157,8 @@ class FeatureTracker {
   GfttDetector feature_detector_;
   ObjectDetectionImpl object_detection_impl_;
   //! Sparse LK tracker
-  // OpticalFlowLK_CPU optical_flow_impl_;
+  // TODO: for now while we implement the provided optical flow!
+  //  OpticalFlowLK_CPU optical_flow_impl_;
   OpticalFlowLK_GPU optical_flow_impl_;
 
   // Cached camera matrices

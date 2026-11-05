@@ -9,6 +9,7 @@
 #include <opengv/sac/Ransac.hpp>
 #include <opengv/sac_problems/absolute_pose/AbsolutePoseSacProblem.hpp>
 
+#include "dynosam2/estimator/ImuError.hpp"
 #include "dynosam2/frontend/FlowRefinement.hpp"
 #include "dynosam2/frontend/GeometryUpdater.hpp"
 #include "dynosam2/frontend/MatchingAdaptor.hpp"
@@ -39,8 +40,22 @@ Frontend::Frontend(const FrontendParameters& parameters,
 
 void Frontend::detectAndTrack(FeatureBlockContainer*& features_out,
                               dyno::ObjectDetectionResult& object_detection_out,
-                              dyno::ImageContainer::Ptr container_in_out) {
-  auto tracking_result = feature_tracker_.track(container_in_out);
+                              dyno::ImageContainer::Ptr container_in_out,
+                              const dyno::ImuMeasurements& imu_measurements,
+                              const SlamBackend& estimator) {
+  const VioGraphEstimator& vio_estimator = estimator.vioEstimator();
+  // see if we can use the IMU get a rotation
+  std::optional<gtsam::Rot3> R_km1_k{};
+  if (auto imu_params = vio_estimator.getImuConfig();
+      imu_params && imu_measurements.size() > 2) {
+    // NOTE: we can use dummy variables
+    ImuError::Ptr imu_error =
+        std::make_shared<ImuError>(imu_measurements, imu_params, 0, 1);
+    R_km1_k.emplace(imu_error->deltaXij().rotation());
+    LOG(INFO) << "Provind tracker IMU camera rotation!";
+  }
+
+  auto tracking_result = feature_tracker_.track(container_in_out, R_km1_k);
   features_out = tracking_result.featues;
   CHECK_NOTNULL(features_out);
   object_detection_out = tracking_result.object_detection;
@@ -98,11 +113,16 @@ void Frontend::solveVisualOdometry(
   std::vector<bool> inliers;
   dyno::utils::ChronoTimingStats ransac_t("frontend.vo.ransac");
   const bool ransac_success = solve3d2dRansac(T_ij_pnp, inliers, adapter,
-                                              vio_ransac_threshold_3d_2d_, 100);
+                                              vio_ransac_threshold_3d_2d_, 500);
   ransac_t.stop();
 
   if (!ransac_success) {
-    // propogate with a constant motion or IMU driven motion model
+    // TODO: should actually do this propogation in Dynamic SLAM ANYWAY
+    //  as this may help with tracking using a constant velocity model
+    //  then we dont need to do prediction here and in detect & track
+    //  use this to init out state and then we can just update the state
+    //  here if we have successs!!
+    //  propogate with a constant motion or IMU driven motion model
     const VioMotionPropagation propagation = Frontend::predictFromMotion(
         frame_id, timestamp, estimator, imu_measurements);
     if (!propagation.success) {
@@ -206,13 +226,13 @@ void Frontend::solveVisualOdometry(
   if (estimator.keyFrames().size() > 2) {
     utils::ChronoTimingStats timer_t("frontend.vo.refine_map");
     std::vector<FrameId> frames_affected;
-    if (should_be_keyframe) {
-      // optimize with structure
-      estimator.optimize(frame_id, frames_affected, false);
-    } else {
-      // optimize only states
-      estimator.optimize(frame_id, frames_affected, true);
-    }
+    // if (should_be_keyframe) {
+    //   // optimize with structure
+    //   estimator.optimize(frame_id, frames_affected, false);
+    // } else {
+    //   // optimize only states
+    //   estimator.optimize(frame_id, frames_affected, true);
+    // }
 
     for (FrameId frame_id : frames_affected) {
       frames_updated_set.insert(frame_id);
@@ -362,6 +382,7 @@ void Frontend::solveObjectOdometry(
       VLOG(50) << "Cannot init object pose from centroid as not enough "
                   "reference points!";
       success = false;
+      return;
     }
 
     // construct the object reference frame from the centroid of the object
@@ -386,7 +407,9 @@ void Frontend::solveObjectOdometry(
     if (reference_lmks_inliers.size() < 3) {
       VLOG(50) << "Cannot init object pose from centroid as not enough inlier "
                   "points!";
+      // estimator.initaliseFrame(frame);
       success = false;
+      return;
     }
 
     gtsam::Point3 t_W_i_centroid =

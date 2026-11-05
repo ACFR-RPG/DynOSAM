@@ -206,7 +206,7 @@ class PoseChangeVIFrontend : public VIFrontend {
     //! This is untouched by the refined state
     // TODO: Not needed anymore I think
     gtsam::NavState frontend_nav_state_j;
-    ImuFrontend::PimPtr pim_lk_j;
+    PimPtr pim_lk_j;
     //! Should exist only if PIM is non null
     ImuMeasurements imu_measurements;
     //! Relative camera pose between from -> to frames

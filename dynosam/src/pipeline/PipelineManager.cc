@@ -63,6 +63,8 @@ DynoPipelineManager::DynoPipelineManager(
 
   VLOG(10) << "Sensor Rig: " << *sensor_rig;
 
+  displayer_.addDisplay(std::make_shared<SmartOpenCvDisplayer>());
+
   data_interface_ = std::make_unique<DataInterfacePipeline>(
       sensor_rig, params_.parallelRun());
   data_provider_->registerImageContainerCallback(
@@ -176,9 +178,7 @@ bool DynoPipelineManager::spin() {
 }
 
 bool DynoPipelineManager::spinViz() {
-  if (FLAGS_use_opencv_display) {
-    displayer_.displayFromQueue();
-  }
+  displayer_.displayFromQueue();
   return true;
 }
 
@@ -326,12 +326,9 @@ void DynoPipelineManager::loadPoseChangeModules(
       pose_change_backend->getFormulation();
   CHECK_NOTNULL(kf_formulation);
 
-  auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontendFAST>(
+  auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontend>(
       params_, camera, kf_formulation, &display_queue_,
       data_interface_->getSharedGroundTruth());
-  // auto pc_vi_frontend = std::make_shared<PoseChangeVIFrontend>(
-  //     params_, camera, kf_formulation, &display_queue_,
-  //     data_interface_->getSharedGroundTruth());
   LOG(INFO) << "Made PoseChangeVIFrontend";
 
   frontend_out = pc_vi_frontend;
@@ -348,13 +345,15 @@ void DynoPipelineManager::loadPoseChangeModules(
   backend_pipeline->parallelRun(parallel_run);
 
   if (FLAGS_use_backend) {
+    LOG(INFO) << "Using backend: registering on onBackendUpdateComplete and "
+                 "output sinks!";
     // register update function from backend to frontend
-    pose_change_backend->registerUpdateCallback(
-        std::bind(&PoseChangeVIFrontendFAST::onBackendUpdateComplete,
-                  pc_vi_frontend.get(), std::placeholders::_1));
     // pose_change_backend->registerUpdateCallback(
-    //     std::bind(&PoseChangeVIFrontend::onBackendUpdateComplete,
+    //     std::bind(&PoseChangeVIFrontendFAST::onBackendUpdateComplete,
     //               pc_vi_frontend.get(), std::placeholders::_1));
+    pose_change_backend->registerUpdateCallback(
+        std::bind(&PoseChangeVIFrontend::onBackendUpdateComplete,
+                  pc_vi_frontend.get(), std::placeholders::_1));
 
     // register output function from frontend
     pc_vi_frontend->addPoseChangeOutputSink(

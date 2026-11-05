@@ -7,7 +7,8 @@ namespace dyno2 {
 
 OpticalFlowLK_CPU::Result OpticalFlowLK_CPU::compute(
     const dyno::WrappedRGBMono& prev_img, const dyno::WrappedRGBMono& next_img,
-    const std::vector<cv::Point2f>& prev_points) const {
+    const std::vector<cv::Point2f>& prev_points,
+    const std::vector<cv::Point2f>* predicted_points) const {
   const auto prev_pyr =
       prev_img.computeImagePyramid(win_size, max_level).levels;
 
@@ -17,12 +18,21 @@ OpticalFlowLK_CPU::Result OpticalFlowLK_CPU::compute(
   CHECK_EQ(prev_pyr.size(), next_pyr.size());
 
   ImplResult forward;
-  forward.next = prev_points;
+  // used as flags argument for calcOpticalFlowPyrLK - initially starts as
+  // default (0) flag
+  int klt_flags = 0;
+  if (predicted_points) {
+    CHECK_EQ(predicted_points->size(), prev_points.size());
+    forward.next = *predicted_points;
+    klt_flags = cv::OPTFLOW_USE_INITIAL_FLOW;
+  } else {
+    forward.next = prev_points;
+  }
   forward.prev = prev_points;
 
   cv::calcOpticalFlowPyrLK(prev_pyr, next_pyr, forward.prev, forward.next,
                            forward.status, forward.error, win_size, max_level,
-                           criteria, 0);
+                           criteria, klt_flags);
 
   CHECK_EQ(forward.size(), prev_points.size());
 
@@ -46,63 +56,6 @@ OpticalFlowLK_GPU::OpticalFlowLK_GPU(int iterations)
       cv::cuda::SparsePyrLKOpticalFlow::create(win_size, max_level, iterations);
 }
 
-// OpticalFlowLK_GPU::Result OpticalFlowLK_GPU::compute(
-//     const dyno::WrappedRGBMono& prev_img, const dyno::WrappedRGBMono&
-//     next_img, const std::vector<cv::Point2f>& prev_points) const
-// {
-//   const cv::Mat& prev = prev_img;
-//   const cv::Mat& next = next_img;
-
-//   //TODO: pinned memory
-//   cv::cuda::GpuMat d_prev(prev);
-//   cv::cuda::GpuMat d_next(next);
-
-//   cv::cuda::GpuMat d_next_pts(prev.size(), CV_32FC2);
-//   cv::cuda::GpuMat d_status;
-//   cv::cuda::GpuMat d_err;
-
-//   cv::cuda::GpuMat d_previous_pts(prev.size(), CV_32FC2);
-//   d_previous_pts.upload(prev_points);
-
-//   impl_->setUseInitialFlow(false);
-//   impl_->calc(d_prev, d_next, d_previous_pts, d_next_pts, d_status, d_err);
-
-//   cv::cuda::GpuMat d_reverse_next_pts = d_previous_pts;
-//   cv::cuda::GpuMat d_reverse_status;
-//   cv::cuda::GpuMat d_reverse_err;
-
-//   impl_->setUseInitialFlow(true);
-//   impl_->calc(d_next, d_prev, d_next_pts, d_reverse_next_pts,
-//   d_reverse_status, d_reverse_err);
-
-//   ImplResult forward;
-//   forward.status.resize(d_status.cols);
-//   d_status.download(forward.status);
-
-//   forward.error.resize(d_err.cols);
-//   d_err.download(forward.error);
-
-//   forward.prev = prev_points;
-
-//   forward.next.resize(d_next_pts.cols);
-//   d_next_pts.download(forward.next);
-
-//   ImplResult reverse;
-//   reverse.status.resize(d_status.cols);
-//   d_status.download(reverse.status);
-
-//   reverse.error.resize(d_err.cols);
-//   d_err.download(reverse.error);
-
-//   reverse.prev = forward.next;
-
-//   reverse.next.resize(d_reverse_next_pts.cols);
-//   d_reverse_next_pts.download(reverse.next);
-
-//   return OpticalFlowLK_GPU::Result{forward, reverse};
-
-// }
-
 void OpticalFlowLK_GPU::ensureBuffer(cv::cuda::GpuMat& buffer, int rows,
                                      int cols, int type) {
   if (rows <= 0 || cols <= 0) {
@@ -117,10 +70,10 @@ void OpticalFlowLK_GPU::ensureBuffer(cv::cuda::GpuMat& buffer, int rows,
 
 OpticalFlowLK_GPU::Result OpticalFlowLK_GPU::compute(
     const dyno::WrappedRGBMono& prev_img, const dyno::WrappedRGBMono& next_img,
-    const std::vector<cv::Point2f>& prev_points) const {
+    const std::vector<cv::Point2f>& prev_points,
+    const std::vector<cv::Point2f>* predicted_points) const {
   const cv::Mat prev = dyno::ImageType::RGBMono::toMono(prev_img);
   const cv::Mat next = dyno::ImageType::RGBMono::toMono(next_img);
-  ;
 
   if (prev.empty() || next.empty()) {
     throw std::invalid_argument("OpticalFlowLK_GPU received an empty image");
@@ -171,8 +124,13 @@ OpticalFlowLK_GPU::Result OpticalFlowLK_GPU::compute(
   d_next_img_.upload(next, stream_);
   d_prev_points_.upload(prev_points, stream_);
 
-  // Forward optical flow: previous frame -> next frame.
-  impl_->setUseInitialFlow(false);
+  if (predicted_points) {
+    CHECK_EQ(predicted_points->size(), prev_points.size());
+    d_forward_points_.upload(*predicted_points, stream_);
+    impl_->setUseInitialFlow(true);
+  } else {
+    impl_->setUseInitialFlow(false);
+  }
 
   impl_->calc(d_prev_img_, d_next_img_, d_prev_points_, d_forward_points_,
               d_forward_status_, d_forward_error_, stream_);

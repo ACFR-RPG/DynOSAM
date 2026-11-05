@@ -51,6 +51,7 @@ class ImuError : public RelativePoseErrorBase {
   inline dyno::FrameId from() const override { return k0(); }
   inline dyno::FrameId to() const override { return k1(); }
 
+  // TODO: must provide delta after bias correction!?
   gtsam::Pose3 deltaXij() const override;
   gtsam::Matrix66 covariance() const override;
 

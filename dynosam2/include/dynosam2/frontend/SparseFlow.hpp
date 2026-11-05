@@ -71,16 +71,20 @@ class OpticalFlowLKBase {
     }
   };
 
-  inline Result operator()(const dyno::WrappedRGBMono& prev_img,
-                           const dyno::WrappedRGBMono& next_img,
-                           const std::vector<cv::Point2f>& prev_points) const {
-    return this->compute(prev_img, next_img, prev_points);
+  inline Result operator()(
+      const dyno::WrappedRGBMono& prev_img,
+      const dyno::WrappedRGBMono& next_img,
+      const std::vector<cv::Point2f>& prev_points,
+      const std::vector<cv::Point2f>* predicted_points = nullptr) const {
+    return this->compute(prev_img, next_img, prev_points, predicted_points);
   }
 
  protected:
-  virtual Result compute(const dyno::WrappedRGBMono& prev_img,
-                         const dyno::WrappedRGBMono& next_img,
-                         const std::vector<cv::Point2f>& prev_points) const = 0;
+  virtual Result compute(
+      const dyno::WrappedRGBMono& prev_img,
+      const dyno::WrappedRGBMono& next_img,
+      const std::vector<cv::Point2f>& prev_points,
+      const std::vector<cv::Point2f>* predicted_points) const = 0;
 
   // Result operator()(const std::vector<cv::Mat>& prev_pyr,
   //                   const std::vector<cv::Mat>& next_pyr,
@@ -93,9 +97,11 @@ class OpticalFlowLK_CPU : public OpticalFlowLKBase {
   OpticalFlowLK_CPU(int iterations) : OpticalFlowLKBase(iterations) {}
 
  private:
-  Result compute(const dyno::WrappedRGBMono& prev_img,
-                 const dyno::WrappedRGBMono& next_img,
-                 const std::vector<cv::Point2f>& prev_points) const override;
+  Result compute(
+      const dyno::WrappedRGBMono& prev_img,
+      const dyno::WrappedRGBMono& next_img,
+      const std::vector<cv::Point2f>& prev_points,
+      const std::vector<cv::Point2f>* predicted_points) const override;
 };
 
 class OpticalFlowLK_GPU : public OpticalFlowLKBase {
@@ -104,9 +110,11 @@ class OpticalFlowLK_GPU : public OpticalFlowLKBase {
   OpticalFlowLK_GPU(int iterations);
 
  private:
-  Result compute(const dyno::WrappedRGBMono& prev_img,
-                 const dyno::WrappedRGBMono& next_img,
-                 const std::vector<cv::Point2f>& prev_points) const override;
+  Result compute(
+      const dyno::WrappedRGBMono& prev_img,
+      const dyno::WrappedRGBMono& next_img,
+      const std::vector<cv::Point2f>& prev_points,
+      const std::vector<cv::Point2f>* predicted_points) const override;
 
   //  // Ensure that a pinned host buffer has sufficient capacity.
   // static void ensureHostCapacity(

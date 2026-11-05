@@ -433,7 +433,6 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
     const gtsam::Symbol anchor_sym('x', anchor_frame);
 
     gtsam::Pose3 T_W_A = getPose(anchor_frame);
-    LOG(INFO) << "T anchor before: " << T_W_A;
     // The anchor may have no selected observations, so ensure its value exists.
     if (!values.exists(anchor_sym)) {
       values.insert(anchor_sym, T_W_A);

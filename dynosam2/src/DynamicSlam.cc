@@ -49,19 +49,20 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   FeatureBlockContainer* features_ptr{nullptr};
   dyno::ObjectDetectionResult object_detection;
 
+  // If no messages are provided just init with an empty vector
+  // this is the equivalenent of having no measurements
+  const dyno::ImuMeasurements imu_measurements =
+      input->imu_measurements.value_or(dyno::ImuMeasurements{});
+
   dyno::utils::ChronoTimingStats detect_t("slam.detect_and_track");
-  frontend_.detectAndTrack(features_ptr, object_detection, image_container);
+  frontend_.detectAndTrack(features_ptr, object_detection, image_container,
+                           imu_measurements, estimator_);
   CHECK_NOTNULL(features_ptr);
   detect_t.stop();
   FeatureBlockContainer& features = *features_ptr;
 
   FeatureBlockGeometryMap geometries;
   GeometryUpdater(camera_, *image_container, features).calcPoints(geometries);
-
-  // If no messages are provided just init with an empty vector
-  // this is the equivalenent of having no measurements
-  const dyno::ImuMeasurements imu_measurements =
-      input->imu_measurements.value_or(dyno::ImuMeasurements{});
 
   if (first_frame_) {
     for (const auto& [object_id, geometry] : geometries) {

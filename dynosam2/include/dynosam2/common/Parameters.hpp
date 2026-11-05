@@ -47,7 +47,7 @@ struct FrontendParameters {
     size_t min_distance_btw_tracked_and_detected;
   };
 
-  Tracker static_tracks{800, 500, 400, 8};
+  Tracker static_tracks{1000, 500, 400, 8};
   // TODO: most of this should really be a function of the object SIZE
   //  since we dont want to try and re-detect ALL the time if the object is too
   //  small to even get 300 features (this)

@@ -44,9 +44,6 @@ void RosImageDisplayer::display(const std::vector<ImageToDisplay>& images) {
     const auto& it = pub_images_.find(name);
     // only display those we have setup topics for?
     if (it != pub_images_.end()) {
-      LOG(INFO) << image_to_display.image_.size();
-      LOG(INFO) << image_to_display.image_.depth();
-      LOG(INFO) << image_to_display.image_.type();
       sensor_msgs::msg::Image::SharedPtr msg =
           cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8",
                              image_to_display.image_.clone())

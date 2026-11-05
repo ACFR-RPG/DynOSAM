@@ -212,7 +212,7 @@ dyno::DataReader::Ptr DynosamNodeImpl::createOnlineDataProvider(
 
   LoadingSourceParams loading_sources;
 
-  const std::string params_path = getParamsPat();
+  const std::string params_path = getParamsPath();
   loading_sources.camera_yaml_path = params_path + "/CameraParams.yaml";
   loading_sources.imu_yaml_path = params_path + "/ImuParams.yaml";
   loading_sources.cameras_from_ros = true;

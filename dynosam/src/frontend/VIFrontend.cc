@@ -135,7 +135,7 @@ Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
 
 std::optional<gtsam::NavState> VIFrontend::tryPropogateImu(
     const VIFrontendInput::ConstPtr input,
-    const gtsam::NavState& nav_state_lIMU, ImuFrontend::PimPtr& pim_out) {
+    const gtsam::NavState& nav_state_lIMU, PimPtr& pim_out) {
   if (!input->imu_measurements.has_value()) {
     return std::nullopt;
   }
