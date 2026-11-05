@@ -300,12 +300,12 @@ inline const cv::Mat Subscriber::convertRosImage<ImageType::RGBMono>(
   }
 
   try {
-    image_traits<ImageType::Depth>::validate(img);
+    image_traits<ImageType::RGBMono>::validate(img);
     return img;
 
   } catch (const InvalidImageTypeException& exception) {
     RCLCPP_FATAL_STREAM(node_->get_logger(),
-                        image_traits<ImageType::Depth>::name()
+                        image_traits<ImageType::RGBMono>::name()
                             << " Image msg was of the wrong type (validate "
                                "failed with exception "
                             << exception.what() << "). "
