@@ -42,6 +42,7 @@ class FrontendViz {
  private:
   const SlamBackend& estimator_;
 
+  /// @brief Internal object state used for drawing target-lock
   struct TemporalObjectState {
     dyno::ObjectId object_id;
 
@@ -53,6 +54,11 @@ class FrontendViz {
     mutable std::array<cv::Point2f, 4> filtered_corners;
     mutable bool corners_initialized = false;
   };
+
+  void updateObjectTrackingBox(cv::Mat& canvas,
+                               const dyno::SingleDetectionResult& detection,
+                               dyno::Timestamp now);
+
   //! How long (in seconds) for 'lock on'
   static constexpr float appear_duration_sec_ = 0.6f;
   //! higher = snappier
