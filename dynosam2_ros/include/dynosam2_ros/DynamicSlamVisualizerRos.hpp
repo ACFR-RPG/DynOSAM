@@ -10,11 +10,14 @@
 #include "dynosam2/DynamicSlamVisualizer.hpp"
 #include "dynosam2/common/DynamicSlamInterface.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_processing/ImageViewer.hpp"
 #include "dynosam_processing/PipelineBase.hpp"
 #include "dynosam_ros_common/RosUtils.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+#include "image_transport/image_transport.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "rclcpp/qos.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "std_msgs/msg/header.hpp"
 #include "tf2_ros/transform_broadcaster.h"
@@ -51,6 +54,39 @@ class DynamicSlamVisualizerRosBase : public DynamicSlamVisualizer,
 using MarkerArray = visualization_msgs::msg::MarkerArray;
 using Marker = visualization_msgs::msg::Marker;
 
+using OdometryPub = rclcpp::Publisher<nav_msgs::msg::Odometry>;
+using PathPub = rclcpp::Publisher<nav_msgs::msg::Path>;
+using MarkerArrayPub = rclcpp::Publisher<MarkerArray>;
+
+using ObjectOdometry = dynamic_slam_interfaces::msg::ObjectOdometry;
+using ObjectOdometryPath = dynamic_slam_interfaces::msg::ObjectOdometryPath;
+using MultiObjectOdometryPath =
+    dynamic_slam_interfaces::msg::MultiObjectOdometryPath;
+
+using ObjectOdometryPub = rclcpp::Publisher<ObjectOdometry>;
+using MultiObjectOdometryPathPub = rclcpp::Publisher<MultiObjectOdometryPath>;
+
+using PointCloud2 = sensor_msgs::msg::PointCloud2;
+using PointCloud2Pub = rclcpp::Publisher<sensor_msgs::msg::PointCloud2>;
+
+/// @brief Displays images coming from the ImageDisplayQueue to ROS
+class RosImageDisplayer : public ImageDisplay {
+ public:
+  RosImageDisplayer(rclcpp::Node::SharedPtr node) : node_(node) {}
+  void display(const std::vector<ImageToDisplay>& images) override;
+
+  // We will only publish topics we have a name for?
+  void setupImageTopic(const std::string& name,
+                       const std::string& remapping = "");
+
+ private:
+  rclcpp::Node::SharedPtr node_;
+  std::unordered_map<std::string,
+                     std::shared_ptr<image_transport::ImageTransport>>
+      image_transports_;
+  std::unordered_map<std::string, image_transport::Publisher> pub_images_;
+};
+
 class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
  public:
   DYNO_POINTER_TYPEDEFS(DynamicSlamVisualizerRos)
@@ -59,11 +95,15 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
                            const SlamBackend* estimator,
                            InputQueue* input_queue);
 
+  void setGroundTruth(const dyno::SharedGroundTruth& ground_truth,
+                      rclcpp::Node::SharedPtr ground_truth_node);
+
  private:
   void publishEstimatorUpdate(const PublicationData& publication_data) override;
   void publishVisualOdometry(const PublicationData& publication_data);
   void publishObjects(const PublicationData& publication_data);
   void publishMap(const PublicationData& publication_data);
+  void publishGroundtruth(const PublicationData& publication_data);
 
   /**
    * @brief Publishes a pose like object as a transform.
@@ -108,35 +148,32 @@ class DynamicSlamVisualizerRos : public DynamicSlamVisualizerRosBase {
   }
 
  private:
+  // Make ground truth version of this private
+  using DynamicSlamVisualizer::setGroundTruth;
+
+ private:
   rclcpp::Node::SharedPtr node_;
 
-  using OdometryPub = rclcpp::Publisher<nav_msgs::msg::Odometry>;
-  using PathPub = rclcpp::Publisher<nav_msgs::msg::Path>;
-  using MarkerArrayPub = rclcpp::Publisher<MarkerArray>;
+  const rclcpp::QoS odom_qos_;
+  const rclcpp::QoS map_qos_;
 
   OdometryPub::SharedPtr vo_publisher_;
   PathPub::SharedPtr vo_path_publisher_;
   MarkerArrayPub::SharedPtr vo_keyframes_publisher_;
 
-  using ObjectOdometry = dynamic_slam_interfaces::msg::ObjectOdometry;
-  using ObjectOdometryPath = dynamic_slam_interfaces::msg::ObjectOdometryPath;
-  using MultiObjectOdometryPath =
-      dynamic_slam_interfaces::msg::MultiObjectOdometryPath;
-
-  using ObjectOdometryPub = rclcpp::Publisher<ObjectOdometry>;
-  using MultiObjectOdometryPathPub = rclcpp::Publisher<MultiObjectOdometryPath>;
-
   ObjectOdometryPub::SharedPtr object_odom_publisher_;
   MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher_;
   MarkerArrayPub::SharedPtr object_keyframes_publisher_;
-
-  using PointCloud2 = sensor_msgs::msg::PointCloud2;
-  using PointCloud2Pub = rclcpp::Publisher<sensor_msgs::msg::PointCloud2>;
 
   PointCloud2Pub::SharedPtr map_publisher_;
 
   //! TF broadcaster for the odometry.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
+  // Ground truth publishing
+  OdometryPub::SharedPtr gt_vo_publisher_;
+  PathPub::SharedPtr gt_vo_path_publisher_;
+  MultiObjectOdometryPathPub::SharedPtr gt_multi_object_odom_path_publisher_;
 };
 
 }  // namespace dyno2

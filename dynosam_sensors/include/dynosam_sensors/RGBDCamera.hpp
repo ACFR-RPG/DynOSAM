@@ -104,7 +104,7 @@ class RGBDCamera : public Camera {
   //     Feature::Ptr feature, const bool force_recalculation = false);
 
   double fxb() const;
-  Baseline baseline() const;
+  double baseline() const;
 
   /**
    * @brief Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline
@@ -113,6 +113,38 @@ class RGBDCamera : public Camera {
 
   // Stereo camera with virtual baseline. Identity pose
   const gtsam::StereoCamera& getFakeStereoCamera() const;
+
+  /**
+   * @brief Get the Stereo extrinscis (ie T_LR) constructed from the baseline.
+   *
+   * @param camera
+   * @return gtsam::Pose3
+   */
+  static gtsam::Pose3 StereoExtrinsics(const dyno::Camera::Ptr& camera);
+
+  /**
+   * @brief Get the Stereo calibration.
+   *
+   * @param camera
+   * @return StereoCalibPtr
+   */
+  static StereoCalibPtr Calibration(const dyno::Camera::Ptr& camera);
+
+  /**
+   * @brief Get the monocular Calibration.
+   *
+   * @param camera
+   * @return gtsam::Cal3_S2
+   */
+  static gtsam::Cal3_S2 MonoCalibration(const dyno::Camera::Ptr& camera);
+
+  /**
+   * @brief Get the calibrated baseline of the stereo camera.
+   *
+   * @param camera
+   * @return double
+   */
+  static double Baseline(const dyno::Camera::Ptr& camera);
 
  private:
   double fx_b_;

@@ -1,6 +1,5 @@
 #include "dynosam2_ros/Dynosam2Node.hpp"
 
-#include <config_utilities/parsing/yaml.h>
 #include <gflags/gflags.h>
 
 #include "dynosam2_ros/Dynosam2Node-impl.hpp"
@@ -35,14 +34,21 @@ static std::string getFilePathFromParams(rclcpp::Node* node,
   return path;
 }
 
+/// @brief
+/// @tparam T Derived PipelineBase class
+/// @param ptr
+/// @return
+template <typename T>
+static dyno::Spinner::UniquePtr makePipelineSpinner(std::unique_ptr<T>& ptr) {
+  return std::make_unique<dyno::Spinner>(std::bind(&T::spin, ptr.get()),
+                                         ptr->moduleName() + "-spinner");
+}
+
 static const auto params_path_message =
     "Path to folder containing dynosam2.yaml file or a direct path to a .yaml "
     "file";
 
-Dynosam2Node::Impl::Impl(rclcpp::Node& node)
-    : node_(node),
-      params_path_(
-          getFilePathFromParams(&node, "params_path", params_path_message)) {
+Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   rclcpp::Node* node_ptr = &node_;
   RCLCPP_INFO_STREAM(node_.get_logger(), "Starting Dynosam2Node");
 
@@ -67,7 +73,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
 
   VLOG(10) << "Sensor Rig: " << *sensor_rig;
   data_interface_ =
-      std::make_shared<dyno::DataInterfacePipeline>(sensor_rig, kRunParallel);
+      std::make_unique<dyno::DataInterfacePipeline>(sensor_rig, kRunParallel);
 
   data_reader_->registerImageContainerCallback(
       std::bind(&dyno::DataInterfacePipeline::fillImageContainerQueue,
@@ -119,29 +125,33 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
 
   const SlamBackend& estimator = slam_->getEstimator();
   auto viz_node = node_.create_sub_node("output");
-  viz_ = std::make_shared<DynamicSlamVisualizerRos>(
+  viz_ = std::make_unique<DynamicSlamVisualizerRos>(
       viz_node, sensor_rig, &estimator, &publication_queue_);
 
+  dyno::ImageDisplayQueue* display_queue = &display_queue_;
   viz_->parallelRun(kRunParallel);
   // enable image displayer
-  viz_->setDisplayQueue(&display_queue_);
+  viz_->setDisplayQueue(display_queue);
+  viz_->addImageDisplay(std::make_shared<SmartOpenCvDisplayer>());
+
+  auto gt_node = node_.create_sub_node("ground_truth");
+  viz_->setGroundTruth(data_interface_->getSharedGroundTruth(), gt_node);
+
+  // ROS image displayer that will use images pulled from the display_queue
+  auto ros_image_displayer = std::make_shared<RosImageDisplayer>(viz_node);
+  // matches name currently in DynamicSLAM
+  // eventually maybe the DynamicSlamVisualizerRos will draw some images too?
+  ros_image_displayer->setupImageTopic("Tracks", "visual_tracks");
+  viz_->addImageDisplay(ros_image_displayer);
 
   // connect pipeline to viz
   slam_->setPublicationQueue(&publication_queue_);
-  slam_->setImageDisplayQueue(&display_queue_);
-
-  viz_spinner_ = std::make_unique<dyno::Spinner>(
-      std::bind(&DynamicSlamVisualizerRos::spin, viz_.get()),
-      "viz-pipeline-spinner");
+  slam_->setImageDisplayQueue(display_queue);
 
   // launch spinners
-  data_interface_spinner_ = std::make_unique<dyno::Spinner>(
-      std::bind(&dyno::DataInterfacePipeline::spin, data_interface_.get()),
-      "data-interface-spinner");
-
-  pipeline_spinner_ = std::make_unique<dyno::Spinner>(
-      std::bind(&DynamicSlamPipeline::spin, pipeline_.get()),
-      "slam-pipeline-spinner");
+  viz_spinner_ = makePipelineSpinner(viz_);
+  data_interface_spinner_ = makePipelineSpinner(data_interface_);
+  pipeline_spinner_ = makePipelineSpinner(pipeline_);
 
   auto spinOnce = [&]() -> void {
     // spin while there is work to do!
@@ -151,7 +161,10 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
       context->shutdown("Dynosam2 pipeline has finished processing all data");
     }
 
-    // do cv display
+    // do display
+    // even if nothing is connected to the display queue, this will ensure
+    // memory does not grow as we will try and pull images from the display
+    // queue
     viz_->displayImages();
   };
 
@@ -167,7 +180,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
   // NOTE: MUST be MutuallyExclusive to prevent execution in parallel to itself
   spin_timer_group_ = node_ptr->create_callback_group(
       rclcpp::CallbackGroupType::MutuallyExclusive);
-  spin_timer_ = node_ptr->create_wall_timer(std::chrono::milliseconds(30),
+  spin_timer_ = node_ptr->create_wall_timer(std::chrono::milliseconds(20),
                                             spinOnce, spin_timer_group_);
 
   // dyno::ros::Parameter publish_diagnostics_param =
@@ -194,6 +207,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node)
 }
 
 Dynosam2Node::Impl::~Impl() {
+  if (data_reader_) data_reader_->shutdown();
   if (data_interface_) data_interface_->shutdown();
   if (pipeline_) pipeline_->shutdown();
   if (viz_) viz_->shutdown();
@@ -209,55 +223,16 @@ Dynosam2Node::Impl::~Impl() {
   LOG(INFO) << dyno::utils::Statistics::Print();
 }
 
-void resolveParamsFile(const std::string& provided_params_path,
-                       std::string& full_params_path) {
-  // params can either be provided directly as a .yaml file or as a folder with
-  // a dynosam2.yaml file inside it
-  namespace fs = std::filesystem;
-  const fs::path params_path_fs(provided_params_path);
-
-  fs::path yaml_path;
-  if (fs::is_regular_file(params_path_fs)) {
-    // A file was provided directly; validate its extension.
-    const std::string extension = params_path_fs.extension().string();
-
-    if (extension != ".yaml" && extension != ".yml") {
-      throw std::runtime_error(
-          "Dynosam2 parameters file must have a .yaml or .yml extension: " +
-          provided_params_path);
-    }
-
-    yaml_path = params_path_fs;
-  } else if (fs::is_directory(params_path_fs)) {
-    // A directory was provided; look for dynosam2.yaml inside it.
-    yaml_path = params_path_fs / "dynosam2.yaml";
-  } else {
-    throw std::runtime_error(
-        "Dynosam2 parameters path does not exist or is not a regular "
-        "file/directory: " +
-        provided_params_path);
-  }
-
-  // Resolve to an absolute path and validate the YAML file.
-  yaml_path = fs::absolute(yaml_path);
-
-  if (!fs::is_regular_file(yaml_path)) {
-    throw std::runtime_error("Dynosam2 parameters YAML file does not exist: " +
-                             yaml_path.string());
-  }
-
-  full_params_path = yaml_path.string();
-}
-
 bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
   // params can either be provided directly as a .yaml file or as a folder with
   // a dynosam2.yaml file inside it
-  std::string config_file_path;
-  resolveParamsFile(params_path_, config_file_path);
+  // std::string config_file_path;
+  // resolveParamsFile(params_path_, config_file_path);
   RCLCPP_INFO_STREAM(node_.get_logger(),
-                     "Loading Dynosam2 params from file: " << config_file_path);
+                     "Loading Dynosam2 params from file: "
+                         << params_path_.dynosam2_param_file_path);
 
-  parameters = config::fromYamlFile<PipelineParameters>(config_file_path);
+  parameters.loadFromYaml(params_path_.dynosam2_param_file_path);
   return true;
 }
 
@@ -283,7 +258,12 @@ dyno::DataReader::Ptr Dynosam2Node::Impl::createDataReader(
     reconfigure(sensor_mode, parameters);
 
     dyno::LoadingSourceParams loading_sources;
-    loading_sources.params_folder = params_path_;
+    // TODO: for now, just assume that the params path is actually just a file
+    // (ie path to dynosam2.yaml!)
+    //  this might not be true and then we should assume to get the files from
+    //  inside this folder
+    loading_sources.camera_yaml_path = params_path_.camera_param_file_path;
+    loading_sources.imu_yaml_path = params_path_.imu_param_file_path;
     loading_sources.cameras_from_ros = true;
 
     dyno::SensorSystem::Ptr sensor_system =
@@ -310,10 +290,55 @@ dyno::DataReader::Ptr Dynosam2Node::Impl::createDataReader(
                        "Loading dataset from: " << dataset_path);
 
     dyno::DataReader::Ptr data_loader = dyno::DataProviderFactory::Create(
-        dataset_path, params_path_,
+        dataset_path, std::string(""),
         static_cast<dyno::DatasetType>(FLAGS_data_provider_type));
     return data_loader;
   }
+}
+
+Dynosam2Node::Impl::ParamterFileSystem::ParamterFileSystem(rclcpp::Node& node)
+    : provided_params_path(
+          getFilePathFromParams(&node, "params_path", params_path_message)) {
+  namespace fs = std::filesystem;
+  // resolve provided params path (check if folder or a provided .yaml path!)
+  fs::path yaml_path;
+  if (fs::is_regular_file(provided_params_path)) {
+    // A file was provided directly; validate its extension.
+    const std::string extension = provided_params_path.extension().string();
+
+    if (extension != ".yaml" && extension != ".yml") {
+      throw std::runtime_error(
+          "Dynosam2 parameters file must have a .yaml or .yml extension: " +
+          provided_params_path.string());
+    }
+    yaml_path = provided_params_path;
+    is_provided_folder = false;
+  } else if (fs::is_directory(provided_params_path)) {
+    // A directory was provided; look for dynosam2.yaml inside it.
+    yaml_path = provided_params_path / "dynosam2.yaml";
+    is_provided_folder = true;
+  } else {
+    throw std::runtime_error(
+        "Dynosam2 parameters path does not exist or is not a regular "
+        "file/directory: " +
+        provided_params_path.string());
+  }
+
+  // Resolve to an absolute path and validate the YAML file.
+  yaml_path = fs::absolute(yaml_path);
+
+  if (!fs::is_regular_file(yaml_path)) {
+    throw std::runtime_error("Dynosam2 parameters YAML file does not exist: " +
+                             yaml_path.string());
+  }
+
+  dynosam2_param_file_path = yaml_path;
+  // by defauly assume camera/imu params exist in the file
+  camera_param_file_path = dynosam2_param_file_path;
+  imu_param_file_path = dynosam2_param_file_path;
+  // TODO: load additional options from ROS params (ie provide cam/imu file name
+  // for folder!)
+  //  if a file is provided just assume that camera/imu params exist in here
 }
 
 // reconfigure any parameters for online mode

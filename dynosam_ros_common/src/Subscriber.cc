@@ -1,6 +1,8 @@
 #include "dynosam_ros_common/Subscriber.hpp"
 
 #include "cv_bridge/cv_bridge.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "sensor_msgs/image_encodings.hpp"
 
 namespace dyno {
 
@@ -52,6 +54,8 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
                 "imu_single_input_callback_ is not registered!");
             return;
           }
+          // TODO: is this going to add substantial delay?
+          dyno::utils::ChronoTimingStats t("subscriber.imu");
           imu_single_input_callback_(imu);
         },
         imu_sub_options);
@@ -66,15 +70,9 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
   auto image_qos = rclcpp::SensorDataQoS()
                        .keep_last(static_cast<size_t>(queue_size))
                        .reliable();
-
-  const bool listen_to_ground_truth =
-      ros::Parameter::Builder(node_.get(), "enable_groundtruth_sub", false)
-          .description(
-              "If the subscriber should additionally listen to ground truth "
-              "data")
-          .finish()
-          .get<bool>();
-
+  // auto image_qos = rclcpp::SensorDataQoS()
+  //                      .keep_last(static_cast<size_t>(queue_size));
+  // auto image_qos = rclcpp::SensorDataQoS();
   // if (listen_to_ground_truth) {
   //   RCLCPP_INFO_STREAM(node_->get_logger(),
   //                      "Ground truth enabled. Subscribing...");
@@ -140,8 +138,10 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
   const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
   images_received_.at(stream_index)[toNSec(timestamp)] = msg;
 
+  dyno::utils::ChronoTimingStats t("subscriber.image_cb");
+
   // try sync
-  std::lock_guard<std::mutex> lock(time_mutex_);
+  // std::lock_guard<std::mutex> lock(time_mutex_);
   std::set<uint64_t> all_times;
   const int num_streams = images_received_.size();
   for (int i = 0; i < num_streams; ++i) {
@@ -198,6 +198,8 @@ bool Subscriber::addImages(Timestamp timestamp,
   if (!image_container_callback_) {
     return false;
   }
+
+  dyno::utils::ChronoTimingStats t("subscriber.add_images");
 
   std::map<size_t, cv::Mat> images;
   for (const auto& [i, msg] : image_msgs) {
@@ -274,6 +276,36 @@ inline const cv::Mat Subscriber::convertRosImage<ImageType::Depth>(
 
     RCLCPP_FATAL_STREAM(node_->get_logger(),
                         image_traits<ImageType::Depth>::name()
+                            << " Image msg was of the wrong type (validate "
+                               "failed with exception "
+                            << exception.what() << "). "
+                            << "ROS encoding type used was "
+                            << cvb_image->encoding);
+
+    rclcpp::shutdown();
+    return cv::Mat();
+  }
+}
+
+template <>
+inline const cv::Mat Subscriber::convertRosImage<ImageType::RGBMono>(
+    const ImageMsgPtr& img_msg) const {
+  const cv_bridge::CvImageConstPtr cvb_image = readRosImage(img_msg);
+  cv::Mat img = cvb_image->image;
+
+  // make sure we only have rgb (without the alpha!)
+  if (sensor_msgs::image_encodings::isColor(cvb_image->encoding) &&
+      sensor_msgs::image_encodings::hasAlpha(cvb_image->encoding)) {
+    cv::cvtColor(img, img, cv::COLOR_RGBA2RGB);
+  }
+
+  try {
+    image_traits<ImageType::RGBMono>::validate(img);
+    return img;
+
+  } catch (const InvalidImageTypeException& exception) {
+    RCLCPP_FATAL_STREAM(node_->get_logger(),
+                        image_traits<ImageType::RGBMono>::name()
                             << " Image msg was of the wrong type (validate "
                                "failed with exception "
                             << exception.what() << "). "

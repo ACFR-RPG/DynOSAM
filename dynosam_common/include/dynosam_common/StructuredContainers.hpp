@@ -389,6 +389,97 @@ class MultiFrameRangeData {
 };
 
 /**
+ * @brief Simpler circular buffer implementation thanks to Chat-GPT.
+ *
+ * @tparam T
+ * @tparam Capacity
+ */
+template <typename T, std::size_t Capacity>
+class CircularBuffer {
+  static_assert(Capacity > 0, "Capacity must be greater than zero");
+
+ public:
+  using value_type = T;
+  using size_type = std::size_t;
+
+  CircularBuffer() = default;
+
+  template <typename... Args>
+  std::optional<T> emplace(Args&&... args) {
+    if (full()) {
+      // Move out the element being overwritten.
+      std::optional<T> removed(std::move(data_[head_]));
+
+      data_[head_] = T(std::forward<Args>(args)...);
+      head_ = (head_ + 1) % Capacity;
+
+      return removed;
+    }
+
+    const size_type index = (head_ + size_) % Capacity;
+    data_[index] = T(std::forward<Args>(args)...);
+    ++size_;
+
+    return std::nullopt;
+  }
+
+  std::optional<T> push(const T& value) { return emplace(value); }
+
+  std::optional<T> push(T&& value) { return emplace(std::move(value)); }
+
+  void clear() noexcept {
+    head_ = 0;
+    size_ = 0;
+  }
+
+  [[nodiscard]] bool empty() const noexcept { return size_ == 0; }
+
+  [[nodiscard]] bool full() const noexcept { return size_ == Capacity; }
+
+  [[nodiscard]] size_type size() const noexcept { return size_; }
+
+  [[nodiscard]] constexpr size_type capacity() const noexcept {
+    return Capacity;
+  }
+
+  // Access by logical index (0 = oldest).
+  T& operator[](size_type index) {
+    assert(index < size_);
+    return data_[(head_ + index) % Capacity];
+  }
+
+  const T& operator[](size_type index) const {
+    assert(index < size_);
+    return data_[(head_ + index) % Capacity];
+  }
+
+  T& front() {
+    assert(!empty());
+    return data_[head_];
+  }
+
+  const T& front() const {
+    assert(!empty());
+    return data_[head_];
+  }
+
+  T& back() {
+    assert(!empty());
+    return data_[(head_ + size_ - 1) % Capacity];
+  }
+
+  const T& back() const {
+    assert(!empty());
+    return data_[(head_ + size_ - 1) % Capacity];
+  }
+
+ private:
+  std::array<T, Capacity> data_{};
+  size_type head_{0};
+  size_type size_{0};
+};
+
+/**
  * FastUnorderedMap is a thin wrapper around std::unordered that uses the boost
  * fast_pool_allocator instead of the default STL allocator.  This is just a
  * convenience to avoid having lengthy types in the code.  Through timing,

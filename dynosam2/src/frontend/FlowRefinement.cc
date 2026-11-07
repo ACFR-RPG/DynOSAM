@@ -53,6 +53,7 @@ struct FlowRefinement::ImplOptimizer {
 
   struct Result {
     gtsam::Pose3 pose;
+    gtsam::Matrix66 covariance;
     gtsam::Point2Vector flows;
     // TODO: inliers!
 
@@ -110,6 +111,7 @@ struct FlowRefinement::ImplOptimizer {
 
     gtsam::Point2Vector& refined_flows = result.flows;
     gtsam::Pose3& refined_pose = result.pose;
+    gtsam::Matrix66& covariance = result.covariance;
 
     std::vector<Pose3FlowProjectionResidual2> factors;
     factors.reserve(num_measurements);
@@ -263,6 +265,7 @@ struct FlowRefinement::ImplOptimizer {
 
       // solve reduced system
       const gtsam::Vector6 dx = H.ldlt().solve(-b);
+      covariance = H.inverse();
       // update pose
       refined_pose = refined_pose.retract(dx);
 
@@ -322,7 +325,7 @@ FlowRefinement::FlowRefinement(const Camera::Ptr camera,
 FlowRefinement::~FlowRefinement() = default;
 
 void FlowRefinement::refine(const gtsam::Pose3& pose_in,
-                            gtsam::Pose3& pose_out) {
+                            dyno::Pose3Measurement& pose_out) {
   dyno::utils::ChronoTimingStats timer("flow_refine.refine");
 
   const dyno::WrappedRGBMono wrapped_rgb = images_.rgb();
@@ -382,9 +385,7 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
   solve_t.stop();
 
   CHECK_EQ(matching_index.size(), result.flows.size());
-  const cv::Mat& object_masks = images_.objectMotionMask();
-  const int rows = object_masks.rows;
-  const int cols = object_masks.cols;
+  const BoundsChecker bounds_checker(images_.objectMotionMask());
 
   cv::Point2f pt;
   for (size_t i = 0; i < matching_index.size(); i++) {
@@ -400,17 +401,13 @@ void FlowRefinement::refine(const gtsam::Pose3& pose_in,
 
     // ensure updated keypoint is still within the object mask
     const ObjectId object_id = object_ids[i];
-    if (!checkBoundsAndLabel(pt, object_masks, object_id, rows, cols)) {
+    if (!bounds_checker(pt, object_id)) {
+      // mark as outlier
       *(inlier_ptrs[i]) = 0;
     }
   }
 
-  pose_out = result.pose;
-
-  // VLOG(10) << "Initial error: " << result.error_before << " final error "
-  //          << result.error_after << " time[ms] "
-  //          << result.total_time_ms
-  //          << " #iterations= " << result.iterations;
+  pose_out = dyno::Pose3Measurement(result.pose, result.covariance);
 }
 
 }  // namespace dyno2

@@ -47,17 +47,45 @@ class ImageSegmenterNode : public rclcpp::Node {
   void imageCallback(const sensor_msgs::msg::Image::ConstSharedPtr& msg) {
     try {
       // Convert to OpenCV image (BGR8)
-      cv::Mat frame = cv_bridge::toCvShare(msg, "bgr8")->image;
+      auto cvb_image = cv_bridge::toCvShare(msg);
+      cv::Mat frame = cvb_image->image;
+
+      // make sure we only have rgb (without the alpha!)
+      if (sensor_msgs::image_encodings::isColor(cvb_image->encoding) &&
+          sensor_msgs::image_encodings::hasAlpha(cvb_image->encoding)) {
+        cv::cvtColor(frame, frame, cv::COLOR_RGBA2RGB);
+      }
 
       // cv::Mat resized;
       // cv::resize(frame, resized, cv::Size(640, 640), 0, 0, cv::INTER_LINEAR);
 
       // if (model_) model_->infer(frame);
       auto result = engine_->process(frame);
+      //   yolov11_->preprocess(resized);
+
+      // // Perform inference
+      // yolov11_->infer();
+
+      // // Postprocess to get detections
+      // std::vector<Detection> detections;
+      // yolov11_->postprocess(detections);
+
+      // // Draw detections on the frame
+      // yolov11_->draw(resized, detections);
+
+      // // Display the frame (optional)
+      // cv::imshow("Inference", resized);
+
+      // // Print image info
+      // RCLCPP_INFO(this->get_logger(), "Received image %dx%d", resized.cols,
+      //             resized.rows);
+      // auto r = engine_->process(resized);
+
+      LOG(INFO) << result;
 
       // // // // Optional: visualize (disable in headless mode)
-      cv::imshow("View", result.colouredMask());
-      cv::waitKey(1);
+      // cv::imshow("View", result.colouredMask());
+      // cv::waitKey(1);
 
     } catch (const cv_bridge::Exception& e) {
       RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());

@@ -63,7 +63,7 @@ double RGBDCamera::depthFromDisparity(double disparity) const {
   return fx_b_ / disparity;
 }
 
-Baseline RGBDCamera::baseline() const {
+double RGBDCamera::baseline() const {
   return getParams().depthParams().virtual_baseline;
 }
 
@@ -127,6 +127,25 @@ StereoCalibPtr RGBDCamera::getFakeStereoCalib() const {
 
 const gtsam::StereoCamera& RGBDCamera::getFakeStereoCamera() const {
   return stereo_camera_;
+}
+
+gtsam::Pose3 RGBDCamera::StereoExtrinsics(const dyno::Camera::Ptr& camera) {
+  const dyno::RGBDCamera& rgbd_camera = camera->getRGBDCamera();
+  return gtsam::Pose3(gtsam::Rot3(),
+                      gtsam::Point3(rgbd_camera.baseline(), 0.0, 0.0));
+}
+
+StereoCalibPtr RGBDCamera::Calibration(const dyno::Camera::Ptr& camera) {
+  const StereoCalibPtr K_stereo = camera->getRGBDCamera().getFakeStereoCalib();
+  return K_stereo;
+}
+
+gtsam::Cal3_S2 RGBDCamera::MonoCalibration(const dyno::Camera::Ptr& camera) {
+  return Camera::Calibration(camera);
+}
+
+double RGBDCamera::Baseline(const dyno::Camera::Ptr& camera) {
+  return camera->getRGBDCamera().baseline();
 }
 
 }  // namespace dyno

@@ -1,11 +1,18 @@
 
+#include <glog/logging.h>
 #include <gtest/gtest.h>
 #include <gtsam/geometry/Pose3.h>
 #include <gtsam/geometry/Rot3.h>
 
 #include <Eigen/Core>
+#include <chrono>
 #include <cmath>
+#include <future>
 #include <limits>
+#include <mutex>
+#include <stdexcept>
+#include <thread>
+#include <utility>
 
 namespace {
 

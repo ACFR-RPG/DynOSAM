@@ -94,7 +94,7 @@ class VisionImuPacket {
 
   Timestamp timestamp() const;
   FrameId frameId() const;
-  ImuFrontend::PimPtr pim() const;
+  PimPtr pim() const;
   Camera::ConstPtr camera() const;
   PointCloudLabelRGB::Ptr denseLabelledCloud() const;
 
@@ -133,7 +133,7 @@ class VisionImuPacket {
 
   VisionImuPacket& timestamp(Timestamp ts);
   VisionImuPacket& frameId(FrameId id);
-  VisionImuPacket& pim(const ImuFrontend::PimPtr& pim);
+  VisionImuPacket& pim(const PimPtr& pim);
   VisionImuPacket& camera(const Camera::Ptr& cam);
   VisionImuPacket& denseLabelledCloud(const PointCloudLabelRGB::Ptr& cloud);
   VisionImuPacket& cameraTracks(const CameraTracks& camera_tracks);
@@ -156,7 +156,7 @@ class VisionImuPacket {
   FrameId frame_id_;
 
   //! Possible PIM going from last frame to this frame
-  ImuFrontend::PimPtr pim_{nullptr};
+  PimPtr pim_{nullptr};
 
   //! Possible camera
   Camera::Ptr camera_;

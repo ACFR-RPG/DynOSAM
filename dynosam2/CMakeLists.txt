@@ -56,6 +56,8 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/MatchingAdaptor.cc
   src/frontend/FlowRefinement.cc
   src/frontend/Frontend.cc
+  src/frontend/FrontendViz.cc
+  src/frontend/Frame.cc
 
   src/common/Types.cc
   src/common/DynamicSlamInterface.cc
@@ -66,6 +68,7 @@ add_library(${PROJECT_NAME} SHARED
   src/estimator/DoGraph.cc
   src/estimator/FullGraph.cc
   src/estimator/SlamBackend.cc
+  src/estimator/ImuError.cc
 
   src/DynamicSlam.cc
   src/DynamicSlamVisualizer.cc
@@ -173,7 +176,9 @@ if(BUILD_TESTING)
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
     test/test_feature_block_container.cc
+    test/test_optical_flow_benchmark.cc
     test/test_concepts.cc
+    test/test_types.cc
 )
 
   target_include_directories(${PROJECT_NAME}_test

@@ -78,6 +78,12 @@ ImagePyramid& ImagePyramid::operator=(ImagePyramid&& other) noexcept {
   return *this;
 }
 
+ImagePyramid::~ImagePyramid() {
+  // detructor should do this automatically but sometimes its nice to be
+  // explicit!
+  clear();
+}
+
 void ImagePyramid::reserve(int max_level) { levels.resize(max_level + 1); }
 
 void ImagePyramid::clear() {

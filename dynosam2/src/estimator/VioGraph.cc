@@ -1,6 +1,7 @@
 #include "dynosam2/estimator/VioGraph.hpp"
 
 #include <gtsam/nonlinear/DoglegOptimizer.h>
+#include <gtsam/slam/BetweenFactor.h>
 #include <gtsam/slam/StereoFactor.h>
 
 #include "dynosam2/frontend/Utils.hpp"
@@ -12,18 +13,21 @@
 
 namespace dyno2 {
 
-VioGraph::VioGraph(dyno::Camera::Ptr camera) {
-  std::shared_ptr<dyno::RGBDCamera> rgbd_camera =
-      CHECK_NOTNULL(camera->safeGetRGBDCamera());
-  K_stereo_ = rgbd_camera->getFakeStereoCalib();
-  CHECK_NOTNULL(K_stereo_);
+VioGraph::VioGraph(dyno::Camera::Ptr camera) : Base(camera) {}
 
-  K_ = camera->getGtsamCalibration();
+void VioGraph::addImu(dyno::CombinedPIMParamPtr imu_config) {
+  CHECK_NOTNULL(imu_config);
+  imu_config_ = imu_config;
 }
 
 void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose) {
   VioGraphState& state = initaliseStatesWithPose(frame, pose);
   setStateVelocityFromPose(state);
+}
+
+void VioGraph::initaliseStates(ViFrame::Ptr frame,
+                               const PoseVelocity3& state_W) {
+  initaliseStates(frame, state_W.pose, state_W.velocity);
 }
 
 void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
@@ -34,10 +38,11 @@ void VioGraph::initaliseStates(ViFrame::Ptr frame, const gtsam::Pose3& pose,
 
 VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
                                                  const gtsam::Pose3& pose) {
-  const dyno::FrameId frame_id = frame->getFrameId();
-  CHECK(!frames_.exists(frame_id));
-  frames_[frame_id] = frame;
+  const dyno::TemporalObjectId id = frame->temporalObjectId();
+  CHECK(!frames_.exists(id));
+  frames_[id] = frame;
 
+  const dyno::FrameId frame_id = id.frame_id;
   VioGraphState& state = this->state(frame_id);
   state.timestamp = frame->timestamp;
   state.frame_id = frame_id;
@@ -47,6 +52,7 @@ VioGraphState& VioGraph::initaliseStatesWithPose(ViFrame::Ptr frame,
 }
 
 void VioGraph::setPose(dyno::FrameId frame_id, const gtsam::Pose3& pose) {
+  const std::lock_guard<std::mutex> guard(mutex_);
   this->state(frame_id).pose_W = pose;
 }
 
@@ -79,6 +85,7 @@ const VioGraphState& VioGraph::getVioState(dyno::FrameId frame_id) const {
 }
 
 const gtsam::Pose3& VioGraph::getPose(dyno::FrameId frame_id) const {
+  const std::lock_guard<std::mutex> guard(mutex_);
   return this->state(frame_id).pose_W;
 }
 
@@ -94,41 +101,26 @@ bool VioGraph::poseExists(dyno::FrameId frame_id) const {
   return stateExists(frame_id);
 }
 
-bool VioGraph::getLandmark(dyno::TrackletId id, MapPoint& map_point) const {
-  auto it = LandmarkMap::find(id);
-  if (it == LandmarkMap::end()) {
+bool VioGraph::getMapPoint(dyno::TrackletId id, MapPoint& map_point) const {
+  dyno::Landmark lmk;
+  if (!this->getLandmark(id, lmk)) {
     return false;
   }
-
-  const dyno::Landmark& lmk = LandmarkMap::landmarkAt(it->second);
   map_point = MapPoint{lmk, dyno::background_label, id};
   return true;
 }
 
-size_t VioGraph::getLandmarks(MapPointVector& map_points) const {
-  if (LandmarkMap::isContiguous()) {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector(LandmarkMap::size());
-    for (size_t i = 0; i < n; i++) {
-      const auto [id, lmk] = LandmarkMap::at(i);
-      map_points[i] = MapPoint{lmk, dyno::background_label, id};
-    }
-  } else {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector();
-    map_points.reserve(n);
-
-    // walk over valid indices
-    for (auto it = LandmarkMap::begin(); it != LandmarkMap::end(); it++) {
-      Index valid_index = it->second;
-      const auto [id, lmk] = LandmarkMap::at(valid_index);
-      map_points.push_back(MapPoint{lmk, dyno::background_label, id});
-    }
+size_t VioGraph::getMapPoints(MapPointVector& map_points) const {
+  const LandmarkMap& landmark_map = this->asLandmarkMap();
+  const size_t n = landmark_map.numLandmarks();
+  map_points = MapPointVector(n);
+  for (const auto& [id, lmk] : landmark_map) {
+    map_points.push_back(MapPoint{lmk, dyno::background_label, id});
   }
   return map_points.size();
 }
 
-size_t VioGraph::getLandmarks(MapPoints& map_points) const { return 0; }
+size_t VioGraph::getMapPoints(MapPoints& map_points) const { return 0; }
 
 bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
   // we do this until we fix speed with covisiblity and growing checks as we
@@ -145,9 +137,20 @@ bool VioGraph::pruneKeyframes(size_t num_keyframes, size_t num_motion_frames) {
     ++added_kfs;
   }
 
-  // TODO: prune frames_ to not hold into memory!
+  // Obtain the keyframes that were pruned.
+  std::vector<dyno::FrameId> pruned_keyframes;
+  pruned_keyframes.reserve(keyframes_.size() - keyframes.size());
 
-  keyframes_ = keyframes;
+  std::set_difference(keyframes_.begin(), keyframes_.end(), keyframes.begin(),
+                      keyframes.end(), std::back_inserter(pruned_keyframes));
+
+  // release image memory. We only store images for keyframes
+  for (dyno::FrameId pruned_frame : pruned_keyframes) {
+    getFramePtr(pruned_frame)->releaseImages();
+  }
+
+  // Update keyframes.
+  keyframes_ = std::move(keyframes);
   return true;
 
   // missing tracking...
@@ -356,8 +359,7 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   std::stringstream ss;
   ss << "VIO factor graph: ";
 
-  size_t frames_used{0};
-  // very important frames_to_try  is in order!
+  std::vector<dyno::FrameId> frames_to_use;
   for (dyno::FrameId frame_id : frames_to_try) {
     auto selected_it = selected_tracklets_by_frame.find(frame_id);
 
@@ -365,38 +367,53 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
         selected_it->second.empty()) {
       continue;
     }
+    frames_to_use.push_back(frame_id);
+  }
 
-    CHECK(poseExists(frame_id)) << frame_id;
+  // this handles the weirdly specific case that we only have 2 frames
+  // with covisibilities (which either occurs right at the start or when we have
+  // massive occlusion and we loose all tracks)
+  // and since we only track by optical flow (no cross frame matching sadly)
+  // we have very minimal constraints
+  if (frames_to_use.size() < 3) {
+    return;
+  }
 
-    const gtsam::Symbol pose_sym('x', frame_id);
+  // const gtsam::Pose3& T_W_A = getPose(anchor_frame);
+  // const gtsam::Pose3 T_W_A_inv = T_W_A.inverse();
+  // very important frames_to_try  is in order!
+  for (dyno::FrameId k0 : frames_to_use) {
+    CHECK(poseExists(k0)) << k0;
 
-    // Each frame appears once in frames_to_try.
-    values.insert(pose_sym, getPose(frame_id));
-    poses_with_update.push_back(frame_id);
-    ++frames_used;
+    const gtsam::Symbol pose_sym('x', k0);
+    // Each frame appears once in frames_to_use.
+    // gtsam::Pose3 T_A_k0 = T_W_A_inv * getPose(k0)
+    values.insert(pose_sym, getPose(k0));
+    poses_with_update.push_back(k0);
 
+    auto selected_it = selected_tracklets_by_frame.find(k0);
     const auto& selected_tracklets = selected_it->second;
-    ss << "k= " << frame_id << " with n=" << selected_tracklets.size();
+    ss << "k= " << k0 << " with n=" << selected_tracklets.size();
 
     for (dyno::TrackletId tracklet_id : selected_tracklets) {
       const auto lmk_node = observations_->getLandmark(tracklet_id);
       CHECK(lmk_node);
 
-      const dyno::Landmark lmk = LandmarkMap::getLandmark(tracklet_id);
+      const dyno::Landmark lmk_W = LandmarkMap::getLandmark(tracklet_id);
 
-      auto [measurement, model] = lmk_node->getMeasurement(frame_id);
+      auto [measurement, model] = lmk_node->getMeasurement(k0);
       model = dyno::factor_graph_tools::robustifyHuber(0.01, model);
 
       if (only_states) {
         // Landmark is fixed; only the pose is optimised.
         graph.emplace_shared<GenericFixedStereoFactor>(
-            measurement, model, pose_sym, lmk, K_stereo_);
+            measurement, model, pose_sym, lmk_W, K_stereo_);
       } else {
         // Insert each landmark variable only once.
         const gtsam::Symbol lmk_sym('l', tracklet_id);
 
         if (!values.exists(lmk_sym)) {
-          values.insert(lmk_sym, lmk);
+          values.insert(lmk_sym, lmk_W);
           tracklets_with_update.push_back(tracklet_id);
         }
 
@@ -409,29 +426,20 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
 
   VLOG(5) << ss.str();
 
-  // this handles the weirdly specific case that we only have 2 frames
-  // with covisibilities (which either occurs right at the start or when we have
-  // massive occlusion and we loose all tracks)
-  // and since we only track by optical flow (no cross frame matching sadly)
-  // we have very minimal constraints
-  if (frames_used < 3) {
-    return;
-  }
-
-  if (!frames_to_try.empty()) {
-    const dyno::FrameId anchor_frame = frames_to_try.front();
+  const dyno::FrameId anchor_frame = frames_to_use.front();
+  const dyno::FrameId head_frame = frames_to_use.back();
+  if (!frames_to_use.empty()) {
     CHECK(poseExists(anchor_frame)) << anchor_frame;
-
     const gtsam::Symbol anchor_sym('x', anchor_frame);
 
+    gtsam::Pose3 T_W_A = getPose(anchor_frame);
     // The anchor may have no selected observations, so ensure its value exists.
     if (!values.exists(anchor_sym)) {
-      values.insert(anchor_sym, getPose(anchor_frame));
+      values.insert(anchor_sym, T_W_A);
     }
 
     graph.addPrior<gtsam::Pose3>(
-        anchor_sym, getPose(anchor_frame),
-        gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001));
+        anchor_sym, T_W_A, gtsam::noiseModel::Isotropic::Sigma(6u, 0.0001));
   }
 
   build_t.stop();
@@ -451,15 +459,73 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
 
   frames_affected.reserve(poses_with_update.size());
   // poses with update must be in order so the velocity update is correct
-  for (dyno::FrameId frame_id : poses_with_update) {
-    gtsam::Symbol pose_sym('x', frame_id);
-    gtsam::Pose3 pose = optimised_values.at<gtsam::Pose3>(pose_sym);
-    setPose(frame_id, pose);
+  // for (dyno::FrameId k0 : poses_with_update) {
+  //   VLOG(15) << "Updating local VIO BA k=" << k0;
+  //   gtsam::Symbol pose_sym('x', k0);
+  //   gtsam::Pose3 T_W_k0_refined =
+  //   optimised_values.at<gtsam::Pose3>(pose_sym); CHECK(stateExists(k0));
 
+  //   LOG(INFO) << "k=" << k0 << " pose before " << getPose(k0) << " pose after
+  //   " << T_W_k0_refined;
+
+  //   setPose(k0, T_W_k0_refined);
+  //   // since we dont have IMU!
+  //   setVelocityFromPose(k0);
+
+  //   frames_affected.push_back(k0);
+
+  //   // if(k0 == anchor_frame) {
+  //   //   LOG(INFO) << "T anchor after: " << T_W_k0_refined;
+  //   // }
+  // }
+
+  // TODO: covariance from estimation!!!
+  gtsam::SharedNoiseModel relative_noise_model =
+      gtsam::noiseModel::Isotropic::Sigma(6u, 0.8);
+
+  gtsam::SharedNoiseModel prior_noise_model =
+      gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001);
+
+  BaProblemInterface smooth_traj_problem;
+  for (dyno::FrameId k0 = anchor_frame; k0 <= head_frame; k0++) {
+    if (k0 > anchor_frame) {
+      const ViFrame::Ptr vi_frame_k0 = getFramePtr(k0);
+      // const Motion3ReferenceFrame& T_ij = vi_frame_k0->getRelativePose();
+      const RelativePoseErrorBase::Ptr rel_pose =
+          vi_frame_k0->getRelativePose();
+      CHECK(rel_pose);
+
+      const dyno::FrameId frame_i = rel_pose->from();
+      // TODO: covariance from estimation!!
+      smooth_traj_problem.addFactor(
+          boost::make_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+              gtsam::Symbol('x', frame_i), gtsam::Symbol('x', k0),
+              rel_pose->deltaXij(), relative_noise_model));
+    }
+
+    const gtsam::Symbol sym('x', k0);
+    if (optimised_values.exists(sym)) {
+      const gtsam::Pose3& X_W_k0_refined =
+          optimised_values.at<gtsam::Pose3>(sym);
+      smooth_traj_problem.addPrior<gtsam::Pose3>(sym, X_W_k0_refined,
+                                                 prior_noise_model);
+    }
+
+    const gtsam::Pose3& X_W_k0 = getPose(k0);
+    smooth_traj_problem.insert(sym, X_W_k0);
+  }
+
+  gtsam::Values optimised_traj;
+  smooth_traj_problem.optimize(optimised_traj, 3);
+
+  for (dyno::FrameId k0 = anchor_frame; k0 <= head_frame; k0++) {
+    const gtsam::Pose3& X_W_k0_refined =
+        optimised_traj.at<gtsam::Pose3>(gtsam::Symbol('x', k0));
+    setPose(k0, X_W_k0_refined);
     // since we dont have IMU!
-    setVelocityFromPose(frame_id);
+    setVelocityFromPose(k0);
 
-    frames_affected.push_back(frame_id);
+    frames_affected.push_back(k0);
   }
 
   LOG(INFO) << "Frames affected in VIO refinement: "
@@ -467,8 +533,8 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
 
   for (dyno::TrackletId id : tracklets_with_update) {
     gtsam::Symbol lmk_sym('l', id);
-    gtsam::Point3 lmk = optimised_values.at<gtsam::Point3>(lmk_sym);
-    setLandmark(id, lmk);
+    gtsam::Point3 lmk_W = optimised_values.at<gtsam::Point3>(lmk_sym);
+    setLandmark(id, lmk_W);
   }
 }
 

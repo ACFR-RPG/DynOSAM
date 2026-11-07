@@ -30,8 +30,8 @@ class FeatureTracker {
 
   FeatureTracker(const FrontendParameters& parameters, Camera::Ptr camera);
 
-  Result track(ImageContainer& image_container,
-               const std::optional<gtsam::Rot3>& R_km1_k = {});
+  Result track(ImageContainer::Ptr image_container,
+               const std::optional<gtsam::Rot3>& R_k_km1 = {});
 
  private:
   struct ObjectDetectionImpl {
@@ -117,16 +117,15 @@ class FeatureTracker {
     }
   };
   using FlowTrackingStatsMap = gtsam::FastMap<ObjectId, FlowTrackingStats>;
-
   std::pair<FeatureBlockContainer, FlowTrackingStatsMap> sparseFeatureTrack(
-      const cv::Mat& mono, const cv::Mat& object_mask);
+      const dyno::ImageContainer::Ptr& image_container,
+      const std::optional<gtsam::Rot3>& R_k_km1);
 
   // R_previous_curr is a rotation from previous to current (ie p_curr = R *
   // p_previous)
-  bool predictKeypointsGivenRotation(
-      const std::vector<cv::Point2f>& previous_pts,
-      const gtsam::Rot3& R_previous_curr,
-      std::vector<cv::Point2f>& predicted_pts_curr) const;
+  bool predictFromPreviousGivenRotation(
+      std::vector<cv::Point2f>& predicted_pts_curr,
+      const gtsam::Rot3& maybe_R_k_km1) const;
 
   void fillDetectionParam(ObjectId object_id, const cv::Mat& mask,
                           const cv::Rect& bounding_box, int current_tracks,
@@ -151,6 +150,8 @@ class FeatureTracker {
   size_t getMaxTrackingCorners(ObjectId object_id) const;
   size_t getMinAllowableTracks(ObjectId object_id) const;
 
+  void setDilationKernel(const cv::Size& img_size);
+
  private:
   FrontendParameters parameters_;
   Camera::Ptr camera_;
@@ -158,23 +159,27 @@ class FeatureTracker {
   GfttDetector feature_detector_;
   ObjectDetectionImpl object_detection_impl_;
   //! Sparse LK tracker
-  OpticalFlowLK optical_flow_impl_;
+  // TODO: for now while we implement the provided optical flow!
+  //  OpticalFlowLK_CPU optical_flow_impl_;
+  OpticalFlowLK_GPU optical_flow_impl_;
 
   // Cached camera matrices
   cv::Matx33f K_cv_;
   cv::Matx33f K_inv_cv_;
 
+  dyno::ImageContainer::Ptr previous_container_;
+
   ObjectDetectionEngine::Ptr object_detection_engine_;
-  std::vector<cv::Mat> curr_mono_pyr_;
-  cv::Mat prev_mono_;
-  //! Image pyramid for the previous mono frame
-  std::vector<cv::Mat> prev_mono_pyr_;
   gtsam::FastMap<ObjectId, cv::Mat> previous_object_detection_masks_;
   //! Object mask for the previous frame
   cv::Mat prev_object_mask_;
 
   //! Set of previous (inlier) features to track against
   FeatureBlockContainer previous_features_;
+
+  //! Some structuring element used to dilate the object masks to fill any small
+  //! holes
+  cv::Mat object_mask_dilate_kernel_;
 };
 
 }  // namespace dyno2

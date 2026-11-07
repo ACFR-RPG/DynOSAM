@@ -36,25 +36,25 @@ FeatureTracker::FeatureTracker(const FrontendParameters& parameters,
     object_detection_engine_ =
         std::make_shared<dyno::YoloV8ObjectDetector>(model_config, yolo_config);
   }
+  setDilationKernel(camera->getParams().imageSize());
 }
 
 FeatureTracker::Result FeatureTracker::track(
-    ImageContainer& image_container,
-    const std::optional<gtsam::Rot3>& R_km1_k) {
-  dyno::utils::ChronoTimingStats feature_track_t("feature_tracker.track");
-  dyno::utils::ChronoTimingStats object_detect_t(
-      "feature_tracker.track.object_detect");
+    ImageContainer::Ptr image_container,
+    const std::optional<gtsam::Rot3>& R_k_km1) {
+  dyno::utils::ChronoTimingStats feature_track_t("ft.all");
+  dyno::utils::ChronoTimingStats object_detect_t("ft.object_detect");
   const auto [object_detection_result, update_object_mask] =
-      object_detection_impl_.detectAndTrack(image_container);
+      object_detection_impl_.detectAndTrack(*image_container);
   object_detect_t.stop();
 
   // update image container with motion mask
   const cv::Mat object_masks = object_detection_result.labelled_mask;
   if (update_object_mask) {
-    image_container.objectMotionMask(object_masks);
+    image_container->objectMotionMask(object_masks);
   }
 
-  const WrappedRGBMono wrapped_rgb = image_container.rgb();
+  const WrappedRGBMono wrapped_rgb = image_container->rgb();
   const cv::Mat rgb = wrapped_rgb.image();
   // build the image pyramid from the wrapped image
   // this allows us to cache the computation of the pyramid within the
@@ -63,7 +63,7 @@ FeatureTracker::Result FeatureTracker::track(
   const ImagePyramid image_pyramid = wrapped_rgb.computeImagePyramid(
       optical_flow_impl_.win_size, optical_flow_impl_.max_level);
   const cv::Mat current_mono = image_pyramid.mono;
-  curr_mono_pyr_ = image_pyramid.levels;
+  // curr_mono_pyr_ = image_pyramid.levels;
 
   ObjectIds object_ids = object_detection_result.objectIds();
 
@@ -77,12 +77,13 @@ FeatureTracker::Result FeatureTracker::track(
     return rect;
   };
 
-  if (prev_mono_.empty()) {
+  if (previous_container_ == nullptr) {
     // fill out initial gfft params
     GfttDetector::Params feature_detection_params(object_ids.size() + 1);
     feature_detection_params.quality_level = 0.01;
 
     for (size_t i = 0; i < object_ids.size(); i++) {
+      LOG(INFO) << "here";
       const auto object_id = object_ids[i];
       const auto& object_detection = object_detection_result.detections[i];
       // sanity check that object_ids and object_detection_result are stored in
@@ -107,16 +108,14 @@ FeatureTracker::Result FeatureTracker::track(
     FeatureBlockContainer detected_features = feature_detector_.calc(
         current_mono, object_masks, feature_detection_params);
 
-    prev_mono_ = current_mono;
+    // prev_mono_ = current_mono;
     previous_features_ = detected_features;
+    // previous_img_ = wrapped_rgb;
+    previous_container_ = image_container;
 
-    // buildOpticalFlowPyramid(prev_mono_, prev_mono_pyr_);
   } else {
-    dyno::utils::ChronoTimingStats previous_t("feature_tracker.track.previous");
-    dyno::utils::ChronoTimingStats sparse_t("feature_tracker.track.sparse");
     auto [tracked_features, tracking_stats] =
-        sparseFeatureTrack(current_mono, object_masks);
-    sparse_t.stop();
+        sparseFeatureTrack(image_container, R_k_km1);
 
     // fill out binary segmentation mask map to be used as detection mask
     gtsam::FastMap<ObjectId, cv::Mat> binary_detection_masks;
@@ -130,35 +129,20 @@ FeatureTracker::Result FeatureTracker::track(
           object_detection.bounding_box;
     }
 
-    // const auto outer_thickness = 12;
-    static constexpr double kReferenceBorderThickness = 15.0;
-    static constexpr double kReferenceImageArea = 640.0 * 480.0;
-
-    const double image_scale = static_cast<double>(current_mono.cols) *
-                               static_cast<double>(current_mono.rows) /
-                               kReferenceImageArea;
-
-    const int scaled_border_thickness =
-        std::round(kReferenceBorderThickness * std::sqrt(image_scale));
-
-    dyno::utils::ChronoTimingStats make_masks_t(
-        "feature_tracker.track.make_masks");
+    dyno::utils::ChronoTimingStats make_masks_t("ft.make_masks");
     cv::Mat object_masks_binary = object_masks > 0;
     // to ensure the validatiy of the mask we will do some dilation
     // to both fill holes and to expant the object masks so we dont
     // attempt to track anywhere near the objects
     // this is slightly conservative but is helpful in practice
     cv::dilate(object_masks_binary, object_masks_binary,
-               cv::getStructuringElement(
-                   cv::MORPH_RECT, cv::Size(2 * scaled_border_thickness + 1,
-                                            2 * scaled_border_thickness + 1)));
+               object_mask_dilate_kernel_);
     cv::Mat static_mask;
     cv::bitwise_not(object_masks_binary, static_mask);
     binary_detection_masks[background_label] = static_mask;
     make_masks_t.stop();
 
-    dyno::utils::ChronoTimingStats needs_detection_t(
-        "feature_tracker.track.needs_detection");
+    dyno::utils::ChronoTimingStats needs_detection_t("ft.needs_detection");
     std::unordered_set<ObjectId> object_needs_detection;
     for (const auto& object_view : tracked_features.objectViews()) {
       const auto j = object_view.objectId();
@@ -168,8 +152,6 @@ FeatureTracker::Result FeatureTracker::track(
       const auto num_tracked = object_view.size();
       const auto min_allowed_tracks = getMinAllowableTracks(j);
       const auto allowed_feature_distance = getMinFeatureDistance(j);
-
-      VLOG(20) << "Tracked features for j=" << j << " n=" << num_tracked;
 
       cv::Mat& binary_detection_mask_j = binary_detection_masks[j];
       auto object_points = object_view.points();
@@ -247,7 +229,7 @@ FeatureTracker::Result FeatureTracker::track(
     }
 
     if (!objects_ids_for_detection.empty()) {
-      utils::ChronoTimingStats detect_t("feature_tracker.track.re_detect");
+      utils::ChronoTimingStats detect_t("ft.re_detect");
       // TODO: still need to handle tracklet ids!
       FeatureBlockContainer detected_features = feature_detector_.calc(
           current_mono, object_masks, feature_detection_params);
@@ -260,11 +242,13 @@ FeatureTracker::Result FeatureTracker::track(
     // cv::imshow("batch Tracks", viz);
   }
 
-  prev_mono_ = current_mono;
-  // move data from current to previous
-  // this prevents shallow copying such that updating the current pyramid
-  // will update the previous pyramid
-  prev_mono_pyr_ = std::move(curr_mono_pyr_);
+  // prev_mono_ = current_mono;
+  // previous_img_ = wrapped_rgb;
+  // // move data from current to previous
+  // // this prevents shallow copying such that updating the current pyramid
+  // // will update the previous pyramid
+  // prev_mono_pyr_ = std::move(curr_mono_pyr_);
+  previous_container_ = image_container;
 
   // always set previous object mask
   prev_object_mask_ = object_masks;
@@ -395,14 +379,15 @@ struct CornerResponses {
 
 FeatureBlockContainer FeatureTracker::GfttDetector::calc(
     const cv::Mat& mono, const cv::Mat& object_mask, const Params& params) {
-  dyno::utils::ChronoTimingStats r("feature_tracker.detector");
+  dyno::utils::ChronoTimingStats r("ft.detector");
   CV_Assert(mono.type() == CV_8UC1 || mono.type() == CV_32FC1);
+  CV_Assert(mono.size() == object_mask.size());
 
   if (params.empty()) {
     return {};
   }
 
-  utils::ChronoTimingStats t1("feature_tracker.corner_min_eigen");
+  utils::ChronoTimingStats t1("ft.corner_min_eigen");
   // If your camera/image pipeline can write directly into mono_,
   // this copy can be eliminated entirely.
   mono.copyTo(mono_);
@@ -422,7 +407,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   t1.stop();
 
   // Find the global maximum corner score across the entire image
-  dyno::utils::ChronoTimingStats tmin("feature_tracker.minMaxLoc");
+  dyno::utils::ChronoTimingStats tmin("ft.minMaxLoc");
   double maxVal = 0;
   cv::minMaxLoc(eig_, nullptr, &maxVal);
   tmin.stop();
@@ -448,7 +433,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
       cv::MORPH_RECT,
       cv::Size(2 * boundary_distance + 1, 2 * boundary_distance + 1));
 
-  dyno::utils::ChronoTimingStats t3("feature_tracker.masks_loop");
+  dyno::utils::ChronoTimingStats t3("ft.masks_loop");
   tbb::task_group task_group;
   for (size_t m = 0; m < params.size(); m++) {
     task_group.run([&, m] {
@@ -551,6 +536,9 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
       }
 
       if (candidates.empty()) return;
+
+      // VLOG(30) << "Extracted " << candidates.size() << " candidates j=" <<
+      // param.object_id;
 
       // --------------------------------------------------------------
       // Sort strongest corners first.
@@ -679,7 +667,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   task_group.wait();
   t3.stop();
 
-  dyno::utils::ChronoTimingStats t_terms("feature_tracker.make_blocks");
+  dyno::utils::ChronoTimingStats t_terms("ft.make_blocks");
   std::vector<std::pair<ObjectId, FeatureBlockContainer::FeatureData>> terms(
       params.size());
   for (size_t i = 0; i < params.size(); i++) {
@@ -710,7 +698,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   FeatureBlockContainer feature_blocks(terms);
   t_terms.stop();
 
-  dyno::utils::ChronoTimingStats t4("feature_tracker.sub_pixe_refine");
+  dyno::utils::ChronoTimingStats t4("ft.sub_pixe_refine");
 
   if (feature_blocks.size() == 0) {
     return feature_blocks;
@@ -724,8 +712,7 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
   cv::cornerSubPix(mono, feature_blocks.points, window_size, zero_zone,
                    criteria);
 
-  const int rows = mono.rows;
-  const int cols = mono.cols;
+  const BoundsChecker bounds_checker(object_mask);
 
   // after subpix refinement points may shift such that they no longer lie
   // within the image bounds or on the same object
@@ -733,7 +720,11 @@ FeatureBlockContainer FeatureTracker::GfttDetector::calc(
     const auto& kp = feature_blocks.points[i];
 
     auto object_id = feature_blocks.object_ids[i];
-    if (!checkBoundsAndLabel(kp, object_mask, object_id, rows, cols)) {
+    // if (!checkBoundsAndLabel(kp, object_mask, object_id, rows, cols)) {
+    //   // mark as outlier
+    //   feature_blocks.inlier[i] = 0;
+    // }
+    if (!bounds_checker(kp, object_id)) {
       // mark as outlier
       feature_blocks.inlier[i] = 0;
     }
@@ -754,16 +745,18 @@ TrackletIds FeatureTracker::GfttDetector::getNewIdsByChunk(size_t N) {
   return tracklet_ids;
 }
 
+// std::pair<FeatureBlockContainer, FeatureTracker::FlowTrackingStatsMap>
+// FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
+//                                    const cv::Mat& object_mask) {
 std::pair<FeatureBlockContainer, FeatureTracker::FlowTrackingStatsMap>
-FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
-                                   const cv::Mat& object_mask) {
-  dyno::utils::ChronoTimingStats timer("feature_tracker.track_gfft");
+FeatureTracker::sparseFeatureTrack(
+    const dyno::ImageContainer::Ptr& image_container,
+    const std::optional<gtsam::Rot3>& maybe_R_k_km1) {
+  dyno::utils::ChronoTimingStats timer("ft.sparse_ft");
 
-  CHECK(!prev_mono_.empty());
-  CV_Assert(prev_mono_.type() == CV_8UC1 && mono.type() == CV_8UC1);
-
-  const int rows = mono.rows;
-  const int cols = mono.cols;
+  CHECK_NOTNULL(previous_container_);
+  // ensure this is the same one that created in ft::calc!
+  const BoundsChecker bounds_checker(image_container->objectMotionMask());
 
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       tracks_per_object;
@@ -782,8 +775,25 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
              << " n=" << num_points;
   }
 
-  OpticalFlowLK::Result flow_result = optical_flow_impl_(
-      prev_mono_pyr_, curr_mono_pyr_, previous_features_.points);
+  // OpticalFlowLK_CPU::Result flow_result = optical_flow_impl_(
+  //     prev_mono_pyr_, curr_mono_pyr_, previous_features_.points);
+
+  const WrappedRGBMono& previous_img = previous_container_->rgb();
+  const WrappedRGBMono& current_img = image_container->rgb();
+
+  // TODO: how to parse rotation to flow tracker as this is only relevant for
+  // static points!
+  //  and therefore we cannot parse them as a single bundle
+  //  what if we "predict all points" with estimated motion and parse this as
+  //  the initial points guess!! do this always (regardless of if we have IMU)
+  //  otherwise use constant motion model!
+  dyno::utils::ChronoTimingStats lkt_t("ft.sparse_ft.lkt");
+  std::vector<cv::Point2f> predicted;
+  const gtsam::Rot3 R_k_km1 = maybe_R_k_km1.value_or(gtsam::Rot3::Identity());
+  predictFromPreviousGivenRotation(predicted, R_k_km1);
+  auto flow_result = optical_flow_impl_(previous_img, current_img,
+                                        previous_features_.points, &predicted);
+  lkt_t.stop();
 
   const std::vector<cv::Point2f>& predicted_points =
       flow_result.predictedPoints();
@@ -801,8 +811,7 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
     }
 
     auto object_id = previous_features_.object_ids[i];
-    if (!checkBoundsAndLabel(predicted_pt, object_mask, object_id, rows,
-                             cols)) {
+    if (!bounds_checker(predicted_pt, object_id)) {
       bounds_bad_count++;
       continue;
     }
@@ -823,11 +832,9 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
   gtsam::FastMap<ObjectId, FeatureBlockContainer::FeatureData>
       verified_tracks_per_object;
 
-  dyno::utils::ChronoTimingStats lkt_outliers_t("feature_tracker.lkt_outliers");
+  dyno::utils::ChronoTimingStats lkt_outliers_t("ft.sparse_ft.outliers");
 
-  const cv::Mat K = camera_->getParams().getCameraMatrix();
-
-  static constexpr double kThresholdE = 1.0;
+  static constexpr double kThresholdE = 2.0;
   static constexpr double kEMaxIters = 100;
 
   // Build a stable list of objects to process. This also updates the tracking
@@ -861,9 +868,9 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
 
       const cv::Mat inlier_mask =
           dyno::findEssential(good_tracks->previous_points, good_tracks->points,
-                              K, kThresholdE, kEMaxIters);
+                              cv::Mat(K_cv_), kThresholdE, kEMaxIters);
 
-      FeatureBlockContainer::FeatureData verified;
+      FeatureBlockContainer::FeatureData& verified = verified_tracks[idx];
       verified.reserve(num_good_points);
 
       for (int i = 0; i < inlier_mask.rows; ++i) {
@@ -881,7 +888,7 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
                << "/" << num_good_points;
 
       // Each task exclusively owns this result slot.
-      verified_tracks[idx] = std::move(verified);
+      // verified_tracks[idx] = std::move(verified);
     });
   }
 
@@ -908,56 +915,53 @@ FeatureTracker::sparseFeatureTrack(const cv::Mat& mono,
   return {tracked_features, tracking_stats};
 }
 
-bool FeatureTracker::predictKeypointsGivenRotation(
-    const std::vector<cv::Point2f>& previous_pts,
-    const gtsam::Rot3& R_previous_curr,
-    std::vector<cv::Point2f>& predicted_pts_curr) const {
+bool FeatureTracker::predictFromPreviousGivenRotation(
+    std::vector<cv::Point2f>& predicted_pts_curr,
+    const gtsam::Rot3& R_k_km1) const {
   // Handle case when rotation is small: just copy prev_kps
   // Removed bcs even small rotations lead to huge optical flow at the borders
   // of the image.
   // Keep because then you save a lot of computation.
   static constexpr double kSmallRotationTol = 1e-4;
-  if (std::abs(1.0 - std::abs(R_previous_curr.toQuaternion().w())) <
+  if (std::abs(1.0 - std::abs(R_k_km1.toQuaternion().w())) <
       kSmallRotationTol) {
-    predicted_pts_curr = previous_pts;
+    predicted_pts_curr = previous_features_.points;
     return true;
   }
-  return false;
 
   // // R is a relative rotation which takes a vector from the last frame to
   // // the current frame.
-  // const cv::Matx33f R =
-  // dyno::utils::gtsamMatrix3ToCvMat(R_previous_curr.matrix());
-  // // Get bearing vector for kpt, rotate knowing frame to frame rotation,
-  // // get keypoints again
-  // const cv::Matx33f H = K_cv_ * R * K_inv_cv_;
+  const cv::Matx33f R = dyno::utils::gtsamMatrix3ToCvMat(R_k_km1.matrix());
+  // Get bearing vector for kpt, rotate knowing frame to frame rotation,
+  // get keypoints again
+  const cv::Matx33f H = K_cv_ * R * K_inv_cv_;
 
-  // const size_t& n_kps = previous_pts.size();
-  // predicted_pts_curr.reserve(n_kps);
-  // for (size_t i = 0u; i < n_kps; ++i) {
-  //   // Create homogeneous keypoints.
-  //   const auto& prev_kpt = previous_pts[i];
-  //   cv::Vec3f p1(prev_kpt.x, prev_kpt.y, 1.0f);
+  const size_t& n_kps = previous_features_.size();
+  predicted_pts_curr.reserve(n_kps);
+  for (size_t i = 0u; i < n_kps; ++i) {
+    // Create homogeneous keypoints.
+    const auto& prev_kpt = previous_features_.points[i];
+    auto object_id = previous_features_.object_ids[i];
+    cv::Point2f new_kpt = prev_kpt;
+    // for now only apply rotation to static points!
+    if (object_id == background_label) {
+      cv::Vec3f p1(prev_kpt.x, prev_kpt.y, 1.0f);
 
-  //   cv::Vec3f p2 = H * p1;
+      cv::Vec3f p2 = H * p1;
 
-  //   // Project predicted bearing vectors to 2D again and re-homogenize.
-  //   cv::Point2f new_kpt;
-  //   if (p2[2] > 0.0f) {
-  //     new_kpt = cv::Point2f(p2[0] / p2[2], p2[1] / p2[2]);
-  //   } else {
-  //     LOG(WARNING) << "Landmark behind the camera:\n"
-  //                  << "- p1: " << p1 << '\n'
-  //                  << "- p2: " << p2;
-  //     new_kpt = prev_kpt;
-  //   }
-  //   // Check that keypoints remain inside the image boundaries!
-  //   if (isWithinShrunkenImage(new_kpt)) {
-  //     predicted_pts_curr.push_back(new_kpt);
-  //   } else {
-  //     // Otw copy-paste previous keypoint.
-  //     predicted_pts_curr.push_back(prev_kpt);
-  //   }
+      // Project predicted bearing vectors to 2D again and re-homogenize.
+      if (p2[2] > 0.0f) {
+        new_kpt = cv::Point2f(p2[0] / p2[2], p2[1] / p2[2]);
+      } else {
+        LOG(WARNING) << "Landmark behind the camera:\n"
+                     << "- p1: " << p1 << '\n'
+                     << "- p2: " << p2;
+      }
+    }
+
+    predicted_pts_curr.push_back(new_kpt);
+  }
+  return true;
 }
 
 void FeatureTracker::fillDetectionParam(
@@ -1010,6 +1014,21 @@ size_t FeatureTracker::getMaxTrackingCorners(ObjectId object_id) const {
 size_t FeatureTracker::getMinAllowableTracks(ObjectId object_id) const {
   return object_id > background_label ? parameters_.dynamic_tracks.min_nr_tracks
                                       : parameters_.static_tracks.min_nr_tracks;
+}
+
+void FeatureTracker::setDilationKernel(const cv::Size& img_size) {
+  static constexpr double kReferenceBorderThickness = 15.0;
+  static constexpr double kReferenceImageArea = 640.0 * 480.0;
+
+  const double image_scale = static_cast<double>(img_size.width) *
+                             static_cast<double>(img_size.height) /
+                             kReferenceImageArea;
+
+  const int scaled_border_thickness =
+      std::round(kReferenceBorderThickness * std::sqrt(image_scale));
+  object_mask_dilate_kernel_ = cv::getStructuringElement(
+      cv::MORPH_RECT, cv::Size(2 * scaled_border_thickness + 1,
+                               2 * scaled_border_thickness + 1));
 }
 
 }  // namespace dyno2

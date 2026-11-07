@@ -67,7 +67,7 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
 
-  ImuFrontend::PimPtr pim = nullptr;
+  PimPtr pim = nullptr;
   std::optional<gtsam::NavState> imu_propogated_nav_state_k =
       tryPropogateImu(input, nav_state_km1_, pim);
 

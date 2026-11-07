@@ -1256,7 +1256,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   // what if we get an update during the consuming!!!
   checkAndConsumeUpdate(frame_id_k);
 
-  ImuFrontend::PimPtr pim = nullptr;
+  PimPtr pim = nullptr;
   std::optional<gtsam::NavState> imu_propogated_nav_state_k =
       tryPropogateImu(input, nav_state_lkf_.state, pim);
 
@@ -1283,6 +1283,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   }
 
   Frame::Ptr frame_k = featureTrack(input, R_km1_k);
+  // Frame::Ptr frame_k = featureTrack(input);
   Frame::Ptr frame_km1 = tracker_.getPreviousFrame();
   CHECK(frame_km1);
 
@@ -1304,6 +1305,9 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   const bool ego_motion_solve = solveAndRefineEgoMotion(
       frame_k, frame_km1, static_landmarks_used_vo, camera_tracking_quality,
       T_ij, imu_propogated_nav_state_k, R_km1_k);
+  // const bool ego_motion_solve = solveAndRefineEgoMotion(
+  //     frame_k, frame_km1, static_landmarks_used_vo, camera_tracking_quality,
+  //     T_ij, imu_propogated_nav_state_k);
 
   // if(input->ground_truth_packet) {
   //   frame_k->T_world_camera_ = input->ground_truth_packet->X_world_;
@@ -1890,7 +1894,7 @@ void PoseChangeVIFrontend::handleCameraKeyframe(
   CHECK(map_->isCameraKeyFrame(lCKF_frame_->getFrameId()));
 
   const gtsam::Pose3& T_lk_k = rel_lkf_k.T_lkf_j;
-  ImuFrontend::PimPtr pim = rel_lkf_k.pim_lk_j;
+  PimPtr pim = rel_lkf_k.pim_lk_j;
 
   auto& new_static_values = pc_input->new_static_fg_input.values;
   auto& new_static_factors = pc_input->new_static_fg_input.factors;
@@ -2117,7 +2121,7 @@ PoseTrajectory PoseChangeVIFrontend::refinePerFrameCameraPGO(
   for (; it != camera_trajectory.end(); ++it) {
     const auto frame_id = it->frame_id;
     const auto timestamp = it->timestamp;
-    LOG(INFO) << " Doing VO propogation to " << it->frame_id;
+    LOG(INFO) << " Doing VO propagation to " << it->frame_id;
 
     CHECK(rel_egopose_infos_.exists(frame_id));
     const auto& relative_ego_motion = rel_egopose_infos_.at(frame_id);

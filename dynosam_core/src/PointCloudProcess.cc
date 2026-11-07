@@ -89,7 +89,7 @@ void point3ToCloud(const gtsam::Point3Vector& points,
 }
 
 void statisticalOutlierRemoval(const gtsam::Point3Vector& points,
-                               std::vector<size_t>& inlier_indices) {
+                               std::vector<uint8_t>& point_status) {
   auto cloud = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
   point3ToCloud(points, *cloud);
 
@@ -101,27 +101,16 @@ void statisticalOutlierRemoval(const gtsam::Point3Vector& points,
   sor.setStddevMulThresh(1.0);  // Threshold based on std dev
   sor.filter(*cloud_filtered);
 
-  // Indices of outliers in the original input cloud.
+  // Initialise all points as inliers.
+  point_status.assign(points.size(), 1);
+
+  // Mark removed points as outliers.
   const auto removed_indices = sor.getRemovedIndices();
-
-  inlier_indices.clear();
-  inlier_indices.reserve(cloud->size() -
-                         (removed_indices ? removed_indices->size() : 0));
-
-  // Build the complement of the removed indices.
-  std::vector<bool> is_outlier(points.size(), false);
-
   if (removed_indices) {
     for (const int idx : *removed_indices) {
       if (idx >= 0 && static_cast<std::size_t>(idx) < points.size()) {
-        is_outlier[static_cast<std::size_t>(idx)] = true;
+        point_status[static_cast<std::size_t>(idx)] = 0;
       }
-    }
-  }
-
-  for (std::size_t i = 0; i < points.size(); ++i) {
-    if (!is_outlier[i]) {
-      inlier_indices.push_back(i);
     }
   }
 }

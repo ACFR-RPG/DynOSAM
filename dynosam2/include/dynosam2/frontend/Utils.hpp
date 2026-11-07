@@ -28,7 +28,7 @@ inline Velocity3 computeWorldVelocity(const gtsam::Pose3& T_WB_prev,
   const Eigen::Vector3d angular = gtsam::Rot3::Logmap(R_delta) / dt;
 
   // return linear and angular velocities in the world frame
-  return {linear, T_WB_curr.rotation().rotate(angular)};
+  return {linear, T_WB_prev.rotation().rotate(angular)};
 }
 
 inline gtsam::Pose3 predictPoseConstantVelocity(const gtsam::Pose3& pose,
@@ -66,26 +66,67 @@ inline void logPoseValidity(const std::string& name, const gtsam::Pose3& pose,
             << R << "\nt: " << pose.translation().transpose()
             << "\northogonality error: " << orthogonality_error
             << "\ndeterminant: " << determinant;
-
+  (void)(tol);
   // CHECK_LT(orthogonality_error, tol);
   // CHECK_NEAR(determinant, 1.0, tol);
 }
 
-inline bool checkBounds(const cv::Point2f& point, int rows, int cols) {
-  const int x = cvRound(point.x);
-  const int y = cvRound(point.y);
-  return x >= 0 && x < cols && y >= 0 && y < rows;
-}
+/**
+ * @brief Checks whether a keypoint lies within image bounds and, optionally,
+ *        belongs to a specified object according to an object mask.
+ */
+struct BoundsChecker {
+  const int cols;
+  const int rows;
+  const cv::Mat object_mask;
 
-inline bool checkBoundsAndLabel(const cv::Point2f& point,
-                                const cv::Mat& object_masks,
-                                dyno::ObjectId expected_id, int rows,
-                                int cols) {
-  const int x = cvRound(point.x);
-  const int y = cvRound(point.y);
-  return x >= 0 && x < cols && y >= 0 && y < rows &&
-         object_masks.at<dyno::ObjectId>(y, x) == expected_id;
-}
+  BoundsChecker(int c, int r) : cols(c), rows(r), object_mask() {}
+
+  BoundsChecker(int c, int r, const cv::Mat mask)
+      : cols(c), rows(r), object_mask(mask) {
+    if (cols != object_mask.cols || rows != object_mask.rows) {
+      throw dyno::DynosamException(
+          "BoundsChecker construction failed: object mask has inconsistent "
+          "dimensions!");
+    }
+  }
+
+  explicit BoundsChecker(const cv::Mat& mask)
+      : cols(mask.cols), rows(mask.rows), object_mask(mask) {}
+
+  inline bool operator()(const cv::Point2f& point) const {
+    const int x = cvRound(point.x);
+    const int y = cvRound(point.y);
+
+    return x >= 0 && x < cols && y >= 0 && y < rows;
+  }
+
+  inline bool operator()(const cv::Point2f& point,
+                         dyno::ObjectId expected_id) const {
+    const int x = cvRound(point.x);
+    const int y = cvRound(point.y);
+
+    if (x < 0 || x >= cols || y < 0 || y >= rows) {
+      return false;
+    }
+
+    // Without an object mask, only the image bounds can be checked.
+    if (object_mask.empty()) {
+      return true;
+    }
+
+    return object_mask.at<dyno::ObjectId>(y, x) == expected_id;
+  }
+
+  inline bool operator()(const dyno::Keypoint& point) const {
+    return (*this)(utils::gtsamPointToCv<float>(point));
+  }
+
+  inline bool operator()(const dyno::Keypoint& point,
+                         dyno::ObjectId expected_id) const {
+    return (*this)(utils::gtsamPointToCv<float>(point), expected_id);
+  }
+};
 
 /* @brief Super fast implementation of K^{-1} * kp, returning normalized bearing
  * vector. Basic benchmarking shows at least a 7x speed up over the raw eigen

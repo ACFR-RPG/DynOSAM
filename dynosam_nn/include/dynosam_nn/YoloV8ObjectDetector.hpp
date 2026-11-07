@@ -5,6 +5,7 @@
 #include "dynosam_nn/ModelConfig.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
 #include "dynosam_nn/TrtUtilities.hpp"
+#include "dynosam_nn/YoloV8Definitions.hpp"
 
 namespace dyno {
 
@@ -46,20 +47,8 @@ class YoloV8ModelInfo {
   const TensorInfo& output0() const { return output0_.value(); }
   const TensorInfo& output1() const { return output1_.value(); }
 
-  /**
-   * @brief Constants from model architecture used to access output data
-   *
-   */
-  struct Constants {
-    constexpr static int BoxOffset = 0;
-    constexpr static int ClassConfOffset = 4;
-    constexpr static int NumMasks = 32;
-    static constexpr int MaxDetections = 8400;
+  using Constants = YoloV8Constants;
 
-    static int MaskCoeffOffset(int num_classes) {
-      return num_classes + ClassConfOffset;
-    }
-  };
 
  private:
   // T is constructable from TensorInfo

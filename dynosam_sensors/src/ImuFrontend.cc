@@ -30,18 +30,7 @@
 
 #include "dynosam_sensors/ImuFrontend.hpp"
 
-#include <gtsam/navigation/CombinedImuFactor.h>
-
 namespace dyno {
-
-template <typename R, typename... A>
-struct FunctionSignature;
-
-template <typename R, typename... A>
-struct FunctionSignature<auto(A...)->R> {
-  using ReturnType = R;
-  using ArgTuple = std::tuple<A...>;
-};
 
 const gtsam::PreintegratedCombinedMeasurements&
 safeCastToPreintegratedCombinedImuMeasurements(
@@ -57,37 +46,9 @@ safeCastToPreintegratedCombinedImuMeasurements(
   }
 }
 
-using CombinedParams = gtsam::PreintegratedCombinedMeasurements::Params;
-using CombinedParamSignature =
-    FunctionSignature<decltype(CombinedParams::MakeSharedD)>;
-using CombinedParamPtr = CombinedParamSignature::ReturnType;
-
 ImuFrontend::ImuFrontend(const ImuCalibration& imu_calib) : params_(imu_calib) {
-  CombinedParamPtr pim_params;
-  pim_params.reset(new CombinedParams(params_.n_gravity));
-
-  pim_params->body_P_sensor = params_.T_CI;
-
-  gtsam::Matrix33 gyroscopeCovariance =
-      std::pow(params_.gyro_noise_density, 2.0) * Eigen::Matrix3d::Identity();
-  pim_params->setGyroscopeCovariance(gyroscopeCovariance);
-  gtsam::Matrix33 accelerometerCovariance =
-      std::pow(params_.acc_noise_density, 2.0) * Eigen::Matrix3d::Identity();
-  pim_params->setAccelerometerCovariance(accelerometerCovariance);
-
-  pim_params->biasAccCovariance =
-      std::pow(params_.gyro_random_walk, 2.0) * Eigen::Matrix3d::Identity();
-  pim_params->biasOmegaCovariance =
-      std::pow(params_.acc_random_walk, 2.0) * Eigen::Matrix3d::Identity();
-
-  pim_params->use2ndOrderCoriolis = false;
-
-  pim_params->integrationCovariance =
-      std::pow(params_.imu_integration_sigma, 2.0) *
-      Eigen::Matrix3d::Identity();
-
   pim_ = std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
-      pim_params, gtsam::imuBias::ConstantBias{});
+      makeCombinedParams(imu_calib), gtsam::imuBias::ConstantBias{});
 }
 
 ImuFrontend::ImuFrontend(const ImuFrontend& other)
@@ -95,6 +56,33 @@ ImuFrontend::ImuFrontend(const ImuFrontend& other)
   if (other.pim_) {
     pim_ = std::move(other.copyPimUnique());
   }
+}
+
+CombinedPIMParamPtr ImuFrontend::makeCombinedParams(
+    const ImuCalibration& imu_calib) {
+  CombinedPIMParamPtr pim_params;
+  pim_params.reset(new CombinedPIMParams(imu_calib.n_gravity));
+
+  pim_params->body_P_sensor = imu_calib.T_CI;
+
+  gtsam::Matrix33 gyroscopeCovariance =
+      std::pow(imu_calib.gyro_noise_density, 2.0) * Eigen::Matrix3d::Identity();
+  pim_params->setGyroscopeCovariance(gyroscopeCovariance);
+  gtsam::Matrix33 accelerometerCovariance =
+      std::pow(imu_calib.acc_noise_density, 2.0) * Eigen::Matrix3d::Identity();
+  pim_params->setAccelerometerCovariance(accelerometerCovariance);
+
+  pim_params->biasAccCovariance =
+      std::pow(imu_calib.gyro_random_walk, 2.0) * Eigen::Matrix3d::Identity();
+  pim_params->biasOmegaCovariance =
+      std::pow(imu_calib.acc_random_walk, 2.0) * Eigen::Matrix3d::Identity();
+
+  pim_params->use2ndOrderCoriolis = false;
+
+  pim_params->integrationCovariance =
+      std::pow(imu_calib.imu_integration_sigma, 2.0) *
+      Eigen::Matrix3d::Identity();
+  return pim_params;
 }
 
 void ImuFrontend::preintegrateImuMeasurements(
@@ -116,7 +104,7 @@ void ImuFrontend::preintegrateImuMeasurements(
   }
 }
 
-ImuFrontend::PimPtr ImuFrontend::preintegrateImuMeasurements(
+PimPtr ImuFrontend::preintegrateImuMeasurements(
     const ImuMeasurements& imu_measurements) {
   preintegrateImuMeasurements(*pim_, imu_measurements);
 
@@ -125,7 +113,7 @@ ImuFrontend::PimPtr ImuFrontend::preintegrateImuMeasurements(
   // return copyPimShared();
 }
 
-ImuFrontend::PimPtr ImuFrontend::copyPim(const ImuFrontend::PimPtr& pim) {
+PimPtr ImuFrontend::copyPim(const PimPtr& pim) {
   auto combined_pim =
       std::dynamic_pointer_cast<gtsam::PreintegratedCombinedMeasurements>(pim);
   if (!combined_pim) {
@@ -137,12 +125,12 @@ ImuFrontend::PimPtr ImuFrontend::copyPim(const ImuFrontend::PimPtr& pim) {
       *combined_pim);
 }
 
-ImuFrontend::PimPtr ImuFrontend::copyPimShared() const {
+PimPtr ImuFrontend::copyPimShared() const {
   return std::make_shared<gtsam::PreintegratedCombinedMeasurements>(
       safeCastToPreintegratedCombinedImuMeasurements(*pim_));
 }
 
-ImuFrontend::PimUniquePtr ImuFrontend::copyPimUnique() const {
+PimUniquePtr ImuFrontend::copyPimUnique() const {
   return std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
       safeCastToPreintegratedCombinedImuMeasurements(*pim_));
 }

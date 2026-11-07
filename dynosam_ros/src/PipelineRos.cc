@@ -211,7 +211,10 @@ dyno::DataReader::Ptr DynosamNodeImpl::createOnlineDataProvider(
   reconfigure(sensor_mode, dyno_params);
 
   LoadingSourceParams loading_sources;
-  loading_sources.params_folder = getParamsPath();
+
+  const std::string params_path = getParamsPath();
+  loading_sources.camera_yaml_path = params_path + "/CameraParams.yaml";
+  loading_sources.imu_yaml_path = params_path + "/ImuParams.yaml";
   loading_sources.cameras_from_ros = true;
 
   SensorSystem::Ptr sensor_system = std::make_shared<SensorSystem>(

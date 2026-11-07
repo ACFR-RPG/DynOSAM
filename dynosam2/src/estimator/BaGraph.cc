@@ -4,7 +4,10 @@
 
 namespace dyno2 {
 
-BaGraph::BaGraph() : observations_(StereoBaMap::create()) {
+BaGraph::BaGraph(dyno::Camera::Ptr camera)
+    : camera_(camera),
+      K_stereo_(dyno::RGBDCamera::Calibration(camera)),
+      observations_(StereoBaMap::create()) {
   setMeasurementSigma(2.0);
 }
 
@@ -13,7 +16,7 @@ void BaGraph::addMeasurement(Frame::Ptr frame, dyno::TrackletId id) {
       dyno::StereoMeasurementStatusVector{createStereoMeasurement(frame, id)});
 }
 void BaGraph::addMeasurement(dyno::KeypointIdentifier id) {
-  const Frame::Ptr frame = getFrame(id.frameId());
+  const Frame::Ptr frame = getFrame(id.temoralObjectIdentifier());
   CHECK_NOTNULL(frame);
   addMeasurement(frame, id.trackletId());
 }
@@ -37,7 +40,9 @@ void BaGraph::addMeasurements(Frame::Ptr frame,
 NonlinearOptimizerSummary BaProblemInterface::optimize(
     gtsam::Values& optimised_values, int max_iterations, bool verbose) const {
   gtsam::DoglegParams params;
-  params.setMaxIterations(max_iterations);
+
+  const int iterations = isTimeLimitSet() ? 100 : max_iterations;
+  params.setMaxIterations(iterations);
 
   dyno::NonlinearOptimizer<gtsam::DoglegOptimizer> solver(graph_, values_,
                                                           params);
@@ -48,6 +53,14 @@ NonlinearOptimizerSummary BaProblemInterface::optimize(
   CHECK(solver.solve(optimised_values, options_, &summary));
 
   return summary;
+}
+
+void BaProblemInterface::addFactor(gtsam::NonlinearFactor::shared_ptr factor) {
+  graph_ += factor;
+}
+
+void BaProblemInterface::insert(gtsam::Key j, const gtsam::Value& val) {
+  values_.insert(j, val);
 }
 
 bool BaProblemInterface::setOptimisationTimeLimit(double time_limit_s,

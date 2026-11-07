@@ -12,11 +12,9 @@ GeometryUpdater::GeometryUpdater(Camera::Ptr camera,
     : camera_(camera),
       images_(images),
       features_(features),
-      compute_bearing_(camera_->getParams()) {
-  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
-  CHECK(rgbd_camera);
-  baseline_ = rgbd_camera->baseline();
-
+      compute_bearing_(camera_->getParams()),
+      baseline_(dyno::RGBDCamera::Baseline(camera_)),
+      T_LR_(dyno::RGBDCamera::StereoExtrinsics(camera_)) {
   if (!std::isfinite(compute_bearing_.fx_) ||
       !std::isfinite(compute_bearing_.fy_) || compute_bearing_.fx_ <= 0.0 ||
       compute_bearing_.fy_ <= 0.0 || !std::isfinite(baseline_) ||
@@ -90,6 +88,11 @@ void GeometryUpdater::calcPointsRGBD(
       CHECK_EQ(features_.ids[global_index], tracklet_id);
 
       const Depth depth = depth_img.at<Depth>(kp_cv);
+
+      if (!checkRGBDGeometry(depth)) {
+        inliers[i] = 0;
+        continue;
+      }
 
       const gtsam::Point2 left_kp = utils::cvPointToGtsam(kp_cv);
       const gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
@@ -173,7 +176,12 @@ void GeometryUpdater::calcPointsStereo(FeatureBlockGeometryMap& point_map) {
     // index in the left_kps/trackletids in which we have a match
     std::vector<size_t> matched_indexs;
     if (!computeStereoMatching(left_kps, matched_right_kps, matched_indexs)) {
-      LOG(INFO) << "Stereo matchinf failed!";
+      // TODO: maybe remark all as inlier so we sitll track these points in
+      // future
+      //  but we get no depth measurements by not filling out the
+      //  FeatureBlockGeometry
+      LOG(WARNING) << "Stereo matching failed j=" << object_id
+                   << ". No measurements for this frame";
       continue;
     }
 
@@ -263,6 +271,11 @@ void GeometryUpdater::updateGeometryRGBD(
     const gtsam::Point2 left_kp = feature_block_geometry.left_kps[i];
     const Depth depth =
         depth_img.at<Depth>(utils::gtsamPointToCv<float>(left_kp));
+
+    if (!checkRGBDGeometry(depth)) {
+      features_.inlier[i] = 0;
+      continue;
+    }
 
     const gtsam::Point2 right_kp = rgbd_camera->rightKeypoint(depth, left_kp);
 
@@ -379,24 +392,28 @@ bool GeometryUpdater::computeStereoMatching(
     return false;
   }
 
-  OpticalFlowLK optical_flow(30);
+  OpticalFlowLK_CPU optical_flow(30);
 
-  const WrappedRGBMono wrapped_left = images_.rgb();
-  const WrappedRGBMono wrapped_right = images_.rightRgb();
+  const WrappedRGBMono& wrapped_left = images_.rgb();
+  const WrappedRGBMono& wrapped_right = images_.rightRgb();
 
   const int rows = wrapped_left.image().rows;
   const int cols = wrapped_left.image().cols;
 
-  // the image wrapper will cache the image pyramid!
-  const ImagePyramid left_image_pyr = wrapped_left.computeImagePyramid(
-      optical_flow.win_size, optical_flow.max_level);
+  const BoundsChecker bounds_checker(cols, rows);
 
-  const ImagePyramid right_image_pyr = wrapped_right.computeImagePyramid(
-      optical_flow.win_size, optical_flow.max_level);
+  // // the image wrapper will cache the image pyramid!
+  // const ImagePyramid left_image_pyr = wrapped_left.computeImagePyramid(
+  //     optical_flow.win_size, optical_flow.max_level);
+
+  // const ImagePyramid right_image_pyr = wrapped_right.computeImagePyramid(
+  //     optical_flow.win_size, optical_flow.max_level);
 
   // track left to right
-  OpticalFlowLK::Result flow_result =
-      optical_flow(left_image_pyr.levels, right_image_pyr.levels, left_kps);
+  // OpticalFlowLK_CPU::Result flow_result =
+  //     optical_flow(left_image_pyr.levels, right_image_pyr.levels, left_kps);
+  OpticalFlowLK_CPU::Result flow_result =
+      optical_flow(wrapped_left, wrapped_right, left_kps);
 
   const size_t num_flows = flow_result.size();
   CHECK_EQ(num_flows, left_kps.size());
@@ -417,7 +434,7 @@ bool GeometryUpdater::computeStereoMatching(
     }
 
     const cv::Point2f& predicted_pt = predicted_points[i];
-    if (!checkBounds(predicted_pt, rows, cols)) {
+    if (!bounds_checker(predicted_pt)) {
       continue;
     }
 

@@ -201,6 +201,14 @@ class Camera {
   static Landmark cameraToWorldConvention(const Landmark& lmk);
 
   /**
+   * @brief Get the Calibration.
+   *
+   * @param camera
+   * @return gtsam::Cal3_S2
+   */
+  static gtsam::Cal3_S2 Calibration(const dyno::Camera::Ptr& camera);
+
+  /**
    * @brief Checks if a landmark can be seen in the image frustrum. The 3D point
    * must be in the camera frame.
    *
@@ -220,7 +228,7 @@ class Camera {
 
   const CameraParams& getParams() const { return camera_params_; }
 
-  RGBDCamera getRGBDCamera() const;
+  const RGBDCamera& getRGBDCamera() const;
   std::shared_ptr<RGBDCamera> safeGetRGBDCamera() const;
 
  protected:
@@ -228,6 +236,10 @@ class Camera {
   const double inv_fx_;
   const double inv_fy_;
   std::unique_ptr<CameraImpl> camera_impl_;
+  // Unfortunately cannot set this in the constructor as RGBDCamera itself
+  // inherits from camera and therefore we get a segfault. Instead we set it on
+  // the first call to getSafeRGBDCamera
+  mutable std::shared_ptr<RGBDCamera> cached_rgbd_camera_;
 };
 
 }  // namespace dyno

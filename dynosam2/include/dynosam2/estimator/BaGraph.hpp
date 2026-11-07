@@ -1,11 +1,15 @@
 #pragma once
 
+#include <gtsam/nonlinear/NonlinearFactor.h>
+
 #include "dynosam2/common/Types.hpp"
 #include "dynosam2/frontend/Frame.hpp"
 #include "dynosam_common/SensorModels.hpp"
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_opt/Map.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
+#include "dynosam_sensors/Camera.hpp"
+#include "dynosam_sensors/RGBDCamera.hpp"
 
 namespace dyno2 {
 
@@ -47,6 +51,7 @@ class States {
     return states_.exists(frame_id);
   }
   dyno::FrameId currentFrameId() const { return states_.rbegin()->first; }
+  dyno::FrameId firstFrameId() const { return states_.begin()->first; }
 
   dyno::FrameId frameIdbyAge(size_t age) const {
     CHECK_LT(age, states_.size()) << "Age exceeds available states";
@@ -55,9 +60,18 @@ class States {
     return iter->first;
   }
 
+  /// @brief Get the state that is N (age) states before frame_id.
+  /// @param frame_id
+  /// @param age
+  /// @param state
+  /// @return
+  bool stateByAge(dyno::FrameId frame_id, size_t age,
+                  const State*& state) const {
+    return stateByAgeImpl(states_, frame_id, age, state);
+  }
+
  protected:
   State& lastState() { return states_.rbegin()->second; }
-
   const State& lastState() const { return states_.rbegin()->second; }
 
   State& state(dyno::FrameId frame_id) { return states_[frame_id]; }
@@ -66,13 +80,20 @@ class States {
   }
 
   bool stateByAge(dyno::FrameId frame_id, size_t age, State*& state) {
-    auto it = states_.find(frame_id);
-    if (it == states_.end()) {
+    return stateByAgeImpl(states_, frame_id, age, state);
+  }
+
+ private:
+  template <typename StatesT, typename StatePtrT>
+  static bool stateByAgeImpl(StatesT& states, dyno::FrameId frame_id,
+                             size_t age, StatePtrT& state) {
+    auto it = states.find(frame_id);
+    if (it == states.end()) {
       return false;
     }
 
     for (size_t i = 0; i < age; ++i) {
-      if (it == states_.begin()) {
+      if (it == states.begin()) {
         return false;
       }
       --it;
@@ -95,7 +116,7 @@ class BaGraph {
   using Covisibilities =
       dyno::FastUnorderedMap<dyno::FrameId, FrameCovisibilities>;
 
-  BaGraph();
+  BaGraph(dyno::Camera::Ptr camera);
   virtual ~BaGraph() = default;
 
   /**
@@ -118,9 +139,23 @@ class BaGraph {
     return this->hasMeasurement(kpi.frameId(), kpi.trackletId());
   }
 
-  const StereoBaMap& getObservations() const { return *observations_; }
+  inline bool getMeasurement(const dyno::KeypointIdentifier& kpi,
+                             StereoMeasurement& measurement) const {
+    auto lmk_node = observations_->getLandmark(kpi.trackletId());
+    if (!lmk_node) {
+      return false;
+    }
 
-  // Measurement frames, not frames in the BaMeasurementGraph
+    return lmk_node->getMeasurement(kpi.frameId(), measurement);
+  }
+
+  /**
+   * @brief Returns number of measurement frames (ie dyno2::Frame)
+   *
+   * NOTE: this is not the number of FrameNodes stored in the BA graph.
+   *
+   * @return size_t
+   */
   size_t numFrames() const { return frames_.size(); }
 
   void setMeasurementSigma(double sigma) {
@@ -145,7 +180,7 @@ class BaGraph {
   int covisibilities(dyno::FrameId frame_i, dyno::FrameId frame_j) const;
 
  protected:
-  inline Frame::Ptr getFrame(dyno::FrameId id) const {
+  inline Frame::Ptr getFrame(dyno::TemporalObjectId id) const {
     auto it = frames_.find(id);
     if (it == frames_.end()) {
       return nullptr;
@@ -154,7 +189,7 @@ class BaGraph {
   }
 
   template <typename FRAME>
-  std::shared_ptr<FRAME> getFrameAs(dyno::FrameId id) const {
+  std::shared_ptr<FRAME> getFrameAs(dyno::TemporalObjectId id) const {
     Frame::Ptr frame = this->getFrame(id);
     return std::static_pointer_cast<FRAME>(frame);
   }
@@ -177,6 +212,8 @@ class BaGraph {
   }
 
  protected:
+  dyno::Camera::Ptr camera_;
+  dyno::StereoCalibPtr K_stereo_;
   //! Represents measurements that have been accepted into the BA problem
   //! Not all keypoint observations, these are stored in Frame::Ptr
   StereoBaMap::Ptr observations_;
@@ -188,22 +225,40 @@ class BaGraph {
   //! Measurement model used when constructing measurements
   gtsam::SharedGaussian measurement_model_;
   //! All frames added so far. Holds all keypoints.
-  //! We use a TemporalObjectIdentifier rather than a frame_id so we can use
+  //! We use a TemporalObjectId rather than a frame_id so we can use
   //! this same structure to hold ViFrames and DoFrames
-  // dyno::FastUnorderedMap<dyno::TemporalObjectIdentifier, Frame::Ptr> frames_;
-  dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
+  dyno::FastUnorderedMap<dyno::TemporalObjectId, Frame::Ptr> frames_;
+  // dyno::FastUnorderedMap<dyno::FrameId, Frame::Ptr> frames_;
 };
 
 class BaProblemInterface {
  public:
   BaProblemInterface() = default;
-
- protected:
   // NOTE: max iterations will only be used if setOptimisationTimeLimit has not
   // been set, otherwise the time-budget will be used
   NonlinearOptimizerSummary optimize(gtsam::Values& optimised_values,
                                      int max_iterations,
                                      bool verbose = false) const;
+
+  void addFactor(gtsam::NonlinearFactor::shared_ptr factor);
+
+  template <class DerivedFactor>
+  void addFactor(const boost::shared_ptr<DerivedFactor>& factor) {
+    graph_.push_back<DerivedFactor>(factor);
+  }
+
+  void insert(gtsam::Key j, const gtsam::Value& val);
+
+  template <typename ValueType>
+  inline void insert(gtsam::Key j, const ValueType& val) {
+    values_.insert<ValueType>(j, val);
+  }
+
+  template <typename T>
+  void addPrior(gtsam::Key key, const T& prior,
+                const gtsam::SharedNoiseModel& model) {
+    graph_.addPrior(key, prior, model);
+  }
 
   // must perform at least min_iterations regardless of time budget
   bool setOptimisationTimeLimit(double time_limit_s, int min_iterations);
@@ -230,7 +285,22 @@ template <typename STATE>
 struct BaGraphStates : public BaGraph,
                        public States<STATE>,
                        public LandmarkMap {
-  BaGraphStates() = default;
+  BaGraphStates(dyno::Camera::Ptr camera)
+      : BaGraph(camera), States<STATE>(), LandmarkMap() {}
+
+  inline States<STATE>& asStates() {
+    return static_cast<States<STATE>&>(*this);
+  }
+  inline const States<STATE>& asStates() const {
+    return static_cast<const States<STATE>&>(*this);
+  }
+
+  inline LandmarkMap& asLandmarkMap() {
+    return static_cast<LandmarkMap&>(*this);
+  }
+  inline const LandmarkMap& asLandmarkMap() const {
+    return static_cast<const LandmarkMap&>(*this);
+  }
 };
 
 }  // namespace dyno2

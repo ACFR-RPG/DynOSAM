@@ -385,7 +385,7 @@ CameraParams SensorSystem::loadSingleParamsFromROS(
 
 CameraParams SensorSystem::loadSingleParamsFromConfig(
     const StreamConfig& config, const ReferenceFrames& reference_frames) const {
-  const auto camera_params_file_path = paramFilePath("CameraParams.yaml");
+  // const auto camera_params_file_path = paramFilePath("CameraParams.yaml");
 }
 
 ImuCalibration SensorSystem::loadImuCalibration(
@@ -407,7 +407,10 @@ ImuCalibration SensorSystem::loadImuCalibration(
 bool SensorSystem::loadImuParamsFromRos(ImuParams& imu_params) const {}
 
 bool SensorSystem::loadImuParamsFromConfig(ImuParams& imu_params) const {
-  imu_params = config::fromYamlFile<ImuParams>(paramFilePath("ImuParams.yaml"));
+  LOG(INFO) << "Loading IMU Params from file: "
+            << loading_source_.imu_yaml_path;
+  imu_params = config::fromYamlFile<ImuParams>(loading_source_.imu_yaml_path,
+                                               "imu_parameters");
   return true;
 }
 
@@ -606,18 +609,6 @@ void SensorSystem::loadGeneralParams(
 
   params.new_image_size.height = rescale_height;
   params.new_image_size.width = rescale_width;
-}
-
-std::filesystem::path SensorSystem::paramFilePath(const std::string& file,
-                                                  bool check_exists) const {
-  const std::filesystem::path params_folder_path(loading_source_.params_folder);
-  const auto file_path = params_folder_path / file;
-
-  if (check_exists) {
-    utils::throwExceptionIfPathInvalid(file_path);
-  }
-
-  return file_path;
 }
 
 }  // namespace dyno

@@ -27,6 +27,10 @@ class GeometryUpdater {
   void updateGeometryRGBD(FeatureBlockGeometry& feature_block_geometry);
   void updateGeometryStereo(FeatureBlockGeometry& feature_block_geometry);
 
+  inline bool checkRGBDGeometry(const double depth) const {
+    return std::isfinite(depth) && depth > 0.0;
+  }
+
   // NOTE: keypoint sigma approximates the angular uncertainty
   //  of the pixel measurement (ie the ray can be anyway along the cone created
   //  by the sigma size)
@@ -36,7 +40,7 @@ class GeometryUpdater {
                                    const gtsam::Point2& left_kp,
                                    const gtsam::Point2& right_kp,
                                    double max_reprojection_error = 2.0,
-                                   double keypoint_sigma = 1.0) {
+                                   double keypoint_sigma = 1.0) const {
     // Reject points that are too close to either camera.
     constexpr double min_depth = 0.2;
     if (!point.allFinite() || point.z() <= min_depth) {
@@ -58,17 +62,20 @@ class GeometryUpdater {
       return false;
     }
 
-    // Calculate the parallax angle between the two viewing rays.
     const Eigen::Vector3d ray_left = compute_bearing_(left_kp);
-    const Eigen::Vector3d ray_right = compute_bearing_(right_kp);
+    const Eigen::Vector3d point_left = (point.z() / ray_left(2)) * ray_left;
+    const Eigen::Vector3d direction_right =
+        (point_left - T_LR_.translation()).normalized();
+    const Eigen::Vector3d direction_left = ray_left;
 
-    const double parallax = ray_left.dot(ray_right);
-
-    const double sigma = keypoint_sigma / compute_bearing_.fx_;
+    const double focal_length =
+        0.5 * (compute_bearing_.fx_ + compute_bearing_.fy_);
+    const double sigma = keypoint_sigma / focal_length;
+    const double parallax = direction_left.dot(direction_right);
 
     // Reject insufficient parallax (rays are too nearly parallel).
-    // this basically implies the minimum disparity is 6 * keypoint_sigma
-    if (!std::isfinite(parallax) || parallax > std::cos(6.0 * sigma)) {
+    // this basically implies the minimum disparity is keypoint_sigma
+    if (!std::isfinite(parallax) || parallax > std::cos(sigma)) {
       return false;
     }
 
@@ -90,6 +97,8 @@ class GeometryUpdater {
   // cached camera paramters
   ComputeBearing compute_bearing_;
   double baseline_;
+  //! Transform from right to left stereo camera
+  gtsam::Pose3 T_LR_;
 };
 
 }  // namespace dyno2

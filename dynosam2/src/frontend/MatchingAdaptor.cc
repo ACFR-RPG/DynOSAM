@@ -16,7 +16,6 @@ FrameAbsoluteAdaptor::FrameAbsoluteAdaptor(
 
   ComputeBearing compute_bearing(camera->getParams());
 
-  size_t adaptor_index{0};
   for (size_t curr_idx = 0; curr_idx < num_features; curr_idx++) {
     const TrackletId tracklet_id = local_geometry.ids[curr_idx];
     const Index fc_curr_idx = local_geometry.fc_indices[curr_idx];
@@ -36,14 +35,11 @@ FrameAbsoluteAdaptor::FrameAbsoluteAdaptor(
     // we have a match in the local map!
     if (it != reference_geometry.end()) {
       // check that the landmarks have the same id!
-      const Index ref_index = it->second;
-      matches_[adaptor_index] = std::make_pair(curr_idx, ref_index);
-      matched_landmarks_ref_.push_back(
-          reference_geometry_.landmarkAt(ref_index));
+      matches_.push_back(curr_idx);
+      matched_landmarks_ref_.push_back(it->second);
 
       const gtsam::Point2& kp = local_geometry_.left_kps[curr_idx];
       bearings_.push_back(compute_bearing(kp));
-      ++adaptor_index;
     }
   }
 }

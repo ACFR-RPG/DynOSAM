@@ -129,7 +129,7 @@ class DynoPipelineManager {
   FrontendVizPipeline::UniquePtr frontend_viz_pipeline_;
   BackendVizPipeline::UniquePtr backend_viz_pipeline_;
   ImageDisplayQueue display_queue_;
-  ImageDisplayer displayer_;
+  ImageBatchDisplayer displayer_;
 
   // Threaded spinners
   Spinner::UniquePtr data_provider_spinner_;

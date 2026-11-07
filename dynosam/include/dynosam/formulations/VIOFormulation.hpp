@@ -61,7 +61,7 @@ class VIOFormulation : public FormulationT<MAP> {
                                      gtsam::NonlinearFactorGraph& new_factors,
                                      FrameId frame_id_k, Timestamp timestamp_k,
                                      const gtsam::Pose3& T_k_1_k,
-                                     const ImuFrontend::PimPtr& pim = nullptr);
+                                     const PimPtr& pim = nullptr);
 
   void addSensorPosePrior(gtsam::NonlinearFactorGraph& new_factors,
                           FrameId frame_id_k, const gtsam::Pose3& X_W_k,
@@ -90,8 +90,7 @@ class VIOFormulation : public FormulationT<MAP> {
 
   gtsam::NavState predictAndAddFactorsIMU(
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
-      FrameId frame_id_k, Timestamp timestamp_k,
-      const ImuFrontend::PimPtr& pim);
+      FrameId frame_id_k, Timestamp timestamp_k, const PimPtr& pim);
 
   void addImuStatesFromInitialNavState(
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors);

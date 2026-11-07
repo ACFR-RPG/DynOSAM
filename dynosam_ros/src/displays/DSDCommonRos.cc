@@ -224,8 +224,11 @@ void DynoStatePublisher::publishObjects(
     multi_object_odom_paths.paths.push_back(path_per_segment);
 
     auto kf_it = do_tracking_states_records_.objects.find(object_id);
-    // weird case where we have object in the trajectory but not in the record!
-    CHECK(kf_it != do_tracking_states_records_.objects.end());
+    if (kf_it == do_tracking_states_records_.objects.end()) {
+      LOG(WARNING) << "Object with KF is in trajectory but not in the KF "
+                      "record! Skipping!";
+      continue;
+    }
 
     const DoTrackingStatesRecord& record = kf_it->second;
     std::set<FrameId> object_keyframes = record.keyframes;

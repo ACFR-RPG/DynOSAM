@@ -164,6 +164,12 @@ Landmark Camera::cameraToWorldConvention(const Landmark& lmk) {
   return Landmark(lmk(2), lmk(0), -lmk(2));
 }
 
+gtsam::Cal3_S2 Camera::Calibration(const dyno::Camera::Ptr& camera) {
+  const auto K_stereo = RGBDCamera::Calibration(camera);
+  const gtsam::Cal3_S2& mono_cal = K_stereo->calibration();
+  return mono_cal;
+}
+
 bool Camera::isLandmarkContained(const Landmark& lmk,
                                  Keypoint* keypoint) const {
   Keypoint kp;
@@ -184,16 +190,13 @@ Camera::CalibrationType::shared_ptr Camera::getGtsamCalibration() const {
   return boost::make_shared<CalibrationType>(getImplCamera()->calibration());
 }
 
-RGBDCamera Camera::getRGBDCamera() const {
-  return RGBDCamera(this->getParams());
-}
+const RGBDCamera& Camera::getRGBDCamera() const { return *safeGetRGBDCamera(); }
 std::shared_ptr<RGBDCamera> Camera::safeGetRGBDCamera() const {
-  try {
-    return std::make_shared<RGBDCamera>(this->getParams());
-  } catch (const InvalidRGBDCameraParams& e) {
-    VLOG(10) << "Cannot get RGBD Camera: " << e.what();
-    return nullptr;
+  if (!cached_rgbd_camera_) {
+    // throws InvalidRGBDCameraParams if invalid depth params
+    cached_rgbd_camera_ = std::make_shared<RGBDCamera>(this->getParams());
   }
+  return cached_rgbd_camera_;
 }
 
 }  // namespace dyno

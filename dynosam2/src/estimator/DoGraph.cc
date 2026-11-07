@@ -15,44 +15,50 @@
 namespace dyno2 {
 
 DoGraph::DoGraph(dyno::Camera::Ptr camera, dyno::ObjectId object_id)
-    : object_id_(object_id) {
-  std::shared_ptr<dyno::RGBDCamera> rgbd_camera =
-      CHECK_NOTNULL(camera->safeGetRGBDCamera());
-  K_stereo_ = rgbd_camera->getFakeStereoCalib();
-  CHECK_NOTNULL(K_stereo_);
-
-  K_ = camera->getGtsamCalibration();
-}
+    : Base(camera), object_id_(object_id) {}
 
 FrameId DoGraph::initaliseFrame(DoFrame::Ptr frame) {
-  const dyno::FrameId frame_id = frame->getFrameId();
-  CHECK(!frames_.exists(frame_id));
-  frames_[frame_id] = frame;
-  return frame_id;
+  const dyno::TemporalObjectId id = frame->temporalObjectId();
+  CHECK(!frames_.exists(id)) << id;
+  frames_[id] = frame;
+  return id.frame_id;
 }
 
 void DoGraph::initalizeNewAnchorState(DoFrame::Ptr do_frame,
-                                      const gtsam::Pose3 L) {
+                                      const gtsam::Pose3& L) {
   const dyno::FrameId frame_id = maybeInitaliseFrame(do_frame);
   // update anchor point we are estimating relative to!
   DOGraphState& state = this->state(frame_id);
-  state.state.motion = dyno::Motion3ReferenceFrame(
-      gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::F2F,
-      dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
-  state.state.pose = L;
+  state.timestamp = do_frame->timestamp;
+  state.H_W_km1_k = dyno::Motion3ReferenceFrame(gtsam::Pose3::Identity(),
+                                                dyno::ReferenceFrame::GLOBAL,
+                                                frame_id, frame_id);
+  state.L_W_k = L;
   state.keyframe_status = dyno::DoKeyframeType::AnchorKeyFrame;
-  state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-      gtsam::Pose3::Identity(), dyno::MotionRepresentationStyle::KF,
-      dyno::ReferenceFrame::GLOBAL, frame_id, frame_id);
+  state.H_W_KF_k = dyno::Motion3ReferenceFrame(gtsam::Pose3::Identity(),
+                                               dyno::ReferenceFrame::GLOBAL,
+                                               frame_id, frame_id);
+
+  // release image data for active keyframes
 
   // reset active keyframes so there is no overlap in the estimator
   // and forces new keyframes at the start
   active_keyframes_.clear();
   active_keyframes_.insert(frame_id);
 
+  // clear image memory for this in windowed keyframe
+  // we should have already cleared the memory in older (active) keyframes
+  // by releasing memory everytime we set a new Regular keyframe
+  for (size_t k = 0; k < windowed_keyframes_.size(); k++) {
+    getFramePtr(windowed_keyframes_[k])->releaseImages();
+  }
+
+  windowed_keyframes_.clear();
+  windowed_keyframes_.push(frame_id);
+
   // clear the map
   // what about when we synchronize from the backend?
-  LandmarkMap::clear();
+  this->clearLandmarks();
 }
 
 // J is current frame
@@ -62,7 +68,7 @@ void DoGraph::initalizeStatesPropogate(
   const dyno::FrameId frame_j = initaliseFrame(do_frame_j);
   // state i
   const DOGraphState& last_state = lastState();
-  const dyno::FrameId frame_i = last_state.state.motion.to();
+  const dyno::FrameId frame_i = last_state.frameId();
   CHECK_EQ(frame_i, G_i_ij.from());
   CHECK_EQ(frame_i, last_state.H_W_KF_k.to());
 
@@ -70,28 +76,33 @@ void DoGraph::initalizeStatesPropogate(
   const gtsam::Pose3 H_W_ij_pose = X_W_j * G_i_ij * X_W_i.inverse();
 
   const dyno::Motion3ReferenceFrame H_W_ij(
-      H_W_ij_pose, dyno::MotionRepresentationStyle::F2F,
-      dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
+      H_W_ij_pose, dyno::ReferenceFrame::GLOBAL, frame_i, frame_j);
 
-  gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.state.pose);
+  gtsam::Pose3 L_W_j = H_W_ij->compose(last_state.L_W_k);
 
   // in effect we dont use A_KF for anything except when we compute it for
   // optimisation store everything as pose!
   CHECK(!stateExists(frame_j));
   DOGraphState& state = this->state(frame_j);
-  state.state.pose = L_W_j;
-  state.state.motion = H_W_ij;
+  state.timestamp = do_frame_j->timestamp;
+  state.L_W_k = L_W_j;
+  state.H_W_km1_k = H_W_ij;
   // propogate using the frame-to-frame motion to construct a motion chain
   // from the anchor frame to the current frame
   gtsam::Pose3 H_W_KF_k = H_W_ij.estimate() * last_state.H_W_KF_k.estimate();
 
-  state.H_W_KF_k = dyno::Motion3ReferenceFrame(
-      H_W_KF_k, dyno::MotionRepresentationStyle::KF,
-      dyno::ReferenceFrame::GLOBAL, last_state.H_W_KF_k.from(), frame_j);
+  state.H_W_KF_k =
+      dyno::Motion3ReferenceFrame(H_W_KF_k, dyno::ReferenceFrame::GLOBAL,
+                                  last_state.H_W_KF_k.from(), frame_j);
 }
 
 void DoGraph::setRegularKeyframe(dyno::FrameId frame_id) {
   active_keyframes_.insert(frame_id);
+  auto maybe_removed = windowed_keyframes_.push(frame_id);
+  if (maybe_removed) {
+    // clear image memory
+    getFramePtr(maybe_removed.value())->releaseImages();
+  }
 
   DOGraphState& state = this->state(frame_id);
   // check that state is not an anchor keyframe
@@ -104,51 +115,30 @@ void DoGraph::setRegularKeyframe(dyno::FrameId frame_id) {
   state.keyframe_status = dyno::DoKeyframeType::RegularKeyFrame;
 }
 
-bool DoGraph::getLandmark(dyno::TrackletId id, dyno::FrameId frame_id,
+bool DoGraph::getMapPoint(dyno::TrackletId id, dyno::FrameId frame_id,
                           MapPoint& map_point) const {
-  auto it = LandmarkMap::find(id);
-  if (it == LandmarkMap::end()) {
+  dyno::Landmark lmk_L;
+  if (!this->getLandmark(id, lmk_L)) {
     return false;
   }
 
-  const dyno::Landmark& lmk_L = LandmarkMap::landmarkAt(it->second);
-  const gtsam::Pose3 L_W_k = getPoseWithMotion(frame_id).pose;
+  const gtsam::Pose3 L_W_k = getPose(frame_id);
   const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
-
   map_point = MapPoint{lmk_W_k, object_id_, id};
   return true;
 }
 
-size_t DoGraph::getLandmarks(dyno::FrameId frame_id,
+size_t DoGraph::getMapPoints(dyno::FrameId frame_id,
                              MapPointVector& map_points) const {
-  const gtsam::Pose3 L_W_k = getPoseWithMotion(frame_id).pose;
-  if (LandmarkMap::isContiguous()) {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector(LandmarkMap::size());
-    for (size_t i = 0; i < n; i++) {
-      const auto [id, lmk_L] = LandmarkMap::at(i);
-      const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
-      map_points[i] = MapPoint{lmk_W_k, object_id_, id};
-    }
-  } else {
-    const size_t n = LandmarkMap::size();
-    map_points = MapPointVector();
-    map_points.reserve(n);
-
-    // walk over valid indices
-    for (auto it = LandmarkMap::begin(); it != LandmarkMap::end(); it++) {
-      Index valid_index = it->second;
-      const auto [id, lmk_L] = LandmarkMap::at(valid_index);
-      const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
-      map_points.push_back(MapPoint{lmk_W_k, object_id_, id});
-    }
+  const gtsam::Pose3& L_W_k = getPose(frame_id);
+  const LandmarkMap& landmark_map = this->asLandmarkMap();
+  const size_t n = landmark_map.numLandmarks();
+  map_points = MapPointVector(n);
+  for (const auto& [id, lmk_L] : landmark_map) {
+    const dyno::Landmark lmk_W_k = L_W_k * lmk_L;
+    map_points.push_back(MapPoint{lmk_W_k, object_id_, id});
   }
   return map_points.size();
-}
-
-const dyno::PoseWithMotion& DoGraph::getPoseWithMotion(
-    dyno::FrameId frame_id) const {
-  return states_.at(frame_id).state;
 }
 
 const dyno::Motion3ReferenceFrame& DoGraph::keyframeMotion(
@@ -161,29 +151,127 @@ dyno::DoKeyframeType DoGraph::keyframeStatus(dyno::FrameId frame_id) const {
 }
 
 const gtsam::Pose3& DoGraph::anchorPose(dyno::FrameId frame_id) const {
-  const dyno::FrameId anchor = states_.at(frame_id).H_W_KF_k.from();
-  return states_.at(anchor).state.pose;
+  const dyno::FrameId anchor = states_.at(frame_id).anchorFrameId();
+  return getPose(anchor);
 }
 
 const gtsam::Pose3& DoGraph::getPose(dyno::FrameId frame_id) const {
-  return states_.at(frame_id).state.pose;
+  return states_.at(frame_id).L_W_k;
+}
+
+const dyno::Motion3ReferenceFrame& DoGraph::getMotion(
+    dyno::FrameId frame_id) const {
+  return states_.at(frame_id).H_W_km1_k;
+}
+
+const Velocity3& DoGraph::getVelocity(dyno::FrameId frame_id) const {
+  return states_.at(frame_id).velocity_W;
+}
+
+size_t DoGraph::removeOutliersByDetection(
+    const VioGraph& vio_graph, const dyno::ImageContainer& image_container) {
+  const dyno::FrameId fid = image_container.frameId();
+
+  const BoundsChecker bounds_checker(image_container.objectMotionMask());
+
+  const gtsam::Pose3 X_W_k_inv = vio_graph.getPose(fid).inverse();
+
+  // TODO: this does not really account for the fact that the object has a shape
+  // and we do NOT do ray tracing or anything
+  //  so bits of the previously observe object may not be outside the mask.
+  //  Therefore we only check against features seen in THIS frame
+  const auto frame_node = observations_->getFrame(fid);
+  if (!frame_node) {
+    // not entirely sure why this would happen!
+    return 0;
+  }
+  // get all observations for this node
+  // these are held as a vector of <lmk node, stereo measurement> pairs
+  const auto measurements = frame_node->dynamicMeasurements(object_id_);
+
+  size_t num_removed{0};
+  size_t num_map_points{0};
+  double repr_error{0.0};
+  for (const auto& [lmk_node, z] : measurements) {
+    const dyno::TrackletId tid = lmk_node->trackletId();
+
+    MapPoint map_point;
+    if (!getMapPoint(tid, fid, map_point)) {
+      // not yet in the map
+      continue;
+    }
+
+    const gtsam::Point3 p_C = X_W_k_inv * map_point.p_W;
+
+    gtsam::Point2 z_proj;
+    camera_->project(p_C, &z_proj);
+
+    const gtsam::Point2 z_measure = z.measurement().point2();
+    repr_error += (z_proj - z_measure).norm();
+    ++num_map_points;
+
+    // if outside the image OR outside the bounds of the object mask!
+    if (!bounds_checker(z_proj, object_id_)) {
+      // TODO: AND remove from landmark map!
+      observations_->removeLandmark(map_point.id);
+      this->removeLandmark(map_point.id);
+      ++num_removed;
+    }
+  }
+
+  if (num_map_points > 0) {
+    repr_error /= static_cast<double>(num_map_points);
+  }
+
+  // TODO: does not EVER seem to be occuring!?
+  // TODO:
+  VLOG(30) << "Removed " << num_removed << " map points from object "
+           << object_id_ << " with total repr " << repr_error;
+
+  return num_removed;
 }
 
 FrameId DoGraph::maybeInitaliseFrame(DoFrame::Ptr frame) {
-  const dyno::FrameId frame_id = frame->getFrameId();
-  auto it = frames_.find(frame_id);
+  const dyno::TemporalObjectId toi = frame->temporalObjectId();
+
+  if (toi.objectId() != object_id_) {
+    DYNO_THROW_MSG(dyno::DynosamException)
+        << "Attempt to add DoFrame at " << toi
+        << " but existing object id and incoming frame do not match!";
+    throw;
+  }
+
+  auto it = frames_.find(toi);
   if (it == frames_.end()) {
-    frames_[frame_id] = frame;
+    frames_[toi] = frame;
   } else {
     // incoming is not the same (by pointer!) as the stored one!
     if (frame != it->second) {
       DYNO_THROW_MSG(dyno::DynosamException)
-          << "Attempt to add DoFrame at " << frame_id
+          << "Attempt to add DoFrame at " << toi
           << " but existing frame and incoming frame do not match!";
       throw;
     }
   }
-  return frame_id;
+  return toi.frameId();
+}
+
+void DoGraph::setStateMotionAndVelocityFromPose(DOGraphState& current_state) {
+  DOGraphState* previous_state{nullptr};
+  if (!stateByAge(current_state.frameId(), 1, previous_state)) {
+    // no previous state, so hopefully velocity is zero?
+    return;
+  }
+
+  CHECK_NOTNULL(previous_state);
+  CHECK_EQ(previous_state->frameId(), current_state.H_W_km1_k.from());
+  current_state.H_W_km1_k.estimate() =
+      current_state.L_W_k * previous_state->L_W_k.inverse();
+
+  const dyno::Timestamp dt =
+      current_state.timestamp - previous_state->timestamp;
+  current_state.velocity_W =
+      computeWorldVelocity(previous_state->L_W_k, current_state.L_W_k, dt);
 }
 
 bool isValidRotation(const gtsam::Pose3& pose, double tolerance = 1e-6) {
@@ -502,7 +590,7 @@ void DoGraphEstimator::optimize(dyno::FrameId frame_id,
     const gtsam::Pose3 L_W_k_refined = H_W_B_k_refined * L_W_B;
     const gtsam::Pose3 H_W_A_k_refined = H_W_B_k_refined * H_W_A_B.estimate();
 
-    state.state.pose = L_W_k_refined;
+    state.L_W_k = L_W_k_refined;
     state.H_W_KF_k.estimate_ = H_W_A_k_refined;
 
     CHECK_EQ(state.H_W_KF_k.from(), anchor_frame);
