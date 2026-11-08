@@ -309,35 +309,58 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   dyno::FastUnorderedMap<dyno::FrameId, std::vector<dyno::TrackletId>>
       selected_tracklets_by_frame;
 
+  using TrackletLastSeen =
+      dyno::FastUnorderedMap<dyno::TrackletId, dyno::FrameId>;
+  TrackletLastSeen last_seen;
+
   constexpr static size_t kMinSharedTracklets = 2;
 
   for (const auto& [frame_i, neighbours] : covisibilities) {
+    auto& selected = selected_tracklets_by_frame[frame_i];
+
     for (const auto& [frame_j, shared_tracklets] : neighbours) {
       if (shared_tracklets.size() < kMinSharedTracklets) {
         continue;
       }
 
-      auto& tracklets_i = selected_tracklets_by_frame[frame_i];
-      auto& tracklets_j = selected_tracklets_by_frame[frame_j];
+      for (const auto tracklet_id : shared_tracklets) {
+        auto [it, inserted] = last_seen.try_emplace(tracklet_id, frame_i);
 
-      // No hashing or uniqueness checks in this inner loop.
-      tracklets_i.insert(tracklets_i.end(), shared_tracklets.begin(),
-                         shared_tracklets.end());
-
-      tracklets_j.insert(tracklets_j.end(), shared_tracklets.begin(),
-                         shared_tracklets.end());
+        if (inserted || it->second != frame_i) {
+          it->second = frame_i;
+          selected.push_back(tracklet_id);
+        }
+      }
     }
   }
 
-  // Deduplicate each frame's selected tracklets.
-  // TODO: should not actually need to do this as we expect tracklets to be
-  // unique from the map!
-  for (auto& [frame_id, tracklets] : selected_tracklets_by_frame) {
-    std::sort(tracklets.begin(), tracklets.end());
+  // for (const auto& [frame_i, neighbours] : covisibilities) {
+  //   for (const auto& [frame_j, shared_tracklets] : neighbours) {
+  //     if (shared_tracklets.size() < kMinSharedTracklets) {
+  //       continue;
+  //     }
 
-    tracklets.erase(std::unique(tracklets.begin(), tracklets.end()),
-                    tracklets.end());
-  }
+  //     auto& tracklets_i = selected_tracklets_by_frame[frame_i];
+  //     auto& tracklets_j = selected_tracklets_by_frame[frame_j];
+
+  //     // No hashing or uniqueness checks in this inner loop.
+  //     tracklets_i.insert(tracklets_i.end(), shared_tracklets.begin(),
+  //                        shared_tracklets.end());
+
+  //     tracklets_j.insert(tracklets_j.end(), shared_tracklets.begin(),
+  //                        shared_tracklets.end());
+  //   }
+  // }
+
+  // // Deduplicate each frame's selected tracklets.
+  // // TODO: should not actually need to do this as we expect tracklets to be
+  // // unique from the map!
+  // for (auto& [frame_id, tracklets] : selected_tracklets_by_frame) {
+  //   std::sort(tracklets.begin(), tracklets.end());
+
+  //   tracklets.erase(std::unique(tracklets.begin(), tracklets.end()),
+  //                   tracklets.end());
+  // }
 
   // ---------------------------------------------------------------------------
   // 2. Build the factor graph.
