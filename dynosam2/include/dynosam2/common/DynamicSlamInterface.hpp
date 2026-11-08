@@ -25,6 +25,8 @@ struct PublicationData {
 
   // tracking state information
   dyno::ViTrackingState vi_tracking_state;
+  //! Set of co-visible frames involved in the most recent bundle adjustment
+  std::unordered_set<dyno::FrameId> vi_covisables;
   //! This also indicates well-tracked/observed objects!
   std::vector<dyno::DoTrackingState> do_tracking_states;
 

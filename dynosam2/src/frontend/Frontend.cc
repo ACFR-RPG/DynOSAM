@@ -13,6 +13,7 @@
 #include "dynosam2/frontend/FlowRefinement.hpp"
 #include "dynosam2/frontend/GeometryUpdater.hpp"
 #include "dynosam2/frontend/MatchingAdaptor.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_cv/CvUtils.hpp"
@@ -171,6 +172,10 @@ void Frontend::solveVisualOdometry(
   observation_ids.reserve(adapter.getNumberCorrespondences());
   new_measurements.reserve(adapter.getNumberCorrespondences());
   correspondences.reserve(adapter.getNumberCorrespondences());
+  // Computed flow between tracked points. This is used to help determine if
+  // there is a zero velocity update
+  std::vector<double> flows;
+  flows.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
   // this will help with the BA to get intermediate frame measurements
   for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
@@ -179,6 +184,8 @@ void Frontend::solveVisualOdometry(
       // indicate point as well tracked
       // may or may not be in the map!
       correspondences.push_back(id);
+      flows.push_back(
+          (adapter.keypoint(idx) - adapter.keypointPrev(idx)).norm());
 
       // add new measurements to BA as these points are well tracked and we
       // already
@@ -189,6 +196,17 @@ void Frontend::solveVisualOdometry(
       }
     }
   }
+
+  const double median_flow = dyno::calculateMedian(flows);
+  const bool zero_velocity_update = median_flow < 1.5;
+  if (zero_velocity_update) {
+    LOG(INFO) << "Zero velocity update found! Skipping adding new points!";
+    frames_updated.push_back(frame_id);
+    new_measurements.clear();
+    success = true;
+    return;
+  }
+
   // all measurements are for the same frame use this function call which runs a
   // bit faster!
   estimator.addMeasurements(vi_frame, observation_ids);

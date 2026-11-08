@@ -90,24 +90,70 @@ byte_track::Xyah<T> byte_track::Rect<T>::getXyah() const {
   };
 }
 
+// template <typename T>
+// float byte_track::Rect<T>::calcIoU(const Rect<T>& other) const {
+//   const float box_area = (other.tlwh[2] + 1) * (other.tlwh[3] + 1);
+//   const float iw = std::min(tlwh[0] + tlwh[2], other.tlwh[0] + other.tlwh[2])
+//   -
+//                    std::max(tlwh[0], other.tlwh[0]) + 1;
+//   float iou = 0;
+//   if (iw > 0) {
+//     const float ih =
+//         std::min(tlwh[1] + tlwh[3], other.tlwh[1] + other.tlwh[3]) -
+//         std::max(tlwh[1], other.tlwh[1]) + 1;
+//     if (ih > 0) {
+//       const float ua = (tlwh[0] + tlwh[2] - tlwh[0] + 1) *
+//                            (tlwh[1] + tlwh[3] - tlwh[1] + 1) +
+//                        box_area - iw * ih;
+//       iou = iw * ih / ua;
+//     }
+//   }
+//   return iou;
+// }
 template <typename T>
 float byte_track::Rect<T>::calcIoU(const Rect<T>& other) const {
-  const float box_area = (other.tlwh[2] + 1) * (other.tlwh[3] + 1);
-  const float iw = std::min(tlwh[0] + tlwh[2], other.tlwh[0] + other.tlwh[2]) -
-                   std::max(tlwh[0], other.tlwh[0]) + 1;
-  float iou = 0;
-  if (iw > 0) {
-    const float ih =
-        std::min(tlwh[1] + tlwh[3], other.tlwh[1] + other.tlwh[3]) -
-        std::max(tlwh[1], other.tlwh[1]) + 1;
-    if (ih > 0) {
-      const float ua = (tlwh[0] + tlwh[2] - tlwh[0] + 1) *
-                           (tlwh[1] + tlwh[3] - tlwh[1] + 1) +
-                       box_area - iw * ih;
-      iou = iw * ih / ua;
-    }
-  }
-  return iou;
+  // Intersection.
+  const float x1 = std::max(tlwh[0], other.tlwh[0]);
+  const float y1 = std::max(tlwh[1], other.tlwh[1]);
+  const float x2 = std::min(tlwh[0] + tlwh[2], other.tlwh[0] + other.tlwh[2]);
+  const float y2 = std::min(tlwh[1] + tlwh[3], other.tlwh[1] + other.tlwh[3]);
+
+  const float iw = std::max(0.0f, x2 - x1 + 1.0f);
+  const float ih = std::max(0.0f, y2 - y1 + 1.0f);
+  const float intersection = iw * ih;
+
+  // Union.
+  const float area1 = (tlwh[2] + 1.0f) * (tlwh[3] + 1.0f);
+  const float area2 = (other.tlwh[2] + 1.0f) * (other.tlwh[3] + 1.0f);
+  const float union_area = area1 + area2 - intersection;
+
+  const float iou = union_area > 0.0f ? intersection / union_area : 0.0f;
+
+  // Squared distance between box centres.
+  const float cx1 = tlwh[0] + tlwh[2] * 0.5f;
+  const float cy1 = tlwh[1] + tlwh[3] * 0.5f;
+  const float cx2 = other.tlwh[0] + other.tlwh[2] * 0.5f;
+  const float cy2 = other.tlwh[1] + other.tlwh[3] * 0.5f;
+
+  const float centre_dist_sq =
+      (cx1 - cx2) * (cx1 - cx2) + (cy1 - cy2) * (cy1 - cy2);
+
+  // Squared diagonal of the smallest enclosing rectangle.
+  const float enclosing_w =
+      std::max(tlwh[0] + tlwh[2], other.tlwh[0] + other.tlwh[2]) -
+      std::min(tlwh[0], other.tlwh[0]);
+
+  const float enclosing_h =
+      std::max(tlwh[1] + tlwh[3], other.tlwh[1] + other.tlwh[3]) -
+      std::min(tlwh[1], other.tlwh[1]);
+
+  const float enclosing_diag_sq =
+      enclosing_w * enclosing_w + enclosing_h * enclosing_h;
+
+  const float distance_penalty =
+      enclosing_diag_sq > 0.0f ? centre_dist_sq / enclosing_diag_sq : 0.0f;
+
+  return iou - distance_penalty;
 }
 
 template <typename T>
