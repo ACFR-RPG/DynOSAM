@@ -97,6 +97,13 @@ class Frontend {
       const dyno::Timestamp constant_motion_max_dt = 2);
 
  private:
+  // frame should have descriptors but not yet be added to the Graph as a
+  // keyframe
+  void matchToVioMap(
+      VioGraphEstimator& estimator, const ImageContainer& container,
+      ViFrame::Ptr frame,
+      std::unordered_map<dyno::TrackletId, dyno::TrackletId>& merged_lmks);
+
   /**
    * @brief Initalise new points in the estimator by triangulation
    *
@@ -106,8 +113,9 @@ class Frontend {
    * @param new_measurements
    * @return size_t
    */
-  size_t matchToVioMap(VioGraphEstimator& estimator, ViFrame::Ptr frame,
-                       std::vector<KeypointIdentifier>& new_measurements);
+  size_t temporalVioTriangultion(
+      VioGraphEstimator& estimator, ViFrame::Ptr frame,
+      std::vector<KeypointIdentifier>& new_measurements);
 
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,
@@ -148,6 +156,8 @@ class Frontend {
     bool is_initalized{false};
   };
   ViTrackingCondition vi_tracking_condition_;
+
+  cv::Ptr<cv::Feature2D> describer_;
 };
 
 }  // namespace dyno2

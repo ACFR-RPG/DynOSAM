@@ -149,6 +149,17 @@ class BaGraph {
     return lmk_node->getMeasurement(kpi.frameId(), measurement);
   }
 
+  inline bool getObservationFrames(dyno::TrackletId tracklet_id,
+                                   std::vector<FrameId>& frames) const {
+    auto lmk_node = observations_->getLandmark(tracklet_id);
+    if (!lmk_node) {
+      return false;
+    }
+
+    frames = lmk_node->getSeenFrameIds();
+    return true;
+  }
+
   /**
    * @brief Returns number of measurement frames (ie dyno2::Frame)
    *
@@ -288,6 +299,8 @@ struct BaGraphStates : public BaGraph,
   BaGraphStates(dyno::Camera::Ptr camera)
       : BaGraph(camera), States<STATE>(), LandmarkMap() {}
 
+  bool mergeLandmark(dyno::TrackletId from_id, dyno::TrackletId to_id);
+
   inline States<STATE>& asStates() {
     return static_cast<States<STATE>&>(*this);
   }
@@ -302,5 +315,22 @@ struct BaGraphStates : public BaGraph,
     return static_cast<const LandmarkMap&>(*this);
   }
 };
+
+template <typename STATE>
+bool BaGraphStates<STATE>::mergeLandmark(dyno::TrackletId from_id,
+                                         dyno::TrackletId to_id) {
+  // merge observations of this landmark
+  if (!BaGraph::observations_->mergeLandmark(from_id, to_id)) {
+    return false;
+  }
+
+  auto& map = this->asLandmarkMap();
+  // we may have observations of this landmark but it may not yet be initalised
+  // yet so we check!
+  if (map.landmarkExists(from_id)) {
+    map.removeLandmark(from_id);
+  }
+  return true;
+}
 
 }  // namespace dyno2

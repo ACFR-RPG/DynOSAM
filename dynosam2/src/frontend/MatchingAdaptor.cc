@@ -19,6 +19,8 @@ FrameAbsoluteAdaptor::FrameAbsoluteAdaptor(
   for (size_t curr_idx = 0; curr_idx < num_features; curr_idx++) {
     const TrackletId tracklet_id = local_geometry.ids[curr_idx];
     const Index fc_curr_idx = local_geometry.fc_indices[curr_idx];
+    // check internal consistency
+    CHECK_EQ(tracklet_id, features_.ids[fc_curr_idx]);
 
     size_t age = features_.age[fc_curr_idx];
     // seen at least twice (ie tracked from previous to current and not a new

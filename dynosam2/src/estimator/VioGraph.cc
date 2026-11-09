@@ -296,8 +296,6 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   }
   covis_t.stop();
 
-  dyno::utils::ChronoTimingStats build_t("vio_graph.opt.build");
-
   // ---------------------------------------------------------------------------
   // 1. Select tracklets using contiguous vectors.
   //
@@ -309,8 +307,13 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   dyno::FastUnorderedMap<dyno::FrameId, std::vector<dyno::TrackletId>>
       selected_tracklets_by_frame;
 
+  using TrackletLastSeen =
+      dyno::FastUnorderedMap<dyno::TrackletId, dyno::FrameId>;
+  TrackletLastSeen last_seen;
+
   constexpr static size_t kMinSharedTracklets = 2;
 
+  dyno::utils::ChronoTimingStats tracklet_t("vio_graph.opt.form_tracks");
   for (const auto& [frame_i, neighbours] : covisibilities) {
     for (const auto& [frame_j, shared_tracklets] : neighbours) {
       if (shared_tracklets.size() < kMinSharedTracklets) {
@@ -339,10 +342,14 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
                     tracklets.end());
   }
 
+  tracklet_t.stop();
+
   // ---------------------------------------------------------------------------
   // 2. Build the factor graph.
   // ---------------------------------------------------------------------------
   resetProblem();
+
+  dyno::utils::ChronoTimingStats build_t("vio_graph.opt.build");
 
   gtsam::Values& values = getProblemValues();
   gtsam::NonlinearFactorGraph& graph = getProblemGraph();

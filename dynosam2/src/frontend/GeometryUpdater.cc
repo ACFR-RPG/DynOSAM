@@ -239,6 +239,9 @@ void GeometryUpdater::calcPointsStereo(FeatureBlockGeometryMap& point_map) {
       feature_block_geometry.fc_indices.push_back(fc_index);
 
       // mapping of tracklet id to location in the local points container
+      // check to ensure no duplicated!
+      CHECK(feature_block_geometry.local_indices.find(id) ==
+            feature_block_geometry.local_indices.end());
       feature_block_geometry.local_indices[id] = local_index;
 
       // remark as inlier
@@ -317,7 +320,8 @@ void GeometryUpdater::updateGeometryStereo(
 
     // check internal consistency
     CHECK_EQ(id, features_.ids[fc_index]);
-    CHECK_EQ(feature_block_geometry.local_indices.at(id), i);
+    CHECK_EQ(feature_block_geometry.local_indices.at(id), i)
+        << " at tid=" << id;
     if (!features_.inlier[fc_index]) {
       continue;
     }

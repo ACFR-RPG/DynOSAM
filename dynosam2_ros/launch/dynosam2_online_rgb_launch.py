@@ -34,8 +34,11 @@ def generate_launch_description():
         DeclareLaunchArgument("rgb_cam_topic", default_value="/d455/color/image_raw"),
         DeclareLaunchArgument("depth_cam_topic", default_value="/d455/aligned_depth_to_color/image_raw"),
         DeclareLaunchArgument("imu_topic", default_value="/d455/imu"),
+        DeclareLaunchArgument("depth_scale", default_value="0.001", description="RGB-Depth scale value"),
         DeclareLaunchArgument("rescale_width", default_value="640", description="Image width to rescale to"),
         DeclareLaunchArgument("rescale_height", default_value="480", description="Image height to rescale to"),
+        DeclareLaunchArgument("odom_frame", default_value="odom", description="ROS odom frame"),
+        DeclareLaunchArgument("base_frame", default_value="camera_link", description="ROS base frame (the estimation frame)"),
         # robot_state_publisher_node,
         DynosamNode(
                 package="dynosam2_ros",
@@ -47,10 +50,9 @@ def generate_launch_description():
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},
                     {"input_image_mode": "rgb+aligned_depth+imu"},
-                    {"base_frame": "camera_link"},
-                    {"odom_frame": "odom"},
-                    {"depth_scale": 0.001},
-                    # {"depth_scale": 1.0},
+                    {"base_frame": LaunchConfiguration("base_frame")},
+                    {"odom_frame": LaunchConfiguration("odom_frame")},
+                    {"depth_scale": LaunchConfiguration("depth_scale")},
                     {"v": LaunchConfiguration("v")}
                 ],
                 remappings=[

@@ -4,6 +4,8 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 
+#include <opencv2/features2d.hpp>
+#include <opencv2/xfeatures2d.hpp>
 #include <opengv/absolute_pose/CentralAbsoluteAdapter.hpp>
 #include <opengv/absolute_pose/methods.hpp>
 #include <opengv/sac/Ransac.hpp>
@@ -13,6 +15,8 @@
 #include "dynosam2/frontend/FlowRefinement.hpp"
 #include "dynosam2/frontend/GeometryUpdater.hpp"
 #include "dynosam2/frontend/MatchingAdaptor.hpp"
+#include "dynosam_common/anms/anms/nanoflann.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_core/PointCloudProcess.hpp"
 #include "dynosam_cv/CvUtils.hpp"
@@ -36,7 +40,10 @@ Frontend::Frontend(const FrontendParameters& parameters,
     : camera_(camera),
       feature_tracker_(parameters, camera),
       vio_ransac_threshold_3d_2d_(computeOpenGvRansacThreshold(2.0, camera)),
-      do_ransac_threshold_3d_2d_(computeOpenGvRansacThreshold(2.0, camera)) {}
+      do_ransac_threshold_3d_2d_(computeOpenGvRansacThreshold(2.0, camera)) {
+  // describer_ = cv::BRISK::create();
+  describer_ = cv::xfeatures2d::BriefDescriptorExtractor::create();
+}
 
 void Frontend::detectAndTrack(FeatureBlockContainer*& features_out,
                               dyno::ObjectDetectionResult& object_detection_out,
@@ -68,6 +75,7 @@ void Frontend::solveVisualOdometry(
   // the estimator does not yet have a solution for the current frame
   // and therefore we need to initalise form the previous frame
   const FrameId previous_frame_id = estimator.currentFrameId();
+  VLOG(20) << "VIO tracking flow against frame k=" << previous_frame_id;
   // const ViFrame& vi_frame_previous = frames.at(previous_frame_id);
   const ViFrame::Ptr vi_frame_previous_ptr =
       estimator.getFramePtr(previous_frame_id);
@@ -171,6 +179,10 @@ void Frontend::solveVisualOdometry(
   observation_ids.reserve(adapter.getNumberCorrespondences());
   new_measurements.reserve(adapter.getNumberCorrespondences());
   correspondences.reserve(adapter.getNumberCorrespondences());
+  // Computed flow between tracked points. This is used to help determine if
+  // there is a zero velocity update
+  std::vector<double> flows;
+  flows.reserve(adapter.getNumberCorrespondences());
   // add measurements for keypoints that were tracked and already initalised
   // this will help with the BA to get intermediate frame measurements
   for (size_t idx = 0; idx < adapter.getNumberCorrespondences(); idx++) {
@@ -179,6 +191,8 @@ void Frontend::solveVisualOdometry(
       // indicate point as well tracked
       // may or may not be in the map!
       correspondences.push_back(id);
+      flows.push_back(
+          (adapter.keypoint(idx) - adapter.keypointPrev(idx)).norm());
 
       // add new measurements to BA as these points are well tracked and we
       // already
@@ -189,6 +203,17 @@ void Frontend::solveVisualOdometry(
       }
     }
   }
+
+  const double median_flow = dyno::calculateMedian(flows);
+  const bool zero_velocity_update = median_flow < 1.5;
+  if (zero_velocity_update) {
+    LOG(INFO) << "Zero velocity update found! Skipping adding new points!";
+    frames_updated.push_back(frame_id);
+    new_measurements.clear();
+    success = true;
+    return;
+  }
+
   // all measurements are for the same frame use this function call which runs a
   // bit faster!
   estimator.addMeasurements(vi_frame, observation_ids);
@@ -212,12 +237,48 @@ void Frontend::solveVisualOdometry(
   const bool should_be_keyframe = shouldBeViKeyFrame(estimator, vi_frame);
   if (should_be_keyframe) {
     // add images to frame. These will get released when the frame is pruned
-    // vi_frame->
+    // vi_frame->setImages(image_container);
+    // vi_frame->describe(describer_);
+    // CHECK(vi_frame->hasDescriptors());
+
+    // //TODO:
+    // std::unordered_map<dyno::TrackletId, dyno::TrackletId> merged_lmks;
+    // matchToVioMap(estimator, image_container, vi_frame, merged_lmks);
+
+    // // hacky and probably slow for the moment
+    // // update tracklet labels in FeatureContainer AND in new measurements AND
+    // in correspences for(size_t i = 0; i < features.ids.size(); i++) {
+    //   auto tid = features.ids[i];
+
+    //   auto it = merged_lmks.find(tid);
+    //   if(it != merged_lmks.end()) {
+    //     LOG(INFO) << "Updatinf tids: " << features.ids[i] << " -> " <<
+    //     it->second; features.ids[i] = it->second;
+    //   }
+    // }
+
+    // for(size_t i = 0; i < correspondences.size(); i++) {
+    //   auto tid = correspondences[i];
+
+    //   auto it = merged_lmks.find(tid);
+    //   if(it != merged_lmks.end()) {
+    //     correspondences[i] = it->second;
+    //   }
+    // }
+
+    // for(size_t i = 0; i < new_measurements.size(); i++) {
+    //   auto tid = new_measurements[i].id;
+
+    //   auto it = merged_lmks.find(tid);
+    //   if(it != merged_lmks.end()) {
+    //     new_measurements[i].id = it->second;
+    //   }
+    // }
 
     // initlaise new points in the map by attempting to triangulate points
     // at all active keyframes
     const size_t init_triangulation =
-        matchToVioMap(estimator, vi_frame, new_measurements);
+        temporalVioTriangultion(estimator, vi_frame, new_measurements);
     // LOG(INFO) << "Init triangulation: " << init_triangulation;
     LOG(INFO) << "Made VIO keyframe k=" << frame_id;
     estimator.setKeyframe(frame_id, true);
@@ -573,6 +634,612 @@ VioMotionPropagation Frontend::predictFromMotion(
   return propagation;
 }
 
+class KeypointCloud {
+ public:
+  explicit KeypointCloud(gtsam::Point2Vector points)
+      : points_(std::move(points)) {}
+
+  std::size_t kdtree_get_point_count() const { return points_.size(); }
+
+  double kdtree_get_pt(const std::size_t index,
+                       const std::size_t dimension) const {
+    return dimension == 0 ? points_[index].x() : points_[index].y();
+  }
+
+  double kdtree_distance(const double* query_point, const std::size_t index,
+                         std::size_t size) const {
+    double distance = 0.0;
+
+    for (std::size_t i = 0; i < size; ++i) {
+      const double diff = query_point[i] - points_[index](i);
+      distance += diff * diff;
+    }
+
+    return distance;
+  }
+
+  template <class BoundingBox>
+  bool kdtree_get_bbox(BoundingBox&) const {
+    return false;
+  }
+
+  const gtsam::Point2& operator[](std::size_t index) const {
+    return points_[index];
+  }
+
+ private:
+  gtsam::Point2Vector points_;
+};
+
+using KeypointKDTree = nanoflann::KDTreeSingleIndexAdaptor<
+    nanoflann::L2_Simple_Adaptor<double, KeypointCloud>, KeypointCloud, 2,
+    std::size_t>;
+
+class KeypointSpatialIndex {
+ public:
+  explicit KeypointSpatialIndex(const gtsam::Point2Vector& points)
+      : cloud_(points),
+        tree_(2, cloud_, nanoflann::KDTreeSingleIndexAdaptorParams(10)) {
+    tree_.buildIndex();
+  }
+
+  // Returns keypoint indices within radius (pixels).
+  std::vector<std::size_t> radiusSearch(const gtsam::Point2& query,
+                                        double radius) const {
+    const double query_point[2] = {query.x(), query.y()};
+
+    // nanoflann uses squared L2 distance.
+    const double radius_squared = radius * radius;
+
+    std::vector<std::pair<std::size_t, double>> results;
+
+    nanoflann::SearchParams search_params;
+    tree_.radiusSearch(query_point, radius_squared, results, search_params);
+
+    std::vector<std::size_t> indices;
+    indices.reserve(results.size());
+
+    for (const auto& result : results) {
+      indices.push_back(result.first);
+    }
+
+    return indices;
+  }
+
+ private:
+  KeypointCloud cloud_;
+  KeypointKDTree tree_;
+};
+
+inline int hammingDistance(const uint8_t* a, const uint8_t* b,
+                           int descriptor_size) {
+  int distance = 0;
+
+  for (int i = 0; i < descriptor_size; ++i) {
+    distance += __builtin_popcount(static_cast<unsigned>(a[i] ^ b[i]));
+  }
+
+  return distance;
+}
+
+struct LandmarkDescriptorObservation {
+  dyno::FrameId frame_id;
+  std::vector<uint8_t> descriptor;
+};
+
+struct LandmarkDescriptorSet {
+  dyno::TrackletId landmark_id;
+  std::vector<LandmarkDescriptorObservation> observations;
+};
+
+struct VioMapMatch {
+  Index keypoint_index;
+  dyno::TrackletId landmark_id;
+  int hamming_distance;
+};
+
+void Frontend::matchToVioMap(
+    VioGraphEstimator& estimator, const ImageContainer& container,
+    ViFrame::Ptr frame,
+    std::unordered_map<dyno::TrackletId, dyno::TrackletId>& merged_lmks) {
+  utils::ChronoTimingStats timer_t("frontend.vo.match_to_map");
+  if (!frame->hasDescriptors()) {
+    return;
+  }
+
+  std::vector<VioMapMatch> matches;
+
+  // ah this should probably smaller than the feature detection min distance
+  // between detected and tracked points so we dont try and search for lmks that
+  // are already tracked alternatively we will just explicitly exclude from
+  // matching observations in the current frame with an associated map point!
+  constexpr float kSearchRadius = 15.0f;
+  constexpr float kRatioThreshold = 0.8f;
+  constexpr float kMaxHammingFraction = 0.25f;
+  constexpr float kMinDepth = 0.2f;
+
+  constexpr size_t kMaxObservationsPerLandmark = 5;
+
+  const int descriptor_size = frame->descriptorSize();
+  CHECK_GT(descriptor_size, 0);
+
+  const int max_hamming_distance =
+      static_cast<int>(descriptor_size * 8 * kMaxHammingFraction);
+
+  // search last 'hopefully covisible' keyframe and most recent keyframe
+  //  that is not this keyframe
+  const std::set<dyno::FrameId> keyframes = estimator.keyFrames();
+
+  if (keyframes.empty()) {
+    return;
+  }
+
+  const dyno::FrameId oldest_fid = *keyframes.begin();
+  const dyno::FrameId latest_fid = *keyframes.rbegin();
+
+  CHECK_NE(latest_fid, frame->getFrameId());
+
+  VLOG(10) << "Matching against local map KF's: " << oldest_fid << " "
+           << latest_fid << " to fid=" << frame->getFrameId();
+
+  const ViFrame::Ptr oldest_kf = estimator.getFramePtr(oldest_fid);
+  const ViFrame::Ptr latest_kf = estimator.getFramePtr(latest_fid);
+
+  // ---------------------------------------------------------------------------
+  // 2. Collect multiple descriptors per landmark
+  // ---------------------------------------------------------------------------
+
+  std::vector<LandmarkDescriptorSet> landmark_descriptors;
+
+  std::unordered_map<dyno::TrackletId, size_t> landmark_lookup;
+
+  auto collectDescriptors = [&](const ViFrame::Ptr& keyframe) {
+    if (!keyframe || !keyframe->hasDescriptors()) {
+      return;
+    }
+
+    CHECK_EQ(keyframe->descriptorSize(), descriptor_size);
+
+    for (size_t i = 0; i < keyframe->numKeypoints(); ++i) {
+      const dyno::TrackletId tid = keyframe->ids[i];
+
+      MapPoint map_point;
+
+      if (!estimator.getMapPoint(tid, map_point)) {
+        continue;
+      }
+
+      const auto [valid, descriptor] = keyframe->getDescriptorByIndex(i);
+
+      if (!valid || descriptor == nullptr) {
+        continue;
+      }
+
+      // Find or create the landmark descriptor set.
+      auto it = landmark_lookup.find(tid);
+
+      if (it == landmark_lookup.end()) {
+        const size_t index = landmark_descriptors.size();
+
+        landmark_lookup.emplace(tid, index);
+
+        landmark_descriptors.push_back({tid, {}});
+
+        it = landmark_lookup.find(tid);
+      }
+
+      auto& observations = landmark_descriptors[it->second].observations;
+
+      // Don't store duplicate observations from the same frame.
+      const bool already_observed =
+          std::any_of(observations.begin(), observations.end(),
+                      [&](const LandmarkDescriptorObservation& observation) {
+                        return observation.frame_id == keyframe->getFrameId();
+                      });
+
+      if (already_observed) {
+        continue;
+      }
+
+      LandmarkDescriptorObservation observation;
+      observation.frame_id = keyframe->getFrameId();
+      observation.descriptor.assign(descriptor, descriptor + descriptor_size);
+
+      observations.push_back(std::move(observation));
+
+      // Retain the most recent observations.
+      if (observations.size() > kMaxObservationsPerLandmark) {
+        observations.erase(observations.begin());
+      }
+    }
+  };
+
+  // Oldest first, latest second.
+  // The latest descriptor is therefore included when a landmark appears
+  // in both keyframes.
+  collectDescriptors(oldest_kf);
+
+  if (latest_fid != oldest_fid) {
+    collectDescriptors(latest_kf);
+  }
+
+  if (landmark_descriptors.empty()) {
+    return;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. Build KD-tree over the new frame's keypoints
+  // ---------------------------------------------------------------------------
+
+  gtsam::Point2Vector keypoint_locations;
+  keypoint_locations.reserve(frame->numKeypoints());
+
+  for (size_t i = 0; i < frame->numKeypoints(); ++i) {
+    gtsam::Point2 pt;
+    frame->getKeypointByIndex(i, pt);
+    keypoint_locations.push_back(pt);
+  }
+
+  CHECK_EQ(keypoint_locations.size(), frame->numKeypoints());
+
+  const KeypointSpatialIndex spatial_index(keypoint_locations);
+
+  // ---------------------------------------------------------------------------
+  // 4. Project landmarks and perform spatially constrained matching
+  // ---------------------------------------------------------------------------
+
+  struct BestTwoMatches {
+    int best_distance = std::numeric_limits<int>::max();
+    int second_best_distance = std::numeric_limits<int>::max();
+
+    dyno::TrackletId best_landmark_id{};
+    bool has_best = false;
+  };
+
+  // Record all keyframes in which each landmark/tracklet ID was observed.
+  std::unordered_map<dyno::TrackletId, std::unordered_set<dyno::FrameId>>
+      observation_frames;
+
+  // recomputing covisability again...
+  std::set<FrameId> keyframes_and_current = keyframes;
+  // add which ever frames are used for BA!
+  // TODO: this should just be a function insoide VioEstimator! (also allows us
+  // to retrieve frames involved in the ba!)
+  keyframes_and_current.insert(frame->getFrameId());
+  keyframes_and_current.insert(frame->getFrameId() - 1u);
+  for (const dyno::FrameId fid : keyframes_and_current) {
+    const ViFrame::Ptr keyframe = estimator.getFramePtr(fid);
+    LOG(INFO) << "Adding fid= " << fid << " to observration frame check";
+
+    for (const dyno::TrackletId id : keyframe->ids) {
+      observation_frames[id].insert(fid);
+    }
+  }
+  // Reject associations if the two IDs have ever been observed together
+  // in a keyframe. Such observations indicate distinct landmarks.
+  const auto coObservedInKeyframe = [&observation_frames](
+                                        dyno::TrackletId id_a,
+                                        dyno::TrackletId id_b) {
+    const auto it_a = observation_frames.find(id_a);
+    const auto it_b = observation_frames.find(id_b);
+
+    if (it_a == observation_frames.end() || it_b == observation_frames.end()) {
+      return false;
+    }
+
+    // Iterate over the smaller set for efficiency.
+    const auto* smaller = &it_a->second;
+    const auto* larger = &it_b->second;
+
+    if (smaller->size() > larger->size()) {
+      std::swap(smaller, larger);
+    }
+
+    for (const dyno::FrameId fid : *smaller) {
+      if (larger->count(fid)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // Indexed by original frame keypoint index.
+  std::vector<BestTwoMatches> best_matches(frame->numKeypoints());
+  const gtsam::Pose3 T_W_C = estimator.getPose(frame->getFrameId());
+  const gtsam::Pose3 T_C_W = T_W_C.inverse();
+
+  const BoundsChecker bounds_checker(container.objectMotionMask());
+
+  std::unordered_map<dyno::TrackletId, Keypoint> projected_landmarks;
+  projected_landmarks.reserve(landmark_descriptors.size());
+
+  const auto& cam_params = camera_->getParams();
+  const double vfov = cam_params.vFov();
+  const double hfov = cam_params.hFov();
+
+  const double max_rad_fov = (hfov > vfov) ? std::atan(hfov) : std::atan(vfov);
+  const double view_th = std::cos(max_rad_fov);
+
+  for (const auto& landmark_set : landmark_descriptors) {
+    MapPoint map_point;
+
+    if (!estimator.getMapPoint(landmark_set.landmark_id, map_point)) {
+      continue;
+    }
+
+    // avoid trying to match against landmarks that have a tracked point in them
+    // this helps avoid the case where a well tracked feature and an initalised
+    // landmark gets matched aginast a different tracklet!
+    if (frame->observedLandmark(landmark_set.landmark_id)) {
+      continue;
+    }
+
+    // Transform world landmark into the new camera frame.
+    const gtsam::Point3 p_C = T_C_W * map_point.p_W;
+
+    // Reject points behind or too close to the camera.
+    if (p_C.z() <= kMinDepth) {
+      continue;
+    }
+
+    const double view_angle = p_C.z() / p_C.norm();
+    if (std::abs(view_angle) < view_th) {
+      continue;
+    }
+
+    // Project into the image.
+    Keypoint projected_keypoint;
+    camera_->project(p_C, &projected_keypoint);
+
+    if (!bounds_checker(projected_keypoint)) {
+      continue;
+    }
+
+    // Find nearby keypoints.
+    const auto nearby_indices =
+        spatial_index.radiusSearch(projected_keypoint, kSearchRadius);
+
+    // maybe expand search radius and try again?
+    if (nearby_indices.empty()) {
+      continue;
+    }
+
+    projected_landmarks.emplace(landmark_set.landmark_id, projected_keypoint);
+
+    // Compare against each nearby keypoint.
+    for (const size_t keypoint_idx : nearby_indices) {
+      // check none of these are already in the map?
+      dyno::TrackletId tid = frame->ids[keypoint_idx];
+      // for now skip already mapped keypoints since we only initalise
+      // map-points on a keyframe!
+      if (estimator.landmarkExists(tid)) {
+        continue;
+      }
+
+      // reject candiates that have already been observed alongside the
+      // projected map landmark in any historical keyframe.
+      if (coObservedInKeyframe(tid, landmark_set.landmark_id)) {
+        continue;
+      }
+
+      const auto [valid, query_descriptor] =
+          frame->getDescriptorByIndex(keypoint_idx);
+
+      if (!valid || query_descriptor == nullptr) {
+        continue;
+      }
+
+      // Find the best descriptor distance across all observations
+      // of this landmark.
+      int landmark_distance = std::numeric_limits<int>::max();
+
+      for (const auto& observation : landmark_set.observations) {
+        const int distance = hammingDistance(
+            query_descriptor, observation.descriptor.data(), descriptor_size);
+
+        landmark_distance = std::min(landmark_distance, distance);
+      }
+
+      if (landmark_distance > max_hamming_distance) {
+        continue;
+      }
+
+      // Update the best two DISTINCT landmark candidates for this
+      // new-frame keypoint.
+      auto& best = best_matches[keypoint_idx];
+
+      if (landmark_distance < best.best_distance) {
+        best.second_best_distance = best.best_distance;
+        best.best_distance = landmark_distance;
+        best.best_landmark_id = landmark_set.landmark_id;
+        best.has_best = true;
+
+      } else if (landmark_distance < best.second_best_distance) {
+        best.second_best_distance = landmark_distance;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. Ratio test
+  // ---------------------------------------------------------------------------
+
+  struct AcceptedMatch {
+    size_t keypoint_idx;
+    dyno::TrackletId landmark_id;
+    int distance;
+  };
+
+  std::vector<AcceptedMatch> accepted_matches;
+
+  for (size_t i = 0; i < best_matches.size(); ++i) {
+    const auto& best = best_matches[i];
+
+    if (!best.has_best) {
+      continue;
+    }
+
+    // Ratio test, when a second distinct landmark candidate exists.
+    if (best.second_best_distance != std::numeric_limits<int>::max()) {
+      if (best.best_distance >= kRatioThreshold * best.second_best_distance) {
+        continue;
+      }
+    }
+
+    accepted_matches.push_back({i, best.best_landmark_id, best.best_distance});
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. Enforce one-to-one associations
+  // ---------------------------------------------------------------------------
+
+  std::sort(accepted_matches.begin(), accepted_matches.end(),
+            [](const AcceptedMatch& a, const AcceptedMatch& b) {
+              return a.distance < b.distance;
+            });
+
+  std::unordered_set<size_t> matched_keypoints;
+  std::unordered_set<dyno::TrackletId> matched_landmarks;
+
+  for (const auto& match : accepted_matches) {
+    if (!matched_keypoints.insert(match.keypoint_idx).second) {
+      continue;
+    }
+
+    if (!matched_landmarks.insert(match.landmark_id).second) {
+      continue;
+    }
+
+    matches.push_back({static_cast<Index>(match.keypoint_idx),
+                       match.landmark_id, match.distance});
+  }
+
+  cv::Mat debug_image = container.rgb().clone();
+
+  CHECK_EQ(debug_image.type(), CV_8UC3);
+
+  // make copy of orignial allowing merging of lmk ids
+  const std::vector<dyno::TrackletId> original_tids = frame->ids;
+  for (const auto& match : matches) {
+    const size_t keypoint_idx = static_cast<size_t>(match.keypoint_index);
+
+    CHECK_LT(keypoint_idx, frame->numKeypoints());
+
+    MapPoint map_point;
+
+    if (!estimator.getMapPoint(match.landmark_id, map_point)) {
+      continue;
+    }
+
+    const auto projected_it = projected_landmarks.find(match.landmark_id);
+
+    if (projected_it == projected_landmarks.end()) {
+      continue;
+    }
+
+    const Keypoint& projected = projected_it->second;
+    const gtsam::Point2& observed = keypoint_locations[keypoint_idx];
+
+    const cv::Point projected_pt(cvRound(projected.x()),
+                                 cvRound(projected.y()));
+
+    const cv::Point observed_pt(cvRound(observed.x()), cvRound(observed.y()));
+
+    // Colour corresponds to the map point's object ID.
+    const dyno::Color color = dyno::Color::uniqueId(map_point.id);
+
+    const cv::Scalar cv_color(color.b, color.g, color.r);
+
+    // Draw the projected map point.
+    cv::circle(debug_image, projected_pt, 5, cv_color, 2, cv::LINE_AA);
+
+    // Draw the observed keypoint.
+    cv::circle(debug_image, observed_pt, 4, cv_color, -1, cv::LINE_AA);
+
+    // Connect projection and observation.
+    cv::line(debug_image, projected_pt, observed_pt, cv_color, 1, cv::LINE_AA);
+
+    // A tracklet ID different from the map point ID indicates that
+    // the frontend track has not yet been associated with this map point.
+    if (original_tids[keypoint_idx] != map_point.id) {
+      // ++stats.tracklet_id_mismatches;
+
+      // merge landmarks
+      // we assume we only need to iterate since the last keyframe to the
+      // current frame to reset keypoints
+      dyno::TrackletId from_id = original_tids[keypoint_idx];
+      dyno::TrackletId to_id = map_point.id;
+
+      VLOG(30) << "Matched VO keypoint: " << from_id << " -> " << to_id;
+
+      // need to do it for all these frames becuase the BA will include the most
+      // recent frames
+      //  too not just the keyframes
+      //  for(dyno::FrameId k0 = latest_fid; k0 <= frame->getFrameId(); k0++) {
+
+      // hack for now! dont update all frames just the ones that will be in the
+      // next bundle adjustmnet this will result in inconsistent ids in older
+      // frames
+      for (dyno::FrameId k0 : keyframes_and_current) {
+        auto vi_frame = estimator.getFramePtr(k0);
+        auto& idx_map = vi_frame->local_indices;
+
+        const auto from_it = idx_map.find(from_id);
+        const auto to_it = idx_map.find(to_id);
+
+        // TODO: not a permanent slution as if both IDS exist in the same frame,
+        // we will need
+        //  somehow to resovle diplicate observations and retain one!
+
+        if (from_it != idx_map.end()) {
+          if (to_it != idx_map.end()) {
+            // we have a match but this frame has somehow seen both ids!
+            auto from_idx = from_it->second;
+            auto to_idx = to_it->second;
+
+            Keypoint from_kp;
+            vi_frame->getKeypointByIndex(from_idx, from_kp);
+            Keypoint to_kp;
+            vi_frame->getKeypointByIndex(to_idx, to_kp);
+
+            std::cout << "from_id: " << from_id << ", index: " << from_idx
+                      << ", measurement: " << from_kp.transpose() << std::endl;
+
+            std::cout << "to_id: " << to_id << ", index: " << to_idx
+                      << ", measurement: " << to_kp.transpose() << std::endl;
+          }
+          CHECK(to_it == idx_map.end())
+              << "Cannot merge tracklets: both IDs already exist in frame "
+              << k0 << ". from_id=" << from_id << ", to_id=" << to_id;
+
+          const Index index = from_it->second;
+
+          idx_map.erase(from_it);
+          idx_map.emplace(to_id, index);
+
+          CHECK_EQ(vi_frame->ids[index], from_id);
+          vi_frame->ids[index] = to_id;
+        }
+      }
+
+      merged_lmks[from_id] = to_id;
+      // merge observations of from into to, and remove the from landmark from
+      // the map!
+      estimator.mergeLandmark(from_id, to_id);
+
+      // Red cross around the observed keypoint.
+      cv::drawMarker(debug_image, observed_pt, cv::Scalar(0, 0, 255),
+                     cv::MARKER_CROSS, 14, 2, cv::LINE_AA);
+    }
+  }
+
+  // stats.accepted_matches = matches.size();
+
+  cv::imshow("VIO Map Matches", debug_image);
+  cv::waitKey(1);
+}
+
 struct StereoMeasurementFiller {
   const gtsam::Pose3 left_Pose_right;
   const gtsam::Cal3_S2 mono_cal;
@@ -609,7 +1276,7 @@ struct StereoMeasurementFiller {
   }
 };
 
-size_t Frontend::matchToVioMap(
+size_t Frontend::temporalVioTriangultion(
     VioGraphEstimator& estimator, ViFrame::Ptr frame,
     std::vector<KeypointIdentifier>& new_measurements) {
   const size_t num_threads = std::max(1u, std::thread::hardware_concurrency());

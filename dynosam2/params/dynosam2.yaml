@@ -1,7 +1,8 @@
 estimator_parameters:
+  # num_static_keyframes: 5
   num_static_keyframes: 5
   enforce_realtime: false
-  realtime_time_limit: 0.01
+  realtime_time_limit: 0.03
 
 
 imu_parameters:

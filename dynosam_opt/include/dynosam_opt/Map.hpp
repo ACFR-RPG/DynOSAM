@@ -1410,6 +1410,49 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     return true;
   }
 
+  bool mergeLandmark(dyno::TrackletId from_id, dyno::TrackletId to_id) {
+    auto interface = this->asLandmarkInterface();
+    SharedLandmarkNodeT lmk_node_from = interface->getLandmark(from_id);
+    if (!lmk_node_from) {
+      return false;
+    }
+
+    SharedLandmarkNodeT lmk_node_to = interface->getLandmark(to_id);
+    if (!lmk_node_to) {
+      VLOG(20) << "Failed to merge landmarks: to landmark node i=" << to_id
+               << " does not exist!";
+
+      return false;
+    }
+
+    // meaasurements should not be overwritten in derived class!
+    for (const auto& [frame, Z] : lmk_node_from->getMeasurements()) {
+      lmk_node_to->add(frame, Z);
+    }
+
+    return removeLandmark(from_id);
+
+    // // merge derived seen frames
+    // auto& derived_seen_frames_to = lmk_node_to->getSeenFrames();
+    // const auto& derived_seen_frames_from = lmk_node_from->getSeenFrames();
+    // derived_seen_frames_to.insert(derived_seen_frames_from.begin(),
+    // derived_seen_frames_from.end());
+
+    // // merge base seen frames and measurements
+    // const LandmarkNodeBase<NodeTypes>& base_lmk_node_from =
+    //     static_cast<const LandmarkNodeBase<NodeTypes>&>(*lmk_node_from);
+    // const auto& base_seen_frames_from = base_lmk_node_to.getSeenFrames();
+
+    // LandmarkNodeBase<NodeTypes>& base_lmk_node_to =
+    //     static_cast<LandmarkNodeBase<NodeTypes>&>(*lmk_node_to);
+
+    // for(const auto& [frame, Z] : base_lmk_node_from.getMeasurements()) {
+    //   base_lmk_node_to.add(frame, Z);
+    // }
+
+    // remove from entirely
+  }
+
   template <typename DERIVEDSTATUS>
   AffectedStates updateObservations(
       const GenericTrackedStatusVector<DERIVEDSTATUS>& measurements) {

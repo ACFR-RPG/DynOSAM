@@ -866,6 +866,7 @@ FeatureTracker::sparseFeatureTrack(
 
       const size_t num_good_points = good_tracks->size();
 
+      // TODO: try opengv implementation, likely faster!
       const cv::Mat inlier_mask =
           dyno::findEssential(good_tracks->previous_points, good_tracks->points,
                               cv::Mat(K_cv_), kThresholdE, kEMaxIters);
