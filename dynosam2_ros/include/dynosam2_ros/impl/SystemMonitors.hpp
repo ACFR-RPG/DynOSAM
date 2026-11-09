@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Diagnostics.hpp"
 #include "dynosam_common/utils/Timing.hpp"
@@ -29,6 +31,8 @@ class LifecycleMonitor : public dyno::DiagnosticTaskRunner {
 
   dyno::utils::Timer::TimePoint startup_time_;
   dyno::utils::Timer::TimePoint last_processing_time_;
+
+  std::mutex mutex_;
 };
 
 }  // namespace dyno2

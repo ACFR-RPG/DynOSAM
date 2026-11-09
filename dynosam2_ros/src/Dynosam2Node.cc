@@ -57,7 +57,6 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
       std::make_unique<dyno::DynoDiagnosticsTaskManager>(node_ptr);
   auto lifecycle_monitor = std::make_shared<LifecycleMonitor>();
   diagnostics_updater_->registerTask("Application", lifecycle_monitor);
-  diagnostics_updater_->forceUpdate();
 
   std::string cuda_enabled_message;
   dyno::utils::opencvCudaAvailable(&cuda_enabled_message);
@@ -160,7 +159,10 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   data_interface_spinner_ = makePipelineSpinner(data_interface_);
   pipeline_spinner_ = makePipelineSpinner(pipeline_);
 
-  auto spinOnce = [&]() -> void {
+  lifecycle_monitor->setState(SystemState::RUNNING);
+
+  // must obtain monitor by copy
+  auto spinOnce = [&, lifecycle_monitor]() -> void {
     // spin while there is work to do!
     // TODO: and SLAM is still running!!
     if (!(data_reader_->spin() || pipeline_->isWorking())) {
@@ -173,6 +175,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
     // memory does not grow as we will try and pull images from the display
     // queue
     viz_->displayImages();
+    lifecycle_monitor->recordHeartBeat();
   };
 
   // so that all process is encapsulated within this class we use a timer
