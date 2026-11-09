@@ -49,7 +49,7 @@ def generate_launch_description():
                     {"rescale_width": LaunchConfiguration("rescale_width")},
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},
-                    {"input_image_mode": "rgb+aligned_depth"},
+                    {"input_image_mode": "rgb+aligned_depth+imu"},
                     {"base_frame": LaunchConfiguration("base_frame")},
                     {"odom_frame": LaunchConfiguration("odom_frame")},
                     {"depth_scale": LaunchConfiguration("depth_scale")},

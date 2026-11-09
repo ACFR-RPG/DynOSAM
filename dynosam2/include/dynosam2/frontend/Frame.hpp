@@ -4,6 +4,8 @@
 #include <gtsam/geometry/Point3.h>
 #include <gtsam/geometry/StereoPoint2.h>
 
+#include <opencv2/features2d.hpp>
+
 #include "dynosam2/common/Types.hpp"
 #include "dynosam2/estimator/ImuError.hpp"
 #include "dynosam2/frontend/FeatureBlockContainer.hpp"
@@ -175,11 +177,21 @@ class ViFrame : public Frame {
   void setRelativePose(RelativePoseErrorBase::Ptr relative_pose);
   RelativePoseErrorBase::Ptr getRelativePose() const { return relative_pose_; }
 
+  inline bool hasDescriptors() const { return !descriptors_.empty(); }
+  inline int descriptorSize() const { return descriptors_.cols; }
+
+  bool describe(cv::Ptr<cv::Feature2D> describer);
+  std::pair<bool, const uint8_t*> getDescriptorByIndex(Index index) const;
+
  private:
   //! Relative pose T_ij coming either from insertial measurements or pseudo VO
   //! measurement. Indicates the reference frame which we attempted to track
   //! against
   RelativePoseErrorBase::Ptr relative_pose_;
+
+  //! Brisk descriptors. Only available for Keyframes
+  cv::Mat descriptors_;
+  std::vector<uchar> valid_descriptors_;
 };
 
 class DoFrame : public Frame {

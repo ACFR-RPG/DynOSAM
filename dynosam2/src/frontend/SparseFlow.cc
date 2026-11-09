@@ -72,8 +72,13 @@ OpticalFlowLK_GPU::Result OpticalFlowLK_GPU::compute(
     const dyno::WrappedRGBMono& prev_img, const dyno::WrappedRGBMono& next_img,
     const std::vector<cv::Point2f>& prev_points,
     const std::vector<cv::Point2f>* predicted_points) const {
-  const cv::Mat prev = dyno::ImageType::RGBMono::toMono(prev_img);
-  const cv::Mat next = dyno::ImageType::RGBMono::toMono(next_img);
+  // const cv::Mat prev = dyno::ImageType::RGBMono::toMono(prev_img);
+  // const cv::Mat next = dyno::ImageType::RGBMono::toMono(next_img);
+
+  // TODO: pyramids not actually used so we waste computation!
+  const cv::Mat prev = prev_img.computeImagePyramid(win_size, max_level).mono;
+
+  const cv::Mat next = next_img.computeImagePyramid(win_size, max_level).mono;
 
   if (prev.empty() || next.empty()) {
     throw std::invalid_argument("OpticalFlowLK_GPU received an empty image");

@@ -39,7 +39,7 @@ def run_omd():
     run_sequnce("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test_omd", omd_dataset)
 
 def run_kitti():
-    run_sequnce("/root/data/vdo_slam/kitti/kitti/0020/", "test_kitti", kitti_dataset)
+    run_sequnce("/root/data/vdo_slam/kitti/kitti/0000/", "test_kitti", kitti_dataset)
 
 def run_viodes():
     # run_sequnce("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)

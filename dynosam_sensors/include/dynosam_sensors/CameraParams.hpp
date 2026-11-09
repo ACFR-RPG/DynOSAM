@@ -140,6 +140,18 @@ class CameraParams {
   inline const std::string& referenceFrame() const { return reference_frame_; }
   void referenceFrame(const std::string& frame) { reference_frame_ = frame; }
 
+  /// @brief Compute vertical field-of-view.
+  /// @return double
+  inline double vFov() const {
+    return 0.5 * static_cast<double>(ImageHeight()) / fy();
+  }
+
+  /// @brief Computed horizontal field-of-view.
+  /// @return double
+  inline double hFov() const {
+    return 0.5 * static_cast<double>(ImageWidth()) / fx();
+  }
+
   inline const cv::Size& imageSize() const { return image_size_; }
 
   inline cv::Mat getCameraMatrix() const { return K_; }
