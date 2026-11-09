@@ -61,13 +61,6 @@ void DynoDiagnosticsTask::run(DiagnosticStatusWrapperRos& stat) {
   }
 }
 
-void DynoDiagnosticsTaskManager::registerTask(
-    DynoDiagnosticsTask::Ptr diagnostics_task) {
-  // properly store the task in memory and provide a reference to the updater
-  dyno_diagnostics_.push_back(diagnostics_task);
-  updater_.add(*diagnostics_task);
-}
-
 void DynoDiagnosticsTaskManager::forceUpdate() { updater_.force_update(); }
 void DynoDiagnosticsTaskManager::broadcast(unsigned char lvl,
                                            const std::string msg) {

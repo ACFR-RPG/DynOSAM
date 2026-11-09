@@ -51,7 +51,30 @@ class DynoDiagnosticsTaskManager {
     setHardwareId("none");
   }
 
-  void registerTask(DynoDiagnosticsTask::Ptr diagnostics_task);
+  void registerTask(
+      const std::string& name,
+      const std::shared_ptr<dyno::DiagnosticTaskRunner>& diagnostic_task) {
+    // properly store the task in memory
+    dyno_diagnostic_tasks_.push_back(diagnostic_task);
+    registerTask(
+        std::make_shared<DynoDiagnosticsTask>(name, diagnostic_task.get()));
+  }
+
+  void registerTask(
+      const std::shared_ptr<dyno::DiagnosticTaskRos>& diagnostic_task) {
+    ros_diagnostics_shared_.push_back(diagnostic_task);
+    updater_.add(*diagnostic_task);
+  }
+
+  /**
+   * @brief Register an external ROS diagnostic task without taking memory
+   * ownership of the object.
+   *
+   * @param diagnostic_task DiagnosticTaskRos&
+   */
+  void registerTask(DiagnosticTaskRos& diagnostic_task) {
+    updater_.add(diagnostic_task);
+  }
 
   /* Force the internal udpater to update if something has changed */
   void forceUpdate();
@@ -63,10 +86,10 @@ class DynoDiagnosticsTaskManager {
   DiagnosticUpdaterRos updater_;
   // Need a vector becuase DiagnosticTaskVector stores everything with
   // references and we manage all tasks statefully so need to store the objects
-  // somewhere Specifically store the dyno diagnostic task wrapper as they only
-  // exist as an interface between the DiagnosticTaskRunner (which is stored in
-  // the Pipeline) and the ROS level runner
-  std::vector<DynoDiagnosticsTask::Ptr> dyno_diagnostics_;
+  // somewhere to avoid them going out of scope (and deallocating memory!)
+  std::vector<std::shared_ptr<DiagnosticTaskRos>> ros_diagnostics_shared_;
+  // dyno tasks that were created via heap memory
+  std::vector<std::shared_ptr<DiagnosticTaskRunner>> dyno_diagnostic_tasks_;
 };
 
 }  // namespace dyno

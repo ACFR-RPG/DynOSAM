@@ -8,24 +8,36 @@
 
 namespace dyno {
 
-ImageBatchDisplayer::ImageBatchDisplayer(ImageDisplayQueue* display_queue)
-    : display_queue_(CHECK_NOTNULL(display_queue)) {}
-
-void ImageBatchDisplayer::displayFromQueue(size_t wait_time_ms) {
-  std::vector<ImageToDisplay> images_to_display;
-  if (getFromQueue(images_to_display, wait_time_ms)) {
-    for (auto d : displayers_) {
-      d->display(images_to_display);
-    }
-  }
-}
-
-void ImageBatchDisplayer::addDisplay(ImageDisplay::Ptr display) {
+void ImageDisplayerBase::addDisplay(ImageDisplay::Ptr display) {
   CHECK_NOTNULL(display);
   displayers_.push_back(display);
 }
 
-bool ImageBatchDisplayer::getFromQueue(std::vector<ImageToDisplay>& images,
+void ImageDisplayerBase::display(const ImageToDisplayVector& images) {
+  for (auto d : displayers_) {
+    d->display(images);
+  }
+}
+
+void ImageBatchDisplayer::display(const ImageToDisplay& image) {
+  ImageDisplayerBase::display(ImageToDisplayVector{image});
+}
+void ImageBatchDisplayer::display(const std::string& name,
+                                  const cv::Mat& image) {
+  this->display(ImageToDisplay(name, image));
+}
+
+ImageQueueDisplayer::ImageQueueDisplayer(ImageDisplayQueue* display_queue)
+    : display_queue_(CHECK_NOTNULL(display_queue)) {}
+
+void ImageQueueDisplayer::displayFromQueue(size_t wait_time_ms) {
+  ImageToDisplayVector images_to_display;
+  if (getFromQueue(images_to_display, wait_time_ms)) {
+    this->display(images_to_display);
+  }
+}
+
+bool ImageQueueDisplayer::getFromQueue(ImageToDisplayVector& images,
                                        size_t wait_time_ms) {
   return display_queue_->popAll(images, wait_time_ms);
 }
@@ -71,7 +83,7 @@ SmartOpenCvDisplayer::SmartOpenCvDisplayer() : can_display_(isGuiAvailable()) {
   }
 }
 
-void SmartOpenCvDisplayer::display(const std::vector<ImageToDisplay>& images) {
+void SmartOpenCvDisplayer::display(const ImageToDisplayVector& images) {
   if (!isDisplayAvailable()) {
     return;
   }

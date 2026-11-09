@@ -28,7 +28,7 @@ class DynamicSlamVisualizer {
   /// @param display_queue
   void setDisplayQueue(dyno::ImageDisplayQueue* display_queue);
 
-  /// @brief Adds an image display to the ImageBatchDisplayer. Must be called
+  /// @brief Adds an image display to the ImageQueueDisplayer. Must be called
   /// after setDisplayQueue.
   /// @param display
   void addImageDisplay(dyno::ImageDisplay::Ptr display);
@@ -68,7 +68,7 @@ class DynamicSlamVisualizer {
   //! ROS style frame ids for output frames
   dyno::ReferenceFrames reference_frames_;
 
-  dyno::ImageBatchDisplayer::UniquePtr image_displayer_{nullptr};
+  dyno::ImageQueueDisplayer::UniquePtr image_displayer_{nullptr};
   dyno::SharedGroundTruth shared_ground_truth_;
 
   // keep the camera in robot coordinate frame, not estimated (camera) frame

@@ -16,7 +16,8 @@ struct ImageToDisplay {
   cv::Mat image_;
 };
 
-using ImageDisplayQueue = ThreadsafeQueue<ImageToDisplay>;
+/// @brief Alias to a vector of ImageToDisplay types
+typedef std::vector<ImageToDisplay> ImageToDisplayVector;
 
 /// @brief Base class to actually display a set of images
 class ImageDisplay {
@@ -24,8 +25,35 @@ class ImageDisplay {
   DYNO_POINTER_TYPEDEFS(ImageDisplay)
   virtual ~ImageDisplay() = default;
 
-  virtual void display(const std::vector<ImageToDisplay>& images) = 0;
+  virtual void display(const ImageToDisplayVector& images) = 0;
 };
+
+class ImageDisplayerBase {
+ public:
+  void addDisplay(ImageDisplay::Ptr display);
+  virtual ~ImageDisplayerBase() = default;
+
+ protected:
+  /// @brief Send provided images to the attached displayers
+  /// @param images
+  void display(const ImageToDisplayVector& images);
+
+ private:
+  //! The classes that will actually do the displaying
+  std::vector<ImageDisplay::Ptr> displayers_;
+};
+
+/**
+ * @brief Immediately displays images via the attached displays
+ *
+ */
+class ImageBatchDisplayer : public ImageDisplayerBase {
+ public:
+  void display(const ImageToDisplay& image);
+  void display(const std::string& name, const cv::Mat& image);
+};
+
+using ImageDisplayQueue = ThreadsafeQueue<ImageToDisplay>;
 
 /**
  * @brief  An non threaded image pipeline class that pulls a batch of images
@@ -36,25 +64,19 @@ class ImageDisplay {
  * since many images might have been added since the last call.
  *
  */
-class ImageBatchDisplayer {
+class ImageQueueDisplayer : public ImageDisplayerBase {
  public:
-  DYNO_POINTER_TYPEDEFS(ImageBatchDisplayer)
-  ImageBatchDisplayer(ImageDisplayQueue* display_queue);
-  virtual ~ImageBatchDisplayer() = default;
+  DYNO_POINTER_TYPEDEFS(ImageQueueDisplayer)
+  ImageQueueDisplayer(ImageDisplayQueue* display_queue);
+  virtual ~ImageQueueDisplayer() = default;
 
   void displayFromQueue(size_t wait_time_ms = 2);
-  void addDisplay(ImageDisplay::Ptr display);
-
- protected:
-  void display(const std::vector<ImageToDisplay>& images);
 
  private:
-  bool getFromQueue(std::vector<ImageToDisplay>& images, size_t wait_time_ms);
+  bool getFromQueue(ImageToDisplayVector& images, size_t wait_time_ms);
 
  private:
   ImageDisplayQueue* display_queue_;
-  //! The classes that will actually do the displaying
-  std::vector<ImageDisplay::Ptr> displayers_;
 };
 
 /**
@@ -69,7 +91,7 @@ class ImageBatchDisplayer {
 class SmartOpenCvDisplayer : public ImageDisplay {
  public:
   SmartOpenCvDisplayer();
-  void display(const std::vector<ImageToDisplay>& images) override;
+  void display(const ImageToDisplayVector& images) override;
 
   inline bool isDisplayAvailable() const { return can_display_; }
 

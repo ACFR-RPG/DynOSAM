@@ -3,6 +3,7 @@
 #include <gflags/gflags.h>
 
 #include "dynosam2_ros/Dynosam2Node-impl.hpp"
+#include "dynosam2_ros/impl/SystemMonitors.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/Statistics.hpp"
 #include "dynosam_ros_common/CameraSystem.hpp"
@@ -51,6 +52,12 @@ static const auto params_path_message =
 Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   rclcpp::Node* node_ptr = &node_;
   RCLCPP_INFO_STREAM(node_.get_logger(), "Starting Dynosam2Node");
+
+  diagnostics_updater_ =
+      std::make_unique<dyno::DynoDiagnosticsTaskManager>(node_ptr);
+  auto lifecycle_monitor = std::make_shared<LifecycleMonitor>();
+  diagnostics_updater_->registerTask("Application", lifecycle_monitor);
+  diagnostics_updater_->forceUpdate();
 
   std::string cuda_enabled_message;
   dyno::utils::opencvCudaAvailable(&cuda_enabled_message);
@@ -191,8 +198,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   //         .finish();
 
   // if (publish_diagnostics_param.get<bool>()) {
-  //   diagnostics_updater_ =
-  //       std::make_unique<dyno::DynoDiagnosticsTaskManager>(node_ptr);
+  //
 
   //   hooks->register_diagnostics_task = [&](const std::string& name,
   //                                          dyno::DiagnosticTaskRunner* task)

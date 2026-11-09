@@ -40,7 +40,7 @@
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
 DEFINE_bool(use_opencv_display, true,
-            "If true, the ImageBatchDisplayer will be processed");
+            "If true, the ImageQueueDisplayer will be processed");
 
 namespace dyno {
 

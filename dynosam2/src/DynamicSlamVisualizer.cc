@@ -11,7 +11,7 @@ DynamicSlamVisualizer::DynamicSlamVisualizer(
 
 void DynamicSlamVisualizer::setDisplayQueue(
     dyno::ImageDisplayQueue* display_queue) {
-  image_displayer_ = std::make_unique<dyno::ImageBatchDisplayer>(display_queue);
+  image_displayer_ = std::make_unique<dyno::ImageQueueDisplayer>(display_queue);
 }
 
 void DynamicSlamVisualizer::setGroundTruth(
