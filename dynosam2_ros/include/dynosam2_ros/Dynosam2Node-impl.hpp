@@ -27,8 +27,10 @@ struct Dynosam2Node::Impl {
 
  private:
   bool loadParameters(PipelineParameters& parameters);
-  dyno::DataReader::Ptr createDataReader(PipelineParameters& parameters,
-                                         bool* is_online);
+
+  /// @brief If the ROS parameter 'online' is true
+  /// @return
+  bool isOnline();
 
   /**
    * @brief Construct the necessary file paths to load all configs from a

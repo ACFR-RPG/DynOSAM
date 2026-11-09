@@ -1,6 +1,7 @@
 #include "dynosam_ros_common/Diagnostics.hpp"
 
 #include "dynosam_common/Types.hpp"  //convert
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 
@@ -40,6 +41,34 @@ bool convert(const DiagnosticsStatus& dyno_diagnostics,
   DiagnosticStatusRos& status =
       static_cast<DiagnosticStatusRos&>(ros_diagnostics);
   return convert(dyno_diagnostics, status);
+}
+
+SensorDiagnostics::SensorDiagnostics(const std::string& sensor_name,
+                                     const std::string& statistics_prefix)
+    : sensor_name_(sensor_name),
+      statistics_prefix_(statistics_prefix),
+      statistics_label_(
+          ConstructStatisticsLabel(sensor_name, statistics_prefix)) {}
+
+void SensorDiagnostics::tick() {
+  dyno::utils::ChronoTimingStats t(statistics_label_);
+}
+
+bool SensorDiagnostics::run(DiagnosticsStatus& status) {
+  status.name = "Sensor:" + sensor_name_;
+
+  const size_t events = utils::Statistics::GetNumSamples(statistics_label_);
+  const double freq = utils::Statistics::GetHz(statistics_label_);
+  return false;
+}
+
+std::string SensorDiagnostics::ConstructStatisticsLabel(
+    const std::string& sensor_name, const std::string& statistics_prefix) {
+  if (statistics_prefix.empty()) {
+    return sensor_name;
+  } else {
+    return statistics_prefix + "." + sensor_name;
+  }
 }
 
 DynoDiagnosticsTask::DynoDiagnosticsTask(const std::string& task_name,

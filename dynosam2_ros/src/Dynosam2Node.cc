@@ -65,8 +65,59 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   PipelineParameters system_paramters;
   loadParameters(system_paramters);
 
-  bool is_online;
-  data_reader_ = createDataReader(system_paramters, &is_online);
+  // load dataset reader
+  const bool is_online = isOnline();
+  if (is_online) {
+    auto mode_param = dyno::ros::Parameter::Builder(&node_, "input_image_mode",
+                                                    "rgb+aligned_depth")
+                          .description(
+                              "Specify sensor and camera stream modes (ie. "
+                              "rgb+aligned_depth, "
+                              "+stereo, +imu etc.)")
+                          .finish();
+
+    dyno::SensorMode sensor_mode(mode_param.get<std::string>());
+    reconfigure(sensor_mode, system_paramters);
+
+    lifecycle_monitor->setSensorMode(sensor_mode.rawSensorMode());
+
+    // TODO: for now, just assume that the params path is actually just a file
+    // (ie path to dynosam2.yaml!)
+    //  this might not be true and then we should assume to get the files from
+    //  inside this folder
+    dyno::LoadingSourceParams loading_sources;
+    loading_sources.camera_yaml_path = params_path_.camera_param_file_path;
+    loading_sources.imu_yaml_path = params_path_.imu_param_file_path;
+    loading_sources.cameras_from_ros = true;
+
+    dyno::SensorSystem::Ptr sensor_system =
+        std::make_shared<dyno::SensorSystem>(
+            node_.create_sub_node("dataprovider"), sensor_mode.depthRigType(),
+            loading_sources);
+
+    for (const auto& configs : sensor_mode.configs()) {
+      sensor_system->addCamera(configs);
+    }
+
+    sensor_system->enableImu(sensor_mode.useImu());
+    sensor_system->finalise();
+
+    // do better with the subnodes
+    auto subscriber = std::make_shared<dyno::Subscriber>(
+        sensor_system, node_.create_sub_node("images"));
+    data_reader_ = subscriber;
+  } else {
+    std::string dataset_path(getFilePathFromParams(&node_, "dataset_path",
+                                                   "Path to dataset folder"));
+
+    RCLCPP_INFO_STREAM(node_.get_logger(),
+                       "Loading dataset from: " << dataset_path);
+
+    lifecycle_monitor->setSensorMode("dataset");
+    data_reader_ = dyno::DataProviderFactory::Create(
+        dataset_path, std::string(""),
+        static_cast<dyno::DatasetType>(FLAGS_data_provider_type));
+  }
   CHECK_NOTNULL(data_reader_);
 
   auto sensor_rig = data_reader_->sensorRig();
@@ -245,64 +296,12 @@ bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
   return true;
 }
 
-dyno::DataReader::Ptr Dynosam2Node::Impl::createDataReader(
-    PipelineParameters& parameters, bool* is_online) {
+bool Dynosam2Node::Impl::isOnline() {
   dyno::ros::Parameter is_online_param =
       dyno::ros::Parameter::Builder(&node_, "online", false)
           .description("If the online DataReader should be used")
           .finish();
-
-  if (is_online) *is_online = is_online_param.get<bool>();
-
-  if (is_online_param.get<bool>()) {
-    auto mode_param = dyno::ros::Parameter::Builder(&node_, "input_image_mode",
-                                                    "rgb+aligned_depth")
-                          .description(
-                              "Specify sensor and camera stream modes (ie. "
-                              "rgb+aligned_depth, "
-                              "+stereo, +imu etc.)")
-                          .finish();
-
-    dyno::SensorMode sensor_mode(mode_param.get<std::string>());
-    reconfigure(sensor_mode, parameters);
-
-    dyno::LoadingSourceParams loading_sources;
-    // TODO: for now, just assume that the params path is actually just a file
-    // (ie path to dynosam2.yaml!)
-    //  this might not be true and then we should assume to get the files from
-    //  inside this folder
-    loading_sources.camera_yaml_path = params_path_.camera_param_file_path;
-    loading_sources.imu_yaml_path = params_path_.imu_param_file_path;
-    loading_sources.cameras_from_ros = true;
-
-    dyno::SensorSystem::Ptr sensor_system =
-        std::make_shared<dyno::SensorSystem>(
-            node_.create_sub_node("dataprovider"), sensor_mode.depthRigType(),
-            loading_sources);
-
-    for (const auto& configs : sensor_mode.configs()) {
-      sensor_system->addCamera(configs);
-    }
-
-    sensor_system->enableImu(sensor_mode.useImu());
-    sensor_system->finalise();
-
-    // do better with the subnodes
-    auto subscriber = std::make_shared<dyno::Subscriber>(
-        sensor_system, node_.create_sub_node("images"));
-    return subscriber;
-  } else {
-    std::string dataset_path(getFilePathFromParams(&node_, "dataset_path",
-                                                   "Path to dataset folder"));
-
-    RCLCPP_INFO_STREAM(node_.get_logger(),
-                       "Loading dataset from: " << dataset_path);
-
-    dyno::DataReader::Ptr data_loader = dyno::DataProviderFactory::Create(
-        dataset_path, std::string(""),
-        static_cast<dyno::DatasetType>(FLAGS_data_provider_type));
-    return data_loader;
-  }
+  return is_online_param.get<bool>();
 }
 
 Dynosam2Node::Impl::ParamterFileSystem::ParamterFileSystem(rclcpp::Node& node)

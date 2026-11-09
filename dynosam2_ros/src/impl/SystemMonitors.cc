@@ -29,8 +29,10 @@ LifecycleMonitor::LifecycleMonitor(SystemState starting_state)
       last_processing_time_(dyno::utils::Timer::tic()) {}
 
 void LifecycleMonitor::setState(SystemState state) { system_state_ = state; }
+void LifecycleMonitor::setSensorMode(const std::string& sensor_mode) {
+  sensor_mode_ = sensor_mode;
+}
 void LifecycleMonitor::recordHeartBeat() {
-  std::lock_guard<std::mutex> lock(mutex_);
   last_processing_time_ = dyno::utils::Timer::tic();
 }
 
@@ -38,12 +40,7 @@ bool LifecycleMonitor::run(dyno::DiagnosticsStatus& status) {
   status.name = "Lifecycle Monitor";
   status.values.insert2("Status", dyno::to_string(system_state_));
 
-  dyno::utils::Timer::TimePoint last_processed_time;
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-    last_processed_time = last_processing_time_;
-  }
-  const auto elapsed = last_processed_time - startup_time_;
+  const auto elapsed = last_processing_time_ - startup_time_;
 
   const auto hours = std::chrono::duration_cast<std::chrono::hours>(elapsed);
   const auto minutes =
@@ -56,6 +53,7 @@ bool LifecycleMonitor::run(dyno::DiagnosticsStatus& status) {
      << seconds.count();
 
   status.values.insert2("Uptime", ss.str());
+  status.values.insert2("Sensor Mode", sensor_mode_);
   status.level = dyno::DiagnosticsStatus::Level::Okay;
   return true;
 }

@@ -21,6 +21,7 @@ class LifecycleMonitor : public dyno::DiagnosticTaskRunner {
  public:
   LifecycleMonitor(SystemState starting_state = SystemState::INITIALISING);
   void setState(SystemState state);
+  void setSensorMode(const std::string& sensor_mode);
   void recordHeartBeat();
 
  protected:
@@ -28,11 +29,12 @@ class LifecycleMonitor : public dyno::DiagnosticTaskRunner {
 
  private:
   SystemState system_state_;
+  // Some metadata about what the source of input is
+  // If offline this will just be dataset
+  std::string sensor_mode_;
 
   dyno::utils::Timer::TimePoint startup_time_;
   dyno::utils::Timer::TimePoint last_processing_time_;
-
-  std::mutex mutex_;
 };
 
 }  // namespace dyno2
