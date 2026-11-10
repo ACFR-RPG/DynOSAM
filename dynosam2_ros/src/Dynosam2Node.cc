@@ -102,6 +102,9 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
     sensor_system->enableImu(sensor_mode.useImu());
     sensor_system->finalise();
 
+    // Attempt initial pose alignmnet (only valid if IMU provided)
+    system_paramters.frontend.attempt_initial_pose_alignment = true;
+
     // do better with the subnodes
     auto subscriber = std::make_shared<dyno::Subscriber>(
         sensor_system, node_.create_sub_node("images"));
@@ -117,6 +120,10 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
     data_reader_ = dyno::DataProviderFactory::Create(
         dataset_path, std::string(""),
         static_cast<dyno::DatasetType>(FLAGS_data_provider_type));
+
+    // we assume we are already aligned with the ground truth from the datasets
+    // so skip initial alignment step
+    system_paramters.frontend.attempt_initial_pose_alignment = false;
   }
   CHECK_NOTNULL(data_reader_);
 
@@ -205,7 +212,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   slam_->setPublicationQueue(&publication_queue_);
   slam_->setImageDisplayQueue(display_queue);
 
-  // launch spinners
+  // // launch spinners
   viz_spinner_ = makePipelineSpinner(viz_);
   data_interface_spinner_ = makePipelineSpinner(data_interface_);
   pipeline_spinner_ = makePipelineSpinner(pipeline_);
@@ -243,30 +250,11 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
       rclcpp::CallbackGroupType::MutuallyExclusive);
   spin_timer_ = node_ptr->create_wall_timer(std::chrono::milliseconds(20),
                                             spinOnce, spin_timer_group_);
-
-  // dyno::ros::Parameter publish_diagnostics_param =
-  //   dyno::ros::Parameter::Builder(node_ptr, "publish_diagnostics", true)
-  //         .description(
-  //             "If the diagnostics publisher should run, reporting stats for
-  //             all" " pipelines and modules.")
-  //         .finish();
-
-  // if (publish_diagnostics_param.get<bool>()) {
-  //
-
-  //   hooks->register_diagnostics_task = [&](const std::string& name,
-  //                                          dyno::DiagnosticTaskRunner* task)
-  //                                          {
-  //     CHECK_NOTNULL(task);
-  //     RCLCPP_INFO_STREAM(node_ptr->get_logger(),
-  //                        "Registering diagnostics task: " << name);
-  //     diagnostics_updater_->registerTask(
-  //         std::make_shared<dyno::DynoDiagnosticsTask>(name, task));
-  //   };
-  // }
 }
 
 Dynosam2Node::Impl::~Impl() {
+  RCLCPP_INFO(node_.get_logger(), "Shutting down Dynosam2 node");
+  if (spin_timer_) spin_timer_.reset();
   if (data_reader_) data_reader_->shutdown();
   if (data_interface_) data_interface_->shutdown();
   if (pipeline_) pipeline_->shutdown();
@@ -279,7 +267,17 @@ Dynosam2Node::Impl::~Impl() {
   //  the memory for all diagnostics tasks which are only stored in the
   //  updater with references/raw pointers
   if (diagnostics_updater_) diagnostics_updater_.reset(nullptr);
+
+  // must explicitly call reset before slam_ becuase pipeline owns an instane
+  // of the slam shared ptr. Theforefore, if we dont reset, calling
+  // slam_.reset() will not actually call the destructor of slam_ and things
+  // wont stop properly internally!
+  if (pipeline_) pipeline_.reset();
+  // this MUST call the slam_ destructor!
   if (slam_) slam_.reset();
+
+  display_queue_.shutdown();
+  publication_queue_.shutdown();
   LOG(INFO) << dyno::utils::Statistics::Print();
 }
 
