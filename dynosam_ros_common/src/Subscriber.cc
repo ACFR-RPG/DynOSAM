@@ -38,11 +38,11 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
   // habdle this better in the data-provider
   if (sensor_system_->imuEnabled()) {
     RCLCPP_INFO_STREAM(node_->get_logger(), "Imu enabled. Subscribing...");
-    imu_callback_group_ =
-        node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    imu_callback_group_ = node_->create_callback_group(
+        rclcpp::CallbackGroupType::MutuallyExclusive);
 
     rclcpp::SubscriptionOptions imu_sub_options;
-    // imu_sub_options.callback_group = imu_callback_group_;
+    imu_sub_options.callback_group = imu_callback_group_;
 
     imu_sub_ = node_->create_subscription<ImuAdaptedType>(
         "/dynosam/imu", rclcpp::SensorDataQoS(),

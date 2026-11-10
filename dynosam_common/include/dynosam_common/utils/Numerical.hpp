@@ -30,6 +30,11 @@
 
 #pragma once
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpsabi"
+#endif
+
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Vector.h>  //for fpequal
 
@@ -322,3 +327,7 @@ inline bool saveMatrixAsUpperTriangular(std::ostream& os,
 }
 
 }  // namespace dyno
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif

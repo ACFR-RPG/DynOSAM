@@ -91,7 +91,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         // NOT for dataset data as we assume that we are already algined to the
         // world-frame with the ground truth
         gtsam::Pose3 T_WS;
-        if (sensor_rig_->imuEnabled() && false) {
+        if (sensor_rig_->imuEnabled()) {
           // align with the world frame (z-down) using accelerometer
           // measurements
           bool success = initPoseImu(imu_measurements, T_WS);

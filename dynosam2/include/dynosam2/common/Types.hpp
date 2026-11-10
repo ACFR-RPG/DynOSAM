@@ -1,6 +1,23 @@
 #pragma once
 
+// TODO: unfortunately for Jetpack 6 boost::unordered_flat_set is unavailable
+// since we only
+//  have access to boost 1.74 and boost > 1.8 is needed. Instead we fall back to
+//  a 3rd party implementation these macros are inherited from dynosam_opt
+#if DYNOSAM_USE_BOOST_FLAT_CONTAINERS
 #include <boost/unordered/unordered_flat_map.hpp>
+template <typename Key, typename Value>
+using UnorderedFlatMap = boost::unordered_flat_map<Key, Value>;
+#pragma message("Using boost::unordered_flat_map")
+#elif DYNOSAM_HAS_PHMAP
+#include <parallel_hashmap/phmap.h>
+template <typename Key, typename Value>
+using UnorderedFlatMap = phmap::parallel_flat_hash_map<Key, Value>;
+#pragma message("Using phmap::parallel_flat_hash_map")
+#else
+#error "No supported unordered container implementation"
+#endif
+
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -39,8 +56,9 @@ struct UpdatedStates {
 
 class LandmarkMap {
  public:
-  typedef boost::unordered_flat_map<dyno::TrackletId, dyno::Landmark>
-      InternalData;
+  // typedef boost::unordered_flat_map<dyno::TrackletId, dyno::Landmark>
+  //     InternalData;
+  typedef UnorderedFlatMap<dyno::TrackletId, dyno::Landmark> InternalData;
 
   LandmarkMap() = default;
 

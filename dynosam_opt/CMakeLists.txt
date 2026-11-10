@@ -19,6 +19,39 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(dynosam_common REQUIRED)
 find_package(dynosam_sensors REQUIRED)
+include(FetchContent)
+
+
+#Prefer Boost >= 1.81 for regular flat hash containers.
+find_package(Boost 1.81 QUIET MODULE)
+
+if(Boost_FOUND)
+    message(WARNING "DynoSAM containers: Using Boost flat containers")
+    set(DYNOSAM_USE_BOOST_FLAT_CONTAINERS ON)
+    set(DYNOSAM_HAS_PHMAP OFF)
+else()
+    message(WARNING "DynoSAM containers: Boost >= 1.81 unavailable; using phmap")
+
+    set(PHMAP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(PHMAP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(PHMAP_INSTALL OFF CACHE BOOL "" FORCE)
+
+    FetchContent_Declare(
+        parallel-hashmap
+        GIT_REPOSITORY https://github.com/greg7mdp/parallel-hashmap.git
+        GIT_TAG        v2.1.0
+    )
+
+    FetchContent_MakeAvailable(parallel-hashmap)
+
+    # target_link_libraries(${PROJECT_NAME} PUBLIC phmap)
+    include_directories(${parallel-hashmap_SOURCE_DIR})
+
+    set(DYNOSAM_USE_BOOST_FLAT_CONTAINERS OFF)
+    set(DYNOSAM_HAS_PHMAP ON)
+endif()
+
+
 
 # setup targets
 include_directories(
@@ -50,6 +83,10 @@ add_library(${PROJECT_NAME} SHARED
 
 )
 
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+  DYNOSAM_USE_BOOST_FLAT_CONTAINERS=$<BOOL:${DYNOSAM_USE_BOOST_FLAT_CONTAINERS}>
+  DYNOSAM_HAS_PHMAP=$<BOOL:${DYNOSAM_HAS_PHMAP}>
+)
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC

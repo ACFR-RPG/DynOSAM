@@ -32,7 +32,24 @@
 
 #include <gtsam/base/FastMap.h>
 
+// TODO: unfortunately for Jetpack 6 boost::unordered_flat_set is unavailable
+// since we only
+//  have access to boost 1.74 and boost > 1.8 is needed. Instead we fall back to
+//  a 3rd party implementation
+#if DYNOSAM_USE_BOOST_FLAT_CONTAINERS
 #include <boost/unordered/unordered_flat_set.hpp>
+template <typename T, typename Hash, typename Equals>
+using UnorderedFlatSet = boost::unordered_flat_set<T, Hash, Equals>;
+#pragma message("Using boost::unordered_flat_set")
+#elif DYNOSAM_HAS_PHMAP
+#include <parallel_hashmap/phmap.h>
+template <typename T, typename Hash, typename Equals>
+using UnorderedFlatSet = phmap::parallel_flat_hash_set<T, Hash, Equals>;
+#pragma message("Using phmap::parallel_flat_hash_set")
+#else
+#error "No supported unordered container implementation"
+#endif
+
 #include <memory>
 #include <unordered_set>
 
@@ -354,7 +371,7 @@ struct NodeStructures {
     }
 
    private:
-    using ImplVector = boost::unordered_flat_set<SharedNode, Hash, Equals>;
+    using ImplVector = UnorderedFlatSet<SharedNode, Hash, Equals>;
     ImplVector data_;
   };
 
