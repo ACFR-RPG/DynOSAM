@@ -23,7 +23,7 @@ bool convert(const DiagnosticsStatus& dyno_diagnostics,
       break;
   }
 
-  ros_diagnostics.name = dyno_diagnostics.name;
+  // ros_diagnostics.name = dyno_diagnostics.name;
   ros_diagnostics.message = dyno_diagnostics.message;
   ros_diagnostics.hardware_id = dyno_diagnostics.hardware_id;
 
@@ -41,34 +41,6 @@ bool convert(const DiagnosticsStatus& dyno_diagnostics,
   DiagnosticStatusRos& status =
       static_cast<DiagnosticStatusRos&>(ros_diagnostics);
   return convert(dyno_diagnostics, status);
-}
-
-SensorDiagnostics::SensorDiagnostics(const std::string& sensor_name,
-                                     const std::string& statistics_prefix)
-    : sensor_name_(sensor_name),
-      statistics_prefix_(statistics_prefix),
-      statistics_label_(
-          ConstructStatisticsLabel(sensor_name, statistics_prefix)) {}
-
-void SensorDiagnostics::tick() {
-  dyno::utils::ChronoTimingStats t(statistics_label_);
-}
-
-bool SensorDiagnostics::run(DiagnosticsStatus& status) {
-  status.name = "Sensor:" + sensor_name_;
-
-  const size_t events = utils::Statistics::GetNumSamples(statistics_label_);
-  const double freq = utils::Statistics::GetHz(statistics_label_);
-  return false;
-}
-
-std::string SensorDiagnostics::ConstructStatisticsLabel(
-    const std::string& sensor_name, const std::string& statistics_prefix) {
-  if (statistics_prefix.empty()) {
-    return sensor_name;
-  } else {
-    return statistics_prefix + "." + sensor_name;
-  }
 }
 
 DynoDiagnosticsTask::DynoDiagnosticsTask(const std::string& task_name,
@@ -97,6 +69,19 @@ void DynoDiagnosticsTaskManager::broadcast(unsigned char lvl,
 }
 void DynoDiagnosticsTaskManager::setHardwareId(const std::string& hwid) {
   updater_.setHardwareID(hwid);
+}
+
+DiagnosticsRegistra::DiagnosticsRegistra(DynoDiagnosticsTaskManager* manager)
+    : manager_(manager) {}
+
+bool DiagnosticsRegistra::registerTask(
+    const std::string& name,
+    const std::shared_ptr<dyno::DiagnosticTaskRunner>& diagnostic_task) {
+  if (isValid()) {
+    manager_->registerTask(name, diagnostic_task);
+    return true;
+  }
+  return false;
 }
 
 }  // namespace dyno

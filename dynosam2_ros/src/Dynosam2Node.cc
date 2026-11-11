@@ -106,8 +106,13 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
     system_paramters.frontend.attempt_initial_pose_alignment = true;
 
     // do better with the subnodes
+    dyno::SubscriberParams subscriber_params;
+    subscriber_params.enable_topic_statistics = false;
+    // record diagnostics for subscriber
+    subscriber_params.diagnostics_registra =
+        dyno::SensorDiagnosticsRegistra(diagnostics_updater_.get());
     auto subscriber = std::make_shared<dyno::Subscriber>(
-        sensor_system, node_.create_sub_node("images"));
+        sensor_system, node_.create_sub_node("images"), subscriber_params);
     data_reader_ = subscriber;
   } else {
     std::string dataset_path(getFilePathFromParams(&node_, "dataset_path",

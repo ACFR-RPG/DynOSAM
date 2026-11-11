@@ -35,31 +35,6 @@ class DynoDiagnosticsTask : public DiagnosticTaskRos {
 };
 
 /**
- * @brief Class to track and monitor incoming sensor data.
- * Mirrors diagnostic_updater::FrequencyStatus in some ways
- *
- */
-class SensorDiagnostics : public DiagnosticTaskRunner {
- public:
-  SensorDiagnostics(const std::string& sensor_name,
-                    const std::string& statistics_prefix = "subscriber");
-
-  void tick();
-
- protected:
-  bool run(DiagnosticsStatus& status) override;
-
- private:
-  static std::string ConstructStatisticsLabel(
-      const std::string& sensor_name, const std::string& statistics_prefix);
-
- private:
-  std::string sensor_name_;
-  std::string statistics_prefix_;
-  std::string statistics_label_;
-};
-
-/**
  * @brief Simple diagnostics task manager to ensure all tasks are stored
  * properly in memory etc becuase the structure of the diagnostic_updater
  * is... odd... at best :)
@@ -116,6 +91,39 @@ class DynoDiagnosticsTaskManager {
   std::vector<std::shared_ptr<DiagnosticTaskRos>> ros_diagnostics_shared_;
   // dyno tasks that were created via heap memory
   std::vector<std::shared_ptr<DiagnosticTaskRunner>> dyno_diagnostic_tasks_;
+};
+
+/**
+ * @brief Simple class that enables registration with the
+ * DynoDiagnosticsTaskManager. To enable optional configuration this class can
+ * either be in a valid or invalid state, whereby the external registration of
+ * tasks will be conditionally ignored.
+ *
+ */
+class DiagnosticsRegistra {
+ public:
+  /**
+   * @brief Constructs a Registra with a provided DynoDiagnosticsTaskManager.
+   * If DynoDiagnosticsTaskManager is nullptr then the registra is considered in
+   * an invalid state and registering tasks will be ignored.
+   *
+   * @param manager DynoDiagnosticsTaskManager*
+   */
+  DiagnosticsRegistra(DynoDiagnosticsTaskManager* manager = nullptr);
+  virtual ~DiagnosticsRegistra() = default;
+
+  /// @brief Externally register a task.
+  /// @param name
+  /// @param diagnostic_task
+  /// @return True if actually registered
+  bool registerTask(
+      const std::string& name,
+      const std::shared_ptr<dyno::DiagnosticTaskRunner>& diagnostic_task);
+
+  inline bool isValid() const noexcept { return manager_ != nullptr; }
+
+ private:
+  DynoDiagnosticsTaskManager* manager_;
 };
 
 }  // namespace dyno

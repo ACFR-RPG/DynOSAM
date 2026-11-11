@@ -7,7 +7,8 @@
 namespace dyno {
 
 Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
-                       std::shared_ptr<rclcpp::Node> node)
+                       std::shared_ptr<rclcpp::Node> node,
+                       const SubscriberParams& params)
     : sensor_system_(sensor_system), node_(node) {
   if (!sensor_system->isInitalised()) {
     throw DynosamException(
@@ -16,6 +17,7 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
 
   image_subscribers_.resize(sensor_system->numCameraStreams());
   images_received_.resize(sensor_system->numCameraStreams());
+  image_stream_diagnostics_.resize(sensor_system->numCameraStreams());
 
   // set up image reception
   img_transport_.reset(new image_transport::ImageTransport(node));
@@ -33,20 +35,31 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
          return this->readMaskRosImage(msg);
        }}};
 
+  SensorDiagnosticsRegistra diagnostics_registra = params.diagnostics_registra;
   // as a potentially temporary solution start the imu subscriber before the
   // images so we at least have imu measurements before the first image should
   // habdle this better in the data-provider
   if (sensor_system_->imuEnabled()) {
     RCLCPP_INFO_STREAM(node_->get_logger(), "Imu enabled. Subscribing...");
-    imu_callback_group_ = node_->create_callback_group(
-        rclcpp::CallbackGroupType::MutuallyExclusive);
+    imu_callback_group_ =
+        node_->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
     rclcpp::SubscriptionOptions imu_sub_options;
     imu_sub_options.callback_group = imu_callback_group_;
 
+    if (params.enable_topic_statistics) {
+      imu_sub_options.topic_stats_options.state =
+          rclcpp::TopicStatisticsState::Enable;
+      RCLCPP_INFO_STREAM(node->get_logger(),
+                         "Enabling IMU subscription statistics");
+    }
+
+    SensorDiagnosticsBase::Ptr imu_diagnostics =
+        diagnostics_registra.create("IMU");
+
     imu_sub_ = node_->create_subscription<ImuAdaptedType>(
         "/dynosam/imu", rclcpp::SensorDataQoS(),
-        [&](const dyno::ImuMeasurement& imu) -> void {
+        [&, imu_diagnostics](const dyno::ImuMeasurement& imu) -> void {
           if (!imu_single_input_callback_) {
             RCLCPP_ERROR_THROTTLE(
                 node_->get_logger(), *node_->get_clock(), 1000,
@@ -54,8 +67,9 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
                 "imu_single_input_callback_ is not registered!");
             return;
           }
-          // TODO: is this going to add substantial delay?
-          dyno::utils::ChronoTimingStats t("subscriber.imu");
+          // // TODO: is this going to add substantial delay?
+          // dyno::utils::ChronoTimingStats t("subscriber.imu");
+          imu_diagnostics->tick();
           imu_single_input_callback_(imu);
         },
         imu_sub_options);
@@ -70,38 +84,35 @@ Subscriber::Subscriber(SensorSystem::Ptr sensor_system,
   auto image_qos = rclcpp::SensorDataQoS()
                        .keep_last(static_cast<size_t>(queue_size))
                        .reliable();
-  // auto image_qos = rclcpp::SensorDataQoS()
-  //                      .keep_last(static_cast<size_t>(queue_size));
-  // auto image_qos = rclcpp::SensorDataQoS();
-  // if (listen_to_ground_truth) {
-  //   RCLCPP_INFO_STREAM(node_->get_logger(),
-  //                      "Ground truth enabled. Subscribing...");
-  //   ground_truth_sub_ = node_->create_subscription<GroundTruthAdaptedType>(
-  //       "/dynosam/ground_truth", image_qos,
-  //       [&](const GroundTruthInputPacket& msg) -> void {
-  //         if (!ground_truth_packet_callback_) {
-  //           RCLCPP_ERROR_THROTTLE(
-  //               node_->get_logger(), *node_->get_clock(), 1000,
-  //               "Ground truth callback triggered but "
-  //               "ground_truth_packet_callback_ is not registered!");
-  //           return;
-  //         }
-  //         LOG(INFO) << "Gotten gt for sequence: " << msg.frame_id_;
-  //         ground_truth_packet_callback_(msg);
-  //       });
-  // }
-
   // Need to explicitly pass VoidPtr, transport options (nullptr) and subscriber
   // options to subscribe to avoid ambiguous overloading specifically in the
   // case when we specify a rmw_qos_profile (which we want to), rahter than just
   // a queue size likely this is only a problem with ROS kilted
   rclcpp::SubscriptionOptions subscriber_options;
+  if (params.enable_topic_statistics) {
+    subscriber_options.topic_stats_options.state =
+        rclcpp::TopicStatisticsState::Enable;
+    RCLCPP_INFO_STREAM(node->get_logger(),
+                       "Enabling Image subscription statistics");
+  }
+
+  std::stringstream ss;
+  ss << sensor_system->depthRigType() << " synchronizer";
+  image_sync_diagnostics_ = std::make_shared<SensorSyncDiagnostics>(ss.str());
+  diagnostics_registra.registerTask(ss.str(), image_sync_diagnostics_);
+
   // set up callbacks
   for (size_t i = 0; i < sensor_system->numCameraStreams(); ++i) {
     const std::string stream_name = sensor_system->streamName(i);
     const std::string topic = "/dynosam/" + stream_name + "/image_raw";
     RCLCPP_INFO_STREAM(node_->get_logger(),
                        "Subscribing to image topic " << topic);
+
+    std::string formatted_stream_name = stream_name;
+    formatted_stream_name[0] =
+        std::toupper(static_cast<unsigned char>(formatted_stream_name[0]));
+    image_stream_diagnostics_[i] =
+        diagnostics_registra.create(formatted_stream_name + " image stream");
 
     image_subscribers_[i] = img_transport_->subscribe(
         topic, image_qos.get_rmw_qos_profile(),
@@ -137,6 +148,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
 
   const Timestamp timestamp = ros::fromRosTime(msg->header.stamp);
   images_received_.at(stream_index)[toNSec(timestamp)] = msg;
+  image_stream_diagnostics_.at(stream_index)->tick();
 
   dyno::utils::ChronoTimingStats t("subscriber.image_cb");
 
@@ -152,6 +164,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
   for (const auto& time : all_times) {
     // note: ordered old to new
     std::vector<uint64_t> syncedTimes(num_streams, 0);
+    std::vector<Timestamp> syncedTimesSeconds(num_streams, 0);
     std::map<size_t, ImageMsgPtr> images;
     Timestamp tcheck = fromNSec(time);
 
@@ -162,6 +175,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
         Timestamp ti = fromNSec(entry.first);
         if (fabs((tcheck - ti)) < kDynoThresholdSync) {
           syncedTimes.at(i) = entry.first;
+          syncedTimesSeconds.at(i) = ti;
           images[i] = images_received_.at(i).at(entry.first);
           syncedi = true;
           break;
@@ -169,10 +183,12 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
       }
       if (!syncedi) {
         synced = false;
+        image_sync_diagnostics_->registerUnsynchronizable();
         break;
       }
     }
     if (synced) {
+      image_sync_diagnostics_->tick(syncedTimesSeconds);
       addImages(tcheck, images);
       // remove all the older stuff from buffer
       for (int i = 0; i < num_streams; ++i) {
@@ -184,6 +200,7 @@ void Subscriber::imageCallback(const ImageMsgPtr& msg,
         images_received_.at(i).erase(images_received_.at(i).begin(), end);
         const int size1 = images_received_.at(i).size();
         if (size0 - size1 > 1) {
+          image_sync_diagnostics_->registerDroppedMessage();
           LOG(WARNING) << "dropped " << size0 - size1 - 1
                        << " unsyncable frame(s) of camera " << i
                        << " before t=" << tcheck;
