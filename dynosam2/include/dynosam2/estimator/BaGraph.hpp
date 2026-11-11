@@ -222,6 +222,42 @@ class BaGraph {
                                    frame->getObjectId(), ReferenceFrame::LOCAL);
   }
 
+  // TODO:
+  //   inline StereoMeasurementCovariance computeStereoCovariance(
+  //     double depth,
+  //     double focal_length,
+  //     double baseline,
+  //     double keypoint_sigma,
+  //     double depth_sigma)
+  // {
+  //     // Input uncertainty: [u_left, v_left, depth].
+  //     Eigen::Matrix3d input_covariance =
+  //         Eigen::Matrix3d::Zero();
+
+  //     input_covariance(0, 0) = keypoint_sigma * keypoint_sigma;
+  //     input_covariance(1, 1) = keypoint_sigma * keypoint_sigma;
+  //     input_covariance(2, 2) = depth_sigma * depth_sigma;
+
+  //     // Jacobian of [u_left, v_left, u_right] w.r.t.
+  //     // [u_left, v_left, depth].
+  //     Eigen::Matrix3d J = Eigen::Matrix3d::Zero();
+
+  //     J(0, 0) = 1.0;
+  //     J(1, 1) = 1.0;
+
+  //     J(2, 0) = 1.0;
+  //     J(2, 2) = focal_length * baseline / (depth * depth);
+
+  //     // Propagate covariance.
+  //     StereoMeasurementCovariance result;
+  //     result.covariance = J * input_covariance * J.transpose();
+
+  //     return result;
+  // }
+  // const double depth_sigma = min_depth_sigma + depth_uncertainty_scale *
+  // depth; const double min_depth_sigma = 0.01;          // 1 cm const double
+  // depth_uncertainty_scale = 0.01;  // 1% of depth
+
  protected:
   dyno::Camera::Ptr camera_;
   dyno::StereoCalibPtr K_stereo_;
