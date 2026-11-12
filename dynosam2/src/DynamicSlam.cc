@@ -43,6 +43,7 @@ DynamicSlam::~DynamicSlam() { shutdownThreads(); }
 StateEstimate::Ptr DynamicSlam::spinOnce(
     dyno::VIFrontendInput::ConstPtr input) {
   LOG(INFO) << "DynamicSlam::spinOnce " << input->getFrameId();
+  const auto t1 = dyno::utils::Timer::tic();
   dyno::utils::ChronoTimingStats spin_t("slam.spin");
 
   const dyno::FrameId frame_id = input->getFrameId();
@@ -350,8 +351,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     pushPublicationDataToQueue(publication_data);
   }
 
-  const dyno::WrappedRGBMono wrapped_rgb = image_container->rgb();
-  const cv::Mat rgb = wrapped_rgb.image();
+  const auto t2 = dyno::utils::Timer::tic();
+  // const double dt_seconds = dyno::utils::Timer::
 
   frontend_viz_data_queue_.pushBlockingIfFull(visualization_data, 1);
 

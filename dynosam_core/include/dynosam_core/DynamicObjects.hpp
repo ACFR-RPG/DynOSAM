@@ -76,7 +76,7 @@ struct ObjectDetection {
   float confidence{0.0};
 };
 
-struct SingleDetectionResult : public ObjectDetection {
+struct TrackedObjectDetection : public ObjectDetection {
   //! Indicates the source of the result
   //! If detection it means inference (likely a NN was run on an imput image)
   //! If mask, it means some pre-processing was done and only a tracking mask
@@ -102,7 +102,7 @@ struct SingleDetectionResult : public ObjectDetection {
  *
  */
 struct ObjectDetectionResult {
-  std::vector<SingleDetectionResult> detections;
+  std::vector<TrackedObjectDetection> detections;
   cv::Mat labelled_mask;
   cv::Mat input_image;  // Should be a 3 channel RGB image. Should always be set
 

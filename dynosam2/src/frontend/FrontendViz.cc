@@ -61,7 +61,7 @@ cv::Mat FrontendViz::draw(FrontendViz::Data::Ptr data) {
   dyno::ObjectDetectionResult& object_detection = data->object_detection;
   const std::unordered_map<dyno::ObjectId, DoFrameTracks>& do_tracks =
       data->do_tracks;
-  for (const dyno::SingleDetectionResult& detection :
+  for (const dyno::TrackedObjectDetection& detection :
        object_detection.detections) {
     const dyno::ObjectId oid = detection.object_id;
     auto it = do_tracks.find(oid);
@@ -140,7 +140,7 @@ void drawTargetLock(cv::Mat& img, const cv::Point& topLeft,
                     const TargetLockStyle& style);
 
 void FrontendViz::updateObjectTrackingBox(
-    cv::Mat& canvas, const dyno::SingleDetectionResult& detection,
+    cv::Mat& canvas, const dyno::TrackedObjectDetection& detection,
     dyno::Timestamp now) {
   const cv::Rect& bbox = detection.bounding_box;
   if (bbox.empty()) return;
@@ -216,8 +216,6 @@ void FrontendViz::updateObjectTrackingBox(
                    std::min(255.0, base_color[1] + 255.0 * flash),
                    std::min(255.0, base_color[2] + 255.0 * flash),
                    base_color[3]);
-
-  static constexpr int thickness = 5;
 
   const cv::Point2f dir_tl = filtered_tl - filtered_center;
   const cv::Point2f p_tl = filtered_center + dir_tl * scale;

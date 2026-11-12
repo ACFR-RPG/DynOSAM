@@ -39,19 +39,20 @@ cv::Rect fromByeTrackRect(const byte_track::Rect<T>& rect) {
                   static_cast<int>(rect.height()));
 }
 
-std::vector<SingleDetectionResult> ByteObjectTracker::track(
+std::vector<TrackedObjectDetection> ByteObjectTracker::track(
     const std::vector<ObjectDetection>& detections) {
   std::vector<byte_track::STrackPtr> object_tracks =
       impl_tracker_.update(detections);
 
-  std::vector<SingleDetectionResult> output;
+  std::vector<TrackedObjectDetection> output;
+  output.reserve(object_tracks.size());
   for (size_t i = 0; i < object_tracks.size(); i++) {
     const auto& object_track = object_tracks.at(i);
 
-    SingleDetectionResult single_result;
+    TrackedObjectDetection single_result;
     single_result.bounding_box = fromByeTrackRect(object_track->getRect());
     single_result.mask = object_track->getMask();
-    //   single_result.class_name = detection.class_name;
+    single_result.class_name = object_track->getClassName();
     single_result.confidence = object_track->getScore();
     single_result.object_id = static_cast<ObjectId>(object_track->getTrackId());
     //   //is this the only indicater we should be using!?

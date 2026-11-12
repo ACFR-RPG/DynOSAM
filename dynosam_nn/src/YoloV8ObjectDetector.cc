@@ -486,10 +486,10 @@ struct YoloV8ObjectDetector::Impl {
       detections.push_back(detection);
     }
 
-    std::vector<SingleDetectionResult> tracking_result =
+    std::vector<TrackedObjectDetection> tracking_result =
         tracker_->track(detections);
 
-    for (const SingleDetectionResult& single_result : tracking_result) {
+    for (const TrackedObjectDetection& single_result : tracking_result) {
       // this may happen if the object was not well tracked
       if (!single_result.isValid()) {
         continue;

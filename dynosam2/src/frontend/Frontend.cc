@@ -490,7 +490,6 @@ void Frontend::solveObjectOdometry(
     // added
     // TODO: unfortunately we dont have access to image_container_i (previous)
     // do_frame_i->setImages(image_container);
-
     estimator.initalizeNewAnchorState(do_frame_i, L_W_i_centroid);
     estimator.addMeasurements(do_frame_i, measurements_i);
     frames_updated_set.insert(frame_id_i);
@@ -522,7 +521,7 @@ void Frontend::solveObjectOdometry(
     // if keyframe for now just initalise keyframe in object frame
 
     // set images for this keyframe
-    // do_frame_j->setImages(image_container);
+    do_frame_j->setImages(image_container);
     estimator.setRegularKeyframe(frame_id_j);
 
     // TODO: before adding points do radial outlier rejection
@@ -571,7 +570,7 @@ void Frontend::solveObjectOdometry(
   estimator.optimize(frame_id_j, vo_estimator, affected_in_opt,
                      params.num_dynamic_keyframes);
 
-  estimator.removeOutliersByDetection(vo_estimator, image_container);
+  estimator.removeOutliersByDetection(vo_estimator);
 
   frames_updated_set.insert(affected_in_opt.begin(), affected_in_opt.end());
   frames_updated = std::vector<dyno::FrameId>(frames_updated_set.begin(),

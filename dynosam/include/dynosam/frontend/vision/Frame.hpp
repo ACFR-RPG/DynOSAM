@@ -70,7 +70,7 @@ class Frame {
 
   // semantic instance label to object observation (by the actual observations
   // in the image) set in constructor
-  gtsam::FastMap<ObjectId, SingleDetectionResult> object_observations_;
+  gtsam::FastMap<ObjectId, TrackedObjectDetection> object_observations_;
   MotionEstimateMap
       motion_estimates_;  // map of object ids to object motions that take the
                           // object from k-1 to k in W. Updated in the frontend
@@ -80,7 +80,7 @@ class Frame {
         const ImageContainer& image_container,
         const FeatureContainer& static_features,
         const FeatureContainer& dynamic_features,
-        const gtsam::FastMap<ObjectId, SingleDetectionResult>&
+        const gtsam::FastMap<ObjectId, TrackedObjectDetection>&
             object_observations,
         std::optional<FeatureTrackerInfo> tracking_info = {});
 
@@ -104,17 +104,17 @@ class Frame {
   const gtsam::Pose3& getPose() const { return T_world_camera_; }
   const ImageContainer& imageContainer() const { return image_container_; }
 
-  inline const gtsam::FastMap<ObjectId, SingleDetectionResult>&
+  inline const gtsam::FastMap<ObjectId, TrackedObjectDetection>&
   getObjectObservations() const {
     return object_observations_;
   }
-  inline gtsam::FastMap<ObjectId, SingleDetectionResult>&
+  inline gtsam::FastMap<ObjectId, TrackedObjectDetection>&
   getObjectObservations() {
     return object_observations_;
   }
 
   /* Get the image based detection of the requested object if it exists */
-  std::optional<SingleDetectionResult> objectDetection(
+  std::optional<TrackedObjectDetection> objectDetection(
       ObjectId object_id) const;
 
   /* True if the object id appears in retracked_objects_ (is O(N) but N is
@@ -251,7 +251,7 @@ class Frame {
   // // also updates all the tracking_labels of the features associated with
   // this
   // // object
-  // void updateObjectTrackingLabel(const SingleDetectionResult& observation,
+  // void updateObjectTrackingLabel(const TrackedObjectDetection& observation,
   //                                ObjectId new_tracking_label);
 
   /**

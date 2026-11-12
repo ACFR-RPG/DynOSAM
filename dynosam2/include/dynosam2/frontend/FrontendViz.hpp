@@ -32,6 +32,11 @@ class FrontendViz {
     ViFrameTracks vi_tracks;
     std::unordered_map<dyno::ObjectId, DoFrameTracks> do_tracks;
 
+    /// @}
+    /// @name Other miscelaneous
+    /// @{
+    Timestamp dt;
+
     typedef std::shared_ptr<Data> Ptr;
   };
 
@@ -56,7 +61,7 @@ class FrontendViz {
   };
 
   void updateObjectTrackingBox(cv::Mat& canvas,
-                               const dyno::SingleDetectionResult& detection,
+                               const dyno::TrackedObjectDetection& detection,
                                dyno::Timestamp now);
 
   //! How long (in seconds) for 'lock on'

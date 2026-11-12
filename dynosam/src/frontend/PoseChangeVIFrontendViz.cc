@@ -147,7 +147,7 @@ void ViTrackingViz::drawDynamicTracks(cv::Mat& img, std::string& info,
       continue;
     }
 
-    std::optional<SingleDetectionResult> maybe_detection_result =
+    std::optional<TrackedObjectDetection> maybe_detection_result =
         frame_k.objectDetection(object_id);
     if (!maybe_detection_result) {
       continue;

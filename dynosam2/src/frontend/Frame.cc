@@ -79,7 +79,15 @@ std::pair<bool, const uint8_t*> ViFrame::getDescriptorByIndex(Index idx) const {
 
 bool DoFrame::getObjectMask(cv::Mat& mask) const {
   if (image_container && image_container->hasObjectMask()) {
-    const cv::Mat& object_mask = image_container->objectMotionMask();
+    mask = image_container->objectMotionMask();
+    return true;
+  }
+  return false;
+}
+
+bool DoFrame::getBinaryObjectMask(cv::Mat& mask) const {
+  cv::Mat object_mask;
+  if (getObjectMask(object_mask)) {
     mask = object_mask == getObjectId();
     return true;
   }

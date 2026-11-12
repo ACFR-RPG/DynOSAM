@@ -41,13 +41,13 @@ class ObjectTracker {
   DYNO_POINTER_TYPEDEFS(ObjectTracker)
 
   virtual ~ObjectTracker() = default;
-  virtual std::vector<SingleDetectionResult> track(
+  virtual std::vector<TrackedObjectDetection> track(
       const std::vector<ObjectDetection>& detections) = 0;
 };
 
 class ByteObjectTracker : public ObjectTracker {
  public:
-  std::vector<SingleDetectionResult> track(
+  std::vector<TrackedObjectDetection> track(
       const std::vector<ObjectDetection>& detections) override;
 
  private:

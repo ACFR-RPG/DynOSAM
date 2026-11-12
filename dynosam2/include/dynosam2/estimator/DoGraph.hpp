@@ -96,8 +96,7 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   const Velocity3& getVelocity(dyno::FrameId frame_id) const;
 
   // TODo: and how to remove in the full graph as well?
-  size_t removeOutliersByDetection(const VioGraph& vio_graph,
-                                   const dyno::ImageContainer& image_container);
+  size_t removeOutliersByDetection(const VioGraph& vio_graph);
 
  protected:
   /** Adds a frame if it does not exist, otherwise checks that the incoming
@@ -117,7 +116,7 @@ class DoGraph : public BaGraphStates<DOGraphState> {
   //! Keyframes since the last anchor keyframe
   std::set<dyno::FrameId> active_keyframes_;
   //! Buffer containing the last N active keyframes
-  dyno::CircularBuffer<dyno::FrameId, 6> windowed_keyframes_;
+  dyno::CircularBuffer<dyno::FrameId, 10> windowed_keyframes_;
 };
 
 class DoGraphEstimator : public DoGraph, public BaProblemInterface {

@@ -27,15 +27,18 @@ FeatureTracker::FeatureTracker(const FrontendParameters& parameters,
       object_detection_impl_(this),
       optical_flow_impl_(kOpticalFlowIterations),
       K_cv_(GetCvKMatrix(camera)),
-      K_inv_cv_(GetCvKInvMatrix(camera)) {
-  if (!parameters_.prefer_provided_object_detection) {
-    LOG(INFO) << "Creating object detection engine";
-    dyno::YoloConfig yolo_config;
-    dyno::ModelConfig model_config;
-    model_config.model_file = "yolov8n-seg.pt";
-    object_detection_engine_ =
-        std::make_shared<dyno::YoloV8ObjectDetector>(model_config, yolo_config);
-  }
+      K_inv_cv_(GetCvKInvMatrix(camera)),
+      object_detection_engine_([this]() {
+        if (!parameters_.prefer_provided_object_detection) {
+          LOG(INFO) << "Creating object detection engine";
+          dyno::ModelConfig model_config;
+          model_config.model_file = parameters_.detection_model;
+          return std::make_shared<dyno::YoloV8ObjectDetector>(
+              model_config, dyno::YoloConfig{});
+        } else {
+          return std::shared_ptr<dyno::YoloV8ObjectDetector>{};
+        }
+      }()) {
   setDilationKernel(camera->getParams().imageSize());
 }
 
@@ -295,13 +298,13 @@ FeatureTracker::ObjectDetectionImpl::detectionViaObjectMask(
   for (size_t i = 0; i < object_ids.size(); i++) {
     const auto object_id = object_ids[i];
 
-    SingleDetectionResult detection_result;
+    TrackedObjectDetection detection_result;
     detection_result.mask = object_masks == object_id;
     detection_result.bounding_box = bounding_boxes[i];
     detection_result.confidence = 1.0;
     detection_result.object_id = object_id;
     detection_result.well_tracked = true;
-    detection_result.source = SingleDetectionResult::Source::MASK;
+    detection_result.source = TrackedObjectDetection::Source::MASK;
 
     result.detections.push_back(detection_result);
   }

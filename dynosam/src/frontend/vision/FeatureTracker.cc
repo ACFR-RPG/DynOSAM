@@ -190,16 +190,16 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
                                               // to the newly created frame)
 
   // calculate dynamic observations for existing data
-  // TODO: SingleDetectionResult really does not need the tracklet ids they
+  // TODO: TrackedObjectDetection really does not need the tracklet ids they
   // are never actually used!! this prevents the frame from needing to do the
   // same calculations we've alrady done
-  gtsam::FastMap<ObjectId, SingleDetectionResult> object_observations;
+  gtsam::FastMap<ObjectId, TrackedObjectDetection> object_observations;
   for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
     ObjectId object_id = boundary_mask_result.objects_detected.at(i);
     const cv::Rect& bb_detection =
         boundary_mask_result.object_bounding_boxes.at(i);
 
-    SingleDetectionResult observation;
+    TrackedObjectDetection observation;
     observation.object_id = object_id;
     // bit of a hacky way to get the object masks as actually they should be
     // provided by the detection directly but also we want the dilated mask

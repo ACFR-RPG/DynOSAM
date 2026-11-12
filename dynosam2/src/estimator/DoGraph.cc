@@ -168,65 +168,173 @@ const Velocity3& DoGraph::getVelocity(dyno::FrameId frame_id) const {
   return states_.at(frame_id).velocity_W;
 }
 
-size_t DoGraph::removeOutliersByDetection(
-    const VioGraph& vio_graph, const dyno::ImageContainer& image_container) {
-  const dyno::FrameId fid = image_container.frameId();
+size_t DoGraph::removeOutliersByDetection(const VioGraph& vio_graph) {
+  struct ReprojectionStats {
+    // Geometric validity
+    size_t num_behind_camera{0};
 
-  const BoundsChecker bounds_checker(image_container.objectMotionMask());
+    // Object association
+    size_t num_in_front{0};
+    size_t num_outside_mask{0};
 
-  const gtsam::Pose3 X_W_k_inv = vio_graph.getPose(fid).inverse();
+    // Reprojection consistency
+    size_t num_valid_projections{0};
+    size_t num_bad_reprojections{0};
 
-  // TODO: this does not really account for the fact that the object has a shape
-  // and we do NOT do ray tracing or anything
-  //  so bits of the previously observe object may not be outside the mask.
-  //  Therefore we only check against features seen in THIS frame
-  const auto frame_node = observations_->getFrame(fid);
-  if (!frame_node) {
-    // not entirely sure why this would happen!
-    return 0;
-  }
-  // get all observations for this node
-  // these are held as a vector of <lmk node, stereo measurement> pairs
-  const auto measurements = frame_node->dynamicMeasurements(object_id_);
+    double total_repr_error{0.0};
 
-  size_t num_removed{0};
-  size_t num_map_points{0};
-  double repr_error{0.0};
-  for (const auto& [lmk_node, z] : measurements) {
-    const dyno::TrackletId tid = lmk_node->trackletId();
+    std::vector<dyno::FrameId> bad_measurements;
+  };
 
-    MapPoint map_point;
-    if (!getMapPoint(tid, fid, map_point)) {
-      // not yet in the map
+  std::unordered_map<dyno::TrackletId, ReprojectionStats> stats;
+  // iterate over windowed frames (which are last N keyframes and check
+  // reprojection errors)
+  for (size_t i = 0; i < windowed_keyframes_.size(); i++) {
+    const dyno::FrameId fid = windowed_keyframes_[i];
+    const DoFrame::Ptr do_frame_k0 = this->getFramePtr(fid);
+
+    cv::Mat object_mask;
+    if (!do_frame_k0->getObjectMask(object_mask)) {
+      continue;
+    }
+    const BoundsChecker bounds_checker(object_mask);
+
+    const gtsam::Pose3 X_W_k_inv = vio_graph.getPose(fid).inverse();
+
+    const auto frame_node = observations_->getFrame(fid);
+    if (!frame_node) {
+      // not entirely sure why this would happen!
       continue;
     }
 
-    const gtsam::Point3 p_C = X_W_k_inv * map_point.p_W;
+    // get all observations for this node
+    // these are held as a vector of <lmk node, stereo measurement> pairs
+    const auto measurements = frame_node->dynamicMeasurements(object_id_);
+    for (const auto& [lmk_node, z] : measurements) {
+      const dyno::TrackletId tid = lmk_node->trackletId();
 
-    gtsam::Point2 z_proj;
-    camera_->project(p_C, &z_proj);
+      MapPoint map_point;
+      if (!getMapPoint(tid, fid, map_point)) {
+        // not yet in the map
+        continue;
+      }
 
-    const gtsam::Point2 z_measure = z.measurement().point2();
-    repr_error += (z_proj - z_measure).norm();
-    ++num_map_points;
+      ReprojectionStats& repr_stats = stats[tid];
 
-    // if outside the image OR outside the bounds of the object mask!
-    if (!bounds_checker(z_proj, object_id_)) {
-      // TODO: AND remove from landmark map!
-      observations_->removeLandmark(map_point.id);
-      this->removeLandmark(map_point.id);
-      ++num_removed;
+      const gtsam::Point3 p_C = X_W_k_inv * map_point.p_W;
+      // Behind camera: don't include in either statistic.
+      if (p_C.z() <= 0.0) {
+        ++repr_stats.num_behind_camera;
+        continue;
+      }
+
+      ++repr_stats.num_in_front;
+
+      gtsam::Point2 z_proj;
+      camera_->project(p_C, &z_proj);
+
+      // Mask consistency.
+      if (!bounds_checker(z_proj, object_id_)) {
+        ++repr_stats.num_outside_mask;
+      }
+
+      // Reprojection consistency.
+      const gtsam::Point2 z_measure = z.measurement().point2();
+
+      const double repr_error = (z_proj - z_measure).norm();
+
+      ++repr_stats.num_valid_projections;
+      repr_stats.total_repr_error += repr_error;
+
+      if (repr_error > 3.0) {
+        ++repr_stats.num_bad_reprojections;
+        repr_stats.bad_measurements.push_back(fid);
+      }
     }
   }
 
-  if (num_map_points > 0) {
-    repr_error /= static_cast<double>(num_map_points);
+  size_t num_removed{0};
+  // average reprojection error across observed keyframes
+  double map_repr_error{0.0};
+
+  static constexpr size_t kMinObservations = 3;
+  static constexpr double kMaxOutsideMaskRatio = 0.4;
+  static constexpr double kMaxBadReprojectionRatio = 0.4;
+
+  for (const auto& [tid, repr_stat] : stats) {
+    // const double repr_error = repr_stat.total_repr_error / num_seen;
+
+    bool remove_landmark = false;
+    if (repr_stat.num_in_front >= kMinObservations) {
+      const double mask_ratio =
+          static_cast<double>(repr_stat.num_outside_mask) /
+          static_cast<double>(repr_stat.num_in_front);
+
+      LOG(INFO) << tid << " mask ratio: " << mask_ratio << " repr: "
+                << repr_stat.total_repr_error / (double)repr_stat.num_in_front;
+
+      if (mask_ratio > kMaxOutsideMaskRatio) {
+        remove_landmark = true;
+      }
+    }
+
+    if (!remove_landmark &&
+        repr_stat.num_valid_projections >= kMinObservations) {
+      const double bad_repr_ratio =
+          static_cast<double>(repr_stat.num_bad_reprojections) /
+          static_cast<double>(repr_stat.num_valid_projections);
+
+      if (bad_repr_ratio > kMaxBadReprojectionRatio) {
+        remove_landmark = true;
+      }
+    }
+
+    if (remove_landmark) {
+      observations_->removeLandmark(tid);
+      this->removeLandmark(tid);
+      ++num_removed;
+      continue;
+    }
+
+    // Otherwise, remove only individual bad measurements.
+    auto lmk_node = observations_->getLandmark(tid);
+    for (const auto fid : repr_stat.bad_measurements) {
+      lmk_node->remove(fid);
+    }
+
+    // if we happen to have removed all measurements remove the landmark!
+    if (lmk_node->numObservations() == 0) {
+      this->removeLandmark(tid);
+      ++num_removed;
+    }
+
+    // const double num_seen = static_cast<double>(repr_stat.seen.size());
+    // CHECK_GT(num_seen, 0);
+
+    // const double repr_error = repr_stat.total_repr_error / num_seen;
+    // map_repr_error += repr_error;
+
+    // const double num_outside_mask =
+    // static_cast<double>(repr_stat.num_outside_mask); if(num_outside_mask > 0)
+    // {
+    //   const double ratio_outside = num_outside_mask/num_seen;
+    //   LOG(INFO) << tid << " outside ratio: " << ratio_outside;
+
+    //   // most were outside the reprojectin!
+    //   if(ratio_outside > 0.4) {
+    //     observations_->removeLandmark(tid);
+    //     this->removeLandmark(tid);
+    //     ++num_removed;
+    //   }
+
+    // }
   }
+  map_repr_error /= (double)stats.size();
 
   // TODO: does not EVER seem to be occuring!?
   // TODO:
   VLOG(30) << "Removed " << num_removed << " map points from object "
-           << object_id_ << " with total repr " << repr_error;
+           << object_id_ << " with total repr " << map_repr_error;
 
   return num_removed;
 }

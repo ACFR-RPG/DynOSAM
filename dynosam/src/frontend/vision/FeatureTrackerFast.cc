@@ -2087,13 +2087,13 @@ FeatureTrackerFast::ObjectDetectionImpl::detectionViaObjectMask(
   for (size_t i = 0; i < object_ids.size(); i++) {
     const auto object_id = object_ids[i];
 
-    SingleDetectionResult detection_result;
+    TrackedObjectDetection detection_result;
     detection_result.mask = object_masks == object_id;
     detection_result.bounding_box = bounding_boxes[i];
     detection_result.confidence = 1.0;
     detection_result.object_id = object_id;
     detection_result.well_tracked = true;
-    detection_result.source = SingleDetectionResult::Source::MASK;
+    detection_result.source = TrackedObjectDetection::Source::MASK;
 
     result.detections.push_back(detection_result);
   }

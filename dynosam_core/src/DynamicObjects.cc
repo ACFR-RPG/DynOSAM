@@ -54,7 +54,7 @@ ObjectIds ObjectDetectionResult::objectIds() const {
   ObjectIds object_ids;
   std::transform(
       detections.begin(), detections.end(), std::back_inserter(object_ids),
-      [](const SingleDetectionResult& result) { return result.object_id; });
+      [](const TrackedObjectDetection& result) { return result.object_id; });
   return object_ids;
 }
 

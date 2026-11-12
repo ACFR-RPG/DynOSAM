@@ -2,7 +2,7 @@ import numpy as np
 from dynosam_nn_py._core import (
     ObjectDetectionEngine,
     ObjectDetectionResult,
-    SingleDetectionResult,
+    TrackedObjectDetection,
     get_nn_weights_path,
     mask_to_rgb
 )
@@ -133,7 +133,7 @@ class UltralyticsDetectionEngine(ObjectDetectionEngine):
                 self._result.labelled_mask += detection_mask_img
 
 
-                single_result = SingleDetectionResult()
+                single_result = TrackedObjectDetection()
                 single_result.object_id = object_id
                 single_result.bounding_box = bb_converter(box)
                 single_result.confidence = prob

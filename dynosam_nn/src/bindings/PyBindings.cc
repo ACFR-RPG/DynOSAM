@@ -53,7 +53,7 @@ class ObjectDetectorEnginePy : public PyObjectDetectionEngineTrampoline {
 }  // namespace dyno
 
 // See https://pybind11.readthedocs.io/en/stable/advanced/cast/stl.html
-PYBIND11_MAKE_OPAQUE(std::vector<dyno::SingleDetectionResult>);
+PYBIND11_MAKE_OPAQUE(std::vector<dyno::TrackedObjectDetection>);
 
 PYBIND11_MODULE(_core, m) {
   pybind11::class_<dyno::PyObjectDetectionEngineTrampoline,
@@ -77,15 +77,16 @@ PYBIND11_MODULE(_core, m) {
       .def_readwrite("class_name", &dyno::ObjectDetection::class_name)
       .def_readwrite("confidence", &dyno::ObjectDetection::confidence);
 
-  // SingleDetectionResult
-  pybind11::class_<dyno::SingleDetectionResult, dyno::ObjectDetection>(
-      m, "SingleDetectionResult")
+  // TrackedObjectDetection
+  pybind11::class_<dyno::TrackedObjectDetection, dyno::ObjectDetection>(
+      m, "TrackedObjectDetection")
       .def(pybind11::init<>())
-      .def_readwrite("object_id", &dyno::SingleDetectionResult::object_id)
-      .def_readwrite("well_tracked", &dyno::SingleDetectionResult::well_tracked)
-      .def("is_valid", &dyno::SingleDetectionResult::isValid);
+      .def_readwrite("object_id", &dyno::TrackedObjectDetection::object_id)
+      .def_readwrite("well_tracked",
+                     &dyno::TrackedObjectDetection::well_tracked)
+      .def("is_valid", &dyno::TrackedObjectDetection::isValid);
 
-  pybind11::bind_vector<std::vector<dyno::SingleDetectionResult>>(
+  pybind11::bind_vector<std::vector<dyno::TrackedObjectDetection>>(
       m, "SingleDetectionResults");
 
   // ObjectDetectionResult

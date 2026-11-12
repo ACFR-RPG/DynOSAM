@@ -200,6 +200,17 @@ class DoFrame : public Frame {
   DoFrame(FrameId fi, Timestamp ts, ObjectId o) : Frame(fi, ts, o) {}
 
   /**
+   * @brief Get the full (labelled) object mask  if available from the
+   * underlying image_container. As this returns a reference to the original
+   * mat, ensure mask is not modified!
+   *
+   * @param mask
+   * @return true
+   * @return false
+   */
+  bool getObjectMask(cv::Mat& mask) const;
+
+  /**
    * @brief Get the isolated object mask (ie. a binary mask containing only
    * pixels for this object) if available from the underlying image_container.
    *
@@ -207,7 +218,7 @@ class DoFrame : public Frame {
    * @return true
    * @return false
    */
-  bool getObjectMask(cv::Mat& mask) const;
+  bool getBinaryObjectMask(cv::Mat& mask) const;
 
   // NOTE: similarly this also tells us which frame was used for the relative
   // solve

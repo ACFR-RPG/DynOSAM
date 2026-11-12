@@ -1,5 +1,9 @@
 #include "dynosam_nn/ModelConfig.hpp"
 
+#include <glog/logging.h>
+
+#include <cstdlib>
+
 #include "ament_index_cpp/get_package_share_directory.hpp"
 #include "dynosam_common/utils/FileSystem.hpp"
 
@@ -13,7 +17,18 @@ fs::path getDynosamNNShareDirectory() {
   return fs::path(ament_index_cpp::get_package_share_directory(PackageName));
 }
 
-fs::path getNNWeightsPath() { return getDynosamNNShareDirectory() / "weights"; }
+fs::path getNNWeightsPath() {
+  const auto env_path = std::getenv("DYNOSAM_NN_WEIGHTS_DIR");
+  if (env_path) {
+    const auto abs_path =
+        std::filesystem::absolute(std::filesystem::path(env_path));
+    VLOG(10)
+        << "Getting model weights from env variable DYNOSAM_NN_WEIGHTS_DIR: "
+        << abs_path;
+    return abs_path;
+  }
+  return getDynosamNNShareDirectory() / "weights";
+}
 
 // not using the ament resource index things
 // (https://github.com/ament/ament_cmake/blob/foxy/ament_cmake_core/doc/resource_index.md)

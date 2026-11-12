@@ -48,7 +48,7 @@ Frame::Frame(
     const ImageContainer& image_container,
     const FeatureContainer& static_features,
     const FeatureContainer& dynamic_features,
-    const gtsam::FastMap<ObjectId, SingleDetectionResult>& object_observations,
+    const gtsam::FastMap<ObjectId, TrackedObjectDetection>& object_observations,
     std::optional<FeatureTrackerInfo> tracking_info)
     : frame_id_(frame_id),
       timestamp_(timestamp),
@@ -79,9 +79,9 @@ Frame::Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
   constructDynamicObservations();
 }
 
-std::optional<SingleDetectionResult> Frame::objectDetection(
+std::optional<TrackedObjectDetection> Frame::objectDetection(
     ObjectId object_id) const {
-  std::optional<SingleDetectionResult> result;
+  std::optional<TrackedObjectDetection> result;
   if (object_observations_.exists(object_id)) {
     result.emplace(object_observations_.at(object_id));
   }
@@ -459,7 +459,7 @@ void Frame::constructDynamicObservations() {
         << container_to_string(instance_labels);
 
     if (object_observations_.find(object_id) == object_observations_.end()) {
-      SingleDetectionResult observation;
+      TrackedObjectDetection observation;
       observation.object_id = object_id;
       object_observations_[object_id] = observation;
     }
@@ -476,7 +476,7 @@ void Frame::constructDynamicObservations() {
   const cv::Mat& mask = image_container_.objectMotionMask();
   for (auto& object_observation_pair : object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
-    SingleDetectionResult& obs = object_observation_pair.second;
+    TrackedObjectDetection& obs = object_observation_pair.second;
     findObjectBoundingBox(mask, object_id, obs.bounding_box);
   }
 }
