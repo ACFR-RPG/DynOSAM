@@ -9,6 +9,10 @@
 
 namespace dyno2 {
 
+/// @brief Only retirn the last two messages in the queue to publish the latest
+/// data
+static constexpr int kVizMaxQueueSize{2};
+
 DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
                          CanonicalSensorRig::Ptr sensor_rig)
     : parameters_(parameters),
@@ -18,7 +22,8 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
           dyno::ImuFrontend::makeCombinedParams(sensor_rig->getImuParams())),
       frontend_(parameters.frontend, camera_),
       estimator_(camera_),
-      frontend_viz_(estimator_)
+      frontend_viz_(estimator_),
+      frontend_viz_data_queue_(kVizMaxQueueSize)
 
 {
   // TODO: set some params for frontend!
@@ -38,7 +43,10 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
   frontend_viz_thread_ = std::thread(&DynamicSlam::visualisationLoop, this);
 }
 
-DynamicSlam::~DynamicSlam() { shutdownThreads(); }
+DynamicSlam::~DynamicSlam() {
+  LOG(INFO) << "Shutting down DynamicSlam";
+  shutdownThreads();
+}
 
 StateEstimate::Ptr DynamicSlam::spinOnce(
     dyno::VIFrontendInput::ConstPtr input) {
@@ -92,7 +100,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
         // NOT for dataset data as we assume that we are already algined to the
         // world-frame with the ground truth
         gtsam::Pose3 T_WS;
-        if (sensor_rig_->imuEnabled() && false) {
+        if (sensor_rig_->imuEnabled() &&
+            parameters_.frontend.attempt_initial_pose_alignment) {
           // align with the world frame (z-down) using accelerometer
           // measurements
           bool success = initPoseImu(imu_measurements, T_WS);
@@ -354,7 +363,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   const auto t2 = dyno::utils::Timer::tic();
   // const double dt_seconds = dyno::utils::Timer::
 
-  frontend_viz_data_queue_.pushBlockingIfFull(visualization_data, 1);
+  frontend_viz_data_queue_.push(visualization_data);
 
   features.reduceToInliersInplace();
 
@@ -404,6 +413,7 @@ bool DynamicSlam::initPoseImu(const dyno::ImuMeasurements& imu_measurements,
 
 void DynamicSlam::shutdownThreads() {
   is_shutdown_ = true;
+
   // shutdown queues first
   frontend_viz_data_queue_.shutdown();
 

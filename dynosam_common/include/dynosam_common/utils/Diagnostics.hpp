@@ -21,10 +21,34 @@ struct DiagnosticsStatus {
   std::string hardware_id;
   gtsam::FastMap<std::string, std::string> values;
 
-  void add(const std::string& key, double value) {
+  template <typename T>
+  void add(const std::string& key, T value) {
     values.insert2(key, std::to_string(value));
   }
+
+  void summary(Level lvl, const std::string& s) {
+    level = lvl;
+    message = s;
+  }
 };
+
+template <>
+inline void DiagnosticsStatus::add<const std::string&>(
+    const std::string& key, const std::string& value) {
+  values.insert2(key, value);
+}
+
+template <>
+inline void DiagnosticsStatus::add<std::string>(const std::string& key,
+                                                std::string value) {
+  values.insert2(key, value);
+}
+
+template <>
+inline void DiagnosticsStatus::add<const char*>(const std::string& key,
+                                                const char* value) {
+  values.insert2(key, std::string(value));
+}
 
 /**
  * @brief Dynosam implementation of a Diagnostic task that fills a

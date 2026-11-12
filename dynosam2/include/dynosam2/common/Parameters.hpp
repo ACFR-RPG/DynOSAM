@@ -35,6 +35,9 @@ struct EstimationParameters {
 
 struct FrontendParameters {
   bool prefer_provided_object_detection{true};
+  //! Attempt to aligned the initial pose with the gravity vector provided by
+  //! the IMU Ignored if no IMU present or not in IMU mode
+  bool attempt_initial_pose_alignment{true};
   std::string detection_model{"yolov8n-seg.pt"};
 
   struct Tracker {

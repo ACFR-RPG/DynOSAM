@@ -43,12 +43,17 @@ class Timer {
 
   static TimePoint tic() { return Clock::now(); }
 
+  template <typename T = std::chrono::nanoseconds>
+  static T Diff(const TimePoint& now, const TimePoint& start) {
+    return std::chrono::duration_cast<T>(now - start);
+  }
+
   // Stop timer and report duration in given time.
   // Returns duration in nanoseconds by default.
   // call .count() on returned duration to have number of ticks.
   template <typename T = std::chrono::nanoseconds>
   static T toc(const TimePoint& start) {
-    return std::chrono::duration_cast<T>(Clock::now() - start);
+    return Diff<T>(Clock::now(), start);
   }
 
   /**
@@ -76,6 +81,15 @@ class Timer {
   template <typename T = std::chrono::nanoseconds>
   static double toSeconds(const T& time) {
     return toUnits<std::ratio<1>>(time);
+  }
+
+  // period should be std::milli, std::nano etc
+  // for seconds std::ratio<1>
+  // T is resolution used to compute the diff
+  template <typename Period, typename T = std::chrono::nanoseconds>
+  static double diffUnits(const TimePoint& now, const TimePoint& start) {
+    const T diff = Diff<T>(now, start);
+    return toUnits<Period, T>(diff);
   }
 };
 

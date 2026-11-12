@@ -63,6 +63,8 @@ set(SRC_FILES
   src/Diagnostics.cc
   src/CameraSystem.cc
   src/Subscriber.cc
+
+  src/diagnostics/SensorDiagnostics.cc
 )
 
 set(LINK_LIBS

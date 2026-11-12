@@ -8,6 +8,7 @@
 #include "dynosam_ros_common/CameraSystem.hpp"
 #include "dynosam_ros_common/adaptors/GroundtuthPacketAdaptor.hpp"
 #include "dynosam_ros_common/adaptors/ImuMeasurementAdaptor.hpp"
+#include "dynosam_ros_common/diagnostics/SensorDiagnostics.hpp"
 #include "image_transport/image_transport.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
@@ -19,7 +20,10 @@ namespace dyno {
 
 typedef sensor_msgs::msg::Image::ConstSharedPtr ImageMsgPtr;
 
-// typedef dynamic_slam_interfaces::msg::GroundtruthPacket GroundtruthMsg;
+struct SubscriberParams {
+  bool enable_topic_statistics{false};
+  SensorDiagnosticsRegistra diagnostics_registra;
+};
 
 /**
  * @brief
@@ -32,7 +36,8 @@ class Subscriber : public DataReader {
 
   // NOTE: ground truth subscription handled via ros param gotten through node
   Subscriber(SensorSystem::Ptr sensor_system,
-             std::shared_ptr<rclcpp::Node> node);
+             std::shared_ptr<rclcpp::Node> node,
+             const SubscriberParams& params = {});
   ~Subscriber() = default;
 
   /** No end to the dataset */
@@ -146,6 +151,9 @@ class Subscriber : public DataReader {
   /// @{
   std::shared_ptr<image_transport::ImageTransport> img_transport_;
   std::vector<image_transport::Subscriber> image_subscribers_;
+
+  std::vector<SensorDiagnosticsBase::Ptr> image_stream_diagnostics_;
+  SensorSyncDiagnostics::Ptr image_sync_diagnostics_;
 
   rclcpp::CallbackGroup::SharedPtr imu_callback_group_;
   using ImuAdaptedType =

@@ -18,7 +18,7 @@ def generate_launch_description():
             ),
             launch_arguments={
                 # 'base_frame': "zed_camera_link",
-                'base_frame': "zed_left_camera_frame_optical",
+                'base_frame': "zed_camera_link",
                 'depth_scale': "1.0",
                 'imu_topic': "/zed/zed_node/imu/data",
                 'camera_info_topic': "/zed/zed_node/rgb/color/rect/camera_info",
