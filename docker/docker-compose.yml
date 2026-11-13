@@ -1,0 +1,56 @@
+name: dynosam2
+
+services:
+  host:
+    image: dynosam2_l4t
+    container_name: dynosam2_robot
+
+    privileged: true
+    # Networking and namespaces
+    network_mode: host
+    pid: host
+    ipc: host
+    shm_size: "512m"
+    runtime: nvidia
+
+
+    environment:
+      IDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      ROS_DOMAIN_ID: "${ROS_DOMAIN_ID:-0}"
+      RMW_IMPLEMENTATION: rmw_zenoh_cpp
+      ZENOH_CONFIG_OVERRIDE: "transport/link/tx/queue/congestion_control/drop/wait_before_drop=1000000"
+      ZENOH_ROUTER_CONFIG_URI: /root/.config/zenoh_config_local.json5
+
+    env_file:
+      - .robot.env
+
+    volumes:
+      - ${HOME}/.ssh:/root/.ssh:ro
+      - ../../extras:/home/user/dev_ws/src/third_parties/
+      - ../../results:/root/results
+      - ../:/home/user/dev_ws/src/core/
+
+
+    build:
+      context: .
+      dockerfile: Dockerfile.l4t_jp6_humble
+      args:
+        TARGET_ROS_DISTRO: humble
+        BUILD_CORES: 4
+        WS_DIR: /root/
+
+    stdin_open: true
+    tty: true
+
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+          set -e
+          source "/opt/ros/$${ROS_DISTRO}/setup.bash"
+          ros2 run rmw_zenoh_cpp rmw_zenohd &
+          exec "$$@"
+      - --
+    command:
+      ["/bin/bash"]

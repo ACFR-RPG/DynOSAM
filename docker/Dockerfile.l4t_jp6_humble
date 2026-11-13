@@ -1,0 +1,259 @@
+# To avoid tzdata asking for geographic location...
+FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
+
+ARG TARGET_ROS_DISTRO=humble
+ARG WS_DIR=/root/
+ARG BUILD_CORES=2
+ENV WS_DIR=${WS_DIR}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+#Install build dependencies
+RUN apt-get update && apt-get upgrade -y --allow-downgrades --no-install-recommends apt-utils
+RUN apt-get update && apt-get install -y --allow-downgrades git cmake build-essential pkg-config
+# Install xvfb to provide a display to container for GUI realted testing.
+RUN apt-get update && apt-get install -y --allow-downgrades xvfb
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# In the arm64 version of the base image we do not have the nvidia-cuda-development toolkit
+# as explained https://github.com/ika-rwth-aachen/docker-ros-ml-images/issues/16
+# this contains nvcc (ie we dont have it)
+# we need nvcc to build opencv with cuda
+# add extra nvidia container apt repository (otherwise we cannot find nvidia-cuda-toolkit)
+RUN curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+
+#NOTE: both nvidia-cuda-toolkit and cuda-toolkit are needed (particularly for header files)
+RUN apt-get update \
+    && apt-get install -y \
+    build-essential \
+      ca-certificates \
+      cmake \
+      curl \
+      freeglut3-dev \
+      git \
+      libacl1-dev \
+      libasio-dev \
+      libboost-filesystem-dev \
+      libboost-iostreams-dev \
+      libboost-python-dev \
+      libflann-dev \
+      libfreetype-dev \
+      libgtk-3-dev \
+      libglu1-mesa \
+      libglu1-mesa-dev \
+      libgoogle-glog-dev \
+      liblttng-ctl-dev \
+      liblttng-ust-dev \
+      liblz4-dev \
+      libompl-dev \
+      libopencv-dev \
+      libpcl-dev \
+      libssl-dev \
+      libsdl2-dev \
+      libsuitesparse-dev \
+      libtbb-dev \
+      libtinyxml2-dev \
+      libudev-dev \
+      libusb-1.0-0-dev \
+      libvtk9-dev \
+      libxaw7-dev \
+      python3-pip \
+      openssh-client \
+      software-properties-common \
+      nano \
+      vim \
+      clang-format \
+      nvidia-cuda-toolkit \
+      libyaml-cpp-dev \
+#     cuda-toolkit \
+    libnvinfer-dev \
+    libnvonnxparsers-dev \
+#     tensorrt-dev \
+    && pip3 install black pre-commit \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
+RUN add-apt-repository universe && \
+    ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') && \
+    curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb" && \
+    dpkg -i /tmp/ros2-apt-source.deb && \
+    rm /tmp/ros2-apt-source.deb && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ros-${TARGET_ROS_DISTRO}-cv-bridge \
+        ros-${TARGET_ROS_DISTRO}-desktop \
+        ros-${TARGET_ROS_DISTRO}-message-filters \
+        ros-${TARGET_ROS_DISTRO}-nav-msgs \
+        ros-${TARGET_ROS_DISTRO}-pcl-conversions \
+        ros-${TARGET_ROS_DISTRO}-pcl-msgs \
+        ros-${TARGET_ROS_DISTRO}-rmw-zenoh-cpp \
+        ros-${TARGET_ROS_DISTRO}-rosbag2-cpp \
+        ros-${TARGET_ROS_DISTRO}-rosbag2-storage \
+        ros-${TARGET_ROS_DISTRO}-rosidl-default-generators \
+        ros-${TARGET_ROS_DISTRO}-tf2-bullet \
+        ros-${TARGET_ROS_DISTRO}-zenoh-cpp-vendor \
+        ros-${TARGET_ROS_DISTRO}-zenoh-security-tools \
+        ros-${TARGET_ROS_DISTRO}-ros2cli-common-extensions \
+        ros-${TARGET_ROS_DISTRO}-cv-bridge \
+        ros-${TARGET_ROS_DISTRO}-image-transport \
+        ros-${TARGET_ROS_DISTRO}-pcl-ros \
+        libpcl-conversions-dev \
+        python3-colcon-common-extensions \
+        python3-rosdep \
+        python3-vcstool \
+    && rm -rf /var/lib/apt/lists/*
+
+# ===============================
+RUN if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then rosdep init; fi && \
+    rosdep update
+
+RUN mkdir -p /opt/hpcx/ompi/lib/aarch64-linux-gnu && \
+    ln -sf /opt/hpcx/ompi /opt/hpcx/ompi/lib/aarch64-linux-gnu/openmpi && \
+    echo "source /opt/ros/${TARGET_ROS_DISTRO}/setup.bash" >> /root/.bashrc
+
+# other deps
+# RUN apt-get install libpng++-dev
+# is libpng-dev different from libpng++? I think not available as a apt for aarm64
+# RUN apt-get install libpng-dev
+
+RUN python3 -m pip install pylatex evo setuptools pre-commit scipy argcomplete black pre-commit
+
+# Install glog, gflags
+RUN apt-get update && apt-get install -y libgflags2.2 libgflags-dev libgoogle-glog-dev
+
+# Install xvfb to provide a display to container for GUI realted testing.
+# vtk is needed for OpenCV to build its viz module (from contrib!)
+RUN apt-get update && apt-get install -y xvfb python3-dev python3-setuptools libvtk9-dev
+
+RUN pip3 install setuptools pre-commit scipy matplotlib argcomplete
+
+# install CSparse
+RUN DEBIAN_FRONTEND=noninteractive apt install -y libsuitesparse-dev
+
+# Parallelism C++ for CPU
+RUN apt-get update && apt-get install -y libboost-all-dev libtbb-dev
+
+# Install OpenCV for Ubuntu
+RUN apt-get update && apt-get install -y \
+      unzip \
+      libjpeg-dev libpng-dev libpng++-dev libtiff-dev libgtk2.0-dev \
+      libatlas-base-dev gfortran
+
+WORKDIR ${WS_DIR}
+
+RUN git clone https://github.com/opencv/opencv.git
+RUN cd opencv && \
+      git checkout tags/4.10.0 && \
+      mkdir build
+
+RUN git clone https://github.com/opencv/opencv_contrib.git
+RUN cd opencv_contrib && \
+      git checkout tags/4.10.0
+
+# on aarch64 there is no binary for nlohmann-json3
+RUN git clone https://github.com/nlohmann/json.git
+RUN cd json && mkdir build && \
+      cd build && \
+      cmake .. && make -j${BUILD_CORES} install
+
+# OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
+RUN ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
+
+# IMPORTANT: must specify CXX_17 version. Default is c++11 which will cause compilation issues
+# On aarch64 we can enable NEON for CPU level optimisations
+# It is vital we use gcc-11 as otheriwise we cannot compile the cuda level code (ie. CUDA 12.9)
+RUN cd opencv/build && \
+      cmake -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      -DCMAKE_CXX_STANDARD=17 \
+      -D BUILD_opencv_python=OFF \
+      -D BUILD_opencv_python2=OFF \
+      -D BUILD_opencv_python3=ON \
+      -D WITH_CUDA=ON \
+      -D WITH_CUDNN=ON \
+      -D INSTALL_CUDA_LIBS=OFF \
+      -D CUDA_ARCH_PTX= \
+      -D CUDA_ARCH_BIN=8.7 \
+      -D CUDNN_INCLUDE_DIR=/usr/include/$(uname -i)-linux-gnu \
+      -D OPENCV_DNN_CUDA=ON \
+      -D ENABLE_FAST_MATH=ON \
+      -D CUDA_FAST_MATH=ON \
+      -D WITH_VTK=ON \
+      -D WITH_CUFFT=ON \
+      -D WITH_CUBLAS=ON \
+      -D WITH_TBB=ON \
+      -DENABLE_NEON=ON \
+      -D BUILD_TESTS=OFF \
+      -D BUILD_PERF_TESTS=OFF \
+      -D BUILD_opencv_ts=OFF \
+      -D BUILD_opencv_sfm=OFF \
+      -D BUILD_JAVA=OFF \
+      -DOPENCV_EXTRA_MODULES_PATH=/root/opencv_contrib/modules .. && \
+      make -j${BUILD_CORES} install
+
+RUN git clone https://github.com/MIT-SPARK/config_utilities.git && \
+      cd config_utilities && \
+      git checkout 1df5f6b5444f8823232cfdb1cef69c2bd41ada96 && \
+      cd config_utilities && mkdir build && \
+      cd build && \
+      cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr/local \
+        -DBUILD_TESTING=OFF \
+        -DCONFIG_UTILS_BUILD_DEMOS=OFF && \
+        make -j${BUILD_CORES} install
+
+
+
+
+# Install GTSAM
+RUN git clone https://github.com/borglab/gtsam.git
+RUN cd gtsam && \
+    git fetch && \
+    git checkout tags/4.2.0 && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -DGTSAM_USE_SYSTEM_EIGEN=ON \
+    -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DCMAKE_BUILD_TYPE=Release -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_POSE3_EXPMAP=ON -DGTSAM_ROT3_EXPMAP=ON -DGTSAM_TANGENT_PREINTEGRATION=OFF .. && \
+    make -j${BUILD_CORES} install
+
+
+# Install Open_GV
+RUN git clone https://github.com/MIT-SPARK/opengv
+RUN cd opengv && \
+      mkdir build
+RUN cd opengv/build && \
+      cmake -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      .. && make -j${BUILD_CORES} install
+
+
+RUN echo 'export RMW_IMPLEMENTATION=rmw_zenoh_cpp' >> ~/.bashrc
+
+RUN mkdir /root/.config
+COPY ./config /root/.config
+
+
+
+RUN mkdir -p /home/user/dev_ws/src/core
+RUN mkdir -p /home/user/dev_ws/src/third_parties
+RUN mkdir -p /home/user/upstream_ws/src
+
+ENV ROS_DISTRO=${TARGET_ROS_DISTRO}
+
+SHELL ["/bin/bash", "-c"]
+
+RUN source /opt/ros/${TARGET_ROS_DISTRO}/setup.bash
+
+WORKDIR /home/user/dev_ws
