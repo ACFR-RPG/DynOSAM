@@ -115,7 +115,7 @@ class Frontend {
    */
   size_t temporalVioTriangultion(
       VioGraphEstimator& estimator, ViFrame::Ptr frame,
-      std::vector<KeypointIdentifier>& new_measurements);
+      std::unordered_set<KeypointIdentifier>& new_measurements);
 
   bool solve3d2dRansac(gtsam::Pose3& pose, std::vector<bool>& inliers,
                        FrameAbsoluteAdaptor& adaptor, double ransac_threshold,

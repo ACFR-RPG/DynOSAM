@@ -83,6 +83,7 @@ class Timer {
     return toUnits<std::ratio<1>>(time);
   }
 
+  using Seconds = std::ratio<1>;
   // period should be std::milli, std::nano etc
   // for seconds std::ratio<1>
   // T is resolution used to compute the diff

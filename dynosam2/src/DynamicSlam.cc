@@ -318,6 +318,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   visualization_data->vi_tracks.frame = estimator.getFramePtr(frame_id);
   visualization_data->vi_tracks.correspondences = vo_correspondences;
   visualization_data->vi_tracks.measurements = vo_measurements_added;
+  visualization_data->vi_tracks.is_keyframe = vi_tracking_state.is_keyframe;
 
   for (size_t i = 0; i < num_objects; i++) {
     const ObjectId object_id = object_ids[i];
@@ -344,6 +345,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     auto& do_track_viz = visualization_data->do_tracks[object_id];
     do_track_viz.frame = estimator.getFramePtr(frame_id);
     do_track_viz.correspondences = object_correspondences.at(i);
+    do_track_viz.is_keyframe =
+        isDoKeyframe(do_tracking_states.back().keyframe_type);
   }
 
   if (estimator_.needsFullGraphOptimisation()) {
@@ -361,7 +364,9 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   }
 
   const auto t2 = dyno::utils::Timer::tic();
-  // const double dt_seconds = dyno::utils::Timer::
+  using Seconds = dyno::utils::Timer::Seconds;
+  visualization_data->dt = dyno::utils::Timer::diffUnits<Seconds>(t2, t1);
+  ;
 
   frontend_viz_data_queue_.push(visualization_data);
 

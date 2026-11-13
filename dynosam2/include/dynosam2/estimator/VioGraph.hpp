@@ -23,6 +23,8 @@ struct VioGraphState {
   // IMU link
   bool is_keyframe{false};
 
+  ImuError::Bias bias{};
+
   inline gtsam::NavState navState() const {
     return gtsam::NavState{pose_W, velocity_W.linear};
   }
@@ -87,6 +89,18 @@ class VioGraph : public BaGraphStates<VioGraphState> {
   // currently no removal of keyframe
   bool setKeyframe(dyno::FrameId id, bool is_keyframe);
   bool isKeyframe(dyno::FrameId id) const;
+
+  /**
+   * @brief Remove outliers in the current frame if measurements exceed a
+   * minimum reprojection error with the map or are projected ont an object in
+   * the current frame
+   *
+   * @param frame
+   * @param tids_removed
+   * @return size_t
+   */
+  [[maybe_unused]] size_t removeOutliers(
+      ViFrame::Ptr frame, std::vector<dyno::TrackletId>& tids_removed);
 
   // active keyframes
   const std::set<dyno::FrameId>& keyFrames() const;

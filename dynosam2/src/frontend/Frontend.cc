@@ -176,9 +176,11 @@ void Frontend::solveVisualOdometry(
   // initalise estimator with new state (eventually maybe from VIO?)
   // we now have an initial pose
   std::vector<dyno::TrackletId> observation_ids;
+  std::unordered_set<TrackletId> correspondences_set;
   observation_ids.reserve(adapter.getNumberCorrespondences());
-  new_measurements.reserve(adapter.getNumberCorrespondences());
-  correspondences.reserve(adapter.getNumberCorrespondences());
+  correspondences_set.reserve(adapter.getNumberCorrespondences());
+
+  std::unordered_set<KeypointIdentifier> new_measurements_set;
   // Computed flow between tracked points. This is used to help determine if
   // there is a zero velocity update
   std::vector<double> flows;
@@ -190,7 +192,7 @@ void Frontend::solveVisualOdometry(
     if (adapter.isInlier(idx)) {
       // indicate point as well tracked
       // may or may not be in the map!
-      correspondences.push_back(id);
+      correspondences_set.insert(id);
       flows.push_back(
           (adapter.keypoint(idx) - adapter.keypointPrev(idx)).norm());
 
@@ -199,7 +201,7 @@ void Frontend::solveVisualOdometry(
       //  have this as a map poing
       if (estimator.landmarkExists(id)) {
         observation_ids.push_back(id);
-        new_measurements.emplace_back(frame_id, id, dyno::background_label);
+        new_measurements_set.emplace(frame_id, id, dyno::background_label);
       }
     }
   }
@@ -210,6 +212,8 @@ void Frontend::solveVisualOdometry(
     LOG(INFO) << "Zero velocity update found! Skipping adding new points!";
     frames_updated.push_back(frame_id);
     new_measurements.clear();
+    correspondences = dyno::TrackletIds(correspondences_set.begin(),
+                                        correspondences_set.end());
     success = true;
     return;
   }
@@ -230,10 +234,7 @@ void Frontend::solveVisualOdometry(
     frames_updated_set.insert(vi_frame_previous_ptr->getFrameId());
   }
 
-  // TODO: if sensor_rig has IMU
-
-  // alert waiting threads AFTER we initalise states as they may need the pose!
-
+  vi_frame->setImages(image_container);
   const bool should_be_keyframe = shouldBeViKeyFrame(estimator, vi_frame);
   if (should_be_keyframe) {
     // add images to frame. These will get released when the frame is pruned
@@ -278,13 +279,27 @@ void Frontend::solveVisualOdometry(
     // initlaise new points in the map by attempting to triangulate points
     // at all active keyframes
     const size_t init_triangulation =
-        temporalVioTriangultion(estimator, vi_frame, new_measurements);
+        temporalVioTriangultion(estimator, vi_frame, new_measurements_set);
     // LOG(INFO) << "Init triangulation: " << init_triangulation;
     LOG(INFO) << "Made VIO keyframe k=" << frame_id;
     estimator.setKeyframe(frame_id, true);
   }
 
   if (estimator.keyFrames().size() > 2) {
+    std::vector<TrackletId> outliers;
+    // we need images at this point in the vi_frame
+    estimator.removeOutliers(vi_frame, outliers);
+
+    VLOG(20) << "VIO removed " << outliers.size() << " map outliers";
+    for (dyno::TrackletId tid : outliers) {
+      new_measurements_set.erase(
+          dyno::KeypointIdentifier(frame_id, tid, dyno::background_label));
+
+      // Index fc_index = geometry.getFeatureContainerIndex(tid);
+      // CHECK_EQ(features.ids[fc_index], tid);
+      // features.inlier[fc_index] = 0;
+    }
+
     utils::ChronoTimingStats timer_t("frontend.vo.refine_map");
     std::vector<FrameId> frames_affected;
     if (should_be_keyframe) {
@@ -293,6 +308,10 @@ void Frontend::solveVisualOdometry(
     } else {
       // optimize only states
       estimator.optimize(frame_id, frames_affected, true);
+      // if this frame is not a keyframe we can release the image memory here
+      // since we will not use it again they keyframe image memory will be
+      // cleaned during pruning
+      vi_frame->releaseImages();
     }
 
     for (FrameId frame_id : frames_affected) {
@@ -302,6 +321,10 @@ void Frontend::solveVisualOdometry(
 
   frames_updated = std::vector<dyno::FrameId>(frames_updated_set.begin(),
                                               frames_updated_set.end());
+  correspondences =
+      dyno::TrackletIds(correspondences_set.begin(), correspondences_set.end());
+  new_measurements = std::vector<KeypointIdentifier>(
+      new_measurements_set.begin(), new_measurements_set.end());
 
   success = true;
 }
@@ -1277,7 +1300,7 @@ struct StereoMeasurementFiller {
 
 size_t Frontend::temporalVioTriangultion(
     VioGraphEstimator& estimator, ViFrame::Ptr frame,
-    std::vector<KeypointIdentifier>& new_measurements) {
+    std::unordered_set<KeypointIdentifier>& new_measurements) {
   const size_t num_threads = std::max(1u, std::thread::hardware_concurrency());
   const size_t num_tracklets = frame->numKeypoints();
   const size_t chunk_size = (num_tracklets + num_threads - 1) / num_threads;
@@ -1380,8 +1403,7 @@ size_t Frontend::temporalVioTriangultion(
     }
   }
   estimator.addMeasurements(observations);
-  new_measurements.insert(new_measurements.begin(), observations.begin(),
-                          observations.end());
+  new_measurements.insert(observations.begin(), observations.end());
   triangulate_t.stop();
 
   return observations.size();

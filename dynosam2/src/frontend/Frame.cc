@@ -11,6 +11,14 @@ void Frame::setImages(const dyno::ImageContainer& other) {
       kCopyImageData);
 }
 
+bool Frame::getObjectMask(cv::Mat& mask) const {
+  if (image_container && image_container->hasObjectMask()) {
+    mask = image_container->objectMotionMask();
+    return true;
+  }
+  return false;
+}
+
 void Frame::releaseImages() {
   if (image_container) {
     image_container.reset();
@@ -75,14 +83,6 @@ std::pair<bool, const uint8_t*> ViFrame::getDescriptorByIndex(Index idx) const {
   const uint8_t* descriptor = descriptors_.ptr<uint8_t>(idx);
   const u_char valid = valid_descriptors_.at(idx);
   return {static_cast<bool>(valid), descriptor};
-}
-
-bool DoFrame::getObjectMask(cv::Mat& mask) const {
-  if (image_container && image_container->hasObjectMask()) {
-    mask = image_container->objectMotionMask();
-    return true;
-  }
-  return false;
 }
 
 bool DoFrame::getBinaryObjectMask(cv::Mat& mask) const {

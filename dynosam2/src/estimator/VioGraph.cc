@@ -1,5 +1,6 @@
 #include "dynosam2/estimator/VioGraph.hpp"
 
+#include <gtsam/navigation/CombinedImuFactor.h>
 #include <gtsam/nonlinear/DoglegOptimizer.h>
 #include <gtsam/slam/BetweenFactor.h>
 #include <gtsam/slam/StereoFactor.h>
@@ -224,6 +225,67 @@ bool VioGraph::isKeyframe(dyno::FrameId id) const {
   return it->second.is_keyframe;
 }
 
+size_t VioGraph::removeOutliers(ViFrame::Ptr frame,
+                                std::vector<dyno::TrackletId>& tids_removed) {
+  const auto fid = frame->getFrameId();
+  const gtsam::Pose3 X_W_k_inv = this->getPose(fid).inverse();
+
+  auto constructBounds = [this](ViFrame::Ptr frame) -> BoundsChecker {
+    cv::Mat object_mask;
+    if (!frame->getObjectMask(object_mask)) {
+      // if no mask, fill in image with background label of correct size
+      // must pass a mask to bounds checker to satisfy the id check, which in
+      // this case will always return true
+      const auto cam_params = camera_->getParams();
+      object_mask = cv::Mat(cam_params.imageSize(),
+                            dyno::ImageType::MotionMask::OpenCVType,
+                            dyno::background_label);
+    }
+    return BoundsChecker(object_mask);
+  };
+  // bounds checker for the projected point and
+  const BoundsChecker bounds_checker = constructBounds(frame);
+
+  // num inlier
+  int ctr = 0;
+  // check against all measurements not just the ones that are in the map
+  // although this should be most of them.
+  gtsam::Point2 pt, proj;
+  for (size_t i = 0; i < frame->numKeypoints(); i++) {
+    const dyno::TrackletId tid = frame->ids[i];
+
+    MapPoint map_point;
+    if (!getMapPoint(tid, map_point)) {
+      // not yet in the map
+      continue;
+    }
+
+    frame->getKeypointByIndex(i, pt);
+
+    bool remove = false;
+    const gtsam::Point3 p_C = X_W_k_inv * map_point.p_W;
+    if (camera_->projectSafe(p_C, &proj)) {
+      // too high reprojection error or the projected point lands on an object!
+      if ((proj - pt).norm() > 4.0 ||
+          !bounds_checker(proj, dyno::background_label)) {
+        remove = true;
+      }
+    } else {
+      remove = true;
+    }
+
+    if (!remove) {
+      ++ctr;
+    }
+    // try remove the measurement if it exists in the observation map!
+    else if (removeMeasurement(dyno::KeypointIdentifier(fid, tid))) {
+      tids_removed.push_back(tid);
+    }
+  }
+
+  return ctr;
+}
+
 void VioGraphEstimator::optimize(dyno::FrameId frame_id,
                                  std::vector<dyno::FrameId>& frames_affected,
                                  bool only_states) {
@@ -386,8 +448,96 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
     return;
   }
 
-  // const gtsam::Pose3& T_W_A = getPose(anchor_frame);
-  // const gtsam::Pose3 T_W_A_inv = T_W_A.inverse();
+  // try and form IMU factors
+  bool use_imu_factors = false;
+  // std::unordered_map<dyno::FrameId, gtsam::NonlinearFactor::shared_ptr>
+  // imu_factors; if(const auto imu_params = getImuConfig()) {
+  //   use_imu_factors = true;
+  //   for(size_t i = 1; i < frames_to_use.size(); i++) {
+  //      const dyno::FrameId from_frame = frames_to_use[i - 1];
+  //     const dyno::FrameId to_frame = frames_to_use[i];
+
+  //     // Start with the IMU error stored at the frame immediately after
+  //     // from_frame, which represents from_frame -> from_frame + 1.
+  //     dyno::FrameId current_frame = from_frame + 1;
+
+  //     const ViFrame::Ptr first_vi_frame = getFramePtr(current_frame);
+  //     CHECK(first_vi_frame);
+
+  //     const RelativePoseErrorBase::Ptr first_rel_pose =
+  //         first_vi_frame->getRelativePose();
+  //     CHECK(first_rel_pose);
+
+  //     ImuError::Ptr imu_error =
+  //         std::dynamic_pointer_cast<ImuError>(first_rel_pose);
+
+  //     if (!imu_error) {
+  //       LOG(WARNING) << "IMU config provided by relative error is not
+  //       ImuError!"; imu_factors.clear(); use_imu_factors = false; break;
+  //     }
+
+  //     // copy to not effect original preintegraion
+  //     ImuError::Ptr accumulated_imu_error =
+  //     std::make_shared<ImuError>(*imu_error);
+  //     CHECK_EQ(accumulated_imu_error->from(), from_frame);
+  //     CHECK_EQ(accumulated_imu_error->to(), current_frame);
+
+  //     // Accumulate subsequent IMU errors until reaching to_frame.
+  //     while (current_frame < to_frame) {
+  //       ++current_frame;
+
+  //       const ViFrame::Ptr vi_frame = getFramePtr(current_frame);
+  //       CHECK(vi_frame);
+
+  //       const RelativePoseErrorBase::Ptr rel_pose =
+  //           vi_frame->getRelativePose();
+  //       CHECK(rel_pose);
+
+  //       const ImuError::Ptr next_imu_error =
+  //           std::dynamic_pointer_cast<ImuError>(rel_pose);
+
+  //       if (!next_imu_error) {
+  //         LOG(WARNING) << "Missing intermediate IMU error at frame "
+  //                     << current_frame;
+  //         imu_factors.clear();
+  //         use_imu_factors = false;
+  //         break;
+  //       }
+
+  //       CHECK_EQ(next_imu_error->from(), current_frame - 1);
+  //       CHECK_EQ(next_imu_error->to(), current_frame);
+
+  //       accumulated_imu_error->append(*next_imu_error);
+  //     }
+
+  //     // if (imu_factors.empty() && i > 1) {
+  //     //   break;
+  //     // }
+
+  //     CHECK_EQ(accumulated_imu_error->from(), from_frame);
+  //     CHECK_EQ(accumulated_imu_error->to(), to_frame);
+
+  //     //TODO: CACHE!
+  //     gtsam::CombinedImuFactor::shared_ptr imu_factor =
+  //     boost::make_shared<gtsam::CombinedImuFactor>(
+  //       gtsam::Symbol('x', from_frame),
+  //       gtsam::Symbol('v', from_frame),
+  //       gtsam::Symbol('x', to_frame),
+  //       gtsam::Symbol('v', to_frame),
+  //       gtsam::Symbol('b', from_frame),
+  //       gtsam::Symbol('b', to_frame),
+  //       accumulated_imu_error->getPim()
+  //     );
+
+  //     imu_factors[to_frame] = imu_factor;
+
+  //     // Add the merged IMU factor.
+  //     // imu_factors.push_back(imu_error);
+  //     LOG(INFO) << "Generated IMU factor: " << accumulated_imu_error->from()
+  //     << " -> " << accumulated_imu_error->to();
+  //   }
+  // }
+
   // very important frames_to_try  is in order!
   for (dyno::FrameId k0 : frames_to_use) {
     CHECK(poseExists(k0)) << k0;
@@ -397,6 +547,16 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
     // gtsam::Pose3 T_A_k0 = T_W_A_inv * getPose(k0)
     values.insert(pose_sym, getPose(k0));
     poses_with_update.push_back(k0);
+
+    // if(use_imu_factors) {
+    //   values.insert(gtsam::Symbol('v', k0), getVelocity(k0).linear);
+    //   values.insert(gtsam::Symbol('b', k0), getVioState(k0).bias);
+
+    //   if(k0 > frames_to_use.at(0)) {
+    //     auto imu_factor = imu_factors[k0];
+    //     graph.add(imu_factor);
+    //   }
+    // }
 
     auto selected_it = selected_tracklets_by_frame.find(k0);
     const auto& selected_tracklets = selected_it->second;
@@ -493,6 +653,8 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
   gtsam::SharedNoiseModel prior_noise_model =
       gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001);
 
+  // TODO: and now with IMU?
+  //  must update velocity and BIAS!
   BaProblemInterface smooth_traj_problem;
   for (dyno::FrameId k0 = anchor_frame; k0 <= head_frame; k0++) {
     if (k0 > anchor_frame) {

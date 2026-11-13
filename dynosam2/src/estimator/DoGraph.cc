@@ -270,9 +270,6 @@ size_t DoGraph::removeOutliersByDetection(const VioGraph& vio_graph) {
           static_cast<double>(repr_stat.num_outside_mask) /
           static_cast<double>(repr_stat.num_in_front);
 
-      LOG(INFO) << tid << " mask ratio: " << mask_ratio << " repr: "
-                << repr_stat.total_repr_error / (double)repr_stat.num_in_front;
-
       if (mask_ratio > kMaxOutsideMaskRatio) {
         remove_landmark = true;
       }

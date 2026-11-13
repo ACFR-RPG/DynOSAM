@@ -78,6 +78,8 @@ class ImuError : public RelativePoseErrorBase {
     return pim_;
   }
 
+  void append(const ImuError& error);
+
   /// @brief Append with the same bias terms
   /// @param measurements
   void append(const dyno::ImuMeasurements& measurements, dyno::FrameId k1);

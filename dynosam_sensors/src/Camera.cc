@@ -67,6 +67,15 @@ void Camera::project(const Landmarks& lmks, Keypoints* kpts) const {
   }
 }
 
+bool Camera::projectSafe(const Landmark& lmk, Keypoint* kpt) const {
+  const auto [pt, status] = camera_impl_->projectSafe(lmk);
+  if (status) {
+    *kpt = pt;
+    return true;
+  }
+  return false;
+}
+
 void Camera::backProject(const Keypoints& kps, const Depths& depths,
                          Landmarks* lmks) const {
   CHECK_NOTNULL(lmks)->clear();

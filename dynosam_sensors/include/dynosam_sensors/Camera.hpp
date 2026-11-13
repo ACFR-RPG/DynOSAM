@@ -74,6 +74,8 @@ class Camera {
    */
   void project(const Landmarks& lmks, Keypoints* kpts) const;
 
+  bool projectSafe(const Landmark& lmk, Keypoint* kpt) const;
+
   /**
    * @brief Checks if a given keypoint is inside the image AND in front the
    * camera (ie. depth > 0).

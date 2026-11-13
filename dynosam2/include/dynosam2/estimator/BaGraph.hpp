@@ -149,6 +149,17 @@ class BaGraph {
     return lmk_node->getMeasurement(kpi.frameId(), measurement);
   }
 
+  inline bool removeMeasurement(const dyno::KeypointIdentifier& kpi) {
+    // way faster to lookup by tracklet id
+    auto lmk_node = observations_->getLandmark(kpi.trackletId());
+    const auto fid = kpi.frameId();
+    if (lmk_node && lmk_node->seenAtFrame(fid)) {
+      lmk_node->remove(fid);
+      return true;
+    }
+    return false;
+  }
+
   inline bool getObservationFrames(dyno::TrackletId tracklet_id,
                                    std::vector<FrameId>& frames) const {
     auto lmk_node = observations_->getLandmark(tracklet_id);

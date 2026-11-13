@@ -107,6 +107,17 @@ struct Frame {
    */
   void setImages(const dyno::ImageContainer& other);
 
+  /**
+   * @brief Get the full (labelled) object mask  if available from the
+   * underlying image_container. As this returns a reference to the original
+   * mat, ensure mask is not modified!
+   *
+   * @param mask
+   * @return true
+   * @return false
+   */
+  bool getObjectMask(cv::Mat& mask) const;
+
   /// @brief Release image container memory (if allocated)
   void releaseImages();
 
@@ -198,17 +209,6 @@ class DoFrame : public Frame {
  public:
   DYNO_POINTER_TYPEDEFS(DoFrame)
   DoFrame(FrameId fi, Timestamp ts, ObjectId o) : Frame(fi, ts, o) {}
-
-  /**
-   * @brief Get the full (labelled) object mask  if available from the
-   * underlying image_container. As this returns a reference to the original
-   * mat, ensure mask is not modified!
-   *
-   * @param mask
-   * @return true
-   * @return false
-   */
-  bool getObjectMask(cv::Mat& mask) const;
 
   /**
    * @brief Get the isolated object mask (ie. a binary mask containing only

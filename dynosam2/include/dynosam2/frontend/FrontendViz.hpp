@@ -22,6 +22,8 @@ class FrontendViz {
       std::shared_ptr<FRAME> frame;
       std::vector<TrackletId> correspondences;
       std::vector<KeypointIdentifier> measurements;
+      bool is_keyframe = false;
+      TrackingQuality tracking_quality = TrackingQuality::Good;
     };
     typedef FrameTracks<ViFrame> ViFrameTracks;
     typedef FrameTracks<DoFrame> DoFrameTracks;
@@ -46,6 +48,10 @@ class FrontendViz {
 
  private:
   const SlamBackend& estimator_;
+  std::unordered_map<ObjectId, size_t> keyframe_count_;
+
+  void updateKeyframeCount(ObjectId oid, bool is_keyframe);
+  void writeFrameInfo(cv::Mat& canvas, const std::string& info_string) const;
 
   /// @brief Internal object state used for drawing target-lock
   struct TemporalObjectState {

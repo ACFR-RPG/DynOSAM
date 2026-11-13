@@ -16,6 +16,9 @@ cv::Mat FrontendViz::draw(FrontendViz::Data::Ptr data) {
   const ImageWrapper<ImageType::RGBMono>& img_wrapper = data->images->rgb();
   cv::Mat img_rgb = img_wrapper.toRGB().clone();
 
+  std::stringstream frame_info_ss;
+  frame_info_ss << "Frame: " << fid << " ";
+
   // draw static correspondences
   using DoFrameTracks = FrontendViz::Data::DoFrameTracks;
   using ViFrameTracks = FrontendViz::Data::ViFrameTracks;
@@ -32,6 +35,15 @@ cv::Mat FrontendViz::draw(FrontendViz::Data::Ptr data) {
   const dyno::FrameId ref_frame = relative_motion->from();
   const ViFrame::Ptr ref_vi_frame = vi_estimator.getFramePtr(ref_frame);
   CHECK_NOTNULL(ref_vi_frame);
+
+  updateKeyframeCount(dyno::background_label, vi_frame_tracks.is_keyframe);
+
+  frame_info_ss << "[VO tracks: " << vi_frame_tracks.correspondences.size()
+                << " ";
+  frame_info_ss << "Cam KFs: " << keyframe_count_.at(dyno::background_label)
+                << " ";
+  frame_info_ss << "quailty: " << to_string(vi_frame_tracks.tracking_quality)
+                << "]";
 
   for (dyno::TrackletId tid : vi_frame_tracks.correspondences) {
     const dyno::Keypoint pt = vi_frame_tracks.frame->keypointById(tid);
@@ -76,6 +88,8 @@ cv::Mat FrontendViz::draw(FrontendViz::Data::Ptr data) {
     const DoFrameTracks& do_track = it->second;
     const DoFrame::Ptr do_frame = do_track.frame;
 
+    updateKeyframeCount(oid, do_track.is_keyframe);
+
     const auto& G = do_frame->getRelativeMotion();
     // sanity check
     CHECK_EQ(G.to(), fid);
@@ -115,7 +129,40 @@ cv::Mat FrontendViz::draw(FrontendViz::Data::Ptr data) {
     updateObjectTrackingBox(img_rgb, detection, timestamp);
   }
 
+  writeFrameInfo(img_rgb, frame_info_ss.str());
   return img_rgb;
+}
+
+void FrontendViz::updateKeyframeCount(ObjectId oid, bool is_keyframe) {
+  if (keyframe_count_.find(oid) == keyframe_count_.end()) {
+    keyframe_count_.emplace(oid, 0);
+  }
+
+  if (!is_keyframe) {
+    return;
+  }
+
+  ++keyframe_count_.at(oid);
+}
+
+void FrontendViz::writeFrameInfo(cv::Mat& canvas,
+                                 const std::string& info_string) const {
+  constexpr static double kFontScale = 0.4;
+  constexpr static int kFontFace = cv::FONT_HERSHEY_SIMPLEX;
+  constexpr static int kThickness = 1;
+
+  int base_line;
+  cv::Size text_size = cv::getTextSize(info_string, kFontFace, kFontScale,
+                                       kThickness, &base_line);
+  cv::Mat image_text =
+      cv::Mat(canvas.rows + text_size.height + 10, canvas.cols, canvas.type());
+  canvas.copyTo(image_text.rowRange(0, canvas.rows).colRange(0, canvas.cols));
+  image_text.rowRange(canvas.rows, image_text.rows) =
+      cv::Mat::zeros(text_size.height + 10, canvas.cols, canvas.type());
+  cv::putText(image_text, info_string, cv::Point(5, image_text.rows - 5),
+              kFontFace, kFontScale, cv::Scalar(255, 255, 255), kThickness);
+
+  canvas = image_text;
 }
 
 struct TargetLockStyle {

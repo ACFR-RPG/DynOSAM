@@ -97,6 +97,7 @@ class LandmarkMap {
 
  private:
   InternalData data_;
+  // std::mutex mutex_;
 };
 
 struct MapPoint {

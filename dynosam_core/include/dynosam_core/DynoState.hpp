@@ -22,6 +22,10 @@ enum class DoKeyframeType {
   AnchorKeyFrame = 2
 };
 
+inline bool isDoKeyframe(const DoKeyframeType& keyframe_type) {
+  return keyframe_type == DoKeyframeType::NonKeyFrame ? false : true;
+}
+
 struct ViTrackingState {
   FrameId frame_id;
   bool is_keyframe{false};
