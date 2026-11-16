@@ -17,7 +17,9 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
+# Include custom CMake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(DetectRos2Version)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -44,7 +46,8 @@ find_package(rclcpp_components REQUIRED)
 find_package(dynosam_sensors REQUIRED)
 find_package(dynosam_processing REQUIRED)
 
-
+# Detect ROS 2 version
+detect_ros2_version()
 
 # setup targets
 include_directories(
@@ -114,7 +117,20 @@ set(TARGET_EXPORT_DEPS
 # in Jazzy the version is 4 and Kilted is 7
 # also for some reason in the kilted version we need pcl_conversions
 # in the link librariers but in Jazzy we dont
-if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
+# if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
+# message(
+#   "message filters version detected > 7. Assumuing ROS Kilted is used. "
+#   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
+# add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
+# # add pcl conversions lib
+# list(APPEND LINK_LIBS pcl_conversions::pcl_conversions)
+# else()
+# message(
+#   "message filters version detected < 7. Assumuing at least ROS Jazzy is used."
+#   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=0")
+# add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=0)
+# endif()
+if(ROS2_GREATER_THAN_JAZZY)
 message(
   "message filters version detected > 7. Assumuing ROS Kilted is used. "
   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")

@@ -15,7 +15,7 @@ services:
 
 
     environment:
-      IDIA_VISIBLE_DEVICES: all
+      NIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all
       ROS_DOMAIN_ID: "${ROS_DOMAIN_ID:-0}"
       RMW_IMPLEMENTATION: rmw_zenoh_cpp

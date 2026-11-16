@@ -6,7 +6,12 @@
 #include <boost/python.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "cv_bridge/cv_bridge.hpp"
+#if __has_include(<cv_bridge/cv_bridge.hpp>)  // requires GCC >= 5
+#include <cv_bridge/cv_bridge.hpp>
+#else
+#include <cv_bridge/cv_bridge.h>  // ros2 changed to .hpp some point...
+#endif
+
 #include "dynosam_common/utils/Statistics.hpp"
 #include "dynosam_nn/ModelConfig.hpp"
 #include "dynosam_nn/PyObjectDetector.hpp"

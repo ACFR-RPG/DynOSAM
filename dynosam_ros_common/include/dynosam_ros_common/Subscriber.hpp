@@ -3,8 +3,12 @@
 #include <dynosam_processing/DataReader.hpp>
 #include <mutex>
 
-#include "cv_bridge/cv_bridge.hpp"
-// #include "dynamic_slam_interfaces/msg/groundtruth_packet.hpp"
+#if __has_include(<cv_bridge/cv_bridge.hpp>)  // requires GCC >= 5
+#include <cv_bridge/cv_bridge.hpp>
+#else
+#include <cv_bridge/cv_bridge.h>  // ros2 changed to .hpp some point...
+#endif
+
 #include "dynosam_ros_common/CameraSystem.hpp"
 #include "dynosam_ros_common/adaptors/GroundtuthPacketAdaptor.hpp"
 #include "dynosam_ros_common/adaptors/ImuMeasurementAdaptor.hpp"

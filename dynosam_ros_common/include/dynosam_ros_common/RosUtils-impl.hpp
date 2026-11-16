@@ -80,7 +80,11 @@ inline void waitAndGetMessage(
       rclcpp::Clock::SharedPtr clock = node->get_clock();
 
       const auto start_time = clock->now();
+#if ROS2_AT_LEAST_JAZZY
       rclcpp::Rate rate(1, clock);
+#else
+      rclcpp::Rate rate(1);
+#endif
 
       while (rclcpp::ok() && !done.load()) {
         const auto elapsed = (clock->now() - start_time).seconds();

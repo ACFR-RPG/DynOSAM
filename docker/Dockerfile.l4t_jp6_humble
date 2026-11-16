@@ -107,6 +107,7 @@ RUN add-apt-repository universe && \
         ros-${TARGET_ROS_DISTRO}-cv-bridge \
         ros-${TARGET_ROS_DISTRO}-image-transport \
         ros-${TARGET_ROS_DISTRO}-pcl-ros \
+        ros-${TARGET_ROS_DISTRO}-diagnostics \
         libpcl-conversions-dev \
         python3-colcon-common-extensions \
         python3-rosdep \
