@@ -30,6 +30,20 @@ struct DiagnosticsStatus {
     level = lvl;
     message = s;
   }
+
+  void mergeSummary(Level lvl, const std::string& s) {
+    if ((lvl > 0) == (level > 0)) {
+      if (!message.empty()) {
+        message += "; ";
+        message += s;
+      }
+    } else if (lvl > level) {
+      message = s;
+    }
+    if (lvl > level) {
+      level = lvl;
+    }
+  }
 };
 
 template <>

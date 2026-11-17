@@ -8,43 +8,15 @@ namespace dyno {
 SensorDiagnostics::SensorDiagnostics(const std::string& sensor_name)
     : sensor_name_(sensor_name) {}
 
-void SensorDiagnostics::tick() {
-  const auto now = Clock::now();
-
-  std::lock_guard<std::mutex> lock(mutex_);
-  ++received_count_;
-
-  if (has_received_message_) {
-    // compute timig internval in milliseconds
-    const double interval =
-        utils::Timer::diffUnits<std::milli>(now, last_message_time_);
-    intervals_.Add(interval);
-  }
-
-  last_message_time_ = now;
-  has_received_message_ = true;
-}
+void SensorDiagnostics::tick() { rolling_interval_.tick(); }
 
 bool SensorDiagnostics::run(DiagnosticsStatus& status) {
-  // Snapshot state under the mutex.
-  uint64_t received_count;
-  bool has_received_message;
-  Clock::time_point last_message_time;
-  IntervalAccumulator intervals;
-
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-
-    received_count = received_count_;
-    has_received_message = has_received_message_;
-    last_message_time = last_message_time_;
-    intervals = intervals_;
-  }
+  const RollingIntervalT::Stats stats = rolling_interval_.getStats();
 
   status.add("Sensor", sensor_name_);
-  status.add("Messages received", received_count);
+  status.add("Messages received", stats.received_count);
 
-  if (!has_received_message) {
+  if (!stats.has_received_message) {
     status.summary(DiagnosticsStatus::Level::Warn,
                    "Waiting for sensor messages");
     return true;
@@ -54,24 +26,16 @@ bool SensorDiagnostics::run(DiagnosticsStatus& status) {
 
   // age in milliseconds
   const double message_age =
-      utils::Timer::diffUnits<std::milli>(now, last_message_time);
+      utils::Timer::diffUnits<std::milli>(now, stats.last_message_time);
 
-  const int interval_samples = intervals.total_samples();
+  const int interval_samples = stats.intervals.total_samples();
 
   // Lifetime statistics.
-  const double lifetime_mean = intervals.Mean();
+  const double lifetime_mean = stats.intervals.Mean();
 
   // Rolling statistics.
-  double rolling_mean = 0.0;
-  double rolling_stddev = 0.0;
-
-  if (interval_samples > 0) {
-    rolling_mean = intervals.RollingMean();
-    rolling_stddev = intervals.StandardDeviation();
-  }
-
-  const double frequency = rolling_mean > 0.0 ? 1000.0 / rolling_mean : 0.0;
-
+  const double rolling_stddev = stats.rollingStdDev();
+  const auto [frequency, rolling_mean] = stats.frequencyAndRollingMean();
   // Adaptive timeout: at least 1 second, or 3x the observed period.
   const double timeout = std::max(1000.0, 3.0 * rolling_mean);
 
@@ -83,8 +47,8 @@ bool SensorDiagnostics::run(DiagnosticsStatus& status) {
   status.add("Lifetime mean period (ms)", lifetime_mean);
 
   if (interval_samples > 0) {
-    status.add("Lifetime min period (ms)", intervals.min());
-    status.add("Lifetime max period (ms)", intervals.max());
+    status.add("Lifetime min period (ms)", stats.intervals.min());
+    status.add("Lifetime max period (ms)", stats.intervals.max());
 
     // Rolling inter-message statistics.
     status.add("Rolling mean period (ms)", rolling_mean);

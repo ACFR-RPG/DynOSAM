@@ -39,6 +39,15 @@ DynamicSlam::DynamicSlam(const PipelineParameters& parameters,
         parameters_.estimator.realtime_static_min_iterations);
   }
 
+  // fill diagnostics
+  diagnostics_->using_imu = sensor_rig_->imuEnabled();
+  diagnostics_->enforcing_realtime = parameters_.estimator.enforce_realtime;
+  diagnostics_->realtime_time_limit =
+      parameters_.estimator.realtime_time_limit * 1000.0;
+  diagnostics_->using_full_graph = parameters_.debug.use_fullgraph;
+  diagnostics_->estimating_do = parameters_.debug.estimate_dynamic_objects;
+  diagnostics_->num_frames_processed = 0;
+
   // start viz thread
   frontend_viz_thread_ = std::thread(&DynamicSlam::visualisationLoop, this);
 }
@@ -70,7 +79,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     frontend_.detectAndTrack(features_ptr, object_detection, image_container,
                              gtsam::Rot3::Identity());
     CHECK_NOTNULL(features_ptr);
-    detect_t.stop();
+    diagnostics_->tickDetectAndTrack(detect_t.stop());
     FeatureBlockContainer& features = *features_ptr;
 
     FeatureBlockGeometryMap geometries;
@@ -151,7 +160,7 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
   frontend_.detectAndTrack(features_ptr, object_detection, image_container,
                            R_k_km1);
   CHECK_NOTNULL(features_ptr);
-  detect_t.stop();
+  diagnostics_->tickDetectAndTrack(detect_t.stop());
   FeatureBlockContainer& features = *features_ptr;
 
   FeatureBlockGeometryMap geometries;
@@ -278,8 +287,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
     });
   }
   group.wait();
-  solve_t.stop();
   doo_t.stop();
+  diagnostics_->tickOdometries(solve_t.stop());
 
   std::vector<dyno::TemporalObjectId>& objects_with_update =
       publication_data->updated_states.objects;
@@ -368,6 +377,8 @@ StateEstimate::Ptr DynamicSlam::spinOnce(
 
   // pushImageToDisplayQueue("Tracks", features.draw(rgb, true));
   pushPublicationDataToQueue(publication_data);
+
+  diagnostics_->tickFrameProcessed(timestamp, spin_t.stop());
 
   return nullptr;
 }

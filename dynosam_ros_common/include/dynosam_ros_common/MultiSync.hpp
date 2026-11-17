@@ -14,6 +14,14 @@
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
+// for Kilted and above
+#pragma message("ROS2 message filters version >=Kilted detected")
+#else
+// for at least Jazzy
+#pragma message("ROS2 message filters version <=Jazzy detected")
+#endif
+
 // struct
 
 namespace dyno {
@@ -38,7 +46,7 @@ template <typename Msg, std::size_t N>
 struct ExactTimePolicyHelperImpl {
   // in Jazzy ExactTime filter requires at least two message types to be defined
   // (ie. does not support N==1)
-#if !ROS2_AT_LEAST_JAZZY
+#if !MESSAGE_FILTERS_USES_NODE_INTERFACE
   static_assert(N > 1,
                 "Message filters (in at least Jazzy) does not support N==1. "
                 "MultiSync with N>=2 must be used!");
@@ -101,7 +109,7 @@ struct MultiSyncConfig {
 template <typename Msg, size_t N>
 class MultiSync : public MultiSyncBase {
  public:
-#if ROS2_AT_LEAST_JAZZY
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
   // In ROS Kilted curent version the message filter subscriber base requires a
   // node interface to the patramters and topics not the node itself. See:
   // https://docs.ros.org/en/humble/Tutorials/Intermediate/Using-Node-Interfaces-Template-Class.html
@@ -203,7 +211,7 @@ class MultiSync : public MultiSyncBase {
                                          *std::get<Is>(subs_)...);
 
       // Use lambda to forward messages to callDerived
-#if ROS2_AT_LEAST_JAZZY
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
       sync_->registerCallback(callback_);
 #else
       // 1. Lambda accepts all 9 arguments (as auto).
@@ -230,7 +238,7 @@ class MultiSync : public MultiSyncBase {
   }
 
  private:
-#if !ROS2_AT_LEAST_JAZZY
+#if !MESSAGE_FILTERS_USES_NODE_INTERFACE
   /**
    * @brief Helper function to slice the 9-argument signal down to N for the
    * callback_.
@@ -247,7 +255,7 @@ class MultiSync : public MultiSyncBase {
 #endif
 
  protected:
-#if ROS2_AT_LEAST_JAZZY
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
   using Subscriber =
       message_filters::Subscriber<MessageType, RequiredInterfaces>;
 #else

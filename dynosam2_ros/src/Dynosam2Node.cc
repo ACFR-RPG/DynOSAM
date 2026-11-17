@@ -56,7 +56,7 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   diagnostics_updater_ =
       std::make_unique<dyno::DynoDiagnosticsTaskManager>(node_ptr);
   auto lifecycle_monitor = std::make_shared<LifecycleMonitor>();
-  diagnostics_updater_->registerTask("Application", lifecycle_monitor);
+  diagnostics_updater_->registerTask("ROS2 Application", lifecycle_monitor);
 
   std::string cuda_enabled_message;
   dyno::utils::opencvCudaAvailable(&cuda_enabled_message);
@@ -137,6 +137,8 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
 
   //   / setup slam
   slam_ = std::make_shared<DynamicSlam>(system_paramters, sensor_rig);
+  auto slam_diagnostics = slam_->getDiagnostics();
+  diagnostics_updater_->registerTask("Dynamic SLAM", slam_diagnostics);
 
   constexpr static bool kRunParallel = true;
 
@@ -182,6 +184,22 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
           auto msg = rosgraph_msgs::msg::Clock();
           msg.clock = dyno::ros::toRosTime(image_container->timestamp());
           CHECK_NOTNULL(clock_pub)->publish(msg);
+        });
+  } else {
+    // this function is called prior to the image container being pushed onto
+    // the processing queue and therefore is a very-good approximation of the
+    // latest data coming directly from ros
+    data_interface_->registerPreQueueContainerCallback(
+        [&,
+         slam_diagnostics](const ImageContainer::Ptr image_container) -> void {
+          TimeDetail time_detail;
+          // cureent ROS time
+          time_detail.real_time = dyno::ros::fromRosTime(node_.now());
+          time_detail.image_time = image_container->timestamp();
+          time_detail.fid = image_container->frameId();
+          // alert the SLAM diagnostics as to the msot recent image in the
+          // processing queue
+          slam_diagnostics->updateImageSyncTimeDetail(time_detail);
         });
   }
 

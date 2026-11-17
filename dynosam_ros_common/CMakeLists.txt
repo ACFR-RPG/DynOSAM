@@ -117,20 +117,7 @@ set(TARGET_EXPORT_DEPS
 # in Jazzy the version is 4 and Kilted is 7
 # also for some reason in the kilted version we need pcl_conversions
 # in the link librariers but in Jazzy we dont
-# if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
-# message(
-#   "message filters version detected > 7. Assumuing ROS Kilted is used. "
-#   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
-# add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
-# # add pcl conversions lib
-# list(APPEND LINK_LIBS pcl_conversions::pcl_conversions)
-# else()
-# message(
-#   "message filters version detected < 7. Assumuing at least ROS Jazzy is used."
-#   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=0")
-# add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=0)
-# endif()
-if(ROS2_GREATER_THAN_JAZZY)
+if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
 message(
   "message filters version detected > 7. Assumuing ROS Kilted is used. "
   " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
