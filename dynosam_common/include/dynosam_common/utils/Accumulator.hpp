@@ -240,7 +240,8 @@ class Accumulator {
   SampleType most_recent_;
 };
 
-typedef Accumulator<double, double, kInfiniteWindowSize> Accumulatord;
+template <std::size_t WindowSize>
+using Accumulatord = Accumulator<double, double, WindowSize>;
 
 }  // namespace utils
 

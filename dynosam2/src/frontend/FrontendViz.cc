@@ -70,7 +70,7 @@ cv::Mat FrontendViz::draw(FrontendViz::Data::Ptr data) {
     }
   }
 
-  dyno::ObjectDetectionResult& object_detection = data->object_detection;
+  const dyno::ObjectDetectionResult& object_detection = data->object_detection;
   const std::unordered_map<dyno::ObjectId, DoFrameTracks>& do_tracks =
       data->do_tracks;
   for (const dyno::TrackedObjectDetection& detection :

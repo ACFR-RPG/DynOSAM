@@ -1,7 +1,8 @@
 #pragma once
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_common/utils/Accumulator.hpp"
+#include "dynosam_common/utils/RollingInterval.hpp"
+// #include "dynosam_common/utils/Accumulator.hpp"
 #include "dynosam_common/utils/Timing.hpp"
 #include "dynosam_ros_common/Diagnostics.hpp"
 
@@ -44,16 +45,18 @@ class SensorDiagnostics : public SensorDiagnosticsBase {
  private:
   std::string sensor_name_;
 
-  uint64_t received_count_{0};
+  // uint64_t received_count_{0};
 
-  Clock::time_point last_message_time_{};
-  bool has_received_message_{false};
-  // Inter-message interval statistics (seconds).
-  using IntervalAccumulator =
-      utils::Accumulator<double, double, kIntervalWindowSize>;
-  IntervalAccumulator intervals_;
+  // Clock::time_point last_message_time_{};
+  // bool has_received_message_{false};
+  // // Inter-message interval statistics (seconds).
+  // using IntervalAccumulator =
+  //     utils::Accumulator<double, double, kIntervalWindowSize>;
+  // IntervalAccumulator intervals_;
 
-  mutable std::mutex mutex_;
+  // mutable std::mutex mutex_;
+  using RollingIntervalT = RollingInterval<kIntervalWindowSize>;
+  RollingIntervalT rolling_interval_;
 };
 
 /**

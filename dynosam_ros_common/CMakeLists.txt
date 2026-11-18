@@ -17,7 +17,9 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
+# Include custom CMake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(DetectRos2Version)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -44,7 +46,8 @@ find_package(rclcpp_components REQUIRED)
 find_package(dynosam_sensors REQUIRED)
 find_package(dynosam_processing REQUIRED)
 
-
+# Detect ROS 2 version
+detect_ros2_version()
 
 # setup targets
 include_directories(

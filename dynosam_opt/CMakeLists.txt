@@ -36,6 +36,8 @@ else()
     set(PHMAP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(PHMAP_INSTALL OFF CACHE BOOL "" FORCE)
 
+    set(FETCHCONTENT_QUIET OFF)
+
     FetchContent_Declare(
         parallel-hashmap
         GIT_REPOSITORY https://github.com/greg7mdp/parallel-hashmap.git
@@ -44,13 +46,18 @@ else()
 
     FetchContent_MakeAvailable(parallel-hashmap)
 
+    if(NOT EXISTS "${parallel-hashmap_SOURCE_DIR}/parallel_hashmap")
+        message(FATAL_ERROR
+            "Failed to populate parallel-hashmap: ${parallel-hashmap_SOURCE_DIR}"
+        )
+    endif()
+
     # target_link_libraries(${PROJECT_NAME} PUBLIC phmap)
     include_directories(${parallel-hashmap_SOURCE_DIR})
 
     set(DYNOSAM_USE_BOOST_FLAT_CONTAINERS OFF)
     set(DYNOSAM_HAS_PHMAP ON)
 endif()
-
 
 
 # setup targets
@@ -100,6 +107,21 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
+
+if(DYNOSAM_HAS_PHMAP)
+target_include_directories(${PROJECT_NAME}
+        SYSTEM PUBLIC
+            $<BUILD_INTERFACE:${parallel-hashmap_SOURCE_DIR}>
+            $<INSTALL_INTERFACE:include>
+    )
+
+    # Install phmap headers alongside DynoSAM's headers.
+    install(
+        DIRECTORY "${parallel-hashmap_SOURCE_DIR}/parallel_hashmap"
+        DESTINATION include
+    )
+
+endif()
 
 install(
   DIRECTORY include/
