@@ -1,5 +1,5 @@
 from dynosam_ros_common.dynosam_node import DynosamNode
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.actions import DeclareLaunchArgument
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -34,6 +34,7 @@ def generate_launch_description():
         DeclareLaunchArgument("rgb_cam_topic", default_value="/d455/color/image_raw"),
         DeclareLaunchArgument("depth_cam_topic", default_value="/d455/aligned_depth_to_color/image_raw"),
         DeclareLaunchArgument("imu_topic", default_value="/d455/imu"),
+        DeclareLaunchArgument("use_imu", default_value="false", description="Enable IMU input"),
         DeclareLaunchArgument("depth_scale", default_value="0.001", description="RGB-Depth scale value"),
         DeclareLaunchArgument("rescale_width", default_value="640", description="Image width to rescale to"),
         DeclareLaunchArgument("rescale_height", default_value="480", description="Image height to rescale to"),
@@ -49,7 +50,13 @@ def generate_launch_description():
                     {"rescale_width": LaunchConfiguration("rescale_width")},
                     {"rescale_height": LaunchConfiguration("rescale_height")},
                     {"online": True},
-                    {"input_image_mode": "rgb+aligned_depth"},
+                     {
+                        "input_image_mode": PythonExpression([
+                            "'rgb+aligned_depth+imu' if '",
+                            LaunchConfiguration("use_imu"),
+                            "' == 'true' else 'rgb+aligned_depth'"
+                        ])
+                    },
                     {"base_frame": LaunchConfiguration("base_frame")},
                     {"odom_frame": LaunchConfiguration("odom_frame")},
                     {"depth_scale": LaunchConfiguration("depth_scale")},

@@ -53,8 +53,6 @@ struct ImuMeasurement {
       : timestamp_(timestamp), acc_gyr_(imu_data) {}
   ImuMeasurement(Timestamp&& timestamp, ImuAccGyr&& imu_data)
       : timestamp_(std::move(timestamp)), acc_gyr_(std::move(imu_data)) {}
-
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   Timestamp timestamp_;
   ImuAccGyr acc_gyr_;
 };
@@ -71,8 +69,6 @@ struct ImuMeasurements {
       : timestamps_(std::move(timestamps)), acc_gyr_(std::move(measurements)) {}
 
   inline size_t size() const { return acc_gyr_.cols(); }
-
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   // assume timestamps are in seconds
   Timestamps timestamps_;
   ImuAccGyrs acc_gyr_;
