@@ -32,6 +32,8 @@ struct Dynosam2Node::Impl {
   /// @return
   bool isOnline();
 
+  void shutdown();
+
   /**
    * @brief Construct the necessary file paths to load all configs from a
    * provided params path that is loaded from ROS2 params: "params_path"
@@ -82,6 +84,8 @@ struct Dynosam2Node::Impl {
 
   dyno::ImageDisplayQueue display_queue_;
   PublicationDataQueue publication_queue_;
+
+  std::atomic_bool are_pipelines_okay_{true};
 };
 
 }  // namespace dyno2

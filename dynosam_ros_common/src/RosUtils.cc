@@ -119,6 +119,27 @@ void initGlog(const std::string& params_folder,
   }
 }
 
+bool hasSubscribers(const image_transport::Publisher& publisher) {
+  try {
+    size_t subscribers = 0;
+    subscribers = publisher.getNumSubscribers();
+    return subscribers != 0;
+  } catch (...) {
+    rcutils_reset_error();
+    RCLCPP_DEBUG(rclcpp::get_logger("HasSubscribers"),
+                 "HasSubscribers(): Exception while counting subscribers");
+  }
+  return false;
+}
+
+bool hasSubscribers(
+    const std::shared_ptr<image_transport::Publisher>& publisher) {
+  if (!publisher) {
+    return false;
+  }
+  return hasSubscribers(*publisher);
+}
+
 rclcpp::QoS addQosParameter(rclcpp::Node& node, std::string default_qos,
                             std::string parameter_name, const int default_depth,
                             const bool use_node_namespace) {

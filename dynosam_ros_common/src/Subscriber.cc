@@ -303,17 +303,41 @@ inline const cv::Mat Subscriber::convertRosImage<ImageType::Depth>(
   }
 }
 
+/// @brief Ensure that the final image is in the right format (either mono8 or
+/// bgr8)
+/// @param cvb_image
+/// @return
+static cv::Mat convertRgbMonoFromEncoding(
+    const cv_bridge::CvImageConstPtr cvb_image) {
+  cv::Mat img = cvb_image->image;
+  const std::string& encoding = cvb_image->encoding;
+
+  // encodings already in desired format
+  if (encoding == sensor_msgs::image_encodings::BGR8 ||
+      encoding == sensor_msgs::image_encodings::MONO8) {
+    return img;
+  }
+
+  // Convert all colour images to BGR8.
+  if (encoding == sensor_msgs::image_encodings::RGB8) {
+    cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
+  } else if (encoding == sensor_msgs::image_encodings::RGBA8) {
+    cv::cvtColor(img, img, cv::COLOR_RGBA2BGR);
+  } else if (encoding == sensor_msgs::image_encodings::BGRA8) {
+    cv::cvtColor(img, img, cv::COLOR_BGRA2BGR);
+  } else {
+    throw std::runtime_error(
+        "Unsupported image encoding for ImageType::RGBMono: " + encoding);
+  }
+
+  return img;
+}
+
 template <>
 inline const cv::Mat Subscriber::convertRosImage<ImageType::RGBMono>(
     const ImageMsgPtr& img_msg) const {
   const cv_bridge::CvImageConstPtr cvb_image = readRosImage(img_msg);
-  cv::Mat img = cvb_image->image;
-
-  // make sure we only have rgb (without the alpha!)
-  if (sensor_msgs::image_encodings::isColor(cvb_image->encoding) &&
-      sensor_msgs::image_encodings::hasAlpha(cvb_image->encoding)) {
-    cv::cvtColor(img, img, cv::COLOR_RGBA2RGB);
-  }
+  cv::Mat img = convertRgbMonoFromEncoding(cvb_image);
 
   try {
     image_traits<ImageType::RGBMono>::validate(img);

@@ -35,6 +35,7 @@
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_sensors/CameraParams.hpp"
+#include "image_transport/publisher.hpp"
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/parameter.hpp"
@@ -96,6 +97,11 @@ void initGlog(const std::string &params_folder,
 template <class T>
 inline bool hasSubscribers(
     const std::shared_ptr<rclcpp::Publisher<T>> &publisher);
+
+bool hasSubscribers(const image_transport::Publisher &publisher);
+
+bool hasSubscribers(
+    const std::shared_ptr<image_transport::Publisher> &publisher);
 
 rclcpp::QoS addQosParameter(rclcpp::Node &node,
                             std::string default_qos = "SYSTEM_DEFAULT",

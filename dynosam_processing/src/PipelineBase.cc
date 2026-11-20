@@ -113,10 +113,22 @@ void PipelineBase::notifyFailures(const PipelineBase::ReturnCode& result) {
   }
 }
 
+void PipelineBase::emitOnExceptionCallbacks(
+    const ExceptionShutdownContext& context) const {
+  for (const auto& cb : on_exception_callbacks_) {
+    cb(context);
+  }
+}
+
 void PipelineBase::registerOnFailureCallback(
     const OnPipelineFailureCallback& callback_) {
   CHECK(callback_);
   on_failure_callbacks_.push_back(callback_);
+}
+
+void PipelineBase::registerOnExceptionCallback(
+    const OnPipelineExceptionCallback& func) {
+  on_exception_callbacks_.push_back(func);
 }
 
 }  // namespace dyno

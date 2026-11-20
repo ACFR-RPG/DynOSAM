@@ -697,8 +697,8 @@ void VioGraphEstimator::optimize(dyno::FrameId frame_id,
     frames_affected.push_back(k0);
   }
 
-  LOG(INFO) << "Frames affected in VIO refinement: "
-            << dyno::container_to_string(frames_affected);
+  // LOG(INFO) << "Frames affected in VIO refinement: "
+  //           << dyno::container_to_string(frames_affected);
 
   for (dyno::TrackletId id : tracklets_with_update) {
     gtsam::Symbol lmk_sym('l', id);

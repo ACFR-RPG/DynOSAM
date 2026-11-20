@@ -89,7 +89,8 @@ void Frontend::solveVisualOdometry(
   CHECK_EQ(previous_frame_id, frame_id - 1u);
   CHECK(estimator.poseExists(previous_frame_id));
 
-  LandmarkMap previous_landmarks_C;
+  LandmarkMap previous_landmarks_C_prev;
+  LandmarkMap previous_landmarks_C_map;
   // build local geometry from previous frame and use with PnP initially
   // this just seems WAY more stabls
   // observations in previous frame and in current
@@ -98,9 +99,22 @@ void Frontend::solveVisualOdometry(
   const gtsam::Pose3 X_W_km1_inv = X_W_km1.inverse();
   for (size_t i = 0; i < vi_frame_previous.ids.size(); i++) {
     // all previous landmarks or just ones in map?
-    previous_landmarks_C.setLandmark(vi_frame_previous.ids[i],
-                                     vi_frame_previous.lmks_C[i]);
+    previous_landmarks_C_prev.setLandmark(vi_frame_previous.ids[i],
+                                          vi_frame_previous.lmks_C[i]);
+
+    if (estimator.landmarkExists(vi_frame_previous.ids[i])) {
+      gtsam::Point3 m_C =
+          X_W_km1_inv * estimator.getLandmark(vi_frame_previous.ids[i]);
+      previous_landmarks_C_map.setLandmark(vi_frame_previous.ids[i], m_C);
+    }
   }
+
+  VLOG(10) << "Prev landmarks from map: "
+           << previous_landmarks_C_map.numLandmarks();
+  LandmarkMap previous_landmarks_C =
+      (previous_landmarks_C_map.numLandmarks() > 30
+           ? previous_landmarks_C_map
+           : previous_landmarks_C_prev);
 
   FrameAbsoluteAdaptor adapter(camera_, geometry, previous_landmarks_C,
                                features);
@@ -280,6 +294,7 @@ void Frontend::solveVisualOdometry(
     // at all active keyframes
     const size_t init_triangulation =
         temporalVioTriangultion(estimator, vi_frame, new_measurements_set);
+    (void)(init_triangulation);
     // LOG(INFO) << "Init triangulation: " << init_triangulation;
     LOG(INFO) << "Made VIO keyframe k=" << frame_id;
     estimator.setKeyframe(frame_id, true);

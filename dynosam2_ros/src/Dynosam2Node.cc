@@ -53,14 +53,16 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   rclcpp::Node* node_ptr = &node_;
   RCLCPP_INFO_STREAM(node_.get_logger(), "Starting Dynosam2Node");
 
+  std::string cuda_enabled_message;
+  if (!dyno::utils::opencvCudaAvailable(&cuda_enabled_message)) {
+    throw std::runtime_error(cuda_enabled_message);
+  }
+  RCLCPP_INFO_STREAM(node_.get_logger(), cuda_enabled_message);
+
   diagnostics_updater_ =
       std::make_unique<dyno::DynoDiagnosticsTaskManager>(node_ptr);
   auto lifecycle_monitor = std::make_shared<LifecycleMonitor>();
   diagnostics_updater_->registerTask("ROS2 Application", lifecycle_monitor);
-
-  std::string cuda_enabled_message;
-  dyno::utils::opencvCudaAvailable(&cuda_enabled_message);
-  RCLCPP_INFO_STREAM(node_.get_logger(), cuda_enabled_message);
 
   PipelineParameters system_paramters;
   loadParameters(system_paramters);
@@ -210,6 +212,19 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   // send to viz
   // pipeline_->registerOutputQueue(&output_queue_);
 
+  using ExceptionShutdownContext = dyno::PipelineBase::ExceptionShutdownContext;
+  auto on_pipeline_exception_callback =
+      [&](const ExceptionShutdownContext& context) {
+        RCLCPP_ERROR_STREAM(
+            node_.get_logger(),
+            "Pipeline " << context.name
+                        << " encountered exception: " << context.e.what());
+        are_pipelines_okay_ = false;
+      };
+  // if SLAM failed with any exception, propogate error and kill the Node
+  // safetly
+  pipeline_->registerOnExceptionCallback(on_pipeline_exception_callback);
+
   const SlamBackend& estimator = slam_->getEstimator();
   auto viz_node = node_.create_sub_node("output");
   viz_ = std::make_unique<DynamicSlamVisualizerRos>(
@@ -246,9 +261,21 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
   auto spinOnce = [&, lifecycle_monitor]() -> void {
     // spin while there is work to do!
     // TODO: and SLAM is still running!!
+    auto context = node_.get_node_options().context();
+    bool should_shutdown{false};
     if (!(data_reader_->spin() || pipeline_->isWorking())) {
-      auto context = node_.get_node_options().context();
+      should_shutdown = true;
       context->shutdown("Dynosam2 pipeline has finished processing all data");
+    }
+
+    if (!are_pipelines_okay_) {
+      should_shutdown = true;
+      context->shutdown("Dynosam2 pipelines have failed. Cleaning up!");
+    }
+
+    if (should_shutdown) {
+      shutdown();
+      return;
     }
 
     // do display
@@ -258,16 +285,6 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
     viz_->displayImages();
     lifecycle_monitor->recordHeartBeat();
   };
-
-  // so that all process is encapsulated within this class we use a timer
-  // to trigger the pipelines spin function
-  // this hides a bit of complex behaviour because depending on the setup
-  // (ie. parallel_run, is_online etc) this may or may not limit the processing
-  // rate of the pipeline
-  // in most cases this should not matter (ie. when we are processing dataset
-  // the processing speed is not an issue) in either case we expect the limit of
-  // processing to be about 15-20Hz (which is realtime anyway) so we attempt to
-  // spin at this rate regardless
   // NOTE: MUST be MutuallyExclusive to prevent execution in parallel to itself
   spin_timer_group_ = node_ptr->create_callback_group(
       rclcpp::CallbackGroupType::MutuallyExclusive);
@@ -275,8 +292,33 @@ Dynosam2Node::Impl::Impl(rclcpp::Node& node) : node_(node), params_path_(node) {
                                             spinOnce, spin_timer_group_);
 }
 
-Dynosam2Node::Impl::~Impl() {
+Dynosam2Node::Impl::~Impl() { shutdown(); }
+
+bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
+  RCLCPP_INFO_STREAM(node_.get_logger(),
+                     "Loading Dynosam2 params from file: "
+                         << params_path_.dynosam2_param_file_path);
+
+  parameters.loadFromYaml(params_path_.dynosam2_param_file_path);
+  return true;
+}
+
+bool Dynosam2Node::Impl::isOnline() {
+  dyno::ros::Parameter is_online_param =
+      dyno::ros::Parameter::Builder(&node_, "online", false)
+          .description("If the online DataReader should be used")
+          .finish();
+  return is_online_param.get<bool>();
+}
+
+void Dynosam2Node::Impl::shutdown() {
+  static bool is_shutdown = false;
+  if (is_shutdown) {
+    return;
+  }
+
   RCLCPP_INFO(node_.get_logger(), "Shutting down Dynosam2 node");
+  is_shutdown = true;
   if (spin_timer_) spin_timer_.reset();
   if (data_reader_) data_reader_->shutdown();
   if (data_interface_) data_interface_->shutdown();
@@ -302,27 +344,6 @@ Dynosam2Node::Impl::~Impl() {
   display_queue_.shutdown();
   publication_queue_.shutdown();
   LOG(INFO) << dyno::utils::Statistics::Print();
-}
-
-bool Dynosam2Node::Impl::loadParameters(PipelineParameters& parameters) {
-  // params can either be provided directly as a .yaml file or as a folder with
-  // a dynosam2.yaml file inside it
-  // std::string config_file_path;
-  // resolveParamsFile(params_path_, config_file_path);
-  RCLCPP_INFO_STREAM(node_.get_logger(),
-                     "Loading Dynosam2 params from file: "
-                         << params_path_.dynosam2_param_file_path);
-
-  parameters.loadFromYaml(params_path_.dynosam2_param_file_path);
-  return true;
-}
-
-bool Dynosam2Node::Impl::isOnline() {
-  dyno::ros::Parameter is_online_param =
-      dyno::ros::Parameter::Builder(&node_, "online", false)
-          .description("If the online DataReader should be used")
-          .finish();
-  return is_online_param.get<bool>();
 }
 
 Dynosam2Node::Impl::ParamterFileSystem::ParamterFileSystem(rclcpp::Node& node)

@@ -26,6 +26,13 @@ class PipelineBase {
  public:
   DYNO_POINTER_TYPEDEFS(PipelineBase)
 
+  struct ExceptionShutdownContext {
+    //! Exception that caused the shutdown
+    std::exception e;
+    //! Name of the pipeline that was shutdown
+    std::string name;
+  };
+
   // Timing Reported in milliseconds
   // Computed as average over sliding window
   // from Statistics
@@ -61,6 +68,8 @@ class PipelineBase {
   };
 
   using OnPipelineFailureCallback = std::function<void(ReturnCode)>;
+  using OnPipelineExceptionCallback =
+      std::function<void(const ExceptionShutdownContext&)>;
 
   PipelineBase(const std::string& module_name) : timing_names_(module_name) {}
 
@@ -114,6 +123,14 @@ class PipelineBase {
    * @param callback_ const OnPipelineFailureCallback&
    */
   void registerOnFailureCallback(const OnPipelineFailureCallback& callback_);
+
+  /**
+   * @brief Registers a callback to be triggered if spinOnce encounters an
+   * exception, upon which the pipeline will be shut dow.
+   *
+   * @param func const OnPipelineExceptionCallback&
+   */
+  void registerOnExceptionCallback(const OnPipelineExceptionCallback& func);
 
   /**
    * @brief Virtual function that should shutdown all associated queues.
@@ -174,8 +191,12 @@ class PipelineBase {
  private:
   void notifyFailures(const ReturnCode& result);
 
+ protected:
+  void emitOnExceptionCallbacks(const ExceptionShutdownContext& context) const;
+
  private:
   std::vector<OnPipelineFailureCallback> on_failure_callbacks_;
+  std::vector<OnPipelineExceptionCallback> on_exception_callbacks_;
   //! Thread related members.
   std::atomic_bool is_shutdown_{false};
 };
